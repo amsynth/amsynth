@@ -115,4 +115,5 @@ Config::save	( string filename )
 		ofile << "gui_font " << xfontname << endl;
 	}
 	ofile.close ( );
+	return 0;
 }
