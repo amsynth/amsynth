@@ -28,7 +28,10 @@ midi_channel		0
 #
 
 # select audio driver to use. (auto/alsa-mmap/alsa/oss/jack)
-# auto selects the best available driver in the order alsa-mmap, alsa, oss
+# auto selects the best available driver (in the order jack alsa-mmap alsa oss)
+# 
+# for most people 'auto' will always be the best choice
+#
 # 'alsa-mmap' has better performance than 'alsa', but may be less compatible
 # 'jack' is the best choice for interoperating with other music programs
 
@@ -45,6 +48,9 @@ oss_audio_device	/dev/dsp
 alsa_audio_device	default
 
 # sets the sampling rate to use
+#
+# (this has no effect when using JACK - the jack server decides the sample rate)
+#
 # lower sampling rates use less CPU power, so more voices are usable at once.
 
 sample_rate		44100
@@ -54,7 +60,7 @@ sample_rate		44100
 #	General Options
 #
 
-# sets the maximum polyphony (simultaneous notes played)
+# sets the default maximum polyphony (simultaneous notes played)
 # playing too many motes for your CPU power will do horrible things.
 #
 # Pentium3 class machines will safely do 16 voices, (pentium4 2.40GHz = 60)
