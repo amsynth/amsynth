@@ -6,7 +6,7 @@
 
 VoiceBoard::VoiceBoard(int rate, VoiceBoardProcessMemory *mem):
 	// call object constructors with parameters
-	
+	osc				(rate, mem->osc_1),
 	lfo1			(rate, mem->lfo_osc_1),
 	osc1			(rate, mem->osc_1),
 	osc2			(rate, mem->osc_2),
@@ -75,7 +75,7 @@ VoiceBoard::Process64SamplesMix	(float *buffer, float vol)
 	// Control Signals
 	//
 	float *lfo1buf = mem->lfo_osc_1;
-	lfo1.Process64Samples (lfo1buf, mLFO1Freq, 0);
+	lfo1.ProcessSamples (lfo1buf, 64, mLFO1Freq, 0);
 
 	float osc1freq = mPitchBend*mKeyPitch * ( mFreqModAmount*(lfo1buf[0]+1.0) + 1.0 - mFreqModAmount );
 	float osc1pw = mOsc1PulseWidth;
@@ -91,8 +91,8 @@ VoiceBoard::Process64SamplesMix	(float *buffer, float vol)
 	//
 	float *osc1buf = mem->osc_1;
 	float *osc2buf = mem->osc_2;
-	osc1.Process64Samples (osc1buf, osc1freq, osc1pw);
-	osc2.Process64Samples (osc2buf, osc2freq, osc2pw);
+	osc1.ProcessSamples (osc1buf, 64, osc1freq, osc1pw);
+	osc2.ProcessSamples (osc2buf, 64, osc2freq, osc2pw);
 
 	//
 	// Osc Mix

@@ -25,7 +25,7 @@ public:
 
 	Oscillator	(int rate, float *buf);
 	
-	void	Process64Samples	(float*, float freq_hz, float pw);
+	void	ProcessSamples		(float*, int, float freq_hz, float pw);
 	void	SetWaveform		(Waveform);
 
 	void reset();

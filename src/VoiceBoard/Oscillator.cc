@@ -10,7 +10,7 @@ Oscillator::Oscillator(int rate, float *buf)
 :	outBuffer (buf)
 ,	rads (0.0)
 ,	random (0)
-,	waveform (1)
+,	waveform (Waveform_Sine)
 ,	rate (rate)
 ,	random_count (0)
 ,	period (0)
@@ -67,7 +67,7 @@ Oscillator::update()
 }
 
 void
-Oscillator::Process64Samples	(float *buffer, float freq_hz, float pw)
+Oscillator::ProcessSamples	(float *buffer, int numSamples, float freq_hz, float pw)
 {
 	freq = freq_hz;
 	mPulseWidth = pw;
@@ -79,11 +79,11 @@ Oscillator::Process64Samples	(float *buffer, float freq_hz, float pw)
 	
 	switch (waveform)
 	{
-	case Waveform_Sine:	doSine (buffer, 64);	break;
-	case Waveform_Pulse:	doSquare (buffer, 64);	break;
-	case Waveform_Saw:	doSaw (buffer, 64);	break;
-	case Waveform_Noise:	doNoise (buffer, 64);	break;
-	case Waveform_Random:	doRandom (buffer, 64);	break;
+	case Waveform_Sine:		doSine		(buffer, numSamples);	break;
+	case Waveform_Pulse:	doSquare	(buffer, numSamples);	break;
+	case Waveform_Saw:		doSaw		(buffer, numSamples);	break;
+	case Waveform_Noise:	doNoise		(buffer, numSamples);	break;
+	case Waveform_Random:	doRandom	(buffer, numSamples);	break;
 	default: break;
 	}
 	
