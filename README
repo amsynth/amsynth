@@ -6,7 +6,10 @@ amSynth is a real-time analogue modelling synthesizer.
 It currently uses the OSS audio and midi devices for its input and output.
 
 * This isn't an official stable release. *
-It is very close to amSynth 1.0 however. 
+Welcome to the beta4 release of amSynth. Although the software has been run 
+stably on the author's system, more extensive testing will be required before
+the 1.0 release.
+
 The basic structure of amSynth is not forseen to change - amSynthe (same 
 homepage) has a different goal of a more complex and powerful engine, but it has
 not yet been started.
