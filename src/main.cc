@@ -189,36 +189,37 @@ int main( int argc, char *argv[] )
 	
 	if (enable_audio)
 	{
-#ifdef with_jack
 		if (config.audio_driver=="jack"||config.audio_driver=="JACK")
 		{
 			jack = 1;
 			out = new JackOutput();
-			if (((JackOutput*)out)->init()!=0)
+			if (((JackOutput*)out)->init (config)!=0)
 			{
 				std::cerr << ((JackOutput*)out)->get_error_msg() << "\n";
 				std::cerr << "** failed to initialise JACK... aborting :'( **\n";
 				exit (10);
 			}
 		}
-		else
-			if (config.audio_driver=="auto"||config.audio_driver=="AUTO")
+		else if (config.audio_driver=="auto"||config.audio_driver=="AUTO")
+		{
+			jack = 1;
+			out = new JackOutput();
+			if (((JackOutput*)out)->init (config)!=0)
 			{
-				jack = 1;
-				out = new JackOutput();
-				if (((JackOutput*)out)->init()!=0)
-				{
-					jack = 0;
-					out = new AudioOutput();
-				}
-			}
-			else
-			{
+				jack = 0;
 				out = new AudioOutput();
 			}
-#endif
-	
-		out->setConfig( config );
+		}
+		else
+		{
+			out = new AudioOutput();
+		}
+
+		if (jack==0) if (out->init (config) != 0)
+		{
+			std::cerr << "failed to open any audio device\n\n";
+			exit (-1);
+		}
 	}
 	
 	vau = new VoiceAllocationUnit( config ); // were sure of sample_rate now
@@ -250,6 +251,12 @@ int main( int argc, char *argv[] )
 	else
 		midi_controller = new MidiController( config );
 
+	if (midi_controller->init () != 0)
+	{
+		std::cerr << "failed to open any midi device\n\n";
+		exit (-1);
+	}
+	
 	int midi_res;
 	if (enable_gui) midi_res = 
 			pthread_create( &midiThread, NULL, midi_thread, NULL );

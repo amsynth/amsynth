@@ -20,7 +20,7 @@ public:
 	virtual		~JackOutput	( ) {};
 	void		setInput	( NFSource & source );
 	
-	int		init		( );	// returns 0 on success
+	int		init		( Config & config );// returns 0 on success
 	void		run		( );
 	void		stop		( );
 	
@@ -32,7 +32,6 @@ public:
 	void		setOutputFile	( string file )	{ wavoutfile = file; };
 	string		getOutputFile	( )		{ return wavoutfile; };
 
-	void		setConfig	( Config & config );
 	const char*	getTitle	( )	{ return client_name.c_str(); };
 
 private:

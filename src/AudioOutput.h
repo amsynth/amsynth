@@ -17,6 +17,8 @@ class GenericOutput : public NFInput
 {
 public:
 	virtual	void		setInput	( NFSource & source )	= 0;
+
+	virtual	int		init		( Config & config )	= 0;
 	virtual	void		run 		( )			= 0;
 	virtual	void		stop		( )			= 0;
 	
@@ -26,7 +28,6 @@ public:
 	virtual	void		setOutputFile	( string file )		= 0;
 	virtual	string		getOutputFile	( )			= 0;
 
-	virtual	void		setConfig	( Config & config )	= 0;
 
 	virtual	const char*	getTitle	( )	{ return "amSynth"; };
 };
@@ -67,7 +68,7 @@ public:
 	void 	stopRecording	( );
 	void 	setOutputFile	( string file )	{ wavoutfile = file; };
   	string 	getOutputFile	( )	{ return wavoutfile; };
-	void 	setConfig	( Config & config );
+	int 	init		( Config & config );
 
 private:
   int running;

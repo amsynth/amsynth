@@ -58,7 +58,6 @@ jack_srate (jack_nframes_t nframes, void *arg)
 void
 jack_shutdown (void *arg)
 {
-	exit (1);
 }
 
 void
@@ -70,7 +69,7 @@ jack_error	(const char* msg)
 #endif
 
 int
-JackOutput::init	( )
+JackOutput::init	( Config & config )
 {
 #ifdef with_jack
 	initialised = 0;
@@ -124,19 +123,16 @@ JackOutput::init	( )
 			JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0 );
 	
 	initialised = 1;
-	return 0;
-#endif
-}
-
-void
-JackOutput::setConfig( Config & config )
-{
-#ifdef with_jack
+	
 	config.sample_rate = sample_rate;
 	config.buffer_size = buf_size;
 	config.audio_driver = "JACK";
+	
+	return 0;
 #endif
+	return -1;
 }
+
 
 void
 JackOutput::setInput( NFSource & source )

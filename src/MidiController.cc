@@ -61,23 +61,23 @@ MidiController::setVAU(VoiceAllocationUnit & vau)
     _va = &vau;
 }
 
+int
+MidiController::init	( )
+{
+	if( midi.open( *config ) == -1 )
+	{
+		cout << "<MidiController> failed to init MIDI. midi_driver:" 
+			<< config->midi_driver << endl;
+		return -1;
+	}
+	running = 1;
+	return 0;
+}
+
 void
 MidiController::run()
 {
-    running = 1;
 #ifdef _DEBUG
-    cout << "<MidiController> opening midi interface.." << endl;
-#endif
-    if( midi.open( *config ) == -1 )
-    {
-		cout << "<MidiController> failed to init MIDI. midi_driver:" 
-			<< config->midi_driver << endl;
-		exit(-1);
-    }
-#ifdef _DEBUG
-    else
-	cout << "<MidiController> opened midi interface." << endl;
-
     cout << "<MidiController> entering doMidi() loop.." << endl;
 #endif
 
@@ -99,10 +99,12 @@ MidiController::stop()
 void
 MidiController::doMidi()
 {
-    if ((bytes_read = midi.read(buffer)) == -1) {
-	cout << "error reading from midi device" << endl;
-	exit(-1);
-    }
+	if ((bytes_read = midi.read(buffer)) == -1)
+	{
+		cout << "error reading from midi device" << endl;
+		running = 0;
+		return;
+	}
 
     int receiveChannel = config->midi_channel;
 

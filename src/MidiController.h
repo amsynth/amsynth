@@ -19,31 +19,34 @@
  * rest of the system.
  */
 class MidiController {
-  public:
-    MidiController( Config & config );
-    ~MidiController();
+public:
+	MidiController( Config & config );
+	~MidiController();
+
+	int	init			( );
+
 	/**
 	 * @param pc The PresetController for the system.
 	 */
-    void setPresetController(PresetController & pc);
+	void	setPresetController	(PresetController & pc);
 	/**
 	 * @param vau The VoiceAllocationUnit for the system.
 	 */
-    void setVAU(VoiceAllocationUnit & vau);
+	void	setVAU			(VoiceAllocationUnit & vau);
 	/**
 	 * @param config The global Config object for the system.
 	 */
-	void saveConfig();
+	void	saveConfig		();
 	/**
 	 * Start execution of the MidiController. This function never returns (until
 	 * execution is stop()ped or an error occurs).
 	 */
-    void run();
+	void	run			();
 	/**
 	 * Stop the execution of the MidiController.
 	 */
-    void stop();
-	void setController( int controller_no, Parameter &param );
+	void	stop			();
+	void	setController		( int controller_no, Parameter &param );
 	Parameter & getLastControllerParam()
 	{ return last_active_controller; };
 	Parameter & getController( int controller_no );

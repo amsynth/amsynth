@@ -16,8 +16,8 @@ AudioOutput::~AudioOutput()
 	out.close();
 }
 
-void
-AudioOutput::setConfig( Config & config )
+int
+AudioOutput::init	( Config & config )
 {
 	this->config = &config;
 	channels = config.channels;
@@ -37,7 +37,9 @@ AudioOutput::setConfig( Config & config )
 #endif
 	
 	
-	if( out.open( config ) == -1) exit(-1);
+	if (out.open (config) == -1) return -1;
+	
+	return 0;
 }
 
 void
@@ -91,7 +93,7 @@ AudioOutput::run()
 			sf_writef_float( sndfile, buffer, BUF_SIZE );
 #endif
 		if( out.write( buffer, BUF_SIZE*channels ) == -1 )
-			exit(-1);
+			running = 0;
 	}
 	
 	out.close();
