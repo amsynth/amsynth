@@ -10,7 +10,7 @@
 Config::Config()
 {
 	realtime = sample_rate = midi_channel = active_voices = polyphony = debug_drivers = load_font = 0;
-	xfontname = "";
+	xfontname = "-*-helvetica-medium-r-*-*-*-100-*-*-*-*-*-*";
 }
 
 int
