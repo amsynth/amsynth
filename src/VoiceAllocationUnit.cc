@@ -162,5 +162,5 @@ VoiceAllocationUnit::killAllVoices()
 void
 VoiceAllocationUnit::set_max_voices	( int voices )
 {
-	max_voices = voices;
+	config->polyphony = max_voices = voices;
 }
