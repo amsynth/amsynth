@@ -31,6 +31,7 @@
 #include "../Parameter.h"
 #include "../Config.h"
 #include "../VoiceAllocationUnit.h"
+#include "../AudioOutput.h"
 
 #include "knob.xpm"
 #include "knob.xbm"
@@ -45,7 +46,7 @@
 class GUI:public Gtk::Window, public UpdateListener {
   public:
     GUI( Config & config, MidiController & mc, 
-		VoiceAllocationUnit & vau, int pipe[2] );
+		VoiceAllocationUnit & vau, int pipe[2], AudioOutput & audio );
     ~GUI();
 	/**
 	 * Sets up all the Interface controls etc..
@@ -141,6 +142,14 @@ class GUI:public Gtk::Window, public UpdateListener {
 	Gtk::FileSelection preset_export_dialog;
 	Gtk::FileSelection preset_import_dialog;
 	
+	// recording dialog
+	Gtk::Dialog record_dialog;
+	Gtk::Label record_label;
+	Gtk::Entry record_entry;
+	Gtk::ToggleButton record_togglebutton;
+	Gtk::Button record_quit, record_choose;
+	Gtk::HBox record_hbox;
+	
 	// quit confirmation dialog
 	Gtk::Dialog quit_confirm;
 	Gtk::Label quit_confirm_label;
@@ -156,5 +165,6 @@ class GUI:public Gtk::Window, public UpdateListener {
 	MidiController *midi_controller;
 	VoiceAllocationUnit *vau;
 	ControllerMapDialog *controller_map_dialog;
+	AudioOutput *audio_out;
 };
 #endif

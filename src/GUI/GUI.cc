@@ -29,7 +29,8 @@ GUI::serve_request()
 	}
 }
 
-GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau, int pipe[2] )
+GUI::GUI( Config & config, MidiController & mc, 
+			VoiceAllocationUnit & vau, int pipe[2], AudioOutput & audio )
 {
 #ifdef _DEBUG
 	cout << "<GUI::GUI()>" << endl;
@@ -38,6 +39,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau, int p
 	this->midi_controller = &mc;
 	this->pipe = pipe;
 	this->vau = &vau;
+	this->audio_out = &audio;
     hide.connect( Gtk::Main::quit.slot() );
 	
 	if(this->config->realtime)
@@ -101,7 +103,13 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau, int p
     menu_item[1]->add_label( "Quit" );
     menu_item[1]->activate.connect( 
 		bind(slot(this, &GUI::event_handler),"quit"));
+	menu_item[3]->add_label( "Record output to .wav file" );
+	menu_item[3]->activate.connect( 
+		bind(slot(this, &GUI::event_handler),"record_dialog"));
+	
+	file_menu.append( *menu_item[3] );
 	file_menu.append( *menu_item[1] );
+	
 	menu_item[2]->add_label( "Configure MIDI Controllers" );
 	menu_item[2]->activate.connect( 
 		bind(slot(this, &GUI::event_handler),"controller_map_dialog"));
@@ -391,7 +399,30 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau, int p
 	preset_import_dialog.set_transient_for( *this );
 	preset_import_dialog.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &preset_import_dialog ) );
-		
+	
+	// the record dialog
+	record_dialog.set_title( "Record Output to File" );
+	preset_import_dialog.set_transient_for( *this );
+	record_dialog.get_vbox()->add( record_label );
+	record_label.set_text( "choose the output file (.wav) to record to,\n and hit the record button" );
+	record_dialog.get_vbox()->add( record_hbox );
+	record_hbox.add( record_entry );
+	record_entry.set_text( "amSynth.wav" );
+	record_hbox.add( record_choose );
+	record_choose.add_label( "...", 0.5, 0.5 );
+	record_choose.clicked.connect(
+		bind(slot(this, &GUI::event_handler),"record_dialog::choose"));
+	record_dialog.get_vbox()->add( record_togglebutton );
+	record_togglebutton.add_label( "Record", 0.5, 0.5 );
+	record_togglebutton.toggled.connect(
+		bind(slot(this, &GUI::event_handler),"record_dialog::record"));
+	record_dialog.get_action_area()->add( record_quit );
+	record_quit.add_label( "Close and Stop Recording", 0.5, 0.5 );
+	record_quit.clicked.connect(
+		bind(slot(this, &GUI::event_handler),"record_dialog::close"));
+	record_dialog.delete_event.connect( 
+		bind( slot( this, &GUI::delete_events ), &record_dialog ) );
+	
 	// the quit confirmation window
 	quit_confirm.set_title( "Quit?" );
 	quit_confirm.set_usize( 300, 200 );
@@ -777,8 +808,32 @@ GUI::event_handler(string text)
 		quit_confirm.hide_all();
 		hide();
 		return;
+    } else if (text == "record_dialog" ) {
+		record_dialog.show_all();
+		return;
+    } else if (text == "record_dialog::close" ) {
+		audio_out->stopRecording();
+		record_dialog.hide_all();
+		return;
+    } else if (text == "record_dialog::record" ) {
+		if( record_togglebutton.get_active() == true )
+		{
+			cout << "record to: " << record_entry.get_text() << endl;
+			audio_out->setOutputFile( record_entry.get_text() );
+			audio_out->startRecording();
+			record_togglebutton.remove();
+			record_togglebutton.add_label( "Stop", 0.5, 0.5 );
+		}
+		else
+		{
+			cout << "stop recording" << endl;
+			record_togglebutton.remove();
+			record_togglebutton.add_label( "Record", 0.5, 0.5 );
+			audio_out->stopRecording();
+		}
+		return;
     } else {
-		cout << text << endl;
+		cout << "no handler for event: " << text << endl;
 		return;
     }
 }
