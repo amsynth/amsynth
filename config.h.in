@@ -1,0 +1,23 @@
+/* config.h.in.  Generated automatically from configure.in by autoheader 2.13.  */
+
+/* Define if you have the <dlfcn.h> header file.  */
+#undef HAVE_DLFCN_H
+
+/* Define if you have the <sys/soundcard.h> header file.  */
+#undef HAVE_SYS_SOUNDCARD_H
+
+/* Define if you have the dl library (-ldl).  */
+#undef HAVE_LIBDL
+
+/* Define if you have the m library (-lm).  */
+#undef HAVE_LIBM
+
+/* Define if you have the pthread library (-lpthread).  */
+#undef HAVE_LIBPTHREAD
+
+/* Name of package */
+#undef PACKAGE
+
+/* Version number of package */
+#undef VERSION
+

@@ -1,0 +1,448 @@
+# Makefile.in generated automatically by automake 1.5 from Makefile.am.
+
+# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
+# Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+@SET_MAKE@
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+top_builddir = ../..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+INSTALL_HEADER = $(INSTALL_DATA)
+transform = @program_transform_name@
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+host_alias = @host_alias@
+host_triplet = @host@
+AMTAR = @AMTAR@
+AS = @AS@
+AWK = @AWK@
+CC = @CC@
+CXX = @CXX@
+DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
+ECHO = @ECHO@
+EXEEXT = @EXEEXT@
+INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+LIBTOOL = @LIBTOOL@
+LN_S = @LN_S@
+OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
+PACKAGE = @PACKAGE@
+RANLIB = @RANLIB@
+STRIP = @STRIP@
+VERSION = @VERSION@
+am__include = @am__include@
+am__quote = @am__quote@
+install_sh = @install_sh@
+
+noinst_LIBRARIES = libGUI.a
+
+libGUI_a_SOURCES = GUI.cc \
+					ParameterKnob.cc \
+					PresetControllerView.cc \
+					RadioButtonParameterView.cc \
+					ParameterSwitch.cc \
+					Knob.cc 
+
+
+libGUI_a_CXXFLAGS = `gtkmm-config --cflags`
+libGUI_a_LDFLAGS = -lstdc++ -lm `gtkmm-config --libs`
+subdir = src/GUI
+mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
+CONFIG_HEADER = $(top_builddir)/config.h
+CONFIG_CLEAN_FILES =
+LIBRARIES = $(noinst_LIBRARIES)
+
+libGUI_a_AR = $(AR) cru
+libGUI_a_LIBADD =
+am_libGUI_a_OBJECTS = libGUI_a-GUI.$(OBJEXT) \
+	libGUI_a-ParameterKnob.$(OBJEXT) \
+	libGUI_a-PresetControllerView.$(OBJEXT) \
+	libGUI_a-RadioButtonParameterView.$(OBJEXT) \
+	libGUI_a-ParameterSwitch.$(OBJEXT) libGUI_a-Knob.$(OBJEXT)
+libGUI_a_OBJECTS = $(am_libGUI_a_OBJECTS)
+
+DEFS = @DEFS@
+DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+depcomp = $(SHELL) $(top_srcdir)/config/depcomp
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/libGUI_a-GUI.Po \
+@AMDEP_TRUE@	$(DEPDIR)/libGUI_a-Knob.Po \
+@AMDEP_TRUE@	$(DEPDIR)/libGUI_a-ParameterKnob.Po \
+@AMDEP_TRUE@	$(DEPDIR)/libGUI_a-ParameterSwitch.Po \
+@AMDEP_TRUE@	$(DEPDIR)/libGUI_a-PresetControllerView.Po \
+@AMDEP_TRUE@	$(DEPDIR)/libGUI_a-RadioButtonParameterView.Po
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CXXFLAGS) $(CXXFLAGS)
+CXXLD = $(CXX)
+CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+CXXFLAGS = @CXXFLAGS@
+DIST_SOURCES = $(libGUI_a_SOURCES)
+DIST_COMMON = Makefile.am Makefile.in
+SOURCES = $(libGUI_a_SOURCES)
+
+all: all-am
+
+.SUFFIXES:
+.SUFFIXES: .cc .lo .o .obj
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+	-rm -f libtool
+$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+	cd $(top_srcdir) && \
+	  $(AUTOMAKE) --gnu  src/GUI/Makefile
+Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) && \
+	  CONFIG_HEADERS= CONFIG_LINKS= \
+	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
+
+AR = ar
+
+clean-noinstLIBRARIES:
+	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
+libGUI_a-GUI.$(OBJEXT): GUI.cc
+libGUI_a-ParameterKnob.$(OBJEXT): ParameterKnob.cc
+libGUI_a-PresetControllerView.$(OBJEXT): PresetControllerView.cc
+libGUI_a-RadioButtonParameterView.$(OBJEXT): RadioButtonParameterView.cc
+libGUI_a-ParameterSwitch.$(OBJEXT): ParameterSwitch.cc
+libGUI_a-Knob.$(OBJEXT): Knob.cc
+libGUI.a: $(libGUI_a_OBJECTS) $(libGUI_a_DEPENDENCIES) 
+	-rm -f libGUI.a
+	$(libGUI_a_AR) libGUI.a $(libGUI_a_OBJECTS) $(libGUI_a_LIBADD)
+	$(RANLIB) libGUI.a
+
+mostlyclean-compile:
+	-rm -f *.$(OBJEXT) core *.core
+
+distclean-compile:
+	-rm -f *.tab.c
+
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/libGUI_a-GUI.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/libGUI_a-Knob.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/libGUI_a-ParameterKnob.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/libGUI_a-ParameterSwitch.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/libGUI_a-PresetControllerView.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/libGUI_a-RadioButtonParameterView.Po@am__quote@
+
+distclean-depend:
+	-rm -rf $(DEPDIR)
+
+.cc.o:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+
+.cc.obj:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
+
+.cc.lo:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LTCXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+
+libGUI_a-GUI.o: GUI.cc
+@AMDEP_TRUE@	source='GUI.cc' object='libGUI_a-GUI.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-GUI.Po' tmpdepfile='$(DEPDIR)/libGUI_a-GUI.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-GUI.o `test -f GUI.cc || echo '$(srcdir)/'`GUI.cc
+
+libGUI_a-GUI.obj: GUI.cc
+@AMDEP_TRUE@	source='GUI.cc' object='libGUI_a-GUI.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-GUI.Po' tmpdepfile='$(DEPDIR)/libGUI_a-GUI.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-GUI.obj `cygpath -w GUI.cc`
+
+libGUI_a-GUI.lo: GUI.cc
+@AMDEP_TRUE@	source='GUI.cc' object='libGUI_a-GUI.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-GUI.Plo' tmpdepfile='$(DEPDIR)/libGUI_a-GUI.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-GUI.lo `test -f GUI.cc || echo '$(srcdir)/'`GUI.cc
+
+libGUI_a-ParameterKnob.o: ParameterKnob.cc
+@AMDEP_TRUE@	source='ParameterKnob.cc' object='libGUI_a-ParameterKnob.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-ParameterKnob.Po' tmpdepfile='$(DEPDIR)/libGUI_a-ParameterKnob.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-ParameterKnob.o `test -f ParameterKnob.cc || echo '$(srcdir)/'`ParameterKnob.cc
+
+libGUI_a-ParameterKnob.obj: ParameterKnob.cc
+@AMDEP_TRUE@	source='ParameterKnob.cc' object='libGUI_a-ParameterKnob.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-ParameterKnob.Po' tmpdepfile='$(DEPDIR)/libGUI_a-ParameterKnob.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-ParameterKnob.obj `cygpath -w ParameterKnob.cc`
+
+libGUI_a-ParameterKnob.lo: ParameterKnob.cc
+@AMDEP_TRUE@	source='ParameterKnob.cc' object='libGUI_a-ParameterKnob.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-ParameterKnob.Plo' tmpdepfile='$(DEPDIR)/libGUI_a-ParameterKnob.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-ParameterKnob.lo `test -f ParameterKnob.cc || echo '$(srcdir)/'`ParameterKnob.cc
+
+libGUI_a-PresetControllerView.o: PresetControllerView.cc
+@AMDEP_TRUE@	source='PresetControllerView.cc' object='libGUI_a-PresetControllerView.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-PresetControllerView.Po' tmpdepfile='$(DEPDIR)/libGUI_a-PresetControllerView.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-PresetControllerView.o `test -f PresetControllerView.cc || echo '$(srcdir)/'`PresetControllerView.cc
+
+libGUI_a-PresetControllerView.obj: PresetControllerView.cc
+@AMDEP_TRUE@	source='PresetControllerView.cc' object='libGUI_a-PresetControllerView.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-PresetControllerView.Po' tmpdepfile='$(DEPDIR)/libGUI_a-PresetControllerView.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-PresetControllerView.obj `cygpath -w PresetControllerView.cc`
+
+libGUI_a-PresetControllerView.lo: PresetControllerView.cc
+@AMDEP_TRUE@	source='PresetControllerView.cc' object='libGUI_a-PresetControllerView.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-PresetControllerView.Plo' tmpdepfile='$(DEPDIR)/libGUI_a-PresetControllerView.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-PresetControllerView.lo `test -f PresetControllerView.cc || echo '$(srcdir)/'`PresetControllerView.cc
+
+libGUI_a-RadioButtonParameterView.o: RadioButtonParameterView.cc
+@AMDEP_TRUE@	source='RadioButtonParameterView.cc' object='libGUI_a-RadioButtonParameterView.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-RadioButtonParameterView.Po' tmpdepfile='$(DEPDIR)/libGUI_a-RadioButtonParameterView.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-RadioButtonParameterView.o `test -f RadioButtonParameterView.cc || echo '$(srcdir)/'`RadioButtonParameterView.cc
+
+libGUI_a-RadioButtonParameterView.obj: RadioButtonParameterView.cc
+@AMDEP_TRUE@	source='RadioButtonParameterView.cc' object='libGUI_a-RadioButtonParameterView.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-RadioButtonParameterView.Po' tmpdepfile='$(DEPDIR)/libGUI_a-RadioButtonParameterView.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-RadioButtonParameterView.obj `cygpath -w RadioButtonParameterView.cc`
+
+libGUI_a-RadioButtonParameterView.lo: RadioButtonParameterView.cc
+@AMDEP_TRUE@	source='RadioButtonParameterView.cc' object='libGUI_a-RadioButtonParameterView.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-RadioButtonParameterView.Plo' tmpdepfile='$(DEPDIR)/libGUI_a-RadioButtonParameterView.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-RadioButtonParameterView.lo `test -f RadioButtonParameterView.cc || echo '$(srcdir)/'`RadioButtonParameterView.cc
+
+libGUI_a-ParameterSwitch.o: ParameterSwitch.cc
+@AMDEP_TRUE@	source='ParameterSwitch.cc' object='libGUI_a-ParameterSwitch.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-ParameterSwitch.Po' tmpdepfile='$(DEPDIR)/libGUI_a-ParameterSwitch.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-ParameterSwitch.o `test -f ParameterSwitch.cc || echo '$(srcdir)/'`ParameterSwitch.cc
+
+libGUI_a-ParameterSwitch.obj: ParameterSwitch.cc
+@AMDEP_TRUE@	source='ParameterSwitch.cc' object='libGUI_a-ParameterSwitch.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-ParameterSwitch.Po' tmpdepfile='$(DEPDIR)/libGUI_a-ParameterSwitch.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-ParameterSwitch.obj `cygpath -w ParameterSwitch.cc`
+
+libGUI_a-ParameterSwitch.lo: ParameterSwitch.cc
+@AMDEP_TRUE@	source='ParameterSwitch.cc' object='libGUI_a-ParameterSwitch.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-ParameterSwitch.Plo' tmpdepfile='$(DEPDIR)/libGUI_a-ParameterSwitch.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-ParameterSwitch.lo `test -f ParameterSwitch.cc || echo '$(srcdir)/'`ParameterSwitch.cc
+
+libGUI_a-Knob.o: Knob.cc
+@AMDEP_TRUE@	source='Knob.cc' object='libGUI_a-Knob.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-Knob.Po' tmpdepfile='$(DEPDIR)/libGUI_a-Knob.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-Knob.o `test -f Knob.cc || echo '$(srcdir)/'`Knob.cc
+
+libGUI_a-Knob.obj: Knob.cc
+@AMDEP_TRUE@	source='Knob.cc' object='libGUI_a-Knob.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-Knob.Po' tmpdepfile='$(DEPDIR)/libGUI_a-Knob.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-Knob.obj `cygpath -w Knob.cc`
+
+libGUI_a-Knob.lo: Knob.cc
+@AMDEP_TRUE@	source='Knob.cc' object='libGUI_a-Knob.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/libGUI_a-Knob.Plo' tmpdepfile='$(DEPDIR)/libGUI_a-Knob.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libGUI_a_CXXFLAGS) $(CXXFLAGS) -c -o libGUI_a-Knob.lo `test -f Knob.cc || echo '$(srcdir)/'`Knob.cc
+CXXDEPMODE = @CXXDEPMODE@
+uninstall-info-am:
+
+tags: TAGS
+
+ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	mkid -fID $$unique $(LISP)
+
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
+	  || etags $(ETAGS_ARGS) $$tags  $$unique $(LISP)
+
+GTAGS:
+	here=`CDPATH=: && cd $(top_builddir) && pwd` \
+	  && cd $(top_srcdir) \
+	  && gtags -i $(GTAGS_ARGS) $$here
+
+distclean-tags:
+	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
+
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+
+top_distdir = ../..
+distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  if test -f $$file; then d=.; else d=$(srcdir); fi; \
+	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
+	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
+	    $(mkinstalldirs) "$(distdir)/$$dir"; \
+	  fi; \
+	  if test -d $$d/$$file; then \
+	    cp -pR $$d/$$file $(distdir) \
+	    || exit 1; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || cp -p $$d/$$file $(distdir)/$$file \
+	    || exit 1; \
+	  fi; \
+	done
+check-am: all-am
+check: check-am
+all-am: Makefile $(LIBRARIES)
+
+installdirs:
+
+install: install-am
+install-exec: install-exec-am
+install-data: install-data-am
+uninstall: uninstall-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+
+installcheck: installcheck-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
+	  `test -z '$(STRIP)' || \
+	    echo "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'"` install
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES) stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+	@echo "This command is intended for maintainers to use"
+	@echo "it deletes files that may require special tools to rebuild."
+clean: clean-am
+
+clean-am: clean-generic clean-libtool clean-noinstLIBRARIES \
+	mostlyclean-am
+
+distclean: distclean-am
+
+distclean-am: clean-am distclean-compile distclean-depend \
+	distclean-generic distclean-libtool distclean-tags
+
+dvi: dvi-am
+
+dvi-am:
+
+info: info-am
+
+info-am:
+
+install-data-am:
+
+install-exec-am:
+
+install-info: install-info-am
+
+install-man:
+
+installcheck-am:
+
+maintainer-clean: maintainer-clean-am
+
+maintainer-clean-am: distclean-am maintainer-clean-generic
+
+mostlyclean: mostlyclean-am
+
+mostlyclean-am: mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool
+
+uninstall-am: uninstall-info-am
+
+.PHONY: GTAGS all all-am check check-am clean clean-generic \
+	clean-libtool clean-noinstLIBRARIES distclean distclean-compile \
+	distclean-depend distclean-generic distclean-libtool \
+	distclean-tags distdir dvi dvi-am info info-am install \
+	install-am install-data install-data-am install-exec \
+	install-exec-am install-info install-info-am install-man \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	tags uninstall uninstall-am uninstall-info-am
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

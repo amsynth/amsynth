@@ -1,0 +1,50 @@
+AMSYNTH_VERSION = 0.35
+
+AC_INIT(README)
+AC_CONFIG_AUX_DIR(config)
+AM_INIT_AUTOMAKE(amSynth, $AMSYNTH_VERSION)
+AM_CONFIG_HEADER(config.h)
+
+
+CXXFLAGS="${CXXFLAGS} -DVERSION="\"0.35\"" -D_REENTRANT"
+
+dnl AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_INSTALL
+AC_PROG_LIBTOOL
+
+dnl Check for headers
+AC_CHECK_HEADERS(sys/soundcard.h, CXXFLAGS="${CXXFLAGS} -D_OSS")
+
+dnl Check for libraries
+AC_CHECK_LIB(m, sin)
+AC_CHECK_LIB(dl, dlopen)
+AC_CHECK_LIB(pthread, pthread_create)
+dnl AC_CHECK_LIB(asound, snd_rawmidi_open, CXXFLAGS="${CXXFLAGS} -D_ALSA -lasound")
+
+
+
+dnl Compile options string used in about dialog for debugging purposes
+COMPOPSTR=""
+
+dnl - Check for debugging or profiling configure flags
+
+AC_MSG_CHECKING(whether to enable debugging support...)
+AC_DEBUGGING
+
+AC_MSG_CHECKING(whether to enable profiling support...)
+AC_PROFILING
+
+AC_MSG_CHECKING(for optimisation level to set...)
+AC_OPTIMISE
+
+AC_MSG_CHECKING(which cpu to optimise for...)
+AC_CPU
+
+AC_OUTPUT([
+Makefile
+src/Makefile 
+src/drivers/Makefile
+src/VoiceBoard/Makefile
+src/GUI/Makefile
+])
