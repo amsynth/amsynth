@@ -174,7 +174,7 @@ Oscillator::doRandom(float *buffer, int nFrames)
 	    random_count = 0;
 		random = 
 #ifdef _WINDOWS
-			0.0;
+			((float)::rand() / (RAND_MAX / 2)) - 1.0;
 #else
 			((float)::random() / (RAND_MAX / 2)) - 1.0;
 #endif
@@ -190,7 +190,7 @@ Oscillator::doNoise(float *buffer, int nFrames)
     for (int i = 0; i < nFrames; i++)
 		buffer[i] = 
 #ifdef _WINDOWS
-		0;
+		((float)::rand() / (RAND_MAX / 2)) - 1.0;
 #else
 		((float)::random() / (RAND_MAX / 2)) - 1.0;
 #endif
