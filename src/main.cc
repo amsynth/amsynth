@@ -123,9 +123,9 @@ int main( int argc, char *argv[] )
 	config.polyphony = 10;
 	
 	// load saved parameters (if any) from .amSynthrc
-	string fname( getenv("HOME") );
-	fname += "/.amSynthrc";
-	ifstream file( fname.c_str(), ios::in );
+	string amsynthrc_fname( getenv("HOME") );
+	amsynthrc_fname += "/.amSynthrc";
+	fstream file( amsynthrc_fname.c_str(), ios::in );
 	char buffer[100];
 	while( file.good() ) {
 		file >> buffer;
@@ -161,9 +161,29 @@ int main( int argc, char *argv[] )
 			file >> buffer;
 			config.polyphony = atoi(buffer);
 		} else if (string(buffer)=="gui_font"){
-			file >> buffer;
+			char tmp;
+			char str[256];
+			char *strpt = str;
+			int whitespace = 1;
+			
+			for (int i=0; i<256; i++)
+			{
+				file.get( tmp );
+
+				if (!whitespace || tmp != ' ')
+				{
+					if (tmp == '\n')
+					{
+						strpt = '\0';
+						break;
+					}
+					whitespace = 0;
+					*strpt++ = tmp;
+				}
+			}
+			
+			xfontname = str;
 			load_font = 1;
-			xfontname = buffer;
 		} else {
 			file >> buffer;
 		}
@@ -298,16 +318,37 @@ int main( int argc, char *argv[] )
 	/*
 	 * code to shut down cleanly..
 	 */
-	xfontname = gui->get_x_font ( );
+	fstream ofile ( amsynthrc_fname.c_str(), ios::in | ios::out );
 	if (load_font)
-	{
+	{	
 		// replace fontname in .amSynthrc with new fontname
+		
+		// seek until we find the gui_font key
+		char chdata[200];
+		int fileidx;
+		while (ofile.good())
+		{
+			// get offset for line we are about to read;
+			fileidx = ofile.tellg ( );
+			ofile.seekp ( ofile.tellg() );
+			ofile.getline ( chdata, 200 );
+			if (strncmp(chdata,"gui_font",8)==0)
+			{
+				ofile.seekp ( fileidx );
+				ofile << "gui_font " 
+					<< gui->get_x_font() << endl;
+			}
+		}
 	}
 	else
 	{
 		// create fontname entry in .amSynthrc
+		ofile.seekp ( 0, ios::end );
+		ofile << "gui_font " << gui->get_x_font() << endl;
 	}
-	
+	ofile.close ( );
+
+		
 	presetController->savePresets();
 	midi_controller->saveConfig();
 	
