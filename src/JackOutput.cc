@@ -77,7 +77,7 @@ JackOutput::init	( )
 	client_name = "amSynth";
 	
 	// check if there are already any amSynth jack clients...
-	/*
+	
 	const char **readports;
 	
 	if ( (client = jack_client_new( "amSynth-tmp" )) == 0 ) exit( 60 );
@@ -100,7 +100,7 @@ JackOutput::init	( )
 		client_name += " (";
 		client_name += string( tmp );
 		client_name += ")";
-	}*/
+	}
 	
 	/* become a client of the JACK server */
 	if ((client = jack_client_new (client_name.c_str())) == 0)
