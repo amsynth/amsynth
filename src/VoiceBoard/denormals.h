@@ -10,6 +10,8 @@
 
 #define undenormalise(sample) if(((*(unsigned int*)&sample)&0x7f800000)==0) sample=0.0f
 
+#define nuke_denormals(value) if(((*(unsigned int *)&(value))&0x7f800000)<0x08000000) value=0.0f
+
 #endif//_denormals_
 
 //ends
