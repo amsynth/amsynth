@@ -9,6 +9,7 @@
 int
 ALSAMidiDriver::read(unsigned char *midi_event_buffer)
 {
+	client_id = 0;
 #ifdef with_alsa
 	snd_seq_event_t *ev;
 	

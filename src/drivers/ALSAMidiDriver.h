@@ -24,9 +24,9 @@ private:
 #ifdef with_alsa
 	snd_seq_t		*seq_handle;
 	snd_midi_event_t	*seq_midi_parser;
-	int 			client_id;
 	int 			portid;
 #endif
+	int			client_id;
 	int 			_bytes_read;
 };
 
