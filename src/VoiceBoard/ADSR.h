@@ -26,7 +26,6 @@
 class ADSR : public EnvelopeGenerator, public UpdateListener {
   public:
     ADSR(int rate, float *buf);
-    ~ADSR();
     inline float *getNFData();
 	/**
 	 * Send a trigger on message to the envelope.
@@ -77,7 +76,8 @@ class ADSR : public EnvelopeGenerator, public UpdateListener {
     Parameter *attackParam, *decayParam, *sustainParam, *releaseParam; 
     float *buffer;
     int state, rate;
-    float a_delta, d_delta, r_time, r_delta, s_val, c_val;
+    float a_delta, d_delta, d_frames, r_time, r_delta, s_val, c_val;
+  	float m_attack_frames, m_release_frames, m_decay_frames;
 };
 
 #endif				//_ADSR_H

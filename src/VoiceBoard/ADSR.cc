@@ -5,7 +5,7 @@
  * @author Nick Dowell
  * @date   2001-11-25
 */
-#include <iostream>
+#include <stdio.h>
 
 #include "ADSR.h"
 
@@ -24,21 +24,19 @@ ADSR::ADSR(int rate, float *buf)
     buffer = buf;
 }
 
-ADSR::~ADSR()
-{
-    delete[] buffer;
-}
-
 void
 ADSR::triggerOn()
 {
+	float a_time=(1.0/((float)a_delta*rate));
+	m_attack_frames=a_time*rate;
     state = ADSR_A;
 }
 
 void 
 ADSR::triggerOff()
 {
-	r_delta = c_val / (r_time*rate);
+	m_release_frames=r_time*rate;
+	r_delta = -c_val/(float)m_release_frames;
     state = ADSR_R;
 }
 
@@ -91,10 +89,13 @@ ADSR::update()
 			a_delta = 1/( attackParam->getControlValue() * rate );
 	}
 	if(decayParam)
+	{
+		d_frames=decayParam->getControlValue()*rate;
 		if(decayParam->getControlValue()==0)
 			d_delta = 1;
 		else
 			d_delta = 1/( decayParam->getControlValue() * rate );
+	}
 	if(sustainParam)
 		s_val = sustainParam->getControlValue();
 	if(releaseParam)
@@ -115,53 +116,41 @@ ADSR::getState()
 float *
 ADSR::getNFData()
 {
-    // this could really do with cleaning up / optimisation..
 	register int i;
-    for (i = 0; i < BUF_SIZE; i++) {
-		switch (state) {
+	register float inc;
 	
-		case ADSR_OFF:
-//			c_val = 0;
-			buffer[i] = 0.0;
-			break;
-	
+	switch(state)
+	{
 		case ADSR_A:
-			buffer[i] = (c_val += a_delta);
-			if (c_val >= 1.0) {
-				state = ADSR_D;
-				c_val = 1.0;
+			inc=a_delta; m_attack_frames-=BUF_SIZE;
+			if (m_attack_frames<=0)
+			{
+				inc=(1.0-c_val)/(float)BUF_SIZE;
+				state=ADSR_D;
+				m_decay_frames=d_frames;
 			}
 			break;
-	
 		case ADSR_D:
-			if ( c_val <= s_val ) {
-				buffer[i] = (c_val = s_val);
-				if( s_val > 0.001 ) state = ADSR_S;
-				else state = ADSR_OFF;
-			} else {
-				buffer[i] = (c_val -= d_delta);
+			inc=(s_val-1.0)/(float)d_frames; m_decay_frames-=BUF_SIZE;
+			if (m_decay_frames<=0)
+			{
+				inc=-(c_val-s_val)/(float)BUF_SIZE;
+				state=ADSR_S;
 			}
 			break;
-	
 		case ADSR_S:
-			buffer[i] = s_val;
-			break;
-	
+			c_val=s_val; inc=0.0; break;
 		case ADSR_R:
-			c_val -= r_delta;
-			if (c_val < r_delta) {
-				c_val = 0;
-				state = ADSR_OFF;
+			inc=r_delta; m_release_frames-=BUF_SIZE;
+			if (m_release_frames<=0)
+			{
+				inc=c_val/(float)BUF_SIZE;
+				state=ADSR_OFF;
 			}
-			buffer[i] = c_val;
 			break;
-	
 		default:
-#ifdef _DEBUG
-			cout << "<ADSR> state error" << endl;
-#endif
-			break;
-		}
-    }
-    return buffer;
+			inc=0.0; c_val=0.0; break;
+	}
+	i=0; while (i<BUF_SIZE) { buffer[i++] = c_val; c_val+=inc; }
+	return buffer;
 }
