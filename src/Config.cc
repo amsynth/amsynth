@@ -6,5 +6,5 @@
 
 Config::Config()
 {
-	realtime = sample_rate = midi_channel = active_voices = 0;
+	realtime = sample_rate = midi_channel = active_voices = polyphony = 0;
 }

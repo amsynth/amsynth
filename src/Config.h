@@ -17,6 +17,7 @@ public:
 	int active_voices;
 	int channels;
 	int buffer_size;
+	int polyphony;
 	string midi_device;
 	string audio_device;
 };
