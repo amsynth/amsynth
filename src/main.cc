@@ -93,6 +93,7 @@ void *audio_thread(void *arg)
 
 int main( int argc, char *argv[] )
 {
+	int enable_audio = 1;
 	// set default parameters
 	config.midi_device = "/dev/midi";
 	config.midi_channel = 0;
@@ -100,6 +101,7 @@ int main( int argc, char *argv[] )
 	config.sample_rate = 44100;
 	config.channels = 2;
 	config.buffer_size = BUF_SIZE;
+	config.polyphony = 10;
 	
 	// load saved parameters (if any) from .amSynthrc
 	string fname(getenv("HOME"));
@@ -131,8 +133,11 @@ int main( int argc, char *argv[] )
 	
 	// get command line options (they override saved prefs.)
 	int opt;
-	while((opt=getopt(argc, argv, "vhm:c:d:r:"))!= -1) {
+	while((opt=getopt(argc, argv, "svhm:c:d:r:"))!= -1) {
 		switch(opt) {
+			case 's':
+				enable_audio = 0;
+				break;
 			case 'm': 
 				config.midi_device = optarg; 
 				break;
@@ -170,7 +175,8 @@ int main( int argc, char *argv[] )
 	
 	out->setInput(*vau);
 	int audio_res;
-	audio_res = pthread_create(&audioThread, NULL, audio_thread, NULL);
+	if(enable_audio)
+		audio_res = pthread_create(&audioThread, NULL, audio_thread, NULL);
 	int midi_res;
 	midi_res = pthread_create(&midiThread, NULL, midi_thread, NULL);
   
@@ -204,18 +210,20 @@ int main( int argc, char *argv[] )
 	 */
 	
 	presetController->savePresets();
-  
-	out->stop();
-	midi_controller->stop();
-  
-	audio_res = pthread_join(audioThread, NULL);
+	
+	if(enable_audio){
+		out->stop();
+		audio_res = pthread_join(audioThread, NULL);
 #ifdef _DEBUG
-	cout << "joined audioThread" << endl;
-#endif
+		cout << "joined audioThread" << endl;
+#endif		
+	}
+	
+	midi_controller->stop();
 	// we probably need to kill the midi thread, as it is always waiting for
 	// a new midi event..
 	midi_res = pthread_kill( midiThread, 2 );
-	midi_res = pthread_join(midiThread, NULL);
+	midi_res = pthread_join( midiThread, NULL );
 #ifdef _DEBUG
 	cout << "joined midiThread" << endl;
 #endif	
