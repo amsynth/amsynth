@@ -36,6 +36,13 @@ PresetController::selectPreset		(const int preset)
     return 0;
 }
 
+int 
+PresetController::selectPreset		(const string name)
+{
+	for (int i=0; i<PRESETS; i++) if (getPreset(i).getName() == name) return selectPreset (i);
+	return -1;
+}
+
 Preset&
 PresetController::getPreset			(const string name)
 {
@@ -55,13 +62,6 @@ PresetController::deletePreset		()
 {
 	currentPreset = blankPreset;
 	notify ();
-}
-
-int 
-PresetController::selectPreset		(const string name)
-{
-	for (int i=0; i<PRESETS; i++) if (getPreset(i).getName() == name) return selectPreset (i);
-	return -1;
 }
 
 int

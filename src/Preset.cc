@@ -67,33 +67,20 @@ Preset::operator =		(Preset& preset)
 Parameter & 
 Preset::getParameter(const string name)
 {
-    for (unsigned i = 0; i < mParameters.size(); i++) {
-		if (mParameters[i].getName() == name) {
-#ifdef _DEBUG
-			cout << "<Preset::getParameter()> Parameter '" << name
-			<< "' found" << endl;
-#endif
-			return mParameters[i];
-		}
-    }
-#ifdef _DEBUG
-    cout << "<Preset::getParameter()> Parameter '" << name
-	<< "' not found" << endl;
-#endif
+    for (unsigned i = 0; i < mParameters.size(); i++) if (getParameter(i).getName() == name) return mParameters[i];
     return nullparam;
 }
 
 void
 Preset::randomise()
 {
-	float master_vol = getParameter( "master_vol" ).getValue();
-	for (unsigned i=0; i<mParameters.size(); i++) 
-		mParameters[i].random_val();
-	getParameter( "master_vol" ).setValue( master_vol );
+	float master_vol = getParameter("master_vol").getValue ();
+	for (unsigned i=0; i<mParameters.size(); i++) getParameter(i).random_val();
+	getParameter("master_vol").setValue (master_vol);
 }
 
 void
 Preset::AddListenerToAll	(UpdateListener* ul)
 {
-	for (unsigned i=0; i<mParameters.size(); i++) mParameters[i].addUpdateListener (*ul);
+	for (unsigned i=0; i<mParameters.size(); i++) getParameter(i).addUpdateListener (*ul);
 }

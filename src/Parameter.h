@@ -35,10 +35,10 @@ public:
 		PARAM_POWER		// controlValue = offset + value ^ base
 	};
 
-					Parameter		(string name = "unused", Param id = kControls_End, 
+					Parameter		(const string name = "unused", Param id = kControls_End, 
 									 float value = 0.0, float min = 0.0, float max = 1.0, float inc = 0.0,
 									 ControlType = PARAM_DIRECT, float base = 1.0, float offset = 0.0,
-									 string label = "");
+									 const string label = "");
 
 	// The raw value of this parameter. Objects in the signal generation 
 	// path should not use this method, but getControlValue() instead.
@@ -84,39 +84,6 @@ private:
 	int								controlMode;
 	float							_value, _min, _max, _step, controlValue, base, offset;
 	std::vector<UpdateListener*>	updateListeners;
-};
-
-class mParameter
-{
-public:
-			mParameter (string name, float min=0.0, float max=1.0, float def=0.0, string label = "") 
-				: mName(name), mLabel(label), mMin(min), mMax(max) { SetNativeValue (def); }
-
-	string	GetName				() { return mName; }
-	string	GetLabel			() { return mLabel; }
-
-	string	GetStringValue		() { std::ostringstream o; o << mNativeValue; return o.str(); }
-
-	void	SetNormalisedValue	(float val)
-	{ 
-		mNormalisedValue = clip(val,0.0f,1.0f);
-		mNativeValue = (mMax-mMin) * mNormalisedValue + mMin;
-	}
-	void	SetNativeValue		(float val)
-	{
-		mNativeValue = clip(val,mMin,mMax);
-		mNormalisedValue = (val-mMin)/(mMax-mMin);
-	}
-	float	GetNormalisedValue	() { return mNormalisedValue; }
-	float	GetNativeValue		() { return mNativeValue; }
-
-private:
-	string		mName;
-	string		mLabel;
-	float		mNormalisedValue;
-	float		mNativeValue;
-	float		mMin;
-	float		mMax;
 };
 
 #endif

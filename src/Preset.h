@@ -24,10 +24,13 @@ public:
 	const string	getName			() const { return mName; }
 	void			setName			(const string name) { mName = name; }
 	
-	unsigned		ParameterCount	() const { return mParameters.size(); }
 	Parameter&		getParameter	(const string name);
 	Parameter&		getParameter	(const int no) { return mParameters[no]; };
+	
+	unsigned		ParameterCount	() const { return mParameters.size(); }
+	
     void			randomise		();
+    
     void			AddListenerToAll(UpdateListener*);
 
 private:
