@@ -64,54 +64,57 @@ GUI::GUI( Config & config )
        +--Gtk::MenuItem   (eg "Save")
        +--Gtk::MenuItem   (eg "Quit")
      */
+	for(int i=0; i<30; i++)
+		menu_item[i] = new Gtk::MenuItem;
+	
     // the menu bar
 	menu_bar.set_shadow_type( GTK_SHADOW_NONE );
-    menu_bar.append( menu_item[0] );
-	menu_bar.append( menu_item[10] );
-	menu_bar.append( menu_item[29] );
+    menu_bar.append( *menu_item[0] );
+	menu_bar.append( *menu_item[10] );
+	menu_bar.append( *menu_item[29] );
 	
     // the file menu
-    menu_item[0].add_label( "File" );
-    menu_item[0].set_submenu( file_menu );
+    menu_item[0]->add_label( "File" );
+    menu_item[0]->set_submenu( file_menu );
 
-    file_menu.append( menu_item[1] );
-    menu_item[1].add_label( "Quit" );
-    menu_item[1].activate.connect( 
+    file_menu.append( *menu_item[1] );
+    menu_item[1]->add_label( "Quit" );
+    menu_item[1]->activate.connect( 
 		bind(slot(this, &GUI::event_handler),"quit"));
 	
 	// the Preset menu
-	menu_item[10].add_label( "Preset" );
-	menu_item[10].set_submenu( preset_menu );
+	menu_item[10]->add_label( "Preset" );
+	menu_item[10]->set_submenu( preset_menu );
 	preset_menu.append( preset_menu_tearoff );
-	preset_menu.append( menu_item[11] );
-	menu_item[11].add_label( "New" );
-	menu_item[11].activate.connect
+	preset_menu.append( *menu_item[11] );
+	menu_item[11]->add_label( "New" );
+	menu_item[11]->activate.connect
 		(bind(slot(this, &GUI::event_handler),"preset::new"));
-	preset_menu.append( menu_item[12] );
-	menu_item[12].add_label( "Rename" );
-	menu_item[12].activate.connect
+	preset_menu.append( *menu_item[12] );
+	menu_item[12]->add_label( "Rename" );
+	menu_item[12]->activate.connect
 		(bind(slot(this, &GUI::event_handler),"preset::rename"));
-	preset_menu.append( menu_item[13] );
-	menu_item[13].add_label( "Copy" );
-	menu_item[13].activate.connect
+	preset_menu.append( *menu_item[13] );
+	menu_item[13]->add_label( "Copy" );
+	menu_item[13]->activate.connect
 		(bind(slot(this, &GUI::event_handler),"preset::copy"));
-	preset_menu.append( menu_item[16] );
-	menu_item[16].add_label( "Save As..." );
-	menu_item[16].activate.connect
+	preset_menu.append( *menu_item[16] );
+	menu_item[16]->add_label( "Save As..." );
+	menu_item[16]->activate.connect
 		(bind(slot(this, &GUI::event_handler),"preset::saveas"));
-	preset_menu.append( menu_item[14] );
-	menu_item[14].add_label( "Randomise" );
-	menu_item[14].activate.connect
+	preset_menu.append( *menu_item[14] );
+	menu_item[14]->add_label( "Randomise" );
+	menu_item[14]->activate.connect
 		(bind(slot(this, &GUI::event_handler),"preset::randomise"));
-	preset_menu.append( menu_item[15] );
-	menu_item[15].add_label( "Delete" );
-	menu_item[15].activate.connect
+	preset_menu.append( *menu_item[15] );
+	menu_item[15]->add_label( "Delete" );
+	menu_item[15]->activate.connect
 		(bind(slot(this, &GUI::event_handler),"preset::delete"));
 		
-	menu_item[29].add_label("Analogue Modelling SYNTHesizer");
-	menu_item[29].activate.connect
+	menu_item[29]->add_label("Analogue Modelling SYNTHesizer");
+	menu_item[29]->activate.connect
 		(bind(slot(this, &GUI::event_handler),"help::about"));
-	menu_item[29].right_justify();
+	menu_item[29]->right_justify();
 	
 #ifdef _DEBUG
 	cout << "<GUI::GUI()> created menus" << endl;

@@ -54,7 +54,7 @@ class GUI:public Gtk::Window, public UpdateListener {
     Gtk::MenuBar menu_bar;
     Gtk::Menu file_menu, help_menu, preset_menu;
 	Gtk::TearoffMenuItem preset_menu_tearoff;
-    Gtk::MenuItem menu_item[30], file_menu_item, menu_item_quit, help_menu_item,
+    Gtk::MenuItem *menu_item[30], file_menu_item, menu_item_quit, help_menu_item,
 	menu_item_about, preset_menu_item, menu_item_presetname, am_synth;
 	
     // top level window & main panel
