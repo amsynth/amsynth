@@ -195,7 +195,9 @@ under certain conditions; see the file COPYING for details\n";
 		}
 	}
 	
-	vau = new VoiceAllocationUnit( config ); // were sure of sample_rate now
+	vau = new VoiceAllocationUnit;
+	vau->SetSampleRate (config.sample_rate);
+	vau->SetMaxVoices (config.polyphony);
 	if (enable_audio) out->setInput( vau );
 	
 	presetController->loadPresets(config.current_bank_file.c_str());

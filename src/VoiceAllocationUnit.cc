@@ -17,10 +17,10 @@ using std::cout;
 
 const int kMaxGrainSize = 64;
 
-VoiceAllocationUnit::VoiceAllocationUnit( Config & config )
-:	max_voices (0)
+VoiceAllocationUnit::VoiceAllocationUnit ()
+:	mMaxVoices (0)
+,	mActiveVoices (0)
 ,	sustain (0)
-,	config (&config)
 ,	mMasterVol (1.0)
 {
 	process_memory = new VoiceBoardProcessMemory (kMaxGrainSize);
@@ -82,13 +82,12 @@ VoiceAllocationUnit::noteOn(int note, float velocity)
 	
 	keyPressed[note] = 1;
 	
-	if (!active[note])
-		if( !max_voices || config->active_voices < max_voices )
-		{
-			_voices[note].reset();
-			active[note]=1;
-			config->active_voices++;
-		}
+	if ((mActiveVoices < mMaxVoices) && !active[note])
+	{
+		_voices[note].reset();
+		active[note]=1;
+		mActiveVoices++;
+	}
 
 	_voices[note].setVelocity(velocity);
 	_voices[note].triggerOn();
@@ -112,7 +111,7 @@ VoiceAllocationUnit::purgeVoices()
 	for (int note = 0; note < 128; note++) 
 		if (active[note] && (0 == _voices[note].getState()))
 		{
-			config->active_voices--;
+			mActiveVoices--;
 			active[note] = 0;
 		}
 }
@@ -123,13 +122,7 @@ VoiceAllocationUnit::killAllVoices()
 	int i;
 	for (i=0; i<128; i++) active[i] = false;
 	reverb->mute();
-	config->active_voices = 0;
-}
-
-void
-VoiceAllocationUnit::set_max_voices	( int voices )
-{
-	config->polyphony = max_voices = voices;
+	mActiveVoices = 0;
 }
 
 void

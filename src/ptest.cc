@@ -41,7 +41,8 @@ int main( int argc, char *argv[] )
 	presetController = new PresetController();
 	
 	
-	vau = new VoiceAllocationUnit( config ); //after were sure of sample_rate
+	vau = new VoiceAllocationUnit;
+	vau->SetSampleRate (config.sample_rate);
 	presetController->loadPresets(bank_file.c_str ());
 	
 	presetController->selectPreset( 1 );

@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "UpdateListener.h"
-#include "Config.h"
 
 class VoiceBoard;
 class SoftLimiter;
@@ -18,7 +17,7 @@ class Distortion;
 class VoiceAllocationUnit : public UpdateListener
 {
 public:
-			VoiceAllocationUnit		(Config& config);
+			VoiceAllocationUnit		();
 	virtual	~VoiceAllocationUnit	();
 
 	void	UpdateParameter		(Param, float);
@@ -32,21 +31,25 @@ public:
   { sustain = 1; };
   void sustainOff();
   void killAllVoices();
-	void		set_max_voices	( int voices );
+  
+	void	SetMaxVoices	(int voices) { mMaxVoices = voices; }
+	int		GetActiveVoices	() { return mActiveVoices; }
 
 	void	Process			(float *l, float *r, unsigned nframes);
 
 private:
-  int max_voices;
-  void purgeVoices();
-  float _pitch[128];
-  char keyPressed[128], sustain;
-  bool	active[128];
-  std::vector<VoiceBoard>	_voices;
-  Config *config;
-  SoftLimiter	*limiter;
-  revmodel		*reverb;
-  Distortion	*distortion;
+	void	purgeVoices		();
+
+	int		mMaxVoices;
+	int 	mActiveVoices;
+
+	char	keyPressed[128], sustain;
+	bool	active[128];
+	std::vector<VoiceBoard>	_voices;
+	
+	SoftLimiter	*limiter;
+	revmodel	*reverb;
+	Distortion	*distortion;
 
 	float	mMasterVol;
 };

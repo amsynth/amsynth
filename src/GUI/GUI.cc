@@ -753,12 +753,12 @@ GUI::event_handler(string text)
 gint
 GUI::idle_callback()
 {
-	if( config->active_voices != lnav )
+	if (vau->GetActiveVoices() != lnav)
 	{
 		string txt = status;
 		txt += "   ";
 		char cstr[3];
-		sprintf( cstr, "%d", config->active_voices );
+		sprintf (cstr, "%d", vau->GetActiveVoices());
 		txt += string( cstr );
 		if( config->polyphony != 0 )
 		{
@@ -891,5 +891,6 @@ GUI::changed_midi_channel( )
 void
 GUI::changed_voices	( )
 {
-	if (vau) vau->set_max_voices ((int)(adj_voices->get_value ()));
+	config->polyphony = (int)(adj_voices->get_value ());
+	if (vau) vau->SetMaxVoices (config->polyphony);
 }
