@@ -4,25 +4,24 @@
 
 #include "Parameter.h"
 
-Parameter::Parameter	(string name, Param id)
-:	mParamId(id)
-,	_name(name)
-{
-    _value = 0.0;
-    _min = 0.0;
-    _max = 1.0;
-    _step = 0;
-	continuous = true;
-	controlMode = 1;
-	base = 1;
-	offset = 0;
-}
-
-Parameter::~Parameter()
-{
 #ifdef _DEBUG
-	cout << "<Parameter::~Parameter()>" << endl;
+#include <iostream>
 #endif
+
+Parameter::Parameter	(string name, Param id, float value, float min, float max)
+:	mParamId	(id)
+,	_name		(name)
+,	label		("")
+,	controlMode	(PARAM_DIRECT)
+,	continuous	(true)
+,	_min		(min)
+,	_max		(max)
+,	_step		(0)
+,	controlValue(0)
+,	base		(1)
+,	offset		(0)
+{
+	setValue (value);
 }
 
 void
@@ -40,8 +39,9 @@ Parameter::removeUpdateListener( UpdateListener & ul )
 }
 
 void
-Parameter::setType( int type, float base, float offset )
-{	controlMode = type;
+Parameter::setType	(ControlType type, float base, float offset)
+{	
+	controlMode = type;
 	this->base = base;
 	this->offset = offset;
 }
@@ -115,24 +115,6 @@ Parameter::getSteps()
 		i++;
 	}
 	return i;
-}
-
-float
-Parameter::getValue()
-{
-	return _value;
-}
-
-void
-Parameter::setLabel( string text )
-{
-	label = text;
-}
-
-string
-Parameter::getLabel()
-{
-	return label;
 }
 
 void
