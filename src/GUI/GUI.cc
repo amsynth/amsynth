@@ -88,6 +88,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	//
 	preset_rename.set_title( "Rename Preset" );
 	preset_rename.set_size_request( 300, 200 );
+	preset_rename.set_resizable (false);
 	preset_rename.get_vbox()->add( preset_rename_label );
 	preset_rename_label.set_text( "Enter new Preset Name:" );
 	preset_rename.get_vbox()->add( preset_rename_entry );
@@ -105,6 +106,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	//
 	d_preset_new.set_title( "Create a New Preset" );
 	d_preset_new.set_size_request( 300, 200 );
+	d_preset_new.set_resizable (false);
 	d_preset_new.get_vbox()->add( d_preset_new_label );
 	d_preset_new_label.set_text( "Enter new Preset Name:" );
 	d_preset_new.get_vbox()->add( d_preset_new_entry );
@@ -122,6 +124,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	//
 	preset_delete.set_title( "Delete Preset?" );
 	preset_delete.set_size_request( 300, 200 );
+	preset_delete.set_resizable (false);
 	preset_delete.get_vbox()->add( preset_delete_label );
 	preset_delete_label.set_text( "Delete the current Preset?" );
 	preset_delete.get_action_area()->add( preset_delete_ok );
@@ -137,6 +140,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	// the about window
 	//
 	about_window.set_title( "About" );
+	about_window.set_resizable (false);
 	about_window.get_vbox()->add (*about_pixmap);
 	about_window.get_action_area()->add( about_close_button );
 	about_close_button.add_label( "sweet", 0.5, 0.5 );
@@ -198,6 +202,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	record_dialog.set_title( "Capture Output" );
 	preset_import_dialog.set_transient_for( *this );
 	record_dialog.add( record_vbox );
+	record_dialog.set_resizable (false);
 	
 	record_vbox.set_spacing( 10 );
 	record_vbox.pack_start( record_file_frame, TRUE, TRUE, 0 );
@@ -232,6 +237,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	//
 	quit_confirm.set_title( "Quit?" );
 	quit_confirm.set_size_request( 300, 200 );
+	quit_confirm.set_resizable (false);
 	quit_confirm.get_vbox()->add( quit_confirm_label );
 	quit_confirm_label.set_text( "Really quit amSynth?\n\nYou will lose any changes\nwhich you haven't explicitly commited" );
 	quit_confirm.get_action_area()->add( quit_confirm_ok );
@@ -335,7 +341,7 @@ GUI::create_menus	( )
 	//
 	Menu *menu_config = manage (new Menu());
 	MenuList& list_config = menu_config->items ();
-	list_config.push_back (MenuElem("Interface Font...", sigc::bind(mem_fun(*this, &GUI::event_handler),"font")));
+//	list_config.push_back (MenuElem("Interface Font...", sigc::bind(mem_fun(*this, &GUI::event_handler),"font")));
 	list_config.push_back (MenuElem("MIDI Controllers...", Gtk::AccelKey("<control>M"), mem_fun(*this, &GUI::config_controllers)));
 	
 	

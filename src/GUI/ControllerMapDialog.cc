@@ -27,6 +27,7 @@ ControllerMapDialog::ControllerMapDialog
 	m_cc = 0;
 	
 	set_title( "MIDI Controller Config" );
+	set_resizable (false);
 	
 	m_label_controller = manage( new Gtk::Label("Nothing") );
 
