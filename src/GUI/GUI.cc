@@ -110,7 +110,15 @@ GUI::GUI( Config & config )
 	menu_item[15]->add_label( "Delete" );
 	menu_item[15]->activate.connect
 		(bind(slot(this, &GUI::event_handler),"preset::delete"));
-		
+	preset_menu.append( *menu_item[18] );
+	menu_item[18]->add_label( "Import as current" );
+	menu_item[18]->activate.connect
+		(bind(slot(this, &GUI::event_handler),"preset::import"));
+	menu_item[17]->add_label( "Export current" );
+	preset_menu.append( *menu_item[17] );
+	menu_item[17]->activate.connect
+		(bind(slot(this, &GUI::event_handler),"preset::export"));
+	
 	menu_item[29]->add_label("Analogue Modelling SYNTHesizer");
 	menu_item[29]->activate.connect
 		(bind(slot(this, &GUI::event_handler),"help::about"));
@@ -321,6 +329,23 @@ GUI::GUI( Config & config )
     about_close_button.add_label( "close", 0.5, 0.5 );
     about_close_button.clicked.connect( about_window.hide.slot() );
 	
+	// export dialog
+	preset_export_dialog.set_title( "Select DIRECTORY to export preset to" );
+	preset_export_dialog.get_cancel_button()->clicked.connect(
+		preset_export_dialog.hide.slot() );
+	preset_export_dialog.get_ok_button()->clicked.connect(
+		bind(slot(this, &GUI::event_handler),"preset::export::ok"));
+	preset_export_dialog.get_selection_entry()->set_editable( false );
+	preset_export_dialog.set_modal( true );
+		
+	// import dialog
+	preset_import_dialog.set_title( "Import as current preset" );
+	preset_import_dialog.get_cancel_button()->clicked.connect(
+		preset_import_dialog.hide.slot() );
+	preset_import_dialog.get_ok_button()->clicked.connect(
+		bind(slot(this, &GUI::event_handler),"preset::import::ok"));
+	preset_import_dialog.set_modal( true );
+		
 	// the quit confirmation window
 	quit_confirm.set_title( "Quit?" );
 	quit_confirm.set_usize( 300, 200 );
@@ -638,6 +663,25 @@ GUI::event_handler(string text)
 		preset_controller->selectPreset( 0 );
 		presetCV->update();
 		preset_delete.hide();
+		return;
+    } else if (text == "preset::export") {
+		preset_export_dialog.show_all();
+		return;
+    } else if (text == "preset::export::ok") {
+		string fn = preset_controller->getCurrentPreset().getName();
+		fn += ".amSynthPreset";
+		string file = preset_export_dialog.get_filename();
+		file += fn;
+		preset_controller->exportPreset( file );
+		preset_export_dialog.hide();
+		return;
+    } else if (text == "preset::import") {
+		preset_import_dialog.complete( "*.amSynthPreset" );
+		preset_import_dialog.show_all();
+		return;
+    } else if (text == "preset::import::ok") {
+		preset_controller->importPreset( preset_import_dialog.get_filename() );
+		preset_import_dialog.hide();
 		return;
     } else if (text == "preset::saveas") {
 		preset_saveas.show_all();

@@ -18,6 +18,7 @@
 #include <gtk--/button.h>
 #include <gtk--/statusbar.h>
 #include <gtk--/pixmap.h>
+#include <gtk--/fileselection.h> 
 
 #include "../PresetController.h"
 #include "ParameterView.h"
@@ -128,6 +129,10 @@ class GUI:public Gtk::Window, public UpdateListener {
 	Gtk::Dialog preset_delete;
 	Gtk::Label preset_delete_label;
 	Gtk::Button preset_delete_ok, preset_delete_cancel;
+	
+	// export/import preset dialog
+	Gtk::FileSelection preset_export_dialog;
+	Gtk::FileSelection preset_import_dialog;
 	
 	// quit confirmation dialog
 	Gtk::Dialog quit_confirm;

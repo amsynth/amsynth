@@ -108,6 +108,63 @@ PresetController::getCurrentPreset()
     return currentPreset;
 }
 
+int
+PresetController::exportPreset( string filename )
+{
+	ofstream file( filename.c_str(), ios::out );
+	file << "amSynth1.0preset" << endl;
+	
+	file << "<preset> " << "<name> " << currentPreset.getName() << endl;
+	for (int n = 0; n < 128; n++)
+		if(currentPreset.getParameter(n).getName()!="unused") {
+			// discard unused Parameters
+			file << "<parameter> " << currentPreset.getParameter(n).getName() 
+			<< " " << currentPreset.getParameter(n).getValue() << endl;
+		}
+	file.close();
+}
+
+int
+PresetController::importPreset( string filename )
+{	
+	ifstream file(filename.c_str(), ios::in);
+	char buffer[100];
+  
+	if (file.bad())	return -1;
+  
+	file >> buffer;
+  
+	if (string(buffer) != "amSynth1.0preset") return -1;
+  
+	int preset = -1;
+	file >> buffer;
+	if (string(buffer) == "<preset>") {
+		file >> buffer;
+		
+		//get the preset's name
+		file >> buffer;
+		string presetName = string(buffer);
+		file >> buffer;
+		while (string(buffer) != "<parameter>") {
+			presetName += " ";
+			presetName += string(buffer);
+			file >> buffer;
+		}
+		currentPreset.setName(presetName); 
+		//get the parameters
+		while (string(buffer) == "<parameter>") {
+			string name;
+			file >> buffer;
+			name = string(buffer);
+			file >> buffer;
+			if(name!="unused")
+				currentPreset.getParameter(name).setValue( atof(buffer) );
+			file >> buffer;
+		}
+	} else file.close();
+	return 1;
+}
+
 int 
 PresetController::savePresets()
 {

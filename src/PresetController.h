@@ -52,6 +52,12 @@ class PresetController {
    * Saves the current Preset and Parameter values to disk.
    */
     int savePresets();
+	
+	/*
+	 * Saves the active preset to the filename filename
+	 */
+	int exportPreset( string filename );
+	int importPreset( string filename );
   /**
    * Loads the Preset & Parameter values from disk & restores them in the 
    * current PresetController.
