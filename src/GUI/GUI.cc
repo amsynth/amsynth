@@ -32,6 +32,48 @@ GUI::serve_request()
 	}
 }
 
+void
+GUI::set_x_font 	( const char *x_font_name )
+{
+	// apply font to current stlye.
+	Gdk_Font font = style->get_font ( );
+	font.load ( x_font_name );
+	style->set_font ( font );
+	xfontname = x_font_name;
+	font_sel.set_font_name ( x_font_name );
+
+	for (int i = 0; i < 31; i++)
+	{
+		parameterView[i]->set_style ( *style );
+		parameterView[i]->queue_resize ( );
+	}
+	for (int i = 0; i < 10; i++)
+	{
+		rb_pv[i]->set_style ( *style );
+		rb_pv[i]->queue_resize ( );
+	}
+	param_switch->set_style ( *style );
+	param_switch->queue_resize ( );
+	
+	osc1_frame.set_style ( *style );
+	osc1_frame.queue_resize ( );
+	osc2_frame.set_style ( *style );
+	osc2_frame.queue_resize ( );
+	osc_mix_frame.set_style ( *style );
+	osc_mix_frame.queue_resize ( );
+	reverb_frame.set_style ( *style );
+	reverb_frame.queue_resize ( );
+	distortion_frame.set_style ( *style );
+	distortion_frame.queue_resize ( );
+	filter_frame.set_style ( *style );
+	filter_frame.queue_resize ( );
+	amp_frame.set_style ( *style );
+	amp_frame.queue_resize ( );
+	mod_frame.set_style ( *style );
+	mod_frame.queue_resize ( );
+	queue_resize ( );
+}
+
 GUI::GUI( Config & config, MidiController & mc, 
 			VoiceAllocationUnit & vau, int pipe[2], GenericOutput & audio, const char *title )
 {
@@ -70,32 +112,16 @@ GUI::GUI( Config & config, MidiController & mc,
 
     GtkShadowType frame_shadow = GTK_SHADOW_OUT;
 
-	Gtk::Style *style = Gtk::Style::create();
-	Gdk_Font font = style->get_font();
-	font.load( "-*-helvetica-medium-r-*-*-*-100-75-75-*-*-*-*" );
-	style->set_font( font );
-	
+	style = Gtk::Style::create ( );
+
+
 	for (int i = 0; i < 31; i++)
-	{
 		parameterView[i] = new ParameterKnob( pipe[1] );
-		parameterView[i]->set_style( *style );
-	}
 	for (int i = 0; i < 10; i++)
-	{
 		rb_pv[i] = new RadioButtonParameterView( pipe[1] );
-		rb_pv[i]->set_style( *style );
-	}
 	param_switch = new ParameterSwitch( pipe[1] );
-	param_switch->set_style( *style );
-	
-	osc1_frame.set_style( *style );
-	osc2_frame.set_style( *style );
-	osc_mix_frame.set_style( *style );
-	reverb_frame.set_style( *style );
-	distortion_frame.set_style( *style );
-	filter_frame.set_style( *style );
-	amp_frame.set_style( *style );
-	mod_frame.set_style( *style );
+
+//	set_x_font( "-*-helvetica-medium-r-*-*-*-100-75-75-*-*-*-*" );
 	
 
 #ifdef _DEBUG
@@ -137,6 +163,9 @@ GUI::GUI( Config & config, MidiController & mc,
 	menu_item[4]->add_label( "Launch Virtual Keybord" );
 	menu_item[4]->activate.connect(
 			bind(slot(this, &GUI::event_handler),"vkeybd"));
+	menu_item[5]->add_label	( "Select GUI font" );
+	menu_item[5]->activate.connect(
+			bind(slot(this,&GUI::event_handler), "font"));
 	
 	
 	//
@@ -156,6 +185,7 @@ GUI::GUI( Config & config, MidiController & mc,
 	
 	file_menu.append( *menu_item[3] );
 	file_menu.append( *menu_item[4] );
+	file_menu.append( *menu_item[5] );
 	file_menu.append( *menu_item[1] );
 	
 	menu_item[2]->add_label( "Configure MIDI Controllers" );
@@ -512,6 +542,16 @@ GUI::GUI( Config & config, MidiController & mc,
 	quit_confirm.set_modal( true );
 	quit_confirm.set_transient_for( *this );
 	quit_confirm.delete_event.connect( bind( slot( this, &GUI::delete_events ), &quit_confirm ) );
+
+	// font selection dialog
+	font_sel.get_ok_button()->clicked.connect(
+			bind(slot(this, &GUI::event_handler),"font::ok") );
+	font_sel.get_apply_button()->clicked.connect(
+			bind(slot(this, &GUI::event_handler),"font::apply") );
+	font_sel.get_cancel_button()->clicked.connect(
+			bind(slot(this, &GUI::event_handler),"font::cancel") );
+	font_sel.delete_event.connect( 
+			bind(slot(this, &GUI::delete_events), &font_sel ) );
 	
 	// show realtime warning message if necessary
 	if(!(this->config->realtime))
@@ -933,6 +973,23 @@ GUI::event_handler(string text)
 	    tmp += string(tc);
 	    tmp += ":0 &";
 	    system( tmp.c_str() );
+    } 
+    else if (text=="font")
+    {
+	    font_sel.show_all ( );
+    } 
+    else if (text=="font::apply")
+    {
+	    set_x_font ( string(font_sel.get_font_name()).c_str() );
+    } 
+    else if (text=="font::ok")
+    {
+	    set_x_font ( string(font_sel.get_font_name()).c_str() );
+	    font_sel.hide ( );
+    } 
+    else if (text=="font::cancel")
+    {
+	    font_sel.hide ( );
     } 
     else {
 		cout << "no handler for event: " << text << endl;

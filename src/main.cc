@@ -107,6 +107,9 @@ int main( int argc, char *argv[] )
 	int jack = 0;
 	int enable_audio = 1;
 	int enable_gui = 1;
+	int load_font;
+	string xfontname;
+	
 	// set default parameters
 	config.audio_driver = "auto";
 	config.midi_driver = "auto";
@@ -157,6 +160,10 @@ int main( int argc, char *argv[] )
 		} else if (string(buffer)=="polyphony"){
 			file >> buffer;
 			config.polyphony = atoi(buffer);
+		} else if (string(buffer)=="gui_font"){
+			file >> buffer;
+			load_font = 1;
+			xfontname = buffer;
 		} else {
 			file >> buffer;
 		}
@@ -274,6 +281,7 @@ int main( int argc, char *argv[] )
 	// this can be called SUID:
 	gui = new GUI( config, *midi_controller, *vau, the_pipe, *out, 
 			out->getTitle() );
+	if (load_font) gui->set_x_font ( xfontname.c_str() );
 	gui->setPresetController( *presetController );
 	gui->init();
 
@@ -290,10 +298,19 @@ int main( int argc, char *argv[] )
 	/*
 	 * code to shut down cleanly..
 	 */
+	xfontname = gui->get_x_font ( );
+	if (load_font)
+	{
+		// replace fontname in .amSynthrc with new fontname
+	}
+	else
+	{
+		// create fontname entry in .amSynthrc
+	}
 	
 	presetController->savePresets();
 	midi_controller->saveConfig();
-
+	
 	if(enable_audio){
 		out->stop();
 		audio_res = pthread_join(audioThread, NULL);

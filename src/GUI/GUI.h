@@ -19,6 +19,7 @@
 #include <gtk--/statusbar.h>
 #include <gtk--/pixmap.h>
 #include <gtk--/fileselection.h> 
+#include <gtk--/fontselection.h>
 
 #include "../PresetController.h"
 #include "ParameterView.h"
@@ -58,6 +59,8 @@ class GUI:public Gtk::Window, public UpdateListener {
 	 * system, to allow communication between it and the system.
 	 */
     void setPresetController(PresetController & p_c);
+	void	set_x_font	( const char *x_font_name );
+	string	get_x_font	( )	{ return xfontname; };
     int delete_event_impl(GdkEventAny *);
 	int delete_events(GdkEventAny *, Gtk::Window *dialog)
 	{ dialog->hide_all(); };
@@ -73,6 +76,8 @@ class GUI:public Gtk::Window, public UpdateListener {
 	string status;
     Gtk::VBox vbox;
 
+    Gtk::Style 		*style;
+    
 	// menus & stuff
     Gtk::MenuBar menu_bar;
     Gtk::Menu file_menu, help_menu, preset_menu;
@@ -158,6 +163,10 @@ class GUI:public Gtk::Window, public UpdateListener {
 	Gtk::Label quit_confirm_label;
 	Gtk::Button quit_confirm_ok, quit_confirm_cancel;
 	
+	// font selection
+	Gtk::FontSelectionDialog	font_sel;
+	string				xfontname;
+
     Parameter *active_param;
     ParameterKnob *parameterView[32];
 	ParameterSwitch *param_switch;

@@ -62,3 +62,7 @@ sample_rate		44100
 # set this to 0 for unlimited polyphony
 
 polyphony		16
+
+# Specify a specific font to load for the interface
+
+gui_font	-*-helvetica-medium-r-*-*-*-100-75-75-*-*-*-*
