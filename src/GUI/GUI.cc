@@ -14,6 +14,9 @@ GUI::delete_event_impl(GdkEventAny *)
 
 GUI::GUI( Config & config )
 {
+#ifdef _DEBUG
+	cout << "<GUI::GUI()>" << endl;
+#endif
 	this->config = &config;
 	
     hide.connect( Gtk::Main::quit.slot() );
@@ -22,9 +25,9 @@ GUI::GUI( Config & config )
 		// messes up the audio thread's timing if not realtime...
 		Gtk::Main::timeout.connect( slot(this,&GUI::idle_callback), 200 );
 
-    string title = "amSynth ";
+    string title = "amSynth";
 #ifdef _DEBUG
-    title += "DEBUG ( build: ";
+    title += " DEBUG ( build: ";
     title += __DATE__;
     title += " @ ";
     title += __TIME__;
