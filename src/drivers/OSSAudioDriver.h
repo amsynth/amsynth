@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001 Nick Dowell
+ * (c) 2001-2003 Nick Dowell
  **/
 
 #ifndef _OSS_AUDIO_DRIVER_H

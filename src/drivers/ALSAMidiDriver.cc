@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2003 Nick Dowell
  **/
 
 #include "ALSAMidiDriver.h"
@@ -14,7 +14,7 @@ ALSAMidiDriver::read(unsigned char *midi_event_buffer)
 	if ( poll(pfd, npfd, 100000) > 0 ){
 		snd_seq_event_input( seq_handle, &ev );
 		_bytes_read = snd_midi_event_decode( seq_midi_parser, 
-											midi_event_buffer, 4, ev );
+						midi_event_buffer, 4, ev );
 		snd_seq_free_event( ev );
     }
 	return _bytes_read;
@@ -37,18 +37,21 @@ int ALSAMidiDriver::open(string device, string name)
 	}
 	
 	snd_seq_set_client_name(seq_handle, name.c_str());
-  
-	if ((portid = snd_seq_create_simple_port(seq_handle, "amSynth Midi In",
+	
+	string port_name = name;
+	port_name += " MIDI IN";
+
+	if ((portid = snd_seq_create_simple_port(seq_handle, port_name.c_str(),
             SND_SEQ_PORT_CAP_WRITE|SND_SEQ_PORT_CAP_SUBS_WRITE,
             SND_SEQ_PORT_TYPE_APPLICATION)) < 0) {
 		cerr << "Error creating sequencer port.\n";
 		exit(1);
 	}
-	
+
 	npfd = snd_seq_poll_descriptors_count(seq_handle, POLLIN);
 	pfd = (struct pollfd *)alloca(npfd * sizeof(struct pollfd));
 	snd_seq_poll_descriptors(seq_handle, pfd, npfd, POLLIN);
-	
+
 	return 0;
 #else
 	return -1;

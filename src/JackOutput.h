@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2003 Nick Dowell
  */
 
 #ifndef _JACK_OUTPUT_H

@@ -1,5 +1,5 @@
 /* Synth--
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2003 Nick Dowell
  **/
 
 #ifndef _ALSA_MIDI_DRIVER_H
@@ -7,7 +7,7 @@
 
 #include "MidiDriver.h"
 
-#include <iostream.h>
+#include <iostream>
 #ifdef _ALSA
 #include <alsa/asoundlib.h>
 #endif

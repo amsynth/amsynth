@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2002 Nick Dowell
+ * (c) 2002,2003 Nick Dowell
  */
 
 #ifndef _REQUEST_H

@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2003 Nick Dowell
  **/
 #ifdef _OSS
 #include <sys/soundcard.h>
@@ -7,7 +7,7 @@
 
 #include <sys/ioctl.h>
 #include <fcntl.h>
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
 #include <unistd.h>
 

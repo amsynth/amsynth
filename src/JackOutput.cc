@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2003 Nick Dowell
  **/
 
 #include "JackOutput.h"
@@ -160,6 +160,8 @@ JackOutput::run()
 		std::cerr << "cannot activate JACK client\n";
 		exit (0);
 	}
+	jack_connect(client, jack_port_name(l_port), "alsa_pcm:playback_1");
+	jack_connect(client, jack_port_name(r_port), "alsa_pcm:playback_2");
 }
 
 void
