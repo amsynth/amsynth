@@ -1,4 +1,4 @@
-/* amSynth
+/* amsynth
  * a GTK-- Knob widget
  * (c) 2002 Nick Dowell
  */
@@ -86,7 +86,7 @@ Knob::button_press_event_impl (GdkEventButton *ev)
 	switch(ev->button){
 		case 1:
 			Gtk::Main::grab_add(*this);
-			mouse_pos_change( ev->x_root, ev->y_root );
+			mouse_pos_change( (gint)ev->x_root, (gint)ev->y_root );
 			break;
 		case 4: // mouse wheel up
 			adj->set_value( (adj->get_value()+adj->get_step_increment()) );
@@ -111,7 +111,7 @@ Knob::button_release_event_impl (GdkEventButton *ev)
 gint
 Knob::motion_notify_event_impl(GdkEventMotion *ev) 
 {
-	if(has_grab()) mouse_pos_change( ev->x_root, ev->y_root );
+	if(has_grab()) mouse_pos_change( (gint)ev->x_root, (gint)ev->y_root );
 	return TRUE;
 }
 

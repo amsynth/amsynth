@@ -1,13 +1,12 @@
 noinst_LIBRARIES = libGUI.a
 
-libGUI_a_SOURCES =	GUI.cc \
-					ParameterKnob.cc \
-					PresetControllerView.cc \
-					RadioButtonParameterView.cc \
-					ParameterSwitch.cc \
-					Knob.cc 
+INCLUDES = `gtkmm-config --cflags` `gtk-config --cflags`
 
-libGUI_a_CXXFLAGS = `gtkmm-config --cflags`
-libGUI_a_LDFLAGS = -lstdc++ -lm `gtkmm-config --libs`
+libGUI_a_SOURCES =	GUI.cc \
+			ParameterKnob.cc \
+			PresetControllerView.cc \
+			RadioButtonParameterView.cc \
+			ParameterSwitch.cc \
+			Knob.cc
 
 

@@ -1,5 +1,7 @@
 bin_PROGRAMS = amSynth
 
+INCLUDES = `gtkmm-config --cflags` `gtk-config --cflags`
+
 amSynth_SOURCES = \
 		main.cc \
 		AudioOutput.cc \
@@ -9,8 +11,6 @@ amSynth_SOURCES = \
 		PresetController.cc \
 		VoiceAllocationUnit.cc \
 		Config.cc
-
-amSynth_CXXFLAGS = `gtkmm-config --cflags`
 
 SUBDIRS = drivers VoiceBoard GUI
 
