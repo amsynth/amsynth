@@ -73,6 +73,7 @@ public:
 	string alsa_audio_device;
 	/* internal */
 	int 	alsa_seq_client_id;
+	int	debug_drivers;
 };
 
 #endif

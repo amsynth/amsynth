@@ -105,7 +105,7 @@ JackOutput::init	( )
 	/* become a client of the JACK server */
 	if ((client = jack_client_new (client_name.c_str())) == 0)
 	{
-		std::cerr << "jack server not running?\n";
+		error_msg = "jack_client_new() failed";
 		return -1;
 	}
 

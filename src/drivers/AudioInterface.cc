@@ -44,9 +44,9 @@ AudioInterface::open( Config & config )
 		driver = new ALSAmmapAudioDriver;
 		if ( driver->open( config ) == 0 )
 		{
-#ifdef _DEBUG
+if (config.debug_drivers)
 			cout << "<AudioInterface> opened ALSA-MMAP AudioDriver" << endl;
-#endif
+
 			return 0;
 		}
 		delete driver; driver = 0;
@@ -55,9 +55,9 @@ AudioInterface::open( Config & config )
 		driver = new ALSAAudioDriver;
 		if ( driver->open( config ) == 0 )
 		{
-#ifdef _DEBUG
+if (config.debug_drivers)
 			cout << "<AudioInterface> opened ALSA AudioDriver" << endl;
-#endif
+
 			return 0;
 		}
 		delete driver; driver = 0;
@@ -66,9 +66,9 @@ AudioInterface::open( Config & config )
 		driver = new OSSAudioDriver;
 		if ( driver->open( config ) == 0 )
 		{
-#ifdef _DEBUG
+if (config.debug_drivers)
 			cout << "<AudioInterface> opened OSS AudioDriver" << endl;
-#endif
+
 			return 0;
 		}
 		delete driver; driver = 0;
@@ -78,9 +78,9 @@ AudioInterface::open( Config & config )
 		driver = new OSSAudioDriver;
 		if ( driver->open( config ) == 0 )
 		{
-#ifdef _DEBUG
+if (config.debug_drivers)
 			cout << "<AudioInterface> opened OSS AudioDriver" << endl;
-#endif
+
 			return 0;
 		} 
 		else
@@ -94,9 +94,9 @@ AudioInterface::open( Config & config )
 		driver = new ALSAAudioDriver;
 		if ( driver->open( config ) == 0 )
 		{
-#ifdef _DEBUG
+if (config.debug_drivers)
 			cout << "<AudioInterface> opened ALSA AudioDriver" << endl;
-#endif
+
 			return 0;
 		} 
 		else
@@ -110,9 +110,9 @@ AudioInterface::open( Config & config )
 		driver = new ALSAmmapAudioDriver;
 		if ( driver->open( config ) == 0 )
 		{
-#ifdef _DEBUG
+if (config.debug_drivers)
 			cout << "<AudioInterface> opened ALSA-MMAP AudioDriver" << endl;
-#endif
+
 			return 0;
 		}
 		else

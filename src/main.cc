@@ -194,7 +194,7 @@ int main( int argc, char *argv[] )
 	
 	// get command line options (they override saved prefs.)
 	int opt;
-	while( (opt=getopt(argc, argv, "vhm:c:a:r:p:b:"))!= -1 ) {
+	while( (opt=getopt(argc, argv, "vhdm:c:a:r:p:b:"))!= -1 ) {
 		switch(opt) {
 			case 'm': 
 				config.midi_driver = optarg;
@@ -207,6 +207,9 @@ int main( int argc, char *argv[] )
 				break;
 			case 'a':
 				config.audio_driver = optarg; 
+				break;
+			case 'd':
+				config.debug_drivers = 1;
 				break;
 			case 'r':
 				config.sample_rate = atoi( optarg );
@@ -225,15 +228,19 @@ int main( int argc, char *argv[] )
 				return 0;
 		}
 	}
-#ifdef _DEBUG
-	cout << "MIDI:- driver:" << config.midi_driver << " channel:" 
-	<< config.midi_channel << endl << "AUDIO:- driver:" 
-	<< config.audio_driver << " sample rate:" << config.sample_rate << endl;
-#endif
+	
+	if (config.debug_drivers) 
+		cout << "\n*** CONFIGURATION:\n"
+				<< "MIDI:- driver:" << config.midi_driver 
+				<< " channel:" << config.midi_channel << endl 
+				<< "AUDIO:- driver:" << config.audio_driver 
+				<< " sample rate:" << config.sample_rate << endl;
 	
 	//
 	// initialise audio
 	//
+	if (config.debug_drivers) std::cerr << "\n\n*** INITIALISING AUDIO ENGINE...\n";
+	
 	if (enable_audio)
 	{
 #ifdef with_jack
@@ -243,6 +250,7 @@ int main( int argc, char *argv[] )
 			out = new JackOutput();
 			if (((JackOutput*)out)->init()!=0)
 			{
+				std::cerr << ((JackOutput*)out)->get_error_msg() << "\n";
 				std::cerr << "** failed to initialise JACK... aborting :'( **\n";
 				exit (10);
 			}
@@ -267,10 +275,14 @@ int main( int argc, char *argv[] )
 			pthread_create(&audioThread, NULL, audio_thread, NULL);
 	}
 	
+	if (config.debug_drivers) std::cerr << "*** DONE :)\n";
+	
 	
 	//
 	// init midi
 	//
+	if (config.debug_drivers) std::cerr << "\n\n*** INITIALISING MIDI ENGINE...\n";
+	
 	if (enable_audio)
 		midi_controller = new MidiController( config, out->getTitle() );
 	else
@@ -279,6 +291,7 @@ int main( int argc, char *argv[] )
 	int midi_res;
 	if (enable_gui) midi_res = 
 			pthread_create( &midiThread, NULL, midi_thread, NULL );
+	if (config.debug_drivers) std::cerr << "*** DONE :)\n\n";
   
 	// need to drop our suid-root permissions :-
 	// GTK will not work SUID for security reasons..
@@ -314,7 +327,7 @@ int main( int argc, char *argv[] )
 	kit.run();
 	}
 	else midi_controller->run();
-
+	
 
 #ifdef _DEBUG
 	cout << "main() : GUI was terminated, shutting down cleanly.." << endl;

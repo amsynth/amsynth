@@ -35,4 +35,5 @@ options:\n\
 -r rate		set the sampling rate to use\n\
 -p voices	set the polyphony (maximum active voices)\n\
 -v		show version.\n\
+-d		show some debugging output\n\
 -h		show this usage message\n";

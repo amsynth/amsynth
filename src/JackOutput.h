@@ -24,6 +24,8 @@ public:
 	void		run		( );
 	void		stop		( );
 	
+	string		get_error_msg	( )		{ return error_msg; };
+	
 	int		canRecord	( )		{ return 0; };
 	void		startRecording	( );
 	void		stopRecording	( );
@@ -40,7 +42,7 @@ private:
 	string	wavoutfile;
 	int	recording;
 	int	bufsize, srate;
-	string	client_name;
+	string	client_name, error_msg;
 };
 
 #endif				// _AUDIO_OUTPUT_H
