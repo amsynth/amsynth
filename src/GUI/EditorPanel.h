@@ -5,17 +5,16 @@
 #ifndef _EDITOR_PANEL_H
 #define _EDITOR_PANEL_H
 
-// forward definition of classes: speeds up compilation
-
 #include <gtk--/box.h>
 #include <gtk--/frame.h>
 #include <gtk--/fixed.h>
 #include <gtk--/style.h>
 
+// forward definition of classes: speeds up compilation
+
 class Preset;
 class ParameterKnob;
 class ParameterSwitch;
-class VoiceAllocationUnit;
 class RadioButtonParameterView;
 
 
@@ -23,8 +22,7 @@ class RadioButtonParameterView;
 class EditorPanel : public Gtk::Fixed
 {
 public:
-			EditorPanel	( VoiceAllocationUnit* vau,
-						Preset* preset, int piped );
+			EditorPanel	( Preset* preset, int piped );
 			~EditorPanel	( );
 	
 	void		set_x_font	( const char *x_font_desc );

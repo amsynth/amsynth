@@ -452,7 +452,7 @@ GUI::init()
 {
 	Preset *preset = &(preset_controller->getCurrentPreset());
 	
-	editor_panel = new EditorPanel (vau, preset, pipe[1]);
+	editor_panel = new EditorPanel (preset, pipe[1]);
 	
 	vbox.pack_start (menu_bar);
 	Gtk::HBox *tmphbox = manage (new Gtk::HBox());

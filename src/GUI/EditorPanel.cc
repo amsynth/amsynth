@@ -11,8 +11,7 @@
 
 #include "knob.xpm"
 
-EditorPanel::EditorPanel	( VoiceAllocationUnit* vau, 
-					Preset* preset, int piped )
+EditorPanel::EditorPanel	( Preset* preset, int piped )
 {
 	
 	// GUI::GUI()
