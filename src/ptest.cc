@@ -2,8 +2,11 @@
  * (c) 2001-2003 Nick Dowell
  */
 
-#include "main.h"
-#include "../config.h"
+//#include "main.h"
+//#include "../config.h"
+
+#include "Config.h"
+#include "VoiceAllocationUnit.h"
 
 #include <iostream>
 #include <unistd.h>
@@ -13,8 +16,12 @@
 #include <sndfile.h>
 #endif
 
+#define BUF_SIZE 64
+
 int main( int argc, char *argv[] )
 {
+	Config config;
+	
 	//
 	// test parameters
 	// 
@@ -38,16 +45,9 @@ int main( int argc, char *argv[] )
 	string bank_file( getenv("HOME") );
 	bank_file += "/.amSynth.presets";
 	
-	presetController = new PresetController();
-	
-	
-	vau = new VoiceAllocationUnit;
+	VoiceAllocationUnit *vau = new VoiceAllocationUnit;
 	vau->SetSampleRate (config.sample_rate);
-	presetController->loadPresets(bank_file.c_str ());
 	
-	presetController->selectPreset( 1 );
-	presetController->selectPreset( 0 );
-
 #ifdef _with_sndfile
 	//
 	// prepare sndfile for .wav output
@@ -112,7 +112,6 @@ int main( int argc, char *argv[] )
 	sf_close( sndfile );
 #endif
 	
-	delete presetController;
 	delete vau;
 	return 0;
 }
