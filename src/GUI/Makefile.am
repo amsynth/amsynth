@@ -1,6 +1,6 @@
 noinst_LIBRARIES = libGUI.a
 
-INCLUDES = `gtkmm-config --cflags` `gtk-config --cflags`
+INCLUDES = $(GTKMM_CFLAGS)
 
 EXTRA_DIST = 	knob.xpm splash.xpm
 
