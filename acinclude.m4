@@ -40,8 +40,8 @@ AC_DEFUN(AC_DEBUGGING,
 AC_DEFUN(AC_OPTIMISE,
 [
   AC_ARG_WITH(	O,
-    		[  --with-O=level      set the compiler optimisation level (default=3)],
-  		opt="$withval", opt="3")
+    		[  --with-O=level      set the compiler optimisation level (default=6)],
+  		opt="$withval", opt="6")
   case "$OPTION_DEBUG" in
     yes)
 	AC_MSG_RESULT([none (debugging enabled)])
