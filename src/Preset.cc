@@ -9,13 +9,13 @@
 using namespace std;
 #endif
 
-Parameter TimeParameter (string name, Param id)
+Parameter TimeParameter (const string name, Param id)
 {
 	return Parameter (name, id, 0, 0, 2.5f, 0, Parameter::PARAM_POWER, 3, 0.0005f, "s");
 }
 
-Preset::Preset()
-:	mName ("New Preset")
+Preset::Preset			(const string name)
+:	mName (name)
 ,	nullparam ("null", kControls_End)
 {
 	//										name					id					def min max inc		ControlType			base offset label
@@ -57,10 +57,10 @@ Preset::operator =		(Preset& preset)
 {
     for (unsigned i=0; i<preset.ParameterCount(); i++)
     {
-    	Parameter& p = preset.getParameter(i);
-    	getParameter(p.getName()).setValue (p.getValue());
+		Parameter& p = preset.getParameter (i);
+		getParameter (p.getName()).setValue (p.getValue());
     }
-    setName(preset.getName());
+    setName (preset.getName());
     return *this;
 }
 

@@ -1,82 +1,65 @@
 /* amSynth
- * (c) 2001 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
 #ifndef _PRESETCONTROLLER_H
 #define _PRESETCONTROLLER_H
 
-#define PRESETS 128
-
 #include <string>
+
 #include "Preset.h"
 #include "UpdateListener.h"
 
 class PresetController {
-  public:
-    PresetController();
-    ~PresetController();
-  /**
-   * Selects a Preset and makes it current, updating averything as neccessary.
-   * If the requested preset does not exist, then the request is ignored, and
-   * an error value is returned.
-   * @param preset The preset number to be selected. Preset numbers start at
-   * 0, and go up to (PRESETS-1), currently 127 following the MIDI spec.
-   * @return 0 on success, -1 on failure.
-   */
-    int selectPreset(int preset);
-  /**
-   * Selects a preset by it's name, making it current and updating everything
-   * as neccessary. If the requested preset does not exist, then the request 
-   * is ignored, and an error value is returned.
-   * @param preset The preset name to be selected.
-   * @return 0 on success, -1 on failure.
-   */
-    int selectPreset(string preset);
-  /**
-   * @return Returns the current Preset object. Note that this is always the 
-   * current Preset: it follows changes from selectPreset() invocations.
-   */
-    Preset & getCurrentPreset();
-	Preset & getPreset( int preset );
-	Preset & getPreset( string name );
-  /**
-  	* Commit the current preset to memory
-  	*/
-    void commitPreset();
-	/**
-	 * Selects a new, unused preset ready for editing.
-	 */
-	int newPreset();
-	void deletePreset();
+public:
+	enum { PRESETS = 128 };
+
+			PresetController	();
+			~PresetController	();
 	
-	/*
-	 * Saves the active preset to the filename filename
-	 */
-	int exportPreset( string filename );
-	int importPreset( string filename );
+	/* Selects a Preset and makes it current, updating averything as neccessary.
+	 * If the requested preset does not exist, then the request is ignored, and
+	 * an error value is returned. */
+	int		selectPreset		(const int preset);
+	int		selectPreset		(const string preset);
+
+	// returns the preset currently being edited
+	Preset&	getCurrentPreset	() { return currentPreset; }
 	
-	/**
-	 * Loading & Saving of bank files
-	 */
-	int		loadPresets	(const char *filename);
-	int		savePresets	(const char *filename);
-  /**
-   * Sets the UpdateListener object for this object.
-   */
-    void setUpdateListener(UpdateListener & ul);
-  /**
-   * @returns The number of the current Preset selected
-   */
-    int getCurrPresetNumber() 
-	{ return currentPresetNo; } 
+	// access presets in the memory bank
+	Preset&	getPreset			(const int preset) { return presets[preset]; }
+	Preset&	getPreset			(const string name);
+
+	// Commit the current preset to memory
+	void	commitPreset		() { presets[currentPresetNo] = currentPreset; }
+
+	// Selects a new, unused preset ready for editing.
+	int		newPreset			();
+	void	deletePreset		();
+	
+	// Saves the active preset to the filename filename
+	int		exportPreset		(const string filename);
+	int		importPreset		(const string filename);
+	
+	// Loading & Saving of bank files
+	int		loadPresets			(const char *filename);
+	int		savePresets			(const char *filename);
+
+    void	setUpdateListener	(UpdateListener & ul) { updateListener = &ul; }
+
+    int		getCurrPresetNumber	() { return currentPresetNo; }
+    
+protected:
+	void	notify				() { if (updateListener) updateListener->update(); }
+
 private:
-	string		bank_file;
+	string			bank_file;
 	UpdateListener*	updateListener;
-	Preset*		presets;
-	Preset 		currentPreset;
-	Preset 		blankPreset;
-	Preset 		nullpreset;
-	int 		currentPresetNo;
+	Preset*			presets;
+	Preset 			currentPreset;
+	Preset			blankPreset;
+	Preset 			nullpreset;
+	int 			currentPresetNo;
 };
 
 #endif

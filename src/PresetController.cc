@@ -1,122 +1,71 @@
 /* amSynth
- * (c) 2001 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <string>
 #include <fstream>
+
 #include "PresetController.h"
 
-PresetController::PresetController()
+PresetController::PresetController	()
+:	updateListener (0)
+,	nullpreset ("null preset")
+,	currentPresetNo (0)
 {
-	updateListener = 0;
-	presets = new Preset[PRESETS];
-	currentPresetNo = 0;
-	nullpreset.setName("null preset");
-	
-	string fname( getenv("HOME") );
-	fname += "/.amSynth.presets";
-	
-	bank_file = fname;
+	presets = new Preset [PRESETS];
+	bank_file = string (getenv ("HOME")) + "/.amSynth.presets";
 }
 
-PresetController::~PresetController()
+PresetController::~PresetController	()
 {
-	delete[]presets;
+	delete[] presets;
 }
 
 int
-PresetController::selectPreset(int preset)
+PresetController::selectPreset		(const int preset)
 {
-#ifdef _DEBUG
-    cout << "<PresetController::selectPreset( " << preset << " )" << endl;
-#endif
-    if (preset > (PRESETS - 1) || preset < 0) {
-#ifdef _DEBUG
-		cout << "<PresetController::selectPreset( int ) out of range: " <<
-	    preset << endl;
-#endif
-		return -1;
-    }
-	if (preset!=currentPresetNo){
-		currentPreset = presets[preset];
+    if (preset > (PRESETS - 1) || preset < 0) { return -1; }
+	if (preset != currentPresetNo)
+	{
+		currentPreset = getPreset (preset);
 		currentPresetNo = preset;
-		if (updateListener) 
-			updateListener->update();
+		notify ();
 	}
     return 0;
 }
 
-Preset &
-PresetController::getPreset( int preset )
+Preset&
+PresetController::getPreset			(const string name)
 {
-	return presets[preset];
-}
-
-Preset &
-PresetController::getPreset( string name )
-{
-	for (int i = 0; i < PRESETS; i++)
-		if (presets[i].getName() == name)
-			return presets[i];
+	for (int i=0; i<PRESETS; i++) if (getPreset(i).getName() == name) return getPreset (i);
 	return nullpreset;
 }
 
-void
-PresetController::commitPreset()
-{
-#ifdef _DEBUG
-	cout << "<PresetController::commitPreset()>" << endl;
-#endif
-	presets[currentPresetNo] = currentPreset;
-}
-
 int
-PresetController::newPreset()
+PresetController::newPreset			()
 {
-	for(int i=0; i<PRESETS; i++){
-		if(presets[i].getName() == "New Preset"){
-			selectPreset(i);
-			updateListener->update();
-			return 0;
-		}
-	}
+	for (int i=0; i<PRESETS; i++) if (getPreset(i).getName() == "New Preset") return selectPreset (i);
 	return -1;
 }
 
-
 void
-PresetController::deletePreset()
+PresetController::deletePreset		()
 {
 	currentPreset = blankPreset;
-	updateListener->update();
+	notify ();
 }
 
 int 
-PresetController::selectPreset(string name)
+PresetController::selectPreset		(const string name)
 {
-	for (int i = 0; i < PRESETS; i++) {
-		if (presets[i].getName() == name) {
-			selectPreset(i);
-			return 0;
-		} else {
-#ifdef _DEBUG
-			cout << "<PresetController::selectPreset(" << name << ") failed" << endl;
-#endif
-		}
-	}
+	for (int i=0; i<PRESETS; i++) if (getPreset(i).getName() == name) return selectPreset (i);
 	return -1;
 }
 
-Preset & 
-PresetController::getCurrentPreset()
-{
-    return currentPreset;
-}
-
 int
-PresetController::exportPreset( string filename )
+PresetController::exportPreset		(const string filename)
 {
 	ofstream file( filename.c_str(), ios::out );
 	file << "amSynth1.0preset" << endl;
@@ -133,7 +82,7 @@ PresetController::exportPreset( string filename )
 }
 
 int
-PresetController::importPreset( string filename )
+PresetController::importPreset		(const string filename)
 {	
 	ifstream file( filename.c_str(), ios::in );
 	char buffer[100];
@@ -170,14 +119,14 @@ PresetController::importPreset( string filename )
 			file >> buffer;
 		}
 		currentPreset.setName(presetName);
-		if (updateListener) updateListener->update();
+		notify ();
 	} else file.close();
 	return 1;
 }
 
 
 int 
-PresetController::savePresets	(const char *filename)
+PresetController::savePresets		(const char *filename)
 {
 	ofstream file( filename, ios::out );
   
@@ -211,7 +160,7 @@ PresetController::savePresets	(const char *filename)
 }
 
 int 
-PresetController::loadPresets	(const char *filename)
+PresetController::loadPresets		(const char *filename)
 {
 #ifdef _DEBUG
 	cout << "<PresetController::loadPresets()>" << endl;
@@ -278,16 +227,9 @@ PresetController::loadPresets	(const char *filename)
 	}
 
 	currentPreset = presets[currentPresetNo];
-	if (updateListener) updateListener->update();
+	notify ();
 #ifdef _DEBUG
 	cout << "<PresetController::loadPresets()>: success" << endl;
 #endif
 	return 0;
 }
-
-void 
-PresetController::setUpdateListener(UpdateListener & ul)
-{
-	updateListener = &ul;
-}
-

@@ -98,7 +98,7 @@ PresetControllerView::_update_()
 	if(inhibit_combo_update==false){
 		inhibit_combo_callback = true;
 		list<string> gl;
-		for (int preset=0; preset<PRESETS; preset++){
+		for (int preset=0; preset<PresetController::PRESETS; preset++){
 			string preset_name = presetController->getPreset(preset).getName();
 			if ( preset_name != "New Preset" ) gl.push_back( preset_name );
 		}

@@ -17,7 +17,8 @@
 class Preset
 {
 public:
-					Preset			();
+					Preset			(const string name = "New Preset");
+					
 	Preset&			operator =		(Preset& p);
 
 	const string	getName			() const { return mName; }
