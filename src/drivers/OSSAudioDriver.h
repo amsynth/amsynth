@@ -20,6 +20,7 @@ class OSSAudioDriver:public AudioDriver {
     int write( float *buffer, int frames );
     int setChannels( int channels );
     int setRate( int rate );
+	int getRate(){ return rate_; };
     int setRealtime();
 
   private:

@@ -15,10 +15,14 @@ AudioOutput::~AudioOutput()
 }
 
 void
-AudioOutput::setConfig( Config config )
+AudioOutput::setConfig( Config & config )
 {
 	this->config = &config;
 	channels = config.channels;
+	if ( out.open( config ) == -1) {
+    //perror("error: could not open dsp device");
+    exit(-1);
+  }
 }
 
 void
@@ -29,10 +33,10 @@ void
 
 void AudioOutput::run()
 {
-  if (out.open( *config ) == -1) {
+//  if (out.open( *config ) == -1) {
     //perror("error: could not open dsp device");
-    exit(-1);
-  }
+//    exit(-1);
+//  }
 //  out.setChannels( config->channels );
   out.setRealtime();
 

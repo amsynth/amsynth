@@ -47,9 +47,10 @@ void *midi_thread(void *arg)
     int foo = (int) arg;
     foo = 0;
 	// run midi thread with real-time priority
-	/* if we don't do this, the audio thread can lock the system due to its priority.
-	 * if the midi thread has same priority, it can still control the audio thread,
-	 * and the system can return to normal when voices are deleted. */
+	/* if we don't do this, the audio thread can lock the system due to its 
+	 * priority. if the midi thread has same priority, it can still control 
+	 * the audio thread, and the system can return to normal when voices are 
+	 * deleted. */
 	sched_realtime();
     midi_controller->run();
 #ifdef _DEBUG
@@ -175,10 +176,9 @@ int main( int argc, char *argv[] )
 	presetController = new PresetController();
 	midi_controller = new MidiController();
 	midi_controller->setConfig( config );
-	vau = new VoiceAllocationUnit( config );
 	out = new AudioOutput();
 	out->setConfig( config );
-	
+	vau = new VoiceAllocationUnit( config ); //after were sure of sample_rate
 	out->setInput(*vau);
 	int audio_res;
 	if(enable_audio)

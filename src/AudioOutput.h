@@ -35,7 +35,7 @@ public:
   void stop() {
     running = 0;
   };
-  void setConfig( Config config );
+  void setConfig( Config & config );
 private:
   int running;
   int channels;

@@ -61,7 +61,8 @@ int OSSAudioDriver::open( Config & config )
     if (ioctl(dsp_handle_, SNDCTL_DSP_SETFMT, &format_) == -1)
 		perror("ioctl format");
     setChannels( config.channels );
-    setRate(config.sample_rate);
+    setRate( config.sample_rate );
+	config.sample_rate = getRate();
 
 	this->config = &config;
 	
@@ -102,16 +103,16 @@ int OSSAudioDriver::setRate(int rate)
     rate_ = rate;
     // set sampling rate
     if (ioctl(dsp_handle_, SNDCTL_DSP_SPEED, &rate_) == -1) {
-	perror("ioctl sample rate");
-	return -1;
+		perror("ioctl sample rate");
+		return -1;
     }
 #ifdef _DEBUG
 	cout << "<OSSAudioDriver::setRate()> rate set to " << rate << endl;
-#endif
+#endif //_DEBUG
     return 0;
-#else
+#else // not _OSS
     return -1;
-#endif
+#endif //_OSS
 }
 
 int OSSAudioDriver::setRealtime()
@@ -128,7 +129,7 @@ int OSSAudioDriver::setRealtime()
      * 2^MMMM = number of fragments. min=2, 0x7fff = no limit
      * 0001 (2) fragments @ 256bytes = disastrous
      * 0002 (4) fragments @ 256bytes = good (fine?)  [1024 bytes total buffer]
-     * 0003 (8) fragments @ 256bytes = ok (latency?) -problems under ALSA's OSS emu.
+     * 0003 (8) fragments @ 256bytes = ok (latency?) -problems under ALSA-OSS
      * 0004 (16) frags @128bytes = good (both)         [2048 bytes total buffer]
      * unlimited              = disastrous for latency..
      */
