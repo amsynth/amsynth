@@ -127,7 +127,7 @@ GUI::GUI( Config & config, MidiController & mc,
     menu_item[1]->add_label( "Quit" );
     menu_item[1]->activate.connect( 
 		bind(slot(this, &GUI::event_handler),"quit"));
-	menu_item[3]->add_label( "Record output to .wav file" );
+	menu_item[3]->add_label( "Capture output to file" );
 	menu_item[3]->activate.connect( 
 		bind(slot(this, &GUI::event_handler),"record_dialog"));
 	
@@ -439,27 +439,38 @@ GUI::GUI( Config & config, MidiController & mc,
 		bind( slot(this, &GUI::delete_events), &record_fileselect ));
 	
 	// the record dialog
-	record_dialog.set_title( "Record Output to File" );
+	record_dialog.set_title( "Capture Output" );
 	preset_import_dialog.set_transient_for( *this );
-	record_dialog.get_vbox()->add( record_label );
-	record_label.set_text( "choose the output file (.wav) to record to,\n and hit the record button" );
-	record_dialog.get_vbox()->add( record_hbox );
-	record_hbox.add( record_entry );
-	record_entry.set_text( "amSynth.wav" );
-	record_hbox.add( record_choose );
+	record_dialog.add( record_vbox );
+	
+	record_vbox.set_spacing( 10 );
+	record_vbox.pack_start( record_file_frame, TRUE, TRUE, 0 );
+	record_vbox.pack_start( record_buttons_hbox, TRUE, TRUE, 0 );
+	record_vbox.pack_start( record_statusbar, FALSE, FALSE, 0 );
+	
+	record_file_frame.set_border_width( 5 );
+	record_file_frame.set_label( "output file:" );
+	record_file_frame.add( record_file_hbox );
+	record_file_hbox.set_border_width( 5 );
+	record_file_hbox.set_spacing( 10 );
+	record_file_hbox.add( record_entry );
+	record_file_hbox.add( record_choose );
+	record_entry.set_text( "/tmp/amSynth-out.wav" );
 	record_choose.add_label( "...", 0.5, 0.5 );
-	record_choose.clicked.connect(
-		bind(slot(this, &GUI::event_handler),"record_dialog::choose"));
-	record_dialog.get_vbox()->add( record_togglebutton );
-	record_togglebutton.add_label( "Record", 0.5, 0.5 );
-	record_togglebutton.toggled.connect(
-		bind(slot(this, &GUI::event_handler),"record_dialog::record"));
-	record_dialog.get_action_area()->add( record_quit );
-	record_quit.add_label( "Close and Stop Recording", 0.5, 0.5 );
-	record_quit.clicked.connect(
-		bind(slot(this, &GUI::event_handler),"record_dialog::close"));
-	record_dialog.delete_event.connect( 
-		bind( slot( this, &GUI::delete_events ), &record_dialog ) );
+	record_choose.clicked.connect( bind(slot(this, &GUI::event_handler),"record_dialog::choose"));
+		
+	record_buttons_hbox.add( record_record );
+	record_buttons_hbox.add( record_pause );
+	record_buttons_hbox.set_border_width( 10 );
+	record_buttons_hbox.set_spacing( 10 );
+	record_record.add_label( "REC", 0.5, 0.5 );
+	record_pause.add_label( "STOP", 0.5, 0.5 );
+	record_record.clicked.connect( bind(slot(this, &GUI::event_handler),"record_dialog::record") );
+	record_pause.clicked.connect( bind(slot(this, &GUI::event_handler),"record_dialog::pause") );
+	
+	record_recording = false;
+	record_statusbar.push( 1, "capture status: STOPPED" );
+	
 	
 	// the quit confirmation window
 	quit_confirm.set_title( "Quit?" );
@@ -865,20 +876,24 @@ GUI::event_handler(string text)
 		record_dialog.hide_all();
 		return;
     } else if (text == "record_dialog::record" ) {
-		if( record_togglebutton.get_active() == true )
+		if( record_recording == false )
 		{
 			audio_out->setOutputFile( record_entry.get_text() );
 			audio_out->startRecording();
-			record_togglebutton.remove();
-			record_togglebutton.add_label( "Stop", 0.5, 0.5 );
-		}
-		else
-		{
-			record_togglebutton.remove();
-			record_togglebutton.add_label( "Record", 0.5, 0.5 );
-			audio_out->stopRecording();
+			record_recording = true;
+			record_statusbar.pop( 1 );
+			record_statusbar.push( 1, "capture status: RECORDING" );
 		}
 		return;
+    } else if ( text == "record_dialog::pause" ) {
+	    if( record_recording == true )
+	    {
+		    audio_out->stopRecording();
+		    record_recording = false;
+		    record_statusbar.pop( 1 );
+		    record_statusbar.push( 1, "capture status: STOPPED" );
+	    }
+	    return;
     } else {
 		cout << "no handler for event: " << text << endl;
 		return;

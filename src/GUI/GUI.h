@@ -143,13 +143,16 @@ class GUI:public Gtk::Window, public UpdateListener {
 	Gtk::FileSelection preset_import_dialog;
 	
 	// recording dialog
-	Gtk::Dialog record_dialog;
-	Gtk::Label record_label;
-	Gtk::Entry record_entry;
-	Gtk::ToggleButton record_togglebutton;
-	Gtk::Button record_quit, record_choose;
-	Gtk::HBox record_hbox;
-	Gtk::FileSelection record_fileselect;
+	Gtk::Window		record_dialog;
+	Gtk::VBox		record_vbox;
+	Gtk::Label		record_label;
+	Gtk::Frame		record_file_frame;
+	Gtk::Entry		record_entry;
+	Gtk::Button		record_pause, record_record, record_choose;
+	Gtk::HBox		record_buttons_hbox, record_file_hbox;
+	Gtk::FileSelection	record_fileselect;
+	Gtk::Statusbar		record_statusbar;
+	gboolean		record_recording;
 	
 	// quit confirmation dialog
 	Gtk::Dialog quit_confirm;
