@@ -65,4 +65,4 @@ polyphony		16
 
 # Specify a specific font to load for the interface
 
-gui_font -adobe-helvetica-medium-r-normal-*-*-100-75-75-p-*-iso8859-1
+gui_font -*-helvetica-medium-r-*-*-*-100-*-*-*-*-*-*
