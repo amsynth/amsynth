@@ -393,12 +393,12 @@ GUI::GUI( Config & config, MidiController & mc,
 	preset_delete.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &preset_delete ) );
 	
-    // the about window
-    about_window.set_title( "About" );
+	// the about window
+	about_window.set_title( "About" );
 	about_window.get_vbox()->add( *about_pixmap );
-    about_window.get_action_area()->add( about_close_button );
-    about_close_button.add_label( "close", 0.5, 0.5 );
-    about_close_button.clicked.connect( about_window.hide.slot() );
+	about_window.get_action_area()->add( about_close_button );
+	about_close_button.add_label( "sweet", 0.5, 0.5 );
+	about_close_button.clicked.connect( about_window.hide.slot() );
 	about_window.set_transient_for( *this );
 	about_window.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &about_window ) );
