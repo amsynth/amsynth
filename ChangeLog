@@ -1,3 +1,6 @@
+17/07/2003
+- 'auto' audio device tries to start JACK first
+
 16/02/2003
 - font selection dialog for custom interface font.
 
