@@ -42,20 +42,20 @@ public:
 
 	// The raw value of this parameter. Objects in the signal generation 
 	// path should not use this method, but getControlValue() instead.
-	float			getValue		() { return _value; }
+	float			getValue		() const { return _value; }
 	void			setValue		(float value);
 
-	float			GetNormalisedValue	() { return (getValue()-getMin())/(getMax()-getMin()); }
+	float			GetNormalisedValue	() const { return (getValue()-getMin())/(getMax()-getMin()); }
 	void			SetNormalisedValue	(float val) { setValue (val*(getMax()-getMin())+getMin()); }
 
 	// The control value for this parameter.
 	// The control value is what the synthesis will use to get its values.
-	inline float	getControlValue	() { return controlValue; }
+	inline float	getControlValue	() const { return controlValue; }
 
-	const string	GetStringValue	() { std::ostringstream o; o << controlValue; return o.str(); }
+	const string	GetStringValue	() const { std::ostringstream o; o << controlValue; return o.str(); }
 
-	const string	getName			() { return _name; }
-	Param			GetId			() { return mParamId; }
+	const string	getName			() const { return _name; }
+	Param			GetId			() const { return mParamId; }
 
 	// UpdateListeners (eg one or more ParameterViews - part of the GUI) are 
 	// notified and updated when this Parameter changes.
@@ -63,20 +63,20 @@ public:
 	void			removeUpdateListener (UpdateListener& ul);
 	
 	// min/max values apply for calls to setValue() not ControlValue
-	float			getMin			() { return _min; }
-	float			getMax			() { return _max; }
+	float			getMin			() const { return _min; }
+	float			getMax			() const { return _max; }
 
 
 	// @return the increment value
-	float			getStep			() { return _step; }
+	float			getStep			() const { return _step; }
 	// @returns The number of discrete steps allowable in this Parameter.
-	int				getSteps		();
+	int				getSteps		() const;
 
 	// Set this parameter to a random value (in it's allowable range)
 	void			random_val		();
 
 	// The label assocaited with this Parameter. (e.g. "seconds")
-	const string	getLabel		() { return label; }
+	const string	getLabel		() const { return label; }
 	
 private:
 	Param							mParamId;

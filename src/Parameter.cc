@@ -95,7 +95,7 @@ Parameter::setValue(float value)
 }
 
 int
-Parameter::getSteps()
+Parameter::getSteps() const
 {
 	if(!_step)
 		return 0;
