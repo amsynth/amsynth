@@ -13,7 +13,7 @@
 #include <math.h>
 #include "UpdateListener.h"
 
-#define MAX_ULS 128
+#define MAX_ULS 256
 #define PARAM_DIRECT 1
 #define PARAM_EXP 2
 #define PARAM_POWER 3
