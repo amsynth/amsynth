@@ -6,18 +6,17 @@
 #include <stdlib.h>		// required for random()
 #include "Oscillator.h"
 
-Oscillator::Oscillator(int rate, float *buf)
+Oscillator::Oscillator(float *buf)
 :	outBuffer (buf)
 ,	rads (0.0)
 ,	random (0)
 ,	waveform (Waveform_Sine)
-,	rate (rate)
+,	rate (44100)
 ,	random_count (0)
 ,	period (0)
 ,	sync (0)
 ,	syncOsc (0)
 {
-    twopi_rate = (float) TWO_PI / rate;
     sync = period = 0;
 }
 

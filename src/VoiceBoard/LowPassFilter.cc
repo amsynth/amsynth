@@ -1,18 +1,16 @@
 /* amSynth
- * (c) 2001-2004 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
 #include "LowPassFilter.h"
 #include <math.h>
 
-LowPassFilter::LowPassFilter(int rate)
+LowPassFilter::LowPassFilter() :
+	rate (4100.0)
+,	nyquist (22050.0)
 {
 	f = k = p = r = d1 = d2 = d3 = d4 = 0.0;
 	a0 = a1 = a2 = b1 = b2 = 0.0;
-	
-	this->rate = rate;
-	nyquist = rate/(float)2;
-	max = 1;
 }
 
 void

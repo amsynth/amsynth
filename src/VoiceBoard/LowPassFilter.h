@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001-2004 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
 #ifndef _LOWPASSFILTER_H
@@ -13,8 +13,9 @@
 class LowPassFilter
 {
 public:
-	LowPassFilter(int rate);
-	virtual ~LowPassFilter(){};
+	LowPassFilter();
+
+	void	SetSampleRate	(int rateIn) { rate = (float) rateIn; nyquist = rate/(float)2; }
 	
 	/**
 	 * Reset the filter - clear anything in the delay units of the filter.
@@ -23,10 +24,10 @@ public:
 
 	void	ProcessSamples	(float*, int, float cutoff, float res);
 private:
-	int rate;
+	float rate;
 	float nyquist;
 	double a0, a1, a2, b1, b2, res;
-	float f, k, p, r, max;
+	float f, k, p, r;
 	double d1, d2, d3, d4, x, y;
 };
 

@@ -6,14 +6,13 @@
 
 VoiceBoard::VoiceBoard(int rate, VoiceBoardProcessMemory *mem):
 	mem				(mem)
-,	rate			(rate)
 ,	mKeyVelocity	(1.0)
 ,	mKeyPitch		(440.0)
 ,	mPitchBend		(1.0)
-,	lfo1			(rate, mem->lfo_osc_1)
+,	lfo1			(mem->lfo_osc_1)
 ,	mLFO1Freq		(0.0)
-,	osc1			(rate, mem->osc_1)
-,	osc2			(rate, mem->osc_2)
+,	osc1			(mem->osc_1)
+,	osc2			(mem->osc_2)
 ,	mFreqModAmount	(0.0)
 ,	mOsc1PulseWidth	(0.0)
 ,	mOsc2PulseWidth	(0.0)
@@ -26,11 +25,11 @@ VoiceBoard::VoiceBoard(int rate, VoiceBoardProcessMemory *mem):
 ,	mFilterModAmt	(0.0)
 ,	mFilterCutoff	(16.0)
 ,	mFilterRes		(0.0)
-,	filter			(rate)
 ,	filter_env		(rate, mem->filter_env)
 ,	mAmpModAmount	(0.0)
 ,	amp_env			(rate, mem->amp_env)
 {
+	SetSampleRate (rate);
 	osc1.SetSyncOsc (osc2);
 }
 
@@ -138,6 +137,18 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	// Copy, with overall volume
 	//
 	for (int i=0; i<numSamples; i++) buffer[i] += (osc1buf[i] * vol);
+}
+
+void
+VoiceBoard::SetSampleRate	(int rate)
+{
+	mSampleRate = rate;
+	lfo1.SetSampleRate (mSampleRate);
+	osc1.SetSampleRate (mSampleRate);
+	osc2.SetSampleRate (mSampleRate);
+	filter.SetSampleRate (mSampleRate);
+//	filter_env.SetSampleRate (mSampleRate);
+//	amp_env.SetSampleRate (mSampleRate);
 }
 
 int 

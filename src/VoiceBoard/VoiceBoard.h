@@ -62,11 +62,13 @@ public:
 
 	void	ProcessSamplesMix	(float *buffer, int numSamples, float vol);
 
+	void	SetSampleRate		(int);
+
 private:
 
 	VoiceBoardProcessMemory	*mem;
 	
-	int rate;
+	int				mSampleRate;
 
 	float			mKeyVelocity;
 	float			mKeyPitch;

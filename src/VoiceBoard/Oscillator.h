@@ -23,7 +23,9 @@ public:
 		Waveform_Random
 	};
 
-	Oscillator	(int rate, float *buf);
+	Oscillator	(float *buf);
+
+	void	SetSampleRate	(int rateIn) { rate = rateIn; twopi_rate = (float) TWO_PI / rate; }
 	
 	void	ProcessSamples		(float*, int, float freq_hz, float pw);
 	void	SetWaveform		(Waveform);
