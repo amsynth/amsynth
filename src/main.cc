@@ -374,9 +374,11 @@ int main( int argc, char *argv[] )
 	presetController->savePresets();
 	midi_controller->saveConfig();
 	
-	if(enable_audio){
+	if(enable_audio)
+	{
 		out->stop();
-		audio_res = pthread_join(audioThread, NULL);
+		if (config.audio_driver!="jack" && config.audio_driver!="JACK")
+			audio_res = pthread_join(audioThread, NULL);
 #ifdef _DEBUG
 		cout << "joined audioThread" << endl;
 #endif		
