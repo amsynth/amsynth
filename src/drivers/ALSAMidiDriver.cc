@@ -15,7 +15,7 @@ ALSAMidiDriver::read(unsigned char *midi_event_buffer)
 		snd_seq_event_input( seq_handle, &ev );
 		//printf( "%x\n", ev->data );
 		_bytes_read = snd_midi_event_decode( seq_midi_parser, 
-											midi_event_buffer, 2, ev );
+											midi_event_buffer, 4, ev );
 		snd_seq_free_event( ev );
     }
 	return _bytes_read;
@@ -61,7 +61,7 @@ int ALSAMidiDriver::open(string device)
 
 ALSAMidiDriver::ALSAMidiDriver()
 {
-	if( snd_midi_event_new(2, &seq_midi_parser) )
+	if( snd_midi_event_new( 4, &seq_midi_parser ) )
 		cout << "Error creating midi event parser\n";
 }
 
