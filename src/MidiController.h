@@ -11,7 +11,7 @@
 #include "Parameter.h"
 
 // there are 32 standard MIDI controllers
-#define MAX_CC 32
+#define MAX_CC 128
 
 /**
  * The MidiController is run as a thread which reads from the MIDI input device,

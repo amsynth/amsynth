@@ -188,7 +188,7 @@ GUI::GUI( Config & config, MidiController & mc,
 	
 	menu_item[2]->add_label( "Configure MIDI Controllers" );
 	menu_item[2]->activate.connect( 
-		bind(slot(this, &GUI::event_handler),"controller_map_dialog"));
+		slot(this, &GUI::config_controllers));
 	
 	// the Preset menu
 	menu_item[10]->add_label( "Preset" );
@@ -576,6 +576,12 @@ GUI::GUI( Config & config, MidiController & mc,
 }
 
 void
+GUI::config_controllers()
+{
+    manage(new ControllerMapDialog( pipe[1], *midi_controller, *preset_controller ));
+}
+
+void
 GUI::realize_impl()
 {
 	Gtk::Window::realize_impl();
@@ -776,9 +782,9 @@ GUI::init()
     arrange();
 	
 	// MIDI Controllers dialog
-	controller_map_dialog = new ControllerMapDialog( pipe[1], 
-						*midi_controller, *preset_controller );
-
+//	controller_map_dialog = new ControllerMapDialog
+//			( pipe[1], *midi_controller, *preset_controller );
+	
 	char cstr[10];
 	status = " Midi Driver: ";
 	status += config->midi_driver;

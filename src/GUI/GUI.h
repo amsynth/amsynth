@@ -66,11 +66,13 @@ class GUI:public Gtk::Window, public UpdateListener {
 	{ dialog->hide_all(); };
     void update();
 	void serve_request();
-  private:
+private:
 	int *pipe, lnav;
 	virtual void realize_impl();
-    void event_handler(string text);
-    void arrange();
+	void event_handler(string text);
+	void arrange();
+	void config_controllers();
+
 	gint idle_callback();
     gint setActiveParam( GdkEventButton *event, Parameter * param );
 	string status;

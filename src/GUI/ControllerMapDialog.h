@@ -4,36 +4,49 @@
 #ifndef _CONTROLLERMAPDIALOG_H
 #define _CONTROLLERMAPDIALOG_H
 
-#include "../MidiController.h"
 #include "../UpdateListener.h"
 #include "Request.h"
 
-#include <gtk--/window.h>
-#include <gtk--/table.h>
+#include <gtk--/dialog.h>
 #include <gtk--/label.h>
 #include <gtk--/combo.h>
+#include <gtk--/button.h>
+#include <gtk--/menu.h>
 
+class MidiController;
+class PresetController;
 class ControllerMapDialog : public Gtk::Window, public UpdateListener
 {
 public:
-	ControllerMapDialog( int pipe_d, MidiController & mc, PresetController & pc );
-	~ControllerMapDialog(){};
-	void callback( gint cc );
-	void update();
-	void _update_();
-	void _updateActive_();
-	gint delete_event_impl( GdkEventAny * ) { Gtk::Widget::hide_all(); };
+		ControllerMapDialog	( int pipe_d,
+					MidiController & mc,
+					PresetController & pc );
+		~ControllerMapDialog	( );
+    
+	void	update			( );
+	gint	popup_menu		( GdkEvent * event );
+	void	midi_select_controller	( );
+	void	select_controller	( int cc );
+	void	select_parameter	( );
+        gint	delete_event_impl	( GdkEventAny * ) 
+			{ hide_all(); return 0; };
+    
 private:
-	Gtk::Table table;
-	Gtk::Label help;
-	Gtk::Label label[32];
-	Gtk::Label active[32];
-	Gtk::Combo combo[32];
-	gboolean supress_callback;
-	int piped;
-	MidiController *midi_controller;
-	PresetController *preset_controller;
-	Request request;
+	gboolean		supress_callback;
+	int			piped;
+    
+	MidiController		*midi_controller;
+	PresetController	*preset_controller;
+	Request			request;
+
+	Gtk::Menu		*m_menu_controllers;
+	Gtk::Button		*m_button_controller;
+	Gtk::Combo		*m_combo;
+	Gtk::Label		*m_label_controller;
+	
+	Gtk::HBox		*hbox;
+	Gtk::VBox		*vbox;
+	int			m_cc;
 };
 
 #endif
