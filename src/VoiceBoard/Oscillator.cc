@@ -7,14 +7,17 @@
 #include "Oscillator.h"
 
 Oscillator::Oscillator(int rate, float *buf)
+:	outBuffer (buf)
+,	rads (0.0)
+,	random (0)
+,	waveform (1)
+,	rate (rate)
+,	random_count (0)
+,	period (0)
+,	sync (0)
+,	syncOsc (0)
 {
-    outBuffer = buf;
-    rads = 0.0;
-    waveform = 1;
-    random = 0;
-    random_count = 0;
-    this->rate = rate;
-    twopi_rate = TWO_PI / rate;
+    twopi_rate = (float) TWO_PI / rate;
     sync = period = 0;
 }
 
@@ -135,7 +138,7 @@ float
 Oscillator::saw(float foo)
 {
     foo = fmod((float)foo, (float)TWO_PI);
-    register float t = (foo / (2 * PI));
+    register float t = (float) (foo / (2 * PI));
     register float a = (mPulseWidth + 1) / 2;
     if (t < a / 2)
 	return 2 * t / a;
