@@ -1,11 +1,28 @@
-06/06/2003
+16/07/2003 - amSynthe 1.0 rc3 released
+
+On-the-fly changing of polyphony & MIDI channel
+
+09/07/2003
+
+Refactoring GUI code (split out editor panel)
+
+08/07/2003
+
+Bank loading & saving, helper apps in the menu
+
+07/07/2003
+
+Re-organisation of menus.
+"Normal" edit functions for Presets (copy/paste)
+
+06/07/2003
 
 new MIDI controller config. dialog
 improved error handling on audio & midi initialisation
 cleaned up some code in main.cc (config file loading & saving)
 fixed various bugs (segfaults etc..)
 
-26/02/2003 - amSynth 1.2 rc2 released
+26/02/2003 - amSynth 1.0 rc2 released
 
 27/10/2002 - amSynth 1.0 rc1 released
 
