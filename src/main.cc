@@ -131,7 +131,7 @@ int main( int argc, char *argv[] )
 	
 	// get command line options (they override saved prefs.)
 	int opt;
-	while( (opt=getopt(argc, argv, "vhdm:c:a:r:p:b:"))!= -1 ) {
+	while( (opt=getopt(argc, argv, "vhstdm:c:a:r:p:b:"))!= -1 ) {
 		switch(opt) {
 			case 'm': 
 				config.midi_driver = optarg;
@@ -161,6 +161,12 @@ int main( int argc, char *argv[] )
 			case 'h':
 				cout << help_text; 
 				return 0;
+			case 's':
+				enable_audio = 0;
+				break;
+			case 't':
+				enable_gui = 0;
+				break;				
 			default:
 				return 0;
 		}
@@ -257,8 +263,10 @@ int main( int argc, char *argv[] )
 	sleep( 1 );
 
 	// this can be called SUID:
-	gui = new GUI( config, *midi_controller, *vau, the_pipe, *out, 
-			out->getTitle() );
+	if (enable_audio)
+		gui = new GUI( config, *midi_controller, *vau, the_pipe, out, out->getTitle() );
+	else
+		gui = new GUI( config, *midi_controller, *vau, the_pipe, 0, (const char*)"amSynth (silent)" );
 	if (config.xfontname!="") gui->set_x_font ( config.xfontname.c_str() );
 	gui->setPresetController( *presetController );
 	gui->init();
@@ -286,8 +294,7 @@ int main( int argc, char *argv[] )
 	if(enable_audio)
 	{
 		out->stop();
-		if (config.audio_driver!="jack" && config.audio_driver!="JACK")
-			audio_res = pthread_join(audioThread, NULL);
+		if (!jack) audio_res = pthread_join(audioThread, NULL);
 #ifdef _DEBUG
 		cout << "joined audioThread" << endl;
 #endif		

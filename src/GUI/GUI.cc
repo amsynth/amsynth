@@ -75,7 +75,7 @@ GUI::set_x_font 	( const char *x_font_name )
 }
 
 GUI::GUI( Config & config, MidiController & mc, 
-			VoiceAllocationUnit & vau, int pipe[2], GenericOutput & audio, const char *title )
+			VoiceAllocationUnit & vau, int pipe[2], GenericOutput *audio, const char *title )
 {
 #ifdef _DEBUG
 	cout << "<GUI::GUI()>" << endl;
@@ -86,7 +86,7 @@ GUI::GUI( Config & config, MidiController & mc,
 	this->midi_controller = &mc;
 	this->pipe = pipe;
 	this->vau = &vau;
-	this->audio_out = &audio;
+	this->audio_out = audio;
     hide.connect( Gtk::Main::quit.slot() );
 	
 	if(this->config->realtime)
@@ -169,7 +169,7 @@ GUI::GUI( Config & config, MidiController & mc,
 	//
 	// grey out menu item if there is no recording interface present
 	// 
-	if (!audio_out->canRecord())
+	if (audio_out && !audio_out->canRecord())
 		menu_item[3]->set_sensitive( false );
 	//
 	// grey out virtual keyboard if we arent running alsa, or no vkeybd..
