@@ -22,6 +22,9 @@ void
 MidiController::setPresetController(PresetController & pc)
 {
     presetController = &pc;
+	for(int i=0; i<32; i++)
+		midi_controllers[i] = &(presetController->getCurrentPreset().getParameter("null"));
+	
 	midi_controllers[1] = &(presetController->getCurrentPreset().getParameter("freq_mod_amount"));
 	midi_controllers[7] = &(presetController->getCurrentPreset().getParameter("master_vol"));
 }

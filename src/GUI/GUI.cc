@@ -26,12 +26,13 @@ GUI::serve_request()
 	}
 }
 
-GUI::GUI( Config & config, int pipe[2] )
+GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 {
 #ifdef _DEBUG
 	cout << "<GUI::GUI()>" << endl;
 #endif
 	this->config = &config;
+	this->midi_controller = &mc;
 	this->pipe = pipe;
     hide.connect( Gtk::Main::quit.slot() );
 	
@@ -262,9 +263,6 @@ GUI::GUI( Config & config, int pipe[2] )
 #endif
     add( vbox );
     show_all();
-
-	// MIDI Controllers dialog
-	controller_map_dialog = new ControllerMapDialog;
 
 	// the preset rename dialog
 	preset_rename.set_title( "Rename Preset" );
@@ -604,6 +602,9 @@ GUI::init()
 	
     arrange();
 	
+	// MIDI Controllers dialog
+	controller_map_dialog = new ControllerMapDialog( *midi_controller, *preset_controller );
+
 	char cstr[10];
 	status = "  Midi Device: ";
 	status += config->midi_device;

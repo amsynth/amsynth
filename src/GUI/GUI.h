@@ -43,7 +43,7 @@
  */
 class GUI:public Gtk::Window, public UpdateListener {
   public:
-    GUI( Config & config, int pipe[2] );
+    GUI( Config & config, MidiController & mc, int pipe[2] );
     ~GUI();
 	/**
 	 * Sets up all the Interface controls etc..
@@ -149,6 +149,7 @@ class GUI:public Gtk::Window, public UpdateListener {
     PresetControllerView *presetCV;
     RadioButtonParameterView *rb_pv[10];
 	Config *config;
+	MidiController *midi_controller;
 	ControllerMapDialog *controller_map_dialog;
 };
 #endif

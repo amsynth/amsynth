@@ -10,19 +10,21 @@
 #include <gtk--/label.h>
 #include <gtk--/combo.h>
 
-class ControllerMapDialog : Gtk::Window
+class ControllerMapDialog : public Gtk::Window
 {
 public:
-	ControllerMapDialog();
+	ControllerMapDialog( MidiController & mc, PresetController & pc );
 	~ControllerMapDialog(){};
-	void callback( string str ){};
-	void show_all() { Gtk::Window::show_all(); };
+	void callback( gint cc );
+	void _update_();
 	gint delete_event_impl( GdkEventAny * ) { Gtk::Widget::hide_all(); };
 private:
 	Gtk::Table table;
 	Gtk::Label label[32];
 	Gtk::Combo combo[32];
+	gboolean supress_callback;
 	MidiController *midi_controller;
+	PresetController *preset_controller;
 };
 
 #endif

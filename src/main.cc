@@ -215,7 +215,7 @@ int main( int argc, char *argv[] )
 	// make GDK loop read events from the pipe
 	gdk_input_add( the_pipe[0], GDK_INPUT_READ, &pipe_event, (void*)NULL );
 	
-	gui = new GUI( config, the_pipe ); // this can be called SUID
+	gui = new GUI( config, *midi_controller, the_pipe ); // this can be called SUID
 	gui->setPresetController(*presetController);
 	gui->init();
 	kit.run(); // this _cannot_ be run SUID
