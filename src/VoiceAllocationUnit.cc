@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001-2004 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
 #include "VoiceAllocationUnit.h"
@@ -15,6 +15,8 @@ static VoiceBoardProcessMemory* process_memory;
 
 using std::cout;
 
+const int kMaxGrainSize = 64;
+
 VoiceAllocationUnit::VoiceAllocationUnit( Config & config )
 {
 	this->config = &config;
@@ -27,49 +29,39 @@ VoiceAllocationUnit::VoiceAllocationUnit( Config & config )
 	reverb = new revmodel;
 	distortion = new Distortion;
 	
-	AllocateMemory (config.buffer_size);
+	process_memory = new VoiceBoardProcessMemory (kMaxGrainSize);
+
 	for (int i = 0; i < 128; i++) {
 		keyPressed[i] = 0;
 		active[i] = false;
-		_voices[i] = new VoiceBoard(process_memory);
-		_voices[i]->SetSampleRate(config.sample_rate);
-		// voices are initialised in setPreset() below...
+		_voices.push_back (VoiceBoard (process_memory));
+		_voices.back().SetSampleRate (config.sample_rate);
+		_voices.back().setFrequency ((440.0/32.0) * pow (2.0f, (float)((i-9.0)/12.0)));
 	}
   
 	sustain = 0;
 	mMasterVol = 1.0;
 }
 
-void
-VoiceAllocationUnit::AllocateMemory (int nFrames)
-{
-	if (process_memory==NULL) delete process_memory;
-	process_memory = new VoiceBoardProcessMemory (nFrames);
-}
-
 VoiceAllocationUnit::~VoiceAllocationUnit	()
 {
-	for (int i=0; i<128; i++) delete _voices[i];
 	delete limiter;
 	delete reverb;
 	delete distortion;
+	delete process_memory;
 }
 
 void
 VoiceAllocationUnit::setPreset( Preset & preset )
 {
 	_preset = &preset;
-
-	// now we can initialise the voices
-	for( int i=0; i<128; i++ )
-		_voices[i]->setFrequency( (440.0/32.0) * pow(2,((i-9.0)/12.0)) );
 };
 
 void
 VoiceAllocationUnit::pwChange( float value )
 {
-	float newval = pow(2,value);
-	for (int i=0; i<128; i++) _voices[i]->SetPitchBend (newval);
+	float newval = pow(2.0f,value);
+	for (int i=0; i<128; i++) _voices[i].SetPitchBend (newval);
 }
 
 void
@@ -77,8 +69,8 @@ VoiceAllocationUnit::sustainOff()
 {
 	sustain = 0;
 	for(int i=0; i<128; i++)
-		if( _voices[i] && (!keyPressed[i]) ) 
-			_voices[i]->triggerOff();
+		if (!keyPressed[i]) 
+			_voices[i].triggerOff();
 }
 
 void
@@ -96,13 +88,13 @@ VoiceAllocationUnit::noteOn(int note, float velocity)
 	if (!active[note])
 		if( !max_voices || config->active_voices < max_voices )
 		{
-			_voices[note]->reset();
+			_voices[note].reset();
 			active[note]=1;
 			config->active_voices++;
 		}
 
-	_voices[note]->setVelocity(velocity);
-	_voices[note]->triggerOn();
+	_voices[note].setVelocity(velocity);
+	_voices[note].triggerOn();
 }
 
 void 
@@ -113,37 +105,19 @@ VoiceAllocationUnit::noteOff(int note)
 #endif
 	keyPressed[note] = 0;
 	if (!sustain){
-		if (_voices[note])
-			_voices[note]->triggerOff();
+		_voices[note].triggerOff();
 	}
 }
 
 void 
 VoiceAllocationUnit::purgeVoices()
 {
-#ifdef _DEBUG
-	int purged = 0;
-	int active = 0;
-#endif
-  
-	for (int note = 0; note < 128; note++) {
-		if (active[note]) {
-			if ( _voices[note]->getState()==0 ) {
-#ifdef _DEBUG
-				purged++;
-#endif
-				config->active_voices--;
-				active[note] = 0;
-			}
-#ifdef _DEBUG
-			else active++;
-#endif
+	for (int note = 0; note < 128; note++) 
+		if (active[note] && (0 == _voices[note].getState()))
+		{
+			config->active_voices--;
+			active[note] = 0;
 		}
-	}
-#ifdef _DEBUG
-	cout << "<VoiceAllocationUnit> removed " << purged << " voice(s) from mixer, "
-	<< active << " voice(s) still connected" << endl;
-#endif
 }
 
 void
@@ -166,9 +140,13 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes)
 {
 	memset (l, 0, nframes * sizeof (float));
 
-	for (unsigned j=0; j<nframes; j+=64)
-		for (int i=0; i<128; i++) if (active[i])
-			_voices[i]->ProcessSamplesMix (l+j, 64, mMasterVol);
+	int framesLeft=nframes; int j=0;
+	while (0 < framesLeft)
+	{
+		int fr = (framesLeft < kMaxGrainSize) ? framesLeft : kMaxGrainSize;
+		for (int i=0; i<128; i++) if (active[i]) _voices[i].ProcessSamplesMix (l+j, kMaxGrainSize, mMasterVol);
+		j += fr; framesLeft -= fr;
+	}
 
 	distortion->Process (l, nframes);
 	reverb->processreplace (l,l, l,r, nframes, 1);
@@ -191,7 +169,7 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	case kDistortionDrive:	break;
 	case kDistortionCrunch:	distortion->SetCrunch (value);	break;
 	
-	default:		for (int i=0; i<128; i++) _voices[i]->UpdateParameter (param, value);
+	default:		for (int i=0; i<128; i++) _voices[i].UpdateParameter (param, value);
 				break;
 	}
 }

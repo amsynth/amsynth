@@ -1,15 +1,15 @@
 /* amSynth
- * (c) 2001-2004 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
 #ifndef _VOICEALLOCATIONUNIT_H
 #define _VOICEALLOCATIONUNIT_H
 
+#include <vector>
+
 #include "PresetController.h"
 #include "UpdateListener.h"
 #include "Config.h"
-
-#include <pthread.h>
 
 class VoiceBoard;
 class SoftLimiter;
@@ -19,12 +19,12 @@ class Distortion;
 class VoiceAllocationUnit : public UpdateListener
 {
 public:
-  VoiceAllocationUnit( Config & config );
-  virtual ~VoiceAllocationUnit();
+			VoiceAllocationUnit		(Config& config);
+	virtual	~VoiceAllocationUnit	();
 
 	void	UpdateParameter		(Param, float);
-  
-  void	AllocateMemory	(int nFrames);
+
+	void	SetSampleRate		(int) {};
   
   void noteOn(int note, float velocity);
   void noteOff(int note);
@@ -46,7 +46,7 @@ private:
   float _pitch[128];
   char keyPressed[128], sustain;
   bool	active[128];
-  VoiceBoard *_voices[128];
+  std::vector<VoiceBoard>	_voices;
   Preset *_preset;
   PresetController *_presetController;
   Config *config;
