@@ -163,7 +163,7 @@ VoiceAllocationUnit::set_max_voices	( int voices )
 void
 VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes)
 {
-	for (unsigned i=0; i<nframes; i++) l[i] = 0.0;
+	memset (l, 0, nframes * sizeof (float));
 
 	for (unsigned j=0; j<nframes; j+=64)
 		for (int i=0; i<128; i++) if (active[i])
