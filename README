@@ -39,9 +39,6 @@ home dir.
 
 Known problems
 --------------
-This isn't an official stable release.
-It is very close to amSynth 1.0 however. The features are all here now. New 
-features will be added into amSynthe, not amSynth.
 Although I've been using this software myself for a while without many problems,
 I am aware of some issues:-
 + Sometimes the program crashes as soon as you play a note on your MIDI input.
