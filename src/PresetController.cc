@@ -75,14 +75,16 @@ PresetController::commitPreset()
 int
 PresetController::newPreset()
 {
-	for(int i=0; i<PRESETS; i++){		if(presets[i].getName() == "New Preset"){
+	for(int i=0; i<PRESETS; i++){
+		if(presets[i].getName() == "New Preset"){
 			selectPreset(i);
 			updateListener->update();
 			return 0;
 		}
 	}
 	return -1;
-}
+}
+
 
 void
 PresetController::deletePreset()

@@ -55,7 +55,8 @@ ParameterKnob::drawValue(bool draw)
 	if (draw_value == false && draw == true)
 		add( value_frame );
     show_all();
-		draw_value = draw;
+	
+	draw_value = draw;
 }
 
 void 

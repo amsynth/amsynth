@@ -51,7 +51,8 @@ ParameterView::drawValue(bool draw)
 		remove(	value_frame	);
 	if (draw_value == false && draw == true)
 		add( value_frame );
-    show_all();	draw_value = draw;
+    show_all();
+	draw_value = draw;
 }
 
 void 

@@ -27,7 +27,8 @@
  *
  * This object also easily enables non-linear relationships between the controls
  * (eg interface ParameterViews) and their effect on synthesis parameters. See
- * setType() for details.
+ * setType() for details.
+
  */
 class Parameter {
 public:

@@ -54,7 +54,8 @@ RadioButtonParameterView::_update_()
 }
 
 void
-RadioButtonParameterView::setParameter( Parameter & param ){
+RadioButtonParameterView::setParameter( Parameter & param )
+{
 	parameter = &param;
 	parameter->addUpdateListener( *this );
 	

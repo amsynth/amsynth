@@ -49,7 +49,8 @@ ParameterSwitch::setParameter( Parameter & param )
 
 Parameter *
 ParameterSwitch::getParameter()
-{	return parameter;
+{
+	return parameter;
 }
 
 void
