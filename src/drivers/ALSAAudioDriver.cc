@@ -7,11 +7,12 @@
 int
 ALSAAudioDriver::write(float *buffer, int frames)
 {
+#ifdef _ALSA
 	int i,p,tmp;
 	audiobuf = (unsigned char*)malloc( (frames*_channels*2) );
 	p=0;
 	for( i=0; i<(frames); i++ ){
-		tmp = 32767*buffer[i];
+		tmp = (int)((flot)32767*buffer[i]);
 		audiobuf[p++] = (unsigned char) (tmp & 0xff);
 		audiobuf[p++] = (unsigned char) ((tmp >> 8) & 0xff);
 	}
@@ -22,6 +23,9 @@ ALSAAudioDriver::write(float *buffer, int frames)
 	}
 	free( audiobuf );
 	return 0;
+#else
+	return -1;
+#endif
 }
 
 int 

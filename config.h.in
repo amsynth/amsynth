@@ -1,7 +1,7 @@
 /* config.h.in.  Generated automatically from configure.in by autoheader 2.13.  */
 
-/* Define if you have the <alsa/asoundlib.h> header file.  */
-#undef HAVE_ALSA_ASOUNDLIB_H
+/* Define if you have the <alsa/doesnotexist.h> header file.  */
+#undef HAVE_ALSA_DOESNOTEXIST_H
 
 /* Define if you have the <dlfcn.h> header file.  */
 #undef HAVE_DLFCN_H
