@@ -294,7 +294,6 @@ int main( int argc, char *argv[] )
 	gui->init();
 	if (config.xfontname!="")
 	{
-		std::cerr << ":::" << config.xfontname << ":::\n";
 		gui->set_x_font ( config.xfontname.c_str() );
 	}
 	
