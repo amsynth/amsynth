@@ -5,7 +5,7 @@
 amSynth is a real-time analogue modelling synthesizer.
 It currently uses the OSS/ALSA audio and midi devices for its input and output.
 
-	** Welcome to the beta4 release of amSynth **
+	** Welcome to the rc2 "jack" release of amSynth **
 
 The basic structure of amSynth is not forseen to change - amSynthe (same 
 homepage) has a different goal of a more complex and powerful engine, but it has
@@ -20,6 +20,8 @@ create! Good luck!
 
 Running amSynth
 ---------------
+read INSTALL for installation instructions!!
+
 Once youve compiled and put amSynth in your $PATH (you can, of course, also run
 it by supplying the full path+executable name) run it with the -h flag to get a
 list of command-line options. 
@@ -45,15 +47,6 @@ Known problems
 Although I've been using this software myself for a while without many problems,
 I am aware of some issues which have arisen in the past :-
 
-+ Sometimes the program crashes as soon as you play a note on your MIDI input.
-  This only happens on certain GTK themes for some reason(?!?). Themes i have
-  had no problems with are "Default", "IceGradient", "ThinIce", "Step"...
-  (note - this has not been experienced for some time, maybe it's fixed?)
-
-+ Under certain conditions (parameter settings) the sound output dies and never
-  recovers. This is an issue with the reverb (Freebirth) and the amSynth filter.
-  This is being worked on... (and appears to be fixed)
-
 + Careful with the polyphony! If you play too many notes at once for your CPU, 
   two things can happen:
   + If you aren't running amSynth SUID root (i.e. with realtime priority) you 
@@ -64,12 +57,6 @@ I am aware of some issues which have arisen in the past :-
 	the CPU time, and running at highest priority.
   Experiment with the "polyphony" setting in .amSynthrc or with the `-p' option
   on the command line.
-
-  For reference, my Athlon (classic) 500MHz can play 13 notes @ 48000KHz.
-  A test on a k62-500 though, gave only 5 notes @ 44100.. :( probably to do with
-  the size of the CPU cache..
-  If you want more polyphony, drop the sample rate. halving the sample rate 
-  gives roughly twice the polyphony...
   
 You have been warned!
 
