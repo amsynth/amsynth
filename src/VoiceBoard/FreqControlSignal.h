@@ -17,6 +17,7 @@ public:
 	void			setKeyPitch( FSource & source );
 	void			setModAmount( Parameter & param );
 	void			update();
+	float			GetValue();
 	void		process();
 	float*		getFData(){ return buffer; };
 private:

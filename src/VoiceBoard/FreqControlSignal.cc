@@ -43,6 +43,13 @@ FreqControlSignal::update()
 	mod_amount = (mod_amount_param->getControlValue()/2.0)+0.5;
 }
 
+float
+FreqControlSignal::GetValue()
+{
+	return pitch_bend_source->getFData()[0] * key_pitch_source->getFData()[0] *
+		( mod_amount*(*lfo->getFData()+1.0) + 1.0 - mod_amount );
+}
+
 void
 FreqControlSignal::process()
 {

@@ -71,6 +71,7 @@ VoiceBoard::init()
 	
 	osc1.setPulseWidth( osc1_pulsewidth_control );
 	osc1.setWaveform( parameter("osc1_waveform") );
+//	osc1.setInputSig( &master_freq );
 	osc1.setInput( master_freq );
 	
 	osc1.setSync( parameter("osc2_sync"), osc2 );

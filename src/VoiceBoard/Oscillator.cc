@@ -21,6 +21,7 @@ Oscillator::Oscillator(int rate, float *buf)
     twopi_rate = TWO_PI / rate;
     syncParam = 0;
     sync = period = 0;
+	input = 0;
 }
 
 Oscillator::~Oscillator()
@@ -29,9 +30,15 @@ Oscillator::~Oscillator()
 }
 
 void
-Oscillator::setInput(FSource & source)
+Oscillator::setInputSig(FreqControlSignal *signal)
 {
-    input = &source;
+    inputSig = signal;
+}
+
+void
+Oscillator::setInput(FSource &fsource)
+{
+    input = &fsource;
 }
 
 void 
@@ -91,9 +98,15 @@ float *
 Oscillator::getNFData()
 {
     // do we really need to track the frequency _every_ sample??
-    inBuffer = input->getFData();
-    freq = inBuffer[0];
-    
+	if (input)
+	{
+	    inBuffer = input->getFData();
+		freq = inBuffer[0];
+	}
+    else
+	{
+		freq = inputSig->GetValue();
+	}
 	sync_c = 0;
     sync_offset = BUF_SIZE + 1;
 	
@@ -209,7 +222,7 @@ Oscillator::doSaw()
 void 
 Oscillator::doRandom()
 {
-    register int period = (int) (rate / inBuffer[0]);
+    register int period = (int) (rate / freq);
     for (int i = 0; i < BUF_SIZE; i++) {
 	if (random_count > period) {
 	    random_count = 0;

@@ -6,6 +6,7 @@
 
 #include "Synth--.h"
 #include "../Parameter.h"
+#include "FreqControlSignal.h"
 
 /**
  * @brief An Audio Oscillator unit.
@@ -18,7 +19,8 @@ class Oscillator:public NFSource, public FInput, public UpdateListener {
 	Oscillator(int rate, float *buf);
     virtual ~Oscillator();
     inline float *getNFData();
-    void setInput(FSource & source);
+  	void setInput(FSource &input);
+    void setInputSig(FreqControlSignal *signal);
 	/**
 	 * @param source The FSource which will control the puslewidth of the 
 	 * waveform where appropriate (saw & square waves).
@@ -50,7 +52,8 @@ class Oscillator:public NFSource, public FInput, public UpdateListener {
 	 */
 	void setSync( Parameter & param, Oscillator & osc );
   private:
-    FSource *input;
+    FreqControlSignal *inputSig;
+  	FSource *input;
 	FSource *pulseWidth;
     float *inBuffer, *outBuffer, *pulseBuffer;
     float rads, twopi_rate, random, freq;

@@ -1,3 +1,7 @@
+21/01/2004
+
+started optimising the freqency control section
+
 20/01/2004
 
 restructured memory allocation - processing memory is now owned by the VAU and shared among all VoiceBoards.
