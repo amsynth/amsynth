@@ -48,7 +48,10 @@ GUI::GUI( Config & config )
 	for (int i = 0; i < 10; i++)
 		rb_pv[i] = new RadioButtonParameterView;
 	param_switch = new ParameterSwitch;
-	
+
+#ifdef _DEBUG
+	cout << "<GUI::GUI()> created ParameterViews" << endl;
+#endif
     /* the menu
        how do menus work in GTK-- ?
 
@@ -110,12 +113,17 @@ GUI::GUI( Config & config )
 		(bind(slot(this, &GUI::event_handler),"help::about"));
 	menu_item[29].right_justify();
 	
+#ifdef _DEBUG
+	cout << "<GUI::GUI()> created menus" << endl;
+#endif
 	
 	/*
 	 * The main panel
 	 */
     presetCV = new PresetControllerView;
-
+#ifdef _DEBUG
+	cout << "<GUI::GUI()> created presetCV" << endl;
+#endif
     // oscillator 1 controls
     osc1_frame.set_shadow_type( frame_shadow );
     osc1_frame.set_label( "Oscillator 1" );
@@ -220,10 +228,12 @@ GUI::GUI( Config & config )
     vbox.pack_start(menu_bar);
     vbox.pack_start(main_panel);
     vbox.pack_start(statusBar);
-
+#ifdef _DEBUG
+	cout << "<GUI::GUI()> put all controls" << endl;
+#endif
     add( vbox );
     show_all();
-	
+
 	// the preset rename dialog
 	preset_rename.set_title( "Rename Preset" );
 	preset_rename.set_usize( 300, 200 );
@@ -335,7 +345,6 @@ GUI::GUI( Config & config )
 		realtime_warning.set_modal( true );
 		realtime_warning.show_all();
 	}
-	
 #ifdef _DEBUG
 	cout << "<GUI::GUI()> success" << endl;
 #endif
