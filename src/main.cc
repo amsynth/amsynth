@@ -125,6 +125,9 @@ int main( int argc, char *argv[] )
 		} else if (string(buffer)=="sample_rate"){
 			file >> buffer;
 			config.sample_rate = atoi(buffer);
+		} else if (string(buffer)=="polyphony"){
+			file >> buffer;
+			config.polyphony = atoi(buffer);
 		} else {
 			file >> buffer;
 		}
