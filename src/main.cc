@@ -162,11 +162,8 @@ int main( int argc, char *argv[] )
 	
 	// get command line options (they override saved prefs.)
 	int opt;
-	while( (opt=getopt(argc, argv, "svhm:c:a:r:p:b:"))!= -1 ) {
+	while( (opt=getopt(argc, argv, "vhm:c:a:r:p:b:"))!= -1 ) {
 		switch(opt) {
-			case 's':
-				enable_audio = 0;
-				break;
 			case 'm': 
 				config.midi_driver = optarg;
 				break;

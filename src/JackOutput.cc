@@ -71,7 +71,8 @@ JackOutput::JackOutput()
 	// check if there are already any amSynth jack clients...
 	const char **readports;
 	
-	client = jack_client_new( "amSynth-tmp" );
+	if ( (client = jack_client_new( "amSynth-tmp" )) == 0 ) exit( 60 );
+
 	readports = jack_get_ports( client, NULL, NULL, JackPortIsOutput );
 	
 	int i=0, c=0;
@@ -92,25 +93,21 @@ JackOutput::JackOutput()
 		client_name += ")";
 	}
 	
-	/* try to become a client of the JACK server */
-	if ( (client = jack_client_new(client_name.c_str())) == 0 )
-	{
-		std::cerr << "jack server not running?\n";
-		exit( 1 );
-	}
+	/* become a client of the JACK server */
+	client = jack_client_new(client_name.c_str());
 
-	/* tell the JACK server to call `process()' whenever
+	/* tell the JACK server to call `jack_process()' whenever
 	   there is work to be done.
 	*/
 	jack_set_process_callback (client, jack_process, 0);
 
-	/* tell the JACK server to call `bufsize()' whenever
+	/* tell the JACK server to call `jack_bufsize()' whenever
 	   the maximum number of frames that will be passed
 	   to `process()' changes
 	*/
 	jack_set_buffer_size_callback (client, jack_bufsize, 0);
 
-	/* tell the JACK server to call `srate()' whenever
+	/* tell the JACK server to call `jack_srate()' whenever
 	   the sample rate of the system changes.
 	*/
 	jack_set_sample_rate_callback (client, jack_srate, 0);
@@ -124,8 +121,7 @@ JackOutput::JackOutput()
 	sample_rate = jack_get_sample_rate( client );
 	buf_size = p = jack_get_buffer_size( client );
 
-	/* create output port */
-
+	/* create output ports */
 	l_port = jack_port_register( client, "L out", 
 			JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0 );
 	r_port = jack_port_register( client, "R out",

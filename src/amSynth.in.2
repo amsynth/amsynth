@@ -54,19 +54,33 @@ $BINDIR/amSynth.bin $*
 #
 case $? in
 130)
-	echo "exited normally"
 	exit
 	;;
-139)
+0)
+	exit
+	;;
+60)
 	echo
-	echo "********** there was an error! **********"
+	echo "**** There was an error connecting to the JACK server! ****"
+	echo
+	echo "please make sure you have the jack server running!"
+	echo
+	exit
+	;;
+255)
+	echo
+	echo "**** There was an error starting the audio system ****"
 	echo
 	echo "please check your config in ~/.amSynthrc"
 	echo
 	exit
 	;;
 *)
-	echo "dunno"
+	echo
+	echo "********** there was an error! **********"
+	echo
+	echo "please check your config in ~/.amSynthrc"
+	echo
 	exit
 	;;
 esac

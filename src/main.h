@@ -34,6 +34,5 @@ options:\n\
 -a device	set the sound output driver to use [alsa/oss/auto(default)]\n\
 -r rate		set the sampling rate to use\n\
 -p voices	set the polyphony (maximum active voices)\n\
--s		enables silent mode - no audio ouput\n\
 -v		show version.\n\
 -h		show this usage message\n";

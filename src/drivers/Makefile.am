@@ -1,12 +1,10 @@
 noinst_LIBRARIES = libdrivers.a
 
-libdrivers_a_SOURCES = 	OSSMidiDriver.cc \
-						OSSAudioDriver.cc \
-						ALSAMidiDriver.cc \
-						ALSAAudioDriver.cc \
-						ALSAmmapAudioDriver.cc \
-						AudioInterface.cc \
-						MidiInterface.cc \
-						MidiInterface.cc
-						
-dnl libdrivers_a_LIBADD = -lasound -ldl -lstdc++
+libdrivers_a_SOURCES = 	OSSMidiDriver.cc OSSMidiDriver.h \
+			OSSAudioDriver.cc OSSAudioDriver.h \
+			ALSAMidiDriver.cc ALSAMidiDriver.h \
+			ALSAAudioDriver.cc ALSAAudioDriver.h \
+			ALSAmmapAudioDriver.cc ALSAmmapAudioDriver.h \
+			AudioInterface.cc AudioInterface.h \
+			MidiInterface.cc MidiInterface.h \
+			AudioDriver.h MidiDriver.h

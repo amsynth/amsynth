@@ -4,7 +4,6 @@ amSynth TODO list
 Next revision:
 + stop segfaults when audio subsystem doesn't start up properly
 + decide on & implement meaningful exit codes for script to interpret
-+ integrate launch script into auto**** build & install process
 
 Ongoing, ASAP:
 + find & fix audio output bug (output dies & kills output from all programs
