@@ -24,8 +24,7 @@ class VoiceAllocationUnit : public NFSource {
 public:
   VoiceAllocationUnit( Config & config );
   virtual ~VoiceAllocationUnit(){};
-  inline float *getNFData()
-  { return limiter.getFData(); };
+  float *getNFData();
   void noteOn(int note, float velocity);
   void noteOff(int note);
   void pwChange( float value );
@@ -48,7 +47,7 @@ private:
   NFValue zero;
   float _pitch[128];
   float outBuffer[BUF_SIZE*2];
-  char keyPressed[128], sustain, connected[128];
+  char keyPressed[128], sustain, connected[128], activate[128];
   VoiceBoard *_voices[128];
   pthread_mutex_t voiceMutex[128];
   Preset *_preset;

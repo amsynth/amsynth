@@ -100,11 +100,10 @@ VoiceAllocationUnit::noteOn(int note, float velocity)
 	keyPressed[note] = 1;
 	
 	if (!connected[note])
-		if( !max_voices || config->active_voices < max_voices ) {
-		_voices[note]->reset();
-		mixer.addInput(*_voices[note]);
-		config->active_voices++;
-		connected[note] = 1;
+		if( !max_voices || config->active_voices < max_voices )
+		{
+			_voices[note]->reset();
+			activate[note]=1;
 		}
 
 	_voices[note]->setVelocity(velocity);
@@ -175,4 +174,18 @@ void
 VoiceAllocationUnit::set_max_voices	( int voices )
 {
 	config->polyphony = max_voices = voices;
+}
+
+float*
+VoiceAllocationUnit::getNFData()
+{
+	for (int i=0; i<128; i++)
+		if (activate[i]==1)
+		{
+			mixer.addInput(*_voices[i]);
+			config->active_voices++;
+			activate[i]=0;
+			connected[i] = 1;
+		}
+	return limiter.getFData();
 }
