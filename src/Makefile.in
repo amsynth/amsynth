@@ -87,7 +87,7 @@ VERSION = @VERSION@
 am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
-bin_PROGRAMS = amSynth
+bin_PROGRAMS = amSynth ptest
 
 INCLUDES = `gtkmm-config --cflags` `gtk-config --cflags`
 
@@ -103,16 +103,21 @@ amSynth_SOURCES = \
 		Config.cc
 
 
+ptest_SOURCES = ptest.cc Parameter.cc Preset.cc PresetController.cc \
+		VoiceAllocationUnit.cc Config.cc
+
+
 SUBDIRS = drivers VoiceBoard GUI
 
 amSynth_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a GUI/libGUI.a
+ptest_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a
 
 LIBS = -lstdc++ -lm -lsndfile `gtkmm-config --libs gtk--`
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-bin_PROGRAMS = amSynth$(EXEEXT)
+bin_PROGRAMS = amSynth$(EXEEXT) ptest$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
 am_amSynth_OBJECTS = main.$(OBJEXT) AudioOutput.$(OBJEXT) \
@@ -123,6 +128,12 @@ amSynth_OBJECTS = $(am_amSynth_OBJECTS)
 amSynth_DEPENDENCIES = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a \
 	GUI/libGUI.a
 amSynth_LDFLAGS =
+am_ptest_OBJECTS = ptest.$(OBJEXT) Parameter.$(OBJEXT) Preset.$(OBJEXT) \
+	PresetController.$(OBJEXT) VoiceAllocationUnit.$(OBJEXT) \
+	Config.$(OBJEXT)
+ptest_OBJECTS = $(am_ptest_OBJECTS)
+ptest_DEPENDENCIES = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a
+ptest_LDFLAGS =
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -136,7 +147,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/Parameter.Po ./$(DEPDIR)/Preset.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/PresetController.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/VoiceAllocationUnit.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/main.Po
+@AMDEP_TRUE@	./$(DEPDIR)/main.Po ./$(DEPDIR)/ptest.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -146,7 +157,7 @@ CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 CXXFLAGS = @CXXFLAGS@
-DIST_SOURCES = $(amSynth_SOURCES)
+DIST_SOURCES = $(amSynth_SOURCES) $(ptest_SOURCES)
 
 RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
 	uninstall-info-recursive all-recursive install-data-recursive \
@@ -154,7 +165,7 @@ RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
 	uninstall-recursive check-recursive installcheck-recursive
 DIST_COMMON = Makefile.am Makefile.in
 DIST_SUBDIRS = $(SUBDIRS)
-SOURCES = $(amSynth_SOURCES)
+SOURCES = $(amSynth_SOURCES) $(ptest_SOURCES)
 
 all: all-recursive
 
@@ -197,6 +208,9 @@ clean-binPROGRAMS:
 amSynth$(EXEEXT): $(amSynth_OBJECTS) $(amSynth_DEPENDENCIES) 
 	@rm -f amSynth$(EXEEXT)
 	$(CXXLINK) $(amSynth_LDFLAGS) $(amSynth_OBJECTS) $(amSynth_LDADD) $(LIBS)
+ptest$(EXEEXT): $(ptest_OBJECTS) $(ptest_DEPENDENCIES) 
+	@rm -f ptest$(EXEEXT)
+	$(CXXLINK) $(ptest_LDFLAGS) $(ptest_OBJECTS) $(ptest_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -213,6 +227,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PresetController.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/VoiceAllocationUnit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ptest.Po@am__quote@
 
 distclean-depend:
 	-rm -rf ./$(DEPDIR)

@@ -60,7 +60,7 @@ AC_DEFUN(AC_OPTIMISE,
 	AC_MSG_RESULT([none (debugging enabled)])
 	;;
     *)
-	CXXFLAGS="${CXXFLAGS} -ffast-math -fno-exceptions -fomit-frame-pointer -O$opt"
+dnl	CXXFLAGS="${CXXFLAGS} -ffast-math -fno-exceptions -fomit-frame-pointer -O$opt"
 	AC_MSG_RESULT([$opt])
 	;;
   esac

@@ -1,0 +1,88 @@
+/* amSynth
+ * (c) 2001-2003 Nick Dowell
+ */
+
+#include "main.h"
+#include "../config.h"
+
+#include <iostream>
+#include <unistd.h>
+#include <sndfile.h>
+
+int main( int argc, char *argv[] )
+{
+	// set default parameters
+	config.audio_driver = "auto";
+	config.midi_driver = "auto";
+	config.oss_midi_device = "/dev/midi";
+	config.midi_channel = 0;
+	config.oss_audio_device = "/dev/dsp";
+	config.alsa_audio_device = "default";
+	config.sample_rate = 44100;
+	config.channels = 2;
+	config.buffer_size = BUF_SIZE;
+	config.polyphony = 10;
+	
+	presetController = new PresetController();
+	
+	
+	vau = new VoiceAllocationUnit( config ); //after were sure of sample_rate
+	presetController->loadPresets();
+	
+	vau->setPreset( presetController->getCurrentPreset() );
+	
+	presetController->selectPreset( 1 );
+	presetController->selectPreset( 0 );
+
+	//
+	// prepare sndfile for .wav output
+	// 
+	SNDFILE	*sndfile;
+	SF_INFO	sf_info;
+
+	// set format etc. for output file
+	sf_info.samplerate = config.sample_rate;
+	sf_info.channels = config.channels;
+	sf_info.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
+
+	// open file for output:
+	sndfile = sf_open( "ptest-out.wav", SFM_WRITE, &sf_info );
+	// specify that floating point data is normalised (between -1.0 and 1.0)
+	sf_command( sndfile, SFC_SET_NORM_FLOAT, NULL, SF_TRUE );
+	
+	
+	//
+	// now run the test.
+	//
+	int i=0;
+	float *buffer;
+	
+	// trigger off some notes for amSynth to render. 10 will do
+	/*
+	vau->noteOn( 36, 127 );
+	vau->noteOn( 40, 127 );
+	vau->noteOn( 43, 127 );
+	vau->noteOn( 48, 127 );
+	vau->noteOn( 52, 127 );
+	vau->noteOn( 55, 127 );
+	*/
+	vau->noteOn( 60, 127 );
+	/*
+	vau->noteOn( 64, 127 );
+	vau->noteOn( 67, 127 );
+	vau->noteOn( 72, 127 );
+	*/
+	
+	while (i<6890) // good for 10 seconds audio (BUF_SIZE=64, 44.1kHz)
+	{
+		buffer = vau->getNFData();
+	//	sf_writef_float( sndfile, buffer, BUF_SIZE );
+		i++;
+	}
+	// dont forget to close the output file, else it wont be written!
+	sf_close( sndfile );
+	
+	delete presetController;
+	delete vau;
+	return 0;
+}
