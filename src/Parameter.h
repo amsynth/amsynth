@@ -88,7 +88,7 @@ public:
 	 * getControlValue()) allowed for this Parameter.
 	 */
 	void setMin( float min )
-	{ _min = min; };
+	{ _min = min; if(_value<_min)_value=_min; };
 	/**
 	 * @returns The minimum value (e.g. for calls to setValue(), NOT 
 	 * getControlValue()) allowed for this Parameter.
@@ -100,7 +100,7 @@ public:
 	 * getControlValue()) allowed for this Parameter.
 	 */
 	void setMax( float max )
-	{ _max = max; };
+	{ _max = max; if(_value>_max)_value=_max; };
 	/**
 	 * @returns The maximum value (e.g. for calls to setValue(), NOT 
 	 * getControlValue()) allowed for this Parameter.

@@ -21,24 +21,22 @@ VoiceAllocationUnit::VoiceAllocationUnit( Config & config ) :
 	}
   
 	sustain = 0;
+	pw_val.setValue(1);
 	
-	distortion.setInput( limiter );
-	reverb.setInput( distortion );
-	
-	distortion.setInput( amp );
-//	reverb.setInput( amp );
-	
+	// wire up the components
 	zero.setValue( 0.0 );
+
 	mixer.addInput( zero );
+	
+	amp.addInput( mixer );
+	amp.addInput( master_vol );
+
+	distortion.setInput( amp );
+
+	reverb.setInput( distortion );
 	
 	limiter.isStereo();
 	limiter.setInput( reverb );
-	
-	reverb.setInput( distortion );
-	amp.addInput( mixer );
-	amp.addInput( master_vol );
-  
-	pw_val.setValue(1);
 }
 
 void

@@ -6,6 +6,7 @@
 
 Reverb::Reverb()
 {
+//	model.mute();
 }
 
 void

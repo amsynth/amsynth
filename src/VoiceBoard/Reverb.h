@@ -28,7 +28,8 @@ class Reverb:public FInput, public NFSource, public UpdateListener {
 	{ widthParam = &param; param.addUpdateListener(*this); };
 	void setMode( Parameter & param )
 	{ modeParam = &param; param.addUpdateListener(*this); };
-	void mute();
+	void mute()
+	{ model.mute(); };
   private:
 	revmodel model;
     FSource *input;

@@ -180,6 +180,9 @@ int main( int argc, char *argv[] )
 	out->setConfig( config );
 	vau = new VoiceAllocationUnit( config ); //after were sure of sample_rate
 	out->setInput(*vau);
+	
+	presetController->loadPresets();
+	
 	int audio_res;
 	if(enable_audio)
 		audio_res = pthread_create(&audioThread, NULL, audio_thread, NULL);
@@ -196,7 +199,7 @@ int main( int argc, char *argv[] )
   
 	vau->setPreset(presetController->getCurrentPreset());
 	
-	presetController->loadPresets();
+//	presetController->loadPresets();
 	
 	g_thread_init(NULL); // allows gtk to be used in a thread-safe manner
 	

@@ -35,6 +35,7 @@ private:
 	Parameter *crunchParam;
 	float *buffer;
 	float drive, crunch;
+	int done;
 };
 
 #endif

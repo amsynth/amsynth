@@ -10,6 +10,7 @@ Distortion::Distortion()
 	crunchParam = 0;
     drive = 1;
     crunch = 1 / 4;
+	done = 0;
 }
 
 void
@@ -63,14 +64,13 @@ float *
 Distortion::getNFData()
 {
     buffer = input->getFData();
-    register float x, y,s;
-
+    register float x, y, s;
+	if(crunch==0)crunch=0.01;
 /*	// LOGDISTORT (3lines)
 	register float k;
 	if (crunch<0.001) return buffer;
 	k=log(crunch+1);*/
 	
-    
 	for (int i = 0; i < BUF_SIZE; i++) {
 //		y = drive * buffer[i];
 		/* LIMITDISTORT.

@@ -198,7 +198,7 @@ Preset::Preset()
 	
 	parameters[no_p].setName("distortion_crunch");
     parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(1.0);
+    parameters[no_p].setMax(0.9);
     no_p++;
 	
 	parameters[no_p].setName("osc2_sync");

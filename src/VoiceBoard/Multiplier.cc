@@ -7,14 +7,15 @@
 #endif
 Multiplier::Multiplier()
 {
-  no_of_inputs = 0;
-  _buffer = new float[BUF_SIZE];
-  for (int i = 0; i < MAX_INPUTS; i++) inputExists[i] = 0;
+	no_of_inputs = 0;
+	_buffer = new float[BUF_SIZE];
+	for (int i=0; i<BUF_SIZE; i++) _buffer[i] = 0;
+	for (int i = 0; i < MAX_INPUTS; i++) inputExists[i] = 0;
 }
 
 Multiplier::~Multiplier()
 {
-  delete[]_buffer;
+	delete[]_buffer;
 }
 
 void Multiplier::addInput(FSource & source)
