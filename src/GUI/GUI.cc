@@ -1,3 +1,6 @@
+/* amSynth
+ * (c) 2002 Nick Dowell
+ */
 #include "GUI.h"
 #include <stdio.h>
 #include <list>
