@@ -80,7 +80,7 @@ JackOutput::init	( )
 	
 	const char **readports;
 	
-	if ( (client = jack_client_new( "amSynth-tmp" )) == 0 ) exit( 60 );
+	if ( (client = jack_client_new( "amSynth-tmp" )) == 0 ) return -1;
 
 	readports = jack_get_ports( client, NULL, NULL, JackPortIsOutput );
 	
