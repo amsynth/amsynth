@@ -62,8 +62,6 @@ public:
 
 	void	ProcessSamplesMix	(float *buffer, int numSamples, float vol);
 
-	Oscillator osc;
-
 private:
 
 	VoiceBoardProcessMemory	*mem;

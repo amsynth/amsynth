@@ -1,23 +1,36 @@
 /* amSynth
- * (c) 2001-2004 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
 #include "VoiceBoard.h"
 
 VoiceBoard::VoiceBoard(int rate, VoiceBoardProcessMemory *mem):
-	// call object constructors with parameters
-	osc				(rate, mem->osc_1),
-	lfo1			(rate, mem->lfo_osc_1),
-	osc1			(rate, mem->osc_1),
-	osc2			(rate, mem->osc_2),
-	filter			(rate), 
-	filter_env		(rate,mem->filter_env), 
-	amp_env			(rate,mem->amp_env),
-	mPitchBend		(1),
-	mKeyPitch		(440)
+	mem				(mem)
+,	rate			(rate)
+,	mKeyVelocity	(1.0)
+,	mKeyPitch		(440.0)
+,	mPitchBend		(1.0)
+,	lfo1			(rate, mem->lfo_osc_1)
+,	mLFO1Freq		(0.0)
+,	osc1			(rate, mem->osc_1)
+,	osc2			(rate, mem->osc_2)
+,	mFreqModAmount	(0.0)
+,	mOsc1PulseWidth	(0.0)
+,	mOsc2PulseWidth	(0.0)
+,	mOsc1Vol		(1.0)
+,	mOsc2Vol		(1.0)
+,	mRingModAmt		(0.0)
+,	mOsc2Octave		(1.0)
+,	mOsc2Detune		(1.0)
+,	mFilterEnvAmt	(0.0)
+,	mFilterModAmt	(0.0)
+,	mFilterCutoff	(16.0)
+,	mFilterRes		(0.0)
+,	filter			(rate)
+,	filter_env		(rate, mem->filter_env)
+,	mAmpModAmount	(0.0)
+,	amp_env			(rate, mem->amp_env)
 {
-	this->rate = rate;
-	this->mem = mem;
 	osc1.SetSyncOsc (osc2);
 }
 
