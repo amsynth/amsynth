@@ -133,7 +133,7 @@ int main( int argc, char *argv[] )
 	
 	// get command line options (they override saved prefs.)
 	int opt;
-	while((opt=getopt(argc, argv, "svhm:c:d:r:"))!= -1) {
+	while((opt=getopt(argc, argv, "svhm:c:d:r:p:"))!= -1) {
 		switch(opt) {
 			case 's':
 				enable_audio = 0;
@@ -148,7 +148,10 @@ int main( int argc, char *argv[] )
 				config.audio_device = optarg; 
 				break;
 			case 'r':
-				config.sample_rate = atoi(optarg); 
+				config.sample_rate = atoi(optarg);
+				break;
+			case 'p':
+				config.polyphony = atoi(optarg); 
 				break;
 			case 'v':
 				cout << "amSynth version " << VERSION << endl 
