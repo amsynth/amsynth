@@ -78,15 +78,27 @@ ControllerMapDialog::ControllerMapDialog
 	midi_controller->getLastControllerParam().addUpdateListener( *this );
 	
 	hbox = manage( new Gtk::HBox());
+	vboxl = manage( new Gtk::VBox());
 	vbox = manage( new Gtk::VBox());
 	
 	hbox->set_spacing( 10 );
+	vboxl->set_spacing( 10 );
 	vbox->set_spacing( 10 );
 	
+	vbox->add( *(manage( new Gtk::Label () )) );
 	vbox->pack_start(*m_button_controller);
 	vbox->pack_start(*m_combo,true);
-			
+	vbox->add( *(manage( new Gtk::Label () )) );
+	
+	vboxl->add (*(manage( new Gtk::Label () )));
+	vboxl->add (*(manage( new Gtk::Label ("MIDI controller:",1) )));
+	vboxl->add (*(manage( new Gtk::Label ("amSynth control:",1) )));
+	vboxl->add (*(manage( new Gtk::Label () )));
+	
+	hbox->add( *(manage( new Gtk::Label () )) );
+	hbox->add( *vboxl );
 	hbox->add( *vbox );
+	hbox->add( *(manage( new Gtk::Label () )) );
 	add( *hbox );
 	
 	show_all();

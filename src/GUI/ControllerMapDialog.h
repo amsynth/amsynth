@@ -45,7 +45,7 @@ private:
 	Gtk::Label		*m_label_controller;
 	
 	Gtk::HBox		*hbox;
-	Gtk::VBox		*vbox;
+	Gtk::VBox		*vbox, *vboxl;
 	int			m_cc;
 };
 
