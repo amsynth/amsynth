@@ -9,8 +9,6 @@
 #include "ParameterSwitch.h"
 #include "RadioButtonParameterView.h"
 
-#include <iostream>
-
 #include "knob.xpm"
 
 EditorPanel::EditorPanel	( VoiceAllocationUnit* vau, 
@@ -349,20 +347,14 @@ EditorPanel::arrange		( )
 void
 EditorPanel::realize_impl	( )
 {
-	std::cerr << "#";
 	Gtk::Fixed::realize_impl();
 	
 	GdkPixmap *pixmap;
 	GdkBitmap *bitmap;
-#ifdef _DEBUG
-	cout << "<GUI::realize_impl()> creating knob pixmap" << endl;
-#endif
+
 	pixmap = gdk_pixmap_create_from_xpm_d(get_window(), &bitmap,
 			get_style()->gtkobj()->bg, knob_xpm);
-#ifdef _DEBUG
-	cout << "<GUI::realize_impl()> initialising Knobs" << endl;
-#endif
+
 	for(int i=0; i < 31; i++)
 		parameterView[i]->setPixmap( pixmap, 50, 50, 15 );
-	std::cerr << "#";
 }
