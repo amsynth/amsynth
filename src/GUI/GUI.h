@@ -30,6 +30,7 @@
 #include "../UpdateListener.h"
 #include "../Parameter.h"
 #include "../Config.h"
+#include "../VoiceAllocationUnit.h"
 
 #include "knob.xpm"
 #include "knob.xbm"
@@ -43,7 +44,8 @@
  */
 class GUI:public Gtk::Window, public UpdateListener {
   public:
-    GUI( Config & config, MidiController & mc, int pipe[2] );
+    GUI( Config & config, MidiController & mc, 
+		VoiceAllocationUnit & vau, int pipe[2] );
     ~GUI();
 	/**
 	 * Sets up all the Interface controls etc..
@@ -152,6 +154,7 @@ class GUI:public Gtk::Window, public UpdateListener {
     RadioButtonParameterView *rb_pv[10];
 	Config *config;
 	MidiController *midi_controller;
+	VoiceAllocationUnit *vau;
 	ControllerMapDialog *controller_map_dialog;
 };
 #endif

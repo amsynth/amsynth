@@ -8,8 +8,9 @@
 using SigC::slot;
 using SigC::bind;
 
-PresetControllerView::PresetControllerView( int pipe_d )
+PresetControllerView::PresetControllerView( int pipe_d, VoiceAllocationUnit & vau )
 {
+	this->vau = &vau;
 	inhibit_combo_callback = false;
 	inhibit_combo_update = false;
 	
@@ -53,6 +54,7 @@ PresetControllerView::ev_handler(string text)
 			inhibit_combo_update = true;
 			string preset_name = presets_combo.get_entry()->get_text();
 			int foo = presetController->selectPreset( preset_name );
+			vau->killAllVoices();
 			inhibit_combo_update = false;
 		} else
 		return;

@@ -14,10 +14,11 @@
 #include "ParameterView.h"
 #include "../PresetController.h"
 #include "../UpdateListener.h"
+#include "../VoiceAllocationUnit.h"
 
 class PresetControllerView : public UpdateListener, public Gtk::HBox {
 public:
-    PresetControllerView( int pipe_d );
+    PresetControllerView( int pipe_d, VoiceAllocationUnit & vau );
     ~PresetControllerView();
     void setPresetController(PresetController & p_c);
     void update();
@@ -31,6 +32,7 @@ private:
 	volatile bool inhibit_combo_callback, inhibit_combo_update;
 	int piped;
 	Request request;
+	VoiceAllocationUnit *vau;
 };
 
 #endif

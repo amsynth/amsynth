@@ -143,3 +143,16 @@ VoiceAllocationUnit::purgeVoices()
 	<< active << " voice(s) still connected" << endl;
 #endif
 }
+
+void
+VoiceAllocationUnit::killAllVoices()
+{
+	int i;
+	for( i=0; i<128; i++ ){
+		if( connected[i] ){
+			mixer.removeInput( *_voices[i] );
+			connected[i] = 0;
+		}
+	}
+	reverb.mute();
+}

@@ -26,7 +26,7 @@ GUI::serve_request()
 	}
 }
 
-GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
+GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau, int pipe[2] )
 {
 #ifdef _DEBUG
 	cout << "<GUI::GUI()>" << endl;
@@ -34,6 +34,7 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	this->config = &config;
 	this->midi_controller = &mc;
 	this->pipe = pipe;
+	this->vau = &vau;
     hide.connect( Gtk::Main::quit.slot() );
 	
 	if(this->config->realtime)
@@ -151,7 +152,7 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	/*
 	 * The main panel
 	 */
-    presetCV = new PresetControllerView( pipe[1] );
+    presetCV = new PresetControllerView( pipe[1], *this->vau );
 #ifdef _DEBUG
 	cout << "<GUI::GUI()> created presetCV" << endl;
 #endif
