@@ -600,10 +600,14 @@ GUI::init()
 		sprintf( cstr, "%d", config->polyphony );
 		status += string(cstr);
 	}*/
-	if(config->realtime)
-		status += "   Realtime Priority: YES";
-	else
-		status += "   Realtime Priority: NO";
+	if (!( this->config->audio_driver=="jack" ||
+				this->config->audio_driver=="JACK" ))
+	{
+		if(config->realtime)
+			status += "   Realtime Priority: YES";
+		else
+			status += "   Realtime Priority: NO";
+	}
 	statusBar.push( 1, status );
 }
 
