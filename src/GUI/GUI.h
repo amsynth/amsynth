@@ -77,7 +77,7 @@ class GUI:public Gtk::Window, public UpdateListener {
 	// about dialog
 	Gtk::Dialog about_window;
 	Gtk::Label about_label;
-	Gtk::Pixmap about_pixmap;
+	Gtk::Pixmap *about_pixmap;
 	Gtk::Button about_close_button;
 	
 	// realtime warning dialog

@@ -12,8 +12,7 @@ GUI::delete_event_impl(GdkEventAny *)
     return true;
 }
 
-GUI::GUI( Config & config ) :
-	about_pixmap( splash_xpm )
+GUI::GUI( Config & config )
 {
 	this->config = &config;
 	
@@ -301,7 +300,7 @@ GUI::GUI( Config & config ) :
     about_window.set_title( "About" );
     //about_label.set_text( "\namSynth\n\n (c) 2001,2002 \n\n Nick Dowell \n University of Warwick \n" );
     //about_window.get_vbox()->add( about_label );
-	about_window.get_vbox()->add( about_pixmap );
+	about_window.get_vbox()->add( *about_pixmap );
     about_window.get_action_area()->add( about_close_button );
     about_close_button.add_label( "close", 0.5, 0.5 );
     about_close_button.clicked.connect( about_window.hide.slot() );
@@ -333,6 +332,10 @@ GUI::GUI( Config & config ) :
 		realtime_warning.set_modal( true );
 		realtime_warning.show_all();
 	}
+	
+#ifdef _DEBUG
+	cout << "<GUI::GUI()> success" << endl;
+#endif
 }
 
 
@@ -340,12 +343,25 @@ void
 GUI::realize_impl()
 {
 	Gtk::Window::realize_impl();
-
+	
+#ifdef _DEBUG
+	cout << "<GUI::realize_impl()> creating Gtk::Pixmap" << endl;
+#endif
+	about_pixmap = new Gtk::Pixmap( splash_xpm );
+#ifdef _DEBUG
+	cout << "<GUI::realize_impl()> created Gtk::Pixmap" << endl;
+#endif
+	
     GdkPixmap *pixmap;
     GdkBitmap *bitmap;
+#ifdef _DEBUG
+	cout << "<GUI::realize_impl()> creating knob pixmap" << endl;
+#endif
     pixmap = gdk_pixmap_create_from_xpm_d(get_window(), &bitmap,
 		get_style()->gtkobj()->bg, knob_xpm);
-	
+#ifdef _DEBUG
+	cout << "<GUI::realize_impl()> initialising Knobs" << endl;
+#endif
 	for(int i=0; i < 31; i++)
 		parameterView[i]->setPixmap( pixmap, 72, 72, 15 );
 }
