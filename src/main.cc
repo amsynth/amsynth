@@ -107,8 +107,6 @@ int main( int argc, char *argv[] )
 	int jack = 0;
 	int enable_audio = 1;
 	int enable_gui = 1;
-	int load_font = 0;
-	string xfontname;
 	
 	// set default parameters
 	config.audio_driver = "auto";
@@ -126,71 +124,9 @@ int main( int argc, char *argv[] )
 	// load saved parameters (if any) from .amSynthrc
 	string amsynthrc_fname( getenv("HOME") );
 	amsynthrc_fname += "/.amSynthrc";
-	fstream file( amsynthrc_fname.c_str(), ios::in );
-	char buffer[100];
-	while( file.good() ) {
-		file >> buffer;
-		if( string(buffer)=="#" ){
-			// ignore lines beginning with '#' (comments)
-			// this next line is needed to deal with a line with 
-			// just a '#'
-			file.unget();
-			// this moves file on by a whole line, so we ignore it
-			file.get(buffer,100);
-		} else if (string(buffer)=="audio_driver"){
-			file >> buffer;
-			config.audio_driver = string(buffer);
-		} else if (string(buffer)=="midi_driver"){
-			file >> buffer;
-			config.midi_driver = buffer;
-		} else if (string(buffer)=="oss_midi_device"){
-			file >> buffer;
-			config.oss_midi_device = string(buffer);
-		} else if (string(buffer)=="midi_channel"){
-			file >> buffer;
-			config.midi_channel = atoi(buffer);
-		} else if (string(buffer)=="oss_audio_device"){
-			file >> buffer;
-			config.oss_audio_device = string(buffer);
-		} else if (string(buffer)=="alsa_audio_device"){
-			file >> buffer;
-			config.alsa_audio_device = string(buffer);
-		} else if (string(buffer)=="sample_rate"){
-			file >> buffer;
-			config.sample_rate = atoi(buffer);
-		} else if (string(buffer)=="polyphony"){
-			file >> buffer;
-			config.polyphony = atoi(buffer);
-		} else if (string(buffer)=="gui_font"){
-			char tmp;
-			char str[256];
-			char *strpt = str;
-			int whitespace = 1;
-			
-			for (int i=0; i<256; i++)
-			{
-				file.get( tmp );
-
-				if (!whitespace || tmp != ' ')
-				{
-					if (tmp == '\n')
-					{
-						strpt = '\0';
-						break;
-					}
-					whitespace = 0;
-					*strpt++ = tmp;
-				}
-			}
-			
-			xfontname = str;
-			load_font = 1;
-		} else {
-			file >> buffer;
-		}
-	}
-	file.close();
 	
+	config.load (amsynthrc_fname);
+
 	presetController = new PresetController();
 	
 	// get command line options (they override saved prefs.)
@@ -323,7 +259,7 @@ int main( int argc, char *argv[] )
 	// this can be called SUID:
 	gui = new GUI( config, *midi_controller, *vau, the_pipe, *out, 
 			out->getTitle() );
-	if (load_font) gui->set_x_font ( xfontname.c_str() );
+	if (config.xfontname!="") gui->set_x_font ( config.xfontname.c_str() );
 	gui->setPresetController( *presetController );
 	gui->init();
 
@@ -340,36 +276,9 @@ int main( int argc, char *argv[] )
 	/*
 	 * code to shut down cleanly..
 	 */
-	fstream ofile ( amsynthrc_fname.c_str(), ios::in | ios::out );
-	if (load_font)
-	{	
-		// replace fontname in .amSynthrc with new fontname
-		
-		// seek until we find the gui_font key
-		char chdata[200];
-		int fileidx;
-		while (ofile.good())
-		{
-			// get offset for line we are about to read;
-			fileidx = ofile.tellg ( );
-			ofile.seekp ( ofile.tellg() );
-			ofile.getline ( chdata, 200 );
-			if (strncmp(chdata,"gui_font",8)==0)
-			{
-				ofile.seekp ( fileidx );
-				ofile << "gui_font " 
-					<< gui->get_x_font() << endl;
-			}
-		}
-	}
-	else
-	{
-		// create fontname entry in .amSynthrc
-		ofile.seekp ( 0, ios::end );
-		ofile << "gui_font " << gui->get_x_font() << endl;
-	}
-	ofile.close ( );
 
+	config.xfontname = gui->get_x_font ();
+	config.save (amsynthrc_fname);
 		
 	presetController->savePresets();
 	midi_controller->saveConfig();

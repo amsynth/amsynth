@@ -15,7 +15,10 @@
 class Config
 {
 public:
-	Config();
+		Config	( );
+
+	int	load	( string filename );
+	int	save	( string filename );
 	/**
 	 * The sampling rate at which the output is to be produced
 	 */
@@ -72,10 +75,15 @@ public:
 	 */
 	string alsa_audio_device;
 	
+	string	xfontname;
+	
 	/* internal */
 	string	alsa_seq_client_name;
 	int 	alsa_seq_client_id;
 	int	debug_drivers;
+	
+private:
+	int	load_font;
 };
 
 #endif
