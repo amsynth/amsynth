@@ -225,6 +225,7 @@ int main( int argc, char *argv[] )
 	gui = new GUI( config, *midi_controller, *vau, the_pipe ); // this can be called SUID
 	gui->setPresetController( *presetController );
 	gui->init();
+	presetController->selectPreset( 1 );
 	presetController->selectPreset( 0 );
 	kit.run(); // this _cannot_ be run SUID
 
