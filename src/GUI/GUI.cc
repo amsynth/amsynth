@@ -448,6 +448,15 @@ GUI::create_menus	( )
         Menu *menu_utils_midi = manage (new Menu());
         MenuList& list_utils_midi = menu_utils_midi->items ();
 	
+	menu_item = manage (new MenuItem("aconnectgui"));
+	menu_item->activate.connect 
+			(bind(slot(this, &GUI::command_run),"aconnectgui"));
+	if (command_exists ("aconnectgui") != 0)
+		menu_item->set_sensitive( false );
+	if (config->alsa_seq_client_id==0)
+		menu_item->set_sensitive( false );
+	list_utils_midi.push_back (*menu_item);
+	
 	menu_item = manage (new MenuItem("kaconnect"));
 	menu_item->activate.connect 
 			(bind(slot(this, &GUI::command_run),"kaconnect"));
