@@ -209,8 +209,8 @@ int main( int argc, char *argv[] )
   
 	// need to drop our suid-root permissions :-
 	// GTK will not work SUID for security reasons..
-	setuid( getuid() );
-	seteuid( getuid() );
+	setreuid( getuid(), getuid() );
+	setregid( getgid(), getgid() );
 	
 	midi_controller->setVAU( *vau );
 	midi_controller->setPresetController( *presetController );
