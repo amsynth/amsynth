@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001 Nick Dowell
+ * (c) 2001-2003 Nick Dowell
  */
 
 #ifndef _GUI_H
@@ -73,6 +73,11 @@ private:
 	void event_handler(string text);
 	void arrange();
 	void config_controllers();
+	
+	void		preset_new		( );
+	void		preset_copy		( );
+	void		preset_paste		( );
+	void		preset_paste_as_new	( );
 
 	gint idle_callback();
 	gint setActiveParam( GdkEventButton *event, Parameter * param );
@@ -103,22 +108,10 @@ private:
 	Gtk::Button preset_rename_cancel, preset_rename_ok;
 	
 	// new preset dialog
-	Gtk::Dialog preset_new;
-	Gtk::Label preset_new_label;
-	Gtk::Entry preset_new_entry;
-	Gtk::Button preset_new_cancel, preset_new_ok;
-	
-	// copy preset dialog
-	Gtk::Dialog preset_copy;
-	Gtk::Label preset_copy_label;
-	Gtk::Combo preset_copy_combo;
-	Gtk::Button preset_copy_cancel, preset_copy_ok;
-	
-	// saveas preset dialog
-	Gtk::Dialog preset_saveas;
-	Gtk::Label preset_saveas_label;
-	Gtk::Entry preset_saveas_entry;
-	Gtk::Button preset_saveas_cancel, preset_saveas_ok;
+	Gtk::Dialog		d_preset_new;
+	Gtk::Label		d_preset_new_label;
+	Gtk::Entry		d_preset_new_entry;
+	Gtk::Button		d_preset_new_cancel, d_preset_new_ok;
 
 	// delete preset dialog
 	Gtk::Dialog preset_delete;
@@ -161,5 +154,7 @@ private:
 	GenericOutput *audio_out;
 	
 	EditorPanel		*editor_panel;
+	
+	Preset			clipboard_preset;
 };
 #endif

@@ -48,8 +48,8 @@ GUI::set_x_font 	( const char *x_font_name )
 	editor_panel->set_x_font (x_font_name);
 }
 
-GUI::GUI( Config & config, MidiController & mc, 
-			VoiceAllocationUnit & vau, int pipe[2], GenericOutput *audio, const char *title )
+GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
+		int pipe[2], GenericOutput *audio, const char *title )
 {
 #ifdef _DEBUG
 	cout << "<GUI::GUI()>" << endl;
@@ -87,8 +87,10 @@ GUI::GUI( Config & config, MidiController & mc,
 	cout << "<GUI::GUI()> put all controls" << endl;
 #endif
 	show_all();
-
+	
+	//
 	// the preset rename dialog
+	//
 	preset_rename.set_title( "Rename Preset" );
 	preset_rename.set_usize( 300, 200 );
 	preset_rename.get_vbox()->add( preset_rename_label );
@@ -105,63 +107,30 @@ GUI::GUI( Config & config, MidiController & mc,
 	preset_rename.set_transient_for( *this );
 	preset_rename.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &preset_rename ) );
-
-	// the new preset dialog
-	preset_new.set_title( "Create a New Preset" );
-	preset_new.set_usize( 300, 200 );
-	preset_new.get_vbox()->add( preset_new_label );
-	preset_new_label.set_text( "Enter new Preset Name:" );
-	preset_new.get_vbox()->add( preset_new_entry );
-	preset_new.get_action_area()->add( preset_new_ok );
-	preset_new_ok.add_label( "Confirm", 0.5, 0.5 );
-	preset_new_ok.clicked.connect(
-		bind(slot(this, &GUI::event_handler),"preset::new::ok"));
-	preset_new.get_action_area()->add( preset_new_cancel );
-	preset_new_cancel.clicked.connect( preset_new.hide.slot() );
-	preset_new_cancel.add_label( "Cancel", 0.5, 0.5 );
-	preset_new.set_modal( true );
-	preset_new.set_transient_for( *this );
-	preset_new.delete_event.connect( 
-		bind( slot( this, &GUI::delete_events ), &preset_new ) );
 	
-	// the copy preset dialog
-	preset_copy.set_title( "Copy another Preset" );
-	preset_copy.set_usize( 300, 200 );
-	preset_copy.get_vbox()->add( preset_copy_label );
-	preset_copy_label.set_text( "Select preset to copy parameters from" );
-	preset_copy.get_vbox()->add( preset_copy_combo );
-	preset_copy.get_action_area()->add( preset_copy_ok );
-	preset_copy_ok.add_label( "Copy", 0.5, 0.5 );
-	preset_copy_ok.clicked.connect(
-		bind(slot(this, &GUI::event_handler),"preset::copy::ok"));
-	preset_copy.get_action_area()->add( preset_copy_cancel );
-	preset_copy_cancel.add_label( "Cancel", 0.5, 0.5 );
-	preset_copy_cancel.clicked.connect( preset_copy.hide.slot() );
-	preset_copy.set_modal( true );
-	preset_copy.set_transient_for( *this );
-	preset_copy.delete_event.connect( 
-		bind( slot( this, &GUI::delete_events ), &preset_copy ) );
-
-	// the saveas preset dialog
-	preset_saveas.set_title( "Save current settings as.." );
-	preset_saveas.set_usize( 300, 200 );
-	preset_saveas.get_vbox()->add( preset_saveas_label );
-	preset_saveas_label.set_text( "Choose a preset name to\nsave these settings as..." );
-	preset_saveas.get_vbox()->add( preset_saveas_entry );
-	preset_saveas.get_action_area()->add( preset_saveas_ok );
-	preset_saveas_ok.add_label( "Save", 0.5, 0.5 );
-	preset_saveas_ok.clicked.connect(
-		bind(slot(this, &GUI::event_handler),"preset::saveas::ok"));
-	preset_saveas.get_action_area()->add( preset_saveas_cancel );
-	preset_saveas_cancel.add_label( "Cancel", 0.5, 0.5 );
-	preset_saveas_cancel.clicked.connect(
-		bind(slot(this, &GUI::event_handler),"preset::saveas::cancel"));
-	preset_saveas.set_modal( true );
-	preset_saveas.set_transient_for( *this );
-	preset_saveas.delete_event.connect( 
-		bind( slot( this, &GUI::delete_events ), &preset_saveas ) );
-
+	//
+	// the new preset dialog
+	//
+	d_preset_new.set_title( "Create a New Preset" );
+	d_preset_new.set_usize( 300, 200 );
+	d_preset_new.get_vbox()->add( d_preset_new_label );
+	d_preset_new_label.set_text( "Enter new Preset Name:" );
+	d_preset_new.get_vbox()->add( d_preset_new_entry );
+	d_preset_new.get_action_area()->add( d_preset_new_ok );
+	d_preset_new_ok.add_label( "Confirm", 0.5, 0.5 );
+	d_preset_new_ok.clicked.connect(
+		bind(slot(this, &GUI::event_handler),"preset::new::ok"));
+	d_preset_new.get_action_area()->add( d_preset_new_cancel );
+	d_preset_new_cancel.clicked.connect( d_preset_new.hide.slot() );
+	d_preset_new_cancel.add_label( "Cancel", 0.5, 0.5 );
+	d_preset_new.set_modal( true );
+	d_preset_new.set_transient_for( *this );
+	d_preset_new.delete_event.connect( 
+		bind( slot( this, &GUI::delete_events ), &d_preset_new ) );
+	
+	//
 	// the delete preset dialog
+	//
 	preset_delete.set_title( "Delete Preset?" );
 	preset_delete.set_usize( 300, 200 );
 	preset_delete.get_vbox()->add( preset_delete_label );
@@ -178,7 +147,9 @@ GUI::GUI( Config & config, MidiController & mc,
 	preset_delete.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &preset_delete ) );
 	
+	//
 	// the about window
+	//
 	about_window.set_title( "About" );
 	about_window.get_vbox()->add( *about_pixmap );
 	about_window.get_action_area()->add( about_close_button );
@@ -188,7 +159,9 @@ GUI::GUI( Config & config, MidiController & mc,
 	about_window.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &about_window ) );
 	
+	//
 	// export dialog
+	//
 	preset_export_dialog.set_title( "Select DIRECTORY to export preset to" );
 	preset_export_dialog.get_cancel_button()->clicked.connect(
 		preset_export_dialog.hide.slot() );
@@ -199,8 +172,10 @@ GUI::GUI( Config & config, MidiController & mc,
 	preset_export_dialog.set_transient_for( *this );
 	preset_export_dialog.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &preset_export_dialog ) );
-		
+	
+	//
 	// import dialog
+	//
 	preset_import_dialog.set_title( "Import as current preset" );
 	preset_import_dialog.get_cancel_button()->clicked.connect(
 		preset_import_dialog.hide.slot() );
@@ -211,7 +186,9 @@ GUI::GUI( Config & config, MidiController & mc,
 	preset_import_dialog.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &preset_import_dialog ) );
 	
+	//
 	// record file-selector dialog
+	//
 	record_fileselect.set_title( "set output WAV file" );
 	record_fileselect.set_filename( "/tmp/amSynth-out.wav" );
 	record_fileselect.get_cancel_button()->clicked.connect(
@@ -223,7 +200,9 @@ GUI::GUI( Config & config, MidiController & mc,
 	record_fileselect.delete_event.connect(
 		bind( slot(this, &GUI::delete_events), &record_fileselect ));
 	
+	//
 	// the record dialog
+	//
 	record_dialog.set_title( "Capture Output" );
 	preset_import_dialog.set_transient_for( *this );
 	record_dialog.add( record_vbox );
@@ -257,8 +236,9 @@ GUI::GUI( Config & config, MidiController & mc,
 	record_recording = false;
 	record_statusbar.push( 1, "capture status: STOPPED" );
 	
-	
+	//
 	// the quit confirmation window
+	//
 	quit_confirm.set_title( "Quit?" );
 	quit_confirm.set_usize( 300, 200 );
 	quit_confirm.get_vbox()->add( quit_confirm_label );
@@ -274,7 +254,9 @@ GUI::GUI( Config & config, MidiController & mc,
 	quit_confirm.set_transient_for( *this );
 	quit_confirm.delete_event.connect( bind( slot( this, &GUI::delete_events ), &quit_confirm ) );
 
+	//
 	// font selection dialog
+	//
 	font_sel.get_ok_button()->clicked.connect(
 			bind(slot(this, &GUI::event_handler),"font::ok") );
 	font_sel.get_apply_button()->clicked.connect(
@@ -283,8 +265,10 @@ GUI::GUI( Config & config, MidiController & mc,
 			bind(slot(this, &GUI::event_handler),"font::cancel") );
 	font_sel.delete_event.connect( 
 			bind(slot(this, &GUI::delete_events), &font_sel ) );
-	
+
+	//
 	// show realtime warning message if necessary
+	//
 	if(!(this->config->realtime))
 		if (!(this->config->realtime))
 		// dont care if using JACK..
@@ -353,47 +337,42 @@ GUI::create_menus	( )
         Menu *menu_preset = manage (new Menu());
         MenuList& list_preset = menu_preset->items ();
 	
-	/*
-	list_preset.push_back (MenuElem("_Copy","<control>C",
-			bind(slot(this, &GUI::event_handler),
-			"preset::copy")));
-	list_preset.push_back (MenuElem("_Paste","<control>V",
-			bind(slot(this, &GUI::event_handler),
-			"preset::paste")));
+	list_preset.push_back (manage (new TearoffMenuItem ()));
 	
+	list_preset.push_back (MenuElem("_New","<control>N",
+			slot(this, &GUI::preset_new)));
+	list_preset.push_back (MenuElem("_Copy","<control>C",
+			slot(this, &GUI::preset_copy)));
+	list_preset.push_back (MenuElem("_Paste","<control>V",
+			slot(this, &GUI::preset_paste)));
+	list_preset.push_back (MenuElem("Paste as New","",
+			slot(this, &GUI::preset_paste_as_new)));
+	
+	list_preset.push_back (SeparatorElem());
+	
+	list_preset.push_back (MenuElem("Rename","",
+			bind(slot(this, &GUI::event_handler),
+			"preset::rename")));
+	list_preset.push_back (MenuElem("Clear","",
+			bind(slot(this, &GUI::event_handler),
+			"preset::delete")));
+
 	list_preset.push_back (SeparatorElem());
 	
 	list_preset.push_back (MenuElem("_Randomise","<control>R",
 			bind(slot(this, &GUI::event_handler),
 			"preset::randomise")));
-	*/
-	list_preset.push_back (manage (new TearoffMenuItem ()));
 
-	list_preset.push_back (MenuElem("_New","<control>N",
-			bind(slot(this, &GUI::event_handler),
-			"preset::new")));	
-	list_preset.push_back (MenuElem("Rename","",
-			bind(slot(this, &GUI::event_handler),
-			"preset::rename")));
-	list_preset.push_back (MenuElem("Copy","",
-			bind(slot(this, &GUI::event_handler),
-			"preset::copy")));
-	list_preset.push_back (MenuElem("Save As...","",
-			bind(slot(this, &GUI::event_handler),
-			"preset::saveas")));
-	list_preset.push_back (MenuElem("_Randomise","<control>R",
-			bind(slot(this, &GUI::event_handler),
-			"preset::randomise")));
-	list_preset.push_back (MenuElem("Delete","",
-			bind(slot(this, &GUI::event_handler),
-			"preset::delete")));
-	list_preset.push_back (MenuElem("Import as current","",
+	list_preset.push_back (SeparatorElem());
+	
+	list_preset.push_back (MenuElem("Import...","",
 			bind(slot(this, &GUI::event_handler),
 			"preset::import")));
-	list_preset.push_back (MenuElem("Export current","",
+	list_preset.push_back (MenuElem("Export...","",
 			bind(slot(this, &GUI::event_handler),
 			"preset::export")));
-		
+
+			
 	//
 	// Config menu
 	//
@@ -427,14 +406,15 @@ GUI::create_menus	( )
 	menu_item = manage (new MenuItem("Record to .wav file..."));
 	menu_item->activate.connect 
 			(bind(slot(this, &GUI::event_handler),"record_dialog"));
-	if (!audio_out->canRecord ())
-		menu_item->set_sensitive (false);
+	if (audio_out)
+		if (!audio_out->canRecord ())
+			menu_item->set_sensitive (false);
 	list_utils.push_back (*menu_item);
 	
 		
 	
 	//
-	// Add menus to menubar
+	// Menubar
 	//
 	MenuBar *menu_bar = manage (new MenuBar ());
 	
@@ -566,38 +546,6 @@ GUI::event_handler(string text)
 		presetCV->update();
 		preset_rename.hide();
 		return;
-    } else if (text == "preset::new") {
-		preset_new_entry.set_text( "" );
-		preset_new_entry.grab_focus();
-		preset_new.show_all();
-		return;
-    } else if (text == "preset::new::ok") {
-		if(!preset_controller->newPreset()){
-			preset_controller->getCurrentPreset().setName( 
-				preset_new_entry.get_text() );
-		}
-		presetCV->update();
-		preset_new.hide();
-		return;
-    } else if (text == "preset::copy") {
-		// populate the combo box with the possible presets to copy from
-		list<string> gl;
-		for (int preset=0; preset<PRESETS; preset++){
-			string preset_name = preset_controller->getPreset(preset).getName();
-			if ( preset_name != "New Preset" ) gl.push_back( preset_name );
-		}
-		preset_copy_combo.set_popdown_strings( gl );
-		preset_copy_combo.get_entry()->grab_focus();
-		preset_copy.show_all();
-		return;
-    } else if (text == "preset::copy::ok") {
-		string name = preset_controller->getCurrentPreset().getName();
-		preset_controller->getCurrentPreset().clone( 
-			preset_controller->getPreset( preset_copy_combo.get_entry()->get_text() ) );
-		preset_controller->getCurrentPreset().setName( name );
-		presetCV->update();
-		preset_copy.hide();
-		return;
     } else if (text == "preset::delete") {
 		preset_delete.show_all();
 		return;
@@ -626,25 +574,6 @@ GUI::event_handler(string text)
     } else if (text == "preset::import::ok") {
 		preset_controller->importPreset( preset_import_dialog.get_filename() );
 		preset_import_dialog.hide();
-		return;
-    } else if (text == "preset::saveas") {
-		preset_saveas_entry.grab_focus();
-		preset_saveas.show_all();
-		return;
-    } else if (text == "preset::saveas::ok") {
-		Preset preset;
-		preset.clone( preset_controller->getCurrentPreset() );
-		preset_controller->newPreset();
-		preset_controller->getCurrentPreset().clone( preset );
-		preset_controller->getCurrentPreset().setName( 
-			preset_saveas_entry.get_text() );
-		preset_controller->commitPreset();
-		presetCV->update();
-		preset_saveas.hide();
-	} else if (text == "preset::saveas::cancel") {
-		preset_saveas.hide();
-	} else if (text == "controller_map_dialog") {
-		controller_map_dialog->show_all();
 		return;
     } else if (text == "quit") {
 		quit_confirm.show_all();
@@ -765,4 +694,29 @@ void
 GUI::setPresetController(PresetController & p_c)
 {
     preset_controller = &p_c;
+}
+
+void
+GUI::preset_new		( )
+{
+	preset_controller->newPreset ();
+}
+
+void
+GUI::preset_copy	( )
+{
+	clipboard_preset.clone (preset_controller->getCurrentPreset ());
+}
+
+void
+GUI::preset_paste	( )
+{
+	preset_controller->getCurrentPreset().clone (clipboard_preset);
+}
+
+void
+GUI::preset_paste_as_new( )
+{
+	preset_new ();
+	preset_controller->getCurrentPreset().clone (clipboard_preset);
 }
