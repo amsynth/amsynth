@@ -121,8 +121,6 @@ GUI::GUI( Config & config, MidiController & mc,
 		rb_pv[i] = new RadioButtonParameterView( pipe[1] );
 	param_switch = new ParameterSwitch( pipe[1] );
 
-//	set_x_font( "-*-helvetica-medium-r-*-*-*-100-75-75-*-*-*-*" );
-	
 
 #ifdef _DEBUG
 	cout << "<GUI::GUI()> created ParameterViews" << endl;
