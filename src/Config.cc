@@ -61,7 +61,7 @@ Config::load	( string filename )
 			for (int i=0; i<256; i++)
 			{
 				file.get( tmp );
-
+				
 				if (!whitespace || tmp != ' ')
 				{
 					if (tmp == '\n')
@@ -76,6 +76,7 @@ Config::load	( string filename )
 			
 			xfontname = str;
 			load_font = 1;
+			*buffer = '!';
 		} else {
 			file >> buffer;
 		}

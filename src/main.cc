@@ -292,7 +292,11 @@ int main( int argc, char *argv[] )
 		gui = new GUI( config, *midi_controller, *vau, the_pipe, 0, (const char*)"amSynth (silent)" );
 	gui->setPresetController( *presetController );
 	gui->init();
-	if (config.xfontname!="") gui->set_x_font ( config.xfontname.c_str() );
+	if (config.xfontname!="")
+	{
+		std::cerr << ":::" << config.xfontname << ":::\n";
+		gui->set_x_font ( config.xfontname.c_str() );
+	}
 	
 	// cannot be called SUID:
 	kit.run();
