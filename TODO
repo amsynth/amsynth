@@ -1,14 +1,19 @@
 amSynth TODO list
 -----------------
 
-soon (current major version):
+Next revision:
++ stop segfaults when audio subsystem doesn't start up properly
++ decide on & implement meaningful exit codes for script to interpret
++ integrate launch script into auto**** build & install process
+
+Ongoing, ASAP:
 + find & fix audio output bug (output dies & kills output from all programs
   to the soundcard)
-+ improve the record dialog
 
-intermediate / long term
-+ improve behaviour of the volume control
+Soon, but not urgent:
++ configuration panel for ~/.amSynthrc
+
+long term
 + bandlimited oscillators
-+ sanitise control signal processing
 + built-in virtual keyboard
 + add a delay (ie a switchable attack/decay envelope) to lfo
