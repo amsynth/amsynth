@@ -1,9 +1,10 @@
 	Hi, and thanks for your interest in amSynth. ;-)
-		http://amsynthe.sourceforge.net
+	     http://amsynthe.sourceforge.net/amSynth
 	------------------------------------------------
 
 amSynth is a real-time analogue modelling synthesizer.
-It currently uses the OSS/ALSA audio and midi devices for its input and output.
+It currently uses the OSS/ALSA audio and midi devices for its input and output,
+and can do JACK audio too!
 
 	** Welcome to the rc2 "jack" release of amSynth **
 
@@ -18,32 +19,42 @@ create! Good luck!
 
 - Nick Dowell
 
+
 Running amSynth
 ---------------
 read INSTALL for installation instructions!!
 
-Once youve compiled and put amSynth in your $PATH (you can, of course, also run
-it by supplying the full path+executable name) run it with the -h flag to get a
-list of command-line options. 
+Once youve compiled and installed amSynth, run it with the -h flag to get a list
+of command-line options. 
+
+For more in-depth discussion of using amSynth, please visit the web-forum at
+http://amsynthe.sourceforge.net/amSynth/forum
+
 
 Configuration
 -------------
 To save passing command-line options every time, you can set the options in the
 ~/.amSynthrc file. Also, there are some options which can only be set in this 
-file, so it is recommended to create one.
-To get an idea what this file looks like, there's an example in the `skel' 
-directory. copy it to your home dir. and edit it to your taste.
+file, so it is recommended to customise it.
+
 
 Presets
 -------
 Presets are stored in the file ~/.amSynth.presets
-By default, you will have no presets to play with, you will have to create them
-yourself. I have included a ".amSynth.presets" file in the `skel' directory,
-so you can start playing with some useable sounds straight away. Copy it to your
-home dir. 
+
+You can specify another file using the 'amSynth -b <file>' command line option
+
 
 Known problems
 --------------
+I have tested this software on my setup, and for me it seems to work fine..
+So far I've used it succesfully with:
++ Cubase (Atari ST) running on another machine
++ seq24 running on the same machine
++ MuSE running on the same machine
++ Rosegarden 4 running on the same machine
++ vkeybd (virtual keyboard program) running on the same machine
+
 Although I've been using this software myself for a while without many problems,
 I am aware of some issues which have arisen in the past :-
 
@@ -63,8 +74,10 @@ You have been warned!
 But more importantly, have fun ;-)
 
 	!! IMPORTANT !!
+	!!!!!!!!!!!!!!!
 
 If you find a bug in amSynth, or just something plain annoying, please give some
 feedback, this is the only way the software will improve, and you want that, 
 don't you? ;-)
 Send messages to the mailng list: amsynthe-main@lists.sourceforge.net
+or discuss on-line: http://amsynthe.sourceforge.net/amSynth/forum

@@ -106,6 +106,7 @@ int main( int argc, char *argv[] )
 	if( pipe( the_pipe ) ) cout << "pipe() error\n";
 	int jack = 0;
 	int enable_audio = 1;
+	int enable_gui = 1;
 	// set default parameters
 	config.audio_driver = "auto";
 	config.midi_driver = "auto";
@@ -124,9 +125,13 @@ int main( int argc, char *argv[] )
 	ifstream file( fname.c_str(), ios::in );
 	char buffer[100];
 	while( file.good() ) {
-		file >>  buffer;
+		file >> buffer;
 		if( string(buffer)=="#" ){
 			// ignore lines beginning with '#' (comments)
+			// this next line is needed to deal with a line with 
+			// just a '#'
+			file.unget();
+			// this moves file on by a whole line, so we ignore it
 			file.get(buffer,100);
 		} else if (string(buffer)=="audio_driver"){
 			file >> buffer;
@@ -202,39 +207,46 @@ int main( int argc, char *argv[] )
 	//
 	// initialise audio
 	//
-#ifdef with_jack
-	if (config.audio_driver=="jack"||config.audio_driver=="JACK")
+	if (enable_audio)
 	{
-		jack = 1;
-		out = new JackOutput();
-	}
-	else
+#ifdef with_jack
+		if (config.audio_driver=="jack"||config.audio_driver=="JACK")
+		{
+			jack = 1;
+			out = new JackOutput();
+		}
+		else
 #endif
-		out = new AudioOutput();
+			out = new AudioOutput();
 	
-	out->setConfig( config );
-	vau = new VoiceAllocationUnit( config ); //after were sure of sample_rate
-	out->setInput( *vau );
+		out->setConfig( config );
+	}
+	
+	vau = new VoiceAllocationUnit( config ); // were sure of sample_rate now
+	if (enable_audio) out->setInput( *vau );
 	
 	presetController->loadPresets();
 	
 	int audio_res;
 	if( enable_audio )
 	{
-		if (jack)
-			out->run();
-		else
-			audio_res = pthread_create( &audioThread, NULL,
-							audio_thread, NULL );
+		if (jack) out->run();
+		else audio_res = 
+			pthread_create(&audioThread, NULL, audio_thread, NULL);
 	}
 	
 	
 	//
 	// init midi
 	//
-	midi_controller = new MidiController( config, out->getTitle() );
+	if (enable_audio)
+		midi_controller = new MidiController( config, out->getTitle() );
+	else
+		midi_controller = new MidiController( config, "amSynth" );
+
 	int midi_res;
-	midi_res = pthread_create( &midiThread, NULL, midi_thread, NULL );
+	if (enable_gui) midi_res = 
+			pthread_create( &midiThread, NULL, midi_thread, NULL );
   
 	// need to drop our suid-root permissions :-
 	// GTK will not work SUID for security reasons..
@@ -245,7 +257,12 @@ int main( int argc, char *argv[] )
 	midi_controller->setPresetController( *presetController );
   
 	vau->setPreset( presetController->getCurrentPreset() );
+
+	presetController->selectPreset( 1 );
+        presetController->selectPreset( 0 );
 	
+	if (enable_gui==1)
+	{	
 	Gtk::Main kit( &argc, &argv ); // this can be called SUID
 	
 	// make GDK loop read events from the pipe
@@ -253,13 +270,18 @@ int main( int argc, char *argv[] )
 
 	// give audio/midi threads time to start up first..
 	sleep( 1 );
-		
-	gui = new GUI( config, *midi_controller, *vau, the_pipe, *out, out->getTitle() ); // this can be called SUID
+
+	// this can be called SUID:
+	gui = new GUI( config, *midi_controller, *vau, the_pipe, *out, 
+			out->getTitle() );
 	gui->setPresetController( *presetController );
 	gui->init();
-	presetController->selectPreset( 1 );
-	presetController->selectPreset( 0 );
-	kit.run(); // this _cannot_ be run SUID
+
+	// cannot be called SUID:
+	kit.run();
+	}
+	else midi_controller->run();
+
 
 #ifdef _DEBUG
 	cout << "main() : GUI was terminated, shutting down cleanly.." << endl;

@@ -5,7 +5,7 @@
 #ifndef _MIDI_DRIVER_H
 #define _MIDI_DRIVER_H
 
-#define MIDI_BUF_SIZE 1
+#define MIDI_BUF_SIZE 64
 
 #include <string>
 #include "../base.h"

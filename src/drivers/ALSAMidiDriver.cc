@@ -11,12 +11,12 @@ ALSAMidiDriver::read(unsigned char *midi_event_buffer)
 {
 #ifdef with_alsa
 	snd_seq_event_t *ev;
-	if ( poll(pfd, npfd, 100000) > 0 ){
-		snd_seq_event_input( seq_handle, &ev );
-		_bytes_read = snd_midi_event_decode( seq_midi_parser, 
-						midi_event_buffer, 4, ev );
-		snd_seq_free_event( ev );
-    }
+	
+	snd_seq_event_input( seq_handle, &ev );
+	_bytes_read = snd_midi_event_decode
+		( seq_midi_parser, midi_event_buffer, 32, ev );
+	snd_seq_free_event( ev );
+
 	return _bytes_read;
 #else
 	return -1;
@@ -48,11 +48,6 @@ int ALSAMidiDriver::open(string device, string name)
 		exit(1);
 	}
 
-	npfd = snd_seq_poll_descriptors_count(seq_handle, POLLIN);
-	pfd = (struct pollfd *)alloca(npfd * sizeof(struct pollfd));
-	snd_seq_poll_descriptors(seq_handle, pfd, npfd, POLLIN);
-
-
 	client_id = snd_seq_client_id( seq_handle );
 
 	return 0;
@@ -64,7 +59,7 @@ int ALSAMidiDriver::open(string device, string name)
 ALSAMidiDriver::ALSAMidiDriver()
 {
 #ifdef with_alsa
-	if( snd_midi_event_new( 4, &seq_midi_parser ) )
+	if( snd_midi_event_new( 32, &seq_midi_parser ) )
 		cout << "Error creating midi event parser\n";
 #endif
 }

@@ -1,0 +1,20 @@
+20/01/2003
+- fixed bug in rc file parsing - failed on lines containing a single '#'
+- fixed midi controllers problem - using controllers on alsa midi driver would
+freeze the midi thread. stopped use of poll(...), and now seems to work fine.
+
+14/01/2003
+Well, lots of stuff done today.
+- finished updating the ./configure script. no longer uses acinclude.m4
+- adapted the whole project to the automake/autoconf system - 'make install' and
+'make dist' targets now work fine :)
+- rc file and presets now installed on the system
+- 'amSynth' is now a script which launches the executable (hidden), so on first
+run the default files will be copied, and launches a text editor to make the 
+user set it up..
+- compile fixes for debuf builds
+- wrote performace analyser (sic)
+- after analysis, found changing the -mcpu -march flags has no beneficial 
+effect, so removed this option. and -O6 is no faster than -O3, so -O3 is now the
+default. in fact, ran faster with no -march or -mcpu flags!!
+- removed unused files

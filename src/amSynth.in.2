@@ -34,6 +34,16 @@ exit
 fi
 
 #
+# copy default controller setup if required
+#
+if test -f ~/.amSynthControllersrc; then
+	INST=no
+else
+	echo "Copying default MIDI controller config to ~/.amSynthControllersrc"
+	cp $DATADIR/Controllersrc ~/.amSynthControllersrc
+fi
+
+#
 # copy default bank if required
 #
 if test -f ~/.amSynth.presets; then

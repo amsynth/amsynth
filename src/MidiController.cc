@@ -8,10 +8,10 @@
 MidiController::MidiController( Config & config, string name )
 {
 	this->config = &config;
-    running = 0;
-    buffer = new unsigned char[MIDI_BUF_SIZE];
-    presetController = 0;
-    _va = 0;
+	running = 0;
+	buffer = new unsigned char[MIDI_BUF_SIZE];
+	presetController = 0;
+	_va = 0;
 	last_active_controller.setMin( 0 );
 	last_active_controller.setMax( 32 );
 	last_active_controller.setStep( 1 );
@@ -21,24 +21,24 @@ MidiController::MidiController( Config & config, string name )
 
 MidiController::~MidiController()
 {
-    delete[]buffer;
+	delete[]buffer;
 }
 
 void
 MidiController::setPresetController(PresetController & pc)
 {
-    presetController = &pc;
+	presetController = &pc;
+	
 	for(int i=0; i<32; i++)
-		midi_controllers[i] = &(presetController->getCurrentPreset().getParameter("null"));
+		midi_controllers[i] = &(presetController->getCurrentPreset().
+				getParameter("null"));
+
+	midi_controllers[1] = &(presetController->getCurrentPreset().
+			getParameter("freq_mod_amount"));
+	midi_controllers[7] = &(presetController->getCurrentPreset().
+			getParameter("master_vol"));
 	
-	//
-	//	THIS NEEDS TO BE CHANGED!!
-	//
-	midi_controllers[1] = &(presetController->getCurrentPreset().getParameter("freq_mod_amount"));
-	midi_controllers[7] = &(presetController->getCurrentPreset().getParameter("master_vol"));
-	
-	
-	// load Config from file. this should probably be moved to its own function..
+	// load controller mapping config. from file	
 	string fname(getenv("HOME"));
 	fname += "/.amSynthControllersrc";
 	ifstream file(fname.c_str(), ios::out);
@@ -47,8 +47,10 @@ MidiController::setPresetController(PresetController & pc)
 	if (file.bad())	return;
   
 	file >> buffer;
-	while( file.good() ){
-		midi_controllers[i++] = &(presetController->getCurrentPreset().getParameter( string(buffer) ));
+	while( file.good() )
+	{
+		midi_controllers[i++] = &(presetController->getCurrentPreset().
+				getParameter( string(buffer) ));
 		file >> buffer;
 	}
 	file.close();
@@ -67,10 +69,10 @@ MidiController::run()
 #ifdef _DEBUG
     cout << "<MidiController> opening midi interface.." << endl;
 #endif
-    if( midi.open( *config, clientname ) == -1 ){
-		cout << "<MidiController> failed to open MIDI. midi_driver:" <<
-			config->midi_driver << endl;
-		cout << config->audio_driver << endl;
+    if( midi.open( *config, clientname ) == -1 )
+    {
+		cout << "<MidiController> failed to init MIDI. midi_driver:" 
+			<< config->midi_driver << endl;
 		exit(-1);
     }
 #ifdef _DEBUG
@@ -268,20 +270,25 @@ MidiController::controller_change(unsigned char controller,
 			
 		case 122:
 			if( !value )
-				cerr << "All Notes Off" << endl;
+				_va->killAllVoices();
+		case 123:
 		// All Notes Off
+			_va->killAllVoices();
 
 		default:
 			if( last_active_controller.getValue() != controller )
 				last_active_controller.setValue( controller );
 			float fval = value/(float)127;
-//			cout << "<MidiController> controller: " << (float) controller
-//				<< " value: " << (float) value << "fval " << fval << endl;
-			if( controller<32)
-				if(midi_controllers[controller])
-					midi_controllers[controller]->setValue( 
-						fval*(midi_controllers[controller]->getMax()-midi_controllers[controller]->getMin())
-						+ midi_controllers[controller]->getMin() );
+#ifdef _DEBUG
+			cout << "<MidiController> controller: " 
+				<< (float) controller << " value: " 
+				<< (float) value << "fval " << fval << endl;
+#endif
+			if (controller<32) 
+			midi_controllers[controller]->setValue(
+				fval*(midi_controllers[controller]->getMax()-
+					midi_controllers[controller]->getMin())
+				+midi_controllers[controller]->getMin() );
 			break;
     }
 	return;
