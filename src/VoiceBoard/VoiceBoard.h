@@ -24,6 +24,36 @@
 #include "../Preset.h"
 #include "../Parameter.h"
 
+typedef struct voiceboard_process_memory {
+	float	osc_1[BUF_SIZE];
+	float	osc_2[BUF_SIZE];
+	float	lfo_osc_1_acc[BUF_SIZE];
+	float	lfo_osc_1[BUF_SIZE];
+	float	key_pitch[BUF_SIZE];
+	float	freq_mod_mix_amount[BUF_SIZE];
+	float	lfo_freq[BUF_SIZE];
+	float	osc_2_detune[BUF_SIZE];
+	float	osc_2_range[BUF_SIZE];
+	float	osc_mix[BUF_SIZE];
+	float	osc1_pulsewidth[BUF_SIZE];
+	float	osc_1_pulsewidth[BUF_SIZE];
+	float	osc2_pulsewidth[BUF_SIZE];
+	float	osc_2_pulsewidth[BUF_SIZE];
+	float	osc_1_pwm_amount[BUF_SIZE];
+	float	mod_add[BUF_SIZE];
+	float	filter_env[BUF_SIZE];
+	float	amp_env[BUF_SIZE];
+	float	freq[BUF_SIZE];
+	float	freq_mod_mult[BUF_SIZE];
+	float	mod_mult[BUF_SIZE];
+	float	osc2_freq[BUF_SIZE];
+	float	osc1_pw[BUF_SIZE];
+	float	freq_mod_mix[BUF_SIZE];
+	float	osc_mixer[BUF_SIZE];
+	float	osc1_pw_mixer[BUF_SIZE];
+} voiboard_process_memory;
+	
+
 /**
  * the VoiceBoard is what makes the nice noises... ;-)
  *
@@ -33,7 +63,7 @@
 
 class VoiceBoard:public NFSource {
 public:
-	VoiceBoard(int rate);
+	VoiceBoard(int rate, voiceboard_process_memory *mem);
 	virtual ~VoiceBoard();
 	void init();
 	inline float *getNFData();

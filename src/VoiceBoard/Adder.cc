@@ -5,11 +5,10 @@
 #ifdef _DEBUG
 #include <iostream>
 #endif
-Adder::Adder()
+Adder::Adder(float *buf)
 {
 	no_of_inputs = 0;
-	_buffer = new float[BUF_SIZE];
-	inBuffer = new float[BUF_SIZE];
+	_buffer = buf;
 	for (int i = 0; i < MAX_INPUTS; i++)
 		inputExists[i] = 0;
 }

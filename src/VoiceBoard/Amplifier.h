@@ -19,7 +19,7 @@
 class Amplifier : public NFSource, public NFInput {
 
 public:
-	Amplifier();
+	Amplifier(float *buf);
 	virtual ~Amplifier();
 	/**
 	 * @param source the NFSource to use as the (audio) input

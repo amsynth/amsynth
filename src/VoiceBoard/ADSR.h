@@ -25,7 +25,7 @@
  */
 class ADSR : public EnvelopeGenerator, public UpdateListener {
   public:
-    ADSR(int rate);
+    ADSR(int rate, float *buf);
     ~ADSR();
     inline float *getNFData();
 	/**

@@ -4,10 +4,10 @@
 
 #include "FValue.h"
 
-FValue::FValue()
+FValue::FValue(float *buf)
 {
 	_value = 0.0;
-	_buffer = new float[BUF_SIZE];
+	_buffer = buf;
 	getvalfunc = &FValue::getIntVal;
 }
 

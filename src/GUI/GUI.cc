@@ -545,7 +545,7 @@ GUI::init()
 	adj_midi->value_changed.connect (slot (this, &GUI::changed_midi_channel));
 	Gtk::SpinButton *sb_midi = manage (new Gtk::SpinButton(*adj_midi,1,0));
 	
-	adj_voices = manage (new Gtk::Adjustment(config->polyphony,0,128,1));
+	adj_voices = manage (new Gtk::Adjustment(config->polyphony,1,128,1));
 	adj_voices->value_changed.connect (slot (this, &GUI::changed_voices));
 	Gtk::SpinButton *sb_voices = manage (new Gtk::SpinButton(*adj_voices,1,0));
 	

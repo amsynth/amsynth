@@ -3,9 +3,9 @@
  **/
 #include "Mixer.h"
 
-Mixer::Mixer()
+Mixer::Mixer(float *buf)
 {
-    buffer = new float[BUF_SIZE];
+    buffer = buf;
     mode_param = 0;
     mix_mode = 0;
 }

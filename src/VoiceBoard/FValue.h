@@ -17,7 +17,7 @@
  **/
 class FValue:public FSource {
   public:
-    FValue();
+    FValue(float *buf);
     virtual ~FValue();
     inline float *getFData();
     void setValue(float value);

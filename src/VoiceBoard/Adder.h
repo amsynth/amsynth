@@ -14,7 +14,7 @@
  */
 class Adder: public FSource {
   public:
-    Adder();
+    Adder(float *buf);
     virtual ~Adder();
 	/**
 	 * add a source to be added to the others to find the output.

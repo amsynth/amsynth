@@ -6,12 +6,14 @@
 #define _PARAMETERKNOB_H
 
 #include <gtk--/box.h>
+#include <gtk--/menu.h>
 #include <gtk--/frame.h>
 #include <gtk--/label.h>
 #include <gtk--/adjustment.h>
 #include <stdlib.h>
 #include "ParameterView.h"
 #include "Knob.h"
+
 
 class ParameterKnob : public ParameterView, public Gtk::VBox {
   public:

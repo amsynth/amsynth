@@ -16,7 +16,7 @@
 
 class Multiplier : public FSource {
 public:
-	Multiplier();
+	Multiplier(float *buf);
 	virtual ~Multiplier();
 	void addInput(FSource & source);
 	void removeInput(FSource & source);
@@ -29,4 +29,3 @@ private:
 };
 
 #endif
-

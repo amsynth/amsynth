@@ -17,7 +17,7 @@
  **/
 class NFValue:public NFSource {
   public:
-    NFValue();
+    NFValue(float *buf);
     virtual ~NFValue();
     inline float *getNFData();
     void setValue(float value);

@@ -7,10 +7,10 @@
 #include <iostream>
 #include "Oscillator.h"
 
-Oscillator::Oscillator(int rate)
+Oscillator::Oscillator(int rate, float *buf)
 {
-    outBuffer = new float[BUF_SIZE];
-    pulseBuffer = new float[BUF_SIZE];
+    outBuffer = buf;
+    pulseBuffer = new float[1];
     pulseWidth = 0;
     rads = 0.0;
     waveform = 1;
@@ -25,7 +25,6 @@ Oscillator::Oscillator(int rate)
 
 Oscillator::~Oscillator()
 {
-    delete[] outBuffer;
     delete[] pulseBuffer;
 }
 

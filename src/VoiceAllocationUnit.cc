@@ -6,8 +6,20 @@
 #include <iostream>
 #include <math.h>
 
+static voiceboard_process_memory process_memory;
+static float master_vol_buf[BUF_SIZE];
+static float pw_val_buf[BUF_SIZE];
+static float zero_buf[BUF_SIZE];
+static float mixer_buf[BUF_SIZE];
+static float amp_buf[BUF_SIZE];
+
 VoiceAllocationUnit::VoiceAllocationUnit( Config & config ) :
-	limiter(config.sample_rate)
+	mixer(mixer_buf),
+	limiter(config.sample_rate),
+	amp(amp_buf),
+	master_vol(master_vol_buf),
+	pw_val(pw_val_buf),
+	zero(zero_buf)
 {
 	this->config = &config;
 	max_voices = config.polyphony;
@@ -16,7 +28,7 @@ VoiceAllocationUnit::VoiceAllocationUnit( Config & config ) :
 #endif
 	for (int i = 0; i < 128; i++) {
 		keyPressed[i] = 0;
-		_voices[i] = new VoiceBoard(config.sample_rate);
+		_voices[i] = new VoiceBoard(config.sample_rate, &process_memory);
 		// voices are initialised in setPreset() below...
 	}
   

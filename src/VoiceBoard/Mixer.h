@@ -21,7 +21,7 @@
 
 class Mixer : public NFSource, public UpdateListener {
 public:
-	Mixer();
+	Mixer(float *buf);
 	virtual ~Mixer();
 	void setInput1(FSource & source);
 	void setInput2(FSource & source);

@@ -4,14 +4,32 @@
 
 #include "VoiceBoard.h"
 
-VoiceBoard::VoiceBoard(int rate):
+VoiceBoard::VoiceBoard(int rate, voiceboard_process_memory *mem):
 	// call object constructors with parameters
-	mod_lfo_real(rate),
-	osc1(rate), 
-	osc2(rate), 
-	filter(rate), 
-	filter_env(rate), 
-	amp_env(rate)
+	key_pitch(mem->key_pitch),
+	freq_mod_mix_amount		(mem->freq_mod_mix_amount),
+	lfo_freq				(mem->lfo_freq),
+	mod_add					(mem->mod_add),
+	osc2_detune				(mem->osc_2_detune),
+	osc2_range				(mem->osc_2_range),
+	mod_lfo_real			(rate, mem->lfo_osc_1),
+	osc1_pulsewidth_control	(mem->osc_1_pulsewidth),
+	osc2_pulsewidth_control	(mem->osc_2_pulsewidth),
+	osc1_pwm_amt			(mem->osc_1_pwm_amount),
+	osc1					(rate, mem->osc_1),
+	osc2					(rate, mem->osc_2),
+	filter					(rate), 
+	filter_env				(rate,mem->filter_env), 
+	amp_env					(rate,mem->amp_env),
+	osc_mix					(mem->osc_mix),
+	freq					(mem->freq),
+	freq_mod_mult			(mem->freq_mod_mult),
+	mod_mult				(mem->mod_mult),
+	osc2_freq				(mem->osc2_freq),
+	osc1_pw					(mem->osc1_pw),
+	freq_mod_mix			(mem->freq_mod_mix),
+	osc_mixer				(mem->osc_mixer),
+	osc1_pw_mixer			(mem->osc1_pw_mixer)
 {
 	this->rate = rate;
 }

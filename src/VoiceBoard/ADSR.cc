@@ -15,13 +15,13 @@
 #define ADSR_S   3
 #define ADSR_R   4
 
-ADSR::ADSR(int rate)
+ADSR::ADSR(int rate, float *buf)
 {
     this->rate = rate;
     state = 0;
     c_val = 0;
 
-    buffer = new float[BUF_SIZE];
+    buffer = buf;
 }
 
 ADSR::~ADSR()

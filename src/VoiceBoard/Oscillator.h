@@ -15,7 +15,7 @@
  */
 class Oscillator:public NFSource, public FInput, public UpdateListener {
   public:
-	Oscillator(int rate);
+	Oscillator(int rate, float *buf);
     virtual ~Oscillator();
     inline float *getNFData();
     void setInput(FSource & source);

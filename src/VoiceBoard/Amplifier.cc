@@ -4,9 +4,9 @@
 #include "Amplifier.h"
 #include <iostream>
 
-Amplifier::Amplifier()
+Amplifier::Amplifier(float *buf)
 {
-    buffer = new float[BUF_SIZE];
+    buffer = buf;
 }
 
 Amplifier::~Amplifier()
