@@ -17,7 +17,7 @@ public:
     ALSAMidiDriver();
     virtual ~ ALSAMidiDriver();
     int read(unsigned char *midi_event_buffer);
-    int open( string device );
+    int open( string device, string name );
     int close();
 private:
 #ifdef _ALSA

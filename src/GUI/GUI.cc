@@ -30,7 +30,7 @@ GUI::serve_request()
 }
 
 GUI::GUI( Config & config, MidiController & mc, 
-			VoiceAllocationUnit & vau, int pipe[2], GenericOutput & audio )
+			VoiceAllocationUnit & vau, int pipe[2], GenericOutput & audio, const char *title )
 {
 #ifdef _DEBUG
 	cout << "<GUI::GUI()>" << endl;
@@ -48,16 +48,16 @@ GUI::GUI( Config & config, MidiController & mc,
 		// messes up the audio thread's timing if not realtime...
 		Gtk::Main::timeout.connect( slot(this,&GUI::idle_callback), 200 );
 
-    string title = "amSynth";
+//    string title = "amSynth";
 #ifdef _DEBUG
-    title += " DEBUG ( build: ";
-    title += __DATE__;
-    title += " @ ";
-    title += __TIME__;
-    title += ")";
+//    title += " DEBUG ( build: ";
+//    title += __DATE__;
+//    title += " @ ";
+//    title += __TIME__;
+//    title += ")";
 #endif
 #ifndef _DEBUG
-    title += VERSION;
+//    title += VERSION;
 #endif
 
     set_title( title );

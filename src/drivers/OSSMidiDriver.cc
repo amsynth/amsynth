@@ -19,7 +19,7 @@ int OSSMidiDriver::close()
 	return 0;
 }
 
-int OSSMidiDriver::open(string device)
+int OSSMidiDriver::open(string device, string)
 {
     _oss_midi_fd =::open(device.c_str(), O_RDONLY, 0);
     if (_oss_midi_fd == -1)

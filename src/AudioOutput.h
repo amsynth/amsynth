@@ -14,17 +14,19 @@
 class GenericOutput : public NFInput
 {
 public:
-	virtual	void	setInput	( NFSource & source )	= 0;
-	virtual	void	run 		( )			= 0;
-	virtual	void	stop		( )			= 0;
+	virtual	void		setInput	( NFSource & source )	= 0;
+	virtual	void		run 		( )			= 0;
+	virtual	void		stop		( )			= 0;
 	
-	virtual	int	canRecord	( )			= 0;
-	virtual	void	startRecording	( )			= 0;
-	virtual	void	stopRecording	( )			= 0;
-	virtual	void	setOutputFile	( string file )		= 0;
-	virtual	string	getOutputFile	( )			= 0;
+	virtual	int		canRecord	( )			= 0;
+	virtual	void		startRecording	( )			= 0;
+	virtual	void		stopRecording	( )			= 0;
+	virtual	void		setOutputFile	( string file )		= 0;
+	virtual	string		getOutputFile	( )			= 0;
 
-	virtual	void	setConfig	( Config & config )	= 0;
+	virtual	void		setConfig	( Config & config )	= 0;
+
+	virtual	const char*	getTitle	( )	{ return "amSynth"; };
 };
 
 /**

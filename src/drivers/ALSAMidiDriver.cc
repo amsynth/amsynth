@@ -28,7 +28,7 @@ int ALSAMidiDriver::close()
 	return 0;
 }
 
-int ALSAMidiDriver::open(string device)
+int ALSAMidiDriver::open(string device, string name)
 {
 #ifdef _ALSA
 	if (snd_seq_open(&seq_handle, "hw", SND_SEQ_OPEN_DUPLEX, 0) < 0) {
@@ -36,7 +36,7 @@ int ALSAMidiDriver::open(string device)
 		exit(1);
 	}
 	
-	snd_seq_set_client_name(seq_handle, "amSynth");
+	snd_seq_set_client_name(seq_handle, name.c_str());
   
 	if ((portid = snd_seq_create_simple_port(seq_handle, "amSynth Midi In",
             SND_SEQ_PORT_CAP_WRITE|SND_SEQ_PORT_CAP_SUBS_WRITE,

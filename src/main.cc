@@ -200,8 +200,10 @@ int main( int argc, char *argv[] )
 	<< config.midi_channel << endl << "AUDIO:- device:" 
 	<< config.audio_device << " sample rate:" << config.sample_rate << endl;
 #endif
-	midi_controller = new MidiController( config );
 	
+	//
+	// initialise audio
+	//
 	if (config.audio_driver=="jack"||config.audio_driver=="JACK")
 	{
 		jack = 1;
@@ -225,6 +227,12 @@ int main( int argc, char *argv[] )
 			audio_res = pthread_create( &audioThread, NULL,
 							audio_thread, NULL );
 	}
+	
+	
+	//
+	// init midi
+	//
+	midi_controller = new MidiController( config, out->getTitle() );
 	int midi_res;
 	midi_res = pthread_create( &midiThread, NULL, midi_thread, NULL );
   
@@ -243,7 +251,7 @@ int main( int argc, char *argv[] )
 	// make GDK loop read events from the pipe
 	gdk_input_add( the_pipe[0], GDK_INPUT_READ, &pipe_event, (void*)NULL );
 	
-	gui = new GUI( config, *midi_controller, *vau, the_pipe, *out ); // this can be called SUID
+	gui = new GUI( config, *midi_controller, *vau, the_pipe, *out, out->getTitle() ); // this can be called SUID
 	gui->setPresetController( *presetController );
 	gui->init();
 	presetController->selectPreset( 1 );

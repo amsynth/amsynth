@@ -21,7 +21,7 @@ class MidiDriver {
     // read() returns the number of bytes succesfully read. numbers < 0 
     // generally indicate failure...
     virtual int read(unsigned char *midi_event_buffer) = 0;
-    virtual int open(string device) = 0;
+    virtual int open(string device, string name) = 0;
     virtual int close() = 0;
 };
 

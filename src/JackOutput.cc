@@ -7,8 +7,8 @@
 
 NFSource	*myinput;
 float		*inbuf, *pt;
-jack_port_t 	*l_port;
-jack_port_t 	*r_port;
+float		*lout, *rout;
+jack_port_t 	*l_port, *r_port;
 jack_client_t 	*client;
 int		sample_rate;
 int		buf_size;
@@ -18,11 +18,10 @@ int
 jack_process (jack_nframes_t nframes, void *arg)
 
 {
-	jack_default_audio_sample_t *lout = (jack_default_audio_sample_t *)
+	lout = (jack_default_audio_sample_t *)
 			jack_port_get_buffer (l_port, nframes);
-	jack_default_audio_sample_t *rout = (jack_default_audio_sample_t *)
+	rout = (jack_default_audio_sample_t *)
 			jack_port_get_buffer (r_port, nframes);
-
 	
 	p = 0;
 	while (p<buf_size)
@@ -64,8 +63,35 @@ jack_shutdown (void *arg)
 
 JackOutput::JackOutput()
 {
+	client_name = "amSynth";
+	
+	// check if there are already any amSynth jack clients...
+	const char **readports;
+	
+	client = jack_client_new( "amSynth-tmp" );
+	readports = jack_get_ports( client, NULL, NULL, JackPortIsOutput );
+	
+	int i=0, c=0;
+	while (readports && readports[i])
+	{
+		if (strncmp( readports[i], "amSynth", 7 )==0) c++;
+		i++;
+	}
+	c/=2;
+	std::cerr << c << " amSynth-jack instances found\n";
+	jack_client_close( client );
+	if (c>0)
+	{
+		char tmp[3];
+		sprintf( tmp, "%d", c );
+		
+		client_name += " (";
+		client_name += string( tmp );
+		client_name += ")";
+	}
+	
 	/* try to become a client of the JACK server */
-	if ( (client = jack_client_new("amSynth")) == 0 )
+	if ( (client = jack_client_new(client_name.c_str())) == 0 )
 	{
 		std::cerr << "jack server not running?\n";
 		exit( 1 );
@@ -74,34 +100,24 @@ JackOutput::JackOutput()
 	/* tell the JACK server to call `process()' whenever
 	   there is work to be done.
 	*/
-
 	jack_set_process_callback (client, jack_process, 0);
 
 	/* tell the JACK server to call `bufsize()' whenever
 	   the maximum number of frames that will be passed
 	   to `process()' changes
 	*/
-
 	jack_set_buffer_size_callback (client, jack_bufsize, 0);
 
 	/* tell the JACK server to call `srate()' whenever
 	   the sample rate of the system changes.
 	*/
-
-
 	jack_set_sample_rate_callback (client, jack_srate, 0);
 
 	/* tell the JACK server to call `jack_shutdown()' if
 	   it ever shuts down, either entirely, or if it
 	   just decides to stop calling us.
 	*/
-
 	jack_on_shutdown (client, jack_shutdown, 0);
-
-	/* display the current sample rate. once the client is activated 
-	   (see below), you should rely on your own sample rate
-	   callback (see above) for this value.
-	*/
 
 	sample_rate = jack_get_sample_rate( client );
 	buf_size = p = jack_get_buffer_size( client );

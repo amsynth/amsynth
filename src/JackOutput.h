@@ -14,19 +14,20 @@
 class JackOutput : public GenericOutput {
 
 public:
-		JackOutput	( );
-	void	setInput	( NFSource & source );
+			JackOutput	( );
+	void		setInput	( NFSource & source );
 	
-	void	run		( );
-	void	stop		( );
+	void		run		( );
+	void		stop		( );
 	
-	int	canRecord	( )		{ return 0; };
-	void	startRecording	( );
-	void	stopRecording	( );
-	void	setOutputFile	( string file )	{ wavoutfile = file; };
-	string	getOutputFile	( )		{ return wavoutfile; };
+	int		canRecord	( )		{ return 0; };
+	void		startRecording	( );
+	void		stopRecording	( );
+	void		setOutputFile	( string file )	{ wavoutfile = file; };
+	string		getOutputFile	( )		{ return wavoutfile; };
 
-	void	setConfig	( Config & config );
+	void		setConfig	( Config & config );
+	const char*	getTitle	( )	{ return client_name.c_str(); };
 
 private:
 	int	running;
@@ -35,6 +36,7 @@ private:
 	string	wavoutfile;
 	int	recording;
 	int	bufsize, srate;
+	string	client_name;
 };
 
 #endif				// _AUDIO_OUTPUT_H

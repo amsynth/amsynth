@@ -14,7 +14,7 @@ class MidiInterface {
   public:
     MidiInterface();
     ~MidiInterface();
-    int open( Config & config );
+    int open( Config & config,string name );
     void close();
     int read(unsigned char *buffer);
 

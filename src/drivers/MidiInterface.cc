@@ -19,7 +19,7 @@ void MidiInterface::close()
   //  delete midi; // this is (was) causing a Segfault....
 }
 
-int MidiInterface::open( Config & config )
+int MidiInterface::open( Config & config, string name )
 {
 	if( config.midi_driver == "auto" ){
 		//try ALSA
@@ -27,7 +27,7 @@ int MidiInterface::open( Config & config )
 #ifdef _DEBUG
 		cout << "<MidiInterface> Trying to open ALSA midi device..." << endl;
 #endif
-		if ((midi->open("")) == 0) {
+		if ((midi->open("",name)) == 0) {
 			config.midi_driver = "ALSA";
 #ifdef _DEBUG
 			cout << "<MidiInterface> opened ALSA midi device! :-)" << endl;
@@ -42,7 +42,7 @@ int MidiInterface::open( Config & config )
 
 		//try OSS
 		midi = new OSSMidiDriver;
-		if ((midi->open(config.oss_midi_device)) == 0) {
+		if ((midi->open(config.oss_midi_device,name)) == 0) {
 			config.midi_driver = "OSS";
 #ifdef _DEBUG
 			cout << "<MidiInterface> opened OSS midi device! :-)" << endl;
@@ -55,7 +55,7 @@ int MidiInterface::open( Config & config )
 		return -1;
 	} else if( config.midi_driver == "oss" || config.midi_driver == "OSS" ){
 		midi = new OSSMidiDriver;
-		if ((midi->open(config.oss_midi_device)) == 0) {
+		if ((midi->open(config.oss_midi_device,name)) == 0) {
 			config.midi_driver = "OSS";
 #ifdef _DEBUG
 			cout << "<MidiInterface> opened OSS midi device! :-)" << endl;
@@ -71,7 +71,7 @@ int MidiInterface::open( Config & config )
 #ifdef _DEBUG
 		cout << "<MidiInterface> Trying to open ALSA midi device..." << endl;
 #endif
-		if ((midi->open("")) == 0) {
+		if ((midi->open("",name)) == 0) {
 			config.midi_driver = "ALSA";
 #ifdef _DEBUG
 			cout << "<MidiInterface> opened ALSA midi device! :-)" << endl;

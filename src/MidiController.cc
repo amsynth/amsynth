@@ -5,7 +5,7 @@
 #include "MidiController.h"
 #include <fstream>
 
-MidiController::MidiController( Config & config )
+MidiController::MidiController( Config & config, string name )
 {
 	this->config = &config;
     running = 0;
@@ -16,6 +16,7 @@ MidiController::MidiController( Config & config )
 	last_active_controller.setMax( 32 );
 	last_active_controller.setStep( 1 );
 	for( int i=0; i<32; i++ ) midi_controllers[i] = 0;
+	clientname = name;
 }
 
 MidiController::~MidiController()
@@ -63,7 +64,7 @@ MidiController::run()
 #ifdef _DEBUG
     cout << "<MidiController> opening midi interface.." << endl;
 #endif
-    if( midi.open( *config ) == -1 ){
+    if( midi.open( *config, clientname ) == -1 ){
 		cout << "<MidiController> failed to open MIDI. midi_driver:" <<
 			config->midi_driver << endl;
 		cout << config->audio_driver << endl;
