@@ -5,8 +5,6 @@
 #ifndef _SYNTH_H
 #define _SYNTH_H
 
-#include "../base.h"
-
 #define TWO_PI 6.28318530717958647692
 #define PI     3.14159265358979323846
 

@@ -26,14 +26,14 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	{
 	case kAmpModAmount:	mAmpModAmount = (value+1.0)/2.0;break;
 	case kLFOFreq:		mLFO1Freq = value; 		break;
-	case kLFOWaveform:	lfo1.SetWaveform ((Oscillator::Waveform) value);
+	case kLFOWaveform:	lfo1.SetWaveform ((Oscillator::Waveform) (int)value);
 				break;
 	case kFreqModAmount:	mFreqModAmount=(value/2.0)+0.5;	break;
 	
-	case kOsc1Waveform:	osc1.SetWaveform ((Oscillator::Waveform) value);
+	case kOsc1Waveform:	osc1.SetWaveform ((Oscillator::Waveform) (int)value);
 				break;
 	case kOsc1Pulsewidth:	mOsc1PulseWidth = value;	break;
-	case kOsc2Waveform:	osc2.SetWaveform ((Oscillator::Waveform) value);
+	case kOsc2Waveform:	osc2.SetWaveform ((Oscillator::Waveform) (int)value);
 				break;
 	case kOsc2Pulsewidth:	mOsc2PulseWidth = value;	break;
 	case kOsc2Octave:	mOsc2Octave = value;		break;
