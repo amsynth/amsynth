@@ -136,11 +136,19 @@ GUI::GUI( Config & config, MidiController & mc,
 			bind(slot(this, &GUI::event_handler),"vkeybd"));
 	
 	
+	//
 	// grey out menu item if there is no recording interface present
+	// 
 	if (!audio_out->canRecord())
 		menu_item[3]->set_sensitive( false );
-	// grey out virtual keyboard if we arent running alsa
+	//
+	// grey out virtual keyboard if we arent running alsa, or no vkeybd..
+	// 
 	if (config.alsa_seq_client_id==0)
+		menu_item[4]->set_sensitive( false );
+	// test for presence of vkeybd.
+	int sys_rtn = system("vkeybd --help 2> /dev/null");
+	if (WEXITSTATUS(sys_rtn)==127)	// exit code 127 = program not found
 		menu_item[4]->set_sensitive( false );
 	
 	file_menu.append( *menu_item[3] );
