@@ -3,6 +3,7 @@
  */
 
 #include "main.h"
+#include "../config.h"
 
 #include <gtk--/main.h>
 #include <pthread.h>
@@ -185,8 +186,8 @@ int main( int argc, char *argv[] )
 				config.polyphony = atoi( optarg );
 				break;
 			case 'v':
-				cout << "amSynth version 1.0 rc2.\ncompiled " << __DATE__ 
-				<< " " << __TIME__ << endl;
+				cout << "amSynth " << VERSION << " -- compiled "
+					<< __DATE__ << " " << __TIME__ << endl;
 				return 0;
 			case 'h':
 				cout << help_text; 
