@@ -59,7 +59,7 @@ FilterControlSignal::update()
 	cutoff = cutoff_param->getControlValue();
 }
 
-inline void
+void
 FilterControlSignal::process()
 {
 	env_buf = env_source->getNFData();

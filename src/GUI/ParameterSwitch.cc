@@ -3,6 +3,7 @@
  */
 
 #include "ParameterSwitch.h"
+#include <iostream>
 
 ParameterSwitch::ParameterSwitch( int pipe_d )
 {

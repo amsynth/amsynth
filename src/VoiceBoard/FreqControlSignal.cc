@@ -43,7 +43,7 @@ FreqControlSignal::update()
 	mod_amount = (mod_amount_param->getControlValue()/2.0)+0.5;
 }
 
-inline void
+void
 FreqControlSignal::process()
 {
 	lfo_buf = lfo->getFData();

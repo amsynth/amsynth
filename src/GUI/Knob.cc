@@ -4,6 +4,9 @@
  */
 #include "Knob.h"
 #include <math.h>
+#include <iostream>
+
+using namespace std;
 
 Knob::Knob()
 {

@@ -4,6 +4,7 @@
 
 #include "ParameterKnob.h"
 #include <stdio.h>
+#include <iostream>
 
 ParameterKnob::ParameterKnob( int pipe_d )
 {

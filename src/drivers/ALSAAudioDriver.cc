@@ -3,6 +3,7 @@
  **/
 
 #include "ALSAAudioDriver.h"
+#include <iostream>
 
 using namespace std;
 

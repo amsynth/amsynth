@@ -34,13 +34,13 @@ class Oscillator:public NFSource, public FInput, public UpdateListener {
 	 * i.e. from the next call the oscillator will begin its cycle from the
 	 * beginning.
 	 */
-	inline void reset();
+	void reset();
 	/*
 	 * reset the oscillator, initially at sample indicated by offset, and then 
 	 * every period samples. used for oscillator sync. 
 	 * NB. period >= delta
 	 */
-    inline void reset( int offset, int period );
+    void reset( int offset, int period );
     void update();
 	/**
 	 * Sets the oscillator up to synchronise another oscillator (oscillator 

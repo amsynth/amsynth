@@ -20,8 +20,8 @@ public:
 	void		setCutoffControl( Parameter & param );
 	
 	void		update();
-	inline void	process();
-	inline float*	getFData(){ return env_buf; };
+	void	process();
+	float*	getFData(){ return env_buf; };
 private:
 	NFSource	*env_source;
 	FSource		*pitch_source, *lfo;

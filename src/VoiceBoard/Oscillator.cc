@@ -59,13 +59,13 @@ Oscillator::setPulseWidth(FSource & source)
     delete[] pulseBuffer;
 }
 
-inline void 
+void 
 Oscillator::reset()
 {
     rads = 0.0;
 }
 
-inline void 
+void 
 Oscillator::reset(int offset, int period)
 {
 	reset_offset = offset;
@@ -145,13 +145,13 @@ Oscillator::doSine()
 			if( rads > TWO_PI )			// then weve completed a circle
 				sync_offset = i;		// remember the offset
 	}
-	rads = fmod(rads, TWO_PI);			// overflows are bad!
+	rads = fmod((float)rads, (float)TWO_PI);			// overflows are bad!
 }
 
 float 
 Oscillator::sqr(float foo)
 {
-    if ((fmod(foo, TWO_PI)) < (pulseBuffer[0] + 1) * PI)
+    if ((fmod((float)foo, (float)TWO_PI)) < (pulseBuffer[0] + 1) * PI)
 	return 1.0;
     else
 	return -1.0;
@@ -171,14 +171,14 @@ Oscillator::doSquare()
 			if( rads > TWO_PI )			// then weve completed a circle
 				sync_offset = i;		// remember the offset
 	}
-    rads = fmod(rads, TWO_PI);
+    rads = fmod((float)rads, (float)TWO_PI);
 }
 
 
 float 
 Oscillator::saw(float foo)
 {
-    foo = fmod(foo, TWO_PI);
+    foo = fmod((float)foo, (float)TWO_PI);
     register float t = (foo / (2 * PI));
     register float a = (pulseBuffer[0] + 1) / 2;
     if (t < a / 2)
@@ -187,7 +187,7 @@ Oscillator::saw(float foo)
 	return (2 * t - 2) / a;
     else
 	return (1 - 2 * t) / (1 - a);
-//    return 1.0 - (fmod(foo, TWO_PI) / PI);
+//    return 1.0 - (fmod((float)foo, (float)TWO_PI) / PI);
 }
 
 void 
@@ -204,7 +204,7 @@ Oscillator::doSaw()
 			if( rads > TWO_PI )			// then weve completed a circle
 				sync_offset = i;		// remember the offset
 	}
-    rads = fmod(rads, TWO_PI);
+    rads = fmod((float)rads, (float)TWO_PI);
 }
 
 void 

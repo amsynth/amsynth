@@ -3,6 +3,8 @@
  * (c) 2002 Karsten Wiese
  **/
 
+#include <iostream>
+
 #include "ALSAmmapAudioDriver.h"
 #include "../VoiceBoard/Synth--.h"
 

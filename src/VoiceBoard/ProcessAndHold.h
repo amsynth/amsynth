@@ -10,9 +10,9 @@
 class ProcessAndHold : public FSource, public FInput
 {
 public:
-	inline float * getFData();
+	float * getFData();
 	void setInput( FSource & source );
-	inline void process();
+	void process();
 private:
 	FSource * input;
 	float * buffer;

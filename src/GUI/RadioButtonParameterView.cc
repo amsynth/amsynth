@@ -4,6 +4,7 @@
 
 #include "RadioButtonParameterView.h"
 #include <stdio.h>
+#include <iostream>
 
 using SigC::slot;
 using SigC::bind;
