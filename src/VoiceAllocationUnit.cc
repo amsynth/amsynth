@@ -52,12 +52,6 @@ VoiceAllocationUnit::~VoiceAllocationUnit	()
 }
 
 void
-VoiceAllocationUnit::setPreset( Preset & preset )
-{
-	_preset = &preset;
-};
-
-void
 VoiceAllocationUnit::pwChange( float value )
 {
 	float newval = pow(2.0f,value);
