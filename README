@@ -33,7 +33,7 @@ Presets
 -------
 Presets are stored in the file ~/.amSynth.presets
 By default, you will have no presets to play with, you will have to create them
-yourself. I have included an .amSynth.presets file in this top-level directory,
+yourself. I have included a ".amSynth.presets" file in this top-level directory,
 so you can start playing with some useable sounds straight away. Copy it to your
 home dir. 
 
