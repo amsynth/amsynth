@@ -50,19 +50,23 @@ I am aware of some issues:-
   recovers. This is an issue with the reverb (Freebirth) and the amSynth filter.
   This is being worked on...
 
-+ There is no software limit on the number of simultaneously active voices 
-  (polyphony). If you play too many notes at once for your CPU, two things can
-  happen:
++ Careful with the polyphony! If you play too many notes at once for your CPU, 
+  two things can happen:
   + If you aren't running amSynth SUID root (i.e. with realtime priority) you 
     will experience (continuous) buffer dropouts, which will sound like horrible
 	distortion.
   + If you are running SUID root, you will also experience dropout, plus your
     system will appear to be locked. This is because amSynth is eating up *all*
 	the CPU time, and running at highest priority.
-  In both cases, the remedy is to play less notes at once ;-)
-  Although you will have to play another note before the others are silenced and
-  everything works nicely again. Basically, keep hitting one note on your midi 
-  controller keyboard until it returns to normal. Hopefully I will find a good 
-  way of enforcing a limit based on the speed of the machine..
+  Experiment with the "polyphony" setting in .amSynthrc or with the `-p' option
+  on the command line.
+
+  For reference, my Athlon (classic) 500MHz can play 13 notes @ 48000KHz.
+  A test on a k62-500 though, gave only 5 notes @ 44100.. :( probably to do with
+  the size of the CPU cache..
+  If you want more polyphony, drop the sample rate. halving the sample rate gives
+  roughly twice the polyphony...
   
 You have been warned!
+
+But more importantly, have fun ;-)
