@@ -1,14 +1,14 @@
 /* amSynth
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
 #include "Parameter.h"
 
-Parameter::Parameter()
+Parameter::Parameter	(string name, Param id)
+:	mParamId(id)
+,	_name(name)
 {
-	for (int i=0; i<MAX_ULS; i++) updateListeners[i] = 0;
     _value = 0.0;
-    _name = "unused";
     _min = 0.0;
     _max = 1.0;
     _step = 0;
@@ -26,27 +26,17 @@ Parameter::~Parameter()
 }
 
 void
-Parameter::addUpdateListener( UpdateListener & ul )
+Parameter::addUpdateListener	(UpdateListener& ul)
 {
-	for (int i=0; i<MAX_ULS; i++)
-		if (&ul == updateListeners[i])
-			return;
-	
-	for (int i=1; i<MAX_ULS; i++)
-		if (!updateListeners[i]) {
-			updateListeners[i] = &ul;
-			return;
-		}
+	for (unsigned i=0; i<updateListeners.size(); i++) if (updateListeners[i] == &ul) return;
+	updateListeners.push_back (&ul);
 }
 
 void
 Parameter::removeUpdateListener( UpdateListener & ul )
 {
-	for (int i=0; i<MAX_ULS; i++)
-		if (updateListeners[i] == &ul) {
-			updateListeners[i] = 0;
-			return;
-		}
+	for (unsigned i=0; i<updateListeners.size(); i++)
+		if (updateListeners[i] == &ul) updateListeners.erase(updateListeners.begin()+i);
 }
 
 void
@@ -62,7 +52,7 @@ Parameter::setValue(float value)
 #ifdef _DEBUG
 	float foo = value;
 #endif
-//	float old_value = _value;
+	float old_value = _value;
 	
 	if (value<_min)
 		value = _min;
@@ -102,14 +92,14 @@ Parameter::setValue(float value)
 	
 	// TODO: only update() Listeners it there _was_ a change?
 	// messes up the GUI - it needs to be better behaved (respect step value)
-//	if (old_value!=_value)
-		for (int i=0; i<MAX_ULS; i++)
-			if (updateListeners[i]){
+	if (old_value!=_value)
+		for (unsigned i=0; i<updateListeners.size(); i++)
+		{
 #ifdef _DEBUG
-				cout << "updating UpdateListener " << updateListeners[i] << endl;
+			cout << "updating UpdateListener " << updateListeners[i] << endl;
 #endif
-				updateListeners[i]->UpdateParameter (mParamId, controlValue);
-			}
+			updateListeners[i]->UpdateParameter (mParamId, controlValue);
+		}
 }
 
 int

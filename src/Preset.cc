@@ -1,254 +1,197 @@
 /* amSynth
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
 #include "Preset.h"
 
-#define setupTimeParam { parameters[no_p].setType( PARAM_POWER, 3, 0.0005 ); parameters[no_p].setMin( 0.0 );	parameters[no_p].setMax( 2.5 ); parameters[no_p].setLabel("s"); }
+void setupTimeParam (Parameter& p) { p.setType( PARAM_POWER, 3, 0.0005 ); p.setMin( 0.0 );	p.setMax( 2.5 ); p.setLabel("s"); }
 
 Preset::Preset()
+:	mName ("New Preset")
+,	nullparam ("null", kControls_End)
 {
-    _name = "New Preset";
-
-    nullparam.setName("null", kControls_End);
-
-    no_p = 0;
-
-    parameters[no_p].setName("amp_attack", kAmpAttack);
-	setupTimeParam
-    no_p++;
-
-    parameters[no_p].setName("amp_decay", kAmpDecay);
-    setupTimeParam
-    no_p++;
-
-    parameters[no_p].setName("amp_sustain", kAmpSustain);
-    parameters[no_p].setValue(1);
-    no_p++;
-
-    parameters[no_p].setName("amp_release", kAmpRelease);
-    setupTimeParam
-    no_p++;
-
-    parameters[no_p].setName("osc1_waveform", kOsc1Waveform);
-    parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(4.0);
-    parameters[no_p].setStep(1.0);
-    no_p++;
-
-    parameters[no_p].setName("filter_attack", kFilterAttack);
-    setupTimeParam
-    no_p++;
-
-    parameters[no_p].setName("filter_decay", kFilterDecay);
-    setupTimeParam
-    no_p++;
-
-    parameters[no_p].setName("filter_sustain", kFilterSustain);
-    parameters[no_p].setValue(1);
-    no_p++;
-
-    parameters[no_p].setName("filter_release", kFilterRelease);
-    setupTimeParam
-    no_p++;
-
-    parameters[no_p].setName("filter_resonance", kFilterResonance);
-	parameters[no_p].setMax(0.97);
-    parameters[no_p].setValue(0);
-    no_p++;
+	mParameters.push_back (Parameter ("amp_attack", kAmpAttack));
+	setupTimeParam (mParameters.back());
 	
-	parameters[no_p].setName("filter_env_amount", kFilterEnvAmount);
-	parameters[no_p].setMax(16.0);
-    parameters[no_p].setValue(0);
-    no_p++;
+	mParameters.push_back (Parameter ("amp_decay", kAmpDecay));
+    setupTimeParam (mParameters.back());
+
+    mParameters.push_back (Parameter ("amp_sustain", kAmpSustain));
+    mParameters.back().setValue(1);
+
+    mParameters.push_back (Parameter ("amp_release", kAmpRelease));
+    setupTimeParam (mParameters.back());
+
+    mParameters.push_back (Parameter ("osc1_waveform", kOsc1Waveform));
+    mParameters.back().setMin(0.0);
+    mParameters.back().setMax(4.0);
+    mParameters.back().setStep(1.0);
+
+    mParameters.push_back (Parameter ("filter_attack", kFilterAttack));
+    setupTimeParam (mParameters.back());
+
+    mParameters.push_back (Parameter ("filter_decay", kFilterDecay));
+    setupTimeParam (mParameters.back());
+
+    mParameters.push_back (Parameter ("filter_sustain", kFilterSustain));
+    mParameters.back().setValue(1);
+
+    mParameters.push_back (Parameter ("filter_release", kFilterRelease));
+    setupTimeParam (mParameters.back());
+
+    mParameters.push_back (Parameter ("filter_resonance", kFilterResonance));
+	mParameters.back().setMax(0.97);
+    mParameters.back().setValue(0);
+	
+	mParameters.push_back (Parameter ("filter_env_amount", kFilterEnvAmount));
+	mParameters.back().setMax(16.0);
+    mParameters.back().setValue(0);
     
-	parameters[no_p].setName("filter_cutoff", kFilterCutoff);
-    parameters[no_p].setType(PARAM_EXP, 16, 0);
-    parameters[no_p].setMin(-0.5);
-    parameters[no_p].setMax(1);
-    parameters[no_p].setValue(1);
-    no_p++;
+	mParameters.push_back (Parameter ("filter_cutoff", kFilterCutoff));
+    mParameters.back().setType(PARAM_EXP, 16, 0);
+    mParameters.back().setMin(-0.5);
+    mParameters.back().setMax(1);
+    mParameters.back().setValue(1);
 
-    parameters[no_p].setName("osc2_detune", kOsc2Detune);
-    parameters[no_p].setType(PARAM_EXP, 1.25, 0);
-    parameters[no_p].setMin(-1);
-    parameters[no_p].setMax(1);
-    parameters[no_p].setValue(0);
-    no_p++;
+    mParameters.push_back (Parameter ("osc2_detune", kOsc2Detune));
+    mParameters.back().setType(PARAM_EXP, 1.25, 0);
+    mParameters.back().setMin(-1);
+    mParameters.back().setMax(1);
+    mParameters.back().setValue(0);
 
-    parameters[no_p].setName("osc2_waveform", kOsc2Waveform);
-    parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(4.0);
-    parameters[no_p].setStep(1.0);
-    no_p++;
+    mParameters.push_back (Parameter ("osc2_waveform", kOsc2Waveform));
+    mParameters.back().setMin(0.0);
+    mParameters.back().setMax(4.0);
+    mParameters.back().setStep(1.0);
 
-    parameters[no_p].setName("master_vol", kMasterVol);
-    parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(1.0);
-    parameters[no_p].setValue(1.0);
-	parameters[no_p].setType( PARAM_POWER, 2, 0 );
-    no_p++;
+    mParameters.push_back (Parameter ("master_vol", kMasterVol));
+    mParameters.back().setMin(0.0);
+    mParameters.back().setMax(1.0);
+    mParameters.back().setValue(1.0);
+	mParameters.back().setType( PARAM_POWER, 2, 0 );
 
-    parameters[no_p].setName( "lfo_freq", kLFOFreq );
-	parameters[no_p].setType( PARAM_POWER, 2, 0 );
-    parameters[no_p].setMax( 7.5 );
-	parameters[no_p].setLabel( "Hz" );
-    no_p++;
+    mParameters.push_back (Parameter ( "lfo_freq", kLFOFreq ));
+	mParameters.back().setType( PARAM_POWER, 2, 0 );
+    mParameters.back().setMax( 7.5 );
+	mParameters.back().setLabel( "Hz" );
 
-    parameters[no_p].setName( "lfo_depth", kLFODepth );
-    parameters[no_p].setValue( 0 );
-    no_p++;
+    mParameters.push_back (Parameter ( "lfo_depth", kLFODepth ));
+    mParameters.back().setValue( 0 );
 
-    parameters[no_p].setName("lfo_waveform", kLFOWaveform);
-    parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(4.0);
-    parameters[no_p].setStep(1.0);
-    no_p++;
+    mParameters.push_back (Parameter ("lfo_waveform", kLFOWaveform));
+    mParameters.back().setMin(0.0);
+    mParameters.back().setMax(4.0);
+    mParameters.back().setStep(1.0);
 
-    parameters[no_p].setName("osc2_range", kOsc2Octave);
-    parameters[no_p].setMin(-1);
-    parameters[no_p].setMax(2);
-    parameters[no_p].setStep(1.0);
-    parameters[no_p].setType(PARAM_EXP, 2, 0);
-    parameters[no_p].setValue(0);
-    no_p++;
+    mParameters.push_back (Parameter ("osc2_range", kOsc2Octave));
+    mParameters.back().setMin(-1);
+    mParameters.back().setMax(2);
+    mParameters.back().setStep(1.0);
+    mParameters.back().setType(PARAM_EXP, 2, 0);
+    mParameters.back().setValue(0);
 	
-	parameters[no_p].setName("osc_mix", kOscMix);
-    parameters[no_p].setMin(-1.0);
-    parameters[no_p].setMax(1.0);
-    no_p++;
+	mParameters.push_back (Parameter ("osc_mix", kOscMix));
+    mParameters.back().setMin(-1.0);
+    mParameters.back().setMax(1.0);
 	
-	parameters[no_p].setName("freq_mod_amount", kFreqModAmount);
-	parameters[no_p].setType( PARAM_POWER, 3, -1 );
-	parameters[no_p].setMin( 0.0 );
-	parameters[no_p].setMax( 1.25992105 );
-    no_p++;
+	mParameters.push_back (Parameter ("freq_mod_amount", kFreqModAmount));
+	mParameters.back().setType( PARAM_POWER, 3, -1 );
+	mParameters.back().setMin( 0.0 );
+	mParameters.back().setMax( 1.25992105 );
 	
-	parameters[no_p].setName("filter_mod_amount", kFilterModAmount);
-    parameters[no_p].setMin(-1.0);
-    parameters[no_p].setMax(1.0);
-	parameters[no_p].setValue(-1);
-    no_p++;
+	mParameters.push_back (Parameter ("filter_mod_amount", kFilterModAmount));
+    mParameters.back().setMin(-1.0);
+    mParameters.back().setMax(1.0);
+	mParameters.back().setValue(-1);
 
-	parameters[no_p].setName("amp_mod_amount", kAmpModAmount);
-    parameters[no_p].setMin(-1.0);
-    parameters[no_p].setMax(1.0);
-	parameters[no_p].setValue(-1);
-    no_p++;
+	mParameters.push_back (Parameter ("amp_mod_amount", kAmpModAmount));
+    mParameters.back().setMin(-1.0);
+    mParameters.back().setMax(1.0);
+	mParameters.back().setValue(-1);
 	
-	parameters[no_p].setName("osc1_pwm_amount", kOsc1PWMAmount);
-    parameters[no_p].setMin(-1.0);
-    parameters[no_p].setMax(1.0);
-	parameters[no_p].setValue(-1);
-    no_p++;
+	mParameters.push_back (Parameter ("osc1_pwm_amount", kOsc1PWMAmount));
+    mParameters.back().setMin(-1.0);
+    mParameters.back().setMax(1.0);
+	mParameters.back().setValue(-1);
 	
-	parameters[no_p].setName("osc_mix_mode", kOscMixRingMod);
-    parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(1.0);
-	parameters[no_p].setStep(1.0);
-    no_p++;
+	mParameters.push_back (Parameter ("osc_mix_mode", kOscMixRingMod));
+    mParameters.back().setMin(0.0);
+    mParameters.back().setMax(1.0);
+	mParameters.back().setStep(1.0);
 	
-	parameters[no_p].setName("osc1_pulsewidth", kOsc1Pulsewidth);
-    parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(1.0);
-    no_p++;
+	mParameters.push_back (Parameter ("osc1_pulsewidth", kOsc1Pulsewidth));
+    mParameters.back().setMin(0.0);
+    mParameters.back().setMax(1.0);
 	
-	parameters[no_p].setName("osc2_pulsewidth", kOsc2Pulsewidth);
-    parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(1.0);
-    no_p++;
+	mParameters.push_back (Parameter ("osc2_pulsewidth", kOsc2Pulsewidth));
+    mParameters.back().setMin(0.0);
+    mParameters.back().setMax(1.0);
 	
-	parameters[no_p].setName("reverb_roomsize", kReverbRoomsize);
-    parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(1.0);
-    no_p++;
+	mParameters.push_back (Parameter ("reverb_roomsize", kReverbRoomsize));
+    mParameters.back().setMin(0.0);
+    mParameters.back().setMax(1.0);
 	
-	parameters[no_p].setName("reverb_damp", kReverbDamp);
-    parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(1.0);
-    no_p++;
+	mParameters.push_back (Parameter ("reverb_damp", kReverbDamp));
+    mParameters.back().setMin(0.0);
+    mParameters.back().setMax(1.0);
 	
-	parameters[no_p].setName("reverb_wet", kReverbWet);
-    parameters[no_p].setMin( 0.0 );
-    parameters[no_p].setMax( 1.0 );
-	parameters[no_p].setValue( 0.0 );
-    no_p++;
+	mParameters.push_back (Parameter ("reverb_wet", kReverbWet));
+    mParameters.back().setMin( 0.0 );
+    mParameters.back().setMax( 1.0 );
+	mParameters.back().setValue( 0.0 );
 	
-	parameters[no_p].setName("reverb_dry", kReverbDry);
-    parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(1.0);
-	parameters[no_p].setValue(0.5);
-    no_p++;
+	mParameters.push_back (Parameter ("reverb_dry", kReverbDry));
+    mParameters.back().setMin(0.0);
+    mParameters.back().setMax(1.0);
+	mParameters.back().setValue(0.5);
 	
-	parameters[no_p].setName("reverb_width", kReverbWidth);
-    parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(1.0);
-    no_p++;
+	mParameters.push_back (Parameter ("reverb_width", kReverbWidth));
+    mParameters.back().setMin(0.0);
+    mParameters.back().setMax(1.0);
 	
-	parameters[no_p].setName("reverb_mode", kReverbMode);
-    parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(0.0);
-//	parameters[no_p].setStep(1.0);
-	parameters[no_p].setDiscrete(true);
-    no_p++;
+	mParameters.push_back (Parameter ("reverb_mode", kReverbMode));
+    mParameters.back().setMin(0.0);
+    mParameters.back().setMax(0.0);
+	mParameters.back().setDiscrete(true);
 	
-	parameters[no_p].setName("distortion_drive", kDistortionDrive);
-    parameters[no_p].setMin(1.0);
-    parameters[no_p].setMax(16.0);
-	parameters[no_p].setValue(1.0);
-    no_p++;
+	mParameters.push_back (Parameter ("distortion_drive", kDistortionDrive));
+    mParameters.back().setMin(1.0);
+    mParameters.back().setMax(16.0);
+	mParameters.back().setValue(1.0);
 	
-	parameters[no_p].setName("distortion_crunch", kDistortionCrunch);
-	parameters[no_p].setMin(0.0);
-	parameters[no_p].setMax(0.9);
-	parameters[no_p].setValue (0.0);
-	no_p++;
+	mParameters.push_back (Parameter ("distortion_crunch", kDistortionCrunch));
+	mParameters.back().setMin(0.0);
+	mParameters.back().setMax(0.9);
+	mParameters.back().setValue (0.0);
 	
-	parameters[no_p].setName("osc2_sync", kOsc2Sync);
-    parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(1.0);
-	parameters[no_p].setStep(1.0);
-    no_p++;
-}
-
-Preset::~Preset()
-{
+	mParameters.push_back (Parameter ("osc2_sync", kOsc2Sync));
+    mParameters.back().setMin(0.0);
+    mParameters.back().setMax(1.0);
+	mParameters.back().setStep(1.0);
 }
 
 void
 Preset::clone(Preset & preset)
 {
-    for (int i = 0; i < 128; i++) {
-		parameters[i].setValue(preset.getParameter(i).getValue());
-		parameters[i].setName(
+    for (unsigned i = 0; i < mParameters.size(); i++) {
+		mParameters[i].setValue(preset.getParameter(i).getValue());
+		mParameters[i].setName(
 			preset.getParameter(i).getName (),
 			preset.getParameter(i).GetId ());
     }
     setName(preset.getName());
 }
 
-string 
-Preset::getName()
-{
-    return _name;
-}
-
-void 
-Preset::setName(string name)
-{
-    _name = name;
-}
-
 Parameter & 
 Preset::getParameter(string name)
 {
-    for (int i = 0; i < no_p; i++) {
-		if (parameters[i].getName() == name) {
+    for (unsigned i = 0; i < mParameters.size(); i++) {
+		if (mParameters[i].getName() == name) {
 #ifdef _DEBUG
 			cout << "<Preset::getParameter()> Parameter '" << name
 			<< "' found" << endl;
 #endif
-			return parameters[i];
+			return mParameters[i];
 		}
     }
 #ifdef _DEBUG
@@ -262,13 +205,13 @@ void
 Preset::randomise()
 {
 	float master_vol = getParameter( "master_vol" ).getValue();
-	for (int i=0; i<no_p; i++) 
-		parameters[i].random_val();
+	for (unsigned i=0; i<mParameters.size(); i++) 
+		mParameters[i].random_val();
 	getParameter( "master_vol" ).setValue( master_vol );
 }
 
 void
 Preset::AddListenerToAll	(UpdateListener* ul)
 {
-	for (int i=0; i<no_p; i++) parameters[i].addUpdateListener (*ul);
+	for (unsigned i=0; i<mParameters.size(); i++) mParameters[i].addUpdateListener (*ul);
 }

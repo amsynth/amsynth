@@ -1,11 +1,12 @@
 /* amSynth
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
 #ifndef _PARAMETER_H
 #define _PARAMETER_H
 
 #include <string>
+#include <vector>
 #include <math.h>
 #include "base.h"
 #include "UpdateListener.h"
@@ -13,7 +14,6 @@
 #include <iostream>
 #endif
 
-#define MAX_ULS 256
 #define PARAM_DIRECT 1
 #define PARAM_EXP 2
 #define PARAM_POWER 3
@@ -32,8 +32,8 @@
  */
 class Parameter {
 public:
-	Parameter();
-	~Parameter();
+			Parameter	(string name = "unused", Param id = kControls_End);
+			~Parameter	();
 	/**
 	 * Returns the value of this parameter. Objects in the signal generation 
 	 * path should not use this method, but getControlValue() instead.
@@ -169,7 +169,7 @@ private:
 	int controlMode;
 	bool continuous;
 	float _value, _min, _max, _step, controlValue, base, offset;
-	UpdateListener *updateListeners[MAX_ULS];
+	std::vector<UpdateListener*>	updateListeners;
 };
 
 #endif
