@@ -78,7 +78,6 @@ JackOutput::JackOutput()
 		i++;
 	}
 	c/=2;
-	std::cerr << c << " amSynth-jack instances found\n";
 	jack_client_close( client );
 	if (c>0)
 	{
