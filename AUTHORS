@@ -8,6 +8,9 @@ Nick Dowell <nixx@nixx.org.uk>
 CONTRIBUTORS
 ------------
 
+Karsten Wiese
+ - ALSA mmap audio driver
+
 Jezar at dreampoint
  - Author of Freeverb (the reverb used here)
 
