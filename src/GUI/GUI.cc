@@ -17,11 +17,11 @@ GUI::GUI( Config & config ) :
 {
 	this->config = &config;
 	
-    hide.connect(Gtk::Main::quit.slot());
+    hide.connect( Gtk::Main::quit.slot() );
 	
 	if(this->config->realtime)
 		// messes up the audio thread's timing if not realtime...
-		Gtk::Main::timeout.connect(slot(this,&GUI::idle_callback), 200);
+		Gtk::Main::timeout.connect( slot(this,&GUI::idle_callback), 200 );
 
     string title = "amSynth ";
 #ifdef _DEBUG
@@ -35,7 +35,7 @@ GUI::GUI( Config & config ) :
     title += VERSION;
 #endif
 
-    set_title(title);
+    set_title( title );
 
     active_param = 0;
 
@@ -103,17 +103,6 @@ GUI::GUI( Config & config ) :
 	menu_item[15].activate.connect
 		(bind(slot(this, &GUI::event_handler),"preset::delete"));
 		
-    // the help menu
-	/*
-    menu_item[20].add_label("Help");
-    menu_item[20].set_submenu(help_menu);
-//    help_menu_item.right_justify();
-
-    help_menu.append(menu_item[21]);
-    menu_item[21].add_label("About");
-    menu_item[21].activate.connect
-		(bind(slot(this, &GUI::event_handler),"help::about"));
-*/		
 	menu_item[29].add_label("Analogue Modelling SYNTHesizer");
 	menu_item[29].activate.connect
 		(bind(slot(this, &GUI::event_handler),"help::about"));
@@ -125,12 +114,6 @@ GUI::GUI( Config & config ) :
 	 */
     presetCV = new PresetControllerView;
 
-    // pitch control frame
-	/*
-    pitch_frame.set_shadow_type(frame_shadow);
-    pitch_frame.set_label("Pitch Control");
-    pitch_frame.add( *parameterView[22]);
-	*/
     // oscillator 1 controls
     osc1_frame.set_shadow_type( frame_shadow );
     osc1_frame.set_label( "Oscillator 1" );

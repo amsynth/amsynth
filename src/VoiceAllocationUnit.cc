@@ -10,15 +10,14 @@ VoiceAllocationUnit::VoiceAllocationUnit( Config & config ) :
 	limiter(config.sample_rate)
 {
 	this->config = &config;
+	max_voices = config.polyphony;
 #ifdef _DEBUG
 	cout << "<VoiceAllocationUnit> new VAU created" << endl;
 #endif
 	for (int i = 0; i < 128; i++) {
-		_voices[i] = 0;
 		keyPressed[i] = 0;
-		pthread_mutex_init(&voiceMutex[i], NULL);
-		// build the note --> frequency lookup table
-		_pitch[i] = (440.0 / 32.0) * pow(2, ((i - 9.0) / 12.0));
+		_voices[i] = new VoiceBoard(config.sample_rate);
+		// voices are initialised in setPreset() below...
 	}
   
 	sustain = 0;
@@ -55,6 +54,14 @@ VoiceAllocationUnit::setPreset( Preset & preset )
 	reverb.setRoomSize( _preset->getParameter("reverb_roomsize") );
 	reverb.setWet( _preset->getParameter("reverb_wet") );
 	reverb.setWidth( _preset->getParameter("reverb_width") );
+	
+	// now we can initialise the voices
+	for( int i=0; i<128; i++ ){
+		_voices[i]->setPreset( *_preset );
+		_voices[i]->setPitchWheel( pw_val );
+		_voices[i]->setFrequency( (440.0/32.0) * pow(2,((i-9.0)/12.0)) );
+		_voices[i]->init();
+	}
 };
 
 void
@@ -81,22 +88,15 @@ VoiceAllocationUnit::noteOn(int note, float velocity)
 #endif
   
 	keyPressed[note] = 1;
-
-	if (!_voices[note]) {
-		_voices[note] = new VoiceBoard(config->sample_rate);
-		_voices[note]->setPreset(*_preset);
-		_voices[note]->setPitchWheel(pw_val);
-		_voices[note]->init();
-	}
-
-	if (!connected[note]) {
+	
+	if (!connected[note])
+		if( !max_voices || config->active_voices < max_voices ) {
 		_voices[note]->reset();
 		mixer.addInput(*_voices[note]);
 		config->active_voices++;
 		connected[note] = 1;
-	}
+		}
 
-	_voices[note]->setFrequency(_pitch[note]);
 	_voices[note]->setVelocity(velocity);
 	_voices[note]->triggerOn();
   

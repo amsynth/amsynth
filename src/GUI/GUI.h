@@ -66,7 +66,7 @@ class GUI:public Gtk::Window, public UpdateListener {
 	Gtk::Fixed osc1_fixed, osc2_fixed;
 	
 	
-    Gtk::Frame pitch_frame, reverb_frame, distortion_frame, filter_frame, amp_frame;
+    Gtk::Frame reverb_frame, distortion_frame, filter_frame, amp_frame;
     Gtk::VBox osc1_vbox, osc2_vbox, osc_mix_vbox, filter_vbox, amp_vbox;
     Gtk::HBox filter_hbox1, filter_hbox2, amp_hbox1, amp_hbox2, reverb_hbox, distortion_hbox;
     

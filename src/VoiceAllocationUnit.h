@@ -36,6 +36,7 @@ public:
   { sustain = 1; };
   void sustainOff();
 private:
+  int max_voices;
   void purgeVoices();
   Adder mixer;
   SoftLimiter limiter;
