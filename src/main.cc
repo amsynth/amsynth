@@ -103,7 +103,7 @@ pipe_event( void *arg, int foo, GdkInputCondition ic )
 int main( int argc, char *argv[] )
 {
 	if( pipe( the_pipe ) ) cout << "pipe() error\n";
-	
+	int jack = 0;
 	int enable_audio = 1;
 	// set default parameters
 	config.audio_driver = "auto";
@@ -201,7 +201,15 @@ int main( int argc, char *argv[] )
 	<< config.audio_device << " sample rate:" << config.sample_rate << endl;
 #endif
 	midi_controller = new MidiController( config );
-	out = new AudioOutput();
+	
+	if (config.audio_driver=="jack"||config.audio_driver=="JACK")
+	{
+		jack = 1;
+		out = new JackOutput();
+	}
+	else
+		out = new AudioOutput();
+	
 	out->setConfig( config );
 	vau = new VoiceAllocationUnit( config ); //after were sure of sample_rate
 	out->setInput( *vau );
@@ -210,7 +218,13 @@ int main( int argc, char *argv[] )
 	
 	int audio_res;
 	if( enable_audio )
-		audio_res = pthread_create( &audioThread, NULL, audio_thread, NULL );
+	{
+		if (jack)
+			out->run();
+		else
+			audio_res = pthread_create( &audioThread, NULL,
+							audio_thread, NULL );
+	}
 	int midi_res;
 	midi_res = pthread_create( &midiThread, NULL, midi_thread, NULL );
   

@@ -5,7 +5,7 @@
  * @author Nick Dowell
  * @date   2001-11-25
 */
-#include <iostream.h>
+#include <iostream>
 
 #include "ADSR.h"
 

@@ -2,7 +2,7 @@
  * (c) 2001,2002 Nick Dowell
  **/
 #include "Amplifier.h"
-#include <iostream.h>
+#include <iostream>
 
 Amplifier::Amplifier()
 {

@@ -46,7 +46,7 @@
 class GUI:public Gtk::Window, public UpdateListener {
   public:
     GUI( Config & config, MidiController & mc, 
-		VoiceAllocationUnit & vau, int pipe[2], AudioOutput & audio );
+		VoiceAllocationUnit & vau, int pipe[2], GenericOutput & audio );
     ~GUI();
 	/**
 	 * Sets up all the Interface controls etc..
@@ -169,6 +169,6 @@ class GUI:public Gtk::Window, public UpdateListener {
 	MidiController *midi_controller;
 	VoiceAllocationUnit *vau;
 	ControllerMapDialog *controller_map_dialog;
-	AudioOutput *audio_out;
+	GenericOutput *audio_out;
 };
 #endif

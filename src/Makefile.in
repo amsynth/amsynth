@@ -91,6 +91,7 @@ INCLUDES = `gtkmm-config --cflags` `gtk-config --cflags`
 amSynth_SOURCES = \
 		main.cc \
 		AudioOutput.cc \
+		JackOutput.cc \
 		MidiController.cc \
 		Parameter.cc \
 		Preset.cc \
@@ -103,7 +104,7 @@ SUBDIRS = drivers VoiceBoard GUI
 
 amSynth_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a GUI/libGUI.a
 
-LIBS = -lstdc++ -lm -lsndfile `gtkmm-config --libs gtk--`
+LIBS = -lstdc++ -lm -lsndfile -ljack `gtkmm-config --libs gtk--`
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
@@ -112,9 +113,9 @@ bin_PROGRAMS = amSynth$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
 am_amSynth_OBJECTS = main.$(OBJEXT) AudioOutput.$(OBJEXT) \
-	MidiController.$(OBJEXT) Parameter.$(OBJEXT) Preset.$(OBJEXT) \
-	PresetController.$(OBJEXT) VoiceAllocationUnit.$(OBJEXT) \
-	Config.$(OBJEXT)
+	JackOutput.$(OBJEXT) MidiController.$(OBJEXT) \
+	Parameter.$(OBJEXT) Preset.$(OBJEXT) PresetController.$(OBJEXT) \
+	VoiceAllocationUnit.$(OBJEXT) Config.$(OBJEXT)
 amSynth_OBJECTS = $(am_amSynth_OBJECTS)
 amSynth_DEPENDENCIES = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a \
 	GUI/libGUI.a
@@ -127,6 +128,7 @@ LDFLAGS = @LDFLAGS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/AudioOutput.Po ./$(DEPDIR)/Config.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/JackOutput.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/MidiController.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/Parameter.Po ./$(DEPDIR)/Preset.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/PresetController.Po \
@@ -201,6 +203,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AudioOutput.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Config.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/JackOutput.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MidiController.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Parameter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Preset.Po@am__quote@

@@ -30,7 +30,7 @@ GUI::serve_request()
 }
 
 GUI::GUI( Config & config, MidiController & mc, 
-			VoiceAllocationUnit & vau, int pipe[2], AudioOutput & audio )
+			VoiceAllocationUnit & vau, int pipe[2], GenericOutput & audio )
 {
 #ifdef _DEBUG
 	cout << "<GUI::GUI()>" << endl;

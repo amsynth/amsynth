@@ -7,7 +7,7 @@
 #include "ALSAAudioDriver.h"
 #include "ALSAmmapAudioDriver.h"
 #include "OSSAudioDriver.h"
-#include <iostream.h>
+#include <iostream>
 
 #define AUDIO_DRIVER_NONE 0
 #define AUDIO_DRIVER_ALSA 1

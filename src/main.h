@@ -5,6 +5,7 @@
 #include "MidiController.h"
 #include "VoiceAllocationUnit.h"
 #include "AudioOutput.h"
+#include "JackOutput.h"
 #include "GUI/GUI.h"
 #include "GUI/ParameterView.h"
 #include "Config.h"
@@ -14,7 +15,7 @@
 PresetController *presetController;
 MidiController *midi_controller;
 VoiceAllocationUnit *vau;
-AudioOutput *out;
+GenericOutput *out;
 Config config;
 GUI *gui;
 

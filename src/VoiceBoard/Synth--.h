@@ -10,7 +10,7 @@
 // 128 frames @ 44100 = 2.9ms,  @ 48000 = 2.67ms
 // 256 frames @ 44100 = 5.8ms,  @ 48000 = 5.33ms
 // 512 frames @ 44100 = 11.6ms, @ 48000 = 10.6ms
-#define BUF_SIZE    256
+#define BUF_SIZE	64
 
 #define TWO_PI 6.28318530717958647692
 #define PI     3.14159265358979323846

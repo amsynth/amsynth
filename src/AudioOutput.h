@@ -11,13 +11,28 @@
 #include "drivers/AudioInterface.h"
 #include "Config.h"
 
+class GenericOutput : public NFInput
+{
+public:
+	virtual	void	setInput	( NFSource & source )	= 0;
+	virtual	void	run 		( )			= 0;
+	virtual	void	stop		( )			= 0;
+	
+	virtual	void	startRecording	( )			= 0;
+	virtual	void	stopRecording	( )			= 0;
+	virtual	void	setOutputFile	( string file )		= 0;
+	virtual	string	getOutputFile	( )			= 0;
+
+	virtual	void	setConfig	( Config & config )	= 0;
+};
+
 /**
  * @class AudioOutput
  * The AudioOutput object opens and configures an AudioInterface, and then
  * streams the signal from it's NFSource input to the output.
  * It can also record the output to a .wav file
  */
-class AudioOutput : public NFInput {
+class AudioOutput : public GenericOutput {
 
 public:
   AudioOutput();
