@@ -13,7 +13,7 @@
 
 static VoiceBoardProcessMemory* process_memory;
 
-using std::cout;
+using namespace std;
 
 const int kMaxGrainSize = 64;
 

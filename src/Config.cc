@@ -13,11 +13,9 @@ static string amsynthrc_fname;
 
 Config::Config()
 {
-#ifndef _WINDOWS
 	amsynthrc_fname = string(getenv("HOME")) + string("/.amSynthrc");
 	realtime = sample_rate = midi_channel = active_voices = polyphony = debug_drivers = load_font = xruns = 0;
 	xfontname = "-*-helvetica-medium-r-*-*-*-100-*-*-*-*-*-*";
-#endif
 }
 
 void
@@ -41,7 +39,6 @@ Config::Defaults	()
 bool
 Config::ParseCOpts	(int argc, char* argv[])
 {
-#ifndef _WINDOWS
 	int opt;
 	while( (opt=getopt(argc, argv, "vhstdm:c:a:r:p:b:"))!= -1 ) {
 		switch(opt) {
@@ -70,7 +67,6 @@ Config::ParseCOpts	(int argc, char* argv[])
 				break;
 		}
 	}
-#endif
 	return true;
 }
 
