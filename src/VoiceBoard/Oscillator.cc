@@ -2,8 +2,9 @@
  * (c) 2001-2004 Nick Dowell
  **/
 
-#include <math.h>
-#include <stdlib.h>		// required for random()
+#include <cmath>
+#include <cstdlib>		// required for random()
+#include <iostream>
 #include "Oscillator.h"
 
 Oscillator::Oscillator(float *buf)
@@ -43,7 +44,7 @@ Oscillator::ProcessSamples	(float *buffer, int numSamples, float freq_hz, float 
 	
 	sync_c = 0;
 	sync_offset = 65;
-	
+		
 	reset_cd = reset_offset;
 	
 	switch (waveform)
@@ -142,12 +143,7 @@ Oscillator::doRandom(float *buffer, int nFrames)
     for (int i = 0; i < nFrames; i++) {
 	if (random_count > period) {
 	    random_count = 0;
-		random = 
-#ifdef _WINDOWS
-			((float)::rand() / (RAND_MAX / 2.0f)) - 1.0f;
-#else
-			((float)::random() / (RAND_MAX / 2.0f)) - 1.0f;
-#endif
+		random = ((float)::rand() / (RAND_MAX / 2.0f)) - 1.0f;
 	}
 	random_count++;
 	buffer[i] = random;
@@ -158,10 +154,5 @@ void
 Oscillator::doNoise(float *buffer, int nFrames)
 {
     for (int i = 0; i < nFrames; i++)
-		buffer[i] = 
-#ifdef _WINDOWS
-		((float)::rand() / (RAND_MAX / 2.0f)) - 1.0f;
-#else
-		((float)::random() / (RAND_MAX / 2.0f)) - 1.0f;
-#endif
+		buffer[i] = ((float)::rand() / (RAND_MAX / 2.0f)) - 1.0f;
 }
