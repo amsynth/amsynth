@@ -29,6 +29,7 @@ Parameter::addUpdateListener	(UpdateListener& ul)
 {
 	for (unsigned i=0; i<updateListeners.size(); i++) if (updateListeners[i] == &ul) return;
 	updateListeners.push_back (&ul);
+	updateListeners.back()->UpdateParameter (mParamId, controlValue);
 }
 
 void
