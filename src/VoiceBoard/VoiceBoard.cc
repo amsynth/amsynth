@@ -4,7 +4,7 @@
 
 #include "VoiceBoard.h"
 
-VoiceBoard::VoiceBoard(int rate, VoiceBoardProcessMemory *mem):
+VoiceBoard::VoiceBoard(VoiceBoardProcessMemory *mem):
 	mem				(mem)
 ,	mKeyVelocity	(1.0)
 ,	mKeyPitch		(440.0)
@@ -25,11 +25,10 @@ VoiceBoard::VoiceBoard(int rate, VoiceBoardProcessMemory *mem):
 ,	mFilterModAmt	(0.0)
 ,	mFilterCutoff	(16.0)
 ,	mFilterRes		(0.0)
-,	filter_env		(rate, mem->filter_env)
+,	filter_env		(mem->filter_env)
 ,	mAmpModAmount	(0.0)
-,	amp_env			(rate, mem->amp_env)
+,	amp_env			(mem->amp_env)
 {
-	SetSampleRate (rate);
 	osc1.SetSyncOsc (osc2);
 }
 
@@ -142,13 +141,12 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 void
 VoiceBoard::SetSampleRate	(int rate)
 {
-	mSampleRate = rate;
-	lfo1.SetSampleRate (mSampleRate);
-	osc1.SetSampleRate (mSampleRate);
-	osc2.SetSampleRate (mSampleRate);
-	filter.SetSampleRate (mSampleRate);
-//	filter_env.SetSampleRate (mSampleRate);
-//	amp_env.SetSampleRate (mSampleRate);
+	lfo1.SetSampleRate (rate);
+	osc1.SetSampleRate (rate);
+	osc2.SetSampleRate (rate);
+	filter.SetSampleRate (rate);
+	filter_env.SetSampleRate (rate);
+	amp_env.SetSampleRate (rate);
 }
 
 int 

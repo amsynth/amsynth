@@ -23,7 +23,9 @@ class ADSR
 public:
 	enum ADSRState { attack, decay, sustain, release, off };
 
-	ADSR	(int rate, float *buf);
+	ADSR	(float *buf);
+	
+	void	SetSampleRate	(int);
 
 	void	SetAttack	(float);
 	void	SetDecay	(float);
@@ -47,7 +49,7 @@ private:
 	float		*buffer;
 	ADSRState	state;
 	int		rate;
-	float a_delta, d_delta, d_frames, r_time, r_delta, s_val, c_val;
+	float a_time, a_delta, d_time, d_delta, d_frames, r_time, r_delta, s_val, c_val;
   	float m_attack_frames, m_release_frames, m_decay_frames;
 };
 

@@ -31,7 +31,8 @@ VoiceAllocationUnit::VoiceAllocationUnit( Config & config )
 	for (int i = 0; i < 128; i++) {
 		keyPressed[i] = 0;
 		active[i] = false;
-		_voices[i] = new VoiceBoard(config.sample_rate, process_memory);
+		_voices[i] = new VoiceBoard(process_memory);
+		_voices[i]->SetSampleRate(config.sample_rate);
 		// voices are initialised in setPreset() below...
 	}
   

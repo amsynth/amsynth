@@ -7,13 +7,18 @@
 */
 #include "ADSR.h"
 
-ADSR::ADSR(int rate, float *buf)
-{
-    this->rate = rate;
-    state = off;
-    c_val = 0;
+ADSR::ADSR(float *buf):
+	buffer (buf)
+,	state (off)
+,	c_val (0.0)
+{}
 
-    buffer = buf;
+void
+ADSR::SetSampleRate	(int rateIn)
+{
+	rate = rateIn;
+	SetAttack (a_time);
+	SetDecay (d_time);
 }
 
 void
@@ -42,6 +47,7 @@ ADSR::reset()
 void 
 ADSR::SetAttack		(float val)
 {
+	a_time = val;
 	if (val == 0.0)	a_delta = 1;
 	else		a_delta = 1 / (val * (float) rate);
 }
@@ -49,6 +55,7 @@ ADSR::SetAttack		(float val)
 void 
 ADSR::SetDecay		(float val)
 {
+	d_time = val;
 	d_frames = val * rate;
 	if (val == 0)	d_delta = 1;
 	else		d_delta = 1 / (val * (float) rate);
