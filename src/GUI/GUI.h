@@ -27,7 +27,6 @@
 #include "RadioButtonParameterView.h"
 #include "ParameterSwitch.h"
 #include "ControllerMapDialog.h"
-#include "AboutDialog.h"
 #include "../UpdateListener.h"
 #include "../Parameter.h"
 #include "../Config.h"
@@ -58,6 +57,8 @@ class GUI:public Gtk::Window, public UpdateListener {
 	 */
     void setPresetController(PresetController & p_c);
     int delete_event_impl(GdkEventAny *);
+	int delete_events(GdkEventAny *, Gtk::Window *dialog)
+	{ dialog->hide_all(); };
     void update();
 	void serve_request();
   private:
@@ -95,11 +96,10 @@ class GUI:public Gtk::Window, public UpdateListener {
 	Gtk::HBox mod_hbox;
 	
 	// about dialog
-	//Gtk::Dialog about_window;
-	//Gtk::Label about_label;
-	//Gtk::Pixmap *about_pixmap;
-	//Gtk::Button about_close_button;
-	AboutDialog about_window;
+	Gtk::Dialog about_window;
+	Gtk::Label about_label;
+	Gtk::Pixmap *about_pixmap;
+	Gtk::Button about_close_button;
 	
 	// realtime warning dialog
 	Gtk::Dialog realtime_warning;

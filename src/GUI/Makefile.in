@@ -79,7 +79,7 @@ noinst_LIBRARIES = libGUI.a
 
 INCLUDES = `gtkmm-config --cflags` `gtk-config --cflags`
 
-libGUI_a_SOURCES = GUI.cc 			ParameterKnob.cc 			PresetControllerView.cc 			RadioButtonParameterView.cc 			ParameterSwitch.cc 			Knob.cc 			ControllerMapDialog.cc 			AboutDialog.cc
+libGUI_a_SOURCES = GUI.cc 			ParameterKnob.cc 			PresetControllerView.cc 			RadioButtonParameterView.cc 			ParameterSwitch.cc 			Knob.cc 			ControllerMapDialog.cc
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = ../../config.h
@@ -94,8 +94,7 @@ LIBS = @LIBS@
 libGUI_a_LIBADD = 
 libGUI_a_OBJECTS =  GUI.$(OBJEXT) ParameterKnob.$(OBJEXT) \
 PresetControllerView.$(OBJEXT) RadioButtonParameterView.$(OBJEXT) \
-ParameterSwitch.$(OBJEXT) Knob.$(OBJEXT) ControllerMapDialog.$(OBJEXT) \
-AboutDialog.$(OBJEXT)
+ParameterSwitch.$(OBJEXT) Knob.$(OBJEXT) ControllerMapDialog.$(OBJEXT)
 AR = ar
 CXXFLAGS = @CXXFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -109,8 +108,8 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
-DEP_FILES =  .deps/AboutDialog.P .deps/ControllerMapDialog.P .deps/GUI.P \
-.deps/Knob.P .deps/ParameterKnob.P .deps/ParameterSwitch.P \
+DEP_FILES =  .deps/ControllerMapDialog.P .deps/GUI.P .deps/Knob.P \
+.deps/ParameterKnob.P .deps/ParameterSwitch.P \
 .deps/PresetControllerView.P .deps/RadioButtonParameterView.P
 SOURCES = $(libGUI_a_SOURCES)
 OBJECTS = $(libGUI_a_OBJECTS)

@@ -86,13 +86,14 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	menu_bar.set_shadow_type( GTK_SHADOW_NONE );
     menu_bar.append( *menu_item[0] );
 	menu_bar.append( *menu_item[10] );
+	menu_bar.append( *menu_item[2] );
 	menu_bar.append( *menu_item[29] );
 	
     // the file menu
     menu_item[0]->add_label( "File" );
     menu_item[0]->set_submenu( file_menu );
 
-    file_menu.append( *menu_item[2] );
+    //file_menu.append( *menu_item[2] );
     menu_item[1]->add_label( "Quit" );
     menu_item[1]->activate.connect( 
 		bind(slot(this, &GUI::event_handler),"quit"));
@@ -278,6 +279,8 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	preset_rename_cancel.clicked.connect( preset_rename.hide.slot() );
 	preset_rename_cancel.add_label( "Cancel", 0.5, 0.5 );
 	preset_rename.set_modal( true );
+	preset_rename.delete_event.connect( 
+		bind( slot( this, &GUI::delete_events ), &preset_rename ) );
 
 	// the new preset dialog
 	preset_new.set_title( "Create a New Preset" );
@@ -293,6 +296,8 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	preset_new_cancel.clicked.connect( preset_new.hide.slot() );
 	preset_new_cancel.add_label( "Cancel", 0.5, 0.5 );
 	preset_new.set_modal( true );
+	preset_new.delete_event.connect( 
+		bind( slot( this, &GUI::delete_events ), &preset_new ) );
 	
 	// the copy preset dialog
 	preset_copy.set_title( "Copy another Preset" );
@@ -308,6 +313,8 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	preset_copy_cancel.add_label( "Cancel", 0.5, 0.5 );
 	preset_copy_cancel.clicked.connect( preset_copy.hide.slot() );
 	preset_copy.set_modal( true );
+	preset_copy.delete_event.connect( 
+		bind( slot( this, &GUI::delete_events ), &preset_copy ) );
 
 	// the saveas preset dialog
 	preset_saveas.set_title( "Save current settings as.." );
@@ -324,6 +331,8 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	preset_saveas_cancel.clicked.connect(
 		bind(slot(this, &GUI::event_handler),"preset::saveas::cancel"));
 	preset_saveas.set_modal( true );
+	preset_saveas.delete_event.connect( 
+		bind( slot( this, &GUI::delete_events ), &preset_saveas ) );
 
 	// the delete preset dialog
 	preset_delete.set_title( "Delete Preset?" );
@@ -338,13 +347,17 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	preset_delete_cancel.add_label( "Cancel", 0.5, 0.5 );
 	preset_delete_cancel.clicked.connect( preset_delete.hide.slot() );
 	preset_delete.set_modal( true );
+	preset_delete.delete_event.connect( 
+		bind( slot( this, &GUI::delete_events ), &preset_delete ) );
 	
     // the about window
-    //about_window.set_title( "About" );
-	//about_window.get_vbox()->add( *about_pixmap );
-    //about_window.get_action_area()->add( about_close_button );
-    //about_close_button.add_label( "close", 0.5, 0.5 );
-    //about_close_button.clicked.connect( about_window.hide_all.slot() );
+    about_window.set_title( "About" );
+	about_window.get_vbox()->add( *about_pixmap );
+    about_window.get_action_area()->add( about_close_button );
+    about_close_button.add_label( "close", 0.5, 0.5 );
+    about_close_button.clicked.connect( about_window.hide.slot() );
+	about_window.delete_event.connect( 
+		bind( slot( this, &GUI::delete_events ), &about_window ) );
 	
 	// export dialog
 	preset_export_dialog.set_title( "Select DIRECTORY to export preset to" );
@@ -354,6 +367,8 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 		bind(slot(this, &GUI::event_handler),"preset::export::ok"));
 	preset_export_dialog.get_selection_entry()->set_editable( false );
 	preset_export_dialog.set_modal( true );
+	preset_export_dialog.delete_event.connect( 
+		bind( slot( this, &GUI::delete_events ), &preset_export_dialog ) );
 		
 	// import dialog
 	preset_import_dialog.set_title( "Import as current preset" );
@@ -362,6 +377,8 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	preset_import_dialog.get_ok_button()->clicked.connect(
 		bind(slot(this, &GUI::event_handler),"preset::import::ok"));
 	preset_import_dialog.set_modal( true );
+	preset_import_dialog.delete_event.connect( 
+		bind( slot( this, &GUI::delete_events ), &preset_import_dialog ) );
 		
 	// the quit confirmation window
 	quit_confirm.set_title( "Quit?" );
@@ -376,6 +393,7 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	quit_confirm_cancel.add_label( "Cancel", 0.5, 0.5 );
 	quit_confirm_cancel.clicked.connect( quit_confirm.hide.slot() );
 	quit_confirm.set_modal( true );
+	quit_confirm.delete_event.connect( bind( slot( this, &GUI::delete_events ), &quit_confirm ) );
 	
 	// show realtime warning message if necessary
 	if(!(this->config->realtime)){
@@ -395,11 +413,12 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 #endif
 }
 
-
 void
 GUI::realize_impl()
 {
 	Gtk::Window::realize_impl();
+	
+	about_pixmap = new Gtk::Pixmap( splash_xpm );
 	
     GdkPixmap *pixmap;
     GdkBitmap *bitmap;
