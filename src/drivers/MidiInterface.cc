@@ -19,7 +19,7 @@ void MidiInterface::close()
 	//  delete midi; // this is (was) causing a Segfault....
 }
 
-int MidiInterface::open( Config & config, string name )
+int MidiInterface::open( Config & config )
 {
 	if (config.midi_driver == "auto")
 	{
@@ -28,7 +28,7 @@ int MidiInterface::open( Config & config, string name )
 if (config.debug_drivers)
 		cout << "<MidiInterface> Trying to open ALSA midi device...\n";
 
-		if ((midi->open("",name)) == 0)
+		if ((midi->open(config)) == 0)
 		{
 			config.midi_driver = "ALSA";
 			config.alsa_seq_client_id = midi->get_alsa_client_id();
@@ -45,7 +45,7 @@ if (config.debug_drivers)
 
 		//try OSS
 		midi = new OSSMidiDriver;
-		if ((midi->open(config.oss_midi_device,name)) == 0) 
+		if ((midi->open(config)) == 0) 
 		{
 			config.midi_driver = "OSS";
 if (config.debug_drivers)
@@ -61,7 +61,7 @@ if (config.debug_drivers)
 	else if (config.midi_driver == "oss" || config.midi_driver == "OSS")
 	{
 		midi = new OSSMidiDriver;
-		if ((midi->open(config.oss_midi_device,name)) == 0)
+		if ((midi->open(config)) == 0)
 		{
 			config.midi_driver = "OSS";
 if (config.debug_drivers)
@@ -80,7 +80,7 @@ if (config.debug_drivers)
 if (config.debug_drivers)
 		cout << "<MidiInterface> Trying to open ALSA midi device...\n";
 
-		if ((midi->open("",name)) == 0)
+		if ((midi->open(config)) == 0)
 		{
 			config.midi_driver = "ALSA";
 			config.alsa_seq_client_id = midi->get_alsa_client_id();

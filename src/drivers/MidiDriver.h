@@ -8,6 +8,7 @@
 #define MIDI_BUF_SIZE 64
 
 #include <string>
+#include "../Config.h"
 #include "../base.h"
 
 /** \class MidiDriver
@@ -21,7 +22,7 @@ class MidiDriver {
     // read() returns the number of bytes succesfully read. numbers < 0 
     // generally indicate failure...
     virtual int read(unsigned char *midi_event_buffer) = 0;
-    virtual int open(string device, string name) = 0;
+    virtual int open( Config & config ) = 0;
     virtual int close() = 0;
     virtual int get_alsa_client_id()	{ return 0; };
 };

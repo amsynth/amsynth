@@ -21,7 +21,7 @@ public:
   OSSMidiDriver();
   virtual ~OSSMidiDriver();
   int read(unsigned char *midi_event_buffer);
-  int open(string device, string);
+  int open( Config & config );
   int close();
   
 private:

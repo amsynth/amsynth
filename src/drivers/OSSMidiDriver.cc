@@ -19,15 +19,15 @@ int OSSMidiDriver::close()
 	return 0;
 }
 
-int OSSMidiDriver::open(string device, string)
+int OSSMidiDriver::open( Config & config )
 {
-    _oss_midi_fd =::open(device.c_str(), O_RDONLY, 0);
+    _oss_midi_fd =::open(config.oss_audio_device.c_str(), O_RDONLY, 0);
     if (_oss_midi_fd == -1)
 	return (-1);
     else {
 	opened = 1;
 #ifdef _DEBUG
-	cout << "<OSSMidiDriver> opened device " << device << endl;
+	cout << "<OSSMidiDriver> opened device " << config.oss_audio_device << endl;
 #endif
 	return 0;
     }

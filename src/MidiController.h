@@ -20,7 +20,7 @@
  */
 class MidiController {
   public:
-    MidiController( Config & config, string name );
+    MidiController( Config & config );
     ~MidiController();
 	/**
 	 * @param pc The PresetController for the system.
@@ -61,7 +61,6 @@ class MidiController {
     int bytes_read;
     unsigned char *buffer;
     unsigned char status, data, channel, byte;
-    string clientname;
 	Parameter last_active_controller;
 	Parameter *midi_controllers[MAX_CC];
 };

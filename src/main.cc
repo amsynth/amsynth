@@ -121,6 +121,7 @@ int main( int argc, char *argv[] )
 	config.channels = 2;
 	config.buffer_size = BUF_SIZE;
 	config.polyphony = 10;
+	config.alsa_seq_client_name = "amSynth";
 	
 	// load saved parameters (if any) from .amSynthrc
 	string amsynthrc_fname( getenv("HOME") );
@@ -284,9 +285,12 @@ int main( int argc, char *argv[] )
 	if (config.debug_drivers) std::cerr << "\n\n*** INITIALISING MIDI ENGINE...\n";
 	
 	if (enable_audio)
-		midi_controller = new MidiController( config, out->getTitle() );
+	{
+		config.alsa_seq_client_name = out->getTitle();
+		midi_controller = new MidiController( config );
+	}
 	else
-		midi_controller = new MidiController( config, "amSynth" );
+		midi_controller = new MidiController( config );
 
 	int midi_res;
 	if (enable_gui) midi_res = 
