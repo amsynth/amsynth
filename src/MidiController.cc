@@ -124,17 +124,19 @@ MidiController::doMidi()
 	switch (status & 0xf0) {
 
 	case 0x80:
-	    // note off.
-	    // data byte 1 = note, data byte 2 = velocity
+	    /* note off.
+	       data byte 1 = note, data byte 2 = velocity
 
-	    // NOTE - many (most?) devices send a 'note on' event with
-	    // velocity
-	    // 0 rather than a distinct 'note off' event...
+	       NOTE - many (most?) devices send a 'note on' event with
+	       velocity
+	       0 rather than a distinct 'note off' event...
+		   BUT - Cubase does! and vel!=0 !!
+		*/
 	    if (data == 0xff) {
 		data = byte;
 		break;
 	    }
-	    dispatch_note(channel, data, byte);
+	    dispatch_note( channel, data, 0 );
 	    data = 0xff;
 	    break;
 
@@ -259,6 +261,11 @@ MidiController::controller_change(unsigned char controller,
 			if (!value) _va->sustainOff();
 			else _va->sustainOn();
 			break;
+			
+		case 122:
+			if( !value )
+				cerr << "All Notes Off" << endl;
+		// All Notes Off
 
 		default:
 			if( last_active_controller.getValue() != controller )
