@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <list>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 using SigC::slot;
 using SigC::bind;
