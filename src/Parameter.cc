@@ -81,10 +81,10 @@ Parameter::setValue(float value)
 			controlValue = offset + base*_value;
 		break;
 		case PARAM_EXP:
-			controlValue = offset + pow((double)base,_value);
+			controlValue = offset + ::pow((double)base,_value);
 		break;
 		case PARAM_POWER:
-			controlValue = offset + pow( _value, (double)base );
+			controlValue = offset + ::pow( _value, (double)base );
 #ifdef _DEBUG
 		default:
 		cout << "<Parameter> mode is undefined" << endl;

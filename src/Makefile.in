@@ -87,11 +87,11 @@ VERSION = @VERSION@
 am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
-bin_PROGRAMS = amSynth ptest
+bin_PROGRAMS = amSynth.bin amSynth.ptest
 
 INCLUDES = `gtkmm-config --cflags` `gtk-config --cflags`
 
-amSynth_SOURCES = \
+amSynth_bin_SOURCES = \
 		main.cc \
 		AudioOutput.cc \
 		JackOutput.cc \
@@ -103,37 +103,38 @@ amSynth_SOURCES = \
 		Config.cc
 
 
-ptest_SOURCES = ptest.cc Parameter.cc Preset.cc PresetController.cc \
+amSynth_ptest_SOURCES = ptest.cc Parameter.cc Preset.cc PresetController.cc \
 		VoiceAllocationUnit.cc Config.cc
 
 
 SUBDIRS = drivers VoiceBoard GUI
 
-amSynth_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a GUI/libGUI.a
-ptest_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a
+amSynth_bin_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a GUI/libGUI.a
+amSynth_ptest_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a
 
 LIBS = -lstdc++ -lm -lsndfile `gtkmm-config --libs gtk--`
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-bin_PROGRAMS = amSynth$(EXEEXT) ptest$(EXEEXT)
+bin_PROGRAMS = amSynth.bin$(EXEEXT) amSynth.ptest$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
-am_amSynth_OBJECTS = main.$(OBJEXT) AudioOutput.$(OBJEXT) \
+am_amSynth_bin_OBJECTS = main.$(OBJEXT) AudioOutput.$(OBJEXT) \
 	JackOutput.$(OBJEXT) MidiController.$(OBJEXT) \
 	Parameter.$(OBJEXT) Preset.$(OBJEXT) PresetController.$(OBJEXT) \
 	VoiceAllocationUnit.$(OBJEXT) Config.$(OBJEXT)
-amSynth_OBJECTS = $(am_amSynth_OBJECTS)
-amSynth_DEPENDENCIES = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a \
-	GUI/libGUI.a
-amSynth_LDFLAGS =
-am_ptest_OBJECTS = ptest.$(OBJEXT) Parameter.$(OBJEXT) Preset.$(OBJEXT) \
-	PresetController.$(OBJEXT) VoiceAllocationUnit.$(OBJEXT) \
-	Config.$(OBJEXT)
-ptest_OBJECTS = $(am_ptest_OBJECTS)
-ptest_DEPENDENCIES = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a
-ptest_LDFLAGS =
+amSynth_bin_OBJECTS = $(am_amSynth_bin_OBJECTS)
+amSynth_bin_DEPENDENCIES = drivers/libdrivers.a \
+	VoiceBoard/libVoiceBoard.a GUI/libGUI.a
+amSynth_bin_LDFLAGS =
+am_amSynth_ptest_OBJECTS = ptest.$(OBJEXT) Parameter.$(OBJEXT) \
+	Preset.$(OBJEXT) PresetController.$(OBJEXT) \
+	VoiceAllocationUnit.$(OBJEXT) Config.$(OBJEXT)
+amSynth_ptest_OBJECTS = $(am_amSynth_ptest_OBJECTS)
+amSynth_ptest_DEPENDENCIES = drivers/libdrivers.a \
+	VoiceBoard/libVoiceBoard.a
+amSynth_ptest_LDFLAGS =
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -157,7 +158,7 @@ CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 CXXFLAGS = @CXXFLAGS@
-DIST_SOURCES = $(amSynth_SOURCES) $(ptest_SOURCES)
+DIST_SOURCES = $(amSynth_bin_SOURCES) $(amSynth_ptest_SOURCES)
 
 RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
 	uninstall-info-recursive all-recursive install-data-recursive \
@@ -165,7 +166,7 @@ RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
 	uninstall-recursive check-recursive installcheck-recursive
 DIST_COMMON = Makefile.am Makefile.in
 DIST_SUBDIRS = $(SUBDIRS)
-SOURCES = $(amSynth_SOURCES) $(ptest_SOURCES)
+SOURCES = $(amSynth_bin_SOURCES) $(amSynth_ptest_SOURCES)
 
 all: all-recursive
 
@@ -205,12 +206,12 @@ clean-binPROGRAMS:
 	  echo " rm -f $$p $$f"; \
 	  rm -f $$p $$f ; \
 	done
-amSynth$(EXEEXT): $(amSynth_OBJECTS) $(amSynth_DEPENDENCIES) 
-	@rm -f amSynth$(EXEEXT)
-	$(CXXLINK) $(amSynth_LDFLAGS) $(amSynth_OBJECTS) $(amSynth_LDADD) $(LIBS)
-ptest$(EXEEXT): $(ptest_OBJECTS) $(ptest_DEPENDENCIES) 
-	@rm -f ptest$(EXEEXT)
-	$(CXXLINK) $(ptest_LDFLAGS) $(ptest_OBJECTS) $(ptest_LDADD) $(LIBS)
+amSynth.bin$(EXEEXT): $(amSynth_bin_OBJECTS) $(amSynth_bin_DEPENDENCIES) 
+	@rm -f amSynth.bin$(EXEEXT)
+	$(CXXLINK) $(amSynth_bin_LDFLAGS) $(amSynth_bin_OBJECTS) $(amSynth_bin_LDADD) $(LIBS)
+amSynth.ptest$(EXEEXT): $(amSynth_ptest_OBJECTS) $(amSynth_ptest_DEPENDENCIES) 
+	@rm -f amSynth.ptest$(EXEEXT)
+	$(CXXLINK) $(amSynth_ptest_LDFLAGS) $(amSynth_ptest_OBJECTS) $(amSynth_ptest_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core

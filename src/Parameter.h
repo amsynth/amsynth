@@ -9,6 +9,9 @@
 #include <math.h>
 #include "base.h"
 #include "UpdateListener.h"
+#ifdef _DEBUG
+#include <iostream>
+#endif
 
 #define MAX_ULS 256
 #define PARAM_DIRECT 1

@@ -7,6 +7,9 @@
 
 #include "Synth--.h"
 #include "../Parameter.h"
+#ifdef _DEBUG
+#include <iostream>
+#endif
 
 /** @class NFValue
  *

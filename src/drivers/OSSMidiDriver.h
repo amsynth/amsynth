@@ -9,6 +9,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#ifdef _DEBUG
+#include <iostream>
+#endif
 
 #include "MidiDriver.h"
 

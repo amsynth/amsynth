@@ -197,9 +197,9 @@ int main( int argc, char *argv[] )
 		}
 	}
 #ifdef _DEBUG
-	cout << "MIDI:- device:" << config.midi_device << " channel:" 
-	<< config.midi_channel << endl << "AUDIO:- device:" 
-	<< config.audio_device << " sample rate:" << config.sample_rate << endl;
+	cout << "MIDI:- driver:" << config.midi_driver << " channel:" 
+	<< config.midi_channel << endl << "AUDIO:- driver:" 
+	<< config.audio_driver << " sample rate:" << config.sample_rate << endl;
 #endif
 	
 	//

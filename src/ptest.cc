@@ -8,9 +8,18 @@
 #include <iostream>
 #include <unistd.h>
 #include <sndfile.h>
+#include <time.h>
 
 int main( int argc, char *argv[] )
 {
+	//
+	// test parameters
+	// 
+	int time_seconds = 60;  // seconds of audio to generate
+        int num_voices = 10;    // number of simultaneous voices to generate
+
+
+	
 	// set default parameters
 	config.audio_driver = "auto";
 	config.midi_driver = "auto";
@@ -21,7 +30,7 @@ int main( int argc, char *argv[] )
 	config.sample_rate = 44100;
 	config.channels = 2;
 	config.buffer_size = BUF_SIZE;
-	config.polyphony = 10;
+	config.polyphony = num_voices;
 	
 	presetController = new PresetController();
 	
@@ -54,31 +63,42 @@ int main( int argc, char *argv[] )
 	//
 	// now run the test.
 	//
-	int i=0;
+	
+	long i=0;
+	long total_calls = config.sample_rate * time_seconds / BUF_SIZE;
 	float *buffer;
 	
-	// trigger off some notes for amSynth to render. 10 will do
-	/*
-	vau->noteOn( 36, 127 );
-	vau->noteOn( 40, 127 );
-	vau->noteOn( 43, 127 );
-	vau->noteOn( 48, 127 );
-	vau->noteOn( 52, 127 );
-	vau->noteOn( 55, 127 );
-	*/
-	vau->noteOn( 60, 127 );
-	/*
-	vau->noteOn( 64, 127 );
-	vau->noteOn( 67, 127 );
-	vau->noteOn( 72, 127 );
-	*/
+	// trigger off some notes for amSynth to render.
+	for (int v=0; v<num_voices; v++)
+	{
+		vau->noteOn( 60+v, 127 );
+	}
 	
-	while (i<6890) // good for 10 seconds audio (BUF_SIZE=64, 44.1kHz)
+	//
+	// now we need to get the time at the start of the test
+	//
+	clock_t clocks_before = clock();
+	
+	while (i<total_calls)
 	{
 		buffer = vau->getNFData();
-	//	sf_writef_float( sndfile, buffer, BUF_SIZE );
+		sf_writef_float( sndfile, buffer, BUF_SIZE );
 		i++;
 	}
+	
+	//
+	// get the time at the end of test execution, and find the time elapsed
+	// 
+	clock_t clocks_elapsed = clock() - clocks_before;
+
+	int ms_audio = time_seconds * 1000 * num_voices;
+	int ms_elapsed = clocks_elapsed*1000 / CLOCKS_PER_SEC;
+
+	std::cout << "generating " << num_voices << " voices of audio for " << 
+		time_seconds << " seconds took " << ms_elapsed << "ms\n";
+	std::cout << "***** performance index = " << 
+		((float)ms_audio/(float)ms_elapsed) << " *****" << std::endl;
+	
 	// dont forget to close the output file, else it wont be written!
 	sf_close( sndfile );
 	
