@@ -6,7 +6,7 @@ amSynth is a real-time analogue modelling synthesizer.
 It currently uses the OSS/ALSA audio and midi devices for its input and output,
 and can do JACK audio too!
 
-	** Welcome to the rc2 "jack" release of amSynth **
+	** Welcome to the third release candidate (rc3) of amSynth **
 
 The basic structure of amSynth is not forseen to change - amSynthe (same 
 homepage) has a different goal of a more complex and powerful engine, but it has
@@ -25,7 +25,7 @@ Running amSynth
 read INSTALL for installation instructions!!
 
 Once youve compiled and installed amSynth, run it with the -h flag to get a list
-of command-line options. 
+of command-line options.
 
 For more in-depth discussion of using amSynth, please visit the web-forum at
 http://amsynthe.sourceforge.net/amSynth/forum
@@ -40,9 +40,10 @@ file, so it is recommended to customise it.
 
 Presets
 -------
-Presets are stored in the file ~/.amSynth.presets
-
+Presets are stored in a bank file, "~/.amSynth.presets" by default
 You can specify another file using the 'amSynth -b <file>' command line option
+You can also load other bank files from the application's menu.
+!! Whenever you exit amSynth, the bank you are using is automatically saved !!
 
 
 Known problems
