@@ -1,0 +1,7 @@
++ incorporate alsa-mmap driver
+
++ Configuration Dialog (hardware devices etc..)
+
++ improve filing system for config + presets (a ~/.amSynth/ directory..)
+
++ add idea of banks of presets - move to one built-in bank, n user-definables?

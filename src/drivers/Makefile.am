@@ -4,6 +4,7 @@ libdrivers_a_SOURCES = 	OSSMidiDriver.cc \
 						OSSAudioDriver.cc \
 						ALSAMidiDriver.cc \
 						ALSAAudioDriver.cc \
+						ALSAmmapAudioDriver.cc \
 						AudioInterface.cc \
 						MidiInterface.cc \
 						MidiInterface.cc

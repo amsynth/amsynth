@@ -24,16 +24,24 @@ AudioInterface::setChannels(int channels)
 int
 AudioInterface::open( Config & config )
 {
+	// auto-select - try all drivers, best first
 	if( config.audio_driver == "auto" || config.audio_driver == "AUTO" ){
-		// try ALSA
+		// try ALSA-MMAP
+		driver = new ALSAmmapAudioDriver;
+		if ( driver->open( config ) == 0 ) {
+#ifdef _DEBUG
+			cout << "<AudioInterface> opened ALSA-MMAP AudioDriver" << endl;
+#endif
+			return 0;
+		} // try ALSA
+		delete driver;
 		driver = new ALSAAudioDriver;
 		if ( driver->open( config ) == 0 ) {
 #ifdef _DEBUG
 			cout << "<AudioInterface> opened ALSA AudioDriver" << endl;
 #endif
 			return 0;
-		}
-		//try OSS
+		} //try OSS
 		delete driver;
 		driver = new OSSAudioDriver;
 		if ( driver->open( config ) == 0 ) {
@@ -64,6 +72,19 @@ AudioInterface::open( Config & config )
 		if ( driver->open( config ) == 0 ) {
 #ifdef _DEBUG
 			cout << "<AudioInterface> opened ALSA AudioDriver" << endl;
+#endif
+			return 0;
+		} else {
+			delete driver;
+			return -1;
+		}
+	}
+	
+	if( config.audio_driver == "alsa-mmap" || config.audio_driver == "ALSA-MMAP" ) {
+		driver = new ALSAmmapAudioDriver;
+		if ( driver->open( config ) == 0 ) {
+#ifdef _DEBUG
+			cout << "<AudioInterface> opened ALSA-MMAP AudioDriver" << endl;
 #endif
 			return 0;
 		} else {

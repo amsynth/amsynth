@@ -5,6 +5,7 @@
 
 #include "AudioDriver.h"
 #include "ALSAAudioDriver.h"
+#include "ALSAmmapAudioDriver.h"
 #include "OSSAudioDriver.h"
 #include <iostream.h>
 
