@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
 #include "main.h"
@@ -247,9 +247,6 @@ under certain conditions; see the file COPYING for details\n";
   
 	presetController->getCurrentPreset().AddListenerToAll (vau);
 
-	presetController->selectPreset( 1 );
-        presetController->selectPreset( 0 );
-	
 	if (enable_gui==1)
 	{	
 	Gtk::Main kit( &argc, &argv ); // this can be called SUID
