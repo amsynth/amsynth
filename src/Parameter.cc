@@ -8,18 +8,18 @@
 #include <iostream>
 #endif
 
-Parameter::Parameter	(string name, Param id, float value, float min, float max)
+Parameter::Parameter	(string name, Param id, float value, float min, float max, float inc, ControlType type, float base, float offset, string label)
 :	mParamId	(id)
 ,	_name		(name)
-,	label		("")
-,	controlMode	(PARAM_DIRECT)
-,	continuous	(true)
+,	label		(label)
+,	controlMode	(type)
+,	continuous	(0.0f < _step)
 ,	_min		(min)
 ,	_max		(max)
-,	_step		(0)
+,	_step		(inc)
 ,	controlValue(0)
-,	base		(1)
-,	offset		(0)
+,	base		(base)
+,	offset		(offset)
 {
 	setValue (value);
 }

@@ -28,9 +28,17 @@
 
 class Parameter {
 public:
-	enum ControlType { PARAM_DIRECT, PARAM_EXP, PARAM_POWER	};
+	enum ControlType
+	{
+		PARAM_DIRECT,	// controlValue = offset + base * value
+		PARAM_EXP,		// controlValue = offset + base ^ value
+		PARAM_POWER		// controlValue = offset + value ^ base
+	};
 
-			Parameter	(string name = "unused", Param id = kControls_End, float value = 0.0, float min = 0.0, float max = 1.0);
+					Parameter		(string name = "unused", Param id = kControls_End, 
+									 float value = 0.0, float min = 0.0, float max = 1.0, float inc = 0.0,
+									 ControlType = PARAM_DIRECT, float base = 1.0, float offset = 0.0,
+									 string label = "");
 
 	// The raw value of this parameter. Objects in the signal generation 
 	// path should not use this method, but getControlValue() instead.
@@ -48,12 +56,7 @@ public:
 
 	const string	getName			() { return _name; }
 	Param			GetId			() { return mParamId; }
-	/**
-	 * Set the mode for this parameter.
-	 * The Parameter can be direct, type : PARAM_DIRECT
-	 * it can be exponential : PARAM_EXP where the control value will be 
-	 * base^value
-	**/
+
 	void			setType			(ControlType, float base, float offset);
 	
 	// UpdateListeners (eg one or more ParameterViews - part of the GUI) are 
