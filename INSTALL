@@ -1,16 +1,17 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-! the confugration scripts etc.. are not complete !
+! the configration scripts etc.. are not complete !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 make sure you have gtkmm (http://gtkmm.sourceforge.net) installed on your
 system. other than that, nothing special is required..
 
-NOTE: 
+NOTE:
 	there is no "make install"
 	after compilation, copy the executable (src/amSynth) somewhere into your 
 	$PATH.
 	default configuration files are included, and can be copied to your home
-	directory. these files are '.amSynthrc' and '.amSynth.presets'
+	directory. these files are '.amSynthrc' and '.amSynth.presets', contained 
+	in the "skel" directory.
 
 Basic Installation
 ==================

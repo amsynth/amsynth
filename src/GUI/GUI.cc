@@ -615,13 +615,13 @@ GUI::init()
 	controller_map_dialog = new ControllerMapDialog( *midi_controller, *preset_controller );
 
 	char cstr[10];
-	status = "  Midi Device: ";
-	status += config->midi_device;
+	status = "  Midi Driver: ";
+	status += config->midi_driver;
 	status += "      Midi Channel: ";
-	sprintf( cstr, "%2d", config->midi_channel );
+	sprintf( cstr, "%2d", config->midi_driver );
 	status += string(cstr);
-	status += "            Audio Device: ";
-	status += config->audio_device;
+	status += "            Audio Driver: ";
+	status += config->audio_driver;
 	status += "      Sample Rate:";
 	sprintf( cstr, "%d", config->sample_rate );
 	status += string(cstr);

@@ -1,5 +1,5 @@
-/* Synth--
- * (c) 2001 Nick Dowell
+/* amSynth
+ * (c) 2001,2002 Nick Dowell
  **/
 
 #ifndef _ALSA_AUDIO_DRIVER_H
@@ -11,7 +11,7 @@
 #include <alsa/asoundlib.h>
 #endif
 
-#define BUFSIZE 256
+#define BUFSIZE 64
 
 class ALSAAudioDriver:public AudioDriver {
 

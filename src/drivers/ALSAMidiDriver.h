@@ -1,5 +1,5 @@
 /* Synth--
- * (c) 2001 Nick Dowell
+ * (c) 2001,2002 Nick Dowell
  **/
 
 #ifndef _ALSA_MIDI_DRIVER_H

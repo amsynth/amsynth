@@ -28,7 +28,7 @@ OSSAudioDriver::write(float *buffer, int frames)
 		outBuf[p++] = (unsigned char) ((_tmp >> 8) & 0xff);
     }
 
-    if ((::write(dsp_handle_, outBuf, frames * 2)) != frames * 2) {
+    if ((::write(dsp_handle_, outBuf, frames*2 )) != frames * 2) {
 		perror("<OSSAudioDriver> error writing to dsp_handle_");
 		return -1;
 	}
@@ -46,9 +46,9 @@ int OSSAudioDriver::open( Config & config )
 	cout << "<OSSAudioDriver::open()>" << endl;
 #endif
 	bufsize_ = config.buffer_size;
-    if ((dsp_handle_ =::open(config.audio_device.c_str(), O_WRONLY)) == -1) {
-	cout << "<OSSAudioDriver> error: could not open dsp device " 
-	<< config.audio_device << endl;
+    if ((dsp_handle_ =::open(config.oss_audio_device.c_str(), O_WRONLY)) == -1){
+		cout << "<OSSAudioDriver> error: could not open dsp device " 
+			<< config.oss_audio_device << endl;
 	return -1;
    }
 #ifdef _DEBUG
@@ -63,7 +63,9 @@ int OSSAudioDriver::open( Config & config )
     setChannels( config.channels );
     setRate( config.sample_rate );
 	config.sample_rate = getRate();
-
+	
+	config.audio_driver = "OSS";
+	
 	this->config = &config;
 	
     return 0;

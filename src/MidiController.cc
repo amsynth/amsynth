@@ -59,7 +59,7 @@ MidiController::run()
 #ifdef _DEBUG
     cout << "<MidiController> opening midi interface.." << endl;
 #endif
-    if (midi.open( config->midi_device ) == -1) {
+    if (midi.open( *config ) == -1) {
 	cout << "<MidiController> failed to open midi." << endl;
 	exit(-1);
     }

@@ -25,9 +25,9 @@ string help_text =
 any options given here override those in the config file ($HOME/.amSynthrc)\n\
 \n\
 options:\n\
--m device	set the (OSS) midi device file to use\n\
+-m device	set the midi driver to use [alsa/oss/auto(default)]\n\
 -c channel	set the midi channel to respond to (default=all)\n\
--d device	set the (OSS) sound output device file to use\n\
+-a device	set the sound output driver to use [alsa/oss/auto(default)]\n\
 -r rate		set the sampling rate to use\n\
 -p voices	set the polyphony (maximum active voices)\n\
 -s		enables silent mode - no audio ouput\n\

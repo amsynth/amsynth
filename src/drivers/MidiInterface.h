@@ -4,6 +4,7 @@
 
 #include "ALSAMidiDriver.h"
 #include "OSSMidiDriver.h"
+#include "../Config.h"
 
 /**
  * \class MidiInterface
@@ -13,7 +14,7 @@ class MidiInterface {
   public:
     MidiInterface();
     ~MidiInterface();
-    int open( string device );
+    int open( Config & config );
     void close();
     int read(unsigned char *buffer);
 

@@ -49,7 +49,8 @@ class AudioInterface {
    * @return 0 on success(all samples were written to the device), 
    * -1 on failure.
    */
-    int write(float *buffer, int frames);
+    int write(float *buffer, int frames)
+	{ return driver->write( buffer, frames ); };
   /** 
    * not implemented yet
    * 

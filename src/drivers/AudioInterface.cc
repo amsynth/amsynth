@@ -1,13 +1,7 @@
 /* amSynth
- * (c) 2001 Nick Dowell
+ * (c) 2001,2002 Nick Dowell
  */
 #include "AudioInterface.h"
-
-int
-AudioInterface::write(float *buffer, int frames)
-{
-    return driver->write(buffer, frames);
-}
 
 int
 AudioInterface::setRealtime()
@@ -30,25 +24,53 @@ AudioInterface::setChannels(int channels)
 int
 AudioInterface::open( Config & config )
 {
-    // try ALSA
-    driver = new ALSAAudioDriver;
-    if (driver->open( config ) == 0) {
+	if( config.audio_driver == "auto" || config.audio_driver == "AUTO" ){
+		// try ALSA
+		driver = new ALSAAudioDriver;
+		if ( driver->open( config ) == 0 ) {
 #ifdef _DEBUG
-	cout << "<AudioInterface> opened ALSA AudioDriver" << endl;
+			cout << "<AudioInterface> opened ALSA AudioDriver" << endl;
 #endif
-	return 0;
-    }
-    //try OSS
-    delete driver;
-    driver = new OSSAudioDriver;
-    if (driver->open( config ) == 0) {
+			return 0;
+		}
+		//try OSS
+		delete driver;
+		driver = new OSSAudioDriver;
+		if ( driver->open( config ) == 0 ) {
 #ifdef _DEBUG
-	cout << "<AudioInterface> opened OSS AudioDriver" << endl;
+			cout << "<AudioInterface> opened OSS AudioDriver" << endl;
 #endif
-	return 0;
-    }
-    delete driver;
-    return -1;
+			return 0;
+		}
+		delete driver;
+		return -1;
+	} 
+	
+	if( config.audio_driver == "oss" || config.audio_driver == "OSS" ){
+		driver = new OSSAudioDriver;
+		if ( driver->open( config ) == 0 ) {
+#ifdef _DEBUG
+			cout << "<AudioInterface> opened OSS AudioDriver" << endl;
+#endif
+			return 0;
+		} else {
+			delete driver;
+			return -1;
+		}
+	} 
+	
+	if( config.audio_driver == "alsa" || config.audio_driver == "ALSA" ){
+		driver = new ALSAAudioDriver;
+		if ( driver->open( config ) == 0 ) {
+#ifdef _DEBUG
+			cout << "<AudioInterface> opened ALSA AudioDriver" << endl;
+#endif
+			return 0;
+		} else {
+			delete driver;
+			return -1;
+		}
+	}
 }
 
 void

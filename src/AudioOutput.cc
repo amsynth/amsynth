@@ -26,18 +26,14 @@ AudioOutput::setConfig( Config & config )
 }
 
 void
- AudioOutput::setInput(NFSource & source)
+AudioOutput::setInput(NFSource & source)
 {
     input = &source;
 }
 
-void AudioOutput::run()
+void 
+AudioOutput::run()
 {
-//  if (out.open( *config ) == -1) {
-    //perror("error: could not open dsp device");
-//    exit(-1);
-//  }
-//  out.setChannels( config->channels );
   out.setRealtime();
 
 #ifdef _DEBUG

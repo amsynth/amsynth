@@ -22,7 +22,7 @@ Limiter::getNFData()
 {
   buffer = source->getFData();
 
-  for (int i=0; i<BUF_SIZE; i++) {
+  for (int i=0; i<BUF_SIZE; i++) {	
     if (buffer[i] > 1.0) buffer[i] = 1.0;
     else if (buffer[i] < -1.0) buffer[i] = -1.0;
   }

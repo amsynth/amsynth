@@ -49,13 +49,23 @@ public:
 	 */
 	int polyphony;
 	/**
+	 * Specify the audio output driver to use. currently "oss", "alsa", or 
+	 * "auto" (which picks the best one)
+	 */
+	string audio_driver;
+	/**
+	 * Specify the midi input driver to use. currently "oss", "alsa", or 
+	 * "auto" (which picks the best one)
+	 */
+	string midi_driver;
+	/**
 	 * The name if the device file for the OSS midi device.
 	 */
-	string midi_device;
+	string oss_midi_device;
 	/**
 	 * The name if the device file for the OSS audio device.
 	 */
-	string audio_device;
+	string oss_audio_device;
 };
 
 #endif

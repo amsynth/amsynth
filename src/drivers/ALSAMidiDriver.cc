@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001 Nick Dowell
+ * (c) 2001,2002 Nick Dowell
  **/
 
 #include "ALSAMidiDriver.h"
@@ -13,14 +13,12 @@ ALSAMidiDriver::read(unsigned char *midi_event_buffer)
 	snd_seq_event_t *ev;
 	if ( poll(pfd, npfd, 100000) > 0 ){
 		snd_seq_event_input( seq_handle, &ev );
-		//printf( "%x\n", ev->data );
 		_bytes_read = snd_midi_event_decode( seq_midi_parser, 
 											midi_event_buffer, 4, ev );
 		snd_seq_free_event( ev );
     }
 	return _bytes_read;
 #else
-	cout << "dummy read" << endl;
 	return -1;
 #endif
 }
@@ -51,10 +49,8 @@ int ALSAMidiDriver::open(string device)
 	pfd = (struct pollfd *)alloca(npfd * sizeof(struct pollfd));
 	snd_seq_poll_descriptors(seq_handle, pfd, npfd, POLLIN);
 	
-	cerr << "alsamidi open() done\n";
 	return 0;
 #else
-	cout << "ALSAMidiDriver::open() dummy\n";
 	return -1;
 #endif
 }

@@ -10,7 +10,6 @@
 #include <fstream>
 #include <unistd.h>
 
-
 int the_pipe[2];
 
 void sched_realtime()
@@ -107,33 +106,41 @@ int main( int argc, char *argv[] )
 	
 	int enable_audio = 1;
 	// set default parameters
-	config.midi_device = "/dev/midi";
+	config.audio_driver = "AUTO";
+	config.midi_driver = "AUTO";
+	config.oss_midi_device = "/dev/midi";
 	config.midi_channel = 0;
-	config.audio_device = "/dev/dsp";
+	config.oss_audio_device = "/dev/dsp";
 	config.sample_rate = 44100;
 	config.channels = 2;
 	config.buffer_size = BUF_SIZE;
 	config.polyphony = 10;
 	
 	// load saved parameters (if any) from .amSynthrc
-	string fname(getenv("HOME"));
+	string fname( getenv("HOME") );
 	fname += "/.amSynthrc";
-	ifstream file(fname.c_str(), ios::in);
+	ifstream file( fname.c_str(), ios::in );
 	char buffer[100];
 	while( file.good() ) {
 		file >>  buffer;
-		if (string(buffer)=="#"){
+		if( string(buffer)=="#" ){
 			// ignore lines beginning with '#' (comments)
 			file.get(buffer,100);
-		} else if (string(buffer)=="midi_device"){
+		} else if (string(buffer)=="audio_driver"){
 			file >> buffer;
-			config.midi_device = string(buffer);
+			config.audio_driver = string(buffer);
+		} else if (string(buffer)=="midi_driver"){
+			file >> buffer;
+			config.midi_driver = atoi(buffer);
+		} else if (string(buffer)=="oss_midi_device"){
+			file >> buffer;
+			config.oss_midi_device = string(buffer);
 		} else if (string(buffer)=="midi_channel"){
 			file >> buffer;
 			config.midi_channel = atoi(buffer);
-		} else if (string(buffer)=="audio_device"){
+		} else if (string(buffer)=="oss_audio_device"){
 			file >> buffer;
-			config.audio_device = string(buffer);
+			config.oss_audio_device = string(buffer);
 		} else if (string(buffer)=="sample_rate"){
 			file >> buffer;
 			config.sample_rate = atoi(buffer);
@@ -148,19 +155,19 @@ int main( int argc, char *argv[] )
 	
 	// get command line options (they override saved prefs.)
 	int opt;
-	while((opt=getopt(argc, argv, "svhm:c:d:r:p:"))!= -1) {
+	while((opt=getopt(argc, argv, "svhm:c:a:r:p:"))!= -1) {
 		switch(opt) {
 			case 's':
 				enable_audio = 0;
 				break;
 			case 'm': 
-				config.midi_device = optarg; 
+				config.midi_driver = optarg; 
 				break;
 			case 'c':
 				config.midi_channel = atoi(optarg); 
 				break;
-			case 'd':
-				config.audio_device = optarg; 
+			case 'a':
+				config.audio_driver = optarg; 
 				break;
 			case 'r':
 				config.sample_rate = atoi(optarg);

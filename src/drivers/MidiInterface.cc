@@ -19,7 +19,7 @@ void MidiInterface::close()
   //  delete midi; // this is (was) causing a Segfault....
 }
 
-int MidiInterface::open(string device)
+int MidiInterface::open( Config & config )
 {
 
     //try ALSA
@@ -27,9 +27,10 @@ int MidiInterface::open(string device)
 #ifdef _DEBUG
     cout << "<MidiInterface> Trying to open ALSA midi device..." << endl;
 #endif
-    if ((midi->open(device)) == 0) {
+    if ((midi->open("")) == 0) {
+		config.midi_driver = "ALSA";
 #ifdef _DEBUG
-	cout << "<MidiInterface> opened ALSA midi device! :-)" << endl;
+		cout << "<MidiInterface> opened ALSA midi device! :-)" << endl;
 #endif
 	return 0;
     }
@@ -41,9 +42,10 @@ int MidiInterface::open(string device)
 
     //try OSS
     midi = new OSSMidiDriver;
-    if ((midi->open(device)) == 0) {
+    if ((midi->open(config.oss_midi_device)) == 0) {
+		config.midi_driver = "OSS";
 #ifdef _DEBUG
-	cout << "<MidiInterface> opened OSS midi device! :-)" << endl;
+		cout << "<MidiInterface> opened OSS midi device! :-)" << endl;
 #endif
 	return 0;
     }
