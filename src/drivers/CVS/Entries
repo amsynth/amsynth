@@ -1,0 +1,18 @@
+/ALSAAudioDriver.cc/1.14/Sat Jul 19 15:30:43 2003//
+/ALSAAudioDriver.h/1.9/Sun Jan  4 15:39:04 2004//
+/ALSAMidiDriver.cc/1.15/Sat Feb 28 12:21:06 2004//
+/ALSAMidiDriver.h/1.11/Sun Jan  4 15:39:04 2004//
+/ALSAmmapAudioDriver.cc/1.8/Sat Jul 19 15:30:43 2003//
+/ALSAmmapAudioDriver.h/1.5/Sun Jan  4 15:39:04 2004//
+/AudioDriver.h/1.2/Fri Oct  4 20:06:43 2002//
+/AudioInterface.cc/1.5/Sun Jul  6 17:03:17 2003//
+/AudioInterface.h/1.4/Mon Dec 23 19:48:35 2002//
+/Makefile.am/1.3/Wed Jan 15 11:19:03 2003//
+/MidiDriver.h/1.6/Sun Jul  6 17:35:24 2003//
+/MidiInterface.cc/1.8/Sun Jul  6 17:35:24 2003//
+/MidiInterface.h/1.4/Sun Jul  6 17:35:24 2003//
+/OSSAudioDriver.cc/1.6/Sun Jan 12 21:36:04 2003//
+/OSSAudioDriver.h/1.3/Sat Jan 11 22:37:53 2003//
+/OSSMidiDriver.cc/1.3/Sun Jul  6 17:35:24 2003//
+/OSSMidiDriver.h/1.4/Sun Jul  6 17:35:24 2003//
+D

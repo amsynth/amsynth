@@ -1,0 +1,47 @@
+21/01/2004
+
+started optimising the freqency control section
+
+20/01/2004
+
+restructured memory allocation - processing memory is now owned by the VAU and shared among all VoiceBoards.
+
+new, faster ADSR envelope generator
+
+16/07/2003 - amSynthe 1.0 rc3 released
+
+On-the-fly changing of polyphony & MIDI channel
+
+09/07/2003
+
+Refactoring GUI code (split out editor panel)
+
+08/07/2003
+
+Bank loading & saving, helper apps in the menu
+
+07/07/2003
+
+Re-organisation of menus.
+"Normal" edit functions for Presets (copy/paste)
+
+06/07/2003
+
+new MIDI controller config. dialog
+improved error handling on audio & midi initialisation
+cleaned up some code in main.cc (config file loading & saving)
+fixed various bugs (segfaults etc..)
+
+26/02/2003 - amSynth 1.0 rc2 released
+
+27/10/2002 - amSynth 1.0 rc1 released
+
+30/06/2002 - amSynth 1.0 beta5 released
+
+21/06/2002 - amSynth 1.0 beta4 released
+
+03/06/2002 - amSynth 1.0 beta3 released
+
+15/04/2002 - amSynth 1.0 beta2 released
+
+19/03/2002 - amSynth 1.0 beta1 released 	INITIAL RELEASE

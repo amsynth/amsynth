@@ -1,0 +1,11 @@
+/ADSR.cc////
+/ADSR.h////
+/LowPassFilter.cc////
+/LowPassFilter.h////
+/Makefile.am////
+/Oscillator.cc////
+/Oscillator.h////
+/Synth--.h////
+/VoiceBoard.cc////
+/VoiceBoard.h////
+/config.h.in////

@@ -1,0 +1,190 @@
+AC_INIT(src/main.cc)
+AC_CONFIG_AUX_DIR(config)
+AM_INIT_AUTOMAKE([amSynth], [1.0.0])
+AM_CONFIG_HEADER(config.h)
+
+
+
+addCXXFLAGS="-D_REENTRANT"
+CXXFLAGS="-Wall"
+
+AC_PROG_CXX
+AC_PROG_INSTALL
+AC_PROG_LIBTOOL
+
+AC_LANG(C++)
+
+dnl
+dnl
+dnl	Check for required headers & libraries
+dnl
+dnl
+
+AC_CHECK_LIB(m, sin,, exit)
+AC_CHECK_LIB(dl, dlopen,, exit)
+AC_CHECK_LIB(pthread, pthread_create,, exit)
+AM_PATH_GTKMM(1.2.8,,exit)
+
+dnl
+dnl
+dnl	User Options
+dnl
+dnl	sets variables like "with_feature=[yes|no]"
+dnl
+
+dnl	OSS support
+AC_ARG_WITH(oss, 
+[  --with-oss              enable OSS support (default=yes)],
+[
+   if test $withval = "yes"; then
+     with_oss=yes
+   else
+     with_oss=no
+  fi
+], with_oss=yes)
+
+dnl	ALSA support
+AC_ARG_WITH(alsa, 
+[  --with-alsa             enable ALSA support (default=yes)],
+[
+   if test $withval = "yes"; then
+     with_alsa=yes
+   else
+     with_alsa=no
+  fi
+], with_alsa=yes)
+
+dnl	JACK support
+AC_ARG_WITH(jack, 
+[  --with-jack             enable JACK support (default=yes)],
+[
+   if test $withval = "yes"; then
+     with_jack=yes
+   else
+     with_jack=no
+  fi
+], with_jack=yes)
+
+dnl     .WAV OUT support
+AC_ARG_WITH(sndfile, 
+[  --with-sndfile          enable .WAV file output support (default=yes)],
+[
+   if test $withval = "yes"; then
+     with_sndfile=yes
+   else
+     with_sndfile=no
+  fi
+], with_sndfile=yes)
+
+dnl	debugging support
+AC_MSG_CHECKING(whether to enable debugging support...)
+AC_ARG_ENABLE(debug,
+[  --enable-debug          enable debugging compiler options])
+if test "${enable_debug}" = "yes" ; then
+	AC_MSG_RESULT([yes])
+	debugging=yes
+	CXXFLAGS="$CXXFLAGS -g -Wall -D_DEBUG"
+	COMPOPSTR="debugging $COMPOPSTR"
+	OPTION_DEBUG="yes"
+else
+	AC_MSG_RESULT([no])
+	debugging=no
+fi
+
+dnl	profiling support
+AC_MSG_CHECKING(whether to enable profiling support...)
+AC_ARG_ENABLE(profile,
+[  --enable-profile       enable profiling compiler options])
+if test "$enable_profile" = "yes" ; then
+	AC_MSG_RESULT([yes])
+	profiling=yes
+	if test "$GCC" = "yes" ; then
+		CXXFLAGS="$CXXFLAGS -pg"
+		AC_MSG_RESULT([yes])
+	else
+                AC_MSG_RESULT(we do not have gcc, hope we have a nice profiler.)
+                CXXFLAGS="$CXXFLAGS -p"
+        fi
+else
+	AC_MSG_RESULT([no])
+	profiling=no
+fi
+
+if test $profiling = "no"; then 
+  if test $debugging = "no"; then
+    CXXFLAGS="$CXXFLAGS -O3 -ffast-math -fno-exceptions -fomit-frame-pointer"
+  fi 
+fi
+
+
+dnl
+dnl
+dnl	Check for optional headers & libraries
+dnl
+dnl
+
+AC_CHECK_HEADERS(sys/soundcard.h,, 	with_oss=no)
+AC_CHECK_HEADERS(alsa/asoundlib.h,, 	with_alsa=no)
+AC_CHECK_HEADERS(jack/jack.h,, 		with_jack=no)
+AC_CHECK_HEADERS(sndfile.h,,            with_sndfile=no)
+
+
+
+dnl Compile options string used in about dialog for debugging purposes
+COMPOPSTR=""
+
+
+
+dnl
+dnl
+dnl	Set compiler options accordingly
+dnl
+dnl
+
+if test "$with_oss" = "yes";  then
+	CXXFLAGS="$CXXFLAGS -Dwith_oss"
+fi
+if test "$with_alsa" = "yes"; then 
+	CXXFLAGS="$CXXFLAGS -Dwith_alsa"
+	LDFLAGS="$LDFLAGS -lasound"
+fi
+if test "$with_jack" = "yes"; then 
+	CXXFLAGS="$CXXFLAGS -Dwith_jack"
+	LDFLAGS="$LDFLAGS -ljack"
+fi
+if test "$with_sndfile" = "yes"; then
+	CXXFLAGS="$CXXFLAGS -Dwith_sndfile"
+	LDFLAGS="$LDFLAGS -lsndfile"
+fi
+
+AC_OUTPUT([
+Makefile
+src/Makefile 
+src/drivers/Makefile
+src/VoiceBoard/Makefile
+src/GUI/Makefile
+src/Effects/Makefile
+skel/Makefile
+])
+
+
+dnl
+dnl
+dnl	Output summary message..
+dnl
+dnl
+
+echo
+echo -------------------------------------------------------- $PACKAGE $VERSION
+echo \|
+echo \| GTK-- version......................................... : `gtkmm-config --version`
+echo \|
+echo \| Build with OSS support................................ : $with_oss
+echo \| Build with ALSA support............................... : $with_alsa
+echo \| Build with JACK support............................... : $with_jack
+echo \|
+echo \| Use libsndfile for .wav output support................ : $with_sndfile
+echo 
+echo configure complete. now type \'make\' to build $PACKAGE
+echo and then, as root, \'make install\' to install
+echo

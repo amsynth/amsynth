@@ -1,0 +1,27 @@
+MAIN AUTHOR
+-----------
+
+Nick Dowell <nixx@nixx.org.uk>
+ - Design, Code, Graphics, Presets, Testing
+
+
+CONTRIBUTORS
+------------
+
+Karsten Wiese
+ - ALSA mmap audio driver
+
+Jezar at dreampoint
+ - Author of Freeverb (the reverb used here)
+
+Sebastien Cevey <seb@cine7.net>
+ - Contributed some of the default presets
+
+Taybin Rutkin
+ - Contribution to default presets
+
+Bob Ham 
+ - GCC 3.x compilation fixes
+
+Darrick Servis
+ - Input on the GUI - new midi controller config, motivating re-organisation of menus, shortcut keys..

@@ -1,0 +1,31 @@
+				amSynth
+				=======
+	  					      (c) 2001-2003 Nick Dowell
+					http://amsynthe.sourceforge.net/amSynth
+
+Requirements
+============
+
++ GTK-- 1.2 is absolutely required. Get it from http://www.gtkmm.org
++ optionally - OSS or OSS/Free
++ optionally - ALSA 0.9x see http://www.alsa-project.org
++ optionally - libsndfile (allows capturing to .wav file)
++ optionally - JACK (allows sophisticated routing and sharing of audio streams)
+               get it from http://jackit.sourceforge.net
+
+
+Compiling
+=========
+
+$ ./configure
+$ make
+$ su -c "make install"
+
+Will normally do the trick.
+
+
+Per - user installation
+=======================
+
+The first time you run amSynth, the default config files and sound presets will
+automatically be copied to your home directory.
