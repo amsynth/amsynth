@@ -57,49 +57,31 @@ public:
 	const string	getName			() { return _name; }
 	Param			GetId			() { return mParamId; }
 
-	void			setType			(ControlType, float base, float offset);
-	
 	// UpdateListeners (eg one or more ParameterViews - part of the GUI) are 
 	// notified and updated when this Parameter changes.
 	void			addUpdateListener (UpdateListener& ul);
-	void			removeUpdateListener (UpdateListener& ul);	
-//	void setUpdateListener( UpdateListener & ul )
-//	{ updateListeners[0] = &ul; };
+	void			removeUpdateListener (UpdateListener& ul);
 	
 	// min/max values apply for calls to setValue() not ControlValue
-	void			setMin			(float min) { _min = min; if(_value<_min)_value=_min; }
 	float			getMin			() { return _min; }
-	void			setMax			( float max ) { _max = max; if(_value>_max)_value=_max; }
 	float			getMax			() { return _max; }
 
-	// The minimum increment in value (e.g. for calls to setValue(), 
-	// NOT getControlValue()) allowed for this Parameter.
-	float			getStep			() { return _step; };
-	void 			setStep			(float step) { _step = step; }
-	
+
+	// @return the increment value
+	float			getStep			() { return _step; }
 	// @returns The number of discrete steps allowable in this Parameter.
 	int				getSteps		();
-
-	// whether this Parameter's value is continuous (eg step=0).
-	bool			isContinuous	() { return continuous; }
-	void			setContinuous	(bool continuous) { this->continuous = continuous; }
-	
-	// whether this Parameter's value is discrete.
-	bool			isDiscrete		() { return !continuous; }
-	void			setDiscrete		(bool discrete)	{ continuous = !discrete; }
 
 	// Set this parameter to a random value (in it's allowable range)
 	void			random_val		();
 
 	// The label assocaited with this Parameter. (e.g. "seconds")
 	const string	getLabel		() { return label; }
-	void			setLabel		(const string text) { label = text; }
 	
 private:
 	Param							mParamId;
 	string							_name, label;
 	int								controlMode;
-	bool							continuous;
 	float							_value, _min, _max, _step, controlValue, base, offset;
 	std::vector<UpdateListener*>	updateListeners;
 };

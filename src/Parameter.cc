@@ -13,7 +13,6 @@ Parameter::Parameter	(string name, Param id, float value, float min, float max, 
 ,	_name		(name)
 ,	label		(label)
 ,	controlMode	(type)
-,	continuous	(0.0f < _step)
 ,	_min		(min)
 ,	_max		(max)
 ,	_step		(inc)
@@ -37,14 +36,6 @@ Parameter::removeUpdateListener( UpdateListener & ul )
 {
 	for (unsigned i=0; i<updateListeners.size(); i++)
 		if (updateListeners[i] == &ul) updateListeners.erase(updateListeners.begin()+i);
-}
-
-void
-Parameter::setType	(ControlType type, float base, float offset)
-{	
-	controlMode = type;
-	this->base = base;
-	this->offset = offset;
 }
 
 void

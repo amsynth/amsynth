@@ -1,20 +1,18 @@
 /* amSynth 
- * (c) 2001,2002 Nick Dowell 
+ * (c) 2001-2005 Nick Dowell 
  */
 
 #include "MidiController.h"
 #include <fstream>
 
 MidiController::MidiController( Config & config )
+:	last_active_controller ("last_active_cc", (Param) -1, 0, 0, MAX_CC, 1)
 {
 	this->config = &config;
 	running = 0;
 	buffer = new unsigned char[MIDI_BUF_SIZE];
 	presetController = 0;
 	_va = 0;
-	last_active_controller.setMin( 0 );
-	last_active_controller.setMax( MAX_CC );
-	last_active_controller.setStep( 1 );
 	for( int i=0; i<MAX_CC; i++ ) midi_controllers[i] = 0;
 }
 

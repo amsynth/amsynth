@@ -60,7 +60,7 @@ ControllerMapDialog::ControllerMapDialog
 
 	std::list<std::string> gl;
 	gl.push_back( "null" );
-	for (gint p=0; p<128; p++)
+	for (guint p=0; p<preset_controller->getCurrentPreset().ParameterCount(); p++)
 	{
 		string p_name = preset_controller->getCurrentPreset().getParameter(p).getName();
 		if ( p_name != "unused" ) gl.push_back( p_name );
