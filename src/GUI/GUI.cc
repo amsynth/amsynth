@@ -494,7 +494,12 @@ GUI::GUI( Config & config, MidiController & mc,
 	quit_confirm.delete_event.connect( bind( slot( this, &GUI::delete_events ), &quit_confirm ) );
 	
 	// show realtime warning message if necessary
-	if(!(this->config->realtime)){
+	if(!(this->config->realtime))
+		if (!(this->config->realtime))
+		// dont care if using JACK..
+		if (!( this->config->audio_driver=="jack" ||
+				this->config->audio_driver=="JACK" ))
+	{
 		realtime_warning.set_title("Warning");
 		realtime_warning.set_usize( 400, 200 );
 		realtime_text_label.set_text(
