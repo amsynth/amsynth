@@ -136,7 +136,8 @@ ADSR::getNFData()
 		case ADSR_D:
 			if ( c_val <= s_val ) {
 				buffer[i] = (c_val = s_val);
-				state = ADSR_S;
+				if( s_val > 0.001 ) state = ADSR_S;
+				else state = ADSR_OFF;
 			} else {
 				buffer[i] = (c_val -= d_delta);
 			}
