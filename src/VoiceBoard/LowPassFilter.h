@@ -21,7 +21,7 @@ public:
 	 */
 	void reset();
 
-	void	Process64Samples	(float*, float cutoff, float res);
+	void	ProcessSamples	(float*, int, float cutoff, float res);
 private:
 	int rate;
 	float nyquist;

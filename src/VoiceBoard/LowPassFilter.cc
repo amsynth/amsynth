@@ -22,7 +22,7 @@ LowPassFilter::reset()
 }
 
 void
-LowPassFilter::Process64Samples	(float *buffer, float fc, float res)
+LowPassFilter::ProcessSamples	(float *buffer, int numSamples, float fc, float res)
 {
 	// constrain cutoff
 #define SAFE 0.99 // filter is unstable _AT_ PI
@@ -45,7 +45,7 @@ LowPassFilter::Process64Samples	(float *buffer, float fc, float res)
 	b2 = double((1-(r*k)+k2)/-bh);
 	
 	double x,y;
-	for (int i=0; i<64; i++) {
+	for (int i=0; i<numSamples; i++) {
 		x = buffer[i];
 		
 		// first 2nd-order unit

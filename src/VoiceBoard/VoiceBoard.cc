@@ -109,7 +109,7 @@ VoiceBoard::Process64SamplesMix	(float *buffer, float vol)
 	//
 	// VCF
 	//
-	filter.Process64Samples (osc1buf, cutoff, mFilterRes);
+	filter.ProcessSamples (osc1buf, 64, cutoff, mFilterRes);
 	
 	//
 	// VCA
@@ -123,6 +123,63 @@ VoiceBoard::Process64SamplesMix	(float *buffer, float vol)
 	// Copy, with overall volume
 	//
 	for (int i=0; i<64; i++) buffer[i] += (osc1buf[i] * vol);
+}
+
+void
+VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
+{
+	//
+	// Control Signals
+	//
+	float *lfo1buf = mem->lfo_osc_1;
+	lfo1.ProcessSamples (lfo1buf, numSamples, mLFO1Freq, 0);
+
+	float osc1freq = mPitchBend*mKeyPitch * ( mFreqModAmount*(lfo1buf[0]+1.0) + 1.0 - mFreqModAmount );
+	float osc1pw = mOsc1PulseWidth;
+
+	float osc2freq = osc1freq * mOsc2Detune * mOsc2Octave;
+	float osc2pw = mOsc2PulseWidth;
+
+	float env_f = *filter_env.getNFData (numSamples);
+        float cutoff = mKeyPitch * env_f * mFilterEnvAmt + ( mKeyPitch * mKeyVelocity * mFilterCutoff ) * ( (lfo1buf[0]*0.5 + 0.5) * mFilterModAmt + 1-mFilterModAmt );
+
+	//
+	// VCOs
+	//
+	float *osc1buf = mem->osc_1;
+	float *osc2buf = mem->osc_2;
+	osc1.ProcessSamples (osc1buf, numSamples, osc1freq, osc1pw);
+	osc2.ProcessSamples (osc2buf, numSamples, osc2freq, osc2pw);
+
+	//
+	// Osc Mix
+	//
+	float osc1vol = mOsc1Vol;
+	float osc2vol = mOsc2Vol;
+	if (mRingModAmt == 1.0) osc1vol = osc2vol = 0.0;
+	for (int i=0; i<numSamples; i++)
+		osc1buf[i] =
+			osc1vol * osc1buf[i] +
+			osc2vol * osc2buf[i] +
+			mRingModAmt * osc1buf[i]*osc2buf[i];
+
+	//
+	// VCF
+	//
+	filter.ProcessSamples (osc1buf, numSamples, cutoff, mFilterRes);
+	
+	//
+	// VCA
+	// 
+	float *ampenvbuf = amp_env.getNFData (numSamples);
+	for (int i=0; i<numSamples; i++) 
+		osc1buf[i] = osc1buf[i]*ampenvbuf[i]*mKeyVelocity *
+			( ((lfo1buf[i]*0.5)+0.5)*mAmpModAmount + 1-mAmpModAmount);
+
+	//
+	// Copy, with overall volume
+	//
+	for (int i=0; i<numSamples; i++) buffer[i] += (osc1buf[i] * vol);
 }
 
 int 
