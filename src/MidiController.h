@@ -17,7 +17,7 @@
  */
 class MidiController {
   public:
-    MidiController();
+    MidiController( Config & config );
     ~MidiController();
 	/**
 	 * @param pc The PresetController for the system.
@@ -30,9 +30,6 @@ class MidiController {
 	/**
 	 * @param config The global Config object for the system.
 	 */
-	void setConfig(Config & config){
-		this->config = &config;
-	};
 	void saveConfig();
 	/**
 	 * Start execution of the MidiController. This function never returns (until

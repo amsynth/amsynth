@@ -5,8 +5,9 @@
 #include "MidiController.h"
 #include <fstream>
 
-MidiController::MidiController()
+MidiController::MidiController( Config & config )
 {
+	this->config = &config;
     running = 0;
     buffer = new unsigned char[MIDI_BUF_SIZE];
     presetController = 0;
@@ -62,9 +63,11 @@ MidiController::run()
 #ifdef _DEBUG
     cout << "<MidiController> opening midi interface.." << endl;
 #endif
-    if (midi.open( *config ) == -1) {
-	cout << "<MidiController> failed to open midi." << endl;
-	exit(-1);
+    if( midi.open( *config ) == -1 ){
+		cout << "<MidiController> failed to open MIDI. midi_driver:" <<
+			config->midi_driver << endl;
+		cout << config->audio_driver << endl;
+		exit(-1);
     }
 #ifdef _DEBUG
     else

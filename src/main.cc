@@ -106,8 +106,8 @@ int main( int argc, char *argv[] )
 	
 	int enable_audio = 1;
 	// set default parameters
-	config.audio_driver = "AUTO";
-	config.midi_driver = "AUTO";
+	config.audio_driver = "auto";
+	config.midi_driver = "auto";
 	config.oss_midi_device = "/dev/midi";
 	config.midi_channel = 0;
 	config.oss_audio_device = "/dev/dsp";
@@ -132,7 +132,7 @@ int main( int argc, char *argv[] )
 			config.audio_driver = string(buffer);
 		} else if (string(buffer)=="midi_driver"){
 			file >> buffer;
-			config.midi_driver = atoi(buffer);
+			config.midi_driver = buffer;
 		} else if (string(buffer)=="oss_midi_device"){
 			file >> buffer;
 			config.oss_midi_device = string(buffer);
@@ -156,7 +156,6 @@ int main( int argc, char *argv[] )
 		}
 	}
 	file.close();
-	
 	// get command line options (they override saved prefs.)
 	int opt;
 	while( (opt=getopt(argc, argv, "svhm:c:a:r:p:"))!= -1 ) {
@@ -165,7 +164,7 @@ int main( int argc, char *argv[] )
 				enable_audio = 0;
 				break;
 			case 'm': 
-				config.midi_driver = optarg; 
+				config.midi_driver = optarg;
 				break;
 			case 'c':
 				config.midi_channel = atoi( optarg ); 
@@ -180,8 +179,8 @@ int main( int argc, char *argv[] )
 				config.polyphony = atoi( optarg );
 				break;
 			case 'v':
-				cout << "amSynth version " << VERSION << endl 
-				<< "compiled " << __DATE__ << " " << __TIME__ << endl;
+				cout << "amSynth version 1.0beta4.\ncompiled " << __DATE__ 
+				<< " " << __TIME__ << endl;
 				return 0;
 			case 'h':
 				cout << help_text; 
@@ -196,8 +195,7 @@ int main( int argc, char *argv[] )
 	<< config.audio_device << " sample rate:" << config.sample_rate << endl;
 #endif
 	presetController = new PresetController();
-	midi_controller = new MidiController();
-	midi_controller->setConfig( config );
+	midi_controller = new MidiController( config );
 	out = new AudioOutput();
 	out->setConfig( config );
 	vau = new VoiceAllocationUnit( config ); //after were sure of sample_rate
