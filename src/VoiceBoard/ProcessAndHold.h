@@ -10,8 +10,6 @@
 class ProcessAndHold : public FSource, public FInput
 {
 public:
-	ProcessAndHold();
-	virtual ~ProcessAndHold();
 	inline float * getFData();
 	void setInput( FSource & source );
 	inline void process();

@@ -190,7 +190,7 @@ ac_help="$ac_help
 ac_help="$ac_help
   --enable-profile	  enable profiling compiler options"
 ac_help="$ac_help
-  --with-O=level      set the compiler optimisation level (default=3)"
+  --with-O=level      set the compiler optimisation level (default=6)"
 ac_help="$ac_help
   --with-cpu=cputype      optimise for cpu _xxx_ (i386,i486,i586,i686,k6 default=i586)"
 
@@ -2272,7 +2272,7 @@ else
   if { (eval echo configure:2273: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; }; then
     for file in conftest.*; do
       case $file in
-      *.c | *.o | *.obj) ;;
+      *.$ac_ext | *.c | *.o | *.obj) ;;
       *) ac_cv_exeext=`echo $file | sed -e s/conftest//` ;;
       esac
     done
@@ -5948,7 +5948,7 @@ if test "${with_O+set}" = set; then
   withval="$with_O"
   opt="$withval"
 else
-  opt="3"
+  opt="6"
 fi
 
   case "$OPTION_DEBUG" in

@@ -32,7 +32,8 @@ void
 ParameterSwitch::setParameter( Parameter & param )
 {
 	paramName = 1;
-	if(param.getSteps()==2){ // only makes sense if the Parameter has 2 possible vals
+	if(param.getSteps()==2){ 
+		// only makes sense if the Parameter has 2 possible vals
 		parameter = &param;
 		parameter->addUpdateListener( *this );
 		update();

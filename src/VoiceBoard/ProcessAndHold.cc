@@ -4,14 +4,6 @@
 
 #include "ProcessAndHold.h"
 
-ProcessAndHold::ProcessAndHold()
-{
-}
-
-ProcessAndHold::~ProcessAndHold()
-{
-}
-
 void
 ProcessAndHold::setInput( FSource & source )
 {

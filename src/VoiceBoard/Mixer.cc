@@ -51,15 +51,16 @@ Mixer::getNFData()
     inBuffer1 = input1->getFData();
     inBuffer2 = input2->getFData();
 	
+	register int i;
 	if (mix_mode == 0) {
 	    controlBuffer = control->getNFData();
-		float mix;
-    	for (int i = 0; i < BUF_SIZE; i++) {
+		register float mix;
+    	for (i = 0; i < BUF_SIZE; i++) {
 			mix = (controlBuffer[i] + 1.0) / 2;
 			buffer[i] = inBuffer1[i] * (1 - mix) + inBuffer2[i] * mix;
 		}
     } else if (mix_mode == 1) {
-		for (int i = 0; i < BUF_SIZE; i++)
+		for (i = 0; i < BUF_SIZE; i++)
 			buffer[i] = inBuffer1[i] * inBuffer2[i];
     }
     return buffer;

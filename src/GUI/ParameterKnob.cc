@@ -16,7 +16,6 @@ ParameterKnob::ParameterKnob()
 	
     parameter = 0;
 
-//    set_homogeneous(false);
     draw_value = false;
 
     add(label);
@@ -31,20 +30,10 @@ void
 ParameterKnob::setPixmap(GdkPixmap * pix, gint x, gint y, gint frames)
 {
 	knob.setPixmap( pix, x, y, frames );
-	/*
-    cout << "ParameterView::setPixmap" << endl;
-    knob = new Knob(pix, x, y, frames);
-    cout << ":O" << endl;
-//      knob->set_adjustment( *adj );
-    cout << ":0" << endl;
-    add(*knob);
-    show_all();
-	*/
 }
 
 ParameterKnob::~ParameterKnob()
 {
-//      delete adj;
 }
 
 Parameter *
@@ -61,9 +50,7 @@ ParameterKnob::drawValue(bool draw)
 	if (draw_value == false && draw == true)
 		add( value_frame );
     show_all();
-	
-//	set_usize( 	width(), 
-//				height()+value_frame.height() );	draw_value = draw;
+		draw_value = draw;
 }
 
 void 
@@ -85,9 +72,7 @@ ParameterKnob::setParameter(Parameter & param)
 void 
 ParameterKnob::updateParam(Gtk::Adjustment * _adj)
 {
-//	gdk_threads_enter();
     parameter->setValue(_adj->get_value());
-//	gdk_threads_leave();
 }
 
 void 
