@@ -1,6 +1,6 @@
 AC_INIT(src/main.cc)
 AC_CONFIG_AUX_DIR(config)
-AM_INIT_AUTOMAKE([amSynth], [1.0-rc3])
+AM_INIT_AUTOMAKE([amSynth], [1.0.0])
 AM_CONFIG_HEADER(config.h)
 
 
