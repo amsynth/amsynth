@@ -13,9 +13,9 @@ MidiController::MidiController( Config & config, string name )
 	presetController = 0;
 	_va = 0;
 	last_active_controller.setMin( 0 );
-	last_active_controller.setMax( 32 );
+	last_active_controller.setMax( MAX_CC );
 	last_active_controller.setStep( 1 );
-	for( int i=0; i<32; i++ ) midi_controllers[i] = 0;
+	for( int i=0; i<MAX_CC; i++ ) midi_controllers[i] = 0;
 	clientname = name;
 }
 
@@ -29,7 +29,7 @@ MidiController::setPresetController(PresetController & pc)
 {
 	presetController = &pc;
 	
-	for(int i=0; i<32; i++)
+	for(int i=0; i<MAX_CC; i++)
 		midi_controllers[i] = &(presetController->getCurrentPreset().
 				getParameter("null"));
 
@@ -284,7 +284,7 @@ MidiController::controller_change(unsigned char controller,
 				<< (float) controller << " value: " 
 				<< (float) value << "fval " << fval << endl;
 #endif
-			if (controller<32) 
+			if (controller<MAX_CC) 
 			midi_controllers[controller]->setValue(
 				fval*(midi_controllers[controller]->getMax()-
 					midi_controllers[controller]->getMin())
@@ -297,14 +297,14 @@ MidiController::controller_change(unsigned char controller,
 void
 MidiController::setController( int controller_no, Parameter & param )
 {
-	if(controller_no<32)
+	if(controller_no<MAX_CC)
 		midi_controllers[controller_no] = &param;
 }
 
 Parameter &
 MidiController::getController( int controller_no )
 {
-	if(controller_no>32) return presetController->getCurrentPreset().getParameter("null");
+	if(controller_no>MAX_CC) return presetController->getCurrentPreset().getParameter("null");
 	else return *midi_controllers[controller_no];
 }
 
@@ -316,7 +316,7 @@ MidiController::saveConfig()
 	ofstream file(fname.c_str(), ios::out);
 	if (file.bad())	return;
   
-	for(int i=0; i<32; i++){
+	for(int i=0; i<MAX_CC; i++){
 		file << midi_controllers[i]->getName() << endl;
 	}
 	file.close();

@@ -10,6 +10,9 @@
 #include "VoiceAllocationUnit.h"
 #include "Parameter.h"
 
+// there are 32 standard MIDI controllers
+#define MAX_CC 32
+
 /**
  * The MidiController is run as a thread which reads from the MIDI input device,
  * decodes the incoming messages and performs the appropriate actions on the
@@ -60,6 +63,6 @@ class MidiController {
     unsigned char status, data, channel, byte;
     string clientname;
 	Parameter last_active_controller;
-	Parameter *midi_controllers[32]; // there are 32 standard MIDI controllers
+	Parameter *midi_controllers[MAX_CC];
 };
 #endif
