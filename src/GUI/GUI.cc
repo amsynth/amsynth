@@ -70,7 +70,7 @@ GUI::GUI( Config & config, MidiController & mc,
 
 	Gtk::Style *style = Gtk::Style::create();
 	Gdk_Font font = style->get_font();
-	font.load( "-*-helvetica-medium-r-*-*-*-100-*-*-*-*-*-*" );
+	font.load( "-*-helvetica-medium-r-*-*-*-100-75-75-*-*-*-*" );
 	style->set_font( font );
 	
 	for (int i = 0; i < 31; i++)
