@@ -419,9 +419,7 @@ GUI::create_menus	( )
 	if (config->alsa_seq_client_id==0)
 		menu_item->set_sensitive( false );
 	// test for presence of vkeybd.
-	int sys_rtn = system("vkeybd --help 2> /dev/null");
-	if (WEXITSTATUS(sys_rtn)==127)
-		// exit code 127 = program not found
+	if (command_exists ("vkeybd") != 0)
 		menu_item->set_sensitive( false );
 	list_utils.push_back (*menu_item);
 
@@ -433,7 +431,60 @@ GUI::create_menus	( )
 			menu_item->set_sensitive (false);
 	list_utils.push_back (*menu_item);
 	
-		
+	list_utils.push_back (SeparatorElem());
+	
+	//
+	// ALSA-MIDI sub-menu
+	//
+        Menu *menu_utils_midi = manage (new Menu());
+        MenuList& list_utils_midi = menu_utils_midi->items ();
+	
+	menu_item = manage (new MenuItem("kaconnect"));
+	menu_item->activate.connect 
+			(bind(slot(this, &GUI::command_run),"kaconnect"));
+	if (command_exists ("kaconnect") != 0)
+		menu_item->set_sensitive( false );
+	if (config->alsa_seq_client_id==0)
+		menu_item->set_sensitive( false );
+	list_utils_midi.push_back (*menu_item);
+	
+	menu_item = manage (new MenuItem("alsa-patch-bay"));
+	menu_item->activate.connect 
+			(bind(slot(this, &GUI::command_run),"alsa-patch-bay --driver alsa"));
+	if (command_exists ("alsa-patch-bay") != 0)
+		menu_item->set_sensitive( false );
+	if (config->alsa_seq_client_id==0)
+		menu_item->set_sensitive( false );
+	list_utils_midi.push_back (*menu_item);
+	
+	list_utils.push_back (MenuElem("MIDI (ALSA) connections","",*menu_utils_midi));
+	//
+	// JACK sub-menu
+	//
+        Menu *menu_utils_jack = manage (new Menu());
+        MenuList& list_utils_jack = menu_utils_jack->items ();
+	
+	menu_item = manage (new MenuItem("qjackconnect"));
+	menu_item->activate.connect 
+			(bind(slot(this, &GUI::command_run),"qjackconnect"));
+	if (command_exists ("qjackconnect") != 0)
+		menu_item->set_sensitive( false );
+	if (config->audio_driver != "jack" && config->audio_driver != "JACK")
+		menu_item->set_sensitive( false );
+	list_utils_jack.push_back (*menu_item);
+	
+	menu_item = manage (new MenuItem("alsa-patch-bay"));
+	menu_item->activate.connect 
+			(bind(slot(this, &GUI::command_run),"alsa-patch-bay --driver jack"));
+	if (command_exists ("alsa-patch-bay") != 0)
+		menu_item->set_sensitive( false );
+	if (config->audio_driver != "jack" && config->audio_driver != "JACK")
+		menu_item->set_sensitive( false );
+	list_utils_jack.push_back (*menu_item);
+	
+	list_utils.push_back (MenuElem("Audio (JACK) connections","",*menu_utils_jack));
+	
+	
 	
 	//
 	// Menubar
@@ -775,4 +826,29 @@ GUI::bank_save_as_ok	( )
 	config->current_bank_file = d_bank_save_as.get_filename ();
 	preset_controller->savePresets (config->current_bank_file.c_str ());
 	d_bank_save_as.hide ();
+}
+
+int
+GUI::command_exists	(const char *command)
+{
+	string test_command = "which ";
+	test_command += command;
+	test_command += " &> /dev/null";
+	
+	int res = system (test_command.c_str ());
+	
+	if (WEXITSTATUS (res) == 0)
+		// exit code 0 - program exists in $PATH
+		return 0;
+	else
+		return 1;
+}
+
+void
+GUI::command_run	(const char *command)
+{
+	string full_command = command;
+	full_command += " &";
+	
+	system (full_command.c_str ());
 }

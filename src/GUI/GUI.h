@@ -84,6 +84,9 @@ private:
 //	void		bank_save		( );
 	void		bank_save_as		( );
 	void		bank_save_as_ok		( );
+	
+	int		command_exists		(const char *command);
+	void		command_run		(const char *command);
 
 	gint idle_callback();
 	gint setActiveParam( GdkEventButton *event, Parameter * param );
