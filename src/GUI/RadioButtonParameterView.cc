@@ -110,4 +110,5 @@ void
 RadioButtonParameterView::set_style( Gtk::Style& style )
 {
 	local_style = style.copy();
+	frame.set_style( *local_style );
 }
