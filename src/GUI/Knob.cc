@@ -95,7 +95,7 @@ Knob::button_press_event_impl (GdkEventButton *ev)
 			adj->set_value( (adj->get_value()-adj->get_step_increment()) );
 			break;
 		default:
-			cout << "Knob: " << adj->get_value() << endl;
+//			cout << "Knob: " << adj->get_value() << endl;
 			break;
 	}
 	return TRUE;
