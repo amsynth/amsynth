@@ -320,3 +320,10 @@ MidiController::saveConfig()
 	}
 	file.close();
 }
+
+void
+MidiController::set_midi_channel	( int ch )
+{
+	_va->killAllVoices ();
+	config->midi_channel = ch;
+}

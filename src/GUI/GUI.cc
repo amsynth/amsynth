@@ -11,6 +11,10 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#include <gtk--/adjustment.h>
+#include <gtk--/spinbutton.h>
+
+#include "../MidiController.h"
 #include "EditorPanel.h"
 
 #include "splash.xpm"
@@ -537,11 +541,23 @@ GUI::init()
 	
 	editor_panel = new EditorPanel (preset, pipe[1]);
 	
+	adj_midi = manage (new Gtk::Adjustment(config->midi_channel,0,16,1));
+	adj_midi->value_changed.connect (slot (this, &GUI::changed_midi_channel));
+	Gtk::SpinButton *sb_midi = manage (new Gtk::SpinButton(*adj_midi,1,0));
+	
+	adj_voices = manage (new Gtk::Adjustment(config->polyphony,0,128,1));
+	adj_voices->value_changed.connect (slot (this, &GUI::changed_voices));
+	Gtk::SpinButton *sb_voices = manage (new Gtk::SpinButton(*adj_voices,1,0));
+	
 	vbox.pack_start (*(create_menus ()));
 	Gtk::HBox *tmphbox = manage (new Gtk::HBox());
 	tmphbox->add (*(manage( new Gtk::Label () )));
 	tmphbox->add (*presetCV);
 	tmphbox->add (*(manage( new Gtk::Label () )));
+	tmphbox->pack_start (*(manage( new Gtk::Label (" midi ch:") )),0,0);
+	tmphbox->pack_start (*sb_midi,0,0);
+	tmphbox->pack_start (*(manage( new Gtk::Label (" poly:") )),0,0);
+	tmphbox->pack_start (*sb_voices,0,0);
 	vbox.pack_start (*tmphbox,0,0);
 	vbox.pack_start (*editor_panel,0,0);
 	vbox.pack_start (statusBar);
@@ -560,11 +576,11 @@ GUI::init()
 		status += ":";
 		status += config->oss_midi_device;
 	}
-	status += "   Midi Channel: ";
+/*	status += "   Midi Channel: ";
 	if( config->midi_channel ){
 		sprintf( cstr, "%2d", config->midi_channel );
 		status += string(cstr);
-	} else status += "All";
+	} else status += "All";*/
 	status += "   Audio Driver: ";
 	status += config->audio_driver;
 	if( config->audio_driver == "OSS" ){
@@ -578,12 +594,12 @@ GUI::init()
 	sprintf( cstr, "%d", config->sample_rate );
 	status += string(cstr);
 	status += " Hz   ";
-	if( !config->realtime )
+/*	if( !config->realtime )
 	{
 		status += "Poly: ";
 		sprintf( cstr, "%d", config->polyphony );
 		status += string(cstr);
-	}
+	}*/
 	if(config->realtime)
 		status += "   Realtime Priority: YES";
 	else
@@ -856,4 +872,16 @@ GUI::command_run	(const char *command)
 	full_command += " &";
 	
 	system (full_command.c_str ());
+}
+
+void
+GUI::changed_midi_channel( )
+{
+	if (midi_controller) midi_controller->set_midi_channel ((int)(adj_midi->get_value ()));
+}
+
+void
+GUI::changed_voices	( )
+{
+	if (vau) vau->set_max_voices ((int)(adj_voices->get_value ()));
 }

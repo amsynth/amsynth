@@ -158,3 +158,9 @@ VoiceAllocationUnit::killAllVoices()
 	reverb.mute();
 	config->active_voices = 0;
 }
+
+void
+VoiceAllocationUnit::set_max_voices	( int voices )
+{
+	max_voices = voices;
+}

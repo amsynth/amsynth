@@ -32,6 +32,9 @@
 #include "../VoiceAllocationUnit.h"
 #include "../AudioOutput.h"
 
+namespace Gtk {
+	class Adjustment;
+};
 
 class EditorPanel;
 
@@ -87,6 +90,9 @@ private:
 	
 	int		command_exists		(const char *command);
 	void		command_run		(const char *command);
+	
+	void		changed_midi_channel	( );
+	void		changed_voices		( );
 
 	gint idle_callback();
 	gint setActiveParam( GdkEventButton *event, Parameter * param );
@@ -155,6 +161,9 @@ private:
 	// font selection
 	Gtk::FontSelectionDialog	font_sel;
 	string				xfontname;
+	
+	Gtk::Adjustment		*adj_midi,
+				*adj_voices;
 
 	Parameter *active_param;
 	PresetController *preset_controller;

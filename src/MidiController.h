@@ -47,6 +47,8 @@ class MidiController {
 	Parameter & getLastControllerParam()
 	{ return last_active_controller; };
 	Parameter & getController( int controller_no );
+	
+	void	set_midi_channel	( int ch );
   private:
     void doMidi();
     void dispatch_note(unsigned char ch,

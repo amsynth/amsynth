@@ -36,6 +36,7 @@ public:
   { sustain = 1; };
   void sustainOff();
   void killAllVoices();
+	void		set_max_voices	( int voices );
 private:
   int max_voices;
   void purgeVoices();
@@ -58,4 +59,3 @@ private:
 };
 
 #endif
-
