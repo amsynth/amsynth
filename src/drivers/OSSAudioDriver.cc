@@ -136,7 +136,7 @@ int OSSAudioDriver::setRealtime()
      * unlimited              = disastrous for latency..
      */
 #ifdef _OSS
-    int frag = 0x00080009;
+    int frag = 0x00060008;
     if (ioctl(dsp_handle_, SNDCTL_DSP_SETFRAGMENT, &frag) == -1) {
 	perror("err: ioctl fragment");
 	return -1;

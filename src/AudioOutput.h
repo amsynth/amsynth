@@ -18,6 +18,7 @@ public:
 	virtual	void	run 		( )			= 0;
 	virtual	void	stop		( )			= 0;
 	
+	virtual	int	canRecord	( )			= 0;
 	virtual	void	startRecording	( )			= 0;
 	virtual	void	stopRecording	( )			= 0;
 	virtual	void	setOutputFile	( string file )		= 0;
@@ -53,13 +54,13 @@ public:
   void stop() {
     running = 0;
   };
-  void startRecording();
-  void stopRecording();
-  void setOutputFile( string file )
-  { wavoutfile = file; };
-  string getOutputFile()
-  { return wavoutfile; };
-  void setConfig( Config & config );
+	int	canRecord	( )	{ return 1; };
+	void	startRecording	( );
+	void 	stopRecording	( );
+	void 	setOutputFile	( string file )	{ wavoutfile = file; };
+  	string 	getOutputFile	( )	{ return wavoutfile; };
+	void 	setConfig	( Config & config );
+
 private:
   int running;
   int channels;

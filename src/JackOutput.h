@@ -14,35 +14,27 @@
 class JackOutput : public GenericOutput {
 
 public:
-  JackOutput();
-  /**
-   * @param source the NFSource which produces the audio signal
-   */
-  void setInput(NFSource & source);
-  /**
-   * the main controller function. This function _never_ returns...
-   * until the stop() method is invoked (from another thread of execution
-   * obviously)
-   */
-  void run();
-  /**
-   * Stops execution 
-   */
-  void stop();
-  void startRecording();
-  void stopRecording();
-  void setOutputFile( string file )
-  { wavoutfile = file; };
-  string getOutputFile()
-  { return wavoutfile; };
-  void setConfig( Config & config );
+		JackOutput	( );
+	void	setInput	( NFSource & source );
+	
+	void	run		( );
+	void	stop		( );
+	
+	int	canRecord	( )		{ return 0; };
+	void	startRecording	( );
+	void	stopRecording	( );
+	void	setOutputFile	( string file )	{ wavoutfile = file; };
+	string	getOutputFile	( )		{ return wavoutfile; };
+
+	void	setConfig	( Config & config );
+
 private:
-  int running;
-  int channels;
-  Config *config;
-  string wavoutfile;
-  int recording;
-	int 		bufsize, srate;
+	int	running;
+	int	channels;
+	Config	*config;
+	string	wavoutfile;
+	int	recording;
+	int	bufsize, srate;
 };
 
 #endif				// _AUDIO_OUTPUT_H

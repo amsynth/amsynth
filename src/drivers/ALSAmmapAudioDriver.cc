@@ -123,7 +123,7 @@ ALSAmmapAudioDriver::open( Config & config )
     snd_pcm_hw_params_set_format( playback_handle, hw_params, SND_PCM_FORMAT_S16_LE );
     snd_pcm_hw_params_set_rate_near( playback_handle, hw_params, _rate, 0 );
     snd_pcm_hw_params_set_channels( playback_handle, hw_params, _channels );
-	snd_pcm_hw_params_set_periods( playback_handle, hw_params, 3, 0 );
+	snd_pcm_hw_params_set_periods( playback_handle, hw_params, 16, 0 );
 	snd_pcm_hw_params_set_period_size( playback_handle, hw_params, BUF_SIZE, 0 );
     snd_pcm_hw_params( playback_handle, hw_params );
 	

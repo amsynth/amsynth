@@ -61,6 +61,7 @@ GUI::GUI( Config & config, MidiController & mc,
 #endif
 
     set_title( title );
+    set_policy( false, false, false );
 
     active_param = 0;
 
@@ -123,13 +124,16 @@ GUI::GUI( Config & config, MidiController & mc,
     menu_item[0]->add_label( "File" );
     menu_item[0]->set_submenu( file_menu );
 
-    //file_menu.append( *menu_item[2] );
-    menu_item[1]->add_label( "Quit" );
-    menu_item[1]->activate.connect( 
+	//file_menu.append( *menu_item[2] );
+	menu_item[1]->add_label( "Quit" );
+	menu_item[1]->activate.connect( 
 		bind(slot(this, &GUI::event_handler),"quit"));
 	menu_item[3]->add_label( "Capture output to file" );
 	menu_item[3]->activate.connect( 
 		bind(slot(this, &GUI::event_handler),"record_dialog"));
+	// grey out menu item if there is no recording interface present
+	if (!audio_out->canRecord())
+		menu_item[3]->set_sensitive( false );
 	
 	file_menu.append( *menu_item[3] );
 	file_menu.append( *menu_item[1] );
