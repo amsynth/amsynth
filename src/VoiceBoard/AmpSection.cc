@@ -48,3 +48,4 @@ AmpSection::getNFData()
 	
 	return buffer;
 }
+

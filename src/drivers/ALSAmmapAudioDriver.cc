@@ -34,6 +34,7 @@ return -1;
                 }
                 return 0;
         }
+	return 0;
 #else
 	return -1;
 #endif //with_alsa
@@ -44,8 +45,8 @@ int
 ALSAmmapAudioDriver::write(float *buffer, int frames)
 {
 #ifdef with_alsa
-	int i,p,tmp;
-	snd_pcm_sframes_t avail, size, commitres;
+	int i,p;
+	snd_pcm_sframes_t avail;
 	snd_pcm_uframes_t offset, lframes = frames / 2;
 	const snd_pcm_channel_area_t* areas;
 	short int*		audiobuf;
@@ -62,7 +63,7 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 			return xrun_recovery();
 		}
 		lframes = frames / 2;
-		if( avail >= lframes ) break;
+		if( (int)avail >= (int)lframes ) break;
 		if( 0 > ( err = snd_pcm_wait( playback_handle, -1)))
 		{
 			cerr << "snd_pcm_wait error\n";

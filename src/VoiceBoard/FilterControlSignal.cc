@@ -73,3 +73,4 @@ FilterControlSignal::process()
 			+ ( pitch_buf[j] * vel * cutoff ) * 
 			( (lfo_buf[j]*0.5 + 0.5) * mod_amount + 1-mod_amount );
 }
+

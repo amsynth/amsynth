@@ -91,6 +91,7 @@ int MidiInterface::open( Config & config, string name )
 		}
 		return -1;
 	}
+	return -1;
 }
 
 MidiInterface::MidiInterface()

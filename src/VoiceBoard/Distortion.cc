@@ -64,7 +64,7 @@ float *
 Distortion::getNFData()
 {
     buffer = input->getFData();
-    register float x, y, s;
+    register float x, s;
 	if(crunch==0)crunch=0.01;
 /*	// LOGDISTORT (3lines)
 	register float k;

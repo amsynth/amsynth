@@ -51,7 +51,6 @@ FreqControlSignal::process()
 	register float pitch_bend = buffer[0];
 	register float key_pitch = key_pitch_source->getFData()[0];
 	register int i;
-	register float tmp;
 	
 	for( i=0; i<BUF_SIZE; i++ ) buffer[i] = pitch_bend*key_pitch *
 		( mod_amount*(lfo_buf[i]+1.0) + 1.0 - mod_amount );
