@@ -229,7 +229,8 @@ int main( int argc, char *argv[] )
 	 */
 	
 	presetController->savePresets();
-	
+	midi_controller->saveConfig();
+
 	if(enable_audio){
 		out->stop();
 		audio_res = pthread_join(audioThread, NULL);

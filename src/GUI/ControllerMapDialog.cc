@@ -54,9 +54,6 @@ ControllerMapDialog::_update_()
 void
 ControllerMapDialog::callback( gint cc )
 {
-	if(!supress_callback){
-		// cc is the combo box which triggered the callback
-		cout << "combo box " << cc << " changed to " << combo[cc].get_entry()->get_text() << endl;
+	if(!supress_callback)
 		midi_controller->setController( 
-			cc, preset_controller->getCurrentPreset().getParameter(combo[cc].get_entry()->get_text()) );
-	}}
+			cc, preset_controller->getCurrentPreset().getParameter(combo[cc].get_entry()->get_text()) );}

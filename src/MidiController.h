@@ -32,6 +32,7 @@ class MidiController {
 	void setConfig(Config & config){
 		this->config = &config;
 	};
+	void saveConfig();
 	/**
 	 * Start execution of the MidiController. This function never returns (until
 	 * execution is stop()ped or an error occurs).

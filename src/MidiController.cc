@@ -3,6 +3,7 @@
  */
 
 #include "MidiController.h"
+#include <fstream>
 
 MidiController::MidiController()
 {
@@ -27,6 +28,22 @@ MidiController::setPresetController(PresetController & pc)
 	
 	midi_controllers[1] = &(presetController->getCurrentPreset().getParameter("freq_mod_amount"));
 	midi_controllers[7] = &(presetController->getCurrentPreset().getParameter("master_vol"));
+	
+	
+	// load Config from file. this should probably be moved to its own function..
+	string fname(getenv("HOME"));
+	fname += "/.amSynthControllersrc";
+	ifstream file(fname.c_str(), ios::out);
+	int i=0;
+	char buffer[100];
+	if (file.bad())	return;
+  
+	file >> buffer;
+	while( file.good() ){
+		midi_controllers[i++] = &(presetController->getCurrentPreset().getParameter( string(buffer) ));
+		file >> buffer;
+	}
+	file.close();
 }
 
 void
@@ -261,4 +278,18 @@ MidiController::getController( int controller_no )
 {
 	if(controller_no>32) return presetController->getCurrentPreset().getParameter("null");
 	else return *midi_controllers[controller_no];
+}
+
+void
+MidiController::saveConfig()
+{
+	string fname(getenv("HOME"));
+	fname += "/.amSynthControllersrc";
+	ofstream file(fname.c_str(), ios::out);
+	if (file.bad())	return;
+  
+	for(int i=0; i<32; i++){
+		file << midi_controllers[i]->getName() << endl;
+	}
+	file.close();
 }
