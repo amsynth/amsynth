@@ -148,18 +148,13 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 {
 	switch (param)
 	{
-	case kMasterVol:	mMasterVol = value;		break;
+	case kMasterVol:		mMasterVol = value;		break;
 	case kReverbRoomsize:	reverb->setroomsize (value);	break;
 	case kReverbDamp:		reverb->setdamp (value);	break;
 	case kReverbWet:		reverb->setwet (value); reverb->setdry(1.0-value); break;
 	case kReverbWidth:		reverb->setwidth (value);	break;
-	case kReverbMode:		reverb->setmode (value);	break;
-	case kReverbDry:		break;
-	
-	case kDistortionDrive:	break;
 	case kDistortionCrunch:	distortion->SetCrunch (value);	break;
 	
-	default:		for (int i=0; i<128; i++) _voices[i].UpdateParameter (param, value);
-				break;
+	default: for (int i=0; i<128; i++) _voices[i].UpdateParameter (param, value); break;
 	}
 }

@@ -35,24 +35,19 @@ Preset::Preset()
     mParameters.push_back (Parameter		("osc2_waveform",		kOsc2Waveform,		0, 0, 4, 1));
     mParameters.push_back (Parameter		("master_vol",			kMasterVol,			1, 0, 1, 0,			Parameter::PARAM_POWER, 2, 0));
     mParameters.push_back (Parameter		("lfo_freq",			kLFOFreq,			0, 0, 7.5, 0,		Parameter::PARAM_POWER, 2, 0,	"Hz"));
-    mParameters.push_back (Parameter		("lfo_depth",			kLFODepth,			0));
     mParameters.push_back (Parameter		("lfo_waveform",		kLFOWaveform,		0, 0, 4, 1));
     mParameters.push_back (Parameter		("osc2_range",			kOsc2Octave,		0, -1, 2, 1,		Parameter::PARAM_EXP, 2, 0));
 	mParameters.push_back (Parameter		("osc_mix",				kOscMix,			0, -1, 1));
 	mParameters.push_back (Parameter		("freq_mod_amount",		kFreqModAmount,		0, 0, 1.25992105,0, Parameter::PARAM_POWER, 3, -1));
 	mParameters.push_back (Parameter		("filter_mod_amount",	kFilterModAmount,	-1, -1, 1));
 	mParameters.push_back (Parameter		("amp_mod_amount",		kAmpModAmount,		-1, -1, 1));
-	mParameters.push_back (Parameter		("osc1_pwm_amount",		kOsc1PWMAmount,		-1, -1, 1));
 	mParameters.push_back (Parameter		("osc_mix_mode",		kOscMixRingMod,		0, 0, 1, 1));
 	mParameters.push_back (Parameter		("osc1_pulsewidth",		kOsc1Pulsewidth));
 	mParameters.push_back (Parameter		("osc2_pulsewidth",		kOsc2Pulsewidth));
 	mParameters.push_back (Parameter		("reverb_roomsize",		kReverbRoomsize));
 	mParameters.push_back (Parameter		("reverb_damp",			kReverbDamp));
 	mParameters.push_back (Parameter		("reverb_wet",			kReverbWet));
-	mParameters.push_back (Parameter		("reverb_dry",			kReverbDry,			0.5));
 	mParameters.push_back (Parameter		("reverb_width",		kReverbWidth));
-	mParameters.push_back (Parameter		("reverb_mode",			kReverbMode));
-	mParameters.push_back (Parameter		("distortion_drive",	kDistortionDrive,	1, 1, 16));
 	mParameters.push_back (Parameter		("distortion_crunch",	kDistortionCrunch,	0, 0, 0.9));
 	mParameters.push_back (Parameter		("osc2_sync",			kOsc2Sync,			0, 0, 1, 1));
 }

@@ -24,7 +24,6 @@ enum Param
 	kMasterVol,
 	
 	kLFOFreq,
-	kLFODepth,
 	kLFOWaveform,
 	
 	kOsc2Octave,
@@ -34,8 +33,6 @@ enum Param
 	kFilterModAmount,
 	kAmpModAmount,
 	
-	kOsc1PWMAmount,
-	
 	kOscMixRingMod,
 	
 	kOsc1Pulsewidth,
@@ -44,11 +41,8 @@ enum Param
 	kReverbRoomsize,
 	kReverbDamp,
 	kReverbWet,
-	kReverbDry,
 	kReverbWidth,
-	kReverbMode,
 	
-	kDistortionDrive,
 	kDistortionCrunch,
 	
 	kOsc2Sync,
