@@ -279,6 +279,7 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	preset_rename_cancel.clicked.connect( preset_rename.hide.slot() );
 	preset_rename_cancel.add_label( "Cancel", 0.5, 0.5 );
 	preset_rename.set_modal( true );
+	preset_rename.set_transient_for( *this );
 	preset_rename.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &preset_rename ) );
 
@@ -296,6 +297,7 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	preset_new_cancel.clicked.connect( preset_new.hide.slot() );
 	preset_new_cancel.add_label( "Cancel", 0.5, 0.5 );
 	preset_new.set_modal( true );
+	preset_new.set_transient_for( *this );
 	preset_new.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &preset_new ) );
 	
@@ -313,6 +315,7 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	preset_copy_cancel.add_label( "Cancel", 0.5, 0.5 );
 	preset_copy_cancel.clicked.connect( preset_copy.hide.slot() );
 	preset_copy.set_modal( true );
+	preset_copy.set_transient_for( *this );
 	preset_copy.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &preset_copy ) );
 
@@ -331,6 +334,7 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	preset_saveas_cancel.clicked.connect(
 		bind(slot(this, &GUI::event_handler),"preset::saveas::cancel"));
 	preset_saveas.set_modal( true );
+	preset_saveas.set_transient_for( *this );
 	preset_saveas.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &preset_saveas ) );
 
@@ -347,6 +351,7 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	preset_delete_cancel.add_label( "Cancel", 0.5, 0.5 );
 	preset_delete_cancel.clicked.connect( preset_delete.hide.slot() );
 	preset_delete.set_modal( true );
+	preset_delete.set_transient_for( *this );
 	preset_delete.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &preset_delete ) );
 	
@@ -356,6 +361,7 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
     about_window.get_action_area()->add( about_close_button );
     about_close_button.add_label( "close", 0.5, 0.5 );
     about_close_button.clicked.connect( about_window.hide.slot() );
+	about_window.set_transient_for( *this );
 	about_window.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &about_window ) );
 	
@@ -367,6 +373,7 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 		bind(slot(this, &GUI::event_handler),"preset::export::ok"));
 	preset_export_dialog.get_selection_entry()->set_editable( false );
 	preset_export_dialog.set_modal( true );
+	preset_export_dialog.set_transient_for( *this );
 	preset_export_dialog.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &preset_export_dialog ) );
 		
@@ -377,6 +384,7 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	preset_import_dialog.get_ok_button()->clicked.connect(
 		bind(slot(this, &GUI::event_handler),"preset::import::ok"));
 	preset_import_dialog.set_modal( true );
+	preset_import_dialog.set_transient_for( *this );
 	preset_import_dialog.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &preset_import_dialog ) );
 		
@@ -393,6 +401,7 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	quit_confirm_cancel.add_label( "Cancel", 0.5, 0.5 );
 	quit_confirm_cancel.clicked.connect( quit_confirm.hide.slot() );
 	quit_confirm.set_modal( true );
+	quit_confirm.set_transient_for( *this );
 	quit_confirm.delete_event.connect( bind( slot( this, &GUI::delete_events ), &quit_confirm ) );
 	
 	// show realtime warning message if necessary
@@ -406,6 +415,7 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 		realtime_close_button.add_label("close", 0.5, 0.5);
 		realtime_close_button.clicked.connect(realtime_warning.hide.slot());
 		realtime_warning.set_modal( true );
+		realtime_warning.set_transient_for( *this );
 		realtime_warning.show_all();
 	}
 #ifdef _DEBUG
@@ -649,7 +659,9 @@ GUI::event_handler(string text)
     } else if (text == "commit") {
 		return;
     } else if (text == "preset::rename") {
-		//preset_rename_entry.set_text( preset_controller->getCurrentPreset().getName() );
+		preset_rename_entry.set_text( 
+			preset_controller->getCurrentPreset().getName() );
+		preset_rename_entry.grab_focus();
 		preset_rename.show_all();
 		return;
     } else if (text == "preset::rename::ok") {
@@ -659,7 +671,9 @@ GUI::event_handler(string text)
 		preset_rename.hide();
 		return;
     } else if (text == "preset::new") {
-			preset_new.show_all();
+		preset_new_entry.set_text( "" );
+		preset_new_entry.grab_focus();
+		preset_new.show_all();
 		return;
     } else if (text == "preset::new::ok") {
 		if(!preset_controller->newPreset()){
