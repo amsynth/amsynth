@@ -691,6 +691,7 @@ GUI::event_handler(string text)
 			if ( preset_name != "New Preset" ) gl.push_back( preset_name );
 		}
 		preset_copy_combo.set_popdown_strings( gl );
+		preset_copy_combo.get_entry()->grab_focus();
 		preset_copy.show_all();
 		return;
     } else if (text == "preset::copy::ok") {
@@ -731,6 +732,7 @@ GUI::event_handler(string text)
 		preset_import_dialog.hide();
 		return;
     } else if (text == "preset::saveas") {
+		preset_saveas_entry.grab_focus();
 		preset_saveas.show_all();
 		return;
     } else if (text == "preset::saveas::ok") {
@@ -738,7 +740,8 @@ GUI::event_handler(string text)
 		preset.clone( preset_controller->getCurrentPreset() );
 		preset_controller->newPreset();
 		preset_controller->getCurrentPreset().clone( preset );
-		preset_controller->getCurrentPreset().setName( preset_saveas_entry.get_text() );
+		preset_controller->getCurrentPreset().setName( 
+			preset_saveas_entry.get_text() );
 		preset_controller->commitPreset();
 		presetCV->update();
 		preset_saveas.hide();
