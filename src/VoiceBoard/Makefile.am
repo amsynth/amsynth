@@ -15,6 +15,9 @@ libVoiceBoard_a_SOURCES = \
 			LowPassFilter.cc \
 			ProcessAndHold.cc \
 			SoftLimiter.cc \
+			FreqControlSignal.cc \
+			FilterControlSignal.cc \
+			AmpSection.cc \
 			Distortion.cc \
 			Reverb.cc \
 			allpass.cpp \

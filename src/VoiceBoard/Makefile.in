@@ -77,7 +77,7 @@ VERSION = @VERSION@
 
 noinst_LIBRARIES = libVoiceBoard.a
 
-libVoiceBoard_a_SOURCES =  			ADSR.cc 			Amplifier.cc 			EnvelopeGenerator.cc 			FValue.cc 			NFValue.cc 			Oscillator.cc 			VoiceBoard.cc 			Mixer.cc 			Limiter.cc 			Adder.cc 			Multiplier.cc 			LowPassFilter.cc 			ProcessAndHold.cc 			SoftLimiter.cc 			Distortion.cc 			Reverb.cc 			allpass.cpp 			comb.cpp 			revmodel.cpp
+libVoiceBoard_a_SOURCES =  			ADSR.cc 			Amplifier.cc 			EnvelopeGenerator.cc 			FValue.cc 			NFValue.cc 			Oscillator.cc 			VoiceBoard.cc 			Mixer.cc 			Limiter.cc 			Adder.cc 			Multiplier.cc 			LowPassFilter.cc 			ProcessAndHold.cc 			SoftLimiter.cc 			FreqControlSignal.cc 			FilterControlSignal.cc 			AmpSection.cc 			Distortion.cc 			Reverb.cc 			allpass.cpp 			comb.cpp 			revmodel.cpp
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = ../../config.h
@@ -95,8 +95,9 @@ EnvelopeGenerator.$(OBJEXT) FValue.$(OBJEXT) NFValue.$(OBJEXT) \
 Oscillator.$(OBJEXT) VoiceBoard.$(OBJEXT) Mixer.$(OBJEXT) \
 Limiter.$(OBJEXT) Adder.$(OBJEXT) Multiplier.$(OBJEXT) \
 LowPassFilter.$(OBJEXT) ProcessAndHold.$(OBJEXT) SoftLimiter.$(OBJEXT) \
-Distortion.$(OBJEXT) Reverb.$(OBJEXT) allpass.$(OBJEXT) comb.$(OBJEXT) \
-revmodel.$(OBJEXT)
+FreqControlSignal.$(OBJEXT) FilterControlSignal.$(OBJEXT) \
+AmpSection.$(OBJEXT) Distortion.$(OBJEXT) Reverb.$(OBJEXT) \
+allpass.$(OBJEXT) comb.$(OBJEXT) revmodel.$(OBJEXT)
 AR = ar
 CXXFLAGS = @CXXFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -110,8 +111,9 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
-DEP_FILES =  .deps/ADSR.P .deps/Adder.P .deps/Amplifier.P \
-.deps/Distortion.P .deps/EnvelopeGenerator.P .deps/FValue.P \
+DEP_FILES =  .deps/ADSR.P .deps/Adder.P .deps/AmpSection.P \
+.deps/Amplifier.P .deps/Distortion.P .deps/EnvelopeGenerator.P \
+.deps/FValue.P .deps/FilterControlSignal.P .deps/FreqControlSignal.P \
 .deps/Limiter.P .deps/LowPassFilter.P .deps/Mixer.P .deps/Multiplier.P \
 .deps/NFValue.P .deps/Oscillator.P .deps/ProcessAndHold.P \
 .deps/Reverb.P .deps/SoftLimiter.P .deps/VoiceBoard.P .deps/allpass.P \
