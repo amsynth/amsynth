@@ -23,7 +23,11 @@ dnl
 AC_CHECK_LIB(m, sin,, exit)
 AC_CHECK_LIB(dl, dlopen,, exit)
 AC_CHECK_LIB(pthread, pthread_create,, exit)
-AM_PATH_GTKMM(1.2.8,,exit)
+
+# Checks for libraries.
+PKG_CHECK_MODULES(DEPS, gtkmm-2.4 >= 2.4.0)
+AC_SUBST(DEPS_CFLAGS)
+AC_SUBST(DEPS_LIBS)
 
 dnl
 dnl
@@ -110,11 +114,11 @@ else
 	profiling=no
 fi
 
-if test $profiling = "no"; then 
-  if test $debugging = "no"; then
-    CXXFLAGS="$CXXFLAGS -O3 -ffast-math -fno-exceptions -fomit-frame-pointer"
-  fi 
-fi
+dnl if test $profiling = "no"; then 
+dnl  if test $debugging = "no"; then
+    CXXFLAGS="$CXXFLAGS -g"
+dnl  fi 
+dnlfi
 
 
 dnl
@@ -177,7 +181,7 @@ dnl
 echo
 echo -------------------------------------------------------- $PACKAGE $VERSION
 echo \|
-echo \| GTK-- version......................................... : `gtkmm-config --version`
+echo \| GTK-- version......................................... : `pkg-config --modversion gtkmm-2.4`
 echo \|
 echo \| Build with OSS support................................ : $with_oss
 echo \| Build with ALSA support............................... : $with_alsa

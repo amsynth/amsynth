@@ -86,6 +86,15 @@ ParameterView::setName(string text)
 void
 ParameterView::update()
 {   
+	// send a request to the GUI thread to update this View..
+	Request request;
+	request.slot = slot( *this, ParameterView::_update_ );
+	if (write (piped, &request, sizeof(request)) != sizeof(request)) cout << "error writing to pipe" << endl;
+}
+
+void 
+ParameterView::_update_()
+{
 	adj->set_value(parameter->getValue());
     char cstr[20];
     sprintf(cstr, "%.2f", parameter->getControlValue());
@@ -93,19 +102,6 @@ ParameterView::update()
     text += " ";
     text += parameter->getLabel();
     value_label.set_text(text);
-}
-
-void 
-ParameterView::_update_()
-{
-	// send a request to the GUI thread to update this View..
-	Request request;
-	request.slot = slot( *this, ParameterView::_update_ );
-	
-	if( write( piped, &request, sizeof(request) ) != sizeof(request) )
-      cout << "error writing to pipe" << endl;
-    else
-      cout << "sent update request to pipe\n";
 }
 
 Gtk::Widget * 

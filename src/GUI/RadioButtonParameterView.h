@@ -5,11 +5,11 @@
 #ifndef _RADIOBUTTONPARAMETERVIEW_H
 #define _RADIOBUTTONPARAMETERVIEW_H
 
-#include <gtk--/box.h>
-#include <gtk--/frame.h>
-#include <gtk--/label.h>
-#include <gtk--/radiobutton.h>
-#include <gtk--/style.h>
+#include <gtkmm/box.h>
+#include <gtkmm/frame.h>
+#include <gtkmm/label.h>
+#include <gtkmm/radiobutton.h>
+#include <gtkmm/style.h>
 #include <stdlib.h>
 #include <list>
 #include <string>
@@ -20,18 +20,14 @@
 class RadioButtonParameterView : public ParameterView, public Gtk::VBox {
 public:
 	RadioButtonParameterView( int pipe_d );
-	~RadioButtonParameterView();
 	void setName( string name );
 	void setDescription( int button, string text );
 	void setParameter( Parameter & param );
-	Parameter * getParameter();
-	void update();
 	void _update_();
 	void set_style( Gtk::Style& style );
 private:
 	void toggle_handler( int button );
 	gfloat last_toggle;
-	Parameter *parameter;
 	gboolean supress_param_callback;
 	Gtk::Label label;
 	Gtk::Frame frame;

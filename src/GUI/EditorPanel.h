@@ -5,10 +5,10 @@
 #ifndef _EDITOR_PANEL_H
 #define _EDITOR_PANEL_H
 
-#include <gtk--/box.h>
-#include <gtk--/frame.h>
-#include <gtk--/fixed.h>
-#include <gtk--/style.h>
+#include <gtkmm/box.h>
+#include <gtkmm/frame.h>
+#include <gtkmm/fixed.h>
+#include <gtkmm/style.h>
 
 // forward definition of classes: speeds up compilation
 
@@ -29,7 +29,7 @@ public:
 	void		arrange		( );
 
 private:
-	virtual void	realize_impl	( );
+	virtual void	on_realize	( );
 	
 
 

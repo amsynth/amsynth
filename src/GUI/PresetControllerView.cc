@@ -9,7 +9,7 @@
 #include <iostream>
 
 using SigC::slot;
-using SigC::bind;
+using sigc::bind;
 using std::cout;
 
 PresetControllerView::PresetControllerView( int pipe_d, VoiceAllocationUnit & vau )
@@ -19,12 +19,12 @@ PresetControllerView::PresetControllerView( int pipe_d, VoiceAllocationUnit & va
 	inhibit_combo_update = false;
 	
     commit.add_label("Save Changes",0.5);
-    commit.clicked.connect(
-		bind <char*>(slot(this, &PresetControllerView::ev_handler),"commit"));
+    commit.signal_clicked().connect(
+		bind <char*>(mem_fun(*this, &PresetControllerView::ev_handler),"commit"));
 
 	presets_combo.get_entry()->set_editable( false );
-	presets_combo.get_entry()->changed.connect(
-		bind <char*>(slot(this, &PresetControllerView::ev_handler),"presets_combo"));
+	presets_combo.get_entry()->signal_changed().connect(
+		bind <char*>(mem_fun(*this, &PresetControllerView::ev_handler),"presets_combo"));
 
     add( preset_no_entry );
     add( presets_combo );
@@ -35,11 +35,11 @@ PresetControllerView::PresetControllerView( int pipe_d, VoiceAllocationUnit & va
 
 	Gtk::Button *panic = manage (new Gtk::Button);
 	panic->add_label ("Panic");
-	panic->clicked.connect ( bind <char*>(slot(this, &PresetControllerView::ev_handler),"panic"));
+	panic->signal_clicked().connect(bind(mem_fun(*this, &PresetControllerView::ev_handler),"panic"));
 	add (*panic);
 
 	piped = pipe_d;
-	request.slot = slot( this, &PresetControllerView::_update_ );
+	request.slot = mem_fun(*this, &PresetControllerView::_update_ );
 }
 
 PresetControllerView::~PresetControllerView()

@@ -1,6 +1,6 @@
 noinst_LIBRARIES = libGUI.a
 
-INCLUDES = $(GTKMM_CFLAGS)
+INCLUDES = $(DEPS_CFLAGS)
 
 EXTRA_DIST = 	knob.xpm splash.xpm
 

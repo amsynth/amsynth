@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2003 Nick Dowell
+ * (c) 2003-2005 Nick Dowell
  */
 
 #include "EditorPanel.h"
@@ -16,10 +16,10 @@ EditorPanel::EditorPanel	( Preset* preset, int piped )
 	
 	// GUI::GUI()
 	
-	style = Gtk::Style::create ( );
+//	style = Gtk::Style::create ( );
 	
 	
-	GtkShadowType frame_shadow = GTK_SHADOW_OUT;
+//	GtkShadowType frame_shadow = GTK_SHADOW_OUT;
 	
 	
 	
@@ -35,14 +35,14 @@ EditorPanel::EditorPanel	( Preset* preset, int piped )
 	
 	
 	// oscillator 1 controls
-	osc1_frame.set_shadow_type( frame_shadow );
+//	osc1_frame.set_shadow_type( frame_shadow );
 	osc1_frame.set_label( "Oscillator 1" );
 	osc1_fixed.put( *rb_pv[0], 0, 0 );		// waveform
 	osc1_fixed.put( *parameterView[18], 10, 135 );	// pulsewidth
 	osc1_frame.add( osc1_fixed );
 
 	// oscillator 2 controls
-	osc2_frame.set_shadow_type( frame_shadow );
+//	osc2_frame.set_shadow_type( frame_shadow );
 	osc2_frame.set_label( "Oscillator 2" );
 	osc2_fixed.put( *param_switch, 85, 0 );		// osc. sync
 	osc2_fixed.put( *rb_pv[1], 10, 0 );		// waveform
@@ -52,19 +52,19 @@ EditorPanel::EditorPanel	( Preset* preset, int piped )
 	osc2_frame.add( osc2_fixed );
 
 	// oscillator mixer section
-	osc_mix_frame.set_shadow_type(frame_shadow);
+//	osc_mix_frame.set_shadow_type(frame_shadow);
 	osc_mix_frame.set_label("Oscillator Mixer");
 	osc_mix_vbox.add(*parameterView[4]);
 	osc_mix_vbox.add(*rb_pv[3]);
 	osc_mix_frame.add(osc_mix_vbox);
 
 	// filter controls
-	filter_frame.set_shadow_type(frame_shadow);
+//	filter_frame.set_shadow_type(frame_shadow);
 	filter_frame.set_label("Low Pass Filter");
 	filter_hbox1.add(*parameterView[6]);
 	filter_hbox1.add(*parameterView[7]);
 	filter_hbox1.add(*parameterView[5]);
-    	filter_hbox2.add(*parameterView[8]);
+	filter_hbox2.add(*parameterView[8]);
 	filter_hbox2.add(*parameterView[9]);
 	filter_hbox2.add(*parameterView[10]);
 	filter_hbox2.add(*parameterView[11]);
@@ -73,7 +73,7 @@ EditorPanel::EditorPanel	( Preset* preset, int piped )
 	filter_frame.add(filter_vbox);
 
 	// amplifier controls
-	amp_frame.set_shadow_type(frame_shadow);
+//	amp_frame.set_shadow_type(frame_shadow);
 	amp_frame.set_label("Amplifier");
 	amp_hbox2.add(*parameterView[13]);
 	amp_hbox2.add(*parameterView[14]);
@@ -83,7 +83,7 @@ EditorPanel::EditorPanel	( Preset* preset, int piped )
 	amp_frame.add(amp_vbox);
 
 	// mod controls
-	mod_frame.set_shadow_type( frame_shadow );
+//	mod_frame.set_shadow_type( frame_shadow );
 	mod_frame.set_label( "Modulation" );
 	mod_frame.add( mod_hbox );
 	mod_hbox.add( *parameterView[20] );		// lfo rate
@@ -93,7 +93,7 @@ EditorPanel::EditorPanel	( Preset* preset, int piped )
 	mod_hbox.add( *parameterView[17] );		// amp mod
 
 	// reverb :)) section
-	reverb_frame.set_shadow_type( frame_shadow );
+//	reverb_frame.set_shadow_type( frame_shadow );
 	reverb_frame.set_label( "Reverb" );
 	reverb_hbox.add( *parameterView[24] );		// amount
 	reverb_hbox.add( *parameterView[23] );		// room size
@@ -102,7 +102,7 @@ EditorPanel::EditorPanel	( Preset* preset, int piped )
 	reverb_frame.add( reverb_hbox );
 
 	// distortion section
-	distortion_frame.set_shadow_type(frame_shadow);
+//	distortion_frame.set_shadow_type(frame_shadow);
 	distortion_frame.set_label("Distortion");
 	distortion_hbox.add(*parameterView[30]);
 	distortion_frame.add(distortion_hbox);
@@ -117,7 +117,6 @@ EditorPanel::EditorPanel	( Preset* preset, int piped )
 	put(reverb_frame, 0, 0);
 	put( *parameterView[19], 0, 0 );
 	put(distortion_frame, 0, 0);
-	
 	
 	
 	
@@ -269,7 +268,7 @@ EditorPanel::EditorPanel	( Preset* preset, int piped )
 	parameterView[30]->setParameter(preset->getParameter("distortion_crunch"));
 	parameterView[30]->setName( "Crunch" );
 	
-	param_switch->setParameter(preset->getParameter("osc2_sync"));
+	param_switch->setParameter(preset->getParameter(kOsc2Sync));
 	param_switch->setName( "Sync. to\nOsc. 1" );
 }
 
@@ -281,39 +280,39 @@ void
 EditorPanel::set_x_font		( const char *x_font_desc )
 {
 	// apply font to current style.
-	Gdk_Font font = style->get_font ( );
-	font.load ( x_font_desc );
-	style->set_font ( font );
-	
-
+//	Gdk_Font font = style->get_font ( );
+//	font.load ( x_font_desc );
+//	style->set_font ( font );
+//	
+//
 	for (int i = 0; i < 31; i++)
 	{
-		parameterView[i]->set_style ( *style );
+//		parameterView[i]->set_style ( *style );
 		parameterView[i]->queue_resize ( );
 	}
 	for (int i = 0; i < 10; i++)
 	{
-		rb_pv[i]->set_style ( *style );
+//		rb_pv[i]->set_style ( *style );
 		rb_pv[i]->queue_resize ( );
 	}
-	param_switch->set_style ( *style );
+//	param_switch->set_style ( *style );
 	param_switch->queue_resize ( );
-	
-	osc1_frame.set_style ( *style );
+//	
+//	osc1_frame.set_style ( *style );
 	osc1_frame.queue_resize ( );
-	osc2_frame.set_style ( *style );
+//	osc2_frame.set_style ( *style );
 	osc2_frame.queue_resize ( );
-	osc_mix_frame.set_style ( *style );
+//	osc_mix_frame.set_style ( *style );
 	osc_mix_frame.queue_resize ( );
-	reverb_frame.set_style ( *style );
+//	reverb_frame.set_style ( *style );
 	reverb_frame.queue_resize ( );
-	distortion_frame.set_style ( *style );
+//	distortion_frame.set_style ( *style );
 	distortion_frame.queue_resize ( );
-	filter_frame.set_style ( *style );
+//	filter_frame.set_style ( *style );
 	filter_frame.queue_resize ( );
-	amp_frame.set_style ( *style );
+//	amp_frame.set_style ( *style );
 	amp_frame.queue_resize ( );
-	mod_frame.set_style ( *style );
+//	mod_frame.set_style ( *style );
 	mod_frame.queue_resize ( );
 	queue_resize ( );
 }
@@ -344,15 +343,18 @@ EditorPanel::arrange		( )
 }
 
 void
-EditorPanel::realize_impl	( )
+EditorPanel::on_realize	( )
 {
-	Gtk::Fixed::realize_impl();
+	Gtk::Fixed::on_realize();
 	
 	GdkPixmap *pixmap;
 	GdkBitmap *bitmap;
 
-	pixmap = gdk_pixmap_create_from_xpm_d(get_window(), &bitmap,
-			get_style()->gtkobj()->bg, knob_xpm);
+	pixmap = gdk_pixmap_create_from_xpm_d(
+		get_window()->gobj(),
+		&bitmap,
+		get_style()->gobj()->bg, 
+		knob_xpm);
 
 	for(int i=0; i < 31; i++)
 		parameterView[i]->setPixmap( pixmap, 50, 50, 15 );

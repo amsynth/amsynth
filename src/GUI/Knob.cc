@@ -1,6 +1,6 @@
 /* amsynth
  * a GTK-- Knob widget
- * (c) 2002 Nick Dowell
+ * (c) 2002-2005 Nick Dowell
  */
 #include "Knob.h"
 #include <math.h>
@@ -9,17 +9,21 @@
 using namespace std;
 
 Knob::Knob()
+:	pixmap_loaded (false)
+,	pixmap (0)
+,	bitmap (0)
+,	myadj (false)
+,	adj (0)
+,	frame (0)
 {
-	pixmap = 0;
-	frame = 0;
+	set_events (Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::POINTER_MOTION_MASK);
 	
-	set_events(GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | 
-				GDK_POINTER_MOTION_MASK);
-	
-	pixmap_loaded = false;
-	
-	adj = new Gtk::Adjustment(0.0, 0.0, 1.0, 0.01, 1.0, 0);
-	myadj = 1;
+	if (NULL != (adj = new Gtk::Adjustment(0.0, 0.0, 1.0, 0.01, 1.0, 0))) myadj = true;
+}
+
+Knob::~Knob()
+{
+	if (myadj) delete adj;
 }
 
 void
@@ -30,7 +34,7 @@ Knob::setPixmap( GdkPixmap *pix, gint x, gint y, gint frames )
 	height = y;
 	center_y = (gint)(y/2);
 	this->frames = frames;
-	set_usize( x, y );
+	set_size_request (x, y);
 	pixmap = pix;
 }
 
@@ -38,57 +42,47 @@ void
 Knob::set_adjustment( Gtk::Adjustment & adjustment )
 {
 	delete adj;
-	myadj = 0;
+	myadj = false;
 	adj = &adjustment;
-	adj->value_changed.connect(bind(slot(this, &Knob::adjUpdate), adj));
+	adj->signal_value_changed().connect(sigc::bind(mem_fun(*this, &Knob::adjUpdate), adj));
+	on_expose_event (NULL);
 }
 
 void
 Knob::adjUpdate(Gtk::Adjustment * _adj)
 {
-	redraw();
+	on_expose_event (NULL);
 }
 
-void
-Knob::realize_impl()
+bool
+Knob::on_expose_event			(GdkEventExpose *ev)
 {
-	Gtk::Misc::realize_impl(); // the *all* important call! ;-) realize()s the underlying object
-}
-
-void
-Knob::redraw()
-{
-	frame = 
-	(gint)( ((adj->get_value()-adj->get_lower())/
+	frame = (gint)( ((adj->get_value()-adj->get_lower())/
 			(adj->get_upper()-adj->get_lower())) *frames);
 	
-	if(frame >= frames)
-		frame = (frames-1);
+	if(frame >= frames) frame = (frames-1);
 	
 	if(pixmap)
-		gdk_draw_pixmap( get_window(), get_style()->get_black_gc(), 
+		gdk_draw_pixmap(
+				get_window()->gobj(),
+				get_style()->get_black_gc()->gobj(), 
 				pixmap,
 				width*frame, 0, 
 				0, 0, 
 				width, height);
-}
 
-gint
-Knob::expose_event_impl(GdkEventExpose *ev)
-{
-	redraw();
 	return TRUE;
 }
 
-gint
-Knob::button_press_event_impl (GdkEventButton *ev)
+bool
+Knob::on_button_press_event		(GdkEventButton *ev)
 {
 	widget_x = (gint)(ev->x_root - ev->x);
 	widget_y = (gint)(ev->y_root - ev->y);
 	
 	switch(ev->button){
 		case 1:
-			Gtk::Main::grab_add(*this);
+			add_modal_grab ();
 			mouse_pos_change( (gint)ev->x_root, (gint)ev->y_root );
 			break;
 		case 4: // mouse wheel up
@@ -104,22 +98,22 @@ Knob::button_press_event_impl (GdkEventButton *ev)
 	return TRUE;
 }
 
-gint
-Knob::button_release_event_impl (GdkEventButton *ev)
+bool
+Knob::on_button_release_event	(GdkEventButton *ev)
 {
-	if(has_grab()) Gtk::Main::grab_remove(*this);
+	if(has_grab()) remove_modal_grab ();
 	return TRUE;
 }
 
-gint
-Knob::motion_notify_event_impl(GdkEventMotion *ev) 
+bool
+Knob::on_motion_notify_event	(GdkEventMotion *ev) 
 {
 	if(has_grab()) mouse_pos_change( (gint)ev->x_root, (gint)ev->y_root );
 	return TRUE;
 }
 
 void
-Knob::mouse_pos_change(gint x_abs, gint y_abs)
+Knob::mouse_pos_change			(gint x_abs, gint y_abs)
 {
 	gfloat x = x_abs - ( widget_x + center_x );
 	gfloat y = y_abs - ( widget_y + center_y );
@@ -145,14 +139,5 @@ Knob::mouse_pos_change(gint x_abs, gint y_abs)
 //	val *= (adj->get_upper()-adj->get_lower());
 	adj->set_value(val);
   
-	redraw();
-}
-
-Knob::~Knob()
-{
-	if(myadj){
-		cout << "delete adj" << endl;
-		delete adj;
-		cout << "k" << endl;
-	}
+	on_expose_event (NULL);
 }

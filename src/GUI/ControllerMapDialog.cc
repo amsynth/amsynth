@@ -7,15 +7,15 @@
 #include "../MidiController.h"
 #include "../PresetController.h"
 #include "controllers.h"
-#include <gtk--/menuitem.h>
+#include <gtkmm/menuitem.h>
 #include <list>
 #include <string>
 #include <stdio.h>
 #include <iostream>
 #include <unistd.h>
 
-using SigC::slot;
-using SigC::bind;
+using sigc::slot;
+using sigc::bind;
 using std::cout;
 
 ControllerMapDialog::ControllerMapDialog
@@ -35,7 +35,7 @@ ControllerMapDialog::ControllerMapDialog
 	m_button_controller->add(*m_label_controller);
 
 
-	m_button_controller->event.connect( slot(this,&ControllerMapDialog::popup_menu) );
+	m_button_controller->signal_event().connect( mem_fun(this, &ControllerMapDialog::popup_menu) );
 
 	m_menu_controllers = manage( new Gtk::Menu());
 
@@ -53,7 +53,7 @@ ControllerMapDialog::ControllerMapDialog
 		for( int j=0; j<16; j++ )
 		{
 			menu_cc->items().push_back( Gtk::Menu_Helpers::MenuElem( c_controller_names[i*16+j], 
-                        bind(slot(this,&ControllerMapDialog::select_controller), i*16+j)));
+                        bind(mem_fun(*this,&ControllerMapDialog::select_controller), i*16+j)));
 		}
 		m_menu_controllers->items().push_back(Gtk::Menu_Helpers::MenuElem( std::string(b) , *menu_cc ));
 	}
@@ -70,10 +70,10 @@ ControllerMapDialog::ControllerMapDialog
 
 	m_combo->set_popdown_strings( gl );
 	m_combo->get_entry()->set_editable( false );
-	m_combo->get_entry()->changed.connect(
-            slot(this, &ControllerMapDialog::select_parameter));
+	m_combo->get_entry()->signal_changed().connect(
+            mem_fun(*this, &ControllerMapDialog::select_parameter));
 
-	request.slot = slot( this, &ControllerMapDialog::midi_select_controller );
+	request.slot = mem_fun(*this, &ControllerMapDialog::midi_select_controller );
 	
 	midi_controller->getLastControllerParam().addUpdateListener( *this );
 	
@@ -87,7 +87,7 @@ ControllerMapDialog::ControllerMapDialog
 	
 	vbox->add( *(manage( new Gtk::Label () )) );
 	vbox->pack_start(*m_button_controller);
-	vbox->pack_start(*m_combo,true);
+	vbox->pack_start(*m_combo);
 	vbox->add( *(manage( new Gtk::Label () )) );
 	
 	vboxl->add (*(manage( new Gtk::Label () )));

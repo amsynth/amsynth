@@ -6,22 +6,22 @@
 #define _GUI_H
 
 #include <string>
-#include <gtk--/box.h>
-#include <gtk--/main.h>
-#include <gtk--/frame.h>
-#include <gtk--/fixed.h>
-#include <gtk--/style.h>
-#include <gtk--/dialog.h>
-#include <gtk--/menu.h>
-#include <gtk--/menubar.h>
-#include <gtk--/menuitem.h>
-#include <gtk--/tearoffmenuitem.h>
-#include <gtk--/label.h>
-#include <gtk--/button.h>
-#include <gtk--/statusbar.h>
-#include <gtk--/pixmap.h>
-#include <gtk--/fileselection.h> 
-#include <gtk--/fontselection.h>
+#include <gtkmm/box.h>
+#include <gtkmm/main.h>
+#include <gtkmm/frame.h>
+#include <gtkmm/fixed.h>
+#include <gtkmm/style.h>
+#include <gtkmm/dialog.h>
+#include <gtkmm/menu.h>
+#include <gtkmm/menubar.h>
+#include <gtkmm/menuitem.h>
+#include <gtkmm/tearoffmenuitem.h>
+#include <gtkmm/label.h>
+#include <gtkmm/button.h>
+#include <gtkmm/statusbar.h>
+#include <gtkmm/image.h>
+#include <gtkmm/fileselection.h> 
+#include <gtkmm/fontselection.h>
 
 #include "PresetControllerView.h"
 #include "ControllerMapDialog.h"
@@ -69,8 +69,12 @@ public:
 					{ dialog->hide_all(); return 0; };
 	void	update();
 	void	serve_request();
-private:
-	void		realize_impl		( );
+
+protected:
+	virtual void	on_realize	();
+	virtual void	on_hide () { Gtk::Main::quit(); }
+
+private:		
 	Gtk::MenuBar*	create_menus		( );
 
 	int *pipe, lnav;
@@ -88,7 +92,7 @@ private:
 //	void		bank_save		( );
 	void		bank_save_as		( );
 	void		bank_save_as_ok		( );
-	
+
 	int		command_exists		(const char *command);
 	void		command_run		(const char *command);
 	
@@ -109,7 +113,7 @@ private:
 	// about dialog
 	Gtk::Dialog about_window;
 	Gtk::Label about_label;
-	Gtk::Pixmap *about_pixmap;
+	Gtk::Image *about_pixmap;
 	Gtk::Button about_close_button;
 	
 	// realtime warning dialog

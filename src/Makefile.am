@@ -3,7 +3,7 @@ EXTRA_DIST = amSynth.in.1 amSynth.in.2
 libexec_PROGRAMS = amSynth.bin
 noinst_PROGRAMS = amSynth.ptest
 
-INCLUDES = `gtkmm-config --cflags` `gtk-config --cflags`
+INCLUDES = $(DEPS_CFLAGS)
 
 amSynth: amSynth.in.1 amSynth.in.2
 	cat amSynth.in.1 > amSynth;\
@@ -33,8 +33,8 @@ amSynth_bin_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a GUI/libGUI.a
 amSynth_ptest_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a Effects/libEffects.a
 
 LIBS = -lstdc++ -lm
-amSynth_bin_LDFLAGS = $(GTKMM_LIBS)
+amSynth_bin_LDFLAGS = $(DEPS_LIBS)
 
-install-exec-hook:
+install-exec-hook):
 	chown root $(DESTDIR)$(libexecdir)/amSynth.bin;\
 	chmod +s $(DESTDIR)$(libexecdir)/amSynth.bin
