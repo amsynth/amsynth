@@ -1020,8 +1020,8 @@ GUI::idle_callback()
 		txt += " Voices Active";
 		statusBar.pop( 1 );
 		statusBar.push( 1, txt );
-		return true;
 	}
+	return true;
 }
 
 GUI::~GUI()

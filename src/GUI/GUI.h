@@ -63,7 +63,7 @@ class GUI:public Gtk::Window, public UpdateListener {
 	string	get_x_font	( )	{ return xfontname; };
     int delete_event_impl(GdkEventAny *);
 	int delete_events(GdkEventAny *, Gtk::Window *dialog)
-	{ dialog->hide_all(); };
+	{ dialog->hide_all(); return 0; };
     void update();
 	void serve_request();
 private:
