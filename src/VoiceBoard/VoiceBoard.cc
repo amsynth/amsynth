@@ -9,10 +9,7 @@ VoiceBoard::VoiceBoard(VoiceBoardProcessMemory *mem):
 ,	mKeyVelocity	(1.0)
 ,	mKeyPitch		(440.0)
 ,	mPitchBend		(1.0)
-,	lfo1			(mem->lfo_osc_1)
 ,	mLFO1Freq		(0.0)
-,	osc1			(mem->osc_1)
-,	osc2			(mem->osc_2)
 ,	mFreqModAmount	(0.0)
 ,	mOsc1PulseWidth	(0.0)
 ,	mOsc2PulseWidth	(0.0)
@@ -29,7 +26,6 @@ VoiceBoard::VoiceBoard(VoiceBoardProcessMemory *mem):
 ,	mAmpModAmount	(0.0)
 ,	amp_env			(mem->amp_env)
 {
-	osc1.SetSyncOsc (osc2);
 }
 
 void
@@ -51,7 +47,7 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kOsc2Pulsewidth:	mOsc2PulseWidth = value;	break;
 	case kOsc2Octave:	mOsc2Octave = value;		break;
 	case kOsc2Detune:	mOsc2Detune = value;		break;
-	case kOsc2Sync:		osc1.SetSync (value>0.5);	break;
+	case kOsc2Sync:		osc1.SetSync (value>0.5 ? &osc2 : 0);	break;
 
 	case kFilterModAmount:	mFilterModAmt = (value+1.0f)/2.0f;break;
 	case kFilterEnvAmount:	mFilterEnvAmt = value;		break;

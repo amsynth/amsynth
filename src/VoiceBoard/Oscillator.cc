@@ -1,39 +1,32 @@
 /* amSynth
- * (c) 2001-2004 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  **/
 
 #include <cmath>
-#include <cstdlib>		// required for random()
+#include <cstdlib>		// required for rand()
 #include <iostream>
 #include "Oscillator.h"
 
-Oscillator::Oscillator(float *buf)
-:	outBuffer (buf)
-,	rads (0.0)
+Oscillator::Oscillator()
+:	rads (0.0)
 ,	random (0)
 ,	waveform (Waveform_Sine)
 ,	rate (44100)
 ,	random_count (0)
 ,	period (0)
-,	sync (0)
-,	syncOsc (0)
+,	sync (NULL)
 {}
 
-void Oscillator::SetWaveform	(Waveform w)			{ waveform = w;		update (); }
-void Oscillator::SetSyncOsc		(Oscillator & osc)		{ syncOsc = &osc;	update (); }
-void Oscillator::SetSync		(int value)				{ sync = value;		update (); }
+void Oscillator::SetWaveform	(Waveform w)			{ waveform = w; }
 void Oscillator::reset			()						{ rads = 0.0; }
 void Oscillator::reset			(int offset, int period){ reset_offset = offset; reset_period = period; }
 
-void 
-Oscillator::update()
+void Oscillator::SetSync		(Oscillator* o)
 {
-	if (sync == 0)
-	{
-		reset_period = 4096;
-		reset_offset = 4096;
-		if (syncOsc) syncOsc->reset( 4096, 4096 );
-	}
+	if (sync) sync->reset (4096, 4096);
+	sync = o;
+	reset_period = 4096;
+	reset_offset = 4096;
 }
 
 void
@@ -57,7 +50,7 @@ Oscillator::ProcessSamples	(float *buffer, int numSamples, float freq_hz, float 
 	default: break;
 	}
 	
-	if (sync) syncOsc->reset (sync_offset, (int)(rate/freq));
+	if (sync) sync->reset (sync_offset, (int)(rate/freq));
 }
 
 void 
