@@ -340,13 +340,11 @@ GUI::GUI( Config & config, MidiController & mc, int pipe[2] )
 	preset_delete.set_modal( true );
 	
     // the about window
-    about_window.set_title( "About" );
-    //about_label.set_text( "\namSynth\n\n (c) 2001,2002 \n\n Nick Dowell \n University of Warwick \n" );
-    //about_window.get_vbox()->add( about_label );
-	about_window.get_vbox()->add( *about_pixmap );
-    about_window.get_action_area()->add( about_close_button );
-    about_close_button.add_label( "close", 0.5, 0.5 );
-    about_close_button.clicked.connect( about_window.hide.slot() );
+    //about_window.set_title( "About" );
+	//about_window.get_vbox()->add( *about_pixmap );
+    //about_window.get_action_area()->add( about_close_button );
+    //about_close_button.add_label( "close", 0.5, 0.5 );
+    //about_close_button.clicked.connect( about_window.hide_all.slot() );
 	
 	// export dialog
 	preset_export_dialog.set_title( "Select DIRECTORY to export preset to" );
@@ -402,14 +400,6 @@ void
 GUI::realize_impl()
 {
 	Gtk::Window::realize_impl();
-	
-#ifdef _DEBUG
-	cout << "<GUI::realize_impl()> creating Gtk::Pixmap" << endl;
-#endif
-	about_pixmap = new Gtk::Pixmap( splash_xpm );
-#ifdef _DEBUG
-	cout << "<GUI::realize_impl()> created Gtk::Pixmap" << endl;
-#endif
 	
     GdkPixmap *pixmap;
     GdkBitmap *bitmap;

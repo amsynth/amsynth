@@ -8,6 +8,5 @@ libGUI_a_SOURCES =	GUI.cc \
 			RadioButtonParameterView.cc \
 			ParameterSwitch.cc \
 			Knob.cc \
-			ControllerMapDialog.cc
-
-
+			ControllerMapDialog.cc \
+			AboutDialog.cc

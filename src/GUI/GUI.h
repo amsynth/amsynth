@@ -27,6 +27,7 @@
 #include "RadioButtonParameterView.h"
 #include "ParameterSwitch.h"
 #include "ControllerMapDialog.h"
+#include "AboutDialog.h"
 #include "../UpdateListener.h"
 #include "../Parameter.h"
 #include "../Config.h"
@@ -94,10 +95,11 @@ class GUI:public Gtk::Window, public UpdateListener {
 	Gtk::HBox mod_hbox;
 	
 	// about dialog
-	Gtk::Dialog about_window;
-	Gtk::Label about_label;
-	Gtk::Pixmap *about_pixmap;
-	Gtk::Button about_close_button;
+	//Gtk::Dialog about_window;
+	//Gtk::Label about_label;
+	//Gtk::Pixmap *about_pixmap;
+	//Gtk::Button about_close_button;
+	AboutDialog about_window;
 	
 	// realtime warning dialog
 	Gtk::Dialog realtime_warning;
