@@ -16,10 +16,11 @@
 class JackOutput : public GenericOutput {
 
 public:
-			JackOutput	( );
+//			JackOutput	( );
 	virtual		~JackOutput	( ) {};
 	void		setInput	( NFSource & source );
 	
+	int		init		( );	// returns 0 on success
 	void		run		( );
 	void		stop		( );
 	

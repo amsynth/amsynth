@@ -241,6 +241,11 @@ int main( int argc, char *argv[] )
 		{
 			jack = 1;
 			out = new JackOutput();
+			if (((JackOutput*)out)->init()!=0)
+			{
+				std::cerr << "** failed to initialise JACK... aborting :'( **\n";
+				exit (10);
+			}
 		}
 		else
 #endif

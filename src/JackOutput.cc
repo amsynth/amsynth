@@ -13,7 +13,7 @@ jack_port_t 	*l_port, *r_port;
 jack_client_t 	*client;
 int		sample_rate;
 int		buf_size;
-int		p,q;
+int		p,q,initialised;
 
 int
 jack_process (jack_nframes_t nframes, void *arg)
@@ -61,14 +61,23 @@ jack_shutdown (void *arg)
 	exit (1);
 }
 
+void
+jack_error	(const char* msg)
+{
+	std::cerr << msg << std::endl;
+}
+
 #endif
 
-JackOutput::JackOutput()
+int
+JackOutput::init	( )
 {
 #ifdef with_jack
+	initialised = 0;
 	client_name = "amSynth";
 	
 	// check if there are already any amSynth jack clients...
+	/*
 	const char **readports;
 	
 	if ( (client = jack_client_new( "amSynth-tmp" )) == 0 ) exit( 60 );
@@ -91,31 +100,18 @@ JackOutput::JackOutput()
 		client_name += " (";
 		client_name += string( tmp );
 		client_name += ")";
-	}
+	}*/
 	
 	/* become a client of the JACK server */
-	client = jack_client_new(client_name.c_str());
+	if ((client = jack_client_new (client_name.c_str())) == 0)
+	{
+		std::cerr << "jack server not running?\n";
+		return -1;
+	}
 
-	/* tell the JACK server to call `jack_process()' whenever
-	   there is work to be done.
-	*/
 	jack_set_process_callback (client, jack_process, 0);
-
-	/* tell the JACK server to call `jack_bufsize()' whenever
-	   the maximum number of frames that will be passed
-	   to `process()' changes
-	*/
 	jack_set_buffer_size_callback (client, jack_bufsize, 0);
-
-	/* tell the JACK server to call `jack_srate()' whenever
-	   the sample rate of the system changes.
-	*/
 	jack_set_sample_rate_callback (client, jack_srate, 0);
-
-	/* tell the JACK server to call `jack_shutdown()' if
-	   it ever shuts down, either entirely, or if it
-	   just decides to stop calling us.
-	*/
 	jack_on_shutdown (client, jack_shutdown, 0);
 
 	sample_rate = jack_get_sample_rate( client );
@@ -126,6 +122,9 @@ JackOutput::JackOutput()
 			JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0 );
 	r_port = jack_port_register( client, "R out",
 			JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0 );
+	
+	initialised = 1;
+	return 0;
 #endif
 }
 
@@ -160,10 +159,11 @@ void
 JackOutput::run()
 {
 #ifdef with_jack
+	if (!initialised) return;
 	if (jack_activate (client)) 
 	{
 		std::cerr << "cannot activate JACK client\n";
-		exit (0);
+		return;
 	}
 	jack_connect(client, jack_port_name(l_port), "alsa_pcm:playback_1");
 	jack_connect(client, jack_port_name(r_port), "alsa_pcm:playback_2");
@@ -174,6 +174,8 @@ void
 JackOutput::stop()
 {
 #ifdef with_jack
+	if (!initialised) return;
+	jack_deactivate (client);
 	jack_client_close (client);
 #endif
 }
