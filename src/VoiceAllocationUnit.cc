@@ -33,7 +33,7 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 		keyPressed[i] = 0;
 		active[i] = false;
 		_voices.push_back (VoiceBoard (process_memory));
-		_voices.back().setFrequency ((440.0/32.0) * pow (2.0f, (float)((i-9.0)/12.0)));
+		_voices.back().setFrequency ((440.0f/32.0f) * pow (2.0f, (float)((i-9.0)/12.0)));
 	}
 
 	SetSampleRate (44100);
@@ -150,7 +150,7 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	case kMasterVol:		mMasterVol = value;		break;
 	case kReverbRoomsize:	reverb->setroomsize (value);	break;
 	case kReverbDamp:		reverb->setdamp (value);	break;
-	case kReverbWet:		reverb->setwet (value); reverb->setdry(1.0-value); break;
+	case kReverbWet:		reverb->setwet (value); reverb->setdry(1.0f-value); break;
 	case kReverbWidth:		reverb->setwidth (value);	break;
 	case kDistortionCrunch:	distortion->SetCrunch (value);	break;
 	

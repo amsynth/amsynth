@@ -22,7 +22,7 @@ void
 Distortion::Process	(float *buffer, unsigned nframes)
 {
 	register float x, s;
-	if (crunch == 0) crunch = 0.01;
+	if (crunch == 0) crunch = 0.01f;
 	
 	for (unsigned i=0; i<nframes; i++)
 	{

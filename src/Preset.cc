@@ -11,7 +11,7 @@ using namespace std;
 
 Parameter TimeParameter (string name, Param id)
 {
-	return Parameter (name, id, 0.0, 0.0, 2.5, 0.0, Parameter::PARAM_POWER, 3, 0.0005, "s");
+	return Parameter (name, id, 0, 0, 2.5f, 0, Parameter::PARAM_POWER, 3, 0.0005f, "s");
 }
 
 Preset::Preset()
@@ -38,7 +38,7 @@ Preset::Preset()
     mParameters.push_back (Parameter		("lfo_waveform",		kLFOWaveform,		0, 0, 4, 1));
     mParameters.push_back (Parameter		("osc2_range",			kOsc2Octave,		0, -1, 2, 1,		Parameter::PARAM_EXP, 2, 0));
 	mParameters.push_back (Parameter		("osc_mix",				kOscMix,			0, -1, 1));
-	mParameters.push_back (Parameter		("freq_mod_amount",		kFreqModAmount,		0, 0, 1.25992105,0, Parameter::PARAM_POWER, 3, -1));
+	mParameters.push_back (Parameter		("freq_mod_amount",		kFreqModAmount,		0, 0, 1.25992105f,0,Parameter::PARAM_POWER, 3, -1));
 	mParameters.push_back (Parameter		("filter_mod_amount",	kFilterModAmount,	-1, -1, 1));
 	mParameters.push_back (Parameter		("amp_mod_amount",		kAmpModAmount,		-1, -1, 1));
 	mParameters.push_back (Parameter		("osc_mix_mode",		kOscMixRingMod,		0, 0, 1, 1));
@@ -48,7 +48,7 @@ Preset::Preset()
 	mParameters.push_back (Parameter		("reverb_damp",			kReverbDamp));
 	mParameters.push_back (Parameter		("reverb_wet",			kReverbWet));
 	mParameters.push_back (Parameter		("reverb_width",		kReverbWidth));
-	mParameters.push_back (Parameter		("distortion_crunch",	kDistortionCrunch,	0, 0, 0.9));
+	mParameters.push_back (Parameter		("distortion_crunch",	kDistortionCrunch,	0, 0, 0.9f));
 	mParameters.push_back (Parameter		("osc2_sync",			kOsc2Sync,			0, 0, 1, 1));
 }
 

@@ -99,7 +99,7 @@ public:
 
 	void	SetNormalisedValue	(float val)
 	{ 
-		mNormalisedValue = clip(val,0.0,1.0);
+		mNormalisedValue = clip(val,0.0f,1.0f);
 		mNativeValue = (mMax-mMin) * mNormalisedValue + mMin;
 	}
 	void	SetNativeValue		(float val)

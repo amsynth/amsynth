@@ -112,5 +112,5 @@ Parameter::getSteps()
 void
 Parameter::random_val()
 {
-	setValue( ((rand()/(double)RAND_MAX) * (getMax()-getMin()) + getMin()) );
+	setValue( ((rand()/(float)RAND_MAX) * (getMax()-getMin()) + getMin()) );
 }
