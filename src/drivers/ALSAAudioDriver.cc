@@ -45,17 +45,9 @@ ALSAAudioDriver::open( Config & config )
 	snd_pcm_hw_params_set_period_size( playback_handle, hw_params, BUFSIZE, 0 );
     snd_pcm_hw_params( playback_handle, hw_params );
 	
-/*    snd_pcm_sw_params_alloca( &sw_params );
-    snd_pcm_sw_params_current( playback_handle, sw_params );
-    snd_pcm_sw_params_set_avail_min( playback_handle, sw_params, BUFSIZE );
-    snd_pcm_sw_params( playback_handle, sw_params );
-	*/
-	
-	cout << snd_pcm_hw_params_get_channels( hw_params ) << endl;
-	
 	config.sample_rate = snd_pcm_hw_params_get_rate( hw_params, 0 );
-	
 	config.audio_driver = "ALSA";
+
 	return 0;
 #else
 	return -1;
