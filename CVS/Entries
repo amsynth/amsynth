@@ -7,11 +7,9 @@
 /README/1.12/Sat Jul 19 15:52:52 2003//
 /TODO/1.7/Sun Jan 26 20:02:12 2003//
 /acconfig.h/1.1.1.1/Sat Mar 16 19:24:51 2002//
-/aclocal.m4/1.12/Wed Jan 21 23:00:02 2004//
 /autogen.sh/1.2/Sun May 12 19:34:02 2002//
 /bootstrap/1.1.1.1/Sat Mar 16 19:24:51 2002//
 /clean_tree/1.1.1.1/Sat Mar 16 19:24:50 2002//
-/config.h.in/1.8/Wed Jan 21 23:00:02 2004//
 /configure.in/1.15/Tue Jul 27 21:07:37 2004//
 /depcomp/1.1.1.1/Sat Mar 16 19:24:36 2002//
 /install-sh/1.1.1.1/Sat Mar 16 19:24:48 2002//
@@ -20,4 +18,9 @@
 /mkinstalldirs/1.1.1.1/Sat Mar 16 19:24:50 2002//
 /stamp-h.in/1.1.1.1/Sat Mar 16 19:24:50 2002//
 /stats/1.1.1.1/Sat Mar 16 19:24:41 2002//
-D
+D/config////
+D/doc////
+D/skel////
+D/src////
+/aclocal.m4/1.13/Fri Jan 21 08:44:20 2005//
+/config.h.in/1.9/Fri Jan 21 08:44:11 2005//
