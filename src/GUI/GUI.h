@@ -149,6 +149,7 @@ class GUI:public Gtk::Window, public UpdateListener {
 	Gtk::ToggleButton record_togglebutton;
 	Gtk::Button record_quit, record_choose;
 	Gtk::HBox record_hbox;
+	Gtk::FileSelection record_fileselect;
 	
 	// quit confirmation dialog
 	Gtk::Dialog quit_confirm;

@@ -400,6 +400,18 @@ GUI::GUI( Config & config, MidiController & mc,
 	preset_import_dialog.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &preset_import_dialog ) );
 	
+	// record file-selector dialog
+	record_fileselect.set_title( "set output WAV file" );
+	record_fileselect.set_filename( "/tmp/amSynth-out.wav" );
+	record_fileselect.get_cancel_button()->clicked.connect(
+		record_fileselect.hide.slot() );
+	record_fileselect.get_ok_button()->clicked.connect(
+		bind( slot(this, &GUI::event_handler), "record::fileselect::ok" ));
+	record_fileselect.set_modal( true );
+	record_fileselect.set_transient_for( *this );
+	record_fileselect.delete_event.connect(
+		bind( slot(this, &GUI::delete_events), &record_fileselect ));
+	
 	// the record dialog
 	record_dialog.set_title( "Record Output to File" );
 	preset_import_dialog.set_transient_for( *this );
@@ -811,6 +823,13 @@ GUI::event_handler(string text)
     } else if (text == "record_dialog" ) {
 		record_dialog.show_all();
 		return;
+    } else if (text == "record_dialog::choose" ) {
+		record_fileselect.show_all();
+		return;
+    } else if (text == "record::fileselect::ok" ) {
+		record_entry.set_text( record_fileselect.get_filename() );
+		record_fileselect.hide_all();
+		return;
     } else if (text == "record_dialog::close" ) {
 		audio_out->stopRecording();
 		record_dialog.hide_all();
@@ -818,7 +837,6 @@ GUI::event_handler(string text)
     } else if (text == "record_dialog::record" ) {
 		if( record_togglebutton.get_active() == true )
 		{
-			cout << "record to: " << record_entry.get_text() << endl;
 			audio_out->setOutputFile( record_entry.get_text() );
 			audio_out->startRecording();
 			record_togglebutton.remove();
@@ -826,7 +844,6 @@ GUI::event_handler(string text)
 		}
 		else
 		{
-			cout << "stop recording" << endl;
 			record_togglebutton.remove();
 			record_togglebutton.add_label( "Record", 0.5, 0.5 );
 			audio_out->stopRecording();
