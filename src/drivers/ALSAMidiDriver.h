@@ -9,6 +9,8 @@
 
 #include <iostream>
 #ifdef with_alsa
+#define ALSA_PCM_OLD_HW_PARAMS_API
+#define ALSA_PCM_OLD_SW_PARAMS_API
 #include <alsa/asoundlib.h>
 #endif
 
