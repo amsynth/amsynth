@@ -16,43 +16,13 @@ Oscillator::Oscillator(float *buf)
 ,	period (0)
 ,	sync (0)
 ,	syncOsc (0)
-{
-    sync = period = 0;
-}
+{}
 
-void
-Oscillator::SetWaveform	(Waveform w)
-{
-	waveform = w;
-	update ();
-}
-
-void 
-Oscillator::SetSyncOsc	(Oscillator & osc)
-{
-	syncOsc = &osc;
-	update ();
-}
-
-void
-Oscillator::SetSync	(int value)
-{
-	sync = value;
-	update ();
-}
-
-void 
-Oscillator::reset()
-{
-    rads = 0.0;
-}
-
-void 
-Oscillator::reset(int offset, int period)
-{
-	reset_offset = offset;
-	reset_period = period;
-}
+void Oscillator::SetWaveform	(Waveform w)			{ waveform = w;		update (); }
+void Oscillator::SetSyncOsc		(Oscillator & osc)		{ syncOsc = &osc;	update (); }
+void Oscillator::SetSync		(int value)				{ sync = value;		update (); }
+void Oscillator::reset			()						{ rads = 0.0; }
+void Oscillator::reset			(int offset, int period){ reset_offset = offset; reset_period = period; }
 
 void 
 Oscillator::update()
@@ -174,9 +144,9 @@ Oscillator::doRandom(float *buffer, int nFrames)
 	    random_count = 0;
 		random = 
 #ifdef _WINDOWS
-			((float)::rand() / (RAND_MAX / 2)) - 1.0;
+			((float)::rand() / (RAND_MAX / 2.0f)) - 1.0f;
 #else
-			((float)::random() / (RAND_MAX / 2)) - 1.0;
+			((float)::random() / (RAND_MAX / 2.0f)) - 1.0f;
 #endif
 	}
 	random_count++;
@@ -190,8 +160,8 @@ Oscillator::doNoise(float *buffer, int nFrames)
     for (int i = 0; i < nFrames; i++)
 		buffer[i] = 
 #ifdef _WINDOWS
-		((float)::rand() / (RAND_MAX / 2)) - 1.0;
+		((float)::rand() / (RAND_MAX / 2.0f)) - 1.0f;
 #else
-		((float)::random() / (RAND_MAX / 2)) - 1.0;
+		((float)::random() / (RAND_MAX / 2.0f)) - 1.0f;
 #endif
 }

@@ -27,7 +27,6 @@ ADSR::triggerOn()
 	if (a_time == 0.0)	a_delta = 1;
 	else				a_delta = 1 / (a_time * (float) rate);
 
-//	float a_time=(1.0/((float)a_delta*rate));
 	m_attack_frames=a_time*rate;
 	state = attack;
 }
@@ -40,43 +39,12 @@ ADSR::triggerOff()
 	state = release;
 }
 
-void
-ADSR::reset()
-{
-	state = off;
-	c_val = 0;
-}
-
-void 
-ADSR::SetAttack		(float val)
-{
-	a_time = val;
-}
-
-void 
-ADSR::SetDecay		(float val)
-{
-	d_time = val;
-}
-
-void 
-ADSR::SetSustain	(float val)
-{
-	s_val = val;
-}
-
-void 
-ADSR::SetRelease	(float val)
-{
-	r_time = val;
-	if (r_time == 0.0f) r_time = 0.001f;
-}
-
-int 
-ADSR::getState()
-{
-	return (state == off) ? 0 : 1;
-}
+void ADSR::reset		()			{ state = off; c_val = 0; }
+void ADSR::SetAttack	(float val)	{ a_time = val; }
+void ADSR::SetDecay		(float val)	{ d_time = val; }
+void ADSR::SetSustain	(float val)	{ s_val = val; }
+void ADSR::SetRelease	(float val) { r_time = val;	if (r_time == 0.0f) r_time = 0.001f; }
+int  ADSR::getState		()			{ return (state == off) ? 0 : 1; }
 
 float *
 ADSR::getNFData(int nFrames)
