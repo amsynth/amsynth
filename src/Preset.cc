@@ -52,8 +52,8 @@ Preset::Preset()
 	mParameters.push_back (Parameter		("osc2_sync",			kOsc2Sync,			0, 0, 1, 1));
 }
 
-void
-Preset::clone		(Preset& preset)
+Preset&
+Preset::operator =		(Preset& preset)
 {
     for (unsigned i=0; i<preset.ParameterCount(); i++)
     {
@@ -61,6 +61,7 @@ Preset::clone		(Preset& preset)
     	getParameter(p.getName()).setValue (p.getValue());
     }
     setName(preset.getName());
+    return *this;
 }
 
 Parameter & 

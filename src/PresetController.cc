@@ -40,7 +40,7 @@ PresetController::selectPreset(int preset)
 		return -1;
     }
 	if (preset!=currentPresetNo){
-		currentPreset.clone(presets[preset]);
+		currentPreset = presets[preset];
 		currentPresetNo = preset;
 		if (updateListener) 
 			updateListener->update();
@@ -69,7 +69,7 @@ PresetController::commitPreset()
 #ifdef _DEBUG
 	cout << "<PresetController::commitPreset()>" << endl;
 #endif
-	presets[currentPresetNo].clone(currentPreset);
+	presets[currentPresetNo] = currentPreset;
 }
 
 int
@@ -89,7 +89,7 @@ PresetController::newPreset()
 void
 PresetController::deletePreset()
 {
-	currentPreset.clone( blankPreset );
+	currentPreset = blankPreset;
 	updateListener->update();
 }
 
@@ -277,7 +277,7 @@ PresetController::loadPresets	(const char *filename)
 		}
 	}
 
-	currentPreset.clone(presets[currentPresetNo]);
+	currentPreset = presets[currentPresetNo];
 	if (updateListener) updateListener->update();
 #ifdef _DEBUG
 	cout << "<PresetController::loadPresets()>: success" << endl;

@@ -18,6 +18,7 @@ class Preset
 {
 public:
 					Preset			();
+	Preset&			operator =		(Preset& p);
 
 	const string	getName			() const { return mName; }
 	void			setName			(const string name) { mName = name; }
@@ -25,9 +26,9 @@ public:
 	unsigned		ParameterCount	() const { return mParameters.size(); }
 	Parameter&		getParameter	(const string name);
 	Parameter&		getParameter	(const int no) { return mParameters[no]; };
-    void			clone			(Preset& preset);
     void			randomise		();
     void			AddListenerToAll(UpdateListener*);
+
 private:
     std::string				mName;
 	std::vector<Parameter>	mParameters;

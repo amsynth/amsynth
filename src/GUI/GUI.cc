@@ -714,20 +714,20 @@ GUI::preset_new		( )
 void
 GUI::preset_copy	( )
 {
-	clipboard_preset->clone (preset_controller->getCurrentPreset ());
+	*clipboard_preset = preset_controller->getCurrentPreset ();
 }
 
 void
 GUI::preset_paste	( )
 {
-	preset_controller->getCurrentPreset().clone (*clipboard_preset);
+	preset_controller->getCurrentPreset() = *clipboard_preset;
 }
 
 void
 GUI::preset_paste_as_new( )
 {
 	preset_new ();
-	preset_controller->getCurrentPreset().clone (*clipboard_preset);
+	preset_controller->getCurrentPreset() = *clipboard_preset;
 }
 
 void
