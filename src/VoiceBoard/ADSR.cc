@@ -24,7 +24,10 @@ ADSR::SetSampleRate	(int rateIn)
 void
 ADSR::triggerOn()
 {
-	float a_time=(1.0/((float)a_delta*rate));
+	if (a_time == 0.0)	a_delta = 1;
+	else				a_delta = 1 / (a_time * (float) rate);
+
+//	float a_time=(1.0/((float)a_delta*rate));
 	m_attack_frames=a_time*rate;
 	state = attack;
 }
@@ -48,17 +51,12 @@ void
 ADSR::SetAttack		(float val)
 {
 	a_time = val;
-	if (val == 0.0)	a_delta = 1;
-	else		a_delta = 1 / (val * (float) rate);
 }
 
 void 
 ADSR::SetDecay		(float val)
 {
 	d_time = val;
-	d_frames = val * rate;
-	if (val == 0)	d_delta = 1;
-	else		d_delta = 1 / (val * (float) rate);
 }
 
 void 
@@ -71,7 +69,7 @@ void
 ADSR::SetRelease	(float val)
 {
 	r_time = val;
-	if (r_time == 0.0) r_time = 0.001;
+	if (r_time == 0.0f) r_time = 0.001f;
 }
 
 int 
@@ -92,13 +90,17 @@ ADSR::getNFData(int nFrames)
 			inc=a_delta; m_attack_frames-=nFrames;
 			if (m_attack_frames<=0)
 			{
-				inc=(1.0-c_val)/(float)nFrames;
+				inc=(1.0f-c_val)/(float)nFrames;
+
 				state = decay;
+				d_frames = d_time * rate;
+				if (d_time == 0)	d_delta = 1;
+				else				d_delta = 1 / (d_time * (float) rate);
 				m_decay_frames=d_frames;
 			}
 			break;
 		case decay:
-			inc=(s_val-1.0)/(float)d_frames; m_decay_frames-=nFrames;
+			inc=(s_val-1.0f)/(float)d_frames; m_decay_frames-=nFrames;
 			if (m_decay_frames<=0)
 			{
 				inc=-(c_val-s_val)/(float)nFrames;
