@@ -174,19 +174,11 @@ PresetController::importPreset( string filename )
 	return 1;
 }
 
-void
-PresetController::setBankFile( string filename )
-{
-	bank_file = filename;
-}
 
 int 
-PresetController::savePresets()
+PresetController::savePresets	(const char *filename)
 {
-#ifdef _DEBUG
-	cout << "<PresetController::savePresets()" << endl;
-#endif
-	ofstream file( bank_file.c_str(), ios::out );
+	ofstream file( filename, ios::out );
   
 	file << "amSynth" << endl;
 	for (int i = 0; i < PRESETS; i++) {
@@ -220,12 +212,12 @@ PresetController::savePresets()
 }
 
 int 
-PresetController::loadPresets()
+PresetController::loadPresets	(const char *filename)
 {
 #ifdef _DEBUG
 	cout << "<PresetController::loadPresets()>" << endl;
 #endif
-	ifstream file( bank_file.c_str(), ios::in );
+	ifstream file( filename, ios::in );
 	char buffer[100];
   
 	if (file.bad()) {

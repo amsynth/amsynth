@@ -120,6 +120,9 @@ int main( int argc, char *argv[] )
 	config.buffer_size = BUF_SIZE;
 	config.polyphony = 10;
 	config.alsa_seq_client_name = "amSynth";
+	string amsynth_bank_file( getenv("HOME") );
+	amsynth_bank_file += "/.amSynth.presets";
+	config.current_bank_file = amsynth_bank_file;
 	
 	// load saved parameters (if any) from .amSynthrc
 	string amsynthrc_fname( getenv("HOME") );
@@ -137,7 +140,7 @@ int main( int argc, char *argv[] )
 				config.midi_driver = optarg;
 				break;
 			case 'b': 
-				presetController->setBankFile( optarg );
+				config.current_bank_file = optarg;
 				break;
 			case 'c':
 				config.midi_channel = atoi( optarg ); 
@@ -208,7 +211,7 @@ int main( int argc, char *argv[] )
 	vau = new VoiceAllocationUnit( config ); // were sure of sample_rate now
 	if (enable_audio) out->setInput( *vau );
 	
-	presetController->loadPresets();
+	presetController->loadPresets(config.current_bank_file.c_str());
 	
 	int audio_res;
 	if( enable_audio )
@@ -288,7 +291,7 @@ int main( int argc, char *argv[] )
 	config.xfontname = gui->get_x_font ();
 	config.save (amsynthrc_fname);
 		
-	presetController->savePresets();
+	presetController->savePresets(config.current_bank_file.c_str ());
 	midi_controller->saveConfig();
 	
 	if(enable_audio)

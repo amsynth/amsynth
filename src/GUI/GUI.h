@@ -78,6 +78,12 @@ private:
 	void		preset_copy		( );
 	void		preset_paste		( );
 	void		preset_paste_as_new	( );
+	
+	void		bank_open		( );
+	void		bank_open_ok		( );
+//	void		bank_save		( );
+	void		bank_save_as		( );
+	void		bank_save_as_ok		( );
 
 	gint idle_callback();
 	gint setActiveParam( GdkEventButton *event, Parameter * param );
@@ -121,6 +127,10 @@ private:
 	// export/import preset dialog
 	Gtk::FileSelection preset_export_dialog;
 	Gtk::FileSelection preset_import_dialog;
+	
+	// export/import preset dialog
+	Gtk::FileSelection	d_bank_open;
+	Gtk::FileSelection	d_bank_save_as;
 	
 	// recording dialog
 	Gtk::Window		record_dialog;

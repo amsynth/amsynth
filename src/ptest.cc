@@ -35,11 +35,14 @@ int main( int argc, char *argv[] )
 	config.buffer_size = BUF_SIZE;
 	config.polyphony = num_voices;
 	
+	string bank_file( getenv("HOME") );
+	bank_file += "/.amSynth.presets";
+	
 	presetController = new PresetController();
 	
 	
 	vau = new VoiceAllocationUnit( config ); //after were sure of sample_rate
-	presetController->loadPresets();
+	presetController->loadPresets(bank_file.c_str ());
 	
 	vau->setPreset( presetController->getCurrentPreset() );
 	

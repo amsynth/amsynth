@@ -48,10 +48,6 @@ class PresetController {
 	 */
 	int newPreset();
 	void deletePreset();
-  /**
-   * Saves the current Preset and Parameter values to disk.
-   */
-    int savePresets();
 	
 	/*
 	 * Saves the active preset to the filename filename
@@ -59,13 +55,11 @@ class PresetController {
 	int exportPreset( string filename );
 	int importPreset( string filename );
 	
-	// set the file to save presets (ie this bank) to
-	void	setBankFile( string filename );
-  /**
-   * Loads the Preset & Parameter values from disk & restores them in the 
-   * current PresetController.
-   */
-    int loadPresets();
+	/**
+	 * Loading & Saving of bank files
+	 */
+	int		loadPresets	(const char *filename);
+	int		savePresets	(const char *filename);
   /**
    * Sets the UpdateListener object for this object.
    */

@@ -158,7 +158,34 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	about_window.set_transient_for( *this );
 	about_window.delete_event.connect( 
 		bind( slot( this, &GUI::delete_events ), &about_window ) );
+
+	//
+	// Bank Open dialog
+	//
+	d_bank_open.set_title( "Open amSynth Bank File..." );
+	d_bank_open.get_cancel_button()->clicked.connect(
+		d_bank_open.hide.slot() );
+	d_bank_open.get_ok_button()->clicked.connect(
+		slot(this, &GUI::bank_open_ok));
+	d_bank_open.set_modal( true );
+	d_bank_open.set_transient_for( *this );
+	d_bank_open.delete_event.connect( 
+		bind( slot( this, &GUI::delete_events ), &d_bank_open ) );
 	
+	//
+	// Bank SaveAs dialog
+	//
+	d_bank_save_as.set_title( "Save As..." );
+	d_bank_save_as.get_cancel_button()->clicked.connect(
+		d_bank_save_as.hide.slot() );
+	d_bank_save_as.get_ok_button()->clicked.connect(
+		slot(this, &GUI::bank_save_as_ok));
+	d_bank_save_as.set_modal( true );
+	d_bank_save_as.set_transient_for( *this );
+	d_bank_save_as.delete_event.connect( 
+		bind( slot( this, &GUI::delete_events ), &d_bank_save_as ) );
+
+		
 	//
 	// export dialog
 	//
@@ -312,21 +339,16 @@ GUI::create_menus	( )
 	//
         Menu *menu_file = manage (new Menu());
         MenuList& list_file = menu_file->items ();
-	/*
+	
 	list_file.push_back (MenuElem("_Open Bank","<control>O",
-			bind(slot(this, &GUI::event_handler),"bank::open")));
-	list_file.push_back (MenuElem("_Save Bank","<control>S",
-			bind(slot(this, &GUI::event_handler),"bank::close")));
+			slot(this, &GUI::bank_open)));
+//	list_file.push_back (MenuElem("_Save Bank","<control>S",
+//			slot(this, &GUI::bank_save)));
+	list_file.push_back (MenuElem("_Save Bank As...","<control>S",
+			slot(this, &GUI::bank_save_as)));
 	
 	list_file.push_back (SeparatorElem());
 	
-	list_file.push_back (MenuElem("_Import Preset","<control>I",
-			bind(slot(this, &GUI::event_handler),"preset::import")));
-	list_file.push_back (MenuElem("_Export Preset","<control>E",
-			bind(slot(this, &GUI::event_handler),"preset::export")));
-	
-	list_file.push_back (SeparatorElem());
-	*/	
 	list_file.push_back (MenuElem("_Quit","<control>Q",
 			bind(slot(this, &GUI::event_handler),"quit")));
 	
@@ -719,4 +741,38 @@ GUI::preset_paste_as_new( )
 {
 	preset_new ();
 	preset_controller->getCurrentPreset().clone (clipboard_preset);
+}
+
+void
+GUI::bank_open		( )
+{
+	d_bank_open.show_all ();
+}
+
+void
+GUI::bank_open_ok	( )
+{
+	preset_controller->savePresets (config->current_bank_file.c_str ());
+	config->current_bank_file = d_bank_open.get_filename ();
+	preset_controller->loadPresets (config->current_bank_file.c_str ());
+	d_bank_open.hide ();
+}
+/*
+void
+GUI::bank_save		( )
+{
+}
+*/
+void
+GUI::bank_save_as	( )
+{
+	d_bank_save_as.show_all ();
+}
+
+void
+GUI::bank_save_as_ok	( )
+{
+	config->current_bank_file = d_bank_save_as.get_filename ();
+	preset_controller->savePresets (config->current_bank_file.c_str ());
+	d_bank_save_as.hide ();
 }

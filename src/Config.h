@@ -77,6 +77,9 @@ public:
 	
 	string	xfontname;
 	
+	string	default_bank_file;
+	string	current_bank_file;
+	
 	/* internal */
 	string	alsa_seq_client_name;
 	int 	alsa_seq_client_id;
