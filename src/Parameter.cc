@@ -59,8 +59,10 @@ Parameter::setType( int type, float base, float offset )
 void
 Parameter::setValue(float value)
 {
+#ifdef _DEBUG
 	float foo = value;
-	float old_value = _value;
+#endif
+//	float old_value = _value;
 	
 	if (value<_min)
 		value = _min;

@@ -53,7 +53,6 @@ PresetControllerView::ev_handler(string text)
 		if (inhibit_combo_callback==false){
 			inhibit_combo_update = true;
 			string preset_name = presets_combo.get_entry()->get_text();
-			int foo = presetController->selectPreset( preset_name );
 			vau->killAllVoices();
 			inhibit_combo_update = false;
 		} else

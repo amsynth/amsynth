@@ -127,6 +127,8 @@ PresetController::exportPreset( string filename )
 			<< " " << currentPreset.getParameter(n).getValue() << endl;
 		}
 	file.close();
+	
+	return 0;
 }
 
 int
@@ -141,7 +143,6 @@ PresetController::importPreset( string filename )
   
 	if (string(buffer) != "amSynth1.0preset") return -1;
   
-	int preset = -1;
 	file >> buffer;
 	if (string(buffer) == "<preset>") {
 		file >> buffer;

@@ -107,7 +107,7 @@ int main( int argc, char *argv[] )
 	int jack = 0;
 	int enable_audio = 1;
 	int enable_gui = 1;
-	int load_font;
+	int load_font = 0;
 	string xfontname;
 	
 	// set default parameters
