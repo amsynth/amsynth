@@ -12,22 +12,24 @@ amSynth: amSynth.in.1 amSynth.in.2
 	chmod +x amSynth
 
 amSynth_bin_SOURCES = \
-		main.cc main.h \
-		AudioOutput.cc AudioOutput.h \
-		JackOutput.cc JackOutput.h \
-		MidiController.cc MidiController.h \
-		Parameter.cc Parameter.h \
-		Preset.cc Preset.h \
-		PresetController.cc PresetController.h \
-		VoiceAllocationUnit.cc VoiceAllocationUnit.h \
-		Config.cc Config.h base.h UpdateListener.h
+	main.cc main.h \
+	AudioOutput.cc AudioOutput.h \
+	JackOutput.cc JackOutput.h \
+	MidiController.cc MidiController.h \
+	Parameter.cc Parameter.h \
+	Preset.cc Preset.h \
+	PresetController.cc PresetController.h \
+	VoiceAllocationUnit.cc VoiceAllocationUnit.h \
+	Config.cc Config.h base.h UpdateListener.h
 
-amSynth_ptest_SOURCES = ptest.cc ptest.h Parameter.cc Preset.cc \
-		PresetController.cc VoiceAllocationUnit.cc Config.cc
+amSynth_ptest_SOURCES = \
+	ptest.cc ptest.h Parameter.cc Preset.cc \
+	PresetController.cc VoiceAllocationUnit.cc Config.cc
 
 SUBDIRS = drivers VoiceBoard GUI
 
 amSynth_bin_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a GUI/libGUI.a
 amSynth_ptest_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a
 
-LIBS = -lstdc++ -lm -lsndfile `gtkmm-config --libs gtk--`
+LIBS = -lstdc++ -lm -lsndfile
+amSynth_bin_LDFLAGS = `gtkmm-config --libs gtk--`
