@@ -144,7 +144,3 @@ RunInTerminal=true
 
 [Project DBase]
 ShowLocals=true
-
-[filelist]
-0=/home/nixx/code/amSynth/src/GUI/GUI.cc
-1=/home/nixx/code/amSynth/src/GUI/GUI.h
