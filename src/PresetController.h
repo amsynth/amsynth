@@ -58,6 +58,9 @@ class PresetController {
 	 */
 	int exportPreset( string filename );
 	int importPreset( string filename );
+	
+	// set the file to save presets (ie this bank) to
+	void	setBankFile( string filename );
   /**
    * Loads the Preset & Parameter values from disk & restores them in the 
    * current PresetController.
@@ -73,12 +76,13 @@ class PresetController {
     int getCurrPresetNumber() 
 	{ return currentPresetNo; } 
 private:
-    UpdateListener * updateListener;
-    Preset *presets;
-    Preset currentPreset;
-	Preset blankPreset;
-	Preset nullpreset;
-    int currentPresetNo;
+	string		bank_file;
+	UpdateListener*	updateListener;
+	Preset*		presets;
+	Preset 		currentPreset;
+	Preset 		blankPreset;
+	Preset 		nullpreset;
+	int 		currentPresetNo;
 };
 
 #endif

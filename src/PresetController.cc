@@ -10,15 +10,20 @@
 
 PresetController::PresetController()
 {
-    updateListener = 0;
-    presets = new Preset[PRESETS];
+	updateListener = 0;
+	presets = new Preset[PRESETS];
 	currentPresetNo = 0;
 	nullpreset.setName("null preset");
+	
+	string fname( getenv("HOME") );
+	fname += "/.amSynth.presets";
+	
+	bank_file = fname;
 }
 
 PresetController::~PresetController()
 {
-    delete[]presets;
+	delete[]presets;
 }
 
 int
@@ -127,7 +132,7 @@ PresetController::exportPreset( string filename )
 int
 PresetController::importPreset( string filename )
 {	
-	ifstream file(filename.c_str(), ios::in);
+	ifstream file( filename.c_str(), ios::in );
 	char buffer[100];
   
 	if (file.bad())	return -1;
@@ -168,15 +173,19 @@ PresetController::importPreset( string filename )
 	return 1;
 }
 
+void
+PresetController::setBankFile( string filename )
+{
+	bank_file = filename;
+}
+
 int 
 PresetController::savePresets()
 {
 #ifdef _DEBUG
 	cout << "<PresetController::savePresets()" << endl;
 #endif
-	string fname(getenv("HOME"));
-	fname += "/.amSynth.presets";
-	ofstream file(fname.c_str(), ios::out);
+	ofstream file( bank_file.c_str(), ios::out );
   
 	file << "amSynth" << endl;
 	for (int i = 0; i < PRESETS; i++) {
@@ -215,10 +224,7 @@ PresetController::loadPresets()
 #ifdef _DEBUG
 	cout << "<PresetController::loadPresets()>" << endl;
 #endif
-  
-	string fname(getenv("HOME"));
-	fname += "/.amSynth.presets";
-	ifstream file(fname.c_str(), ios::in);
+	ifstream file( bank_file.c_str(), ios::in );
 	char buffer[100];
   
 	if (file.bad()) {

@@ -156,15 +156,21 @@ int main( int argc, char *argv[] )
 		}
 	}
 	file.close();
+	
+	presetController = new PresetController();
+	
 	// get command line options (they override saved prefs.)
 	int opt;
-	while( (opt=getopt(argc, argv, "svhm:c:a:r:p:"))!= -1 ) {
+	while( (opt=getopt(argc, argv, "svhm:c:a:r:p:b:"))!= -1 ) {
 		switch(opt) {
 			case 's':
 				enable_audio = 0;
 				break;
 			case 'm': 
 				config.midi_driver = optarg;
+				break;
+			case 'b': 
+				presetController->setBankFile( optarg );
 				break;
 			case 'c':
 				config.midi_channel = atoi( optarg ); 
@@ -194,7 +200,6 @@ int main( int argc, char *argv[] )
 	<< config.midi_channel << endl << "AUDIO:- device:" 
 	<< config.audio_device << " sample rate:" << config.sample_rate << endl;
 #endif
-	presetController = new PresetController();
 	midi_controller = new MidiController( config );
 	out = new AudioOutput();
 	out->setConfig( config );

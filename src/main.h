@@ -26,6 +26,8 @@ string help_text =
 any options given here override those in the config file ($HOME/.amSynthrc)\n\
 \n\
 options:\n\
+-b <filename>	use <filename> as the bank to store presets,\n\
+		default = ~/.amSynth.presets\n\
 -m device	set the midi driver to use [alsa/oss/auto(default)]\n\
 -c channel	set the midi channel to respond to (default=all)\n\
 -a device	set the sound output driver to use [alsa/oss/auto(default)]\n\
