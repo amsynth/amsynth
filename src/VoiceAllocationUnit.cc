@@ -122,7 +122,6 @@ VoiceAllocationUnit::noteOff(int note)
 	if (!sustain){
 		if (_voices[note]) 
 			_voices[note]->triggerOff();
-		purgeVoices();
 	}
 }
 
@@ -187,5 +186,7 @@ VoiceAllocationUnit::getNFData()
 			activate[i]=0;
 			connected[i] = 1;
 		}
-	return limiter.getFData();
+	float *data = limiter.getFData();
+	purgeVoices();
+	return data;
 }

@@ -49,7 +49,6 @@ private:
   float outBuffer[BUF_SIZE*2];
   char keyPressed[128], sustain, connected[128], activate[128];
   VoiceBoard *_voices[128];
-  pthread_mutex_t voiceMutex[128];
   Preset *_preset;
   PresetController *_presetController;
   Reverb reverb;
