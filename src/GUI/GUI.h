@@ -8,7 +8,9 @@
 #include <string>
 #include <gtk--/box.h>
 #include <gtk--/main.h>
+#include <gtk--/frame.h>
 #include <gtk--/fixed.h>
+#include <gtk--/style.h>
 #include <gtk--/dialog.h>
 #include <gtk--/menu.h>
 #include <gtk--/menubar.h>
@@ -22,11 +24,7 @@
 #include <gtk--/fontselection.h>
 
 #include "../PresetController.h"
-#include "ParameterView.h"
-#include "ParameterKnob.h"
 #include "PresetControllerView.h"
-#include "RadioButtonParameterView.h"
-#include "ParameterSwitch.h"
 #include "ControllerMapDialog.h"
 #include "../UpdateListener.h"
 #include "../Parameter.h"
@@ -34,8 +32,8 @@
 #include "../VoiceAllocationUnit.h"
 #include "../AudioOutput.h"
 
-#include "knob.xpm"
-#include "splash.xpm"
+
+class EditorPanel;
 
 /**
  * @brief The top-level Graphical User Interface
@@ -44,65 +42,54 @@
  * The gui must be init()ialised before entering the main gtk execution loop.
  */
 class GUI:public Gtk::Window, public UpdateListener {
-  public:
-    GUI( Config & config, MidiController & mc, 
-		VoiceAllocationUnit & vau, int pipe[2], GenericOutput *audio, const char *title );
-    ~GUI();
+public:
+	GUI				( Config & config, MidiController & mc, 
+					VoiceAllocationUnit & vau, int pipe[2],
+					GenericOutput *audio, const char *title );
+	~GUI				( );
 	/**
 	 * Sets up all the Interface controls etc..
 	 * Must be called after setPresetController().
 	 */
-    void init();
-    void run();
+	void	init			();
+	void	run			();
 	/**
 	 * The gui needs to be told about the PresetController for the overall
 	 * system, to allow communication between it and the system.
 	 */
-    void setPresetController(PresetController & p_c);
-	void	set_x_font	( const char *x_font_name );
-	string	get_x_font	( )	{ return xfontname; };
-    int delete_event_impl(GdkEventAny *);
-	int delete_events(GdkEventAny *, Gtk::Window *dialog)
-	{ dialog->hide_all(); return 0; };
-    void update();
-	void serve_request();
+	void	setPresetController	(PresetController & p_c);
+	void	set_x_font		( const char *x_font_name );
+	string	get_x_font		( )	{ return xfontname; };
+	int	delete_event_impl	(GdkEventAny *);
+	int	delete_events		(GdkEventAny *, Gtk::Window *dialog)
+					{ dialog->hide_all(); return 0; };
+	void	update();
+	void	serve_request();
 private:
+	void	realize_impl		( );
+
 	int *pipe, lnav;
-	virtual void realize_impl();
 	void event_handler(string text);
 	void arrange();
 	void config_controllers();
 
 	gint idle_callback();
-    gint setActiveParam( GdkEventButton *event, Parameter * param );
+	gint setActiveParam( GdkEventButton *event, Parameter * param );
 	string status;
-    Gtk::VBox vbox;
+	Gtk::VBox vbox;
 
-    Gtk::Style 		*style;
+	Gtk::Style 		*style;
     
 	// menus & stuff
-    Gtk::MenuBar menu_bar;
-    Gtk::Menu file_menu, help_menu, preset_menu;
+	Gtk::MenuBar menu_bar;
+	Gtk::Menu file_menu, help_menu, preset_menu;
 	Gtk::TearoffMenuItem preset_menu_tearoff;
-    Gtk::MenuItem *menu_item[30], file_menu_item, menu_item_quit, help_menu_item,
+	Gtk::MenuItem *menu_item[30], file_menu_item, menu_item_quit, help_menu_item,
 	menu_item_about, preset_menu_item, menu_item_presetname, am_synth;
 	
-    // top level window & main panel
+	// top level window & main panel
 	Gtk::Statusbar statusBar;
-    Gtk::Fixed main_panel;
 	
-	// oscillator controls
-	Gtk::Frame osc1_frame, osc2_frame, osc_mix_frame;
-	Gtk::Fixed osc1_fixed, osc2_fixed;
-	
-	// random stuff
-    Gtk::Frame reverb_frame, distortion_frame, filter_frame, amp_frame;
-    Gtk::VBox osc1_vbox, osc2_vbox, osc_mix_vbox, filter_vbox, amp_vbox;
-    Gtk::HBox filter_hbox1, filter_hbox2, amp_hbox1, amp_hbox2, reverb_hbox, distortion_hbox;
-    
-	// modulation controls
-	Gtk::Frame mod_frame;
-	Gtk::HBox mod_hbox;
 	
 	// about dialog
 	Gtk::Dialog about_window;
@@ -112,8 +99,8 @@ private:
 	
 	// realtime warning dialog
 	Gtk::Dialog realtime_warning;
-    Gtk::Label realtime_text_label;
-    Gtk::Button realtime_close_button;
+	Gtk::Label realtime_text_label;
+	Gtk::Button realtime_close_button;
 	
 	// rename preset dialog
 	Gtk::Dialog preset_rename;
@@ -161,24 +148,24 @@ private:
 	gboolean		record_recording;
 	
 	// quit confirmation dialog
-	Gtk::Dialog quit_confirm;
-	Gtk::Label quit_confirm_label;
-	Gtk::Button quit_confirm_ok, quit_confirm_cancel;
+	Gtk::Dialog		quit_confirm;
+	Gtk::Label		quit_confirm_label;
+	Gtk::Button		quit_confirm_ok, quit_confirm_cancel;
 	
 	// font selection
 	Gtk::FontSelectionDialog	font_sel;
 	string				xfontname;
 
-    Parameter *active_param;
-    ParameterKnob *parameterView[32];
-	ParameterSwitch *param_switch;
-    PresetController *preset_controller;
-    PresetControllerView *presetCV;
-    RadioButtonParameterView *rb_pv[10];
+	Parameter *active_param;
+	PresetController *preset_controller;
+	PresetControllerView *presetCV;
+    
 	Config *config;
 	MidiController *midi_controller;
 	VoiceAllocationUnit *vau;
 	ControllerMapDialog *controller_map_dialog;
 	GenericOutput *audio_out;
+	
+	EditorPanel		*editor_panel;
 };
 #endif

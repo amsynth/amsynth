@@ -260,17 +260,17 @@ int main( int argc, char *argv[] )
 	gdk_input_add( the_pipe[0], GDK_INPUT_READ, &pipe_event, (void*)NULL );
 
 	// give audio/midi threads time to start up first..
-	sleep( 1 );
+	if (enable_audio && jack) sleep( 1 );
 
 	// this can be called SUID:
 	if (enable_audio)
 		gui = new GUI( config, *midi_controller, *vau, the_pipe, out, out->getTitle() );
 	else
 		gui = new GUI( config, *midi_controller, *vau, the_pipe, 0, (const char*)"amSynth (silent)" );
-	if (config.xfontname!="") gui->set_x_font ( config.xfontname.c_str() );
 	gui->setPresetController( *presetController );
 	gui->init();
-
+	if (config.xfontname!="") gui->set_x_font ( config.xfontname.c_str() );
+	
 	// cannot be called SUID:
 	kit.run();
 	}
