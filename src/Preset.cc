@@ -4,7 +4,7 @@
 
 #include "Preset.h"
 
-#define setupTimeParam { parameters[no_p].setType( PARAM_POWER, 3, 0.0005 ); parameters[no_p].setMin( 0.0 );	parameters[no_p].setMax( 2.5 ); parameters[no_p].setLabel("secs"); }
+#define setupTimeParam { parameters[no_p].setType( PARAM_POWER, 3, 0.0005 ); parameters[no_p].setMin( 0.0 );	parameters[no_p].setMax( 2.5 ); parameters[no_p].setLabel("s"); }
 
 Preset::Preset()
 {
@@ -84,8 +84,9 @@ Preset::Preset()
 
     parameters[no_p].setName("master_vol");
     parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(2.0);
+    parameters[no_p].setMax(1.0);
     parameters[no_p].setValue(1.0);
+	parameters[no_p].setType( PARAM_POWER, 2, 0 );
     no_p++;
 
     parameters[no_p].setName( "lfo_freq" );
@@ -168,8 +169,9 @@ Preset::Preset()
     no_p++;
 	
 	parameters[no_p].setName("reverb_wet");
-    parameters[no_p].setMin(0.0);
-    parameters[no_p].setMax(1.0);
+    parameters[no_p].setMin( 0.0 );
+    parameters[no_p].setMax( 1.0 );
+	parameters[no_p].setValue( 0.0 );
     no_p++;
 	
 	parameters[no_p].setName("reverb_dry");

@@ -33,8 +33,8 @@
 #include "../VoiceAllocationUnit.h"
 #include "../AudioOutput.h"
 
-#include "knob.xpm"
-#include "knob.xbm"
+#include "knob50.xpm"
+//#include "knob.xbm"
 #include "splash.xpm"
 
 /**

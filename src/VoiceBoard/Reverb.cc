@@ -16,7 +16,8 @@ Reverb::update()
 	model.setroomsize( roomSizeParam->getControlValue() );
 	model.setdamp( dampParam->getControlValue() );
 	model.setwet( wetParam->getControlValue() );
-	model.setdry( dryParam->getControlValue() );
+	model.setdry( 1-wetParam->getControlValue() );
+//	model.setdry( dryParam->getControlValue() );
 	model.setwidth( widthParam->getControlValue() );
 	//model.update();
 }

@@ -170,8 +170,8 @@ GUI::GUI( Config & config, MidiController & mc,
     // oscillator 1 controls
     osc1_frame.set_shadow_type( frame_shadow );
     osc1_frame.set_label( "Oscillator 1" );
-	osc1_fixed.put( *rb_pv[0], 10, 0 );
-	osc1_fixed.put( *parameterView[18], 85, 10 );
+	osc1_fixed.put( *rb_pv[0], 0, 0 );				// waveform
+	osc1_fixed.put( *parameterView[18], 10, 135 );	// pulsewidth
 //    osc1_vbox.add(*rb_pv[0]);
 //    osc1_vbox.add(*parameterView[18]);
     osc1_frame.add( osc1_fixed );
@@ -179,11 +179,11 @@ GUI::GUI( Config & config, MidiController & mc,
     // oscillator 2 controls
     osc2_frame.set_shadow_type( frame_shadow );
     osc2_frame.set_label( "Oscillator 2" );
-	osc2_fixed.put( *param_switch, 10, 0 );
-	osc2_fixed.put( *rb_pv[1], 10, 35 );
-	osc2_fixed.put( *parameterView[1], 85, 35 );
-	osc2_fixed.put( *rb_pv[2], 10, 170 );
-	osc2_fixed.put( *parameterView[3], 85, 170 );
+	osc2_fixed.put( *param_switch, 85, 0 );			// osc. sync
+	osc2_fixed.put( *rb_pv[1], 10, 0 );				// waveform
+	osc2_fixed.put( *parameterView[1], 150, 70 );	// pulsewidth
+	osc2_fixed.put( *rb_pv[2], 85, 30 );			// octave
+	osc2_fixed.put( *parameterView[3], 150, 0 );	// detune
 //	osc2_vbox.add(*param_switch);
 //    osc2_vbox.add(*rb_pv[1]);
 //    osc2_vbox.add(*parameterView[1]);
@@ -230,22 +230,23 @@ GUI::GUI( Config & config, MidiController & mc,
     mod_frame.set_shadow_type( frame_shadow );
     mod_frame.set_label( "Modulation" );
 	mod_frame.add( mod_hbox );
-    mod_hbox.add( *parameterView[20] );	// lfo rate
-    mod_hbox.add( *rb_pv[4] );			// waveform switch
-	mod_hbox.add( *parameterView[22] );	// freq mod
-	mod_hbox.add( *parameterView[12] );	// filter mod
-	mod_hbox.add( *parameterView[17] );	// amp mod
-//	mod_hbox.add( *parameterView[30] );	// osc1 pwm mod
+    mod_hbox.add( *parameterView[20] );		// lfo rate
+    mod_hbox.add( *rb_pv[4] );				// waveform switch
+	mod_hbox.add( *parameterView[22] );		// freq mod
+	mod_hbox.add( *parameterView[12] );		// filter mod
+	mod_hbox.add( *parameterView[17] );		// amp mod
+//	mod_hbox.add( *parameterView[30] );		// osc1 pwm mod
 
     // reverb :)) section
-    reverb_frame.set_shadow_type(frame_shadow);
-    reverb_frame.set_label("Reverb");
-    reverb_hbox.add(*parameterView[23]);	// room size
-    reverb_hbox.add(*parameterView[24]);	// wet
-    reverb_hbox.add(*parameterView[25]);	// dry
-    reverb_hbox.add(*parameterView[26]);	// width
-    reverb_hbox.add(*parameterView[28]);	// damping
-    reverb_frame.add(reverb_hbox);
+    reverb_frame.set_shadow_type( frame_shadow );
+    reverb_frame.set_label( "Reverb" );
+	reverb_hbox.add( *parameterView[24] );	// amount
+    reverb_hbox.add( *parameterView[23] );	// room size
+//    reverb_hbox.add( *parameterView[24] );	// amount
+//    reverb_hbox.add( *parameterView[25] );	// dry
+    reverb_hbox.add( *parameterView[26] );	// width
+    reverb_hbox.add( *parameterView[28] );	// damping
+    reverb_frame.add( reverb_hbox );
 
 	// distortion section
 	distortion_frame.set_shadow_type(frame_shadow);
@@ -488,7 +489,7 @@ GUI::realize_impl()
 	cout << "<GUI::realize_impl()> initialising Knobs" << endl;
 #endif
 	for(int i=0; i < 31; i++)
-		parameterView[i]->setPixmap( pixmap, 72, 72, 15 );
+		parameterView[i]->setPixmap( pixmap, 50, 50, 15 );
 }
 
 void
@@ -498,23 +499,25 @@ GUI::arrange()
     x = 10;
     y = 35;
     main_panel.move( osc1_frame, x, y );
-	y += 180;
+	y += 220;
     main_panel.move( osc2_frame, x, y );
-    x += 180;
+    x += 75;
 	y += 80;
-    main_panel.move( osc_mix_frame, x, 135 );
-	main_panel.move( mod_frame, 250, y+50 );
-	main_panel.move( distortion_frame, 700, y+50 );
-	x = 300;
+    main_panel.move( osc_mix_frame, x, 35 );
+	main_panel.move( mod_frame, 240, y-80 );
+	main_panel.move( distortion_frame, 530, y-80 );
+	x = 175;
 	y = 35;
     main_panel.move( filter_frame, x, y );
-	x += 320;
+	x += 210;
     main_panel.move( amp_frame, x, y );
-	y += 150;
+	y += 100;
 	main_panel.move( reverb_frame, x, y );
 	main_panel.move( *presetCV, 100, 5 );
 	main_panel.resize_children();
-	main_panel.move( *parameterView[19], 900, 410 );
+	main_panel.move( *parameterView[19], 530, 340);		// master vol.
+	
+	set_usize( 605, 450 );
 }
 
 void 
@@ -577,49 +580,49 @@ GUI::init()
 
     // filter controls
 	parameterView[5]->setParameter(preset->getParameter("filter_env_amount"));
-	parameterView[5]->setName( "Envelope\nAmount" );
+	parameterView[5]->setName( "Env.\nAmount" );
     parameterView[6]->setParameter(preset->getParameter("filter_cutoff"));
-	parameterView[6]->setName( "Cutoff\nFrequency" );
+	parameterView[6]->setName( "Cutoff\nFreq." );
 	parameterView[6]->drawValue( false );
     parameterView[7]->setParameter(preset->getParameter("filter_resonance"));
 	parameterView[7]->setName( "\nResonance" );
 	parameterView[7]->drawValue( false );
     parameterView[8]->setParameter(preset->getParameter("filter_attack"));
-	parameterView[8]->setName( "Attack\nTime" );
+	parameterView[8]->setName( "Attack" );
 	parameterView[8]->drawValue( true );
     parameterView[9]->setParameter(preset->getParameter("filter_decay"));
-	parameterView[9]->setName( "Decay\nTime" );
+	parameterView[9]->setName( "Decay" );
 	parameterView[9]->drawValue( true );
     parameterView[10]->setParameter(preset->getParameter("filter_sustain"));
-	parameterView[10]->setName( "Sustain\nLevel" );
+	parameterView[10]->setName( "Sustain" );
 	parameterView[10]->drawValue( true );
     parameterView[11]->setParameter(preset->getParameter("filter_release"));
-	parameterView[11]->setName( "Release\nTime" );
+	parameterView[11]->setName( "Release" );
 	parameterView[11]->drawValue( true );
     parameterView[12]->setParameter(preset->getParameter("filter_mod_amount"));
-	parameterView[12]->setName( "Filter\nModulation\nAmount" );
+	parameterView[12]->setName( "Filter\nMod.\nAmount" );
 	parameterView[12]->drawValue( false );
 
 
     // voice amplitude
     parameterView[13]->setParameter(preset->getParameter("amp_attack"));
-	parameterView[13]->setName( "Attack\nTime" );
+	parameterView[13]->setName( "Attack" );
 	parameterView[13]->drawValue( true );
     parameterView[14]->setParameter(preset->getParameter("amp_decay"));
-	parameterView[14]->setName( "Decay\nTime" );
+	parameterView[14]->setName( "Decay" );
 	parameterView[14]->drawValue( true );
     parameterView[15]->setParameter(preset->getParameter("amp_sustain"));
-	parameterView[15]->setName( "Sustain\nLevel" );
+	parameterView[15]->setName( "Sustain" );
 	parameterView[15]->drawValue( true );
     parameterView[16]->setParameter(preset->getParameter("amp_release"));
-	parameterView[16]->setName( "Release\nTime" );
+	parameterView[16]->setName( "Release" );
 	parameterView[16]->drawValue( true );
     parameterView[17]->setParameter(preset->getParameter("amp_mod_amount"));
-	parameterView[17]->setName( "Amplitude\nModulation\nAmount" );
+	parameterView[17]->setName( "Amplitude\nMod.\nAmount" );
 	parameterView[17]->drawValue( false );
     /* 18 is taken */
     parameterView[19]->setParameter(preset->getParameter("master_vol"));
-	parameterView[19]->setName( "Master\nVolume" );
+	parameterView[19]->setName( "Master Vol." );
 
     // mod section
     parameterView[20]->setParameter(preset->getParameter("lfo_freq"));
@@ -636,16 +639,16 @@ GUI::init()
 
     // freq control section
     parameterView[22]->setParameter(preset->getParameter("freq_mod_amount"));
-	parameterView[22]->setName( "Frequency\nModulation\nAmount" );
+	parameterView[22]->setName( "Frequency\nMod.\nAmount" );
 	parameterView[22]->drawValue( false );
 
     // reverb control section
     parameterView[23]->setParameter(preset->getParameter("reverb_roomsize"));
 	parameterView[23]->setName( "Room Size" );
     parameterView[24]->setParameter(preset->getParameter("reverb_wet"));
-	parameterView[24]->setName( "Wet Level" );
-    parameterView[25]->setParameter(preset->getParameter("reverb_dry"));
-	parameterView[25]->setName( "Dry Level" );
+	parameterView[24]->setName( "Amount" );
+//    parameterView[25]->setParameter(preset->getParameter("reverb_dry"));
+//	parameterView[25]->setName( "Dry" );
     parameterView[26]->setParameter(preset->getParameter("reverb_width"));
 	parameterView[26]->setName( "Stereo Width" );
 //    parameterView[27]->setParameter(preset->getParameter("reverb_mode"));
