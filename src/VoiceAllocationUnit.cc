@@ -58,14 +58,14 @@ void
 VoiceAllocationUnit::pwChange( float value )
 {
 	float newval = pow(2.0f,value);
-	for (int i=0; i<128; i++) _voices[i].SetPitchBend (newval);
+	for (unsigned i=0; i<_voices.size(); i++) _voices[i].SetPitchBend (newval);
 }
 
 void
 VoiceAllocationUnit::sustainOff()
 {
 	sustain = 0;
-	for(int i=0; i<128; i++)
+	for(unsigned i=0; i<_voices.size(); i++)
 		if (!keyPressed[i]) 
 			_voices[i].triggerOff();
 }
@@ -108,7 +108,7 @@ VoiceAllocationUnit::noteOff(int note)
 void 
 VoiceAllocationUnit::purgeVoices()
 {
-	for (int note = 0; note < 128; note++) 
+	for (unsigned note = 0; note < _voices.size(); note++) 
 		if (active[note] && (0 == _voices[note].getState()))
 		{
 			mActiveVoices--;
@@ -119,8 +119,7 @@ VoiceAllocationUnit::purgeVoices()
 void
 VoiceAllocationUnit::killAllVoices()
 {
-	int i;
-	for (i=0; i<128; i++) active[i] = false;
+	for (unsigned i=0; i<_voices.size(); i++) active[i] = false;
 	reverb->mute();
 	mActiveVoices = 0;
 }
@@ -134,7 +133,7 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes)
 	while (0 < framesLeft)
 	{
 		int fr = (framesLeft < kMaxGrainSize) ? framesLeft : kMaxGrainSize;
-		for (int i=0; i<128; i++) if (active[i]) _voices[i].ProcessSamplesMix (l+j, fr, mMasterVol);
+		for (unsigned i=0; i<_voices.size(); i++) if (active[i]) _voices[i].ProcessSamplesMix (l+j, fr, mMasterVol);
 		j += fr; framesLeft -= fr;
 	}
 
@@ -155,6 +154,6 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	case kReverbWidth:		reverb->setwidth (value);	break;
 	case kDistortionCrunch:	distortion->SetCrunch (value);	break;
 	
-	default: for (int i=0; i<128; i++) _voices[i].UpdateParameter (param, value); break;
+	default: for (unsigned i=0; i<_voices.size(); i++) _voices[i].UpdateParameter (param, value); break;
 	}
 }
