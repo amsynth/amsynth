@@ -19,10 +19,12 @@ public:
     int read(unsigned char *midi_event_buffer);
     int open( string device, string name );
     int close();
+    int get_alsa_client_id()	{ return client_id; };
 private:
 #ifdef with_alsa
 	snd_seq_t *seq_handle;
 	snd_midi_event_t *seq_midi_parser;
+	int client_id;
 	int portid;
 	int npfd;
 	struct pollfd *pfd;

@@ -113,16 +113,16 @@ GUI::GUI( Config & config, MidiController & mc,
 	for(int i=0; i<30; i++)
 		menu_item[i] = new Gtk::MenuItem;
 	
-    // the menu bar
+	// the menu bar
 	menu_bar.set_shadow_type( GTK_SHADOW_NONE );
-    menu_bar.append( *menu_item[0] );
+	menu_bar.append( *menu_item[0] );
 	menu_bar.append( *menu_item[10] );
 	menu_bar.append( *menu_item[2] );
 	menu_bar.append( *menu_item[29] );
 	
-    // the file menu
-    menu_item[0]->add_label( "File" );
-    menu_item[0]->set_submenu( file_menu );
+	// the file menu
+	menu_item[0]->add_label( "File" );
+	menu_item[0]->set_submenu( file_menu );
 
 	//file_menu.append( *menu_item[2] );
 	menu_item[1]->add_label( "Quit" );
@@ -131,11 +131,20 @@ GUI::GUI( Config & config, MidiController & mc,
 	menu_item[3]->add_label( "Capture output to file" );
 	menu_item[3]->activate.connect( 
 		bind(slot(this, &GUI::event_handler),"record_dialog"));
+	menu_item[4]->add_label( "Launch Virtual Keybord" );
+	menu_item[4]->activate.connect(
+			bind(slot(this, &GUI::event_handler),"vkeybd"));
+	
+	
 	// grey out menu item if there is no recording interface present
 	if (!audio_out->canRecord())
 		menu_item[3]->set_sensitive( false );
+	// grey out virtual keyboard if we arent running alsa
+	if (config.alsa_seq_client_id==0)
+		menu_item[4]->set_sensitive( false );
 	
 	file_menu.append( *menu_item[3] );
+	file_menu.append( *menu_item[4] );
 	file_menu.append( *menu_item[1] );
 	
 	menu_item[2]->add_label( "Configure MIDI Controllers" );
@@ -904,7 +913,17 @@ GUI::event_handler(string text)
 		    record_statusbar.push( 1, "capture status: STOPPED" );
 	    }
 	    return;
-    } else {
+    }
+    else if (text=="vkeybd")
+    {
+	    string tmp = "vkeybd --addr ";
+	    char tc[5];
+	    sprintf( tc, "%d", config->alsa_seq_client_id );
+	    tmp += string(tc);
+	    tmp += ":0 &";
+	    system( tmp.c_str() );
+    } 
+    else {
 		cout << "no handler for event: " << text << endl;
 		return;
     }

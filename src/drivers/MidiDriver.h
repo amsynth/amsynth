@@ -23,6 +23,7 @@ class MidiDriver {
     virtual int read(unsigned char *midi_event_buffer) = 0;
     virtual int open(string device, string name) = 0;
     virtual int close() = 0;
+    virtual int get_alsa_client_id()	{ return 0; };
 };
 
 #endif

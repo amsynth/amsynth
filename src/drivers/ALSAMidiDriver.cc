@@ -52,6 +52,9 @@ int ALSAMidiDriver::open(string device, string name)
 	pfd = (struct pollfd *)alloca(npfd * sizeof(struct pollfd));
 	snd_seq_poll_descriptors(seq_handle, pfd, npfd, POLLIN);
 
+
+	client_id = snd_seq_client_id( seq_handle );
+
 	return 0;
 #else
 	return -1;

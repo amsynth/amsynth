@@ -250,7 +250,10 @@ int main( int argc, char *argv[] )
 	
 	// make GDK loop read events from the pipe
 	gdk_input_add( the_pipe[0], GDK_INPUT_READ, &pipe_event, (void*)NULL );
-	
+
+	// give audio/midi threads time to start up first..
+	sleep( 1 );
+		
 	gui = new GUI( config, *midi_controller, *vau, the_pipe, *out, out->getTitle() ); // this can be called SUID
 	gui->setPresetController( *presetController );
 	gui->init();

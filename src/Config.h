@@ -71,6 +71,8 @@ public:
 	 * The name of the ALSA PCM device to use
 	 */
 	string alsa_audio_device;
+	/* internal */
+	int 	alsa_seq_client_id;
 };
 
 #endif
