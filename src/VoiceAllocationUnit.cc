@@ -167,7 +167,7 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes)
 
 	for (unsigned j=0; j<nframes; j+=64)
 		for (int i=0; i<128; i++) if (active[i])
-			_voices[i]->Process64SamplesMix (l+j, mMasterVol);
+			_voices[i]->ProcessSamplesMix (l+j, 64, mMasterVol);
 
 	distortion->Process (l, nframes);
 	reverb->Process (l, l,r, nframes);
