@@ -31,7 +31,7 @@ SUBDIRS = drivers VoiceBoard GUI
 amSynth_bin_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a GUI/libGUI.a
 amSynth_ptest_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a
 
-LIBS = -lstdc++ -lm -lsndfile
+LIBS = -lstdc++ -lm
 amSynth_bin_LDFLAGS = `gtkmm-config --libs gtk--`
 
 install-exec-hook:
