@@ -10,12 +10,7 @@
 #include <unistd.h>
 #include "../Parameter.h"
 #include "../UpdateListener.h"
-
-struct __Request {
-  SigC::Slot0<void> slot;
-};
-
-typedef struct __Request Request;
+#include "Request.h"
 
 class ParameterView : public UpdateListener {
   public:

@@ -9,8 +9,10 @@
 using SigC::slot;
 using SigC::bind;
 
-ControllerMapDialog::ControllerMapDialog( MidiController & mc, PresetController & pc )
+ControllerMapDialog::ControllerMapDialog( int pipe_d, MidiController & mc, 
+											PresetController & pc )
 {
+	piped = pipe_d;
 	midi_controller = &mc;
 	preset_controller = &pc;
 	
@@ -31,15 +33,28 @@ ControllerMapDialog::ControllerMapDialog( MidiController & mc, PresetController 
 		sprintf( cstr, "%d:", i );
 		str += string( cstr );
 		label[i].set_text( str );
-		table.attach( label[i], 0, 1, i, i+1 );
+		table.attach( active[i], 0, 1, i, i+1 );
+		table.attach( label[i], 1, 2, i, i+1 );
 		combo[i].set_popdown_strings( gl );
 		combo[i].get_entry()->set_editable( false );
 		combo[i].get_entry()->changed.connect(
 			bind(slot(this, &ControllerMapDialog::callback),i) );
-		table.attach( combo[i], 1, 2, i, i+1 );
+		table.attach( combo[i], 2, 3, i, i+1 );
 	}
 
+	request.slot = slot( this, &ControllerMapDialog::_updateActive_ );
+	
+	midi_controller->getLastControllerParam().addUpdateListener( *this );
+	
 	_update_();
+	_updateActive_();
+}
+
+void
+ControllerMapDialog::update()
+{
+	if( write( piped, &request, sizeof(request) ) != sizeof(request) )
+		cout << "ParameterSwitch: error writing to pipe" << endl;
 }
 
 void
@@ -49,6 +64,17 @@ ControllerMapDialog::_update_()
 	for(int i=0; i<32; i++)
 		combo[i].get_entry()->set_text( midi_controller->getController(i).getName() );
 	supress_callback = false;
+}
+
+void
+ControllerMapDialog::_updateActive_()
+{
+	int i;
+	int lastactive = (int)midi_controller->getLastControllerParam().getValue();
+	for( i=0; i<32; i++ ){
+		if( i==lastactive ) active[i].set_text( "<> " );
+		else active[i].set_text( "" );
+	}
 }
 
 void

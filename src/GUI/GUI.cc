@@ -626,7 +626,8 @@ GUI::init()
     arrange();
 	
 	// MIDI Controllers dialog
-	controller_map_dialog = new ControllerMapDialog( *midi_controller, *preset_controller );
+	controller_map_dialog = new ControllerMapDialog( pipe[1], 
+						*midi_controller, *preset_controller );
 
 	char cstr[10];
 	status = "  Midi Driver: ";

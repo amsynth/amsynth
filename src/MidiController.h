@@ -8,6 +8,7 @@
 #include "PresetController.h"
 #include "drivers/MidiInterface.h"
 #include "VoiceAllocationUnit.h"
+#include "Parameter.h"
 
 /**
  * The MidiController is run as a thread which reads from the MIDI input device,
@@ -43,6 +44,8 @@ class MidiController {
 	 */
     void stop();
 	void setController( int controller_no, Parameter &param );
+	Parameter & getLastControllerParam()
+	{ return last_active_controller; };
 	Parameter & getController( int controller_no );
   private:
     void doMidi();
@@ -58,6 +61,7 @@ class MidiController {
     int bytes_read;
     unsigned char *buffer;
     unsigned char status, data, channel, byte;
+	Parameter last_active_controller;
 	Parameter *midi_controllers[32]; // there are 32 standard MIDI controllers
 };
 #endif

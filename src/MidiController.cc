@@ -11,6 +11,9 @@ MidiController::MidiController()
     buffer = new unsigned char[MIDI_BUF_SIZE];
     presetController = 0;
     _va = 0;
+	last_active_controller.setMin( 0 );
+	last_active_controller.setMax( 32 );
+	last_active_controller.setStep( 1 );
 	for( int i=0; i<32; i++ ) midi_controllers[i] = 0;
 }
 
@@ -251,6 +254,8 @@ MidiController::controller_change(unsigned char controller,
 			break;
 
 		default:
+			if( last_active_controller.getValue() != controller )
+				last_active_controller.setValue( controller );
 			float fval = value/(float)127;
 //			cout << "<MidiController> controller: " << (float) controller
 //				<< " value: " << (float) value << "fval " << fval << endl;
