@@ -33,3 +33,7 @@ amSynth_ptest_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a
 
 LIBS = -lstdc++ -lm -lsndfile
 amSynth_bin_LDFLAGS = `gtkmm-config --libs gtk--`
+
+install-exec-hook:
+	chown root $(DESTDIR)$(libexecdir)/amSynth.bin;\
+	chmod +s $(DESTDIR)$(libexecdir)/amSynth.bin
