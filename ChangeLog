@@ -1,3 +1,6 @@
+16/02/2003
+- font selection dialog for custom interface font.
+
 25/01/2003
 - now checks for vkeybd on startup and greys out menu item if not found :)
 - fixed linking error on non-libsndfile systems
