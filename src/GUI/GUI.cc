@@ -339,6 +339,11 @@ GUI::create_menus	( )
 	//
         Menu *menu_file = manage (new Menu());
         MenuList& list_file = menu_file->items ();
+
+	list_file.push_back (MenuElem("New Instance","",
+			bind(slot(this, &GUI::command_run),"amSynth")));
+	
+	list_file.push_back (SeparatorElem());
 	
 	list_file.push_back (MenuElem("_Open Bank","<control>O",
 			slot(this, &GUI::bank_open)));
