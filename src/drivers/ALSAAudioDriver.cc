@@ -12,7 +12,9 @@ ALSAAudioDriver::write(float *buffer, int frames)
 {
 #ifdef with_alsa
 	int i,p,tmp;
-//	audiobuf = (unsigned char*)malloc( (frames*_channels*2) );
+//	if (!audiobuf)
+	audiobuf = (unsigned char*)malloc((frames*_channels*2));
+	
 	p=0;
 	for( i=0; i<(frames); i++ ){
 		tmp = (int)((float)32767*buffer[i]);
@@ -54,8 +56,6 @@ ALSAAudioDriver::open( Config & config )
 	config.sample_rate = snd_pcm_hw_params_get_rate( hw_params, 0 );
 	config.audio_driver = "ALSA";
 
-	audiobuf = (unsigned char*)malloc( (64*_channels*2) );
-
 	return 0;
 #else
 	return -1;
@@ -91,7 +91,6 @@ int ALSAAudioDriver::setRealtime()
 
 ALSAAudioDriver::ALSAAudioDriver()
 {
-  // WRITE ME!
 }
 
 ALSAAudioDriver::~ALSAAudioDriver()
