@@ -4,6 +4,8 @@
 
 #include "ALSAAudioDriver.h"
 
+using namespace std;
+
 int
 ALSAAudioDriver::write(float *buffer, int frames)
 {
