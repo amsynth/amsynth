@@ -8,8 +8,6 @@ libEffects_a_SOURCES = \
 	denormals.h \
 	Distortion.cc \
 	Distortion.h \
-	Reverb.cc \
-	Reverb.h \
 	revmodel.cpp \
 	revmodel.hpp \
 	SoftLimiter.cc \

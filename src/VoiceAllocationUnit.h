@@ -13,7 +13,7 @@
 
 class VoiceBoard;
 class SoftLimiter;
-class Reverb;
+class revmodel;
 class Distortion;
 
 class VoiceAllocationUnit : public UpdateListener
@@ -51,7 +51,7 @@ private:
   PresetController *_presetController;
   Config *config;
   SoftLimiter	*limiter;
-  Reverb	*reverb;
+  revmodel		*reverb;
   Distortion	*distortion;
 
 	float	mMasterVol;

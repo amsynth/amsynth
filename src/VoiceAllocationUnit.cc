@@ -5,7 +5,7 @@
 #include "VoiceAllocationUnit.h"
 #include "VoiceBoard/VoiceBoard.h"
 #include "Effects/SoftLimiter.h"
-#include "Effects/Reverb.h"
+#include "Effects/revmodel.hpp"
 #include "Effects/Distortion.h"
 
 #include <iostream>
@@ -24,7 +24,7 @@ VoiceAllocationUnit::VoiceAllocationUnit( Config & config )
 #endif
 
 	limiter = new SoftLimiter (config.sample_rate);
-	reverb = new Reverb;
+	reverb = new revmodel;
 	distortion = new Distortion;
 	
 	AllocateMemory (config.buffer_size);
@@ -171,7 +171,7 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes)
 			_voices[i]->ProcessSamplesMix (l+j, 64, mMasterVol);
 
 	distortion->Process (l, nframes);
-	reverb->Process (l, l,r, nframes);
+	reverb->processreplace (l,l, l,r, nframes, 1);
 	limiter->Process (l,r, nframes);
 }
 
@@ -181,12 +181,12 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	switch (param)
 	{
 	case kMasterVol:	mMasterVol = value;		break;
-	case kReverbRoomsize:	reverb->SetRoomSize (value);	break;
-	case kReverbDamp:	reverb->SetDamp (value);	break;
-	case kReverbWet:	reverb->SetWet (value);		break;
-	case kReverbDry:	break;
-	case kReverbWidth:	reverb->SetWidth (value);	break;
-	case kReverbMode:	reverb->SetMode (value);	break;
+	case kReverbRoomsize:	reverb->setroomsize (value);	break;
+	case kReverbDamp:		reverb->setdamp (value);	break;
+	case kReverbWet:		reverb->setwet (value); reverb->setdry(1.0-value); break;
+	case kReverbWidth:		reverb->setwidth (value);	break;
+	case kReverbMode:		reverb->setmode (value);	break;
+	case kReverbDry:		break;
 	
 	case kDistortionDrive:	break;
 	case kDistortionCrunch:	distortion->SetCrunch (value);	break;
