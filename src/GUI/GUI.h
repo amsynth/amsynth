@@ -66,7 +66,8 @@ public:
 	void	update();
 	void	serve_request();
 private:
-	void	realize_impl		( );
+	void		realize_impl		( );
+	Gtk::MenuBar*	create_menus		( );
 
 	int *pipe, lnav;
 	void event_handler(string text);
@@ -79,14 +80,7 @@ private:
 	Gtk::VBox vbox;
 
 	Gtk::Style 		*style;
-    
-	// menus & stuff
-	Gtk::MenuBar menu_bar;
-	Gtk::Menu file_menu, help_menu, preset_menu;
-	Gtk::TearoffMenuItem preset_menu_tearoff;
-	Gtk::MenuItem *menu_item[30], file_menu_item, menu_item_quit, help_menu_item,
-	menu_item_about, preset_menu_item, menu_item_presetname, am_synth;
-	
+    	
 	// top level window & main panel
 	Gtk::Statusbar statusBar;
 	

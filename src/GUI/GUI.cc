@@ -1,5 +1,6 @@
 /* amSynth
- * (c) 2002 Nick Dowell
+ * (c) 2002-2003 Nick Dowell
+ * portions of this file (c) 2003 Darrick Servis
  */
  
 #include "GUI.h"
@@ -71,127 +72,12 @@ GUI::GUI( Config & config, MidiController & mc,
 
 	active_param = 0;
 
-    
 
 	style = Gtk::Style::create ( );
-
-
-	/* the menu
-	   how do menus work in GTK-- ?
-
-       --+Gtk::MenuBar  (the bar at the top of the screen)
-       |
-       +--+Gtk::MenuItem    (eg "File")
-       |
-       +--+Gtk::Menu     (a container)
-       |
-       +--Gtk::MenuItem   (eg "Save")
-       +--Gtk::MenuItem   (eg "Quit")
-     */
-	for(int i=0; i<30; i++)
-		menu_item[i] = new Gtk::MenuItem;
 	
-	// the menu bar
-	menu_bar.set_shadow_type( GTK_SHADOW_NONE );
-	menu_bar.append( *menu_item[0] );
-	menu_bar.append( *menu_item[10] );
-	menu_bar.append( *menu_item[2] );
-	menu_bar.append( *menu_item[29] );
-	
-	// the file menu
-	menu_item[0]->add_label( "File" );
-	menu_item[0]->set_submenu( file_menu );
-
-	//file_menu.append( *menu_item[2] );
-	menu_item[1]->add_label( "Quit" );
-	menu_item[1]->activate.connect( 
-		bind(slot(this, &GUI::event_handler),"quit"));
-	menu_item[3]->add_label( "Capture output to file" );
-	menu_item[3]->activate.connect( 
-		bind(slot(this, &GUI::event_handler),"record_dialog"));
-	menu_item[4]->add_label( "Launch Virtual Keybord" );
-	menu_item[4]->activate.connect(
-			bind(slot(this, &GUI::event_handler),"vkeybd"));
-	menu_item[5]->add_label	( "Select GUI font" );
-	menu_item[5]->activate.connect(
-			bind(slot(this,&GUI::event_handler), "font"));
-	
-	
-	//
-	// grey out menu item if there is no recording interface present
-	// 
-	if (audio_out && !audio_out->canRecord())
-		menu_item[3]->set_sensitive( false );
-	//
-	// grey out virtual keyboard if we arent running alsa, or no vkeybd..
-	// 
-	if (config.alsa_seq_client_id==0)
-		menu_item[4]->set_sensitive( false );
-	// test for presence of vkeybd.
-	int sys_rtn = system("vkeybd --help 2> /dev/null");
-	if (WEXITSTATUS(sys_rtn)==127)	// exit code 127 = program not found
-		menu_item[4]->set_sensitive( false );
-	
-	file_menu.append( *menu_item[3] );
-	file_menu.append( *menu_item[4] );
-	file_menu.append( *menu_item[5] );
-	file_menu.append( *menu_item[1] );
-	
-	menu_item[2]->add_label( "Configure MIDI Controllers" );
-	menu_item[2]->activate.connect( 
-		slot(this, &GUI::config_controllers));
-	
-	// the Preset menu
-	menu_item[10]->add_label( "Preset" );
-	menu_item[10]->set_submenu( preset_menu );
-	preset_menu.append( preset_menu_tearoff );
-	preset_menu.append( *menu_item[11] );
-	menu_item[11]->add_label( "New" );
-	menu_item[11]->activate.connect
-		(bind(slot(this, &GUI::event_handler),"preset::new"));
-	preset_menu.append( *menu_item[12] );
-	menu_item[12]->add_label( "Rename" );
-	menu_item[12]->activate.connect
-		(bind(slot(this, &GUI::event_handler),"preset::rename"));
-	preset_menu.append( *menu_item[13] );
-	menu_item[13]->add_label( "Copy" );
-	menu_item[13]->activate.connect
-		(bind(slot(this, &GUI::event_handler),"preset::copy"));
-	preset_menu.append( *menu_item[16] );
-	menu_item[16]->add_label( "Save As..." );
-	menu_item[16]->activate.connect
-		(bind(slot(this, &GUI::event_handler),"preset::saveas"));
-	preset_menu.append( *menu_item[14] );
-	menu_item[14]->add_label( "Randomise" );
-	menu_item[14]->activate.connect
-		(bind(slot(this, &GUI::event_handler),"preset::randomise"));
-	preset_menu.append( *menu_item[15] );
-	menu_item[15]->add_label( "Delete" );
-	menu_item[15]->activate.connect
-		(bind(slot(this, &GUI::event_handler),"preset::delete"));
-	preset_menu.append( *menu_item[18] );
-	menu_item[18]->add_label( "Import as current" );
-	menu_item[18]->activate.connect
-		(bind(slot(this, &GUI::event_handler),"preset::import"));
-	menu_item[17]->add_label( "Export current" );
-	preset_menu.append( *menu_item[17] );
-	menu_item[17]->activate.connect
-		(bind(slot(this, &GUI::event_handler),"preset::export"));
-	
-	menu_item[29]->add_label("Analogue Modelling SYNTHesizer");
-	menu_item[29]->activate.connect
-		(bind(slot(this, &GUI::event_handler),"help::about"));
-	menu_item[29]->right_justify();
-	
-#ifdef _DEBUG
-	cout << "<GUI::GUI()> created menus" << endl;
-#endif
-	
-	/*
-	 * The main panel
-	 */
 	
 	presetCV = new PresetControllerView( pipe[1], *this->vau );
+
 #ifdef _DEBUG
 	cout << "<GUI::GUI()> created presetCV" << endl;
 #endif
@@ -431,6 +317,145 @@ GUI::realize_impl	( )
 	about_pixmap = new Gtk::Pixmap( splash_xpm );
 }
 
+Gtk::MenuBar*
+GUI::create_menus	( )
+{
+	using namespace Gtk::Menu_Helpers;
+        using namespace Gtk;
+	
+	//
+	// File menu
+	//
+        Menu *menu_file = manage (new Menu());
+        MenuList& list_file = menu_file->items ();
+	/*
+	list_file.push_back (MenuElem("_Open Bank","<control>O",
+			bind(slot(this, &GUI::event_handler),"bank::open")));
+	list_file.push_back (MenuElem("_Save Bank","<control>S",
+			bind(slot(this, &GUI::event_handler),"bank::close")));
+	
+	list_file.push_back (SeparatorElem());
+	
+	list_file.push_back (MenuElem("_Import Preset","<control>I",
+			bind(slot(this, &GUI::event_handler),"preset::import")));
+	list_file.push_back (MenuElem("_Export Preset","<control>E",
+			bind(slot(this, &GUI::event_handler),"preset::export")));
+	
+	list_file.push_back (SeparatorElem());
+	*/	
+	list_file.push_back (MenuElem("_Quit","<control>Q",
+			bind(slot(this, &GUI::event_handler),"quit")));
+	
+	
+	//
+	// Preset menu
+	//
+        Menu *menu_preset = manage (new Menu());
+        MenuList& list_preset = menu_preset->items ();
+	
+	/*
+	list_preset.push_back (MenuElem("_Copy","<control>C",
+			bind(slot(this, &GUI::event_handler),
+			"preset::copy")));
+	list_preset.push_back (MenuElem("_Paste","<control>V",
+			bind(slot(this, &GUI::event_handler),
+			"preset::paste")));
+	
+	list_preset.push_back (SeparatorElem());
+	
+	list_preset.push_back (MenuElem("_Randomise","<control>R",
+			bind(slot(this, &GUI::event_handler),
+			"preset::randomise")));
+	*/
+	list_preset.push_back (manage (new TearoffMenuItem ()));
+
+	list_preset.push_back (MenuElem("_New","<control>N",
+			bind(slot(this, &GUI::event_handler),
+			"preset::new")));	
+	list_preset.push_back (MenuElem("Rename","",
+			bind(slot(this, &GUI::event_handler),
+			"preset::rename")));
+	list_preset.push_back (MenuElem("Copy","",
+			bind(slot(this, &GUI::event_handler),
+			"preset::copy")));
+	list_preset.push_back (MenuElem("Save As...","",
+			bind(slot(this, &GUI::event_handler),
+			"preset::saveas")));
+	list_preset.push_back (MenuElem("_Randomise","<control>R",
+			bind(slot(this, &GUI::event_handler),
+			"preset::randomise")));
+	list_preset.push_back (MenuElem("Delete","",
+			bind(slot(this, &GUI::event_handler),
+			"preset::delete")));
+	list_preset.push_back (MenuElem("Import as current","",
+			bind(slot(this, &GUI::event_handler),
+			"preset::import")));
+	list_preset.push_back (MenuElem("Export current","",
+			bind(slot(this, &GUI::event_handler),
+			"preset::export")));
+		
+	//
+	// Config menu
+	//
+        Menu *menu_config = manage (new Menu());
+        MenuList& list_config = menu_config->items ();
+
+	list_config.push_back (MenuElem("Interface Font...","",
+			bind(slot(this, &GUI::event_handler),"font")));
+	list_config.push_back (MenuElem("MIDI Controllers...","<control>M",
+			slot(this, &GUI::config_controllers)));
+	
+	
+	//
+	// Utils menu
+	//
+        Menu *menu_utils = manage (new Menu());
+        MenuList& list_utils = menu_utils->items ();
+
+	MenuItem *menu_item = manage (new MenuItem("Virtual Keyboard"));
+	menu_item->activate.connect 
+			(bind(slot(this, &GUI::event_handler),"vkeybd"));
+	if (config->alsa_seq_client_id==0)
+		menu_item->set_sensitive( false );
+	// test for presence of vkeybd.
+	int sys_rtn = system("vkeybd --help 2> /dev/null");
+	if (WEXITSTATUS(sys_rtn)==127)
+		// exit code 127 = program not found
+		menu_item->set_sensitive( false );
+	list_utils.push_back (*menu_item);
+
+	menu_item = manage (new MenuItem("Record to .wav file..."));
+	menu_item->activate.connect 
+			(bind(slot(this, &GUI::event_handler),"record_dialog"));
+	if (!audio_out->canRecord ())
+		menu_item->set_sensitive (false);
+	list_utils.push_back (*menu_item);
+	
+		
+	
+	//
+	// Add menus to menubar
+	//
+	MenuBar *menu_bar = manage (new MenuBar ());
+	
+	menu_bar->set_shadow_type( GTK_SHADOW_NONE );
+	
+	MenuList& list_bar = menu_bar->items();
+	list_bar.push_back (MenuElem("_File","<alt>F",*menu_file));
+	list_bar.push_back (MenuElem("_Preset","<alt>P",*menu_preset));
+	list_bar.push_back (MenuElem("_Config","<alt>C",*menu_config));
+	list_bar.push_back (MenuElem("_Utils","<alt>U",*menu_utils));
+	
+	
+	menu_item = manage (new MenuItem("Analogue Modelling SYNTHesizer"));
+	menu_item->right_justify();
+	menu_item->activate.connect (
+			bind(slot(this, &GUI::event_handler),"help::about"));
+	list_bar.push_back (*menu_item);
+	
+	return menu_bar;
+}
+
 
 void
 GUI::config_controllers()
@@ -454,13 +479,13 @@ GUI::init()
 	
 	editor_panel = new EditorPanel (preset, pipe[1]);
 	
-	vbox.pack_start (menu_bar);
+	vbox.pack_start (*(create_menus ()));
 	Gtk::HBox *tmphbox = manage (new Gtk::HBox());
 	tmphbox->add (*(manage( new Gtk::Label () )));
 	tmphbox->add (*presetCV);
 	tmphbox->add (*(manage( new Gtk::Label () )));
 	vbox.pack_start (*tmphbox,0,0);
-	vbox.pack_start (*editor_panel);
+	vbox.pack_start (*editor_panel,0,0);
 	vbox.pack_start (statusBar);
 	add (vbox);
 	arrange();
