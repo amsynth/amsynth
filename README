@@ -7,8 +7,9 @@ It currently uses the OSS audio and midi devices for its input and output.
 
 * This isn't an official stable release. *
 It is very close to amSynth 1.0 however. 
-The features are all here now. New features will be added into amSynthe 
-(which will be started in the next month or so), not amSynth.
+The basic structure of amSynth is not forseen to change - amSynthe (same 
+homepage) has a different goal of a more complex and powerful engine, but it has
+not yet been started.
 
 I hope the amSynth works well for you, and you can get the sounds you want to
 create! Good luck!
@@ -26,14 +27,14 @@ Configuration
 -------------
 To save passing command-line options every time, you can set the options in the
 ~/.amSynthrc file. To get an idea what this file looks like, there's an example 
-in (this) top-level directory. copy it to your home dir. and edit it to your
+in the `skel' directory. copy it to your home dir. and edit it to your
 taste.
 
 Presets
 -------
 Presets are stored in the file ~/.amSynth.presets
 By default, you will have no presets to play with, you will have to create them
-yourself. I have included a ".amSynth.presets" file in this top-level directory,
+yourself. I have included a ".amSynth.presets" file in the `skel' directory,
 so you can start playing with some useable sounds straight away. Copy it to your
 home dir. 
 
@@ -45,10 +46,11 @@ I am aware of some issues:-
 + Sometimes the program crashes as soon as you play a note on your MIDI input.
   This only happens on certain GTK themes for some reason(?!?). Themes i have
   had no problems with are "Default", "IceGradient", "ThinIce", "Step"...
+  (note - this has not been experienced for some time, maybe it's fixed?)
 
 + Under certain conditions (parameter settings) the sound output dies and never
   recovers. This is an issue with the reverb (Freebirth) and the amSynth filter.
-  This is being worked on...
+  This is being worked on... (and appears to be fixed)
 
 + Careful with the polyphony! If you play too many notes at once for your CPU, 
   two things can happen:
