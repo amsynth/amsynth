@@ -7,8 +7,11 @@
 
 #include <iostream>
 #include <unistd.h>
-#include <sndfile.h>
 #include <time.h>
+
+#ifdef _with_sndfile
+#include <sndfile.h>
+#endif
 
 int main( int argc, char *argv[] )
 {
@@ -43,6 +46,7 @@ int main( int argc, char *argv[] )
 	presetController->selectPreset( 1 );
 	presetController->selectPreset( 0 );
 
+#ifdef _with_sndfile
 	//
 	// prepare sndfile for .wav output
 	// 
@@ -58,7 +62,7 @@ int main( int argc, char *argv[] )
 	sndfile = sf_open( "ptest-out.wav", SFM_WRITE, &sf_info );
 	// specify that floating point data is normalised (between -1.0 and 1.0)
 	sf_command( sndfile, SFC_SET_NORM_FLOAT, NULL, SF_TRUE );
-	
+#endif
 	
 	//
 	// now run the test.
@@ -82,7 +86,9 @@ int main( int argc, char *argv[] )
 	while (i<total_calls)
 	{
 		buffer = vau->getNFData();
+#ifdef _with_sndfile
 		sf_writef_float( sndfile, buffer, BUF_SIZE );
+#endif
 		i++;
 	}
 	
@@ -99,8 +105,10 @@ int main( int argc, char *argv[] )
 	std::cout << "***** performance index = " << 
 		((float)ms_audio/(float)ms_elapsed) << " *****" << std::endl;
 	
+#ifdef _with_sndfile
 	// dont forget to close the output file, else it wont be written!
 	sf_close( sndfile );
+#endif
 	
 	delete presetController;
 	delete vau;
