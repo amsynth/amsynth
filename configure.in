@@ -114,11 +114,11 @@ else
 	profiling=no
 fi
 
-dnl if test $profiling = "no"; then 
-dnl  if test $debugging = "no"; then
-    CXXFLAGS="$CXXFLAGS -g"
-dnl  fi 
-dnlfi
+if test $profiling = "no"; then 
+  if test $debugging = "no"; then
+    CXXFLAGS="$CXXFLAGS -O3 -ffast-math -fno-exceptions -fomit-frame-pointer"
+  fi 
+fi
 
 
 dnl
