@@ -112,4 +112,7 @@ RadioButtonParameterView::set_style( Gtk::Style& style )
 {
 	local_style = style.copy();
 	frame.set_style( *local_style );
+	for (int i=0; i<MAX_BUTTONS; i++)
+		if( radio_button[i].get_child() )
+			radio_button[i].get_child()->set_style( *local_style );
 }
