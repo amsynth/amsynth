@@ -4,6 +4,11 @@
 
 #include "Preset.h"
 
+#ifdef _DEBUG
+#include <iostream>
+using namespace std;
+#endif
+
 void setupTimeParam (Parameter& p) { p.setType( Parameter::PARAM_POWER, 3, 0.0005 ); p.setMin( 0.0 );	p.setMax( 2.5 ); p.setLabel("s"); }
 Parameter TimeParameter (string name, Param id)
 {

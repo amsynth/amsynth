@@ -7,10 +7,12 @@
 
 #include <string>
 #include <vector>
-#include <math.h>
+#include <sstream>
+#include <cmath>
 #include "base.h"
 #include "UpdateListener.h"
 
+#define clip(in,min,max) ((in) < (min) ? (min) : ((in) > (max) ? (max) : (in)))
 
 /**
  * @brief a Parameter holds a particular value for a slider, selector switch 
@@ -35,9 +37,14 @@ public:
 	float			getValue		() { return _value; }
 	void			setValue		(float value);
 
+	float			GetNormalisedValue	() { return (getValue()-getMin())/(getMax()-getMin()); }
+	void			SetNormalisedValue	(float val) { setValue (val*(getMax()-getMin())+getMin()); }
+
 	// The control value for this parameter.
 	// The control value is what the synthesis will use to get its values.
 	inline float	getControlValue	() { return controlValue; }
+
+	const string	GetStringValue	() { std::ostringstream o; o << controlValue; return o.str(); }
 
 	const string	getName			() { return _name; }
 	Param			GetId			() { return mParamId; }
@@ -92,6 +99,39 @@ private:
 	bool							continuous;
 	float							_value, _min, _max, _step, controlValue, base, offset;
 	std::vector<UpdateListener*>	updateListeners;
+};
+
+class mParameter
+{
+public:
+			mParameter (string name, float min=0.0, float max=1.0, float def=0.0, string label = "") 
+				: mName(name), mLabel(label), mMin(min), mMax(max) { SetNativeValue (def); }
+
+	string	GetName				() { return mName; }
+	string	GetLabel			() { return mLabel; }
+
+	string	GetStringValue		() { std::ostringstream o; o << mNativeValue; return o.str(); }
+
+	void	SetNormalisedValue	(float val)
+	{ 
+		mNormalisedValue = clip(val,0.0,1.0);
+		mNativeValue = (mMax-mMin) * mNormalisedValue + mMin;
+	}
+	void	SetNativeValue		(float val)
+	{
+		mNativeValue = clip(val,mMin,mMax);
+		mNormalisedValue = (val-mMin)/(mMax-mMin);
+	}
+	float	GetNormalisedValue	() { return mNormalisedValue; }
+	float	GetNativeValue		() { return mNativeValue; }
+
+private:
+	string		mName;
+	string		mLabel;
+	float		mNormalisedValue;
+	float		mNativeValue;
+	float		mMin;
+	float		mMax;
 };
 
 #endif

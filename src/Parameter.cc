@@ -73,10 +73,10 @@ Parameter::setValue(float value)
 			controlValue = offset + base*_value;
 		break;
 		case PARAM_EXP:
-			controlValue = offset + ::pow((double)base,_value);
+			controlValue = offset + ::pow((float)base,_value);
 		break;
 		case PARAM_POWER:
-			controlValue = offset + ::pow( _value, (double)base );
+			controlValue = offset + ::pow( _value, (float)base );
 #ifdef _DEBUG
 		default:
 		cout << "<Parameter> mode is undefined" << endl;
@@ -120,5 +120,5 @@ Parameter::getSteps()
 void
 Parameter::random_val()
 {
-	setValue( ((random()/(double)RAND_MAX) * (getMax()-getMin()) + getMin()) );
+	setValue( ((rand()/(double)RAND_MAX) * (getMax()-getMin()) + getMin()) );
 }
