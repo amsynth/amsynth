@@ -51,6 +51,7 @@ revmodel::revmodel()
 	setwidth(initialwidth);
 	setmode(initialmode);
 
+	update();
 	// Buffer will be full of rubbish - so we MUST mute them
 	mute();
 }
@@ -82,8 +83,6 @@ revmodel::processreplace(float *inputL, float *inputR, float *outputL, float *ou
 	{
 		outL = outR = 0;
 		input = (*inputL) * gain;
-		// input=0;
-//		if (input > 9999 || input < -9999) cout << input << endl;
 
 		// Accumulate comb filters in parallel
 		for(i=0; i<numcombs; i++)

@@ -155,7 +155,7 @@ int main( int argc, char *argv[] )
 	
 	// get command line options (they override saved prefs.)
 	int opt;
-	while((opt=getopt(argc, argv, "svhm:c:a:r:p:"))!= -1) {
+	while( (opt=getopt(argc, argv, "svhm:c:a:r:p:"))!= -1 ) {
 		switch(opt) {
 			case 's':
 				enable_audio = 0;
@@ -164,16 +164,16 @@ int main( int argc, char *argv[] )
 				config.midi_driver = optarg; 
 				break;
 			case 'c':
-				config.midi_channel = atoi(optarg); 
+				config.midi_channel = atoi( optarg ); 
 				break;
 			case 'a':
 				config.audio_driver = optarg; 
 				break;
 			case 'r':
-				config.sample_rate = atoi(optarg);
+				config.sample_rate = atoi( optarg );
 				break;
 			case 'p':
-				config.polyphony = atoi(optarg); 
+				config.polyphony = atoi( optarg );
 				break;
 			case 'v':
 				cout << "amSynth version " << VERSION << endl 
@@ -197,34 +197,35 @@ int main( int argc, char *argv[] )
 	out = new AudioOutput();
 	out->setConfig( config );
 	vau = new VoiceAllocationUnit( config ); //after were sure of sample_rate
-	out->setInput(*vau);
+	out->setInput( *vau );
 	
 	presetController->loadPresets();
 	
 	int audio_res;
-	if(enable_audio)
-		audio_res = pthread_create(&audioThread, NULL, audio_thread, NULL);
+	if( enable_audio )
+		audio_res = pthread_create( &audioThread, NULL, audio_thread, NULL );
 	int midi_res;
-	midi_res = pthread_create(&midiThread, NULL, midi_thread, NULL);
+	midi_res = pthread_create( &midiThread, NULL, midi_thread, NULL );
   
 	// need to drop our suid-root permissions :-
 	// GTK will not work SUID for security reasons..
-	setuid(getuid());
-	seteuid(getuid());
+	setuid( getuid() );
+	seteuid( getuid() );
 	
-	midi_controller->setVAU(*vau);
-	midi_controller->setPresetController(*presetController);
+	midi_controller->setVAU( *vau );
+	midi_controller->setPresetController( *presetController );
   
-	vau->setPreset(presetController->getCurrentPreset());
+	vau->setPreset( presetController->getCurrentPreset() );
 	
-	Gtk::Main kit(&argc, &argv); // this can be called SUID
+	Gtk::Main kit( &argc, &argv ); // this can be called SUID
 	
 	// make GDK loop read events from the pipe
 	gdk_input_add( the_pipe[0], GDK_INPUT_READ, &pipe_event, (void*)NULL );
 	
 	gui = new GUI( config, *midi_controller, the_pipe ); // this can be called SUID
-	gui->setPresetController(*presetController);
+	gui->setPresetController( *presetController );
 	gui->init();
+	presetController->selectPreset( 0 );
 	kit.run(); // this _cannot_ be run SUID
 
 #ifdef _DEBUG

@@ -16,7 +16,7 @@ ParameterKnob::ParameterKnob( int pipe_d )
 	
     parameter = 0;
 
-    draw_value = true;
+    draw_value = false;
 
     add(label);
     add(knob);

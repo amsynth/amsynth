@@ -618,8 +618,10 @@ GUI::init()
 	status = "  Midi Driver: ";
 	status += config->midi_driver;
 	status += "      Midi Channel: ";
-	sprintf( cstr, "%2d", config->midi_channel );
-	status += string(cstr);
+	if( config->midi_channel ){
+		sprintf( cstr, "%2d", config->midi_channel );
+		status += string(cstr);
+	} else status += "All";
 	status += "            Audio Driver: ";
 	status += config->audio_driver;
 	status += "      Sample Rate:";
