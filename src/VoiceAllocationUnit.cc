@@ -82,7 +82,7 @@ VoiceAllocationUnit::noteOn(int note, float velocity)
 	
 	keyPressed[note] = 1;
 	
-	if ((mActiveVoices < mMaxVoices) && !active[note])
+	if ((!mMaxVoices || (mActiveVoices < mMaxVoices)) && !active[note])
 	{
 		_voices[note].reset();
 		active[note]=1;
