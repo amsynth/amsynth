@@ -10,21 +10,18 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 
+AC_LANG(C++)
+
 dnl
 dnl
 dnl	Check for required headers & libraries
 dnl
 dnl
 
-AC_CHECK_LIB(m, sin,, AC_MSG_ERROR("FATAL - math library not found"))
-AC_CHECK_LIB(dl, dlopen,, AC_MSG_ERROR("FATAL - libdl not found"))
-AC_CHECK_LIB(pthread, pthread_create,, AC_MSG_ERROR("FATAL - pthread library not found"))
-AC_CHECK_PROG(have_gtkmm, gtkmm-config, yes, AC_MSG_ERROR("FATAL - gtk-- not found"))
-if test "$have_gtkmm" = "no"; then
-	AC_MSG_ERROR("FATAL - gtk-- not found!!")
-	exit
-fi
-
+AC_CHECK_LIB(m, sin,, exit)
+AC_CHECK_LIB(dl, dlopen,, exit)
+AC_CHECK_LIB(pthread, pthread_create,, exit)
+AM_PATH_GTKMM(1.2.8,,exit)
 
 dnl
 dnl
@@ -63,6 +60,17 @@ AC_ARG_WITH(jack, [  --with-jack             enable JACK support (default=yes)],
   fi
 ], with_jack=yes)
 
+dnl     .WAV OUT support
+AC_ARG_WITH(sndfile, [  --with-sndfile          enable .WAV file output support (default=yes)],
+[
+   if test $withval = "yes"; then
+     with_sndfile=yes
+   else
+     with_sndfile=no
+  fi
+], with_sndfile=yes)
+
+
 
 dnl
 dnl
@@ -73,6 +81,7 @@ dnl
 AC_CHECK_HEADERS(sys/soundcard.h,, 	with_oss=no)
 AC_CHECK_HEADERS(alsa/asoundlib.h,, 	with_alsa=no)
 AC_CHECK_HEADERS(jack/jack.h,, 		with_jack=no)
+AC_CHECK_HEADERS(sndfile.h,,            with_sndfile=no)
 
 
 
@@ -93,14 +102,27 @@ AC_OPTIMISE
 AC_MSG_CHECKING(which cpu to optimise for...)
 AC_CPU
 
+
+dnl
+dnl
+dnl	Set compiler options accordingly
+dnl
+dnl
+
 if test "$with_oss" = "yes";  then
-	CXXFLAGS="$CXXFLAGS -Dwith_oss" 
+	CXXFLAGS="$CXXFLAGS -Dwith_oss"
 fi
 if test "$with_alsa" = "yes"; then 
-	CXXFLAGS="$CXXFLAGS -Dwith_alsa -lasound" 
+	CXXFLAGS="$CXXFLAGS -Dwith_alsa"
+	LDFLAGS="$LDFLAGS -lasound"
 fi
 if test "$with_jack" = "yes"; then 
-	CXXFLAGS="$CXXFLAGS -Dwith_jack -ljack" 
+	CXXFLAGS="$CXXFLAGS -Dwith_jack"
+	LDFLAGS="$LDFLAGS -ljack"
+fi
+if test "$with_sndfile" = "yes"; then
+	CXXFLAGS="$CXXFLAGS -Dwith_sndfile"
+	LDFLAGS="$LDFLAGS -lsndfile"
 fi
 
 AC_OUTPUT([
@@ -121,11 +143,13 @@ dnl
 echo
 echo $PACKAGE $VERSION
 echo
-echo GTK-- version........................ : `gtkmm-config --version`
+echo GTK-- version......................................... : `gtkmm-config --version`
 echo
-echo Build with OSS support............... : $with_oss
-echo Build with ALSA support.............. : $with_alsa
-echo Build with JACK support.............. : $with_jack
+echo Build with OSS support................................ : $with_oss
+echo Build with ALSA support............................... : $with_alsa
+echo Build with JACK support............................... : $with_jack
+echo
+echo Use libsndfile for .wav output support................ : $with_sndfile
 echo
 echo configure complete. now type \'make\' to build $PACKAGE
 echo and then, as root, \'make install\' to install

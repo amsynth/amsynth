@@ -5,7 +5,9 @@
 #ifndef _AUDIO_OUTPUT_H
 #define _AUDIO_OUTPUT_H
 
+#ifdef with_sndfile
 #include <sndfile.h>
+#endif
 
 #include "VoiceBoard/Synth--.h"
 #include "drivers/AudioInterface.h"
@@ -56,7 +58,11 @@ public:
   void stop() {
     running = 0;
   };
+#ifdef with_sndfile
 	int	canRecord	( )	{ return 1; };
+#else
+	int	canRecord	( )	{ return 0; };
+#endif
 	void	startRecording	( );
 	void 	stopRecording	( );
 	void 	setOutputFile	( string file )	{ wavoutfile = file; };
@@ -71,8 +77,10 @@ private:
   AudioInterface out;
   string wavoutfile;
   int recording;
+#ifdef with_sndfile
   SNDFILE *sndfile;
   SF_INFO sf_info;
+#endif
 };
 
 #endif				// _AUDIO_OUTPUT_H
