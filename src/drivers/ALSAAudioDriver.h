@@ -7,7 +7,7 @@
 
 #include "AudioDriver.h"
 
-#ifdef _ALSA
+#ifdef with_alsa
 #include <alsa/asoundlib.h>
 #endif
 
@@ -32,7 +32,7 @@ class ALSAAudioDriver:public AudioDriver {
     int _channels;
     int _format;
 	unsigned char *audiobuf;
-#ifdef _ALSA
+#ifdef with_alsa
 	snd_pcm_t *playback_handle;
     snd_pcm_hw_params_t *hw_params;
     snd_pcm_sw_params_t *sw_params;
@@ -40,4 +40,4 @@ class ALSAAudioDriver:public AudioDriver {
 };
 
 
-#endif				// _ALSA_AUDIO_DRIVER_H
+#endif				// with_alsa_AUDIO_DRIVER_H

@@ -5,7 +5,9 @@
 #ifndef _JACK_OUTPUT_H
 #define _JACK_OUTPUT_H
 
+#ifdef with_jack
 #include <jack/jack.h>
+#endif
 
 #include "AudioOutput.h"
 #include "VoiceBoard/Synth--.h"

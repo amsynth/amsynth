@@ -9,7 +9,7 @@
 int
 ALSAMidiDriver::read(unsigned char *midi_event_buffer)
 {
-#ifdef _ALSA
+#ifdef with_alsa
 	snd_seq_event_t *ev;
 	if ( poll(pfd, npfd, 100000) > 0 ){
 		snd_seq_event_input( seq_handle, &ev );
@@ -30,7 +30,7 @@ int ALSAMidiDriver::close()
 
 int ALSAMidiDriver::open(string device, string name)
 {
-#ifdef _ALSA
+#ifdef with_alsa
 	if (snd_seq_open(&seq_handle, "hw", SND_SEQ_OPEN_DUPLEX, 0) < 0) {
 		cerr << "Error opening ALSA sequencer.\n";
 		exit(1);
@@ -60,7 +60,7 @@ int ALSAMidiDriver::open(string device, string name)
 
 ALSAMidiDriver::ALSAMidiDriver()
 {
-#ifdef _ALSA
+#ifdef with_alsa
 	if( snd_midi_event_new( 4, &seq_midi_parser ) )
 		cout << "Error creating midi event parser\n";
 #endif

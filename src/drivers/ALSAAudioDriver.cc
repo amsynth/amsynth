@@ -10,7 +10,7 @@ using namespace std;
 int
 ALSAAudioDriver::write(float *buffer, int frames)
 {
-#ifdef _ALSA
+#ifdef with_alsa
 	int i,p,tmp;
 	audiobuf = (unsigned char*)malloc( (frames*_channels*2) );
 	p=0;
@@ -36,7 +36,7 @@ ALSAAudioDriver::open( Config & config )
 {
 	_channels = config.channels;
 	_rate = config.sample_rate;
-#ifdef _ALSA
+#ifdef with_alsa
 	if(snd_pcm_open(&playback_handle, config.alsa_audio_device.c_str(), SND_PCM_STREAM_PLAYBACK, 0)<0){
 		cerr << "ALSA: cannot open audio device " << config.alsa_audio_device << endl;
 		return -1;
@@ -62,7 +62,7 @@ ALSAAudioDriver::open( Config & config )
 
 void ALSAAudioDriver::close()
 {
-#ifdef _ALSA
+#ifdef with_alsa
 	snd_pcm_close( playback_handle );
 #endif
 }

@@ -17,4 +17,4 @@ SUBDIRS = drivers VoiceBoard GUI
 
 amSynth_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a GUI/libGUI.a
 
-LIBS = -lstdc++ -lm -lsndfile -ljack `gtkmm-config --libs gtk--`
+LIBS = -lstdc++ -lm -lsndfile `gtkmm-config --libs gtk--`

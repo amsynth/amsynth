@@ -12,7 +12,7 @@
 int
 ALSAmmapAudioDriver::xrun_recovery()
 {
-#ifdef _ALSA
+#ifdef with_alsa
         if (err == -EPIPE) {    /* under-run */
 				periods = 0;
                 err = snd_pcm_prepare(playback_handle);
@@ -36,14 +36,14 @@ return -1;
         }
 #else
 	return -1;
-#endif //_ALSA
+#endif //with_alsa
 }
 
 
 int
 ALSAmmapAudioDriver::write(float *buffer, int frames)
 {
-#ifdef _ALSA
+#ifdef with_alsa
 	int i,p,tmp;
 	snd_pcm_sframes_t avail, size, commitres;
 	snd_pcm_uframes_t offset, lframes = frames / 2;
@@ -102,7 +102,7 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 				cerr << "( periods % 0x100)\n";
 	}*/
 	return 0;
-#else //_ALSA
+#else //with_alsa
 	return -1;
 #endif
 }
@@ -112,7 +112,7 @@ ALSAmmapAudioDriver::open( Config & config )
 {
 	_channels = config.channels;
 	_rate = config.sample_rate;
-#ifdef _ALSA
+#ifdef with_alsa
 	if(snd_pcm_open(&playback_handle, config.alsa_audio_device.c_str(), SND_PCM_STREAM_PLAYBACK, 0)<0){
 		cerr << "ALSA: cannot open audio device " << config.alsa_audio_device << endl;
 		return -1;
@@ -139,7 +139,7 @@ ALSAmmapAudioDriver::open( Config & config )
 
 void ALSAmmapAudioDriver::close()
 {
-#ifdef _ALSA
+#ifdef with_alsa
 	snd_pcm_close( playback_handle );
 #endif
 }

@@ -3,12 +3,12 @@
  **/
 
 #ifndef _ALSA_MIDI_DRIVER_H
-#define _ALSA_MIDI_DRIVER_H
+#define _ALSA_alsa_MIDI_DRIVER_H
 
 #include "MidiDriver.h"
 
 #include <iostream>
-#ifdef _ALSA
+#ifdef with_alsa
 #include <alsa/asoundlib.h>
 #endif
 
@@ -20,7 +20,7 @@ public:
     int open( string device, string name );
     int close();
 private:
-#ifdef _ALSA
+#ifdef with_alsa
 	snd_seq_t *seq_handle;
 	snd_midi_event_t *seq_midi_parser;
 	int portid;
@@ -30,4 +30,4 @@ private:
     int _bytes_read;
 };
 
-#endif				// _ALSA_MIDI_DRIVER_H
+#endif				// with_alsa_MIDI_DRIVER_H

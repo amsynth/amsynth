@@ -185,7 +185,7 @@ int main( int argc, char *argv[] )
 				config.polyphony = atoi( optarg );
 				break;
 			case 'v':
-				cout << "amSynth version 1.0beta4.\ncompiled " << __DATE__ 
+				cout << "amSynth version 1.0 rc2.\ncompiled " << __DATE__ 
 				<< " " << __TIME__ << endl;
 				return 0;
 			case 'h':
@@ -204,12 +204,14 @@ int main( int argc, char *argv[] )
 	//
 	// initialise audio
 	//
+#ifdef with_jack
 	if (config.audio_driver=="jack"||config.audio_driver=="JACK")
 	{
 		jack = 1;
 		out = new JackOutput();
 	}
 	else
+#endif
 		out = new AudioOutput();
 	
 	out->setConfig( config );

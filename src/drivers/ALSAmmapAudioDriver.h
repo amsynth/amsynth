@@ -3,11 +3,11 @@
  **/
 
 #ifndef _ALSA_MMAP_AUDIO_DRIVER_H
-#define _ALSA_MMAP_AUDIO_DRIVER_H
+#define _ALSA_alsa_MMAP_AUDIO_DRIVER_H
 
 #include "AudioDriver.h"
 
-#ifdef _ALSA
+#ifdef with_alsa
 #include <alsa/asoundlib.h>
 #endif
 
@@ -33,7 +33,7 @@ private:
 	int		_channels;
 	int		_format;
 	unsigned char	*audiobuf;
-#ifdef _ALSA
+#ifdef with_alsa
 	snd_pcm_t		*playback_handle;
 	snd_pcm_hw_params_t	*hw_params;
 	snd_pcm_sw_params_t	*sw_params;
@@ -43,4 +43,4 @@ private:
 };
 
 
-#endif				// _ALSA_MMAP_AUDIO_DRIVER_H
+#endif				// with_alsa_MMAP_AUDIO_DRIVER_H

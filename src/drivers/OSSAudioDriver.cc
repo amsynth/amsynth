@@ -1,7 +1,7 @@
 /* amSynth
  * (c) 2001-2003 Nick Dowell
  **/
-#ifdef _OSS
+#ifdef with_oss
 #include <sys/soundcard.h>
 #endif
 
@@ -17,7 +17,7 @@
 int
 OSSAudioDriver::write(float *buffer, int frames)
 {
-#ifdef _OSS
+#ifdef with_oss
     unsigned char outBuf[frames * 2 * channels_];
     int p = 0;
 	int i;
@@ -41,7 +41,7 @@ OSSAudioDriver::write(float *buffer, int frames)
 
 int OSSAudioDriver::open( Config & config )
 {
-#ifdef _OSS
+#ifdef with_oss
 #ifdef _DEBUG
 	cout << "<OSSAudioDriver::open()>" << endl;
 #endif
@@ -76,7 +76,7 @@ int OSSAudioDriver::open( Config & config )
 
 int OSSAudioDriver::setChannels(int channels)
 {
-#ifdef _OSS
+#ifdef with_oss
     channels_ = channels;
     switch (channels_) {
     case 1:
@@ -101,7 +101,7 @@ int OSSAudioDriver::setChannels(int channels)
 
 int OSSAudioDriver::setRate(int rate)
 {
-#ifdef _OSS
+#ifdef with_oss
     rate_ = rate;
     // set sampling rate
     if (ioctl(dsp_handle_, SNDCTL_DSP_SPEED, &rate_) == -1) {
@@ -112,9 +112,9 @@ int OSSAudioDriver::setRate(int rate)
 	cout << "<OSSAudioDriver::setRate()> rate set to " << rate << endl;
 #endif //_DEBUG
     return 0;
-#else // not _OSS
+#else // not with_oss
     return -1;
-#endif //_OSS
+#endif //with_oss
 }
 
 int OSSAudioDriver::setRealtime()
@@ -135,7 +135,7 @@ int OSSAudioDriver::setRealtime()
      * 0004 (16) frags @128bytes = good (both)         [2048 bytes total buffer]
      * unlimited              = disastrous for latency..
      */
-#ifdef _OSS
+#ifdef with_oss
     int frag = 0x00060008;
     if (ioctl(dsp_handle_, SNDCTL_DSP_SETFRAGMENT, &frag) == -1) {
 	perror("err: ioctl fragment");
@@ -149,7 +149,7 @@ int OSSAudioDriver::setRealtime()
 
 void OSSAudioDriver::close()
 {
-#ifdef _OSS
+#ifdef with_oss
     if (dsp_handle_ != -1) {
 	::close(dsp_handle_);
 #ifdef _DEBUG
@@ -161,7 +161,7 @@ void OSSAudioDriver::close()
 
 OSSAudioDriver::OSSAudioDriver()
 {
-#ifdef _OSS
+#ifdef with_oss
     rate_ = 0;
     stereo_ = 1;
     format_ = AFMT_S16_LE;

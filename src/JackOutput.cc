@@ -5,6 +5,7 @@
 #include "JackOutput.h"
 #include <iostream>
 
+#ifdef with_jack
 NFSource	*myinput;
 float		*inbuf, *pt;
 float		*lout, *rout;
@@ -60,9 +61,11 @@ jack_shutdown (void *arg)
 	exit (1);
 }
 
+#endif
 
 JackOutput::JackOutput()
 {
+#ifdef with_jack
 	client_name = "amSynth";
 	
 	// check if there are already any amSynth jack clients...
@@ -127,19 +130,24 @@ JackOutput::JackOutput()
 			JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0 );
 	r_port = jack_port_register( client, "R out",
 			JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0 );
+#endif
 }
 
 void
 JackOutput::setConfig( Config & config )
 {
+#ifdef with_jack
 	config.sample_rate = sample_rate;
 	config.buffer_size = buf_size;
+#endif
 }
 
 void
 JackOutput::setInput( NFSource & source )
 {
+#ifdef with_jack
 	myinput = &source;
+#endif
 }
 
 void
@@ -155,6 +163,7 @@ JackOutput::stopRecording()
 void 
 JackOutput::run()
 {
+#ifdef with_jack
 	if (jack_activate (client)) 
 	{
 		std::cerr << "cannot activate JACK client\n";
@@ -162,10 +171,13 @@ JackOutput::run()
 	}
 	jack_connect(client, jack_port_name(l_port), "alsa_pcm:playback_1");
 	jack_connect(client, jack_port_name(r_port), "alsa_pcm:playback_2");
+#endif
 }
 
 void
 JackOutput::stop()
 {
+#ifdef with_jack
 	jack_client_close (client);
+#endif
 }

@@ -35,11 +35,7 @@ AudioOutput::setConfig( Config & config )
 #endif
 	
 	
-	if( out.open( config ) == -1)
-	{
-		//perror("error: could not open dsp device");
-		exit(-1);
-	}
+	if( out.open( config ) == -1) exit(-1);
 }
 
 void

@@ -28,7 +28,7 @@ AC_DEFUN(AC_DEBUGGING,
 
   if test "${enable_debug}" = "yes" ; then
   	AC_MSG_RESULT([yes])
-  	CXXFLAGS="${CXXFLAGS} -g -Wall -D_DEBUG"
+  	CXXFLAGS="${CXXFLAGS} -g -Wall"
 	COMPOPSTR="debugging ${COMPOPSTR}"
 	OPTION_DEBUG="yes"
   else
