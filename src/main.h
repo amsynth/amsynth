@@ -8,6 +8,7 @@
 #include "GUI/GUI.h"
 #include "GUI/ParameterView.h"
 #include "Config.h"
+#include "base.h"
 #include <string>
 
 PresetController *presetController;

@@ -6,6 +6,7 @@
 #define _PRESET_H
 
 #include <string>
+#include "base.h"
 #include "Parameter.h"
 
 /**

@@ -5,6 +5,8 @@
 #ifndef _SYNTH_H
 #define _SYNTH_H
 
+#include "../base.h"
+
 // 128 frames @ 44100 = 2.9ms,  @ 48000 = 2.67ms
 // 256 frames @ 44100 = 5.8ms,  @ 48000 = 5.33ms
 // 512 frames @ 44100 = 11.6ms, @ 48000 = 10.6ms

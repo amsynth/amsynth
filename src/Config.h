@@ -6,6 +6,7 @@
 #define CONFIG_H
  
 #include <string>
+#include "base.h"
 
 /**
  * @brief Encapsulates any configuration parameters which must be shared between

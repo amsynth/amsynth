@@ -7,6 +7,7 @@
 
 #include <string>
 #include <math.h>
+#include "base.h"
 #include "UpdateListener.h"
 
 #define MAX_ULS 256

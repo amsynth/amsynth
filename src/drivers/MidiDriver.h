@@ -1,5 +1,5 @@
-/* Synth--
- * (c) Nick Dowell
+/* amSynth
+ * (c) 2001, 2002 Nick Dowell
  **/
 
 #ifndef _MIDI_DRIVER_H
@@ -8,6 +8,7 @@
 #define MIDI_BUF_SIZE 1
 
 #include <string>
+#include "../base.h"
 
 /** \class MidiDriver
  *  \brief a Generic MIDI Interface
