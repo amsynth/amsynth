@@ -618,7 +618,7 @@ GUI::init()
 	status = "  Midi Driver: ";
 	status += config->midi_driver;
 	status += "      Midi Channel: ";
-	sprintf( cstr, "%2d", config->midi_driver );
+	sprintf( cstr, "%2d", config->midi_channel );
 	status += string(cstr);
 	status += "            Audio Driver: ";
 	status += config->audio_driver;
