@@ -134,6 +134,7 @@ JackOutput::setConfig( Config & config )
 #ifdef with_jack
 	config.sample_rate = sample_rate;
 	config.buffer_size = buf_size;
+	config.audio_driver = "JACK";
 #endif
 }
 

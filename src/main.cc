@@ -202,8 +202,21 @@ int main( int argc, char *argv[] )
 			}
 		}
 		else
+			if (config.audio_driver=="auto"||config.audio_driver=="AUTO")
+			{
+				jack = 1;
+				out = new JackOutput();
+				if (((JackOutput*)out)->init()!=0)
+				{
+					jack = 0;
+					out = new AudioOutput();
+				}
+			}
+			else
+			{
+				out = new AudioOutput();
+			}
 #endif
-			out = new AudioOutput();
 	
 		out->setConfig( config );
 	}
