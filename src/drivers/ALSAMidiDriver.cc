@@ -57,8 +57,10 @@ int ALSAMidiDriver::open(string device)
 
 ALSAMidiDriver::ALSAMidiDriver()
 {
+#ifdef _ALSA
 	if( snd_midi_event_new( 4, &seq_midi_parser ) )
 		cout << "Error creating midi event parser\n";
+#endif
 }
 
 ALSAMidiDriver::~ALSAMidiDriver()
