@@ -24,7 +24,8 @@ ALSAAudioDriver::write(float *buffer, int frames)
 	
 	while( snd_pcm_writei( playback_handle, audiobuf, frames/2 ) < 0){
 		snd_pcm_prepare( playback_handle );
-		cerr << "buffer underrun - please set realtime priority\n";
+		config->xruns++;
+//		cerr << "buffer underrun - please set realtime priority\n";
 	}
 	free( audiobuf );
 	return 0;
@@ -55,6 +56,8 @@ ALSAAudioDriver::open( Config & config )
 	
 	config.sample_rate = snd_pcm_hw_params_get_rate( hw_params, 0 );
 	config.audio_driver = "ALSA";
+	
+	this->config = &config;
 
 	return 0;
 #else

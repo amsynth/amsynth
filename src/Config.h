@@ -84,6 +84,8 @@ public:
 	string	alsa_seq_client_name;
 	int 	alsa_seq_client_id;
 	int	debug_drivers;
+	// used to count buffer underruns
+	int	xruns;
 	
 private:
 	int	load_font;

@@ -326,6 +326,9 @@ int main( int argc, char *argv[] )
 #endif		
 	}
 	
+	if (config.debug_drivers && config.xruns) 
+		std::cerr << config.xruns << " audio buffer underruns occurred\n";
+	
 	midi_controller->stop();
 	// we probably need to kill the midi thread, as it is always waiting for
 	// a new midi event..

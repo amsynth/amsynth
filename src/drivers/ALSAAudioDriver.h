@@ -32,6 +32,8 @@ class ALSAAudioDriver:public AudioDriver {
     int _channels;
     int _format;
 	unsigned char *audiobuf;
+	
+	Config		*config;
 #ifdef with_alsa
 	snd_pcm_t *playback_handle;
     snd_pcm_hw_params_t *hw_params;

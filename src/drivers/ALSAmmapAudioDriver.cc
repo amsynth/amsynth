@@ -58,15 +58,16 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 		{
 			char b[ 80];
 			sprintf( b, "%i", err = avail);
-			cerr << "snd_pcm_avail_update error " << b << "=\"" 
-			<< snd_strerror( err) << "\"\n";
+//			cerr << "snd_pcm_avail_update error " << b << "=\"" 
+//			<< snd_strerror( err) << "\"\n";
 			return xrun_recovery();
 		}
 		lframes = frames / 2;
 		if( (int)avail >= (int)lframes ) break;
 		if( 0 > ( err = snd_pcm_wait( playback_handle, -1)))
 		{
-			cerr << "snd_pcm_wait error\n";
+//			cerr << "snd_pcm_wait error\n";
+			config->xruns++;
 			return xrun_recovery();
 		}
 	}
@@ -130,6 +131,8 @@ ALSAmmapAudioDriver::open( Config & config )
 	
 	config.sample_rate = snd_pcm_hw_params_get_rate( hw_params, 0 );
 	config.audio_driver = "ALSA-MMAP";
+	
+	this->config = &config;
 
 	periods = 0;
 	return 0;
