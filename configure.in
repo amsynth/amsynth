@@ -1,12 +1,12 @@
 AC_INIT(src/main.cc)
 AC_CONFIG_AUX_DIR(config)
-AM_INIT_AUTOMAKE([amSynth], [cvs])
+AM_INIT_AUTOMAKE([amSynth], [1.0-rc3])
 AM_CONFIG_HEADER(config.h)
 
 
 
 addCXXFLAGS="-D_REENTRANT"
-CXXFLAGS="-Wall -g"
+CXXFLAGS="-Wall"
 
 AC_PROG_CXX
 AC_PROG_INSTALL
