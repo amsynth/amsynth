@@ -455,6 +455,11 @@ GUI::init()
 	editor_panel = new EditorPanel (vau, preset, pipe[1]);
 	
 	vbox.pack_start (menu_bar);
+	Gtk::HBox *tmphbox = manage (new Gtk::HBox());
+	tmphbox->add (*(manage( new Gtk::Label () )));
+	tmphbox->add (*presetCV);
+	tmphbox->add (*(manage( new Gtk::Label () )));
+	vbox.pack_start (*tmphbox,0,0);
 	vbox.pack_start (*editor_panel);
 	vbox.pack_start (statusBar);
 	add (vbox);
