@@ -33,12 +33,26 @@
 #include "knob.xbm"
 #include "splash.xpm"
 
+/**
+ * @brief The top-level Graphical User Interface
+ *
+ * Remember to call setPresetController() before calling init().
+ * The gui must be init()ialised before entering the main gtk execution loop.
+ */
 class GUI:public Gtk::Window, public UpdateListener {
   public:
     GUI( Config & config );
     ~GUI();
+	/**
+	 * Sets up all the Interface controls etc..
+	 * Must be called after setPresetController().
+	 */
     void init();
     void run();
+	/**
+	 * The gui needs to be told about the PresetController for the overall
+	 * system, to allow communication between it and the system.
+	 */
     void setPresetController(PresetController & p_c);
     int delete_event_impl(GdkEventAny *);
     void update();
@@ -50,6 +64,7 @@ class GUI:public Gtk::Window, public UpdateListener {
     gint setActiveParam( GdkEventButton *event, Parameter * param );
 	string status;
     Gtk::VBox vbox;
+
 	// menus & stuff
     Gtk::MenuBar menu_bar;
     Gtk::Menu file_menu, help_menu, preset_menu;
@@ -65,7 +80,7 @@ class GUI:public Gtk::Window, public UpdateListener {
 	Gtk::Frame osc1_frame, osc2_frame, osc_mix_frame;
 	Gtk::Fixed osc1_fixed, osc2_fixed;
 	
-	
+	// random stuff
     Gtk::Frame reverb_frame, distortion_frame, filter_frame, amp_frame;
     Gtk::VBox osc1_vbox, osc2_vbox, osc_mix_vbox, filter_vbox, amp_vbox;
     Gtk::HBox filter_hbox1, filter_hbox2, amp_hbox1, amp_hbox2, reverb_hbox, distortion_hbox;

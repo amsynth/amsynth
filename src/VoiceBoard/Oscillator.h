@@ -7,14 +7,28 @@
 #include "Synth--.h"
 #include "../Parameter.h"
 
+/**
+ * @brief An Audio Oscillator unit.
+ * 
+ * Provides several different output waveforms (sine, saw, square, noise, 
+ * random).
+ */
 class Oscillator:public NFSource, public FInput, public UpdateListener {
   public:
-    Oscillator(int rate);
+	Oscillator(int rate);
     virtual ~Oscillator();
     inline float *getNFData();
     void setInput(FSource & source);
+	/**
+	 * @param source The FSource which will control the puslewidth of the 
+	 * waveform where appropriate (saw & square waves).
+	 */
 	void setPulseWidth(FSource & source);
     void setWaveform(int form);
+	/**
+	 * @param source The Parameter which will control the waveform of the
+	 * oscillator.
+	 */
     void setWaveform(Parameter & param);
 	/* resets the oscillator.
 	 * i.e. from the next call the oscillator will begin its cycle from the
@@ -22,12 +36,18 @@ class Oscillator:public NFSource, public FInput, public UpdateListener {
 	 */
 	inline void reset();
 	/*
-	 * reset the oscillator, initially at sample indicated by offset, and then every
-	 * period samples. used for oscillator sync. 
+	 * reset the oscillator, initially at sample indicated by offset, and then 
+	 * every period samples. used for oscillator sync. 
 	 * NB. period >= delta
 	 */
     inline void reset( int offset, int period );
     void update();
+	/**
+	 * Sets the oscillator up to synchronise another oscillator (oscillator 
+	 * sync).
+	 * @param param This Parameter controls whether or not to synchronise the 
+	 * other oscillator. 1 indicates yes, 0 no.
+	 */
 	void setSync( Parameter & param, Oscillator & osc );
   private:
     FSource *input;

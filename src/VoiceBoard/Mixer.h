@@ -11,9 +11,12 @@
 #define MAX_INPUTS 128
 
 /**
- * @class Mixer
- * @brief A mixer object. takes two input NFSources --(+)--> one NFSource output
- * it allows you to control the relative strenghts of the two signals in the output.
+ * @brief An (Audio) mixer object.
+ *
+ * Takes two input NFSources -(+)-> one NFSource
+ * output. It allows you to control the relative strenghts of the two signals in 
+ * normal mix mode, but also provides a 'ring modultaion' mixing mode, which is
+ * effectively multiplication.
  */
 
 class Mixer : public NFSource, public UpdateListener {
@@ -27,6 +30,10 @@ public:
 	 * 1 indicates 0% input1, 100% input2. 0 = 50% each
 	 */
 	void setControl(NFSource & source);
+	/**
+	 * @param param The Parameter which will be used to control the mixer mode.
+	 * where 0 is normal mixing, and 1 is ring modulation.
+	 */
 	void setMode( Parameter & param );
 	void update();
 	inline float * getNFData();

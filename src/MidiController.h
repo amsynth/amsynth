@@ -9,17 +9,37 @@
 #include "drivers/MidiInterface.h"
 #include "VoiceAllocationUnit.h"
 
+/**
+ * The MidiController is run as a thread which reads from the MIDI input device,
+ * decodes the incoming messages and performs the appropriate actions on the
+ * rest of the system.
+ */
 class MidiController {
   public:
     MidiController();
     ~MidiController();
-    //  void setEventController( EventController &ev );
+	/**
+	 * @param pc The PresetController for the system.
+	 */
     void setPresetController(PresetController & pc);
+	/**
+	 * @param vau The VoiceAllocationUnit for the system.
+	 */
     void setVAU(VoiceAllocationUnit & vau);
+	/**
+	 * @param config The global Config object for the system.
+	 */
 	void setConfig(Config & config){
 		this->config = &config;
 	};
+	/**
+	 * Start execution of the MidiController. This function never returns (until
+	 * execution is stop()ped or an error occurs).
+	 */
     void run();
+	/**
+	 * Stop the execution of the MidiController.
+	 */
     void stop();
   private:
     void doMidi();
@@ -27,7 +47,6 @@ class MidiController {
 		       unsigned char note, unsigned char vel);
     void controller_change(unsigned char controller, unsigned char value);
     void pitch_wheel_change(float val);
-    //  EventController _ev;
     VoiceAllocationUnit *_va;
     MidiInterface midi;
     PresetController *presetController;

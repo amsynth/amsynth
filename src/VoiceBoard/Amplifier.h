@@ -9,14 +9,26 @@
 
 /**
  * @class Amplifier
- * use the Multiplier class in preference - it can handle more than 2 inputs..
+ * A simple (Audio) signal level amplifier
+ * for general purpose use, use the Multiplier class in preference - it can 
+ * handle more than 2 inputs..
+ * The Amplifier class, however, is an NFSource, and is tailored for amplifying
+ * an audio stream. As such it may have optimisations which exploit its intended
+ * use..
  **/
 class Amplifier : public NFSource, public NFInput {
 
 public:
 	Amplifier();
 	virtual ~Amplifier();
+	/**
+	 * @param source the NFSource to use as the (audio) input
+	 */
 	void setInput(NFSource & source);
+	/**
+	 * @param source the NFSource which will control the volume. Do not set
+	 * this as the audio stream, as optimisations may lead to strange artifacts.
+	 */
 	void setCInput(NFSource & source);
 	inline float *getNFData();
 private:

@@ -10,7 +10,7 @@
 #include "../Parameter.h"
 
 /**
- * @class LowPassFilter
+ * A 24 dB/ocatave resonant low-pass filter.
  **/
 class LowPassFilter : public NFSource, public NFInput, public UpdateListener
 {
@@ -19,9 +19,19 @@ public:
 	virtual ~LowPassFilter(){};
 	inline float * getNFData();
 	void setInput( NFSource & source );
+	/**
+	 * @param fval The FValue which represents the filter cutoff frequency.
+	 */
 	void setCFreq( FSource & fval );
 	void setCutoff( Parameter & param );
+	/**
+	 * @param param The Parameter which controls the resonance of the filter.
+	 * i.e. 'Q'
+	 */
 	void setResonance( Parameter & param );
+	/**
+	 * Reset the filter - clear anything in the delay units of the filter.
+	 */
 	void reset();
 	void update();
 private:

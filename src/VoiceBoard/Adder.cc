@@ -1,7 +1,6 @@
-/**
- * amSynth
+/* amSynth
  * (c) 2001 Nick Dowell
-**/
+ */
 #include "Adder.h"
 #ifdef _DEBUG
 #include <iostream>
@@ -9,10 +8,10 @@
 Adder::Adder()
 {
 	no_of_inputs = 0;
-  _buffer = new float[BUF_SIZE];
-  inBuffer = new float[BUF_SIZE];
-  for (int i = 0; i < MAX_INPUTS; i++)
-	inputExists[i] = 0;
+	_buffer = new float[BUF_SIZE];
+	inBuffer = new float[BUF_SIZE];
+	for (int i = 0; i < MAX_INPUTS; i++)
+		inputExists[i] = 0;
 }
 
 Adder::~Adder()

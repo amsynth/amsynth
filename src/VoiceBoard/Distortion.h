@@ -9,13 +9,24 @@
 #include "../UpdateListener.h"
 #include "../Parameter.h"
 
+/**
+ * @brief A distortion (waveshaping) effect unit
+ */
 class Distortion: public NFSource, public FInput, public UpdateListener
 {
 public:
 	Distortion();
 	void setInput( FSource & input );
 	inline float * getNFData();
+	/**
+	 * @param parameter The Parameter to control the 'drive' of the effect - 
+	 * i.e. the input gain.
+	 */
 	void setDrive( Parameter & parameter );
+	/**
+	 * @param parameter The Parameter to control the 'crunch' of the effect - 
+	 * the amount of waveshape distortion.
+	 */
 	void setCrunch( Parameter & parameter );
 	void update();
 private:
