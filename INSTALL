@@ -1,3 +1,11 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! the confugration scripts etc.. are not complete !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+make sure you have gtkmm (http://gtkmm.sourceforge.net) installed on your
+system. other than that, nothing special is required..
+
+
 Basic Installation
 ==================
 
