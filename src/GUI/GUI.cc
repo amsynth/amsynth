@@ -442,6 +442,7 @@ GUI::GUI( Config & config, MidiController & mc,
 	record_dialog.set_title( "Capture Output" );
 	preset_import_dialog.set_transient_for( *this );
 	record_dialog.add( record_vbox );
+	record_dialog.delete_event.connect( bind( slot(this, &GUI::delete_events), &record_dialog ) );
 	
 	record_vbox.set_spacing( 10 );
 	record_vbox.pack_start( record_file_frame, TRUE, TRUE, 0 );
