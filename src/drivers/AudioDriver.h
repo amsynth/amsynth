@@ -6,6 +6,9 @@
 #define _AUDIO_DRIVER_H
 
 #include "../Config.h"
+#include "../base.h"
+
+using namespace std;
 
 /** 
  * @class AudioDriver

@@ -6,7 +6,6 @@
 #define _ALSA_AUDIO_DRIVER_H
 
 #include "AudioDriver.h"
-#include "../base.h"
 
 #ifdef _ALSA
 #include <alsa/asoundlib.h>
