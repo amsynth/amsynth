@@ -53,7 +53,7 @@ AudioOutput::startRecording()
 {
 #ifdef SNDFILE_1
 	// libsndfile version 1.x:
-	snfile = sf_open( wavoutfile.c_str(), SFM_WRITE, &sf_info );
+	sndfile = sf_open( wavoutfile.c_str(), SFM_WRITE, &sf_info );
 	sf_command( sndfile, SFC_SET_NORM_FLOAT, NULL, SF_TRUE );
 #else
 	// libsndfile versions < 1.0:
