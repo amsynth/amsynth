@@ -5,7 +5,7 @@
 #include "ParameterKnob.h"
 #include <stdio.h>
 
-ParameterKnob::ParameterKnob()
+ParameterKnob::ParameterKnob( int pipe_d )
 {
     adj = new Gtk::Adjustment(0.0, 0.0, 1.0, 0.01, 1.0, 0);
 
@@ -16,7 +16,7 @@ ParameterKnob::ParameterKnob()
 	
     parameter = 0;
 
-    draw_value = false;
+    draw_value = true;
 
     add(label);
     add(knob);
@@ -24,6 +24,10 @@ ParameterKnob::ParameterKnob()
 	value_frame.add( value_label );
 	if(draw_value==true)
 		add(value_frame);
+	
+	supress_param_callback = false;
+	piped = pipe_d;
+	request.slot = slot( *this, &ParameterKnob::_update_ );
 }
 
 void
@@ -72,6 +76,7 @@ ParameterKnob::setParameter(Parameter & param)
 void 
 ParameterKnob::updateParam(Gtk::Adjustment * _adj)
 {
+	if (!supress_param_callback)
     parameter->setValue(_adj->get_value());
 }
 
@@ -81,16 +86,30 @@ ParameterKnob::setName(string text)
     label.set_text(text);
 }
 
-void 
+void
 ParameterKnob::update()
 {
+	if(!supress_param_callback)
+		if( write( piped, &request, sizeof(request) ) != sizeof(request) )
+			cout << "error writing to pipe" << endl;
+}
+
+void 
+ParameterKnob::_update_()
+{
+	supress_param_callback = true;
+	
     adj->set_value(parameter->getValue());
+	
     char cstr[6];
     sprintf(cstr, "%.3f", parameter->getControlValue());
     string text(cstr);
     text += " ";
     text += parameter->getLabel();
+	
     value_label.set_text(text);
+	
+	supress_param_callback = false;
 }
 
 Gtk::Widget *

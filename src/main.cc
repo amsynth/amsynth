@@ -10,6 +10,9 @@
 #include <fstream>
 #include <unistd.h>
 
+
+int the_pipe[2];
+
 void sched_realtime()
 {
 	struct sched_param sched;
@@ -92,8 +95,16 @@ void *audio_thread(void *arg)
 	pthread_exit(0);
 }
 
+void
+pipe_event( void *arg, int foo, GdkInputCondition ic )
+{
+	gui->serve_request();
+}
+
 int main( int argc, char *argv[] )
 {
+	if( pipe( the_pipe ) ) cout << "pipe() error\n";
+	
 	int enable_audio = 1;
 	// set default parameters
 	config.midi_device = "/dev/midi";
@@ -199,17 +210,16 @@ int main( int argc, char *argv[] )
   
 	vau->setPreset(presetController->getCurrentPreset());
 	
-//	presetController->loadPresets();
-	
-	g_thread_init(NULL); // allows gtk to be used in a thread-safe manner
-	
 	Gtk::Main kit(&argc, &argv); // this can be called SUID
-	GUI gui( config ); // so can this
-	gui.setPresetController(*presetController);
-	gui.init();
-	gdk_threads_enter();
+	
+	// make GDK loop read events from the pipe
+	gdk_input_add( the_pipe[0], GDK_INPUT_READ, &pipe_event, (void*)NULL );
+	
+	gui = new GUI( config, the_pipe ); // this can be called SUID
+	gui->setPresetController(*presetController);
+	gui->init();
 	kit.run(); // this _cannot_ be run SUID
-	gdk_threads_leave();
+
 #ifdef _DEBUG
 	cout << "main() : GUI was terminated, shutting down cleanly.." << endl;
 #endif

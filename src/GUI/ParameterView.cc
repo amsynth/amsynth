@@ -5,7 +5,7 @@
 #include "ParameterView.h"
 #include <stdio.h>
 
-ParameterView::ParameterView()
+ParameterView::ParameterView( int pipe_descr )
 {
     adj = new Gtk::Adjustment(0.0, 0.0, 1.0, 0.01, 1.0, 0);
 
@@ -24,6 +24,8 @@ ParameterView::ParameterView()
 	value_frame.add( value_label );
 	if(draw_value==true)
 		add(value_frame);
+	
+	piped = pipe_descr;
 }
 
 void
@@ -80,16 +82,29 @@ ParameterView::setName(string text)
     label.set_text(text);
 }
 
-void 
+void
 ParameterView::update()
-{
-    adj->set_value(parameter->getValue());
+{   
+	adj->set_value(parameter->getValue());
     char cstr[20];
     sprintf(cstr, "%.2f", parameter->getControlValue());
     string text(cstr);
     text += " ";
     text += parameter->getLabel();
     value_label.set_text(text);
+}
+
+void 
+ParameterView::_update_()
+{
+	// send a request to the GUI thread to update this View..
+	Request request;
+	request.slot = slot( *this, ParameterView::_update_ );
+	
+	if( write( piped, &request, sizeof(request) ) != sizeof(request) )
+      cout << "error writing to pipe" << endl;
+    else
+      cout << "sent update request to pipe\n";
 }
 
 Gtk::Widget * 

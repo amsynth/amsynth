@@ -15,12 +15,13 @@
 
 class ParameterKnob : public ParameterView, public Gtk::VBox {
   public:
-    ParameterKnob();
+    ParameterKnob( int pipe_d );
     ~ParameterKnob();
     void setParameter(Parameter & param);
     Parameter *getParameter();
     void setName(string name);
     void update();
+	void _update_();
     Gtk::Widget * getGtkWidget();
 	void drawValue( bool draw );
 	void setPixmap( GdkPixmap *pix, gint x, gint y, gint frames );
@@ -28,7 +29,7 @@ class ParameterKnob : public ParameterView, public Gtk::VBox {
     void updateParam(Gtk::Adjustment * _adj);
     Parameter *parameter;
     Knob knob;
-	bool draw_value;
+	gboolean draw_value, supress_param_callback;
     Gtk::Label label, value_label;
     Gtk::Adjustment * adj;
 	Gtk::Frame value_frame;

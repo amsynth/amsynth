@@ -26,6 +26,7 @@
 #include "PresetControllerView.h"
 #include "RadioButtonParameterView.h"
 #include "ParameterSwitch.h"
+#include "ControllerMapDialog.h"
 #include "../UpdateListener.h"
 #include "../Parameter.h"
 #include "../Config.h"
@@ -42,7 +43,7 @@
  */
 class GUI:public Gtk::Window, public UpdateListener {
   public:
-    GUI( Config & config );
+    GUI( Config & config, int pipe[2] );
     ~GUI();
 	/**
 	 * Sets up all the Interface controls etc..
@@ -57,7 +58,9 @@ class GUI:public Gtk::Window, public UpdateListener {
     void setPresetController(PresetController & p_c);
     int delete_event_impl(GdkEventAny *);
     void update();
+	void serve_request();
   private:
+	int *pipe;
 	virtual void realize_impl();
     void event_handler(string text);
     void arrange();
@@ -146,5 +149,6 @@ class GUI:public Gtk::Window, public UpdateListener {
     PresetControllerView *presetCV;
     RadioButtonParameterView *rb_pv[10];
 	Config *config;
+	ControllerMapDialog *controller_map_dialog;
 };
 #endif

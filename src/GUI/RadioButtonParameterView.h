@@ -18,17 +18,19 @@
 
 class RadioButtonParameterView : public ParameterView, public Gtk::VBox {
 public:
-	RadioButtonParameterView();
+	RadioButtonParameterView( int pipe_d );
 	~RadioButtonParameterView();
 	void setName( string name );
 	void setDescription( int button, string text );
 	void setParameter( Parameter & param );
 	Parameter * getParameter();
 	void update();
+	void _update_();
 private:
 	void toggle_handler( int button );
 	gfloat last_toggle;
 	Parameter *parameter;
+	gboolean supress_param_callback;
 	Gtk::Label label;
 	Gtk::Frame frame;
 	Gtk::VBox vbox;

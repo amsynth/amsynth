@@ -6,6 +6,7 @@
 #include "VoiceAllocationUnit.h"
 #include "AudioOutput.h"
 #include "GUI/GUI.h"
+#include "GUI/ParameterView.h"
 #include "Config.h"
 #include <string>
 
@@ -14,6 +15,7 @@ MidiController *midi_controller;
 VoiceAllocationUnit *vau;
 AudioOutput *out;
 Config config;
+GUI *gui;
 
 pthread_t midiThread, guiThread, audioThread;
 

@@ -8,7 +8,7 @@
 using SigC::slot;
 using SigC::bind;
 
-RadioButtonParameterView::RadioButtonParameterView()
+RadioButtonParameterView::RadioButtonParameterView( int pipe_d )
 {
 	last_toggle = 0.0;
 	parameter = 0;
@@ -17,6 +17,10 @@ RadioButtonParameterView::RadioButtonParameterView()
 	frame.add( vbox );
 	for(gint i=1; i<MAX_BUTTONS; i++)
 		radio_button[i].set_group( radio_button[0].group() );
+	
+	supress_param_callback = false;
+	request.slot = slot( *this, &RadioButtonParameterView::_update_ );
+	piped = pipe_d;
 }
 
 RadioButtonParameterView::~RadioButtonParameterView()
@@ -28,13 +32,23 @@ RadioButtonParameterView::~RadioButtonParameterView()
 void
 RadioButtonParameterView::update()
 {
-//	gdk_threads_enter();
+	if(!supress_param_callback)
+		if( write( piped, &request, sizeof(request) ) != sizeof(request) )
+			cout << "error writing to pipe" << endl;
+}
+
+void
+RadioButtonParameterView::_update_()
+{
+	supress_param_callback = true;
+	gdk_threads_enter();
 	if(parameter){
 		gint button = (gint)( (parameter->getMax()-parameter->getValue())/parameter->getStep() );
 		if(button>=0 && button<MAX_BUTTONS && !radio_button[button].get_active() )
 			radio_button[button].set_active( true );
 	}
-//	gdk_threads_leave();
+	gdk_threads_leave();
+	supress_param_callback = false;
 }
 
 void
@@ -67,10 +81,12 @@ RadioButtonParameterView::getParameter()
 void
 RadioButtonParameterView::toggle_handler( gint button )
 {
-	if (button!=last_toggle && parameter){
-		last_toggle = button;
-		if (parameter->getValue()!=(float)button_value[button])
-			parameter->setValue( (float)button_value[button] );
+	if(!supress_param_callback){
+		if (button!=last_toggle && parameter){
+			last_toggle = button;
+			if (parameter->getValue()!=(float)button_value[button])
+				parameter->setValue( (float)button_value[button] );
+		}
 	}
 }
 

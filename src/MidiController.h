@@ -41,6 +41,8 @@ class MidiController {
 	 * Stop the execution of the MidiController.
 	 */
     void stop();
+	void setController( int controller_no, Parameter &param );
+	Parameter & getController( int controller_no );
   private:
     void doMidi();
     void dispatch_note(unsigned char ch,
@@ -55,5 +57,6 @@ class MidiController {
     int bytes_read;
     unsigned char *buffer;
     unsigned char status, data, channel, byte;
+	Parameter *midi_controllers[32]; // there are 32 standard MIDI controllers
 };
 #endif

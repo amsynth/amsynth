@@ -10,6 +10,7 @@ MidiController::MidiController()
     buffer = new unsigned char[MIDI_BUF_SIZE];
     presetController = 0;
     _va = 0;
+	for( int i=0; i<32; i++ ) midi_controllers[i] = 0;
 }
 
 MidiController::~MidiController()
@@ -21,6 +22,8 @@ void
 MidiController::setPresetController(PresetController & pc)
 {
     presetController = &pc;
+	midi_controllers[1] = &(presetController->getCurrentPreset().getParameter("freq_mod_amount"));
+	midi_controllers[7] = &(presetController->getCurrentPreset().getParameter("master_vol"));
 }
 
 void
@@ -138,14 +141,15 @@ MidiController::doMidi()
 
 	case 0xc0:
 	    // program change
-	    //if (presetController && channel == receiveChannel)
+		if (presetController && channel == receiveChannel){
 		// this is broken, due to threading issues..
-//		presetController->selectPreset((int) byte);
+			presetController->selectPreset((int) byte);
 #ifdef _DEBUG
-	    cout << "<MidiController> program change: " << (int) byte <<
-		endl;
+			cout << "<MidiController> program change: " << (int) byte <<
+			endl;
 #endif
-	    data = 0xff;
+			data = 0xff;
+		}
 	    break;
 
 	case 0xd0:
@@ -219,20 +223,39 @@ MidiController::controller_change(unsigned char controller,
     // controller 0x40 (64) is the sustain pedal. (0 if off, 127 is on)
 
     switch (controller) {
+		
+		case 64:
+		// sustain pedal
+			if (!value) _va->sustainOff();
+			else _va->sustainOn();
+			break;
 
-    case 64:
-	// sustain pedal
-	if (!value)
-	    _va->sustainOff();
-	else
-	    _va->sustainOn();
-	break;
-
-    default:
-#ifdef _DEBUG
-	cout << "<MidiController> controller: " << (float) controller
-	    << " value: " << (float) value << endl;
-#endif
-	return;
+		default:
+			float fval = value/(float)127;
+//			cout << "<MidiController> controller: " << (float) controller
+//				<< " value: " << (float) value << "fval " << fval << endl;
+			if( controller<32)
+				if(midi_controllers[controller]){
+					cout << midi_controllers[controller]->getName() << endl;
+					midi_controllers[controller]->setValue( 
+						fval*(midi_controllers[controller]->getMax()-midi_controllers[controller]->getMin())
+						+ midi_controllers[controller]->getMin() );
+				}
+			break;
     }
+	return;
+}
+
+void
+MidiController::setController( int controller_no, Parameter & param )
+{
+	if(controller_no<32)
+		midi_controllers[controller_no] = &param;
+}
+
+Parameter &
+MidiController::getController( int controller_no )
+{
+	if(controller_no>32) return presetController->getCurrentPreset().getParameter("null");
+	else return *midi_controllers[controller_no];
 }

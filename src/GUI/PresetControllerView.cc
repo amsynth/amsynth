@@ -8,7 +8,7 @@
 using SigC::slot;
 using SigC::bind;
 
-PresetControllerView::PresetControllerView()
+PresetControllerView::PresetControllerView( int pipe_d )
 {
 	inhibit_combo_callback = false;
 	inhibit_combo_update = false;
@@ -24,6 +24,9 @@ PresetControllerView::PresetControllerView()
     add( preset_no_entry );
     add( presets_combo );
 	add( commit );
+
+	piped = pipe_d;
+	request.slot = slot( this, &PresetControllerView::_update_ );
 }
 
 PresetControllerView::~PresetControllerView()
@@ -62,10 +65,17 @@ PresetControllerView::ev_handler(string text)
     }
 }
 
-void 
+void
 PresetControllerView::update()
 {
-//	gdk_threads_enter();
+	if(!inhibit_combo_callback)
+		if( write( piped, &request, sizeof(request) ) != sizeof(request) )
+			cout << "ParameterSwitch: error writing to pipe" << endl;
+}
+
+void 
+PresetControllerView::_update_()
+{
 	inhibit_combo_callback = true;
 	
 	// update our list of preset names
@@ -91,5 +101,4 @@ PresetControllerView::update()
     preset_no_entry.set_text(txt);	
 	
 	inhibit_combo_callback = false;
-//	gdk_threads_leave();
 }

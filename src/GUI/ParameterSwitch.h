@@ -14,18 +14,20 @@
 
 class ParameterSwitch : public ParameterView, public Gtk::VBox {
   public:
-    ParameterSwitch();
+    ParameterSwitch( int pipe_d );
     ~ParameterSwitch();
     void setParameter(Parameter & param);
     Parameter *getParameter();
     void setName(string name);
     void update();
+	void _update_();
 	void toggle_handler();
   private:
 	Gtk::CheckButton check_button;
 	Gtk::Label label;
 	Parameter *parameter;
 	int paramName;
+	gboolean supress_param_callback;
 };
 
 #endif

@@ -12,13 +12,27 @@ GUI::delete_event_impl(GdkEventAny *)
     return true;
 }
 
-GUI::GUI( Config & config )
+void
+GUI::serve_request()
+{
+	Request *request;
+	request = (Request*)malloc( sizeof(Request) );
+	  
+	if( read( pipe[0], request, sizeof(Request) ) != sizeof(Request) )
+		cout << "error reading from pipe" << endl;
+	else {
+		request->slot.call();
+		free(request);
+	}
+}
+
+GUI::GUI( Config & config, int pipe[2] )
 {
 #ifdef _DEBUG
 	cout << "<GUI::GUI()>" << endl;
 #endif
 	this->config = &config;
-	
+	this->pipe = pipe;
     hide.connect( Gtk::Main::quit.slot() );
 	
 	if(this->config->realtime)
@@ -44,10 +58,10 @@ GUI::GUI( Config & config )
     GtkShadowType frame_shadow = GTK_SHADOW_OUT;
 
 	for (int i = 0; i < 31; i++)
-		parameterView[i] = new ParameterKnob();
+		parameterView[i] = new ParameterKnob( pipe[1] );
 	for (int i = 0; i < 10; i++)
-		rb_pv[i] = new RadioButtonParameterView;
-	param_switch = new ParameterSwitch;
+		rb_pv[i] = new RadioButtonParameterView( pipe[1] );
+	param_switch = new ParameterSwitch( pipe[1] );
 
 #ifdef _DEBUG
 	cout << "<GUI::GUI()> created ParameterViews" << endl;
@@ -77,10 +91,14 @@ GUI::GUI( Config & config )
     menu_item[0]->add_label( "File" );
     menu_item[0]->set_submenu( file_menu );
 
-    file_menu.append( *menu_item[1] );
+    file_menu.append( *menu_item[2] );
     menu_item[1]->add_label( "Quit" );
     menu_item[1]->activate.connect( 
 		bind(slot(this, &GUI::event_handler),"quit"));
+	file_menu.append( *menu_item[1] );
+	menu_item[2]->add_label( "Configure MIDI Controllers" );
+	menu_item[2]->activate.connect( 
+		bind(slot(this, &GUI::event_handler),"controller_map_dialog"));
 	
 	// the Preset menu
 	menu_item[10]->add_label( "Preset" );
@@ -131,7 +149,7 @@ GUI::GUI( Config & config )
 	/*
 	 * The main panel
 	 */
-    presetCV = new PresetControllerView;
+    presetCV = new PresetControllerView( pipe[1] );
 #ifdef _DEBUG
 	cout << "<GUI::GUI()> created presetCV" << endl;
 #endif
@@ -244,6 +262,9 @@ GUI::GUI( Config & config )
 #endif
     add( vbox );
     show_all();
+
+	// MIDI Controllers dialog
+	controller_map_dialog = new ControllerMapDialog;
 
 	// the preset rename dialog
 	preset_rename.set_title( "Rename Preset" );
@@ -697,7 +718,10 @@ GUI::event_handler(string text)
 		preset_saveas.hide();
 	} else if (text == "preset::saveas::cancel") {
 		preset_saveas.hide();
-	} else if (text == "quit") {
+	} else if (text == "controller_map_dialog") {
+		controller_map_dialog->show_all();
+		return;
+    } else if (text == "quit") {
 		quit_confirm.show_all();
 		return;
     } else if (text == "quit::ok") {

@@ -4,7 +4,7 @@
 
 #include "ParameterSwitch.h"
 
-ParameterSwitch::ParameterSwitch()
+ParameterSwitch::ParameterSwitch( int pipe_d )
 {
 	paramName = 1;
 	
@@ -13,6 +13,10 @@ ParameterSwitch::ParameterSwitch()
 	
 	check_button.toggled.connect( 
 		slot(this, &ParameterSwitch::toggle_handler) );
+	
+	supress_param_callback = false;
+	piped = pipe_d;
+	request.slot = slot( this, &ParameterSwitch::_update_ );
 }
 
 ParameterSwitch::~ParameterSwitch()
@@ -22,10 +26,12 @@ ParameterSwitch::~ParameterSwitch()
 void
 ParameterSwitch::toggle_handler()
 {
-	if(check_button.get_active()==true)
-		parameter->setValue( parameter->getMax() );
-	else
-		parameter->setValue( parameter->getMin() );
+	if(!supress_param_callback){
+		if(check_button.get_active()==true)
+			parameter->setValue( parameter->getMax() );
+		else
+			parameter->setValue( parameter->getMin() );
+	}
 }
 
 void
@@ -55,10 +61,19 @@ ParameterSwitch::setName( string name )
 void
 ParameterSwitch::update()
 {
-	if( paramName ) 
-		label.set_text( parameter->getName() );
-	if( parameter && (parameter->getValue() == parameter->getMax()) ) 
-		check_button.set_active( true );
-	else
-		check_button.set_active( false );
+	if(!supress_param_callback)
+		if( write( piped, &request, sizeof(request) ) != sizeof(request) )
+			cout << "ParameterSwitch: error writing to pipe" << endl;
+}
+
+void
+ParameterSwitch::_update_()
+{
+	supress_param_callback = true;
+	
+	if( paramName )	label.set_text( parameter->getName() );
+	if( parameter && (parameter->getValue() == parameter->getMax()) ) check_button.set_active( true );
+	else check_button.set_active( false );
+	
+	supress_param_callback = false;
 }
