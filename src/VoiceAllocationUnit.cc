@@ -134,7 +134,7 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes)
 	while (0 < framesLeft)
 	{
 		int fr = (framesLeft < kMaxGrainSize) ? framesLeft : kMaxGrainSize;
-		for (int i=0; i<128; i++) if (active[i]) _voices[i].ProcessSamplesMix (l+j, kMaxGrainSize, mMasterVol);
+		for (int i=0; i<128; i++) if (active[i]) _voices[i].ProcessSamplesMix (l+j, fr, mMasterVol);
 		j += fr; framesLeft -= fr;
 	}
 
