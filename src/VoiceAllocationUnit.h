@@ -23,7 +23,7 @@ public:
 
 	void	UpdateParameter		(Param, float);
 
-	void	SetSampleRate		(int) {};
+	void	SetSampleRate		(int);
   
   void noteOn(int note, float velocity);
   void noteOff(int note);

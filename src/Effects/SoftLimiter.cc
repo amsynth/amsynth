@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
 #include "SoftLimiter.h"
@@ -10,17 +10,14 @@
 #define RT 0.5			// release time in seconds
 #define THRESHOLD 0.9	// THRESHOLD>0 !!
 
-SoftLimiter::SoftLimiter(float rate)
+void
+SoftLimiter::SetSampleRate	(int rate)
 {
 	xpeak=0;
-	attack=1-exp(-2.2/(AT*rate));
-	release=1-exp(-2.2/(RT*rate));
+	attack=1-exp(-2.2/(AT*(float)rate));
+	release=1-exp(-2.2/(RT*(float)rate));
 	thresh=(float)log(THRESHOLD); // thresh in linear scale :)
 	ch=1;
-}
-
-SoftLimiter::~SoftLimiter()
-{
 }
 
 void

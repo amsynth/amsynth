@@ -18,29 +18,25 @@ using std::cout;
 const int kMaxGrainSize = 64;
 
 VoiceAllocationUnit::VoiceAllocationUnit( Config & config )
+:	max_voices (0)
+,	sustain (0)
+,	config (&config)
+,	mMasterVol (1.0)
 {
-	this->config = &config;
-	max_voices = config.polyphony;
-#ifdef _DEBUG
-	cout << "<VoiceAllocationUnit> new VAU created" << endl;
-#endif
-
-	limiter = new SoftLimiter (config.sample_rate);
+	process_memory = new VoiceBoardProcessMemory (kMaxGrainSize);
+	limiter = new SoftLimiter;
 	reverb = new revmodel;
 	distortion = new Distortion;
-	
-	process_memory = new VoiceBoardProcessMemory (kMaxGrainSize);
 
-	for (int i = 0; i < 128; i++) {
+	for (int i = 0; i < 128; i++)
+	{
 		keyPressed[i] = 0;
 		active[i] = false;
 		_voices.push_back (VoiceBoard (process_memory));
-		_voices.back().SetSampleRate (config.sample_rate);
 		_voices.back().setFrequency ((440.0/32.0) * pow (2.0f, (float)((i-9.0)/12.0)));
 	}
-  
-	sustain = 0;
-	mMasterVol = 1.0;
+
+	SetSampleRate (44100);
 }
 
 VoiceAllocationUnit::~VoiceAllocationUnit	()
@@ -49,6 +45,13 @@ VoiceAllocationUnit::~VoiceAllocationUnit	()
 	delete reverb;
 	delete distortion;
 	delete process_memory;
+}
+
+void
+VoiceAllocationUnit::SetSampleRate	(int rate)
+{
+	limiter->SetSampleRate (rate);
+	for (unsigned i=0; i<_voices.size(); ++i) _voices[i].SetSampleRate (rate);
 }
 
 void
