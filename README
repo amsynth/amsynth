@@ -41,9 +41,28 @@ Known problems
 --------------
 Although I've been using this software myself for a while without many problems,
 I am aware of some issues:-
+
 + Sometimes the program crashes as soon as you play a note on your MIDI input.
   This only happens on certain GTK themes for some reason(?!?). Themes i have
   had no problems with are "Default", "IceGradient", "ThinIce", "Step"...
+
 + Under certain conditions (parameter settings) the sound output dies and never
   recovers. This is an issue with the reverb (Freebirth) and the amSynth filter.
   This is being worked on...
+
++ There is no software limit on the number of simultaneously active voices 
+  (polyphony). If you play too many notes at once for your CPU, two things can
+  happen:
+  + If you aren't running amSynth SUID root (i.e. with realtime priority) you 
+    will experience (continuous) buffer dropouts, which will sound like horrible
+	distortion.
+  + If you are running SUID root, you will also experience dropout, plus your
+    system will appear to be locked. This is because amSynth is eating up *all*
+	the CPU time, and running at highest priority.
+  In both cases, the remedy is to play less notes at once ;-)
+  Although you will have to play another note before the others are silenced and
+  everything works nicely again. Basically, keep hitting one note on your midi 
+  controller keyboard until it returns to normal. Hopefully I will find a good 
+  way of enforcing a limit based on the speed of the machine..
+  
+You have been warned!
