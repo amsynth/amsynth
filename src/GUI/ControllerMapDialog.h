@@ -25,6 +25,7 @@ public:
 	gint delete_event_impl( GdkEventAny * ) { Gtk::Widget::hide_all(); };
 private:
 	Gtk::Table table;
+	Gtk::Label help;
 	Gtk::Label label[32];
 	Gtk::Label active[32];
 	Gtk::Combo combo[32];

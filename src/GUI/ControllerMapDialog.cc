@@ -18,8 +18,11 @@ ControllerMapDialog::ControllerMapDialog( int pipe_d, MidiController & mc,
 	
 	set_title( "MIDI Controller Config" );
 	
-	table.resize( 32, 2 );
+	table.resize( 33, 2 );
 	add( table );
+	
+	help.set_text( "\nThe <> denotes the controller\nwith the latest sensed change\n" );
+	table.attach( help, 0, 3, 0, 1 );
 	
 	list<string> gl;
 	gl.push_back( "null" );
@@ -34,13 +37,13 @@ ControllerMapDialog::ControllerMapDialog( int pipe_d, MidiController & mc,
 		sprintf( cstr, "%d:", i );
 		str += string( cstr );
 		label[i].set_text( str );
-		table.attach( active[i], 0, 1, i, i+1 );
-		table.attach( label[i], 1, 2, i, i+1 );
+		table.attach( active[i], 0, 1, i+1, i+2 );
+		table.attach( label[i], 1, 2, i+1, i+2 );
 		combo[i].set_popdown_strings( gl );
 		combo[i].get_entry()->set_editable( false );
 		combo[i].get_entry()->changed.connect(
 			bind(slot(this, &ControllerMapDialog::callback),i) );
-		table.attach( combo[i], 2, 3, i, i+1 );
+		table.attach( combo[i], 2, 3, i+1, i+2 );
 	}
 
 	request.slot = slot( this, &ControllerMapDialog::_updateActive_ );
