@@ -1,3 +1,8 @@
+19/07/2003
+- restructured slightly to remove any exit() statements not in main.cc
+- fixed startup bug when compiled without JACK
+- fixed bug in fontname loading (was broken if gui_font... was the last line in file)
+
 17/07/2003
 - 'auto' audio device tries to start JACK first
 - fixed bug on loading ui fontname from config file
