@@ -12,7 +12,9 @@ VoiceBoard::VoiceBoard(int rate, VoiceBoardProcessMemory *mem):
 	osc2			(rate, mem->osc_2),
 	filter			(rate), 
 	filter_env		(rate,mem->filter_env), 
-	amp_env			(rate,mem->amp_env)
+	amp_env			(rate,mem->amp_env),
+	mPitchBend		(1),
+	mKeyPitch		(440)
 {
 	this->rate = rate;
 	this->mem = mem;
