@@ -632,6 +632,10 @@ GUI::init()
 	char cstr[10];
 	status = "  Midi Driver: ";
 	status += config->midi_driver;
+	if( config->midi_driver == "OSS" ){
+		status += ":";
+		status += config->oss_midi_device;
+	}
 	status += "      Midi Channel: ";
 	if( config->midi_channel ){
 		sprintf( cstr, "%2d", config->midi_channel );
@@ -639,10 +643,21 @@ GUI::init()
 	} else status += "All";
 	status += "            Audio Driver: ";
 	status += config->audio_driver;
+	if( config->audio_driver == "OSS" ){
+		status += " : ";
+		status += config->oss_audio_device;
+	} else if( config->audio_driver == "ALSA" ){
+		status += " : ";
+		status += config->alsa_audio_device;
+	}
 	status += "      Sample Rate:";
 	sprintf( cstr, "%d", config->sample_rate );
 	status += string(cstr);
-	status += " Hz            ";
+	status += " Hz        ";
+	status += "Poly: ";
+	sprintf( cstr, "%d", config->polyphony );
+	status += string(cstr);
+	status += "       ";
 	if(config->realtime)
 		status += "            Realtime Priority: YES";
 	else

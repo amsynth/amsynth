@@ -30,9 +30,8 @@ ALSAAudioDriver::open( Config & config )
 	_channels = config.channels;
 	_rate = config.sample_rate;
 #ifdef _ALSA
-	char *pcm_name = "hw";
-	if(snd_pcm_open(&playback_handle, pcm_name, SND_PCM_STREAM_PLAYBACK, 0)<0){
-		cerr << "ALSA: cannot open audio device " << pcm_name << endl;
+	if(snd_pcm_open(&playback_handle, config.alsa_audio_device.c_str(), SND_PCM_STREAM_PLAYBACK, 0)<0){
+		cerr << "ALSA: cannot open audio device " << config.alsa_audio_device << endl;
 		return -1;
 	}
     snd_pcm_hw_params_alloca( &hw_params );

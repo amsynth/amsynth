@@ -152,7 +152,9 @@ VoiceAllocationUnit::killAllVoices()
 		if( connected[i] ){
 			mixer.removeInput( *_voices[i] );
 			connected[i] = 0;
+			keyPressed[i] = 0;
 		}
 	}
 	reverb.mute();
+	config->active_voices = 0;
 }

@@ -66,6 +66,10 @@ public:
 	 * The name if the device file for the OSS audio device.
 	 */
 	string oss_audio_device;
+	/**
+	 * The name of the ALSA PCM device to use
+	 */
+	string alsa_audio_device;
 };
 
 #endif

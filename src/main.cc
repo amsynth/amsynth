@@ -111,6 +111,7 @@ int main( int argc, char *argv[] )
 	config.oss_midi_device = "/dev/midi";
 	config.midi_channel = 0;
 	config.oss_audio_device = "/dev/dsp";
+	config.alsa_audio_device = "default";
 	config.sample_rate = 44100;
 	config.channels = 2;
 	config.buffer_size = BUF_SIZE;
@@ -141,6 +142,9 @@ int main( int argc, char *argv[] )
 		} else if (string(buffer)=="oss_audio_device"){
 			file >> buffer;
 			config.oss_audio_device = string(buffer);
+		} else if (string(buffer)=="alsa_audio_device"){
+			file >> buffer;
+			config.alsa_audio_device = string(buffer);
 		} else if (string(buffer)=="sample_rate"){
 			file >> buffer;
 			config.sample_rate = atoi(buffer);
