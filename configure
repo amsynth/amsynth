@@ -5765,6 +5765,46 @@ else
   echo "$ac_t""no" 1>&6
 fi
 
+echo $ac_n "checking for snd_seq_open in -lasound""... $ac_c" 1>&6
+echo "configure:5770: checking for snd_seq_open in -lasound" >&5
+ac_lib_var=`echo asound'_'snd_seq_open | sed 'y%./+-%__p_%'`
+if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  ac_save_LIBS="$LIBS"
+LIBS="-lasound  $LIBS"
+cat > conftest.$ac_ext <<EOF
+#line 5778 "configure"
+#include "confdefs.h"
+/* Override any gcc2 internal prototype to avoid an error.  */
+/* We use char because int might match the return type of a gcc2
+    builtin and then its argument prototype would still apply.  */
+char snd_seq_open();
+
+int main() {
+snd_seq_open()
+; return 0; }
+EOF
+if { (eval echo configure:5789: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+  rm -rf conftest*
+  eval "ac_cv_lib_$ac_lib_var=yes"
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  eval "ac_cv_lib_$ac_lib_var=no"
+fi
+rm -f conftest*
+LIBS="$ac_save_LIBS"
+
+fi
+if eval "test \"`echo '$ac_cv_lib_'$ac_lib_var`\" = yes"; then
+  echo "$ac_t""yes" 1>&6
+  CXXFLAGS="${CXXFLAGS} -D_ALSA -lasound"
+else
+  echo "$ac_t""no" 1>&6
+fi
+
 
 
 
@@ -5772,7 +5812,7 @@ COMPOPSTR=""
 
 
 echo $ac_n "checking whether to enable debugging support...""... $ac_c" 1>&6
-echo "configure:5776: checking whether to enable debugging support..." >&5
+echo "configure:5816: checking whether to enable debugging support..." >&5
 
   # Check whether --enable-debug or --disable-debug was given.
 if test "${enable_debug+set}" = set; then
@@ -5793,7 +5833,7 @@ fi
 
 
 echo $ac_n "checking whether to enable profiling support...""... $ac_c" 1>&6
-echo "configure:5797: checking whether to enable profiling support..." >&5
+echo "configure:5837: checking whether to enable profiling support..." >&5
 
   # Check whether --enable-profile or --disable-profile was given.
 if test "${enable_profile+set}" = set; then
@@ -5817,7 +5857,7 @@ fi
 
 
 echo $ac_n "checking for optimisation level to set...""... $ac_c" 1>&6
-echo "configure:5821: checking for optimisation level to set..." >&5
+echo "configure:5861: checking for optimisation level to set..." >&5
 
   # Check whether --with-O or --without-O was given.
 if test "${with_O+set}" = set; then
@@ -5839,7 +5879,7 @@ fi
 
 
 echo $ac_n "checking which cpu to optimise for...""... $ac_c" 1>&6
-echo "configure:5843: checking which cpu to optimise for..." >&5
+echo "configure:5883: checking which cpu to optimise for..." >&5
 
   # Check whether --with-cpu or --without-cpu was given.
 if test "${with_cpu+set}" = set; then

@@ -12,19 +12,21 @@
 #include <alsa/asoundlib.h>
 #endif
 
-class ALSAMidiDriver:public MidiDriver {
-  public:
+class ALSAMidiDriver : public MidiDriver {
+public:
     ALSAMidiDriver();
     virtual ~ ALSAMidiDriver();
     int read(unsigned char *midi_event_buffer);
     int open( string device );
     int close();
-  private:
+private:
 #ifdef _ALSA
-     snd_rawmidi_t * _alsa_midi_handle;	// Handle for ALSA midi device
+	snd_seq_t *seq_handle;
+	snd_midi_event_t *seq_midi_parser;
+	int portid;
+	int npfd;
+	struct pollfd *pfd;
 #endif
-    int _alsa_midi_card;	// card # for ALSA driver
-    int _alsa_midi_device;	// MIDI device # for ALSA driver
     int _bytes_read;
 };
 
