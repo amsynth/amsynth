@@ -255,12 +255,10 @@ MidiController::controller_change(unsigned char controller,
 //			cout << "<MidiController> controller: " << (float) controller
 //				<< " value: " << (float) value << "fval " << fval << endl;
 			if( controller<32)
-				if(midi_controllers[controller]){
-					cout << midi_controllers[controller]->getName() << endl;
+				if(midi_controllers[controller])
 					midi_controllers[controller]->setValue( 
 						fval*(midi_controllers[controller]->getMax()-midi_controllers[controller]->getMin())
 						+ midi_controllers[controller]->getMin() );
-				}
 			break;
     }
 	return;
