@@ -11,27 +11,28 @@ int
 ALSAmmapAudioDriver::xrun_recovery()
 {
 #ifdef _ALSA
-        if (err == -EPIPE) {    /* under-run */
-				periods = 0;
-                err = snd_pcm_prepare(playback_handle);
-                if (err < 0){
-                        cerr << "Can't recovery from underrun, prepare failed: " << snd_strerror(err) << "\n";
-return -1;
+    if (err == -EPIPE) {    /* under-run */
+		cerr << "buffer underrun" << endl;
+		periods = 0;
+		err = snd_pcm_prepare(playback_handle);
+		if (err < 0){
+			cerr << "Can't recovery from underrun, prepare failed: " << snd_strerror(err) << "\n";
+			return -1;
+		}
+		return 0;
+	} else if (err == -ESTRPIPE) {
+		while ((err = snd_pcm_resume(playback_handle)) == -EAGAIN)
+			sleep(1);       /* wait until the suspend flag is released */
+		if (err < 0) {
+			periods = 0;
+			err = snd_pcm_prepare(playback_handle);
+			if (err < 0){
+				cerr << "Can't recovery from suspend, prepare failed: " << snd_strerror(err) << "\n";
+				return -1;
 				}
-                return 0;
-        } else if (err == -ESTRPIPE) {
-                while ((err = snd_pcm_resume(playback_handle)) == -EAGAIN)
-                        sleep(1);       /* wait until the suspend flag is released */
-                if (err < 0) {
-						periods = 0;
-                        err = snd_pcm_prepare(playback_handle);
-                        if (err < 0){
-                                cerr << "Can't recovery from suspend, prepare failed: " << snd_strerror(err) << "\n";
-return -1;
-						}
-                }
-                return 0;
-        }
+		}
+		return 0;
+	}
 #else
 	return -1;
 #endif //_ALSA
@@ -53,10 +54,10 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 		avail = snd_pcm_avail_update( playback_handle);
 		if (avail < 0)
 		{
-			char b[ 80];
-			sprintf( b, "%i", err = avail);
-			cerr << "snd_pcm_avail_update error " << b << "=\"" 
-			<< snd_strerror( err) << "\"\n";
+//			char b[ 80];
+//			sprintf( b, "%i", err = avail);
+//			cerr << "snd_pcm_avail_update error " << b << "=\"" 
+//			<< snd_strerror( err) << "\"\n";
 			return xrun_recovery();
 		}
 		lframes = frames / 2;

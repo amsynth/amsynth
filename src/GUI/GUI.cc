@@ -35,6 +35,8 @@ GUI::GUI( Config & config, MidiController & mc,
 #ifdef _DEBUG
 	cout << "<GUI::GUI()>" << endl;
 #endif
+	lnav = -1;
+	
 	this->config = &config;
 	this->midi_controller = &mc;
 	this->pipe = pipe;
@@ -64,11 +66,33 @@ GUI::GUI( Config & config, MidiController & mc,
 
     GtkShadowType frame_shadow = GTK_SHADOW_OUT;
 
+	Gtk::Style *style = Gtk::Style::create();
+	Gdk_Font font = style->get_font();
+	font.load( "-*-helvetica-medium-r-*-*-*-100-*-*-*-*-*-*" );
+	style->set_font( font );
+	
 	for (int i = 0; i < 31; i++)
+	{
 		parameterView[i] = new ParameterKnob( pipe[1] );
+		parameterView[i]->set_style( *style );
+	}
 	for (int i = 0; i < 10; i++)
+	{
 		rb_pv[i] = new RadioButtonParameterView( pipe[1] );
+		rb_pv[i]->set_style( *style );
+	}
 	param_switch = new ParameterSwitch( pipe[1] );
+	param_switch->set_style( *style );
+	
+	osc1_frame.set_style( *style );
+	osc2_frame.set_style( *style );
+	osc_mix_frame.set_style( *style );
+	reverb_frame.set_style( *style );
+	distortion_frame.set_style( *style );
+	filter_frame.set_style( *style );
+	amp_frame.set_style( *style );
+	mod_frame.set_style( *style );
+	
 
 #ifdef _DEBUG
 	cout << "<GUI::GUI()> created ParameterViews" << endl;
@@ -163,6 +187,7 @@ GUI::GUI( Config & config, MidiController & mc,
 	/*
 	 * The main panel
 	 */
+	
     presetCV = new PresetControllerView( pipe[1], *this->vau );
 #ifdef _DEBUG
 	cout << "<GUI::GUI()> created presetCV" << endl;
@@ -644,17 +669,17 @@ GUI::init()
 
     // reverb control section
     parameterView[23]->setParameter(preset->getParameter("reverb_roomsize"));
-	parameterView[23]->setName( "Room Size" );
+	parameterView[23]->setName( "Room\nSize" );
     parameterView[24]->setParameter(preset->getParameter("reverb_wet"));
-	parameterView[24]->setName( "Amount" );
+	parameterView[24]->setName( "\nAmount" );
 //    parameterView[25]->setParameter(preset->getParameter("reverb_dry"));
 //	parameterView[25]->setName( "Dry" );
     parameterView[26]->setParameter(preset->getParameter("reverb_width"));
-	parameterView[26]->setName( "Stereo Width" );
+	parameterView[26]->setName( "Stereo\nWidth" );
 //    parameterView[27]->setParameter(preset->getParameter("reverb_mode"));
 //	parameterView[27]->setName( "Mode" );
     parameterView[28]->setParameter(preset->getParameter("reverb_damp"));
-	parameterView[28]->setName( "Damping" );
+	parameterView[28]->setName( "\nDamping" );
 
     // distortion control section
 //    parameterView[29]->setParameter(preset->getParameter("distortion_drive"));
@@ -676,18 +701,18 @@ GUI::init()
 						*midi_controller, *preset_controller );
 
 	char cstr[10];
-	status = "  Midi Driver: ";
+	status = " Midi Driver: ";
 	status += config->midi_driver;
 	if( config->midi_driver == "OSS" ){
 		status += ":";
 		status += config->oss_midi_device;
 	}
-	status += "      Midi Channel: ";
+	status += "   Midi Channel: ";
 	if( config->midi_channel ){
 		sprintf( cstr, "%2d", config->midi_channel );
 		status += string(cstr);
 	} else status += "All";
-	status += "            Audio Driver: ";
+	status += "   Audio Driver: ";
 	status += config->audio_driver;
 	if( config->audio_driver == "OSS" ){
 		status += " : ";
@@ -696,18 +721,20 @@ GUI::init()
 		status += " : ";
 		status += config->alsa_audio_device;
 	}
-	status += "      Sample Rate:";
+	status += "   Sample Rate:";
 	sprintf( cstr, "%d", config->sample_rate );
 	status += string(cstr);
-	status += " Hz        ";
-	status += "Poly: ";
-	sprintf( cstr, "%d", config->polyphony );
-	status += string(cstr);
-	status += "       ";
+	status += " Hz   ";
+	if( !config->realtime )
+	{
+		status += "Poly: ";
+		sprintf( cstr, "%d", config->polyphony );
+		status += string(cstr);
+	}
 	if(config->realtime)
-		status += "            Realtime Priority: YES";
+		status += "   Realtime Priority: YES";
 	else
-		status += "            Realtime Priority: NO";
+		status += "   Realtime Priority: NO";
 	statusBar.push( 1, status );
 }
 
@@ -861,15 +888,24 @@ GUI::event_handler(string text)
 gint
 GUI::idle_callback()
 {
-	string txt = status;
-	txt += "          ";
-	char cstr[3];
-	sprintf( cstr, "%d", config->active_voices );
-	txt += string( cstr );
-	txt += " Voices Active";
-	statusBar.pop( 1 );
-	statusBar.push( 1, txt );
-	return true;
+	if( config->active_voices != lnav )
+	{
+		string txt = status;
+		txt += "   ";
+		char cstr[3];
+		sprintf( cstr, "%d", config->active_voices );
+		txt += string( cstr );
+		if( config->polyphony != 0 )
+		{
+			sprintf( cstr, "%d", config->polyphony );
+			txt += "/";
+			txt += string(cstr);
+		}
+		txt += " Voices Active";
+		statusBar.pop( 1 );
+		statusBar.push( 1, txt );
+		return true;
+	}
 }
 
 GUI::~GUI()

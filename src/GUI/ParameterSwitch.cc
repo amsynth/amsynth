@@ -77,3 +77,10 @@ ParameterSwitch::_update_()
 	
 	supress_param_callback = false;
 }
+
+void 
+ParameterSwitch::set_style( Gtk::Style& style )
+{
+	label.set_style( style );
+	check_button.get_child()->set_style( style );
+}

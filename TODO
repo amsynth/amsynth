@@ -2,7 +2,6 @@ amSynth TODO list
 -----------------
 
 soon (current major version):
-+ the interface is too big - make it max 640x480 - smaller knob pixmap
 + find & fix audio output bug (output dies & kills output from all programs
   to the soundcard)
 + improve the record dialog
@@ -11,3 +10,5 @@ intermediate / long term
 + improve behaviour of the volume control
 + bandlimited oscillators
 + sanitise control signal processing
++ built-in virtual keyboard
++ add a delay (ie a switchable attack/decay envelope) to lfo

@@ -25,6 +25,7 @@ class ParameterKnob : public ParameterView, public Gtk::VBox {
     Gtk::Widget * getGtkWidget();
 	void drawValue( bool draw );
 	void setPixmap( GdkPixmap *pix, gint x, gint y, gint frames );
+	void set_style( Gtk::Style& style );
   private:
     void updateParam(Gtk::Adjustment * _adj);
     Parameter *parameter;

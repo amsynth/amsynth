@@ -22,6 +22,7 @@ class ParameterSwitch : public ParameterView, public Gtk::VBox {
     void update();
 	void _update_();
 	void toggle_handler();
+	void set_style( Gtk::Style& style );
   private:
 	Gtk::CheckButton check_button;
 	Gtk::Label label;

@@ -12,6 +12,7 @@ RadioButtonParameterView::RadioButtonParameterView( int pipe_d )
 {
 	last_toggle = 0.0;
 	parameter = 0;
+	local_style = 0;
 
 	add( frame );
 	frame.add( vbox );
@@ -101,4 +102,12 @@ RadioButtonParameterView::setDescription( int button, string text )
 {
 	radio_button[button].remove();
 	radio_button[button].add_label( text );
+	if( local_style!= 0 )
+		radio_button[button].get_child()->set_style( *local_style );
+}
+
+void 
+RadioButtonParameterView::set_style( Gtk::Style& style )
+{
+	local_style = style.copy();
 }

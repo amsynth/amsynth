@@ -9,6 +9,7 @@
 #include <gtk--/frame.h>
 #include <gtk--/label.h>
 #include <gtk--/radiobutton.h>
+#include <gtk--/style.h>
 #include <stdlib.h>
 #include <list>
 #include <string>
@@ -26,6 +27,7 @@ public:
 	Parameter * getParameter();
 	void update();
 	void _update_();
+	void set_style( Gtk::Style& style );
 private:
 	void toggle_handler( int button );
 	gfloat last_toggle;
@@ -35,6 +37,7 @@ private:
 	Gtk::Frame frame;
 	Gtk::VBox vbox;
 	Gtk::RadioButton radio_button[MAX_BUTTONS];
+	Gtk::Style *local_style;
 	gfloat button_value[MAX_BUTTONS]; // holds parameter value attatched to a radio button
 };
 

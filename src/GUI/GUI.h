@@ -65,7 +65,7 @@ class GUI:public Gtk::Window, public UpdateListener {
     void update();
 	void serve_request();
   private:
-	int *pipe;
+	int *pipe, lnav;
 	virtual void realize_impl();
     void event_handler(string text);
     void arrange();
