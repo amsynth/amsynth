@@ -1,26 +1,26 @@
-/AUTHORS/1.6/Mon Jul  7 23:20:29 2003//
-/COPYING/1.1.1.1/Sat Mar 16 19:24:51 2002//
-/ChangeLog/1.8/Sat Jul 19 14:21:59 2003//
-/INSTALL/1.6/Sat Jan 25 16:48:17 2003//
-/Makefile.am/1.2/Tue Jan 14 18:27:28 2003//
-/NEWS/1.9/Wed Jan 21 23:00:02 2004//
-/README/1.12/Sat Jul 19 15:52:52 2003//
-/TODO/1.7/Sun Jan 26 20:02:12 2003//
-/acconfig.h/1.1.1.1/Sat Mar 16 19:24:51 2002//
-/autogen.sh/1.2/Sun May 12 19:34:02 2002//
-/bootstrap/1.1.1.1/Sat Mar 16 19:24:51 2002//
-/clean_tree/1.1.1.1/Sat Mar 16 19:24:50 2002//
-/configure.in/1.15/Tue Jul 27 21:07:37 2004//
-/depcomp/1.1.1.1/Sat Mar 16 19:24:36 2002//
-/install-sh/1.1.1.1/Sat Mar 16 19:24:48 2002//
-/loc_count.sh/1.1.1.1/Sat Mar 16 19:24:36 2002//
-/missing/1.1.1.1/Sat Mar 16 19:24:50 2002//
-/mkinstalldirs/1.1.1.1/Sat Mar 16 19:24:50 2002//
-/stamp-h.in/1.1.1.1/Sat Mar 16 19:24:50 2002//
-/stats/1.1.1.1/Sat Mar 16 19:24:41 2002//
+/config.h.in/1.9/Fri Jan 21 08:44:11 2005//
 D/config////
 D/doc////
 D/skel////
 D/src////
-/aclocal.m4/1.13/Fri Jan 21 08:44:20 2005//
-/config.h.in/1.9/Fri Jan 21 08:44:11 2005//
+/AUTHORS/1.6/Fri Jan 21 08:44:11 2005//
+/COPYING/1.1.1.1/Fri Jan 21 08:44:11 2005//
+/ChangeLog/1.8/Fri Jan 21 08:44:11 2005//
+/INSTALL/1.6/Fri Jan 21 08:44:11 2005//
+/Makefile.am/1.2/Fri Jan 21 08:44:11 2005//
+/NEWS/1.9/Fri Jan 21 08:44:11 2005//
+/README/1.12/Fri Jan 21 08:44:11 2005//
+/TODO/1.7/Fri Jan 21 08:44:11 2005//
+/acconfig.h/1.1.1.1/Fri Jan 21 08:44:11 2005//
+/autogen.sh/1.2/Fri Jan 21 08:44:11 2005//
+/bootstrap/1.1.1.1/Fri Jan 21 08:44:11 2005//
+/clean_tree/1.1.1.1/Fri Jan 21 08:44:11 2005//
+/depcomp/1.1.1.1/Fri Jan 21 08:44:11 2005//
+/install-sh/1.1.1.1/Fri Jan 21 08:44:12 2005//
+/loc_count.sh/1.1.1.1/Fri Jan 21 08:44:11 2005//
+/missing/1.1.1.1/Fri Jan 21 08:44:11 2005//
+/mkinstalldirs/1.1.1.1/Fri Jan 21 08:44:11 2005//
+/stamp-h.in/1.1.1.1/Thu Mar  3 00:32:46 2005//
+/stats/1.1.1.1/Fri Jan 21 08:44:11 2005//
+/aclocal.m4/1.14/Thu Mar  3 00:32:12 2005//
+/configure.in/1.17/Mon Mar  7 23:34:43 2005//
