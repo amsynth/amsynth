@@ -14,7 +14,7 @@ PresetControllerView::PresetControllerView( int pipe_d, VoiceAllocationUnit & va
 	inhibit_combo_callback = false;
 	inhibit_combo_update = false;
 	
-    commit.add_label("Save Changes");
+    commit.add_label("Save Changes",0.5);
     commit.clicked.connect(
 		bind <char*>(slot(this, &PresetControllerView::ev_handler),"commit"));
 
