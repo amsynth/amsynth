@@ -143,7 +143,8 @@ PresetController::importPreset( string filename )
 		
 		//get the preset's name
 		file >> buffer;
-		string presetName = string(buffer);
+		string presetName = "Imported: ";
+		presetName += string(buffer);
 		file >> buffer;
 		while (string(buffer) != "<parameter>") {
 			presetName += " ";
@@ -161,6 +162,8 @@ PresetController::importPreset( string filename )
 				currentPreset.getParameter(name).setValue( atof(buffer) );
 			file >> buffer;
 		}
+		currentPreset.setName(presetName);
+		if (updateListener) updateListener->update();
 	} else file.close();
 	return 1;
 }
