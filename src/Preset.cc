@@ -53,7 +53,7 @@ Preset::Preset()
     no_p++;
 
     parameters[no_p].setName("filter_resonance");
-	parameters[no_p].setMax(1.0);
+	parameters[no_p].setMax(0.97);
     parameters[no_p].setValue(0);
     no_p++;
 	
