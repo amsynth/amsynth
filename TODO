@@ -1,7 +1,13 @@
-+ incorporate alsa-mmap driver
+amSynth TODO list
+-----------------
 
-+ Configuration Dialog (hardware devices etc..)
+soon (current major version):
++ the interface is too big - make it max 640x480 - smaller knob pixmap
++ find & fix audio output bug (output dies & kills output from all programs
+  to the soundcard)
++ improve the record dialog
 
-+ improve filing system for config + presets (a ~/.amSynth/ directory..)
-
-+ add idea of banks of presets - move to one built-in bank, n user-definables?
+intermediate / long term
++ improve behaviour of the volume control
++ bandlimited oscillators
++ sanitise control signal processing
