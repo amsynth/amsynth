@@ -1,10 +1,11 @@
 /* amSynth
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2003 Nick Dowell
  */
  
 #include "Config.h"
 
 #include <fstream>
+#include <iostream>
 
 Config::Config()
 {
@@ -65,7 +66,7 @@ Config::load	( string filename )
 				{
 					if (tmp == '\n')
 					{
-						strpt = '\0';
+						*strpt++ = '\0';
 						break;
 					}
 					whitespace = 0;
