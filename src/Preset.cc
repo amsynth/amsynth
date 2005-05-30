@@ -47,7 +47,7 @@ Preset::Preset			(const string name)
 	mParameters.push_back (Parameter		("reverb_roomsize",		kReverbRoomsize));
 	mParameters.push_back (Parameter		("reverb_damp",			kReverbDamp));
 	mParameters.push_back (Parameter		("reverb_wet",			kReverbWet));
-	mParameters.push_back (Parameter		("reverb_width",		kReverbWidth));
+	mParameters.push_back (Parameter		("reverb_width",		kReverbWidth,		1));
 	mParameters.push_back (Parameter		("distortion_crunch",	kDistortionCrunch,	0, 0, 0.9f));
 	mParameters.push_back (Parameter		("osc2_sync",			kOsc2Sync,			0, 0, 1, 1));
 }
