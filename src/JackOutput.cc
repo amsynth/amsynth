@@ -7,10 +7,6 @@
 #include <iostream>
 
 #ifdef with_jack
-//float		*inbuf, *pt;
-//float		*lout, *rout;
-//int		p,q,initialised;
-
 
 int
 jack_process (jack_nframes_t nframes, void *arg)
