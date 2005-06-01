@@ -97,9 +97,6 @@ void
 AudioOutput::ThreadAction	()
 {
 	sched_realtime ();
-	//struct sched_param sched; sched.sched_priority = 50;
-	//sched_setscheduler (0, SCHED_FIFO, &sched);
-	//sched_getparam (0, &sched);
 	
 	while (!ShouldStop ())
 	{
