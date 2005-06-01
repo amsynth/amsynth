@@ -5,8 +5,6 @@
 #ifndef _LOWPASSFILTER_H
 #define _LOWPASSFILTER_H
 
-#include "Synth--.h"
-
 /**
  * A 24 dB/ocatave resonant low-pass filter.
  **/

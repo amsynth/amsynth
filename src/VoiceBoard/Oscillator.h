@@ -4,7 +4,7 @@
 #ifndef _OSCILLATOR_H
 #define _OSCILLATOR_H
 
-#include "Synth--.h"
+#include "Synth--.h"	// for PI and TWO_PI
 
 /**
  * @brief An Audio Oscillator unit.

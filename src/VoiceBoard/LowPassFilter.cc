@@ -3,6 +3,7 @@
  */
 
 #include "LowPassFilter.h"
+#include "Synth--.h"		// for PI and TWO_PI
 #include <math.h>
 
 LowPassFilter::LowPassFilter() :

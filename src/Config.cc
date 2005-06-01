@@ -7,8 +7,6 @@
 #include <fstream>
 #include <iostream>
 
-#include "VoiceBoard/Synth--.h"
-
 static string amsynthrc_fname;
 
 Config::Config()
@@ -29,7 +27,7 @@ Config::Defaults	()
 	alsa_audio_device = "default";
 	sample_rate = 44100;
 	channels = 2;
-	buffer_size = BUF_SIZE;
+	buffer_size = 128;
 	polyphony = 10;
 	alsa_seq_client_name = "amSynth";
 	current_bank_file = string (getenv ("HOME")) +

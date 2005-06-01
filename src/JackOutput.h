@@ -10,7 +10,6 @@
 #endif
 
 #include "AudioOutput.h"
-#include "VoiceBoard/Synth--.h"
 #include "Config.h"
 
 class JackOutput : public GenericOutput {

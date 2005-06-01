@@ -6,11 +6,11 @@
 #include "VoiceAllocationUnit.h"
 
 AudioOutput::AudioOutput()
+:	buffer (NULL)
 {
 	running = 0;
 	recording = 0;
 	wavoutfile = "/tmp/amSynth.wav";
-	buffer = new float[BUF_SIZE*4];
 }
 
 AudioOutput::~AudioOutput()
@@ -20,7 +20,7 @@ AudioOutput::~AudioOutput()
 }
 
 int
-AudioOutput::init	( Config & config )
+AudioOutput::init	(Config & config)
 {
 	this->config = &config;
 	channels = config.channels;
@@ -38,6 +38,10 @@ AudioOutput::init	( Config & config )
 	sf_info.pcmbitwidth = 16;
 #endif
 #endif
+
+	if (buffer) delete[] buffer;
+	buffer = new float [config.buffer_size*4];
+	
 	return 0;
 }
 
@@ -98,19 +102,18 @@ AudioOutput::ThreadAction	()
 {
 	sched_realtime ();
 	
+	int bufsize = config->buffer_size;
 	while (!ShouldStop ())
 	{
-		mInput->Process (buffer+128, buffer+192, BUF_SIZE);
-		for (int i=0; i<BUF_SIZE; i++)
+		mInput->Process (buffer+bufsize*2, buffer+bufsize*3, bufsize);
+		for (int i=0; i<bufsize; i++)
 		{
-			buffer[2*i] = buffer[128+i];
-			buffer[2*i+1] = buffer[192+i];
+			buffer[2*i]   = buffer[bufsize*2+i];
+			buffer[2*i+1] = buffer[bufsize*3+i];
 		}
 #ifdef with_sndfile
-		if( recording )
-			sf_writef_float( sndfile, buffer, BUF_SIZE );
+		if (recording) sf_writef_float (sndfile, buffer, bufsize);
 #endif
-		if( out.write( buffer, BUF_SIZE*channels ) == -1 )
-			running = 0;
+		if (out.write (buffer, bufsize*channels) == -1) Stop ();
 	}
 }

@@ -9,7 +9,6 @@
 #include <sndfile.h>
 #endif
 
-#include "VoiceBoard/Synth--.h"
 #include "drivers/AudioInterface.h"
 #include "Config.h"
 
