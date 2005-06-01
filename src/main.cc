@@ -5,7 +5,7 @@
 #include "main.h"
 #include "../config.h"
 
-#include <gtk--/main.h>
+#include <gtkmm/main.h>
 #include <pthread.h>
 #include <iostream>
 #include <fstream>
@@ -73,24 +73,6 @@ void *gui_thread(void *arg)
 	//kit->run();
 #ifdef _DEBUG
 	cout << "gui_thread() terminated" << endl;
-#endif
-	pthread_exit(0);
-}
-
-
-void *audio_thread(void *arg)
-{
-#ifdef _DEBUG
-	cout << "audio_thread() starting" << endl;
-#endif
-	int foo = (int) arg;
-	foo = 0;
-
-	// set realtime priority for this (the audio) thread.
-	sched_realtime();
-	out->run();
-#ifdef _DEBUG
-	cout << "audio_thread() terminated" << endl;
 #endif
 	pthread_exit(0);
 }
@@ -177,8 +159,9 @@ under certain conditions; see the file COPYING for details\n";
 		{
 			jack = 1;
 			out = new JackOutput();
-			if (((JackOutput*)out)->init (config)!=0)
+			if (((JackOutput*) out)->init (config) != 0)
 			{
+				delete out;
 				jack = 0;
 				out = new AudioOutput();
 			}
@@ -195,6 +178,13 @@ under certain conditions; see the file COPYING for details\n";
 		}
 	}
 	
+	//~ out = new AudioOutput ();
+	//~ int res = out->init (config);
+	//~ if (0 != res)
+	//~ {
+		//~ std::cerr << "AudioOutput::init() failed with code %d" << res;
+	//~ }
+	
 	vau = new VoiceAllocationUnit;
 	vau->SetSampleRate (config.sample_rate);
 	vau->SetMaxVoices (config.polyphony);
@@ -202,13 +192,7 @@ under certain conditions; see the file COPYING for details\n";
 	
 	presetController->loadPresets(config.current_bank_file.c_str());
 	
-	int audio_res;
-	if( enable_audio )
-	{
-		if (jack) out->run();
-		else audio_res = 
-			pthread_create(&audioThread, NULL, audio_thread, NULL);
-	}
+	if (enable_audio) out->Start ();
 	
 	if (config.debug_drivers) std::cerr << "*** DONE :)\n";
 	
@@ -291,8 +275,8 @@ under certain conditions; see the file COPYING for details\n";
 	
 	if(enable_audio)
 	{
-		out->stop();
-		if (!jack) audio_res = pthread_join(audioThread, NULL);
+		out->Stop ();
+//		if (!jack) audio_res = pthread_join(audioThread, NULL);
 #ifdef _DEBUG
 		cout << "joined audioThread" << endl;
 #endif		

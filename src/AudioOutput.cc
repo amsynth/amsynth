@@ -38,10 +38,6 @@ AudioOutput::init	( Config & config )
 	sf_info.pcmbitwidth = 16;
 #endif
 #endif
-	
-	
-	if (out.open (config) == -1) return -1;
-	
 	return 0;
 }
 
@@ -72,17 +68,33 @@ AudioOutput::stopRecording()
 #endif
 }
 
-void 
-AudioOutput::run()
+bool
+AudioOutput::Start ()
 {
-	out.setRealtime();
-
-#ifdef _DEBUG
-	cout << "<AudioOutput> entering main loop" << endl;
-#endif
+	fprintf (stderr, "AudioOutput::Start ()\n");
 	
-	running = 1;
-	while (running)
+	if (out.open (*config) == -1) return false;
+	out.setRealtime();
+	if (0 != PThread::Run ())
+	{
+		out.close ();
+		return false;
+	}
+	return true;
+}
+
+void
+AudioOutput::Stop ()
+{
+	PThread::Stop ();
+	PThread::Join ();
+	out.close ();
+}
+
+void 
+AudioOutput::ThreadAction	()
+{
+	while (!ShouldStop ())
 	{
 		mInput->Process (buffer+128, buffer+192, BUF_SIZE);
 		for (int i=0; i<BUF_SIZE; i++)
@@ -97,6 +109,4 @@ AudioOutput::run()
 		if( out.write( buffer, BUF_SIZE*channels ) == -1 )
 			running = 0;
 	}
-	
-	out.close();
 }

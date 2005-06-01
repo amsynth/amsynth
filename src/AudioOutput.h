@@ -22,8 +22,9 @@ public:
 				{ mInput = src; }
 
 	virtual	int		init		( Config & config )	= 0;
-	virtual	void		run 		( )			= 0;
-	virtual	void		stop		( )			= 0;
+	
+	virtual	bool		Start 			() = 0;
+	virtual	void		Stop			() = 0;
 	
 	virtual	bool		canRecord	( )	{ return false; }
 	virtual	void		startRecording	( )			{;}
@@ -38,29 +39,41 @@ protected:
 	VoiceAllocationUnit*	mInput;
 };
 
-/**
- * @class AudioOutput
- * The AudioOutput object opens and configures an AudioInterface, and then
- * streams the signal from it's NFSource input to the output.
- * It can also record the output to a .wav file
- */
-class AudioOutput : public GenericOutput {
-
+class PThread
+{
 public:
-  AudioOutput();
-  virtual ~AudioOutput();
-  /**
-   * the main controller function. This function _never_ returns...
-   * until the stop() method is invoked (from another thread of execution
-   * obviously)
-   */
-  void run();
-  /**
-   * Stops execution 
-   */
-  void stop() {
-    running = 0;
-  };
+	int		Run		() { return pthread_create (&mThread, NULL, PThread::start_routine, this); }
+	void	Stop	() { mShouldStop = true; }
+	int		Join	() { return pthread_join (mThread, NULL); }
+
+protected:
+	// override me!
+	// and make sure to call ShouldStop() periodically and return if so.
+	virtual void 	ThreadAction () = 0;
+	bool			ShouldStop () { return mShouldStop; }
+
+private:
+	static void* start_routine (void *arg)
+	{
+		PThread *self = (PThread *) arg;
+		self->mShouldStop = false;
+		self->ThreadAction ();
+		pthread_exit (0);
+	}
+	pthread_t	mThread;
+	bool		mShouldStop;
+};
+
+
+class AudioOutput : public GenericOutput, public PThread
+{
+public:
+	AudioOutput();
+	virtual ~AudioOutput();
+
+	bool	Start	();
+	void	Stop	();
+
 #ifdef with_sndfile
 	bool	canRecord	( )	{ return true; };
 #else
@@ -71,6 +84,8 @@ public:
 	void 	setOutputFile	( string file )	{ wavoutfile = file; };
   	string 	getOutputFile	( )	{ return wavoutfile; };
 	int 	init		( Config & config );
+
+	void	ThreadAction	();
 
 private:
   int running;

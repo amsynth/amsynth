@@ -131,23 +131,27 @@ JackOutput::setInput( VoiceAllocationUnit* source )
 	GenericOutput::setInput (source);
 }
 
-void 
-JackOutput::run()
+bool 
+JackOutput::Start	()
 {
 #ifdef with_jack
-	if (!initialised) return;
+	if (!initialised) return false;
+	if (!myinput) return false;
 	if (jack_activate (client)) 
 	{
 		std::cerr << "cannot activate JACK client\n";
-		return;
+		return false;
 	}
 	jack_connect(client, jack_port_name(l_port), "alsa_pcm:playback_1");
 	jack_connect(client, jack_port_name(r_port), "alsa_pcm:playback_2");
+	return true;
+#else
+	return false;
 #endif
 }
 
 void
-JackOutput::stop()
+JackOutput::Stop()
 {
 #ifdef with_jack
 	if (!initialised) return;

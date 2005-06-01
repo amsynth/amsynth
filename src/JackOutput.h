@@ -20,9 +20,9 @@ public:
 	virtual		~JackOutput	( ) {};
 	void		setInput	( VoiceAllocationUnit* );
 	
-	int		init		( Config & config );// returns 0 on success
-	void		run		( );
-	void		stop		( );
+	int			init		( Config & config );// returns 0 on success
+	bool		Start		();
+	void		Stop		();
 	
 	string		get_error_msg	( )		{ return error_msg; };
 	
