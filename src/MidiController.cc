@@ -4,12 +4,12 @@
 
 #include "MidiController.h"
 #include <fstream>
+void sched_realtime (); // defined in main.cc
 
 MidiController::MidiController( Config & config )
 :	last_active_controller ("last_active_cc", (Param) -1, 0, 0, MAX_CC, 1)
 {
 	this->config = &config;
-	running = 0;
 	buffer = new unsigned char[MIDI_BUF_SIZE];
 	presetController = 0;
 	_va = 0;
@@ -68,31 +68,25 @@ MidiController::init	( )
 			<< config->midi_driver << endl;
 		return -1;
 	}
-	running = 1;
 	return 0;
 }
 
 void
-MidiController::run()
+MidiController::ThreadAction ()
 {
-#ifdef _DEBUG
-    cout << "<MidiController> entering doMidi() loop.." << endl;
-#endif
-
-    while (running)
-	doMidi();
-
+	sched_realtime ();
+    while (!ShouldStop ()) doMidi();
     midi.close();
 }
 
+// need to kill the thread, otherwise it waits indefinitely for the next incoming byte
 void
-MidiController::stop()
-{
-#ifdef _DEBUG
-    cout << "<MidiController::stop()>" << endl;
-#endif
-    running = 0;
+MidiController::Stop ()
+{ 
+	PThread::Kill (); 
+	PThread::Join ();
 }
+
 
 void
 MidiController::doMidi()
@@ -100,7 +94,7 @@ MidiController::doMidi()
 	if ((bytes_read = midi.read(buffer)) == -1)
 	{
 		cout << "error reading from midi device" << endl;
-		running = 0;
+		Stop ();
 		return;
 	}
 

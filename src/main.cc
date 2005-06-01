@@ -6,7 +6,6 @@
 #include "../config.h"
 
 #include <gtkmm/main.h>
-#include <pthread.h>
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
@@ -41,41 +40,6 @@ void sched_realtime()
 	}
 }
 
-void *midi_thread(void *arg)
-{
-#ifdef _DEBUG
-    cout << "midi_thread() starting" << endl;
-#endif
-    int foo = (int) arg;
-    foo = 0;
-	// run midi thread with real-time priority
-	/* if we don't do this, the audio thread can lock the system due to its 
-	 * priority. if the midi thread has same priority, it can still control 
-	 * the audio thread, and the system can return to normal when voices are 
-	 * deleted. */
-	sched_realtime();
-    midi_controller->run();
-#ifdef _DEBUG
-    cout << "midi_thread() terminated" << endl;
-#endif
-    pthread_exit(0);
-}
-
-void *gui_thread(void *arg)
-// it would be nice to have a GUI thread, so it could run without GUI...
-{
-#ifdef _DEBUG
-	cout << "gui_thread() starting" << endl;
-#endif
-	int foo = (int) arg;
-	foo = 0; // not useful - just gets rid of compiler warning
-	//kit->run();
-#ifdef _DEBUG
-	cout << "gui_thread() terminated" << endl;
-#endif
-	pthread_exit(0);
-}
-
 void
 pipe_event( void *arg, int foo, GdkInputCondition ic )
 {
@@ -92,10 +56,7 @@ This is free software, and you are welcome to redistribute it\n\
 under certain conditions; see the file COPYING for details\n";
 
 	if( pipe( the_pipe ) ) cout << "pipe() error\n";
-	int jack = 0;
-	int enable_audio = 1;
-	int enable_gui = 1;
-	
+	bool jack = false;
 	
 	int opt;
 	while( (opt=getopt(argc, argv, "vhstdm:c:a:r:p:b:"))!= -1 ) {
@@ -107,12 +68,6 @@ under certain conditions; see the file COPYING for details\n";
 			case 'h':
 				cout << help_text; 
 				return 0;
-			case 's':
-				enable_audio = 0;
-				break;
-			case 't':
-				enable_gui = 0;
-				break;				
 			default:
 				break;
 		}
@@ -141,40 +96,36 @@ under certain conditions; see the file COPYING for details\n";
 	//
 	if (config.debug_drivers) std::cerr << "\n\n*** INITIALISING AUDIO ENGINE...\n";
 	
-	if (enable_audio)
+	if (config.audio_driver=="jack"||config.audio_driver=="JACK")
 	{
-		if (config.audio_driver=="jack"||config.audio_driver=="JACK")
+		jack = 1;
+		out = new JackOutput();
+		if (((JackOutput*)out)->init (config)!=0)
 		{
-			jack = 1;
-			out = new JackOutput();
-			if (((JackOutput*)out)->init (config)!=0)
-			{
-				std::cerr << ((JackOutput*)out)->get_error_msg() << "\n";
-				std::cerr << "** failed to initialise JACK... aborting :'( **\n";
-				exit (10);
-			}
+			std::cerr << ((JackOutput*)out)->get_error_msg() << "\n";
+			std::cerr << "** failed to initialise JACK... aborting :'( **\n";
+			exit (10);
 		}
-		else if (config.audio_driver=="auto"||config.audio_driver=="AUTO")
+	}
+	else if (config.audio_driver=="auto"||config.audio_driver=="AUTO")
+	{
+		jack = 1;
+		out = new JackOutput();
+		if (((JackOutput*) out)->init (config) != 0)
 		{
-			jack = 1;
-			out = new JackOutput();
-			if (((JackOutput*) out)->init (config) != 0)
-			{
-				delete out;
-				jack = 0;
-				out = new AudioOutput();
-			}
-		}
-		else
-		{
+			delete out;
+			jack = 0;
 			out = new AudioOutput();
 		}
-
-		if (jack==0) if (out->init (config) != 0)
-		{
-			std::cerr << "failed to open any audio device\n\n";
-			exit (-1);
-		}
+	}
+	else
+	{
+		out = new AudioOutput();
+	}
+	if ((!jack) && (out->init (config) != 0))
+	{
+		std::cerr << "failed to open any audio device\n\n";
+		exit (-1);
 	}
 	
 	//~ out = new AudioOutput ();
@@ -187,11 +138,11 @@ under certain conditions; see the file COPYING for details\n";
 	vau = new VoiceAllocationUnit;
 	vau->SetSampleRate (config.sample_rate);
 	vau->SetMaxVoices (config.polyphony);
-	if (enable_audio) out->setInput( vau );
+	out->setInput( vau );
 	
 	presetController->loadPresets(config.current_bank_file.c_str());
 	
-	if (enable_audio) out->Start ();
+	out->Start ();
 	
 	if (config.debug_drivers) std::cerr << "*** DONE :)\n";
 	
@@ -201,23 +152,17 @@ under certain conditions; see the file COPYING for details\n";
 	//
 	if (config.debug_drivers) std::cerr << "\n\n*** INITIALISING MIDI ENGINE...\n";
 	
-	if (enable_audio)
-	{
-		config.alsa_seq_client_name = out->getTitle();
-		midi_controller = new MidiController( config );
-	}
-	else
-		midi_controller = new MidiController( config );
+	config.alsa_seq_client_name = out->getTitle();
 
+	midi_controller = new MidiController( config );
 	if (midi_controller->init () != 0)
 	{
 		std::cerr << "failed to open any midi device\n\n";
 		exit (-1);
 	}
 	
-	int midi_res;
-	if (enable_gui) midi_res = 
-			pthread_create( &midiThread, NULL, midi_thread, NULL );
+	midi_controller->Run ();
+
 	if (config.debug_drivers) std::cerr << "*** DONE :)\n\n";
   
 	// need to drop our suid-root permissions :-
@@ -230,22 +175,17 @@ under certain conditions; see the file COPYING for details\n";
   
 	presetController->getCurrentPreset().AddListenerToAll (vau);
 
-	if (enable_gui==1)
-	{	
 	Gtk::Main kit( &argc, &argv ); // this can be called SUID
 	
 	// make GDK loop read events from the pipe
 	gdk_input_add( the_pipe[0], GDK_INPUT_READ, &pipe_event, (void*)NULL );
 
 	// give audio/midi threads time to start up first..
-	if (enable_audio && jack) sleep( 1 );
+	if (jack) sleep (1);
 
 	// this can be called SUID:
-	if (enable_audio)
-		gui = new GUI( config, *midi_controller, *vau, the_pipe, out, out->getTitle() );
-	else
-		gui = new GUI( config, *midi_controller, *vau, the_pipe, 0, (const char*)"amSynth (silent)" );
-	gui->setPresetController( *presetController );
+	gui = new GUI (config, *midi_controller, *vau, the_pipe, out, out->getTitle());
+	gui->setPresetController ( *presetController );
 	gui->init();
 	if (config.xfontname!="")
 	{
@@ -254,8 +194,6 @@ under certain conditions; see the file COPYING for details\n";
 	
 	// cannot be called SUID:
 	kit.run();
-	}
-	else midi_controller->run();
 	
 
 #ifdef _DEBUG
@@ -272,26 +210,15 @@ under certain conditions; see the file COPYING for details\n";
 	presetController->savePresets(config.current_bank_file.c_str ());
 	midi_controller->saveConfig();
 	
-	if(enable_audio)
-	{
-		out->Stop ();
-//		if (!jack) audio_res = pthread_join(audioThread, NULL);
+	out->Stop ();
 #ifdef _DEBUG
-		cout << "joined audioThread" << endl;
+	cout << "joined audioThread" << endl;
 #endif		
-	}
 	
-	if (config.xruns) 
-		std::cerr << config.xruns << " audio buffer underruns occurred\n";
+	if (config.xruns) std::cerr << config.xruns << " audio buffer underruns occurred\n";
 	
-	midi_controller->stop();
-	// we probably need to kill the midi thread, as it is always waiting for
-	// a new midi event..
-	midi_res = pthread_kill( midiThread, 2 );
-	midi_res = pthread_join( midiThread, NULL );
-#ifdef _DEBUG
-	cout << "joined midiThread" << endl;
-#endif	
+	midi_controller->Stop ();
+
 	delete presetController;
 	delete midi_controller;
 	delete vau;

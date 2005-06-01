@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
 #ifndef _AUDIO_OUTPUT_H
@@ -11,6 +11,7 @@
 
 #include "drivers/AudioInterface.h"
 #include "Config.h"
+#include "PThread.h"
 
 class VoiceAllocationUnit;
 
@@ -37,32 +38,6 @@ public:
 protected:
 	VoiceAllocationUnit*	mInput;
 };
-
-class PThread
-{
-public:
-	int		Run		() { return pthread_create (&mThread, NULL, PThread::start_routine, this); }
-	void	Stop	() { mShouldStop = true; }
-	int		Join	() { return pthread_join (mThread, NULL); }
-
-protected:
-	// override me!
-	// and make sure to call ShouldStop() periodically and return if so.
-	virtual void 	ThreadAction () = 0;
-	bool			ShouldStop () { return mShouldStop; }
-
-private:
-	static void* start_routine (void *arg)
-	{
-		PThread *self = (PThread *) arg;
-		self->mShouldStop = false;
-		self->ThreadAction ();
-		pthread_exit (0);
-	}
-	pthread_t	mThread;
-	bool		mShouldStop;
-};
-
 
 class AudioOutput : public GenericOutput, public PThread
 {

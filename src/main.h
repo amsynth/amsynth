@@ -19,8 +19,6 @@ GenericOutput *out;
 Config config;
 GUI *gui;
 
-pthread_t midiThread, guiThread, audioThread;
-
 string help_text =
 "usage: amSynth [options]\n\
 \n\

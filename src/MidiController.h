@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
 #ifndef _MIDICONTROLLER_H
@@ -9,6 +9,7 @@
 #include "drivers/MidiInterface.h"
 #include "VoiceAllocationUnit.h"
 #include "Parameter.h"
+#include "PThread.h"
 
 // there are 32 standard MIDI controllers
 #define MAX_CC 128
@@ -18,41 +19,31 @@
  * decodes the incoming messages and performs the appropriate actions on the
  * rest of the system.
  */
-class MidiController {
+class MidiController : public PThread
+{
 public:
 	MidiController( Config & config );
-	~MidiController();
+	virtual ~MidiController();
 
 	int	init			( );
 
-	/**
-	 * @param pc The PresetController for the system.
-	 */
+	void	Stop ();
+
 	void	setPresetController	(PresetController & pc);
-	/**
-	 * @param vau The VoiceAllocationUnit for the system.
-	 */
 	void	setVAU			(VoiceAllocationUnit & vau);
-	/**
-	 * @param config The global Config object for the system.
-	 */
-	void	saveConfig		();
-	/**
-	 * Start execution of the MidiController. This function never returns (until
-	 * execution is stop()ped or an error occurs).
-	 */
-	void	run			();
-	/**
-	 * Stop the execution of the MidiController.
-	 */
-	void	stop			();
+
+	void	saveConfig ();
+
 	void	setController		( int controller_no, Parameter &param );
-	Parameter & getLastControllerParam()
-	{ return last_active_controller; };
+	Parameter & getLastControllerParam() { return last_active_controller; };
 	Parameter & getController( int controller_no );
 	
 	void	set_midi_channel	( int ch );
-  private:
+
+protected:
+	void	ThreadAction ();
+
+private:
     void doMidi();
     void dispatch_note(unsigned char ch,
 		       unsigned char note, unsigned char vel);
@@ -62,7 +53,6 @@ public:
     MidiInterface midi;
     PresetController *presetController;
 	Config *config;
-    char running;
     int bytes_read;
     unsigned char *buffer;
     unsigned char status, data, channel, byte;

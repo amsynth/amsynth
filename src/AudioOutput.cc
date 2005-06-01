@@ -75,8 +75,6 @@ AudioOutput::stopRecording()
 bool
 AudioOutput::Start ()
 {
-	fprintf (stderr, "AudioOutput::Start ()\n");
-	
 	if (out.open (*config) == -1) return false;
 	out.setRealtime();
 	if (0 != PThread::Run ())
