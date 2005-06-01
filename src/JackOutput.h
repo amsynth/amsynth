@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001-2003 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
 #ifndef _JACK_OUTPUT_H
@@ -18,7 +18,6 @@ class JackOutput : public GenericOutput {
 public:
 //			JackOutput	( );
 	virtual		~JackOutput	( ) {};
-	void		setInput	( VoiceAllocationUnit* );
 	
 	int			init		( Config & config );// returns 0 on success
 	bool		Start		();
@@ -32,14 +31,24 @@ public:
 
 	const char*	getTitle	( )	{ return client_name.c_str(); };
 
+	int			process		(jack_nframes_t nframes);
+	int			bufsize		(jack_nframes_t nframes);
+	int			srate		(jack_nframes_t nframes);
+	void		shutdown	();
+	
 private:
 	int	running;
 	int	channels;
 	Config	*config;
 	string	wavoutfile;
 	int	recording;
-	int	bufsize, srate;
 	string	client_name, error_msg;
+
+	jack_port_t 	*l_port, *r_port;
+	jack_client_t 	*client;
+	int		sample_rate;
+	int		buf_size;
+	bool	initialised;
 };
 
 #endif				// _AUDIO_OUTPUT_H

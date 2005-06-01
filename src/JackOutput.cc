@@ -7,45 +7,37 @@
 #include <iostream>
 
 #ifdef with_jack
-VoiceAllocationUnit	*myinput;
-float		*inbuf, *pt;
-float		*lout, *rout;
-jack_port_t 	*l_port, *r_port;
-jack_client_t 	*client;
-int		sample_rate;
-int		buf_size;
-int		p,q,initialised;
+//float		*inbuf, *pt;
+//float		*lout, *rout;
+//int		p,q,initialised;
 
 
 int
 jack_process (jack_nframes_t nframes, void *arg)
-
 {
-	lout = (jack_default_audio_sample_t *)
-			jack_port_get_buffer (l_port, nframes);
-	rout = (jack_default_audio_sample_t *)
-			jack_port_get_buffer (r_port, nframes);
-	myinput->Process (lout, rout, nframes);
-	return 0;
+	JackOutput *client = (JackOutput *) arg;
+	return client->process (nframes);
 }
 
 int
 jack_bufsize (jack_nframes_t nframes, void *arg)
 {
-	buf_size = nframes;
-	return 0;
+	JackOutput *client = (JackOutput *) arg;
+	return client->bufsize (nframes);
 }
 
 int
 jack_srate (jack_nframes_t nframes, void *arg)
 {
-	sample_rate = nframes;
-	return 0;
+	JackOutput *client = (JackOutput *) arg;
+	return client->srate (nframes);
 }
 
 void
 jack_shutdown (void *arg)
 {
+	JackOutput *client = (JackOutput *) arg;
+	client->shutdown ();
 }
 
 void
@@ -60,7 +52,7 @@ int
 JackOutput::init	( Config & config )
 {
 #ifdef with_jack
-	initialised = 0;
+	initialised = false;
 	client_name = "amSynth";
 	
 	// check if there are already any amSynth jack clients...
@@ -96,21 +88,19 @@ JackOutput::init	( Config & config )
 		return -1;
 	}
 
-	jack_set_process_callback (client, jack_process, 0);
-	jack_set_buffer_size_callback (client, jack_bufsize, 0);
-	jack_set_sample_rate_callback (client, jack_srate, 0);
-	jack_on_shutdown (client, jack_shutdown, 0);
+	jack_set_process_callback (client, jack_process, this);
+	jack_set_buffer_size_callback (client, jack_bufsize, this);
+	jack_set_sample_rate_callback (client, jack_srate, this);
+	jack_on_shutdown (client, jack_shutdown, this);
 
 	sample_rate = jack_get_sample_rate( client );
-	buf_size = p = jack_get_buffer_size( client );
+	buf_size = jack_get_buffer_size (client);
 
 	/* create output ports */
-	l_port = jack_port_register( client, "L out", 
-			JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0 );
-	r_port = jack_port_register( client, "R out",
-			JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0 );
+	l_port = jack_port_register (client, "L out", JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
+	r_port = jack_port_register (client, "R out", JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
 	
-	initialised = 1;
+	initialised = true;
 	
 	config.sample_rate = sample_rate;
 	config.buffer_size = buf_size;
@@ -121,14 +111,32 @@ JackOutput::init	( Config & config )
 	return -1;
 }
 
+int
+JackOutput::process (jack_nframes_t nframes)
+{
+	float *lout = (jack_default_audio_sample_t *) jack_port_get_buffer (l_port, nframes);
+	float *rout = (jack_default_audio_sample_t *) jack_port_get_buffer (r_port, nframes);
+	mInput->Process (lout, rout, nframes);
+	return 0;
+}
+
+int
+JackOutput::bufsize (jack_nframes_t nframes)
+{
+	buf_size = nframes;
+	return 0;
+}
+
+int
+JackOutput::srate (jack_nframes_t nframes)
+{
+	sample_rate = nframes;
+	return 0;
+}
 
 void
-JackOutput::setInput( VoiceAllocationUnit* source )
+JackOutput::shutdown ()
 {
-#ifdef with_jack
-	myinput = source;
-#endif
-	GenericOutput::setInput (source);
 }
 
 bool 
@@ -136,7 +144,7 @@ JackOutput::Start	()
 {
 #ifdef with_jack
 	if (!initialised) return false;
-	if (!myinput) return false;
+	if (!mInput) return false;
 	if (jack_activate (client)) 
 	{
 		std::cerr << "cannot activate JACK client\n";
