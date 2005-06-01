@@ -41,7 +41,6 @@ void sched_realtime()
 	}
 }
 
-
 void *midi_thread(void *arg)
 {
 #ifdef _DEBUG

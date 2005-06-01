@@ -91,9 +91,16 @@ AudioOutput::Stop ()
 	out.close ();
 }
 
+extern void sched_realtime ();
+
 void 
 AudioOutput::ThreadAction	()
 {
+	sched_realtime ();
+	//struct sched_param sched; sched.sched_priority = 50;
+	//sched_setscheduler (0, SCHED_FIFO, &sched);
+	//sched_getparam (0, &sched);
+	
 	while (!ShouldStop ())
 	{
 		mInput->Process (buffer+128, buffer+192, BUF_SIZE);
