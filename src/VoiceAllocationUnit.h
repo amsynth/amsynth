@@ -35,7 +35,8 @@ public:
 	void	SetMaxVoices	(int voices) { mMaxVoices = voices; }
 	int		GetActiveVoices	() { return mActiveVoices; }
 
-	void	Process			(float *l, float *r, unsigned nframes);
+	// processing with stride (interleaved) is not functional yet!!!
+	void	Process			(float *l, float *r, unsigned nframes, int stride=1);
 
 private:
 	void	purgeVoices		();

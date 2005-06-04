@@ -110,6 +110,42 @@ revmodel::processreplace(float *inputL, float *inputR, float *outputL, float *ou
 	}
 }
 
+void 
+revmodel::processreplace(float *inputM, float *outputL, float *outputR, long numsamples, int stride_in, int stride_out)
+{
+	float outL,outR,input;
+	int i;
+
+	while(numsamples-- > 0)
+	{
+		outL = outR = 0;
+		input = (*inputM) * gain;
+
+		// Accumulate comb filters in parallel
+		for(i=0; i<numcombs; i++)
+		{
+			outL += combL[i].process(input);
+			outR += combR[i].process(input);
+		}
+
+		// Feed through allpasses in series
+		for(i=0; i<numallpasses; i++)
+		{
+			outL = allpassL[i].process(outL);
+			outR = allpassR[i].process(outR);
+		}
+
+		// Calculate output REPLACING anything already there
+		*outputL = outL*wet1 + outR*wet2 + *inputM*dry;
+		*outputR = outR*wet1 + outL*wet2 + *inputM*dry;
+
+		// Increment sample pointers, allowing for interleave (if any)
+		inputM += stride_in;
+		outputL += stride_out;
+		outputR += stride_out;
+	}
+}
+
 void revmodel::processmix(float *inputL, float *inputR, float *outputL, float *outputR, long numsamples, int skip)
 {
 	float outL,outR,input;

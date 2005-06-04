@@ -103,12 +103,15 @@ AudioOutput::ThreadAction	()
 	int bufsize = config->buffer_size;
 	while (!ShouldStop ())
 	{
-		mInput->Process (buffer+bufsize*2, buffer+bufsize*3, bufsize);
+//		mInput->Process (buffer, buffer+1, bufsize, 2);
+
+		mInput->Process (buffer+bufsize*2, buffer+bufsize*3, bufsize, 1);
 		for (int i=0; i<bufsize; i++)
 		{
 			buffer[2*i]   = buffer[bufsize*2+i];
 			buffer[2*i+1] = buffer[bufsize*3+i];
 		}
+
 #ifdef with_sndfile
 		if (recording) sf_writef_float (sndfile, buffer, bufsize);
 #endif

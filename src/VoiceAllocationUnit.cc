@@ -125,7 +125,7 @@ VoiceAllocationUnit::killAllVoices()
 }
 
 void
-VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes)
+VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 {
 	memset (l, 0, nframes * sizeof (float));
 
@@ -138,7 +138,7 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes)
 	}
 
 	distortion->Process (l, nframes);
-	reverb->processreplace (l,l, l,r, nframes, 1);
+	reverb->processreplace (l, l,r, nframes, 1, 1);
 	limiter->Process (l,r, nframes);
 }
 
