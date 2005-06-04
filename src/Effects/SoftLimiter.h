@@ -10,7 +10,7 @@ class SoftLimiter
 public:
 	void	SetSampleRate	(int rate);
 	void	isStereo(){ch=2;};
-	void	Process	(float *l, float *r, unsigned);
+	void	Process	(float *l, float *r, unsigned, int stride=1);
   private:
     float *buffer;
 	double xpeak, attack, release, thresh;

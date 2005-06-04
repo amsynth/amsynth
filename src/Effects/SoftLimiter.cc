@@ -21,7 +21,7 @@ SoftLimiter::SetSampleRate	(int rate)
 }
 
 void
-SoftLimiter::Process	(float *l, float *r, unsigned nframes)
+SoftLimiter::Process	(float *l, float *r, unsigned nframes, int stride)
 {
 	register double x;
 	register unsigned i;
@@ -47,7 +47,12 @@ SoftLimiter::Process	(float *l, float *r, unsigned nframes)
 			x = exp(x);
 		} else x=1;
 		
-		*l++ *= x;
-		*r++ *= x;
+		// apply gain
+		*l *= x;
+		*r *= x;
+		
+		// Increment sample pointers, allowing for interleave (if any)
+		l += stride;
+		r += stride;
 	}
 }
