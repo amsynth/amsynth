@@ -1,12 +1,11 @@
-				amSynth
-				=======
-	  					      (c) 2001-2003 Nick Dowell
-					http://amsynthe.sourceforge.net/amSynth
+amSynth	(C) 2001-2003 Nick Dowell       http://amsynthe.sourceforge.net/amSynth
+===============================================================================
+
 
 Requirements
 ============
 
-+ GTK-- 1.2 is absolutely required. Get it from http://www.gtkmm.org
++ gtkmm 2.4 or above is required. Get it from http://www.gtkmm.org
 + optionally - OSS or OSS/Free
 + optionally - ALSA 0.9x see http://www.alsa-project.org
 + optionally - libsndfile (allows capturing to .wav file)

@@ -1,18 +1,14 @@
-	Hi, and thanks for your interest in amSynth. ;-)
-	     http://amsynthe.sourceforge.net/amSynth
-	------------------------------------------------
+amSynth	(C) 2001-2003 Nick Dowell       http://amsynthe.sourceforge.net/amSynth
+===============================================================================
+
+
+Thank you for your interest in amSynth!
 
 amSynth is a real-time analogue modelling synthesizer.
-It currently uses the OSS/ALSA audio and midi devices for its input and output,
-and can do JACK audio too!
 
-	** Welcome to the third release candidate (rc3) of amSynth **
-
-The basic structure of amSynth is not forseen to change - amSynthe (same 
-homepage) has a different goal of a more complex and powerful engine, but it has
-not yet been started. Work is now underway on turning amSynth into a plugin 
-shared library, which will make it easy to integrate with many software 
-packages.
+It presents a dual-oscillator subtractive synthesizer with envelopes, filter, 
+modulation and effects. The aim was to keep the synth easy to use, so you can 
+more easily get the sounds you want ;-)
 
 I hope that amSynth works well for you, and you can get the sounds you want to
 create! Good luck!
