@@ -12,7 +12,7 @@
 
 class PresetController {
 public:
-	enum { PRESETS = 128 };
+	enum { kNumPresets = 128 };
 
 			PresetController	();
 			~PresetController	();

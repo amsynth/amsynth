@@ -14,8 +14,10 @@ PresetController::PresetController	()
 ,	nullpreset ("null preset")
 ,	currentPresetNo (0)
 {
-	presets = new Preset [PRESETS];
+	presets = new Preset [kNumPresets];
+#ifndef _WINDOWS
 	bank_file = string (getenv ("HOME")) + "/.amSynth.presets";
+#endif
 }
 
 PresetController::~PresetController	()
@@ -26,7 +28,7 @@ PresetController::~PresetController	()
 int
 PresetController::selectPreset		(const int preset)
 {
-    if (preset > (PRESETS - 1) || preset < 0) { return -1; }
+    if (preset > (kNumPresets - 1) || preset < 0) { return -1; }
 	if (preset != currentPresetNo)
 	{
 		currentPreset = getPreset (preset);
@@ -39,21 +41,21 @@ PresetController::selectPreset		(const int preset)
 int 
 PresetController::selectPreset		(const string name)
 {
-	for (int i=0; i<PRESETS; i++) if (getPreset(i).getName() == name) return selectPreset (i);
+	for (int i=0; i<kNumPresets; i++) if (getPreset(i).getName() == name) return selectPreset (i);
 	return -1;
 }
 
 Preset&
 PresetController::getPreset			(const string name)
 {
-	for (int i=0; i<PRESETS; i++) if (getPreset(i).getName() == name) return getPreset (i);
+	for (int i=0; i<kNumPresets; i++) if (getPreset(i).getName() == name) return getPreset (i);
 	return nullpreset;
 }
 
 int
 PresetController::newPreset			()
 {
-	for (int i=0; i<PRESETS; i++) if (getPreset(i).getName() == "New Preset") return selectPreset (i);
+	for (int i=0; i<kNumPresets; i++) if (getPreset(i).getName() == "New Preset") return selectPreset (i);
 	return -1;
 }
 
@@ -131,7 +133,7 @@ PresetController::savePresets		(const char *filename)
 	ofstream file( filename, ios::out );
   
 	file << "amSynth" << endl;
-	for (int i = 0; i < PRESETS; i++) {
+	for (int i = 0; i < kNumPresets; i++) {
 		if (presets[i].getName()!="unused"){
 #ifdef _DEBUG
 			cout << "<PresetController::savePresets():- preset: name= "
