@@ -1,117 +1,56 @@
 /* amSynth
- * (c) 2001-2003 Nick Dowell
+ * (c) 2001-2005 Nick Dowell
  */
 
-//#include "main.h"
-//#include "../config.h"
-
-#include "Config.h"
 #include "VoiceAllocationUnit.h"
 
-#include <iostream>
 #include <unistd.h>
-#include <time.h>
+#include <sys/time.h>
+#include <sys/resource.h>
 
-#ifdef _with_sndfile
-#include <sndfile.h>
-#endif
-
-#define BUF_SIZE 64
-
-int main( int argc, char *argv[] )
+int main ()
 {
-	Config config;
-	
 	//
 	// test parameters
 	// 
-	int time_seconds = 60;  // seconds of audio to generate
-        int num_voices = 10;    // number of simultaneous voices to generate
+	const int kTestBufSize = 256;
+	const int kTestSampleRate = 44100;
+	const int kTimeSeconds = 60;
+	const int kNumVoices = 10;
 
+	float *buffer = new float [kTestBufSize];
 
-	
-	// set default parameters
-	config.audio_driver = "auto";
-	config.midi_driver = "auto";
-	config.oss_midi_device = "/dev/midi";
-	config.midi_channel = 0;
-	config.oss_audio_device = "/dev/dsp";
-	config.alsa_audio_device = "default";
-	config.sample_rate = 44100;
-	config.channels = 2;
-	config.buffer_size = BUF_SIZE;
-	config.polyphony = num_voices;
-	
-	string bank_file( getenv("HOME") );
-	bank_file += "/.amSynth.presets";
-	
 	VoiceAllocationUnit *vau = new VoiceAllocationUnit;
-	vau->SetSampleRate (config.sample_rate);
-	
-#ifdef _with_sndfile
-	//
-	// prepare sndfile for .wav output
-	// 
-	SNDFILE	*sndfile;
-	SF_INFO	sf_info;
-
-	// set format etc. for output file
-	sf_info.samplerate = config.sample_rate;
-	sf_info.channels = config.channels;
-	sf_info.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
-
-	// open file for output:
-	sndfile = sf_open( "ptest-out.wav", SFM_WRITE, &sf_info );
-	// specify that floating point data is normalised (between -1.0 and 1.0)
-	sf_command( sndfile, SFC_SET_NORM_FLOAT, NULL, SF_TRUE );
-#endif
-	
-	//
-	// now run the test.
-	//
-	
-	long i=0;
-	long total_calls = config.sample_rate * time_seconds / BUF_SIZE;
-	float buffer[128];
+	vau->SetSampleRate (kTestSampleRate);
 	
 	// trigger off some notes for amSynth to render.
-	for (int v=0; v<num_voices; v++)
-	{
-		vau->noteOn( 60+v, 127 );
-	}
+	for (int v=0; v<kNumVoices; v++) vau->noteOn (60+v, 127);
 	
-	//
-	// now we need to get the time at the start of the test
-	//
-	clock_t clocks_before = clock();
+	struct rusage usage_before; 
+	getrusage (RUSAGE_SELF, &usage_before);
 	
-	while (i<total_calls)
-	{
-		vau->Process (buffer, buffer+64, BUF_SIZE);
-#ifdef _with_sndfile
-		sf_writef_float( sndfile, buffer, BUF_SIZE );
-#endif
-		i++;
-	}
-	
-	//
-	// get the time at the end of test execution, and find the time elapsed
-	// 
-	clock_t clocks_elapsed = clock() - clocks_before;
+	long total_samples = kTestSampleRate * kTimeSeconds;
+	long total_calls = total_samples / kTestBufSize;
+	long remain_samples = total_samples % kTestBufSize;
+	for (int i=0; i<total_calls; i++) vau->Process (buffer, buffer, kTestBufSize);
+	vau->Process (buffer, buffer, remain_samples);
 
-	int ms_audio = time_seconds * 1000 * num_voices;
-	int ms_elapsed = clocks_elapsed*1000 / CLOCKS_PER_SEC;
+	struct rusage usage_after; 
+	getrusage (RUSAGE_SELF, &usage_after);
+	
+	unsigned long user_usec = (usage_after.ru_utime.tv_sec*1000000 + usage_after.ru_utime.tv_usec)
+							- (usage_before.ru_utime.tv_sec*1000000 + usage_before.ru_utime.tv_usec);
+	
+	unsigned long syst_usec = (usage_after.ru_stime.tv_sec*1000000 + usage_after.ru_stime.tv_usec)
+							- (usage_before.ru_stime.tv_sec*1000000 + usage_before.ru_stime.tv_usec);
 
-	std::cout << "generating " << num_voices << " voices of audio for " << 
-		time_seconds << " seconds took " << ms_elapsed << "ms\n";
-	std::cout << "***** performance index = " << 
-		((float)ms_audio/(float)ms_elapsed) << " *****" << std::endl;
+	unsigned long usec_audio = kTimeSeconds * kNumVoices * 1000000;
+	unsigned long usec_cpu = user_usec + syst_usec;
 	
-#ifdef _with_sndfile
-	// dont forget to close the output file, else it wont be written!
-	sf_close( sndfile );
-#endif
+	fprintf (stderr, "user time: %f		system time: %f\n", user_usec/1000000.f, syst_usec/1000000.f);
+	fprintf (stderr, "performance index: %f\n", (float) usec_audio / (float) usec_cpu);
 	
+	delete [] buffer;
 	delete vau;
 	return 0;
 }
