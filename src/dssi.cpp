@@ -1,14 +1,10 @@
-/* -*- c-basic-offset: 4 -*-  vi:set ts=8 sts=4 sw=4: */
-
-/* trivial_synth.c
-
-   Disposable Hosted Soft Synth API
-   Constructed by Chris Cannam, Steve Harris and Sean Bolton
-
-   This is an example DSSI synth plugin written by Steve Harris.
-
-   This example file is in the public domain.
-*/
+/*
+ * dssi.c
+ * amSynth
+ *
+ * DSSI wrapper around amsynth
+ * Copyright 2005 Nick Dowell
+ */
 
 #include <stdlib.h>
 #include <string.h>
@@ -16,34 +12,20 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "dssi.h"
-#include "ladspa.h"
+#include <dssi.h>
+#include <ladspa.h>
 
-#define TS_OUTPUT 0
-#define TS_FREQ   1
-#define TS_VOLUME 2
+#include "Preset.h"
 
-#define MIDI_NOTES 128
-
-static LADSPA_Descriptor *tsLDescriptor = NULL;
-static DSSI_Descriptor *tsDDescriptor = NULL;
+static LADSPA_Descriptor *	s_ladspaDescriptor = NULL;
+static DSSI_Descriptor *	s_dssiDescriptor = NULL;
 
 
-typedef struct {
-    unsigned int active;
-    float amp;
-    double phase;
-} note_data;
+//
+// simple dummy synth, to demontrate wrapping.
+//
 
-typedef struct {
-    LADSPA_Data *output;
-    LADSPA_Data *freq;
-    LADSPA_Data *vol;
-    note_data data[MIDI_NOTES];
-    float omega[MIDI_NOTES];
-} TS;
-
-
+Preset s_preset;
 
 class DssiSynth
 {
@@ -83,7 +65,7 @@ const DSSI_Descriptor *dssi_descriptor (unsigned long index)
 {
     switch (index)
 	{
-    case 0: return tsDDescriptor;
+    case 0: return s_dssiDescriptor;
 	default: return NULL;
     }
 }
@@ -101,7 +83,7 @@ static void connectPortTS(LADSPA_Handle instance, unsigned long port,
     DssiSynth *self = (DssiSynth *) instance;
     switch (port)
 	{
-    case TS_OUTPUT:	self->bufOut = data; break;
+    case 0:	self->bufOut = data; break;
 //    case TS_FREQ:	plugin->freq = data; break;
 //    case TS_VOLUME:	plugin->vol = data;	break;
     }
@@ -159,95 +141,93 @@ static void runTS(	LADSPA_Handle instance, unsigned long sample_count,
  */
 void __attribute__ ((constructor)) my_init ()
 {
-    char **port_names;
+    const char **port_names;
     LADSPA_PortDescriptor *port_descriptors;
     LADSPA_PortRangeHint *port_range_hints;
 
 	/* LADSPA descriptor */
-    tsLDescriptor =	(LADSPA_Descriptor *) malloc (sizeof (LADSPA_Descriptor));
-    if (tsLDescriptor)
+    s_ladspaDescriptor =	(LADSPA_Descriptor *) malloc (sizeof (LADSPA_Descriptor));
+    if (s_ladspaDescriptor)
 	{
-		tsLDescriptor->UniqueID = 23;
-		tsLDescriptor->Label = "TS";
-		tsLDescriptor->Properties = 0;
-		tsLDescriptor->Name = "amSynth";
-		tsLDescriptor->Maker = "Nick Dowell <nick@nickdowell.com>";
-		tsLDescriptor->Copyright = "(C) 2005";
+		s_ladspaDescriptor->UniqueID = 23;
+		s_ladspaDescriptor->Label = "TS";
+		s_ladspaDescriptor->Properties = 0;
+		s_ladspaDescriptor->Name = "amSynth";
+		s_ladspaDescriptor->Maker = "Nick Dowell <nick@nickdowell.com>";
+		s_ladspaDescriptor->Copyright = "(C) 2005";
 
 
-		/* LADPSA ports */
-		tsLDescriptor->PortCount = 3;		
-	
-		port_descriptors = (LADSPA_PortDescriptor *) calloc (tsLDescriptor->PortCount, sizeof (LADSPA_PortDescriptor));
-		tsLDescriptor->PortDescriptors = (const LADSPA_PortDescriptor *) port_descriptors;
-	
-		port_range_hints = (LADSPA_PortRangeHint *) calloc (tsLDescriptor->PortCount, sizeof (LADSPA_PortRangeHint));
-		tsLDescriptor->PortRangeHints = (const LADSPA_PortRangeHint *) port_range_hints;
-	
-		port_names = (char **) calloc(tsLDescriptor->PortCount, sizeof(char *));
-		tsLDescriptor->PortNames = (const char **) port_names;
-	
-		/* Parameters for Output */
-		port_descriptors[TS_OUTPUT] = LADSPA_PORT_OUTPUT | LADSPA_PORT_AUDIO;
-		port_names[TS_OUTPUT] = "Output";
-		port_range_hints[TS_OUTPUT].HintDescriptor = 0;
-	
-		/* Parameters for Freq */
-		port_descriptors[TS_FREQ] = LADSPA_PORT_INPUT | LADSPA_PORT_CONTROL;
-		port_names[TS_FREQ] = "Tuning frequency";
-		port_range_hints[TS_FREQ].HintDescriptor = LADSPA_HINT_DEFAULT_440 | LADSPA_HINT_BOUNDED_BELOW | LADSPA_HINT_BOUNDED_ABOVE;
-		port_range_hints[TS_FREQ].LowerBound = 420;
-		port_range_hints[TS_FREQ].UpperBound = 460;
-	
-		/* Parameters for Volume */
-		port_descriptors[TS_VOLUME] = LADSPA_PORT_INPUT | LADSPA_PORT_CONTROL;
-		port_names[TS_VOLUME] = "Volume";
-		port_range_hints[TS_VOLUME].HintDescriptor = LADSPA_HINT_DEFAULT_MAXIMUM | LADSPA_HINT_BOUNDED_BELOW | LADSPA_HINT_BOUNDED_ABOVE;
-		port_range_hints[TS_VOLUME].LowerBound = 0.0;
-		port_range_hints[TS_VOLUME].UpperBound = 1.0;
-	
-	
-	
-		tsLDescriptor->instantiate = instantiateTS;
-		tsLDescriptor->cleanup = cleanupTS;
+		//
+		// set up ladspa 'Ports' - used to perform audio and parameter communication...
+		//
+		const unsigned numParams = s_preset.ParameterCount();
+		//unsigned numParams = 0;
+		
+		port_descriptors = new LADSPA_PortDescriptor [numParams+1];
+		port_names = new const char * [numParams+1];
+		port_range_hints = new LADSPA_PortRangeHint [numParams+1];
+		
+		// we need a port to transmit the audio data...
+		port_descriptors[0] = LADSPA_PORT_OUTPUT | LADSPA_PORT_AUDIO;
+		port_names[0] = "Output";
+		port_range_hints[0].HintDescriptor = 0;
 
-		tsLDescriptor->activate = activateTS;
-		tsLDescriptor->deactivate = NULL;
+		for (unsigned i=1; i<numParams; i++)
+		{
+			port_descriptors[i] = LADSPA_PORT_INPUT | LADSPA_PORT_CONTROL;
+			port_names[i] = s_preset.getParameter(i).getName().c_str();
+			port_range_hints[i].HintDescriptor = LADSPA_HINT_BOUNDED_BELOW | LADSPA_HINT_BOUNDED_ABOVE;
+			port_range_hints[i].LowerBound = s_preset.getParameter(i).getMin();
+			port_range_hints[i].UpperBound = s_preset.getParameter(i).getMax();
+		}
+	
+		s_ladspaDescriptor->PortDescriptors = port_descriptors;
+		s_ladspaDescriptor->PortRangeHints  = port_range_hints;
+		s_ladspaDescriptor->PortNames       = port_names;
+		s_ladspaDescriptor->PortCount       = numParams + 1;
+	
+	
+	
+		s_ladspaDescriptor->instantiate = instantiateTS;
+		s_ladspaDescriptor->cleanup = cleanupTS;
 
-		tsLDescriptor->connect_port = connectPortTS;
-		tsLDescriptor->run = NULL;
-		tsLDescriptor->run_adding = NULL;
-		tsLDescriptor->set_run_adding_gain = NULL;
+		s_ladspaDescriptor->activate = activateTS;
+		s_ladspaDescriptor->deactivate = NULL;
+
+		s_ladspaDescriptor->connect_port = connectPortTS;
+		s_ladspaDescriptor->run = NULL;
+		s_ladspaDescriptor->run_adding = NULL;
+		s_ladspaDescriptor->set_run_adding_gain = NULL;
     }
 
 	/* DSSI descriptor */
-    tsDDescriptor = (DSSI_Descriptor *) malloc (sizeof (DSSI_Descriptor));
-    if (tsDDescriptor)
+    s_dssiDescriptor = (DSSI_Descriptor *) malloc (sizeof (DSSI_Descriptor));
+    if (s_dssiDescriptor)
 	{
-		tsDDescriptor->DSSI_API_Version				= 1;
-		tsDDescriptor->LADSPA_Plugin				= tsLDescriptor;
-		tsDDescriptor->configure					= NULL;
-		tsDDescriptor->get_program 					= NULL;
-		tsDDescriptor->get_midi_controller_for_port	= NULL;
-		tsDDescriptor->select_program 				= NULL;
-		tsDDescriptor->run_synth 					= runTS;
-		tsDDescriptor->run_synth_adding 			= NULL;
-		tsDDescriptor->run_multiple_synths 			= NULL;
-		tsDDescriptor->run_multiple_synths_adding	= NULL;
+		s_dssiDescriptor->DSSI_API_Version				= 1;
+		s_dssiDescriptor->LADSPA_Plugin				= s_ladspaDescriptor;
+		s_dssiDescriptor->configure					= NULL;
+		s_dssiDescriptor->get_program 					= NULL;
+		s_dssiDescriptor->get_midi_controller_for_port	= NULL;
+		s_dssiDescriptor->select_program 				= NULL;
+		s_dssiDescriptor->run_synth 					= runTS;
+		s_dssiDescriptor->run_synth_adding 			= NULL;
+		s_dssiDescriptor->run_multiple_synths 			= NULL;
+		s_dssiDescriptor->run_multiple_synths_adding	= NULL;
     }
 }
 
 void __attribute__ ((destructor)) my_fini ()
 {
-    if (tsLDescriptor)
+    if (s_ladspaDescriptor)
 	{
-		free ((LADSPA_PortDescriptor *) tsLDescriptor->PortDescriptors);
-		free ((char **) tsLDescriptor->PortNames);
-		free ((LADSPA_PortRangeHint *) tsLDescriptor->PortRangeHints);
-		free (tsLDescriptor);
+		free ((LADSPA_PortDescriptor *) s_ladspaDescriptor->PortDescriptors);
+		free ((char **) s_ladspaDescriptor->PortNames);
+		free ((LADSPA_PortRangeHint *) s_ladspaDescriptor->PortRangeHints);
+		free (s_ladspaDescriptor);
     }
-    if (tsDDescriptor)
+    if (s_dssiDescriptor)
 	{
-		free (tsDDescriptor);
+		free (s_dssiDescriptor);
     }
 }
