@@ -22,7 +22,7 @@ OTHER_OBJECTS = \
 
 all: $(TARGET)
 
-CFLAGS = -Wall -O2 -I/home/nixx/dev/dssi-0.9/dssi
+CFLAGS = -Wall -O2
 CXXFLAGS = $(CFLAGS)
 
 $(TARGET): $(OBJECTS)
