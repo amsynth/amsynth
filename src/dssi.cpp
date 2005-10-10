@@ -97,6 +97,8 @@ static void connect_port (LADSPA_Handle instance, unsigned long port, LADSPA_Dat
 
 //////////////////// Audio callback ////////////////////////////////////////////
 
+const float kMidiScaler = (1. / 127.);
+
 static void run_synth (LADSPA_Handle instance, unsigned long sample_count, snd_seq_event_t *events, unsigned long event_count)
 {
     amsynth_wrapper * a = (amsynth_wrapper *) instance;
@@ -107,7 +109,7 @@ static void run_synth (LADSPA_Handle instance, unsigned long sample_count, snd_s
 	    switch (e->type)
 	    {
 		    case SND_SEQ_EVENT_NOTEON:
-			    a->vau->noteOn (e->data.note.note, e->data.note.velocity);
+			    a->vau->noteOn (e->data.note.note, e->data.note.velocity * kMidiScaler);
 			    break;
 
 		    case SND_SEQ_EVENT_NOTEOFF:
