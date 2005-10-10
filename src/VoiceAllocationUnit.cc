@@ -137,9 +137,9 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 		j += fr; framesLeft -= fr;
 	}
 
-	distortion->Process (l, nframes);
-	reverb->processreplace (l, l,r, nframes, 1, 1);
-	limiter->Process (l,r, nframes);
+//	distortion->Process (l, nframes);
+//	reverb->processreplace (l, l,r, nframes, 1, 1);
+//	limiter->Process (l,r, nframes);
 }
 
 void

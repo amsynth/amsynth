@@ -15,12 +15,12 @@
 #include <dssi.h>
 #include <ladspa.h>
 
-#include "Preset.h"
+#include "PresetController.h"
 #include "VoiceAllocationUnit.h"
 
 
 static LADSPA_Descriptor *	s_ladspaDescriptor = NULL;
-static DSSI_Descriptor *	s_dssiDescriptor = NULL;
+static DSSI_Descriptor *	s_dssiDescriptor   = NULL;
 
 
 Preset s_preset;
@@ -28,9 +28,10 @@ Preset s_preset;
 
 typedef struct _amsynth_wrapper {
 	VoiceAllocationUnit * vau;
-	Preset *              preset;
+	PresetController *    bank;
 	LADSPA_Data *         out_l;
 	LADSPA_Data *         out_r;
+	LADSPA_Data **        params;
 } amsynth_wrapper;
 
 
@@ -59,7 +60,27 @@ const DSSI_Descriptor *dssi_descriptor (unsigned long index)
 
 
 
+//////////////////// Constructor & Destructor (equivalents) ////////////////////
 
+static LADSPA_Handle instantiate (const LADSPA_Descriptor * descriptor, unsigned long s_rate)
+{
+    amsynth_wrapper * a = new amsynth_wrapper;
+    a->vau = new VoiceAllocationUnit;
+    a->vau->SetSampleRate (s_rate);
+    a->bank = new PresetController;
+    a->bank->getCurrentPreset().AddListenerToAll (a->vau);
+    a->params = (LADSPA_Data **) malloc (s_preset.ParameterCount() * sizeof (LADSPA_Data));
+    return (LADSPA_Handle) a;
+}
+
+static void cleanup (LADSPA_Handle instance)
+{
+    amsynth_wrapper * a = (amsynth_wrapper *) instance;
+    delete a->vau;
+    delete a->bank;
+    free (a->params);
+    delete a;
+}
 
 //////////////////// LADSPA port setup /////////////////////////////////////////
 
@@ -70,28 +91,8 @@ static void connect_port (LADSPA_Handle instance, unsigned long port, LADSPA_Dat
     {
     case 0: a->out_l = data; break;
     case 1: a->out_r = data; break;
-    default: break;
+    default: a->params[port-2] = data; break;
     }
-}
-
-
-//////////////////// Constructor & Destructor (equivalents) ////////////////////
-
-static LADSPA_Handle instantiate (const LADSPA_Descriptor * descriptor, unsigned long s_rate)
-{
-    amsynth_wrapper * a = new amsynth_wrapper;
-    a->vau = new VoiceAllocationUnit;
-    a->vau->SetSampleRate (s_rate);
-    a->preset = new Preset;
-    return (LADSPA_Handle) a;
-}
-
-static void cleanup (LADSPA_Handle instance)
-{
-    amsynth_wrapper * a = (amsynth_wrapper *) instance;
-    delete a->vau;
-    delete a->preset;
-    delete a;
 }
 
 //////////////////// Audio callback ////////////////////////////////////////////
@@ -99,12 +100,38 @@ static void cleanup (LADSPA_Handle instance)
 static void run_synth (LADSPA_Handle instance, unsigned long sample_count, snd_seq_event_t *events, unsigned long event_count)
 {
     amsynth_wrapper * a = (amsynth_wrapper *) instance;
-    a->vau->Process (a->out_l, a->out_l, sample_count);
+
+    // process midi events
+    for (snd_seq_event_t * e = events; e < events+event_count; e++)
+    {
+	    switch (e->type)
+	    {
+		    case SND_SEQ_EVENT_NOTEON:
+			    a->vau->noteOn (e->data.note.note, e->data.note.velocity);
+			    break;
+
+		    case SND_SEQ_EVENT_NOTEOFF:
+			    a->vau->noteOff (e->data.note.note);
+			    break;
+
+		    default:
+			    break;
+	    }
+    }
+
+    // push through changes to parameters
+    /*
+    for (unsigned i=0; i<s_preset.ParameterCount(); i++)
+    {
+	    if (a->bank->getCurrentPreset().getParameter(i).getValue() != *(a->params[i]))
+	    {
+		    a->bank->getCurrentPreset().getParameter(i).setValue (*(a->params[i]));
+	    }
+    }
+    */
+
+    a->vau->Process (a->out_l, a->out_r, sample_count);
 }
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 
