@@ -4,7 +4,6 @@ TARGET = amsynth.so
 OBJECTS = dssi.o
 
 OTHER_OBJECTS = \
-	Effects/Reverb.o \
 	Effects/allpass.o \
 	Effects/comb.o \
 	Effects/Distortion.o \
