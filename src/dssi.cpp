@@ -130,7 +130,7 @@ static void run_synth (LADSPA_Handle instance, unsigned long sample_count, snd_s
     }
     */
 
-    a->vau->Process (a->out_l, a->out_r, sample_count);
+    a->vau->Process ((float *) a->out_l, (float *) a->out_r, sample_count);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
