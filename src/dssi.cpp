@@ -8,46 +8,32 @@
 
 #include <stdlib.h>
 #include <string.h>
-
 #include <math.h>
 #include <stdio.h>
+#include <assert.h>
 
 #include <dssi.h>
 #include <ladspa.h>
 
 #include "Preset.h"
+#include "VoiceAllocationUnit.h"
+
 
 static LADSPA_Descriptor *	s_ladspaDescriptor = NULL;
 static DSSI_Descriptor *	s_dssiDescriptor = NULL;
 
 
-//
-// simple dummy synth, to demontrate wrapping.
-//
-
 Preset s_preset;
 
-class DssiSynth
-{
-public:
-	DssiSynth () { fprintf (stderr, "DssiSynth::DssiSynth ()\n"); }
-	~DssiSynth () { fprintf (stderr, "DssiSynth::~DssiSynth ()\n"); }
-	void	SetSampleRate	(unsigned rate) { fprintf (stderr, "DssiSynth::SetSampleRate (%d)\n", rate); }
-	void	Process	(	unsigned long sample_count, 
-						snd_seq_event_t *events, unsigned long event_count);
-	float *bufOut;
-};
 
-void
-DssiSynth::Process (	unsigned long sample_count, 
-						snd_seq_event_t *events, unsigned long event_count)
-{
-    float *output = bufOut;
-   	while (sample_count--)
-	{
-		*output++ = (float) rand () / (float) RAND_MAX;
-    }	
-}
+typedef struct _amsynth_wrapper {
+	VoiceAllocationUnit * vau;
+	Preset *              preset;
+	LADSPA_Data *         out_l;
+	LADSPA_Data *         out_r;
+} amsynth_wrapper;
+
+
 
 
 /*	DLL Entry point
@@ -64,9 +50,9 @@ DssiSynth::Process (	unsigned long sample_count,
 const DSSI_Descriptor *dssi_descriptor (unsigned long index)
 {
     switch (index)
-	{
+    {
     case 0: return s_dssiDescriptor;
-	default: return NULL;
+    default: return NULL;
     }
 }
 
@@ -75,70 +61,58 @@ const DSSI_Descriptor *dssi_descriptor (unsigned long index)
 
 
 
+//////////////////// LADSPA port setup /////////////////////////////////////////
 
-
-static void connectPortTS(LADSPA_Handle instance, unsigned long port,
-			  LADSPA_Data * data)
+static void connect_port (LADSPA_Handle instance, unsigned long port, LADSPA_Data * data)
 {
-    DssiSynth *self = (DssiSynth *) instance;
+    amsynth_wrapper * a = (amsynth_wrapper *) instance;
     switch (port)
-	{
-    case 0:	self->bufOut = data; break;
-//    case TS_FREQ:	plugin->freq = data; break;
-//    case TS_VOLUME:	plugin->vol = data;	break;
+    {
+    case 0: a->out_l = data; break;
+    case 1: a->out_r = data; break;
+    default: break;
     }
 }
 
 
-/****************************************************
- *
- *	Constructor & Destructor (equivalents)
- *
- ****************************************************/
+//////////////////// Constructor & Destructor (equivalents) ////////////////////
 
-static LADSPA_Handle instantiateTS(const LADSPA_Descriptor * descriptor,
-				   unsigned long s_rate)
+static LADSPA_Handle instantiate (const LADSPA_Descriptor * descriptor, unsigned long s_rate)
 {
-	DssiSynth *self = new DssiSynth;
-	self->SetSampleRate (s_rate);
-    return (LADSPA_Handle) self;
+    amsynth_wrapper * a = new amsynth_wrapper;
+    a->vau = new VoiceAllocationUnit;
+    a->vau->SetSampleRate (s_rate);
+    a->preset = new Preset;
+    return (LADSPA_Handle) a;
 }
 
-static void cleanupTS(LADSPA_Handle instance)
+static void cleanup (LADSPA_Handle instance)
 {
-	DssiSynth *self = (DssiSynth *) instance;
-    delete self;
+    amsynth_wrapper * a = (amsynth_wrapper *) instance;
+    delete a->vau;
+    delete a->preset;
+    delete a;
 }
 
-/************************************
- *
- *	activate / deactivate
- *
- ************************************/
+//////////////////// Audio callback ////////////////////////////////////////////
 
-static void activateTS(LADSPA_Handle instance)
+static void run_synth (LADSPA_Handle instance, unsigned long sample_count, snd_seq_event_t *events, unsigned long event_count)
 {
+    amsynth_wrapper * a = (amsynth_wrapper *) instance;
+    a->vau->Process (a->out_l, a->out_l, sample_count);
 }
 
-/*********************************
- *
- *	Audio callback
- *
- *********************************/
 
-static void runTS(	LADSPA_Handle instance, unsigned long sample_count,
-					snd_seq_event_t *events, unsigned long event_count)
-{
-	// do some processing here!
-	DssiSynth *self = (DssiSynth*) instance;
-	self->Process (sample_count, events, event_count);
-}
 
+
+
+////////////////////////////////////////////////////////////////////////////////
 
 /*
  * Magic routines called by the system upon opening and closing libraries..
  * http://www.tldp.org/HOWTO/Program-Library-HOWTO/miscellaneous.html#INIT-AND-CLEANUP
  */
+
 void __attribute__ ((constructor)) my_init ()
 {
     const char **port_names;
@@ -160,41 +134,45 @@ void __attribute__ ((constructor)) my_init ()
 		//
 		// set up ladspa 'Ports' - used to perform audio and parameter communication...
 		//
+		
 		const unsigned numParams = s_preset.ParameterCount();
-		//unsigned numParams = 0;
 		
-		port_descriptors = new LADSPA_PortDescriptor [numParams+1];
-		port_names = new const char * [numParams+1];
-		port_range_hints = new LADSPA_PortRangeHint [numParams+1];
+		port_descriptors = new LADSPA_PortDescriptor [numParams+2];
+		port_names = new const char * [numParams+2];
+		port_range_hints = new LADSPA_PortRangeHint [numParams+2];
 		
-		// we need a port to transmit the audio data...
+		// we need ports to transmit the audio data...
 		port_descriptors[0] = LADSPA_PORT_OUTPUT | LADSPA_PORT_AUDIO;
-		port_names[0] = "Output";
+		port_names[0] = "OutL";
 		port_range_hints[0].HintDescriptor = 0;
 
-		for (unsigned i=1; i<numParams; i++)
+		port_descriptors[1] = LADSPA_PORT_OUTPUT | LADSPA_PORT_AUDIO;
+		port_names[1] = "OutR";
+		port_range_hints[1].HintDescriptor = 0;
+
+		for (unsigned i=0; i<numParams; i++)
 		{
-			port_descriptors[i] = LADSPA_PORT_INPUT | LADSPA_PORT_CONTROL;
-			port_names[i] = s_preset.getParameter(i).getName().c_str();
-			port_range_hints[i].HintDescriptor = LADSPA_HINT_BOUNDED_BELOW | LADSPA_HINT_BOUNDED_ABOVE;
-			port_range_hints[i].LowerBound = s_preset.getParameter(i).getMin();
-			port_range_hints[i].UpperBound = s_preset.getParameter(i).getMax();
+			port_descriptors[i+2] = LADSPA_PORT_INPUT | LADSPA_PORT_CONTROL;
+			port_names[i+2] = s_preset.getParameter(i).getName().c_str();
+			port_range_hints[i+2].HintDescriptor = LADSPA_HINT_BOUNDED_BELOW | LADSPA_HINT_BOUNDED_ABOVE;
+			port_range_hints[i+2].LowerBound = s_preset.getParameter(i).getMin();
+			port_range_hints[i+2].UpperBound = s_preset.getParameter(i).getMax();
 		}
 	
 		s_ladspaDescriptor->PortDescriptors = port_descriptors;
 		s_ladspaDescriptor->PortRangeHints  = port_range_hints;
 		s_ladspaDescriptor->PortNames       = port_names;
-		s_ladspaDescriptor->PortCount       = numParams + 1;
+		s_ladspaDescriptor->PortCount       = numParams+2;
 	
 	
 	
-		s_ladspaDescriptor->instantiate = instantiateTS;
-		s_ladspaDescriptor->cleanup = cleanupTS;
+		s_ladspaDescriptor->instantiate = instantiate;
+		s_ladspaDescriptor->cleanup = cleanup;
 
-		s_ladspaDescriptor->activate = activateTS;
+		s_ladspaDescriptor->activate = NULL;
 		s_ladspaDescriptor->deactivate = NULL;
 
-		s_ladspaDescriptor->connect_port = connectPortTS;
+		s_ladspaDescriptor->connect_port = connect_port;
 		s_ladspaDescriptor->run = NULL;
 		s_ladspaDescriptor->run_adding = NULL;
 		s_ladspaDescriptor->set_run_adding_gain = NULL;
@@ -210,7 +188,7 @@ void __attribute__ ((constructor)) my_init ()
 		s_dssiDescriptor->get_program 					= NULL;
 		s_dssiDescriptor->get_midi_controller_for_port	= NULL;
 		s_dssiDescriptor->select_program 				= NULL;
-		s_dssiDescriptor->run_synth 					= runTS;
+		s_dssiDescriptor->run_synth 					= run_synth;
 		s_dssiDescriptor->run_synth_adding 			= NULL;
 		s_dssiDescriptor->run_multiple_synths 			= NULL;
 		s_dssiDescriptor->run_multiple_synths_adding	= NULL;
