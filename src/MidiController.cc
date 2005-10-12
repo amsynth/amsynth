@@ -83,8 +83,8 @@ MidiController::ThreadAction ()
 void
 MidiController::Stop ()
 { 
-	PThread::Kill (); 
-	PThread::Join ();
+	Thread::Kill (); 
+	Thread::Join ();
 }
 
 

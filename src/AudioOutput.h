@@ -11,7 +11,7 @@
 
 #include "drivers/AudioInterface.h"
 #include "Config.h"
-#include "PThread.h"
+#include "Thread.h"
 
 class VoiceAllocationUnit;
 
@@ -39,7 +39,7 @@ protected:
 	VoiceAllocationUnit*	mInput;
 };
 
-class AudioOutput : public GenericOutput, public PThread
+class AudioOutput : public GenericOutput, public Thread
 {
 public:
 	AudioOutput();

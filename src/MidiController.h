@@ -9,7 +9,7 @@
 #include "drivers/MidiInterface.h"
 #include "VoiceAllocationUnit.h"
 #include "Parameter.h"
-#include "PThread.h"
+#include "Thread.h"
 
 // there are 32 standard MIDI controllers
 #define MAX_CC 128
@@ -19,7 +19,7 @@
  * decodes the incoming messages and performs the appropriate actions on the
  * rest of the system.
  */
-class MidiController : public PThread
+class MidiController : public Thread
 {
 public:
 	MidiController( Config & config );

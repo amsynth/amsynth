@@ -27,10 +27,10 @@
 
 #include <pthread.h>
 
-class PThread
+class Thread
 {
 public:
-	int		Run		() { return pthread_create (&mThread, NULL, PThread::start_routine, this); }
+	int		Run		() { return pthread_create (&mThread, NULL, Thread::start_routine, this); }
 	void	Stop	() { mShouldStop = true; }
 	int		Kill	(int sig = 2) { return pthread_kill (mThread, sig); }
 	int		Join	() { return pthread_join (mThread, NULL); }
@@ -44,7 +44,7 @@ protected:
 private:
 	static void* start_routine (void *arg)
 	{
-		PThread *self = (PThread *) arg;
+		Thread *self = (Thread *) arg;
 		self->mShouldStop = false;
 		self->ThreadAction ();
 		pthread_exit (0);

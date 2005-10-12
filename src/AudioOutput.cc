@@ -77,7 +77,7 @@ AudioOutput::Start ()
 {
 	if (out.open (*config) == -1) return false;
 	out.setRealtime();
-	if (0 != PThread::Run ())
+	if (0 != Thread::Run ())
 	{
 		out.close ();
 		return false;
@@ -88,8 +88,8 @@ AudioOutput::Start ()
 void
 AudioOutput::Stop ()
 {
-	PThread::Stop ();
-	PThread::Join ();
+	Thread::Stop ();
+	Thread::Join ();
 	out.close ();
 }
 
