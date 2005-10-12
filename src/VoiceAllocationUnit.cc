@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <math.h>
+#include <assert.h>
 
 static VoiceBoardProcessMemory* process_memory;
 
@@ -32,8 +33,8 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 	{
 		keyPressed[i] = 0;
 		active[i] = false;
-		_voices.push_back (VoiceBoard (process_memory));
-		_voices.back().setFrequency ((440.0f/32.0f) * pow (2.0f, (float)((i-9.0)/12.0)));
+		_voices.push_back (new VoiceBoard (process_memory));
+		_voices.back()->setFrequency ((440.0f/32.0f) * pow (2.0f, (float)((i-9.0)/12.0)));
 	}
 
 	SetSampleRate (44100);
@@ -41,6 +42,7 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 
 VoiceAllocationUnit::~VoiceAllocationUnit	()
 {
+//	while (_voices.size()) delete (VoiceBoard *) _voices.pop_back();
 	delete limiter;
 	delete reverb;
 	delete distortion;
@@ -51,14 +53,14 @@ void
 VoiceAllocationUnit::SetSampleRate	(int rate)
 {
 	limiter->SetSampleRate (rate);
-	for (unsigned i=0; i<_voices.size(); ++i) _voices[i].SetSampleRate (rate);
+	for (unsigned i=0; i<_voices.size(); ++i) _voices[i]->SetSampleRate (rate);
 }
 
 void
 VoiceAllocationUnit::pwChange( float value )
 {
 	float newval = pow(2.0f,value);
-	for (unsigned i=0; i<_voices.size(); i++) _voices[i].SetPitchBend (newval);
+	for (unsigned i=0; i<_voices.size(); i++) _voices[i]->SetPitchBend (newval);
 }
 
 void
@@ -67,7 +69,7 @@ VoiceAllocationUnit::sustainOff()
 	sustain = 0;
 	for(unsigned i=0; i<_voices.size(); i++)
 		if (!keyPressed[i]) 
-			_voices[i].triggerOff();
+			_voices[i]->triggerOff();
 }
 
 void
@@ -77,6 +79,9 @@ VoiceAllocationUnit::noteOn(int note, float velocity)
 	cout << "<VoiceAllocationUnit> noteOn(note:" << note 
 	<< " vel:" << velocity << ")" << endl;
 #endif
+
+	assert (note >= 0);
+	assert (note < 128);
   
 	purgeVoices ();
 	
@@ -84,13 +89,13 @@ VoiceAllocationUnit::noteOn(int note, float velocity)
 	
 	if ((!mMaxVoices || (mActiveVoices < mMaxVoices)) && !active[note])
 	{
-		_voices[note].reset();
+		_voices[note]->reset();
 		active[note]=1;
 		mActiveVoices++;
 	}
 
-	_voices[note].setVelocity(velocity);
-	_voices[note].triggerOn();
+	_voices[note]->setVelocity(velocity);
+	_voices[note]->triggerOn();
 }
 
 void 
@@ -101,7 +106,7 @@ VoiceAllocationUnit::noteOff(int note)
 #endif
 	keyPressed[note] = 0;
 	if (!sustain){
-		_voices[note].triggerOff();
+		_voices[note]->triggerOff();
 	}
 }
 
@@ -109,7 +114,7 @@ void
 VoiceAllocationUnit::purgeVoices()
 {
 	for (unsigned note = 0; note < _voices.size(); note++) 
-		if (active[note] && (0 == _voices[note].getState()))
+		if (active[note] && (0 == _voices[note]->getState()))
 		{
 			mActiveVoices--;
 			active[note] = 0;
@@ -133,7 +138,7 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 	while (0 < framesLeft)
 	{
 		int fr = (framesLeft < kMaxGrainSize) ? framesLeft : kMaxGrainSize;
-		for (unsigned i=0; i<_voices.size(); i++) if (active[i]) _voices[i].ProcessSamplesMix (l+j, fr, mMasterVol);
+		for (unsigned i=0; i<_voices.size(); i++) if (active[i]) _voices[i]->ProcessSamplesMix (l+j, fr, mMasterVol);
 		j += fr; framesLeft -= fr;
 	}
 
@@ -154,6 +159,6 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	case kReverbWidth:		reverb->setwidth (value);	break;
 	case kDistortionCrunch:	distortion->SetCrunch (value);	break;
 	
-	default: for (unsigned i=0; i<_voices.size(); i++) _voices[i].UpdateParameter (param, value); break;
+	default: for (unsigned i=0; i<_voices.size(); i++) _voices[i]->UpdateParameter (param, value); break;
 	}
 }

@@ -46,7 +46,7 @@ private:
 
 	char	keyPressed[128], sustain;
 	bool	active[128];
-	std::vector<VoiceBoard>	_voices;
+	std::vector<VoiceBoard*>	_voices;
 	
 	SoftLimiter	*limiter;
 	revmodel	*reverb;
