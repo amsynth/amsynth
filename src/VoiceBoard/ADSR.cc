@@ -7,7 +7,7 @@
 */
 #include "ADSR.h"
 
-ADSR::ADSR(float *buf):
+ADSR::ADSR(float * const buf):
 	buffer (buf)
 ,	state (off)
 ,	c_val (0.0)
@@ -46,7 +46,7 @@ void ADSR::SetSustain	(float val)	{ s_val = val; }
 void ADSR::SetRelease	(float val) { r_time = val;	if (r_time == 0.0f) r_time = 0.001f; }
 int  ADSR::getState		()			{ return (state == off) ? 0 : 1; }
 
-float *
+float * const
 ADSR::getNFData(int nFrames)
 {
 	register int i;

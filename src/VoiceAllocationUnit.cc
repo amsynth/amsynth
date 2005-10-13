@@ -12,11 +12,11 @@
 #include <math.h>
 #include <assert.h>
 
-static VoiceBoardProcessMemory* process_memory;
-
 using namespace std;
 
 const int kMaxGrainSize = 64;
+
+static const VoiceBoardProcessMemory s_procMem (kMaxGrainSize);
 
 VoiceAllocationUnit::VoiceAllocationUnit ()
 :	mMaxVoices (0)
@@ -24,7 +24,6 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 ,	sustain (0)
 ,	mMasterVol (1.0)
 {
-	process_memory = new VoiceBoardProcessMemory (kMaxGrainSize);
 	limiter = new SoftLimiter;
 	reverb = new revmodel;
 	distortion = new Distortion;
@@ -33,7 +32,7 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 	{
 		keyPressed[i] = 0;
 		active[i] = false;
-		_voices.push_back (new VoiceBoard (process_memory));
+		_voices.push_back (new VoiceBoard (&s_procMem));
 		_voices.back()->setFrequency ((440.0f/32.0f) * pow (2.0f, (float)((i-9.0)/12.0)));
 	}
 
@@ -42,11 +41,10 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 
 VoiceAllocationUnit::~VoiceAllocationUnit	()
 {
-//	while (_voices.size()) delete (VoiceBoard *) _voices.pop_back();
+	while (_voices.size()) { delete _voices.back(); _voices.pop_back(); }
 	delete limiter;
 	delete reverb;
 	delete distortion;
-	delete process_memory;
 }
 
 void

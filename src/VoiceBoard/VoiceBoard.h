@@ -14,27 +14,24 @@ class VoiceBoardProcessMemory
 {
 public:
 	VoiceBoardProcessMemory	(int bufsize)
-	{
-		osc_1 = new float[bufsize];
-		osc_2 = new float[bufsize];
-		lfo_osc_1 = new float[bufsize];
-		filter_env = new float[bufsize];
-		amp_env = new float[bufsize];
-	}
-	VoiceBoardProcessMemory	()
-	{
-		delete[] osc_1;
-		delete[] osc_2;
-		delete[] lfo_osc_1;
-		delete[] filter_env;
-		delete[] amp_env;
-	}
-		
-	float*	osc_1;
-	float*	osc_2;
-	float*	lfo_osc_1;
-	float*	filter_env;
-	float*	amp_env;
+	:	buffer		(new float[bufsize*5])
+	,	osc_1		(buffer+bufsize*0)
+	,	osc_2		(buffer+bufsize*1)
+	,	lfo_osc_1	(buffer+bufsize*2)
+	,	filter_env	(buffer+bufsize*3)
+	,	amp_env		(buffer+bufsize*4)
+	{}
+	~VoiceBoardProcessMemory () { delete [] buffer; }
+
+private:
+	float * buffer;
+
+public:	
+	float *	const osc_1;
+	float *	const osc_2;
+	float *	const lfo_osc_1;
+	float *	const filter_env;
+	float *	const amp_env;
 };
 	
 
@@ -48,7 +45,7 @@ public:
 class VoiceBoard
 {
 public:
-	VoiceBoard(VoiceBoardProcessMemory *mem);
+	VoiceBoard(const VoiceBoardProcessMemory * mem);
 
 	int	getState		();
 	void	triggerOn		();
@@ -66,7 +63,7 @@ public:
 
 private:
 
-	VoiceBoardProcessMemory	*mem;
+	const VoiceBoardProcessMemory * mem;
 	
 	float			mKeyVelocity;
 	float			mKeyPitch;
