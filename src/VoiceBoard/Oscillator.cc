@@ -14,6 +14,8 @@ Oscillator::Oscillator()
 ,	rate (44100)
 ,	random_count (0)
 ,	period (0)
+,	reset_offset (4096)
+,	reset_period (4096)
 ,	sync (NULL)
 {}
 
