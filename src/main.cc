@@ -49,7 +49,7 @@ pipe_event( void *arg, int foo, GdkInputCondition ic )
 int main( int argc, char *argv[] )
 {
 	std::cout << 
-"amSynth 1.0.0\n\
+"amSynth " VERSION "\n\
 Copyright 2001-2004 Nick Dowell and others.\n\
 amSynth comes with ABSOLUTELY NO WARRANTY\n\
 This is free software, and you are welcome to redistribute it\n\
