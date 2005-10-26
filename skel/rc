@@ -45,7 +45,7 @@ oss_audio_device	/dev/dsp
 # set the ALSA pcm device to use
 # you should probably set this to hw:0 or similar, if you know what youre doing
 
-alsa_audio_device	default
+alsa_audio_device	hw:0
 
 # sets the sampling rate to use
 #
