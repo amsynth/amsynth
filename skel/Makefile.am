@@ -1,1 +1,1 @@
-EXTRA_DIST = rc presets Controllersrc
+dist_pkgdata_DATA = rc presets Controllersrc
