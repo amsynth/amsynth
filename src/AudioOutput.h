@@ -18,6 +18,8 @@ class VoiceAllocationUnit;
 class GenericOutput
 {
 public:
+	virtual ~GenericOutput () {}
+
 	virtual	void		setInput	(VoiceAllocationUnit* src)
 				{ mInput = src; }
 

@@ -17,9 +17,11 @@ using namespace std;
  * An abstraction of audio driver interfaces, to allow any system-level
  * driver to be used..
  */
-class AudioDriver {
-
-  public:
+class AudioDriver
+{
+public:
+	virtual ~AudioDriver () {}
+	
   /** 
    * Opens the audio driver, ready for input.
    * @return 0 on success, -1 on error.

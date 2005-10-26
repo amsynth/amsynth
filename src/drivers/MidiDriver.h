@@ -17,8 +17,11 @@
  * an abstraction of Midi driver interfaces, to allow use of all? (sane) MIDI
  * drivers. Only the simplest functions are defined.
  */
-class MidiDriver {
-  public:
+class MidiDriver
+{
+public:
+	virtual ~MidiDriver () {}
+	
     // read() returns the number of bytes succesfully read. numbers < 0 
     // generally indicate failure...
     virtual int read(unsigned char *midi_event_buffer) = 0;

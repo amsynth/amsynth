@@ -30,6 +30,8 @@
 class Thread
 {
 public:
+	virtual ~Thread () {}
+	
 	int		Run		() { return pthread_create (&mThread, NULL, Thread::start_routine, this); }
 	void	Stop	() { mShouldStop = true; }
 	int		Kill	(int sig = 2) { return pthread_kill (mThread, sig); }

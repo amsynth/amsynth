@@ -10,8 +10,11 @@
 /**
  * an interface for classes which can be update() ed, eg the GUI objects.
  **/
-class UpdateListener {
-  public:
+class UpdateListener
+{
+public:
+	virtual ~UpdateListener () {}
+	 
     virtual void update			()		{;}
     virtual void UpdateParameter	(Param, float)	{ update ();}
 };
