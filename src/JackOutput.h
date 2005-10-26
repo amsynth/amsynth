@@ -30,11 +30,12 @@ public:
 
 	const char*	getTitle	( )	{ return client_name.c_str(); };
 
+#ifdef with_jack
 	int			process		(jack_nframes_t nframes);
 	int			bufsize		(jack_nframes_t nframes);
 	int			srate		(jack_nframes_t nframes);
 	void		shutdown	();
-	
+#endif
 private:
 	int	running;
 	int	channels;
@@ -42,9 +43,10 @@ private:
 	string	wavoutfile;
 	int	recording;
 	string	client_name, error_msg;
-
+#ifdef with_jack
 	jack_port_t 	*l_port, *r_port;
 	jack_client_t 	*client;
+#endif
 	int		sample_rate;
 	int		buf_size;
 	bool	initialised;

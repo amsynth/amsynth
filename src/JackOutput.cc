@@ -107,6 +107,7 @@ JackOutput::init	( Config & config )
 	return -1;
 }
 
+#ifdef with_jack
 int
 JackOutput::process (jack_nframes_t nframes)
 {
@@ -134,6 +135,7 @@ void
 JackOutput::shutdown ()
 {
 }
+#endif
 
 bool 
 JackOutput::Start	()
