@@ -32,7 +32,7 @@ amSynth_bin_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a GUI/libGUI.a
 
 amSynth_ptest_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a Effects/libEffects.a
 
-LIBS = -lstdc++ -lm
+LIBS = -lstdc++ -lm -lpthread
 amSynth_bin_LDFLAGS = $(DEPS_LIBS)
 
 install-exec-hook):
