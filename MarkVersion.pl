@@ -20,7 +20,7 @@ if ($numArgs < 2)
 
 my $cmd = 0;
 for (@cmd_locations) {
-	if (-1 != index `$_ --help 2>1&`, "usage:") {
+	if (-1 != index `$_ --help 2>&1`, "usage:") {
 		$cmd = $_; last;
 	}
 }
