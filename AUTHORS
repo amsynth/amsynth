@@ -28,3 +28,6 @@ Darrick Servis
 
 Johan Martinsson
  - Improved gtk layout code for different font sizes
+ 
+Andy Ryan
+ - Added midi out capabilities for control surfaces with feedback
