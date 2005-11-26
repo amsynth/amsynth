@@ -25,3 +25,6 @@ Bob Ham
 
 Darrick Servis
  - Input on the GUI - new midi controller config, motivating re-organisation of menus, shortcut keys..
+
+Johan Martinsson
+ - Improved gtk layout code for different font sizes

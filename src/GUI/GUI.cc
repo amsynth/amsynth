@@ -12,6 +12,7 @@
 
 #include <gtkmm/adjustment.h>
 #include <gtkmm/spinbutton.h>
+#include <gtkmm/alignment.h>
 #include <sigc++/bind.h>
 
 #include "../AudioOutput.h"
@@ -63,7 +64,6 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 //		Gtk::Main::timeout.connect( mem_fun(*this,&GUI::idle_callback), 200 );
 
 	set_title (title);
-	set_resizable (false);
 
 	active_param = 0;
 
@@ -438,13 +438,6 @@ GUI::config_controllers()
 
 
 
-void
-GUI::arrange()
-{
-	editor_panel->arrange ( );
-	set_size_request( 605, 450 );
-}
-
 void 
 GUI::init()
 {
@@ -460,21 +453,24 @@ GUI::init()
 	adj_voices->signal_value_changed().connect (mem_fun (*this, &GUI::changed_voices));
 	Gtk::SpinButton *sb_voices = manage (new Gtk::SpinButton(*adj_voices,1,0));
 	
-	vbox.pack_start (*(create_menus ()));
+	vbox.pack_start (*(create_menus ()),0,0);
 	Gtk::HBox *tmphbox = manage (new Gtk::HBox());
-	tmphbox->add (*(manage( new Gtk::Label () )));
-	tmphbox->add (*presetCV);
-	tmphbox->add (*(manage( new Gtk::Label () )));
-	tmphbox->pack_start (*(manage( new Gtk::Label (" midi ch:") )),0,0);
-	tmphbox->pack_start (*sb_midi,0,0);
-	tmphbox->pack_start (*(manage( new Gtk::Label (" poly:") )),0,0);
-	tmphbox->pack_start (*sb_voices,0,0);
+	tmphbox->pack_start(*presetCV,0,0);
+	Gtk::HBox *midibox = manage(new Gtk::HBox());
+	midibox->pack_start(*(manage( new Gtk::Label (" midi ch:") )),0,0);
+	midibox->pack_start(*sb_midi,0,0);
+	midibox->pack_start(*(manage( new Gtk::Label (" poly:") )),0,0);
+	midibox->pack_start(*sb_voices,0,0);
+	Gtk::Alignment *align = manage(new Gtk::Alignment(Gtk::ALIGN_RIGHT,
+							  Gtk::ALIGN_CENTER,
+							  0,0));
+	align->add(*midibox);
+	tmphbox->pack_start(*align);
 	vbox.pack_start (*tmphbox,0,0);
-	vbox.pack_start (*editor_panel,0,0);
+	vbox.pack_start (*editor_panel,Gtk::PACK_EXPAND_WIDGET,0);
 	vbox.pack_start (statusBar);
-	add (vbox);
-	arrange();
-	show_all ();
+	add(vbox);
+	show_all();
 	
 	
 	presetCV->setPresetController(*preset_controller);

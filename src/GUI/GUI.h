@@ -79,7 +79,6 @@ private:
 
 	int *pipe, lnav;
 	void event_handler(string text);
-	void arrange();
 	void config_controllers();
 	
 	void		preset_new		( );

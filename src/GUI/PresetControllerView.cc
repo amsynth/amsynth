@@ -35,7 +35,7 @@ PresetControllerView::PresetControllerView( int pipe_d, VoiceAllocationUnit & va
 	add (*blank);
 
 	Gtk::Button *panic = manage (new Gtk::Button);
-	panic->add_label ("Panic");
+	panic->add_label ("Kill all voices");
 	panic->signal_clicked().connect(bind(mem_fun(*this, &PresetControllerView::ev_handler),"panic"));
 	add (*panic);
 
