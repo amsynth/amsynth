@@ -39,6 +39,7 @@ public:
 	Parameter & getController( int controller_no );
 	
 	void	set_midi_channel	( int ch );
+	int     sendMidi_values		();
 
 protected:
 	void	ThreadAction ();

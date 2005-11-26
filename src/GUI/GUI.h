@@ -114,6 +114,11 @@ private:
 	Gtk::Label about_label;
 	Gtk::Image *about_pixmap;
 	Gtk::Button about_close_button;
+
+	// send midi dialog
+	Gtk::Dialog send_midi_window;
+	Gtk::Label send_midi_label;
+	Gtk::Button send_midi_ok, send_midi_cancel;
 	
 	// realtime warning dialog
 	Gtk::Dialog realtime_warning;

@@ -21,6 +21,7 @@ public:
   OSSMidiDriver();
   virtual ~OSSMidiDriver();
   int read(unsigned char *midi_event_buffer);
+  int write_cc(unsigned int channel, unsigned int param, unsigned int value);
   int open( Config & config );
   int close();
   

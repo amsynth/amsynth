@@ -17,7 +17,7 @@ class MidiInterface {
     int open( Config & config );
     void close();
     int read(unsigned char *buffer);
-
+    int write_cc(unsigned int channel, unsigned int param, unsigned int value);
   private:
      MidiDriver * midi;
 };

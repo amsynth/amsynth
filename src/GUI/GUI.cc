@@ -149,6 +149,25 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	about_window.set_transient_for( *this );
 
 	//
+	// send midi
+	//
+	send_midi_window.set_title( "Send Settings to Midi Device" );
+    send_midi_window.set_resizable (true);
+    send_midi_window.set_size_request( 300, 200 );
+	send_midi_window.get_vbox()->add( send_midi_label );
+	
+	send_midi_label.set_text( "Send Setting to Midi Out" );
+	send_midi_window.get_action_area()->add( send_midi_ok );
+	send_midi_ok.add_label("Send Settings", 0.5, 0.5);
+	send_midi_ok.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),"midi::send::ok"));
+	
+	send_midi_window.get_action_area()->add( send_midi_cancel );
+	send_midi_cancel.add_label("Cancel", 0.5, 0.5 );
+	send_midi_cancel.signal_clicked().connect(mem_fun(send_midi_window, &Gtk::Dialog::hide));
+	send_midi_window.set_modal( true );
+	send_midi_window.set_transient_for( *this );    
+
+    //
 	// Bank Open dialog
 	//
 	d_bank_open.set_title( "Open amSynth Bank File..." );
@@ -405,7 +424,7 @@ GUI::create_menus	( )
 	
 	list_utils.push_back (MenuElem("Audio (JACK) connections", *menu_utils_jack));
 	
-	
+	list_utils.push_back (MenuElem("Send Settings to Midi", sigc::bind(mem_fun(*this, &GUI::event_handler), "midi::send")));
 	
 	//
 	// Menubar
@@ -647,6 +666,15 @@ GUI::event_handler(string text)
     {
 	    font_sel.hide ( );
     } 
+	else if (text=="midi::send")
+	{
+		send_midi_window.show_all();
+	}
+	else if (text=="midi::send::ok")
+	{
+		midi_controller->sendMidi_values();
+		send_midi_window.hide ();
+	}      
     else {
 		cout << "no handler for event: " << text << endl;
 		return;

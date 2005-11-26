@@ -19,6 +19,7 @@ public:
 		ALSAMidiDriver		( );
 	virtual ~ALSAMidiDriver		( );
 	int 	read			( unsigned char *midi_event_buffer );
+	int		write_cc		(unsigned int channel, unsigned int param, unsigned int value);
 	int 	open			( Config & config );
 	int 	close			( );
 	int 	get_alsa_client_id	( )	{ return client_id; };
@@ -27,6 +28,7 @@ private:
 	snd_seq_t		*seq_handle;
 	snd_midi_event_t	*seq_midi_parser;
 	int 			portid;
+	int				portid_out;
 #endif
 	int			client_id;
 	int 			_bytes_read;

@@ -25,6 +25,38 @@ ALSAMidiDriver::read(unsigned char *midi_event_buffer)
 #endif
 }
 
+int
+ALSAMidiDriver::write_cc(unsigned int channel, unsigned int param, unsigned int value)
+{
+      int ret=0;
+      client_id = 0;
+#ifdef with_alsa
+      snd_seq_event_t ev;
+
+
+        snd_seq_ev_clear(&ev);
+        snd_seq_ev_set_subs(&ev);
+        snd_seq_ev_set_direct(&ev);
+        snd_seq_ev_set_source(&ev, portid_out);
+        ev.type = SND_SEQ_EVENT_CONTROLLER;
+        ev.data.control.channel = channel;
+        ev.data.control.param = param;
+        ev.data.control.value = value;
+        ret=snd_seq_event_output_direct(seq_handle, &ev);
+#if _DEBUG
+      cout << "param = " << param << " value = " << value << " ret = " << ret << endl;
+#endif
+      if (ret < 0 ) cout << snd_strerror(ret) << endl;        
+      snd_seq_free_event( &ev );
+
+      return ret;
+#else
+      return -1;
+#endif
+}
+
+
+
 int ALSAMidiDriver::close()
 {
 #ifdef with_alsa
@@ -57,6 +89,16 @@ int ALSAMidiDriver::open( Config & config )
 	
 //	if (config.debug_drivers)
 //		cerr << "opened alsa sequencer client. id=" << client_id << endl;
+
+	port_name = config.alsa_seq_client_name;
+	port_name += " MIDI OUT";
+	
+	if ((portid_out = snd_seq_create_simple_port(seq_handle, port_name.c_str(),
+		SND_SEQ_PORT_CAP_READ|SND_SEQ_PORT_CAP_SUBS_READ,
+		SND_SEQ_PORT_TYPE_APPLICATION)) < 0) {
+		cerr << "Error creating sequencer port.\n";
+		return -1;
+	}
 
 	return 0;
 #else

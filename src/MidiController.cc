@@ -321,3 +321,28 @@ MidiController::set_midi_channel	( int ch )
 	if (ch)	_va->killAllVoices ();
 	config->midi_channel = ch;
 }
+
+int
+MidiController::sendMidi_values       ()
+{
+      for (unsigned i = 0; i < MAX_CC; i++)
+      {
+              if (midi_controllers[i]->getName() != "null")
+              {
+      
+                      float fval=midi_controllers[i]->getValue();
+                      int midiValue=(int)(127*(fval-midi_controllers[i]->getMin())/(midi_controllers[i]->getMax()-midi_controllers[i]->getMin()));
+#ifdef _DEBUG
+                      cout << "PresetController::midiSendPresets :- parameter name="
+                      << midi_controllers[i]->getName() << " value= "
+                      << midi_controllers[i]->getValue() 
+                      << " midiValue = " << midiValue << endl;
+#endif
+                      midi.write_cc(0,i,midiValue);
+              }
+      }
+      return 0;
+}
+
+
+

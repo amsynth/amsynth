@@ -10,6 +10,13 @@ int
     return bar;
 }
 
+
+int
+ OSSMidiDriver::write_cc(unsigned int channel, unsigned int param, unsigned int value)
+{
+    return -1;
+}
+
 int OSSMidiDriver::close()
 {
     if (opened) {

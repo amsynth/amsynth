@@ -12,6 +12,12 @@ MidiInterface::read(unsigned char *buffer)
 	return midi->read(buffer);
 }
 
+int
+MidiInterface::write_cc(unsigned int channel, unsigned int param, unsigned int val)
+{
+      return midi->write_cc(channel, param, val);
+}
+
 void MidiInterface::close()
 {
 	midi->close();
