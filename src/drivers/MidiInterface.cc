@@ -4,6 +4,8 @@
 
 #include "MidiInterface.h"
 
+using namespace std;
+
 int
 MidiInterface::read(unsigned char *buffer)
 {

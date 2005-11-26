@@ -7,6 +7,8 @@
 #include <fstream>
 #include <iostream>
 
+using namespace std;
+
 static string amsynthrc_fname;
 
 Config::Config()

@@ -6,7 +6,7 @@
 #define CONFIG_H
  
 #include <string>
-#include "base.h"
+using std::string;
 
 /**
  * @brief Encapsulates any configuration parameters which must be shared between

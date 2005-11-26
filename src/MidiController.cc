@@ -4,6 +4,9 @@
 
 #include "MidiController.h"
 #include <fstream>
+
+using namespace std;
+
 void sched_realtime (); // defined in main.cc
 
 MidiController::MidiController( Config & config )

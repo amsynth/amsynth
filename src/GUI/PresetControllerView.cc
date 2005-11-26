@@ -11,6 +11,7 @@
 using SigC::slot;
 using sigc::bind;
 using std::cout;
+using namespace std;
 
 PresetControllerView::PresetControllerView( int pipe_d, VoiceAllocationUnit & vau )
 {

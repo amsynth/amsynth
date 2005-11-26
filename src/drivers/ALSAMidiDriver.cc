@@ -3,8 +3,9 @@
  **/
 
 #include "ALSAMidiDriver.h"
-
 #include <unistd.h>
+
+using namespace std;
 
 int
 ALSAMidiDriver::read(unsigned char *midi_event_buffer)

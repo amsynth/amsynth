@@ -9,7 +9,6 @@
 #include "GUI/GUI.h"
 #include "GUI/ParameterView.h"
 #include "Config.h"
-#include "base.h"
 #include "../config.h"
 
 #include <gtkmm/main.h>
@@ -18,6 +17,7 @@
 #include <unistd.h>
 #include <string>
 
+using namespace std;
 
 PresetController *presetController;
 MidiController *midi_controller;

@@ -17,6 +17,7 @@
 using sigc::slot;
 using sigc::bind;
 using std::cout;
+using namespace std;
 
 ControllerMapDialog::ControllerMapDialog
 		( int pipe_d, MidiController & mc, PresetController & pc )

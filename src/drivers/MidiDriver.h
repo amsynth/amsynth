@@ -7,9 +7,7 @@
 
 #define MIDI_BUF_SIZE 64
 
-#include <string>
 #include "../Config.h"
-#include "../base.h"
 
 /** \class MidiDriver
  *  \brief a Generic MIDI Interface

@@ -9,6 +9,9 @@
 
 #include "PresetController.h"
 
+using namespace std;
+
+
 PresetController::PresetController	()
 :	updateListener (0)
 ,	nullpreset ("null preset")

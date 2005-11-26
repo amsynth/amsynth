@@ -9,8 +9,10 @@
 #include <vector>
 #include <sstream>
 #include <cmath>
-#include "base.h"
 #include "UpdateListener.h"
+
+using std::string;
+using std::vector;
 
 #define clip(in,min,max) ((in) < (min) ? (min) : ((in) > (max) ? (max) : (in)))
 
@@ -83,7 +85,7 @@ private:
 	string							_name, label;
 	int								controlMode;
 	float							_value, _min, _max, _step, controlValue, base, offset;
-	std::vector<UpdateListener*>	updateListeners;
+	vector<UpdateListener*>			updateListeners;
 };
 
 #endif

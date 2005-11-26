@@ -20,7 +20,7 @@ amSynth_bin_SOURCES = \
 	Preset.cc Preset.h \
 	PresetController.cc PresetController.h \
 	VoiceAllocationUnit.cc VoiceAllocationUnit.h \
-	Config.cc Config.h base.h UpdateListener.h Thread.h controls.h
+	Config.cc Config.h UpdateListener.h Thread.h controls.h
 
 amSynth_ptest_SOURCES = \
 	ptest.cc Parameter.cc Preset.cc \
