@@ -12,7 +12,7 @@ amSynth: amSynth.in.1 amSynth.in.2
 	chmod +x amSynth
 
 amSynth_bin_SOURCES = \
-	main.cc main.h \
+	main.cc \
 	AudioOutput.cc AudioOutput.h \
 	JackOutput.cc JackOutput.h \
 	MidiController.cc MidiController.h \
