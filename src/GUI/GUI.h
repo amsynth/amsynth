@@ -78,7 +78,7 @@ private:
 	Gtk::MenuBar*	create_menus		( );
 
 	int *pipe, lnav;
-	void event_handler(string text);
+	void		event_handler	(const int);
 	void config_controllers();
 	
 	void		preset_new		( );

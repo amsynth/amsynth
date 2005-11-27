@@ -22,10 +22,42 @@
 
 #include "splash.xpm"
 
+
+enum {
+	evPresetRandomise,
+	evHelpAbout,
+	evLoad,
+	evCommit,
+	evPresetRename,
+	evPresetRenameOk,
+    evPresetDelete,
+	evPresetDeleteOk,
+	evPresetExport,
+	evPresetExportOk,
+	evPresetImport,
+	evPresetImportOk,
+	evQuit,
+	evQuitOk,
+	evRecDlg,
+	evRecDlgChoose,
+	evRecordFileselectOk,
+	evRecDlgClose,
+	evRecDlgRecord,
+	evRecDlgPause,
+	evVkeybd,
+	evFont,
+	evFontApply,
+	evFontOk,
+	evFontCancel,
+	evMidiSend,
+	evMidiSendOk
+};
+
+
 int
 GUI::delete_event_impl(GdkEventAny *)
 {
-    event_handler( "quit" );
+    event_handler( evQuit );
     return true;
 }
 
@@ -94,7 +126,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	preset_rename.get_vbox()->add( preset_rename_entry );
 	preset_rename.get_action_area()->add( preset_rename_ok );
 	preset_rename_ok.add_label( "Confirm", 0.5, 0.5 );
-	preset_rename_ok.signal_clicked().connect(sigc::bind( sigc::mem_fun(*this, &GUI::event_handler), "preset::rename::ok"));
+	preset_rename_ok.signal_clicked().connect(sigc::bind( sigc::mem_fun(*this, &GUI::event_handler), (int) evPresetRenameOk));
 	preset_rename.get_action_area()->add( preset_rename_cancel );
 	preset_rename_cancel.signal_clicked().connect(mem_fun(preset_rename, &Gtk::Dialog::hide));
 	preset_rename_cancel.add_label( "Cancel", 0.5, 0.5 );
@@ -112,7 +144,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	d_preset_new.get_vbox()->add( d_preset_new_entry );
 	d_preset_new.get_action_area()->add( d_preset_new_ok );
 	d_preset_new_ok.add_label( "Confirm", 0.5, 0.5 );
-	d_preset_new_ok.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),"preset::new::ok"));
+	d_preset_new_ok.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler), 0));
 	d_preset_new.get_action_area()->add( d_preset_new_cancel );
 	d_preset_new_cancel.signal_clicked().connect(mem_fun(d_preset_new, &Gtk::Dialog::hide));
 	d_preset_new_cancel.add_label( "Cancel", 0.5, 0.5 );
@@ -129,7 +161,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	preset_delete_label.set_text( "Delete the current Preset?" );
 	preset_delete.get_action_area()->add( preset_delete_ok );
 	preset_delete_ok.add_label( "Yes", 0.5, 0.5 );
-	preset_delete_ok.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),"preset::delete::ok"));
+	preset_delete_ok.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler), (int) evPresetDeleteOk));
 	preset_delete.get_action_area()->add( preset_delete_cancel );
 	preset_delete_cancel.add_label( "Cancel", 0.5, 0.5 );
 	preset_delete_cancel.signal_clicked().connect(mem_fun(preset_delete, &Gtk::Dialog::hide));
@@ -159,7 +191,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	send_midi_label.set_text( "Send Setting to Midi Out" );
 	send_midi_window.get_action_area()->add( send_midi_ok );
 	send_midi_ok.add_label("Send Settings", 0.5, 0.5);
-	send_midi_ok.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),"midi::send::ok"));
+	send_midi_ok.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler), (int) evMidiSendOk));
 	
 	send_midi_window.get_action_area()->add( send_midi_cancel );
 	send_midi_cancel.add_label("Cancel", 0.5, 0.5 );
@@ -191,7 +223,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	//
 	preset_export_dialog.set_title( "Select DIRECTORY to export preset to" );
 	preset_export_dialog.get_cancel_button()->signal_clicked().connect(mem_fun(preset_export_dialog, &Gtk::Dialog::hide));
-	preset_export_dialog.get_ok_button()->signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),"preset::export::ok"));
+	preset_export_dialog.get_ok_button()->signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evPresetExportOk));
 	preset_export_dialog.get_selection_entry()->set_editable( false );
 	preset_export_dialog.set_modal( true );
 	preset_export_dialog.set_transient_for( *this );
@@ -201,7 +233,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	//
 	preset_import_dialog.set_title( "Import as current preset" );
 	preset_import_dialog.get_cancel_button()->signal_clicked().connect(mem_fun(preset_import_dialog, &Gtk::Dialog::hide));
-	preset_import_dialog.get_ok_button()->signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),"preset::import::ok"));
+	preset_import_dialog.get_ok_button()->signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evPresetImportOk));
 	preset_import_dialog.set_modal( true );
 	preset_import_dialog.set_transient_for( *this );
 	
@@ -211,7 +243,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	record_fileselect.set_title( "set output WAV file" );
 	record_fileselect.set_filename( "/tmp/amSynth-out.wav" );
 	record_fileselect.get_cancel_button()->signal_clicked().connect(mem_fun(record_fileselect, &Gtk::Dialog::hide));
-	record_fileselect.get_ok_button()->signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler), "record::fileselect::ok"));
+	record_fileselect.get_ok_button()->signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evRecordFileselectOk));
 	record_fileselect.set_modal( true );
 	record_fileselect.set_transient_for( *this );
 	
@@ -237,7 +269,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	record_file_hbox.add( record_choose );
 	record_entry.set_text( "/tmp/amSynth-out.wav" );
 	record_choose.add_label( "...", 0.5, 0.5 );
-	record_choose.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),"record_dialog::choose"));
+	record_choose.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evRecDlgChoose));
 		
 	record_buttons_hbox.add( record_record );
 	record_buttons_hbox.add( record_pause );
@@ -245,8 +277,8 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	record_buttons_hbox.set_spacing( 10 );
 	record_record.add_label( "REC", 0.5, 0.5 );
 	record_pause.add_label( "STOP", 0.5, 0.5 );
-	record_record.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),"record_dialog::record") );
-	record_pause.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),"record_dialog::pause") );
+	record_record.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evRecDlgRecord) );
+	record_pause.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evRecDlgPause) );
 	
 	record_recording = false;
 	record_statusbar.push ("capture status: STOPPED", 1);
@@ -261,7 +293,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	quit_confirm_label.set_text( "Really quit amSynth?\n\nYou will lose any changes\nwhich you haven't explicitly commited" );
 	quit_confirm.get_action_area()->add( quit_confirm_ok );
 	quit_confirm_ok.add_label( "Yes, Quit!", 0.5, 0.5 );
-	quit_confirm_ok.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),"quit::ok") );
+	quit_confirm_ok.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evQuitOk) );
 	quit_confirm_ok.grab_focus ();
 	quit_confirm.get_action_area()->add( quit_confirm_cancel );
 	quit_confirm_cancel.add_label( "Cancel", 0.5, 0.5 );
@@ -273,11 +305,11 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	// font selection dialog
 	//
 	font_sel.get_ok_button()->signal_clicked().connect(
-			sigc::bind(mem_fun(*this, &GUI::event_handler),"font::ok") );
+			sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evFontOk) );
 	font_sel.get_apply_button()->signal_clicked().connect(
-			sigc::bind(mem_fun(*this, &GUI::event_handler),"font::apply") );
+			sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evFontApply) );
 	font_sel.get_cancel_button()->signal_clicked().connect(
-			sigc::bind(mem_fun(*this, &GUI::event_handler),"font::cancel") );
+			sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evFontCancel) );
 
 	//
 	// show realtime warning message if necessary
@@ -331,7 +363,7 @@ GUI::create_menus	( )
 //	list_file.push_back (MenuElem("_Save Bank","<control>S", mem_fun(*this, &GUI::bank_save)));
 	list_file.push_back (MenuElem("_Save Bank As...",Gtk::AccelKey("<control>S"), mem_fun(*this, &GUI::bank_save_as)));
 	list_file.push_back (SeparatorElem());
-	list_file.push_back (MenuElem("_Quit",Gtk::AccelKey("<control>Q"), sigc::bind(mem_fun(*this, &GUI::event_handler),"quit")));
+	list_file.push_back (MenuElem("_Quit",Gtk::AccelKey("<control>Q"), sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evQuit)));
 	
 	
 	//
@@ -345,14 +377,14 @@ GUI::create_menus	( )
 	list_preset.push_back (MenuElem("_Paste", Gtk::AccelKey("<control>V"), mem_fun(*this, &GUI::preset_paste)));
 	list_preset.push_back (MenuElem("Paste as New", mem_fun(*this, &GUI::preset_paste_as_new)));
 	list_preset.push_back (SeparatorElem());
-	list_preset.push_back (MenuElem("Rename", sigc::bind(mem_fun(*this, &GUI::event_handler), "preset::rename")));
-	list_preset.push_back (MenuElem("Clear", sigc::bind(mem_fun(*this, &GUI::event_handler), "preset::delete")));
+	list_preset.push_back (MenuElem("Rename", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetRename)));
+	list_preset.push_back (MenuElem("Clear", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetDelete)));
 	list_preset.push_back (SeparatorElem());
-//	list_preset.push_back (MenuElem("_Randomise", Gtk::AccelKey("<control>R"), sigc::bind(mem_fun(*this, &GUI::event_handler), "preset::randomise")));
+//	list_preset.push_back (MenuElem("_Randomise", Gtk::AccelKey("<control>R"), sigc::bind(mem_fun(*this, &GUI::event_handler), evPresetRandomise)));
 	list_preset.push_back (MenuElem("_Randomise", Gtk::AccelKey("<control>R"), sigc::mem_fun(preset_controller->getCurrentPreset(), &Preset::randomise)));
 	list_preset.push_back (SeparatorElem());
-	list_preset.push_back (MenuElem("Import...", sigc::bind(mem_fun(*this, &GUI::event_handler), "preset::import")));
-	list_preset.push_back (MenuElem("Export...", sigc::bind(mem_fun(*this, &GUI::event_handler), "preset::export")));
+	list_preset.push_back (MenuElem("Import...", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetImport)));
+	list_preset.push_back (MenuElem("Export...", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetExport)));
 
 			
 	//
@@ -360,7 +392,7 @@ GUI::create_menus	( )
 	//
 	Menu *menu_config = manage (new Menu());
 	MenuList& list_config = menu_config->items ();
-//	list_config.push_back (MenuElem("Interface Font...", sigc::bind(mem_fun(*this, &GUI::event_handler),"font")));
+//	list_config.push_back (MenuElem("Interface Font...", sigc::bind(mem_fun(*this, &GUI::event_handler),evFont)));
 	list_config.push_back (MenuElem("MIDI Controllers...", Gtk::AccelKey("<control>M"), mem_fun(*this, &GUI::config_controllers)));
 	
 	
@@ -371,14 +403,14 @@ GUI::create_menus	( )
 	MenuList& list_utils = menu_utils->items ();
 
 	MenuItem *menu_item = manage (new MenuItem("Virtual Keyboard"));
-	menu_item->signal_activate().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),"vkeybd"));
+	menu_item->signal_activate().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evVkeybd));
 	if (config->alsa_seq_client_id==0) menu_item->set_sensitive( false );
 	// test for presence of vkeybd.
 	if (command_exists ("vkeybd") != 0) menu_item->set_sensitive( false );
 	list_utils.push_back (*menu_item);
 
 	menu_item = manage (new MenuItem("Record to .wav file..."));
-	menu_item->signal_activate().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),"record_dialog"));
+	menu_item->signal_activate().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evRecDlg));
 	if (audio_out) if (!audio_out->canRecord ()) menu_item->set_sensitive (false);
 	list_utils.push_back (*menu_item);
 
@@ -424,7 +456,7 @@ GUI::create_menus	( )
 	
 	list_utils.push_back (MenuElem("Audio (JACK) connections", *menu_utils_jack));
 	
-	list_utils.push_back (MenuElem("Send Settings to Midi", sigc::bind(mem_fun(*this, &GUI::event_handler), "midi::send")));
+	list_utils.push_back (MenuElem("Send Settings to Midi", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evMidiSend)));
 	
 	//
 	// Menubar
@@ -442,7 +474,7 @@ GUI::create_menus	( )
 	
 	menu_item = manage (new MenuItem("Analogue Modelling SYNTHesizer"));
 	menu_item->set_right_justified (true);
-	menu_item->signal_activate().connect (sigc::bind(mem_fun(*this, &GUI::event_handler),"help::about"));
+	menu_item->signal_activate().connect (sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evHelpAbout));
 	list_bar.push_back (*menu_item);
 	
 	return menu_bar;
@@ -538,89 +570,102 @@ GUI::init()
 }
 
 
-
-
-
-
-
-
-
 void 
-GUI::event_handler(string text)
+GUI::event_handler(const int e)
 {
-    if (text == "preset::randomise") {
+	switch (e)
+	{
+	case evPresetRandomise:
 		preset_controller->getCurrentPreset().randomise();
-		return;
-    } else if (text == "help::about") {
+		break;			
+			
+	case evHelpAbout:
 		about_window.show_all();
-		return;
-    } else if (text == "load") {
-		return;
-    } else if (text == "commit") {
-		return;
-    } else if (text == "preset::rename") {
-		preset_rename_entry.set_text( 
-			preset_controller->getCurrentPreset().getName() );
+		break;
+	
+	case evLoad:
+		break;
+
+	case evCommit:
+		break;
+
+	case evPresetRename:
+		preset_rename_entry.set_text(preset_controller->getCurrentPreset().getName());
 		preset_rename_entry.grab_focus();
 		preset_rename.show_all();
-		return;
-    } else if (text == "preset::rename::ok") {
-		preset_controller->getCurrentPreset().setName( 
-			preset_rename_entry.get_text() );
+		break;
+	
+	case evPresetRenameOk:
+		preset_controller->getCurrentPreset().setName(preset_rename_entry.get_text());
 		presetCV->update();
 		preset_rename.hide();
-		return;
-    } else if (text == "preset::delete") {
+		break;
+	
+    case evPresetDelete:
 		preset_delete.show_all();
-		return;
-    } else if (text == "preset::delete::ok") {
+		break;
+	
+	case evPresetDeleteOk:
 		preset_controller->deletePreset();
 		preset_controller->commitPreset();
 		preset_controller->selectPreset( 0 );
 		presetCV->update();
 		preset_delete.hide();
-		return;
-    } else if (text == "preset::export") {
+		break;
+	
+	case evPresetExport:
 		preset_export_dialog.show_all();
-		return;
-    } else if (text == "preset::export::ok") {
-		string fn = preset_controller->getCurrentPreset().getName();
-		fn += ".amSynthPreset";
-		string file = preset_export_dialog.get_filename();
-		file += fn;
-		preset_controller->exportPreset( file );
-		preset_export_dialog.hide();
-		return;
-    } else if (text == "preset::import") {
+		break;
+	
+	case evPresetExportOk:
+		{
+			string fn = preset_controller->getCurrentPreset().getName();
+			fn += ".amSynthPreset";
+			string file = preset_export_dialog.get_filename();
+			file += fn;
+			preset_controller->exportPreset( file );
+			preset_export_dialog.hide();
+		}
+		break;
+	
+	case evPresetImport:
 		preset_import_dialog.complete( "*.amSynthPreset" );
 		preset_import_dialog.show_all();
-		return;
-    } else if (text == "preset::import::ok") {
+		break;
+	
+	case evPresetImportOk:
 		preset_controller->importPreset( preset_import_dialog.get_filename() );
 		preset_import_dialog.hide();
-		return;
-    } else if (text == "quit") {
+		break;
+	
+	case evQuit:
 		quit_confirm.show_all();
-		return;
-    } else if (text == "quit::ok") {
+		break;
+	
+	case evQuitOk:
 		quit_confirm.hide_all();
 		hide();
-		return;
-    } else if (text == "record_dialog" ) {
+		break;
+	
+	case evRecDlg:
 		record_dialog.show_all();
-		return;
-    } else if (text == "record_dialog::choose" ) {
+		break;
+	
+	case evRecDlgChoose:
 		record_fileselect.show_all();
-		return;
-    } else if (text == "record::fileselect::ok" ) {
+		break;
+	
+	case evRecordFileselectOk:
 		record_entry.set_text( record_fileselect.get_filename() );
 		record_fileselect.hide_all();
-		return;
-    } else if (text == "record_dialog::close" ) {
+		break;
+	
+	case evRecDlgClose:
 		audio_out->stopRecording();
 		record_dialog.hide_all();
-		return;
-    } else if (text == "record_dialog::record" ) {
+		break;
+	
+	case evRecDlgRecord:
 		if( record_recording == false )
 		{
 			audio_out->setOutputFile( record_entry.get_text() );
@@ -629,8 +674,9 @@ GUI::event_handler(string text)
 			record_statusbar.pop( 1 );
 			record_statusbar.push ("capture status: RECORDING", 1);
 		}
-		return;
-    } else if ( text == "record_dialog::pause" ) {
+		break;
+	
+	case evRecDlgPause:
 	    if( record_recording == true )
 	    {
 		    audio_out->stopRecording();
@@ -638,46 +684,48 @@ GUI::event_handler(string text)
 		    record_statusbar.pop( 1 );
 		    record_statusbar.push ("capture status: STOPPED", 1);
 	    }
-	    return;
-    }
-    else if (text=="vkeybd")
-    {
-	    string tmp = "vkeybd --addr ";
-	    char tc[5];
-	    sprintf( tc, "%d", config->alsa_seq_client_id );
-	    tmp += string(tc);
-	    tmp += ":0 &";
-	    system( tmp.c_str() );
-    } 
-    else if (text=="font")
-    {
+	    break;
+	
+	case evVkeybd:
+	    {
+		    string tmp = "vkeybd --addr ";
+		    char tc[5];
+		    sprintf( tc, "%d", config->alsa_seq_client_id );
+		    tmp += string(tc);
+		    tmp += ":0 &";
+		    system( tmp.c_str() );
+	    }
+		break;
+	
+	case evFont:
 	    font_sel.show_all ( );
-    } 
-    else if (text=="font::apply")
-    {
-	    set_x_font ( string(font_sel.get_font_name()).c_str() );
-    } 
-    else if (text=="font::ok")
-    {
-	    set_x_font ( string(font_sel.get_font_name()).c_str() );
+	    break;
+	
+	case evFontApply:
+		set_x_font ( string(font_sel.get_font_name()).c_str() );
+		break;
+	
+	case evFontOk:
+		set_x_font ( string(font_sel.get_font_name()).c_str() );
+		font_sel.hide ( );
+		break;
+	
+	case evFontCancel:
 	    font_sel.hide ( );
-    } 
-    else if (text=="font::cancel")
-    {
-	    font_sel.hide ( );
-    } 
-	else if (text=="midi::send")
-	{
+	    break;
+	
+	case evMidiSend:
 		send_midi_window.show_all();
-	}
-	else if (text=="midi::send::ok")
-	{
+		break;
+	
+	case evMidiSendOk:
 		midi_controller->sendMidi_values();
 		send_midi_window.hide ();
-	}      
-    else {
-		cout << "no handler for event: " << text << endl;
-		return;
+		break;
+		
+	default:
+		cout << "no handler for event: " << e << endl;
+		break;
     }
 }
 
