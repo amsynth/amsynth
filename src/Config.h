@@ -80,8 +80,6 @@ public:
 	 */
 	string alsa_audio_device;
 	
-	string	xfontname;
-	
 	string	default_bank_file;
 	string	current_bank_file;
 	
@@ -91,9 +89,6 @@ public:
 	int	debug_drivers;
 	// used to count buffer underruns
 	int	xruns;
-	
-private:
-	int	load_font;
 };
 
 #endif

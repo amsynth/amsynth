@@ -223,10 +223,6 @@ under certain conditions; see the file COPYING for details\n";
 	gui = new GUI (config, *midi_controller, *vau, the_pipe, out, out->getTitle());
 	gui->setPresetController ( *presetController );
 	gui->init();
-	if (config.xfontname!="")
-	{
-		gui->set_x_font ( config.xfontname.c_str() );
-	}
 	
 	// cannot be called SUID:
 	kit.run();
@@ -240,9 +236,6 @@ under certain conditions; see the file COPYING for details\n";
 	 * code to shut down cleanly..
 	 */
 
-	config.xfontname = gui->get_x_font ();
-	config.save ();
-		
 	presetController->savePresets(config.current_bank_file.c_str ());
 	midi_controller->saveConfig();
 	

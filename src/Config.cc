@@ -14,8 +14,7 @@ static string amsynthrc_fname;
 Config::Config()
 {
 	amsynthrc_fname = string(getenv("HOME")) + string("/.amSynthrc");
-	realtime = sample_rate = midi_channel = active_voices = polyphony = debug_drivers = load_font = xruns = 0;
-	xfontname = "-*-helvetica-medium-r-*-*-*-100-*-*-*-*-*-*";
+	realtime = sample_rate = midi_channel = active_voices = polyphony = debug_drivers = xruns = 0;
 }
 
 void
@@ -109,31 +108,6 @@ Config::load	()
 		} else if (string(buffer)=="polyphony"){
 			file >> buffer;
 			polyphony = atoi(buffer);
-		} else if (string(buffer)=="gui_font"){
-			char tmp;
-			char str[256];
-			char *strpt = str;
-			int whitespace = 1;
-			
-			for (int i=0; i<256; i++)
-			{
-				file.get( tmp );
-				
-				if (!whitespace || tmp != ' ')
-				{
-					if (tmp == '\n')
-					{
-						*strpt++ = '\0';
-						break;
-					}
-					whitespace = 0;
-					*strpt++ = tmp;
-				}
-			}
-			
-			xfontname = str;
-			load_font = 1;
-			*buffer = '!';
 		} else {
 			file >> buffer;
 		}
@@ -147,32 +121,6 @@ int
 Config::save	()
 {
 	fstream ofile ( amsynthrc_fname.c_str(), ios::in | ios::out );
-	if (load_font)
-	{	
-		// replace fontname in .amSynthrc with new fontname
-		
-		// seek until we find the gui_font key
-		char chdata[200];
-		int fileidx;
-		while (ofile.good())
-		{
-			// get offset for line we are about to read;
-			fileidx = ofile.tellg ( );
-			ofile.seekp ( ofile.tellg() );
-			ofile.getline ( chdata, 200 );
-			if (strncmp(chdata,"gui_font",8)==0)
-			{
-				ofile.seekp ( fileidx );
-				ofile << "gui_font " << xfontname << endl;
-			}
-		}
-	}
-	else
-	{
-		// create fontname entry in .amSynthrc
-		ofile.seekp ( 0, ios::end );
-		ofile << "gui_font " << xfontname << endl;
-	}
 	ofile.close ( );
 	return 0;
 }

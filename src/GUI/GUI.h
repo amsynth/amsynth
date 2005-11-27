@@ -62,8 +62,7 @@ public:
 	 * system, to allow communication between it and the system.
 	 */
 	void	setPresetController	(PresetController & p_c);
-	void	set_x_font		( const char *x_font_name );
-	string	get_x_font		( )	{ return xfontname; };
+
 	int	delete_event_impl	(GdkEventAny *);
 	int	delete_events		(GdkEventAny *, Gtk::Window *dialog)
 					{ dialog->hide_all(); return 0; };
@@ -166,11 +165,7 @@ private:
 	Gtk::Dialog		quit_confirm;
 	Gtk::Label		quit_confirm_label;
 	Gtk::Button		quit_confirm_ok, quit_confirm_cancel;
-	
-	// font selection
-	Gtk::FontSelectionDialog	font_sel;
-	string				xfontname;
-	
+		
 	Gtk::Adjustment		*adj_midi,
 				*adj_voices;
 

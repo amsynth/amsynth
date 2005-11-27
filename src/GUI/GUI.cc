@@ -24,7 +24,6 @@
 
 
 enum {
-	evPresetRandomise,
 	evHelpAbout,
 	evLoad,
 	evCommit,
@@ -45,10 +44,6 @@ enum {
 	evRecDlgRecord,
 	evRecDlgPause,
 	evVkeybd,
-	evFont,
-	evFontApply,
-	evFontOk,
-	evFontCancel,
 	evMidiSend,
 	evMidiSendOk
 };
@@ -67,14 +62,6 @@ GUI::serve_request()
 	Request *r = (Request*) malloc (sizeof (Request)); if (!r) return;
 	if (read (pipe[0], r, sizeof(Request)) == sizeof(Request)) r->slot();
 	free (r);
-}
-
-void
-GUI::set_x_font 	( const char *x_font_name )
-{
-	xfontname = x_font_name;
-	font_sel.set_font_name (x_font_name);
-//	editor_panel->set_x_font (x_font_name);
 }
 
 GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
@@ -302,16 +289,6 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	quit_confirm.set_transient_for( *this );
 
 	//
-	// font selection dialog
-	//
-	font_sel.get_ok_button()->signal_clicked().connect(
-			sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evFontOk) );
-	font_sel.get_apply_button()->signal_clicked().connect(
-			sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evFontApply) );
-	font_sel.get_cancel_button()->signal_clicked().connect(
-			sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evFontCancel) );
-
-	//
 	// show realtime warning message if necessary
 	//
 	if(!(this->config->realtime))
@@ -380,7 +357,6 @@ GUI::create_menus	( )
 	list_preset.push_back (MenuElem("Rename", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetRename)));
 	list_preset.push_back (MenuElem("Clear", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetDelete)));
 	list_preset.push_back (SeparatorElem());
-//	list_preset.push_back (MenuElem("_Randomise", Gtk::AccelKey("<control>R"), sigc::bind(mem_fun(*this, &GUI::event_handler), evPresetRandomise)));
 	list_preset.push_back (MenuElem("_Randomise", Gtk::AccelKey("<control>R"), sigc::mem_fun(preset_controller->getCurrentPreset(), &Preset::randomise)));
 	list_preset.push_back (SeparatorElem());
 	list_preset.push_back (MenuElem("Import...", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetImport)));
@@ -392,7 +368,6 @@ GUI::create_menus	( )
 	//
 	Menu *menu_config = manage (new Menu());
 	MenuList& list_config = menu_config->items ();
-//	list_config.push_back (MenuElem("Interface Font...", sigc::bind(mem_fun(*this, &GUI::event_handler),evFont)));
 	list_config.push_back (MenuElem("MIDI Controllers...", Gtk::AccelKey("<control>M"), mem_fun(*this, &GUI::config_controllers)));
 	
 	
@@ -575,10 +550,6 @@ GUI::event_handler(const int e)
 {
 	switch (e)
 	{
-	case evPresetRandomise:
-		preset_controller->getCurrentPreset().randomise();
-		break;			
-			
 	case evHelpAbout:
 		about_window.show_all();
 		break;
@@ -696,23 +667,6 @@ GUI::event_handler(const int e)
 		    system( tmp.c_str() );
 	    }
 		break;
-	
-	case evFont:
-	    font_sel.show_all ( );
-	    break;
-	
-	case evFontApply:
-		set_x_font ( string(font_sel.get_font_name()).c_str() );
-		break;
-	
-	case evFontOk:
-		set_x_font ( string(font_sel.get_font_name()).c_str() );
-		font_sel.hide ( );
-		break;
-	
-	case evFontCancel:
-	    font_sel.hide ( );
-	    break;
 	
 	case evMidiSend:
 		send_midi_window.show_all();
