@@ -24,27 +24,20 @@
 
 
 enum {
-	evHelpAbout,
 	evLoad,
 	evCommit,
 	evPresetRename,
 	evPresetRenameOk,
-    evPresetDelete,
 	evPresetDeleteOk,
-	evPresetExport,
 	evPresetExportOk,
 	evPresetImport,
 	evPresetImportOk,
-	evQuit,
 	evQuitOk,
-	evRecDlg,
-	evRecDlgChoose,
 	evRecordFileselectOk,
 	evRecDlgClose,
 	evRecDlgRecord,
 	evRecDlgPause,
 	evVkeybd,
-	evMidiSend,
 	evMidiSendOk
 };
 
@@ -52,7 +45,7 @@ enum {
 int
 GUI::delete_event_impl(GdkEventAny *)
 {
-    event_handler( evQuit );
+    hide ();
     return true;
 }
 
@@ -256,7 +249,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	record_file_hbox.add( record_choose );
 	record_entry.set_text( "/tmp/amSynth-out.wav" );
 	record_choose.add_label( "...", 0.5, 0.5 );
-	record_choose.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evRecDlgChoose));
+	record_choose.signal_clicked().connect(mem_fun(record_fileselect, &Gtk::Dialog::show_all));
 		
 	record_buttons_hbox.add( record_record );
 	record_buttons_hbox.add( record_pause );
@@ -340,7 +333,7 @@ GUI::create_menus	( )
 //	list_file.push_back (MenuElem("_Save Bank","<control>S", mem_fun(*this, &GUI::bank_save)));
 	list_file.push_back (MenuElem("_Save Bank As...",Gtk::AccelKey("<control>S"), mem_fun(*this, &GUI::bank_save_as)));
 	list_file.push_back (SeparatorElem());
-	list_file.push_back (MenuElem("_Quit",Gtk::AccelKey("<control>Q"), sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evQuit)));
+	list_file.push_back (MenuElem("_Quit",Gtk::AccelKey("<control>Q"), mem_fun(quit_confirm, &Gtk::Dialog::show_all)));
 	
 	
 	//
@@ -355,12 +348,12 @@ GUI::create_menus	( )
 	list_preset.push_back (MenuElem("Paste as New", mem_fun(*this, &GUI::preset_paste_as_new)));
 	list_preset.push_back (SeparatorElem());
 	list_preset.push_back (MenuElem("Rename", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetRename)));
-	list_preset.push_back (MenuElem("Clear", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetDelete)));
+	list_preset.push_back (MenuElem("Clear", mem_fun(preset_delete,&Gtk::Dialog::show_all)));
 	list_preset.push_back (SeparatorElem());
 	list_preset.push_back (MenuElem("_Randomise", Gtk::AccelKey("<control>R"), sigc::mem_fun(preset_controller->getCurrentPreset(), &Preset::randomise)));
 	list_preset.push_back (SeparatorElem());
 	list_preset.push_back (MenuElem("Import...", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetImport)));
-	list_preset.push_back (MenuElem("Export...", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetExport)));
+	list_preset.push_back (MenuElem("Export...", mem_fun(preset_export_dialog, &Gtk::Dialog::show_all)));
 
 			
 	//
@@ -385,7 +378,7 @@ GUI::create_menus	( )
 	list_utils.push_back (*menu_item);
 
 	menu_item = manage (new MenuItem("Record to .wav file..."));
-	menu_item->signal_activate().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evRecDlg));
+	menu_item->signal_activate().connect(mem_fun(record_dialog, &Gtk::Dialog::show_all));
 	if (audio_out) if (!audio_out->canRecord ()) menu_item->set_sensitive (false);
 	list_utils.push_back (*menu_item);
 
@@ -431,7 +424,7 @@ GUI::create_menus	( )
 	
 	list_utils.push_back (MenuElem("Audio (JACK) connections", *menu_utils_jack));
 	
-	list_utils.push_back (MenuElem("Send Settings to Midi", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evMidiSend)));
+	list_utils.push_back (MenuElem("Send Settings to Midi", mem_fun(send_midi_window, &Gtk::Dialog::show_all)));
 	
 	//
 	// Menubar
@@ -449,7 +442,7 @@ GUI::create_menus	( )
 	
 	menu_item = manage (new MenuItem("Analogue Modelling SYNTHesizer"));
 	menu_item->set_right_justified (true);
-	menu_item->signal_activate().connect (sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evHelpAbout));
+	menu_item->signal_activate().connect(mem_fun(about_window, &Gtk::Dialog::show_all));
 	list_bar.push_back (*menu_item);
 	
 	return menu_bar;
@@ -550,10 +543,6 @@ GUI::event_handler(const int e)
 {
 	switch (e)
 	{
-	case evHelpAbout:
-		about_window.show_all();
-		break;
-	
 	case evLoad:
 		break;
 
@@ -572,10 +561,6 @@ GUI::event_handler(const int e)
 		preset_rename.hide();
 		break;
 	
-    case evPresetDelete:
-		preset_delete.show_all();
-		break;
-	
 	case evPresetDeleteOk:
 		preset_controller->deletePreset();
 		preset_controller->commitPreset();
@@ -583,11 +568,7 @@ GUI::event_handler(const int e)
 		presetCV->update();
 		preset_delete.hide();
 		break;
-	
-	case evPresetExport:
-		preset_export_dialog.show_all();
-		break;
-	
+
 	case evPresetExportOk:
 		{
 			string fn = preset_controller->getCurrentPreset().getName();
@@ -609,21 +590,9 @@ GUI::event_handler(const int e)
 		preset_import_dialog.hide();
 		break;
 	
-	case evQuit:
-		quit_confirm.show_all();
-		break;
-	
 	case evQuitOk:
 		quit_confirm.hide_all();
 		hide();
-		break;
-	
-	case evRecDlg:
-		record_dialog.show_all();
-		break;
-	
-	case evRecDlgChoose:
-		record_fileselect.show_all();
 		break;
 	
 	case evRecordFileselectOk:
@@ -666,10 +635,6 @@ GUI::event_handler(const int e)
 		    tmp += ":0 &";
 		    system( tmp.c_str() );
 	    }
-		break;
-	
-	case evMidiSend:
-		send_midi_window.show_all();
 		break;
 	
 	case evMidiSendOk:
