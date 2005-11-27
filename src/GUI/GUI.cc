@@ -13,7 +13,10 @@
 #include <gtkmm/adjustment.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/alignment.h>
+#include <gtkmm/messagedialog.h>
 #include <sigc++/bind.h>
+
+using namespace Gtk;
 
 #include "../AudioOutput.h"
 #include "../MidiController.h"
@@ -38,7 +41,7 @@ enum {
 	evRecDlgRecord,
 	evRecDlgPause,
 	evVkeybd,
-	evMidiSendOk
+	evMidiSend
 };
 
 
@@ -159,25 +162,6 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	about_close_button.signal_clicked().connect(mem_fun(about_window, &Gtk::Dialog::hide));
 	about_close_button.grab_focus ();
 	about_window.set_transient_for( *this );
-
-	//
-	// send midi
-	//
-	send_midi_window.set_title( "Send Settings to Midi Device" );
-    send_midi_window.set_resizable (true);
-    send_midi_window.set_size_request( 300, 200 );
-	send_midi_window.get_vbox()->add( send_midi_label );
-	
-	send_midi_label.set_text( "Send Setting to Midi Out" );
-	send_midi_window.get_action_area()->add( send_midi_ok );
-	send_midi_ok.add_label("Send Settings", 0.5, 0.5);
-	send_midi_ok.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler), (int) evMidiSendOk));
-	
-	send_midi_window.get_action_area()->add( send_midi_cancel );
-	send_midi_cancel.add_label("Cancel", 0.5, 0.5 );
-	send_midi_cancel.signal_clicked().connect(mem_fun(send_midi_window, &Gtk::Dialog::hide));
-	send_midi_window.set_modal( true );
-	send_midi_window.set_transient_for( *this );    
 
     //
 	// Bank Open dialog
@@ -321,6 +305,7 @@ GUI::create_menus	( )
 {
 	using namespace Gtk::Menu_Helpers;
 	using namespace Gtk;
+	using sigc::bind;
 	
 	//
 	// File menu
@@ -424,7 +409,7 @@ GUI::create_menus	( )
 	
 	list_utils.push_back (MenuElem("Audio (JACK) connections", *menu_utils_jack));
 	
-	list_utils.push_back (MenuElem("Send Settings to Midi", mem_fun(send_midi_window, &Gtk::Dialog::show_all)));
+	list_utils.push_back (MenuElem("Send Settings to Midi", bind(mem_fun(this,&GUI::event_handler),(int)evMidiSend)));
 	
 	//
 	// Menubar
@@ -637,9 +622,11 @@ GUI::event_handler(const int e)
 	    }
 		break;
 	
-	case evMidiSendOk:
-		midi_controller->sendMidi_values();
-		send_midi_window.hide ();
+	case evMidiSend:
+		{
+			MessageDialog dlg (*this, "Send Setting to Midi Out?", false, MESSAGE_QUESTION, BUTTONS_YES_NO, true);
+			if (RESPONSE_YES == dlg.run()) midi_controller->sendMidi_values();
+		}
 		break;
 		
 	default:
