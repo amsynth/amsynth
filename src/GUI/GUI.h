@@ -131,7 +131,6 @@ private:
 	Gtk::Entry		record_entry;
 	Gtk::Button		record_pause, record_record, record_choose;
 	Gtk::HBox		record_buttons_hbox, record_file_hbox;
-	Gtk::FileSelection	record_fileselect;
 	Gtk::Statusbar		record_statusbar;
 	gboolean		record_recording;
 		

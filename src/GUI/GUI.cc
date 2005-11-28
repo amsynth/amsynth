@@ -32,7 +32,7 @@ enum {
 	evPresetExport,
 	evPresetImport,
 	evQuit,
-	evRecordFileselectOk,
+	evRecDlgFileChooser,
 	evRecDlgClose,
 	evRecDlgRecord,
 	evRecDlgPause,
@@ -144,16 +144,6 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	about_window.set_transient_for( *this );
 	
 	//
-	// record file-selector dialog
-	//
-	record_fileselect.set_title( "set output WAV file" );
-	record_fileselect.set_filename( "/tmp/amSynth-out.wav" );
-	record_fileselect.get_cancel_button()->signal_clicked().connect(mem_fun(record_fileselect, &Gtk::Dialog::hide));
-	record_fileselect.get_ok_button()->signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evRecordFileselectOk));
-	record_fileselect.set_modal( true );
-	record_fileselect.set_transient_for( *this );
-	
-	//
 	// the record dialog
 	//
 	record_dialog.set_title( "Capture Output" );
@@ -172,9 +162,9 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	record_file_hbox.set_spacing( 10 );
 	record_file_hbox.add( record_entry );
 	record_file_hbox.add( record_choose );
-	record_entry.set_text( "/tmp/amSynth-out.wav" );
+	record_entry.set_text( "amsynth-out.wav" );
 	record_choose.add_label( "...", 0.5, 0.5 );
-	record_choose.signal_clicked().connect(mem_fun(record_fileselect, &Gtk::Dialog::show_all));
+	record_choose.signal_clicked().connect(bind(mem_fun(this, &GUI::event_handler),(int)evRecDlgFileChooser));
 		
 	record_buttons_hbox.add( record_record );
 	record_buttons_hbox.add( record_pause );
@@ -504,9 +494,14 @@ GUI::event_handler(const int e)
 		delete_event_impl(0);
 		break;
 	
-	case evRecordFileselectOk:
-		record_entry.set_text( record_fileselect.get_filename() );
-		record_fileselect.hide_all();
+	case evRecDlgFileChooser:
+		{
+			FileChooserDialog dlg (record_dialog, "Select output WAV file...", FILE_CHOOSER_ACTION_SAVE);
+			dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);
+			dlg.add_button(Stock::OK, RESPONSE_OK);
+			dlg.set_current_name (record_entry.get_text());
+			if (RESPONSE_OK == dlg.run()) record_entry.set_text (dlg.get_filename());
+		}
 		break;
 	
 	case evRecDlgClose:
