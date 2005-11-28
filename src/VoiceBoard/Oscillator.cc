@@ -7,6 +7,14 @@
 #include <iostream>
 #include "Oscillator.h"
 
+// fmod is sloooooooooooow.
+#undef fmodf
+#undef fmodf
+inline float fmodf (float x, float y) {
+	while (x > y) x -= y;
+	return x;
+}
+
 Oscillator::Oscillator()
 :	rads (0.0)
 ,	random (0)
@@ -59,7 +67,7 @@ void
 Oscillator::doSine(float *buffer, int nFrames)
 {
     for (int i = 0; i < nFrames; i++) {
-		buffer[i] = sin(rads += (twopi_rate * freq));
+		buffer[i] = sinf(rads += twopi_rate * freq);
 		//-- sync to other oscillator --
 		if (reset_cd-- == 0){
 			rads = 0.0;					// reset the oscillator
@@ -69,13 +77,13 @@ Oscillator::doSine(float *buffer, int nFrames)
 			if( rads > TWO_PI )			// then weve completed a circle
 				sync_offset = i;		// remember the offset
 	}
-	rads = fmod((float)rads, (float)TWO_PI);			// overflows are bad!
+	rads = fmodf((float)rads, (float)TWO_PI);			// overflows are bad!
 }
 
 float 
 Oscillator::sqr(float foo)
 {
-    if ((fmod((float)foo, (float)TWO_PI)) < (mPulseWidth + 1) * PI)
+    if ((fmodf((float)foo, (float)TWO_PI)) < (mPulseWidth + 1) * PI)
 	return 1.0;
     else
 	return -1.0;
@@ -95,14 +103,14 @@ Oscillator::doSquare(float *buffer, int nFrames)
 			if( rads > TWO_PI )			// then weve completed a circle
 				sync_offset = i;		// remember the offset
 	}
-    rads = fmod((float)rads, (float)TWO_PI);
+    rads = fmodf((float)rads, (float)TWO_PI);
 }
 
 
 float 
 Oscillator::saw(float foo)
 {
-    foo = fmod((float)foo, (float)TWO_PI);
+    foo = fmodf((float)foo, (float)TWO_PI);
     register float t = (float) (foo / (2 * PI));
     register float a = (mPulseWidth + 1) / 2;
     if (t < a / 2)
@@ -111,7 +119,7 @@ Oscillator::saw(float foo)
 	return (2 * t - 2) / a;
     else
 	return (1 - 2 * t) / (1 - a);
-//    return 1.0 - (fmod((float)foo, (float)TWO_PI) / PI);
+//    return 1.0 - (fmodf((float)foo, (float)TWO_PI) / PI);
 }
 
 void 
@@ -128,7 +136,7 @@ Oscillator::doSaw(float *buffer, int nFrames)
 			if( rads > TWO_PI )			// then weve completed a circle
 				sync_offset = i;		// remember the offset
 	}
-    rads = fmod((float)rads, (float)TWO_PI);
+    rads = fmodf((float)rads, (float)TWO_PI);
 }
 
 void 
