@@ -10,10 +10,7 @@
 #include <list>
 #include <sys/types.h>
 
-#include <gtkmm/adjustment.h>
-#include <gtkmm/spinbutton.h>
-#include <gtkmm/alignment.h>
-#include <gtkmm/messagedialog.h>
+#include <gtkmm.h>
 #include <sigc++/bind.h>
 
 using namespace Gtk;
@@ -31,11 +28,10 @@ enum {
 	evCommit,
 	evPresetRename,
 	evPresetRenameOk,
-	evPresetDeleteOk,
-	evPresetExportOk,
+	evPresetDelete,
+	evPresetExport,
 	evPresetImport,
-	evPresetImportOk,
-	evQuitOk,
+	evQuit,
 	evRecordFileselectOk,
 	evRecDlgClose,
 	evRecDlgRecord,
@@ -48,8 +44,9 @@ enum {
 int
 GUI::delete_event_impl(GdkEventAny *)
 {
-    hide ();
-    return true;
+	MessageDialog dlg (*this, "Really quit amSynth?\n\nYou will lose any changes\nwhich you haven't explicitly commited", false, MESSAGE_QUESTION, BUTTONS_YES_NO, true);
+	if (RESPONSE_YES == dlg.run()) hide_all();
+	return true;
 }
 
 void
@@ -135,23 +132,6 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	d_preset_new.set_transient_for( *this );
 	
 	//
-	// the delete preset dialog
-	//
-	preset_delete.set_title( "Delete Preset?" );
-	preset_delete.set_size_request( 300, 200 );
-	preset_delete.set_resizable (false);
-	preset_delete.get_vbox()->add( preset_delete_label );
-	preset_delete_label.set_text( "Delete the current Preset?" );
-	preset_delete.get_action_area()->add( preset_delete_ok );
-	preset_delete_ok.add_label( "Yes", 0.5, 0.5 );
-	preset_delete_ok.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler), (int) evPresetDeleteOk));
-	preset_delete.get_action_area()->add( preset_delete_cancel );
-	preset_delete_cancel.add_label( "Cancel", 0.5, 0.5 );
-	preset_delete_cancel.signal_clicked().connect(mem_fun(preset_delete, &Gtk::Dialog::hide));
-	preset_delete.set_modal( true );
-	preset_delete.set_transient_for( *this );
-	
-	//
 	// the about window
 	//
 	about_window.set_title( "About" );
@@ -162,44 +142,6 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	about_close_button.signal_clicked().connect(mem_fun(about_window, &Gtk::Dialog::hide));
 	about_close_button.grab_focus ();
 	about_window.set_transient_for( *this );
-
-    //
-	// Bank Open dialog
-	//
-	d_bank_open.set_title( "Open amSynth Bank File..." );
-	d_bank_open.get_cancel_button()->signal_clicked().connect(mem_fun(d_bank_open, &Gtk::Dialog::hide));
-	d_bank_open.get_ok_button()->signal_clicked().connect(mem_fun(*this, &GUI::bank_open_ok));
-	d_bank_open.set_modal( true );
-	d_bank_open.set_transient_for( *this );
-	
-	//
-	// Bank SaveAs dialog
-	//
-	d_bank_save_as.set_title( "Save As..." );
-	d_bank_save_as.get_cancel_button()->signal_clicked().connect(mem_fun(d_bank_save_as, &Gtk::Dialog::hide));
-	d_bank_save_as.get_ok_button()->signal_clicked().connect(mem_fun(*this, &GUI::bank_save_as_ok));
-	d_bank_save_as.set_modal( true );
-	d_bank_save_as.set_transient_for( *this );
-
-		
-	//
-	// export dialog
-	//
-	preset_export_dialog.set_title( "Select DIRECTORY to export preset to" );
-	preset_export_dialog.get_cancel_button()->signal_clicked().connect(mem_fun(preset_export_dialog, &Gtk::Dialog::hide));
-	preset_export_dialog.get_ok_button()->signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evPresetExportOk));
-	preset_export_dialog.get_selection_entry()->set_editable( false );
-	preset_export_dialog.set_modal( true );
-	preset_export_dialog.set_transient_for( *this );
-	
-	//
-	// import dialog
-	//
-	preset_import_dialog.set_title( "Import as current preset" );
-	preset_import_dialog.get_cancel_button()->signal_clicked().connect(mem_fun(preset_import_dialog, &Gtk::Dialog::hide));
-	preset_import_dialog.get_ok_button()->signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evPresetImportOk));
-	preset_import_dialog.set_modal( true );
-	preset_import_dialog.set_transient_for( *this );
 	
 	//
 	// record file-selector dialog
@@ -215,7 +157,6 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	// the record dialog
 	//
 	record_dialog.set_title( "Capture Output" );
-	preset_import_dialog.set_transient_for( *this );
 	record_dialog.add( record_vbox );
 	record_dialog.set_resizable (false);
 	
@@ -246,24 +187,6 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	
 	record_recording = false;
 	record_statusbar.push ("capture status: STOPPED", 1);
-	
-	//
-	// the quit confirmation window
-	//
-	quit_confirm.set_title( "Quit?" );
-	quit_confirm.set_size_request( 300, 200 );
-	quit_confirm.set_resizable (false);
-	quit_confirm.get_vbox()->add( quit_confirm_label );
-	quit_confirm_label.set_text( "Really quit amSynth?\n\nYou will lose any changes\nwhich you haven't explicitly commited" );
-	quit_confirm.get_action_area()->add( quit_confirm_ok );
-	quit_confirm_ok.add_label( "Yes, Quit!", 0.5, 0.5 );
-	quit_confirm_ok.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evQuitOk) );
-	quit_confirm_ok.grab_focus ();
-	quit_confirm.get_action_area()->add( quit_confirm_cancel );
-	quit_confirm_cancel.add_label( "Cancel", 0.5, 0.5 );
-	quit_confirm_cancel.signal_clicked().connect(mem_fun(quit_confirm, &Gtk::Dialog::hide));
-	quit_confirm.set_modal( true );
-	quit_confirm.set_transient_for( *this );
 
 	//
 	// show realtime warning message if necessary
@@ -274,18 +197,9 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 		if (!( this->config->audio_driver=="jack" ||
 				this->config->audio_driver=="JACK" ))
 	{
-		realtime_warning.set_title("Warning");
-		realtime_warning.set_size_request( 400, 200 );
-		realtime_text_label.set_text(
-		" amSynth could not set realtime priority. \n You may experience audio buffer underruns \n resulting in 'clicks' in the audio.\n This is most likely because the program is not SUID root.\n Please read the documentation for information on how to remedy this.");
-		realtime_warning.get_vbox()->add( realtime_text_label );
-		realtime_warning.get_action_area()->add( realtime_close_button );
-		realtime_close_button.add_label("close", 0.5, 0.5);
-		realtime_close_button.signal_clicked().connect(mem_fun(realtime_warning, &Gtk::Dialog::hide));
-		realtime_warning.set_modal( true );
-		realtime_warning.set_transient_for( *this );
-		realtime_close_button.grab_focus ();
-		realtime_warning.show_all();
+		MessageDialog dlg (*this, "amSynth could not set realtime priority");
+		dlg.set_secondary_text ("You may experience audio buffer underruns resulting in 'clicks' in the audio.\n\nThis is most likely because the program is not SUID root.\n\nPlease read the documentation for information on how to remedy this.");
+		dlg.run();
 	}
 #ifdef _DEBUG
 	cout << "<GUI::GUI()> success" << endl;
@@ -318,7 +232,7 @@ GUI::create_menus	( )
 //	list_file.push_back (MenuElem("_Save Bank","<control>S", mem_fun(*this, &GUI::bank_save)));
 	list_file.push_back (MenuElem("_Save Bank As...",Gtk::AccelKey("<control>S"), mem_fun(*this, &GUI::bank_save_as)));
 	list_file.push_back (SeparatorElem());
-	list_file.push_back (MenuElem("_Quit",Gtk::AccelKey("<control>Q"), mem_fun(quit_confirm, &Gtk::Dialog::show_all)));
+	list_file.push_back (MenuElem("_Quit",Gtk::AccelKey("<control>Q"), bind(mem_fun(this, &GUI::event_handler),(int)evQuit)));
 	
 	
 	//
@@ -333,12 +247,12 @@ GUI::create_menus	( )
 	list_preset.push_back (MenuElem("Paste as New", mem_fun(*this, &GUI::preset_paste_as_new)));
 	list_preset.push_back (SeparatorElem());
 	list_preset.push_back (MenuElem("Rename", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetRename)));
-	list_preset.push_back (MenuElem("Clear", mem_fun(preset_delete,&Gtk::Dialog::show_all)));
+	list_preset.push_back (MenuElem("Clear", bind(mem_fun(this,&GUI::event_handler),(int)evPresetDelete)));
 	list_preset.push_back (SeparatorElem());
 	list_preset.push_back (MenuElem("_Randomise", Gtk::AccelKey("<control>R"), sigc::mem_fun(preset_controller->getCurrentPreset(), &Preset::randomise)));
 	list_preset.push_back (SeparatorElem());
-	list_preset.push_back (MenuElem("Import...", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetImport)));
-	list_preset.push_back (MenuElem("Export...", mem_fun(preset_export_dialog, &Gtk::Dialog::show_all)));
+	list_preset.push_back (MenuElem("Import...", bind(mem_fun(*this, &GUI::event_handler), (int)evPresetImport)));
+	list_preset.push_back (MenuElem("Export...", bind(mem_fun(*this, &GUI::event_handler), (int)evPresetExport)));
 
 			
 	//
@@ -546,38 +460,53 @@ GUI::event_handler(const int e)
 		preset_rename.hide();
 		break;
 	
-	case evPresetDeleteOk:
-		preset_controller->deletePreset();
-		preset_controller->commitPreset();
-		preset_controller->selectPreset( 0 );
-		presetCV->update();
-		preset_delete.hide();
-		break;
-
-	case evPresetExportOk:
+	case evPresetDelete:
 		{
-			string fn = preset_controller->getCurrentPreset().getName();
-			fn += ".amSynthPreset";
-			string file = preset_export_dialog.get_filename();
-			file += fn;
-			preset_controller->exportPreset( file );
-			preset_export_dialog.hide();
+			MessageDialog dlg (*this, "Delete the current Preset?", false, MESSAGE_QUESTION, BUTTONS_YES_NO, true);
+			if (RESPONSE_YES == dlg.run())
+			{
+				preset_controller->deletePreset();
+				preset_controller->commitPreset();
+				preset_controller->selectPreset( 0 );
+				presetCV->update();
+			}
+		}
+		break;
+	
+	case evPresetExport:
+		{
+			FileChooserDialog dlg (*this, "Select location to export preset to", FILE_CHOOSER_ACTION_SELECT_FOLDER);
+			dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);
+			dlg.add_button("Select", RESPONSE_OK);
+			if (RESPONSE_OK == dlg.run())
+			{
+				string fn = preset_controller->getCurrentPreset().getName();
+				fn += ".amSynthPreset";
+				string file = dlg.get_filename();
+				file += fn;
+				preset_controller->exportPreset( file );
+			}
 		}
 		break;
 	
 	case evPresetImport:
-		preset_import_dialog.complete( "*.amSynthPreset" );
-		preset_import_dialog.show_all();
+		{
+			FileChooserDialog dlg (*this, "Import as current preset", FILE_CHOOSER_ACTION_OPEN);
+			dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);
+			dlg.add_button("Select", RESPONSE_OK);
+			FileFilter filter;
+			filter.set_name("amSynth 1.x files");
+			filter.add_pattern("*.amSynthPreset");
+			dlg.add_filter(filter);
+			if (RESPONSE_OK == dlg.run())
+			{
+				preset_controller->importPreset (dlg.get_filename());
+			}
+		}
 		break;
 	
-	case evPresetImportOk:
-		preset_controller->importPreset( preset_import_dialog.get_filename() );
-		preset_import_dialog.hide();
-		break;
-	
-	case evQuitOk:
-		quit_confirm.hide_all();
-		hide();
+	case evQuit:
+		delete_event_impl(0);
 		break;
 	
 	case evRecordFileselectOk:
@@ -711,35 +640,28 @@ GUI::preset_paste_as_new( )
 void
 GUI::bank_open		( )
 {
-	d_bank_open.show_all ();
+	FileChooserDialog dlg (*this, "Open amSynth Bank File...", FILE_CHOOSER_ACTION_OPEN);
+	dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);	dlg.add_button("Select", RESPONSE_OK);
+	if (RESPONSE_OK == dlg.run())
+	{
+		preset_controller->savePresets (config->current_bank_file.c_str ());
+		config->current_bank_file = dlg.get_filename ();
+		preset_controller->loadPresets (config->current_bank_file.c_str ());
+	}
 }
 
-void
-GUI::bank_open_ok	( )
-{
-	preset_controller->savePresets (config->current_bank_file.c_str ());
-	config->current_bank_file = d_bank_open.get_filename ();
-	preset_controller->loadPresets (config->current_bank_file.c_str ());
-	d_bank_open.hide ();
-}
-/*
-void
-GUI::bank_save		( )
-{
-}
-*/
 void
 GUI::bank_save_as	( )
 {
-	d_bank_save_as.show_all ();
-}
-
-void
-GUI::bank_save_as_ok	( )
-{
-	config->current_bank_file = d_bank_save_as.get_filename ();
-	preset_controller->savePresets (config->current_bank_file.c_str ());
-	d_bank_save_as.hide ();
+	/* we need to get the filename entry widget back in there somehow....
+	FileChooserDialog dlg (*this, "Save As...", FILE_CHOOSER_ACTION_OPEN);
+	dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);	dlg.add_button(Stock::SAVE_AS, RESPONSE_OK);
+	if (RESPONSE_OK == dlg.run())
+	{
+		config->current_bank_file = dlg.get_filename ();
+		preset_controller->savePresets (config->current_bank_file.c_str ());
+	}
+	*/
 }
 
 int

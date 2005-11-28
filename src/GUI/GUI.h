@@ -86,10 +86,7 @@ private:
 	void		preset_paste_as_new	( );
 	
 	void		bank_open		( );
-	void		bank_open_ok		( );
-//	void		bank_save		( );
 	void		bank_save_as		( );
-	void		bank_save_as_ok		( );
 
 	int		command_exists		(const char *command);
 	void		command_run		(const char *command);
@@ -114,11 +111,6 @@ private:
 	Gtk::Image *about_pixmap;
 	Gtk::Button about_close_button;
 	
-	// realtime warning dialog
-	Gtk::Dialog realtime_warning;
-	Gtk::Label realtime_text_label;
-	Gtk::Button realtime_close_button;
-	
 	// rename preset dialog
 	Gtk::Dialog preset_rename;
 	Gtk::Label preset_rename_label;
@@ -130,19 +122,6 @@ private:
 	Gtk::Label		d_preset_new_label;
 	Gtk::Entry		d_preset_new_entry;
 	Gtk::Button		d_preset_new_cancel, d_preset_new_ok;
-
-	// delete preset dialog
-	Gtk::Dialog preset_delete;
-	Gtk::Label preset_delete_label;
-	Gtk::Button preset_delete_ok, preset_delete_cancel;
-	
-	// export/import preset dialog
-	Gtk::FileSelection preset_export_dialog;
-	Gtk::FileSelection preset_import_dialog;
-	
-	// export/import preset dialog
-	Gtk::FileSelection	d_bank_open;
-	Gtk::FileSelection	d_bank_save_as;
 	
 	// recording dialog
 	Gtk::Window		record_dialog;
@@ -155,11 +134,6 @@ private:
 	Gtk::FileSelection	record_fileselect;
 	Gtk::Statusbar		record_statusbar;
 	gboolean		record_recording;
-	
-	// quit confirmation dialog
-	Gtk::Dialog		quit_confirm;
-	Gtk::Label		quit_confirm_label;
-	Gtk::Button		quit_confirm_ok, quit_confirm_cancel;
 		
 	Gtk::Adjustment		*adj_midi,
 				*adj_voices;
