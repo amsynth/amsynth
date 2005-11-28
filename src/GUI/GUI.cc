@@ -188,19 +188,6 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	record_recording = false;
 	record_statusbar.push ("capture status: STOPPED", 1);
 
-	//
-	// show realtime warning message if necessary
-	//
-	if(!(this->config->realtime))
-		if (!(this->config->realtime))
-		// dont care if using JACK..
-		if (!( this->config->audio_driver=="jack" ||
-				this->config->audio_driver=="JACK" ))
-	{
-		MessageDialog dlg (*this, "amSynth could not set realtime priority");
-		dlg.set_secondary_text ("You may experience audio buffer underruns resulting in 'clicks' in the audio.\n\nThis is most likely because the program is not SUID root.\n\nPlease read the documentation for information on how to remedy this.");
-		dlg.run();
-	}
 #ifdef _DEBUG
 	cout << "<GUI::GUI()> success" << endl;
 #endif
@@ -434,6 +421,14 @@ GUI::init()
 			status += "   Realtime Priority: NO";
 	}
 	statusBar.push (status, 1);
+	
+	// show realtime warning message if necessary
+	if (!config->realtime && config->audio_driver != "jack" && config->audio_driver != "JACK")
+	{
+		MessageDialog dlg (*this, "amSynth could not set realtime priority");
+		dlg.set_secondary_text ("You may experience audio buffer underruns resulting in 'clicks' in the audio.\n\nThis is most likely because the program is not SUID root.\n\nUsing the JACK audio subsystem can also help");
+		dlg.run();
+	}
 }
 
 
