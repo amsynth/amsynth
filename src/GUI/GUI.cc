@@ -449,23 +449,17 @@ GUI::event_handler(const int e)
 	
 	case evPresetExport:
 		{
-			FileChooserDialog dlg (*this, "Select location to export preset to", FILE_CHOOSER_ACTION_SELECT_FOLDER);
+			FileChooserDialog dlg (*this, "Export preset as...", FILE_CHOOSER_ACTION_SAVE);
 			dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);
-			dlg.add_button("Select", RESPONSE_OK);
-			if (RESPONSE_OK == dlg.run())
-			{
-				string fn = preset_controller->getCurrentPreset().getName();
-				fn += ".amSynthPreset";
-				string file = dlg.get_filename();
-				file += fn;
-				preset_controller->exportPreset( file );
-			}
+			dlg.add_button(Stock::SAVE_AS, RESPONSE_OK);
+			dlg.set_current_name (preset_controller->getCurrentPreset().getName()+".amSynthPreset");
+			if (RESPONSE_OK == dlg.run()) preset_controller->exportPreset (dlg.get_filename());
 		}
 		break;
 	
 	case evPresetImport:
 		{
-			FileChooserDialog dlg (*this, "Import as current preset", FILE_CHOOSER_ACTION_OPEN);
+			FileChooserDialog dlg (*this, "Import over current preset...", FILE_CHOOSER_ACTION_OPEN);
 			dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);
 			dlg.add_button("Select", RESPONSE_OK);
 			FileFilter filter;
