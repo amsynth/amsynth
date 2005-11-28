@@ -6,22 +6,7 @@
 #define _GUI_H
 
 #include <string>
-#include <gtkmm/box.h>
-#include <gtkmm/main.h>
-#include <gtkmm/frame.h>
-#include <gtkmm/fixed.h>
-#include <gtkmm/style.h>
-#include <gtkmm/dialog.h>
-#include <gtkmm/menu.h>
-#include <gtkmm/menubar.h>
-#include <gtkmm/menuitem.h>
-#include <gtkmm/tearoffmenuitem.h>
-#include <gtkmm/label.h>
-#include <gtkmm/button.h>
-#include <gtkmm/statusbar.h>
-#include <gtkmm/image.h>
-#include <gtkmm/fileselection.h> 
-#include <gtkmm/fontselection.h>
+#include <gtkmm.h>
 
 #include "PresetControllerView.h"
 #include "ControllerMapDialog.h"
@@ -70,7 +55,6 @@ public:
 	void	serve_request();
 
 protected:
-	virtual void	on_realize	();
 	virtual void	on_hide () { Gtk::Main::quit(); }
 
 private:		
@@ -104,12 +88,7 @@ private:
 	// top level window & main panel
 	Gtk::Statusbar statusBar;
 	
-	
-	// about dialog
-	Gtk::Dialog about_window;
-	Gtk::Label about_label;
-	Gtk::Image *about_pixmap;
-	Gtk::Button about_close_button;
+	Gtk::AboutDialog	aboutDlg;
 	
 	// rename preset dialog
 	Gtk::Dialog preset_rename;

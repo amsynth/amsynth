@@ -18,10 +18,10 @@ using namespace Gtk;
 #include "../AudioOutput.h"
 #include "../MidiController.h"
 #include "../Preset.h"
+
 #include "EditorPanel.h"
-
-#include "splash.xpm"
-
+#include "../../config.h"
+#include "amsynth_logo.h"
 
 enum {
 	evLoad,
@@ -131,17 +131,14 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	d_preset_new.set_modal( true );
 	d_preset_new.set_transient_for( *this );
 	
-	//
-	// the about window
-	//
-	about_window.set_title( "About" );
-	about_window.set_resizable (false);
-	about_window.get_vbox()->add (*about_pixmap);
-	about_window.get_action_area()->add( about_close_button );
-	about_close_button.add_label( "sweet", 0.5, 0.5 );
-	about_close_button.signal_clicked().connect(mem_fun(about_window, &Gtk::Dialog::hide));
-	about_close_button.grab_focus ();
-	about_window.set_transient_for( *this );
+	
+	aboutDlg.set_name (PACKAGE);
+	aboutDlg.set_version (VERSION);
+	aboutDlg.set_logo (Gdk::Pixbuf::create_from_inline(sizeof(amsynth_logo), amsynth_logo));
+	aboutDlg.set_comments ("Analogue Modelling SYNTHesizer");
+	aboutDlg.set_website ("http://amsynthe.sourceforge.net/amSynth");
+	aboutDlg.set_copyright ("(C) 2002 - 2005 Nick Dowell and others");
+	
 	
 	//
 	// the record dialog
@@ -181,14 +178,6 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 #ifdef _DEBUG
 	cout << "<GUI::GUI()> success" << endl;
 #endif
-}
-
-
-void
-GUI::on_realize	()
-{
-	Gtk::Window::on_realize ();
-	about_pixmap = new Gtk::Image (Gdk::Pixbuf::create_from_xpm_data (splash_xpm));
 }
 
 Gtk::MenuBar*
@@ -318,7 +307,7 @@ GUI::create_menus	( )
 	
 	menu_item = manage (new MenuItem("Analogue Modelling SYNTHesizer"));
 	menu_item->set_right_justified (true);
-	menu_item->signal_activate().connect(mem_fun(about_window, &Gtk::Dialog::show_all));
+	menu_item->signal_activate().connect(mem_fun(aboutDlg, &Gtk::AboutDialog::show_all));
 	list_bar.push_back (*menu_item);
 	
 	return menu_bar;
