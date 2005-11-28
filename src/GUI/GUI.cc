@@ -653,15 +653,16 @@ GUI::bank_open		( )
 void
 GUI::bank_save_as	( )
 {
-	/* we need to get the filename entry widget back in there somehow....
-	FileChooserDialog dlg (*this, "Save As...", FILE_CHOOSER_ACTION_OPEN);
-	dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);	dlg.add_button(Stock::SAVE_AS, RESPONSE_OK);
+	/* we need to get the filename entry widget back in there somehow.... */
+	FileChooserDialog dlg (*this, "Save As...", FILE_CHOOSER_ACTION_SAVE);
+	dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);
+	dlg.add_button(Stock::SAVE_AS, RESPONSE_OK);
+	dlg.set_current_name ("default.amsynth.bank");
 	if (RESPONSE_OK == dlg.run())
 	{
 		config->current_bank_file = dlg.get_filename ();
 		preset_controller->savePresets (config->current_bank_file.c_str ());
 	}
-	*/
 }
 
 int
