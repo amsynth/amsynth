@@ -125,6 +125,7 @@ VoiceAllocationUnit::killAllVoices()
 	for (unsigned i=0; i<_voices.size(); i++) active[i] = false;
 	reverb->mute();
 	mActiveVoices = 0;
+	sustain = 0;
 }
 
 void
