@@ -355,54 +355,47 @@ GUI::init()
 	tmphbox->pack_start(*align);
 	vbox.pack_start (*tmphbox,0,0);
 	vbox.pack_start (*editor_panel,Gtk::PACK_EXPAND_WIDGET,0);
-	vbox.pack_start (statusBar);
+	vbox.pack_start (statusBar,PACK_SHRINK);
 	add(vbox);
-	show_all();
-	
-	
+		
 	presetCV->setPresetController(*preset_controller);
 	
-		
-	char cstr[10];
-	status = " Midi Driver: ";
-	status += config->midi_driver;
-	if( config->midi_driver == "OSS" ){
-		status += ":";
-		status += config->oss_midi_device;
-	}
-/*	status += "   Midi Channel: ";
-	if( config->midi_channel ){
-		sprintf( cstr, "%2d", config->midi_channel );
-		status += string(cstr);
-	} else status += "All";*/
-	status += "   Audio Driver: ";
-	status += config->audio_driver;
-	if( config->audio_driver == "OSS" ){
-		status += " : ";
-		status += config->oss_audio_device;
-	} else if( config->audio_driver == "ALSA" ){
-		status += " : ";
-		status += config->alsa_audio_device;
-	}
-	status += "   Sample Rate:";
-	sprintf( cstr, "%d", config->sample_rate );
-	status += string(cstr);
-	status += " Hz   ";
-/*	if( !config->realtime )
-	{
-		status += "Poly: ";
-		sprintf( cstr, "%d", config->polyphony );
-		status += string(cstr);
-	}*/
-	if (!( this->config->audio_driver=="jack" ||
-				this->config->audio_driver=="JACK" ))
-	{
-		if(config->realtime)
-			status += "   Realtime Priority: YES";
-		else
-			status += "   Realtime Priority: NO";
-	}
-	statusBar.push (status, 1);
+	
+	// set up a fancy status bar.... why? i dont know.
+	
+	guint padding = 3;
+	
+	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
+	
+	status = "MIDI : " + config->midi_driver;
+	if (config->midi_driver == "OSS") status += " : " + config->oss_midi_device;
+	statusBar.pack_start (*manage(new Gtk::Label (status)), PACK_SHRINK, padding);
+
+	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
+	
+	status = "Audio: " + config->audio_driver + " : ";
+	if( config->audio_driver == "OSS" ) status += config->oss_audio_device;
+	else if( config->audio_driver == "ALSA" ) status += config->alsa_audio_device;
+	statusBar.pack_start (*manage(new Gtk::Label (status)), PACK_SHRINK, padding);
+	
+	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
+	
+	static char cstr[10];
+	sprintf( cstr, "Sample Rate: %d", config->sample_rate );
+	statusBar.pack_start (*manage(new Gtk::Label (cstr)), PACK_SHRINK, padding);
+
+	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
+	
+	status = "Realtime : ";
+	if (this->config->audio_driver!="jack" && 
+		this->config->audio_driver!="JACK" &&
+		config->realtime
+		){ status += "YES"; }
+	else { status += "NO"; }
+	statusBar.pack_start (*manage(new Gtk::Label (status)), PACK_SHRINK, padding);
+	
+	show_all();
+	
 	
 	// show realtime warning message if necessary
 	if (!config->realtime && config->audio_driver != "jack" && config->audio_driver != "JACK")
