@@ -59,6 +59,7 @@ GUI::serve_request()
 
 GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 		int pipe[2], GenericOutput *audio, const char *title )
+:	clipboard_preset (new Preset)
 {
 #ifdef _DEBUG
 	cout << "<GUI::GUI()>" << endl;
