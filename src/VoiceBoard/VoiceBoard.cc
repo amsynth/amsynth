@@ -93,7 +93,14 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	float osc2pw = mOsc2PulseWidth;
 
 	float env_f = *filter_env.getNFData (numSamples);
-        float cutoff = mKeyPitch * env_f * mFilterEnvAmt + ( mKeyPitch * mKeyVelocity * mFilterCutoff ) * ( (lfo1buf[0]*0.5f + 0.5f) * mFilterModAmt + 1-mFilterModAmt );
+	float cutoff = ( mKeyPitch * mKeyVelocity * mFilterCutoff ) * ( (lfo1buf[0]*0.5f + 0.5f) * mFilterModAmt + 1-mFilterModAmt );
+	if (mFilterEnvAmt > 0.f) cutoff += (mKeyPitch * env_f * mFilterEnvAmt);
+	else
+	{
+		static const float r16 = 1.f/16.f; // scale if from -16 to -1
+		cutoff += cutoff * r16 * mFilterEnvAmt * env_f;
+	}
+	
 
 	//
 	// VCOs
