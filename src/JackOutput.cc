@@ -100,7 +100,7 @@ JackOutput::init	( Config & config )
 	
 	config.sample_rate = sample_rate;
 	config.buffer_size = buf_size;
-	config.audio_driver = "JACK";
+	config.current_audio_driver = "JACK";
 	
 	return 0;
 #endif

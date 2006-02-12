@@ -12,4 +12,5 @@ libGUI_a_SOURCES =	GUI.cc GUI.h \
 			Knob.cc Knob.h \
 			ControllerMapDialog.cc ControllerMapDialog.h Request.h \
 			ParameterView.h controllers.h \
-			EditorPanel.h EditorPanel.cc
+			EditorPanel.h EditorPanel.cc \
+			ConfigDialog.h ConfigDialog.cpp

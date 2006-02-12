@@ -55,7 +55,7 @@ ALSAAudioDriver::open( Config & config )
     snd_pcm_hw_params( playback_handle, hw_params );
 	
 	config.sample_rate = snd_pcm_hw_params_get_rate( hw_params, 0 );
-	config.audio_driver = "ALSA";
+	config.current_audio_driver = "ALSA";
 	
 	this->config = &config;
 

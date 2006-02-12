@@ -238,6 +238,7 @@ under certain conditions; see the file COPYING for details\n";
 
 	presetController->savePresets(config.current_bank_file.c_str ());
 	midi_controller->saveConfig();
+	config.save();
 	
 	out->Stop ();
 #ifdef _DEBUG

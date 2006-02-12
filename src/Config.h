@@ -62,11 +62,13 @@ public:
 	 * "auto" (which picks the best one)
 	 */
 	string audio_driver;
+	string current_audio_driver;
 	/**
 	 * Specify the midi input driver to use. currently "oss", "alsa", or 
 	 * "auto" (which picks the best one)
 	 */
 	string midi_driver;
+	string current_midi_driver;
 	/**
 	 * The name if the device file for the OSS midi device.
 	 */

@@ -120,7 +120,15 @@ Config::load	()
 int
 Config::save	()
 {
-	fstream ofile ( amsynthrc_fname.c_str(), ios::in | ios::out );
-	ofile.close ( );
+	FILE *fout = fopen (amsynthrc_fname.c_str(), "w"); if (NULL == fout) return -1;
+	fprintf (fout, "midi_driver\t%s\n", midi_driver.c_str());
+	fprintf (fout, "oss_midi_device\t%s\n", oss_midi_device.c_str());
+	fprintf (fout, "midi_channel\t%d\n", midi_channel);
+	fprintf (fout, "audio_driver\t%s\n", audio_driver.c_str());
+	fprintf (fout, "oss_audio_device\t%s\n", oss_audio_device.c_str());
+	fprintf (fout, "alsa_audio_device\t%s\n", alsa_audio_device.c_str());
+	fprintf (fout, "sample_rate\t%d\n", sample_rate);
+	fprintf (fout, "polyphony\t%d\n", polyphony);
+	fclose (fout);
 	return 0;
 }

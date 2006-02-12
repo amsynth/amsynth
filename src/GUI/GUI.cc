@@ -22,6 +22,7 @@ using namespace Gtk;
 #include "EditorPanel.h"
 #include "../../config.h"
 #include "amsynth_logo.h"
+#include "ConfigDialog.h"
 
 enum {
 	evLoad,
@@ -37,7 +38,8 @@ enum {
 	evRecDlgRecord,
 	evRecDlgPause,
 	evVkeybd,
-	evMidiSend
+	evMidiSend,
+	evConfig,
 };
 
 
@@ -229,6 +231,7 @@ GUI::create_menus	( )
 	//
 	Menu *menu_config = manage (new Menu());
 	MenuList& list_config = menu_config->items ();
+	list_config.push_back (MenuElem("Audio & MIDI...", bind(mem_fun(*this, &GUI::event_handler), (int)evConfig)));
 	list_config.push_back (MenuElem("MIDI Controllers...", Gtk::AccelKey("<control>M"), mem_fun(*this, &GUI::config_controllers)));
 	
 	
@@ -281,13 +284,13 @@ GUI::create_menus	( )
 	menu_item = manage (new MenuItem("qjackconnect"));
 	menu_item->signal_activate().connect (sigc::bind(mem_fun(*this, &GUI::command_run),"qjackconnect"));
 	if (command_exists ("qjackconnect") != 0) menu_item->set_sensitive( false );
-	if (config->audio_driver != "jack" && config->audio_driver != "JACK") menu_item->set_sensitive( false );
+	if (config->current_audio_driver != "jack" && config->current_audio_driver != "JACK") menu_item->set_sensitive( false );
 	list_utils_jack.push_back (*menu_item);
 	
 	menu_item = manage (new MenuItem("alsa-patch-bay"));
 	menu_item->signal_activate().connect (sigc::bind(mem_fun(*this, &GUI::command_run),"alsa-patch-bay --driver jack"));
 	if (command_exists ("alsa-patch-bay") != 0) menu_item->set_sensitive( false );
-	if (config->audio_driver != "jack" && config->audio_driver != "JACK") menu_item->set_sensitive( false );
+	if (config->current_audio_driver != "jack" && config->current_audio_driver != "JACK") menu_item->set_sensitive( false );
 	list_utils_jack.push_back (*menu_item);
 	
 	list_utils.push_back (MenuElem("Audio (JACK) connections", *menu_utils_jack));
@@ -367,15 +370,15 @@ GUI::init()
 	
 	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
 	
-	status = "MIDI : " + config->midi_driver;
-	if (config->midi_driver == "OSS") status += " : " + config->oss_midi_device;
+	status = "MIDI : " + config->current_midi_driver;
+	if (config->current_midi_driver == "OSS") status += " : " + config->oss_midi_device;
 	statusBar.pack_start (*manage(new Gtk::Label (status)), PACK_SHRINK, padding);
 
 	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
 	
-	status = "Audio: " + config->audio_driver + " : ";
-	if( config->audio_driver == "OSS" ) status += config->oss_audio_device;
-	else if( config->audio_driver == "ALSA" ) status += config->alsa_audio_device;
+	status = "Audio: " + config->current_audio_driver + " : ";
+	if( config->current_audio_driver == "OSS" ) status += config->oss_audio_device;
+	else if( config->current_audio_driver == "ALSA" ) status += config->alsa_audio_device;
 	statusBar.pack_start (*manage(new Gtk::Label (status)), PACK_SHRINK, padding);
 	
 	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
@@ -387,8 +390,8 @@ GUI::init()
 	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
 	
 	status = "Realtime : ";
-	if (this->config->audio_driver!="jack" && 
-		this->config->audio_driver!="JACK" &&
+	if (this->config->current_audio_driver!="jack" && 
+		this->config->current_audio_driver!="JACK" &&
 		config->realtime
 		){ status += "YES"; }
 	else { status += "NO"; }
@@ -398,7 +401,7 @@ GUI::init()
 	
 	
 	// show realtime warning message if necessary
-	if (!config->realtime && config->audio_driver != "jack" && config->audio_driver != "JACK")
+	if (!config->realtime && config->current_audio_driver != "jack" && config->current_audio_driver != "JACK")
 	{
 		MessageDialog dlg (*this, "amSynth could not set realtime priority");
 		dlg.set_secondary_text ("You may experience audio buffer underruns resulting in 'clicks' in the audio.\n\nThis is most likely because the program is not SUID root.\n\nUsing the JACK audio subsystem can also help");
@@ -526,6 +529,12 @@ GUI::event_handler(const int e)
 			if (RESPONSE_YES == dlg.run()) midi_controller->sendMidi_values();
 		}
 		break;
+		
+	case evConfig:
+	{
+		ConfigDialog dlg (*this, *config);
+		dlg.run ();
+	}
 		
 	default:
 		cout << "no handler for event: " << e << endl;
