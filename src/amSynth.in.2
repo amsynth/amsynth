@@ -6,34 +6,6 @@ INST=no
 EDFAIL=no
 
 #
-# copy default config file if needed, and launch editor to edit it
-#
-if test -f ~/.amSynthrc; then
-INST=no
-else
-echo ""
-echo "This appears to be your first time with amSynth, welcome!"
-echo "*********************************************************"
-echo ""
-echo "copying default configuration file to ~/.amSynthrc"
-echo "launching editor now, please set config file up for your system"
-cp $DATADIR/rc ~/.amSynthrc
-gedit 1>/dev/null 2>/dev/null 3>/dev/null ~/.amSynthrc ||\
-kwrite 1>/dev/null 2>/dev/null 3>/dev/null ~/.amSynthrc ||\
-nedit 1>/dev/null 2>/dev/null 3>/dev/null ~/.amSynthrc ||\
-xedit 1>/dev/null 2>/dev/null 3>/dev/null ~/.amSynthrc ||\
-EDFAIL=yes
-fi
-
-#
-# quit if we tried to launch an editor and it failed
-#
-if test $EDFAIL = "yes"; then
-echo "couldnt launch an editor, please edit config file by hand before next run"
-exit
-fi
-
-#
 # copy default controller setup if required
 #
 if test -f ~/.amSynthControllersrc; then
