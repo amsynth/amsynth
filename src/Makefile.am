@@ -1,17 +1,9 @@
-bin_SCRIPTS = amSynth
-EXTRA_DIST = amSynth.in.1 amSynth.in.2
-libexec_PROGRAMS = amSynth.bin
+bin_PROGRAMS = amSynth
 noinst_PROGRAMS = amSynth.ptest
 
 INCLUDES = $(DEPS_CFLAGS)
 
-amSynth: amSynth.in.1 amSynth.in.2
-	cat amSynth.in.1 > amSynth;\
-	echo PREFIX=$(prefix) >> amSynth;\
-	cat amSynth.in.2 >> amSynth;\
-	chmod +x amSynth
-
-amSynth_bin_SOURCES = \
+amSynth_SOURCES = \
 	main.cc \
 	AudioOutput.cc AudioOutput.h \
 	JackOutput.cc JackOutput.h \
@@ -20,7 +12,8 @@ amSynth_bin_SOURCES = \
 	Preset.cc Preset.h \
 	PresetController.cc PresetController.h \
 	VoiceAllocationUnit.cc VoiceAllocationUnit.h \
-	Config.cc Config.h UpdateListener.h Thread.h controls.h
+	Config.cc Config.h UpdateListener.h Thread.h controls.h \
+	binreloc.h binreloc.c
 
 amSynth_ptest_SOURCES = \
 	ptest.cc Parameter.cc Preset.cc \
@@ -28,13 +21,15 @@ amSynth_ptest_SOURCES = \
 
 SUBDIRS = drivers VoiceBoard GUI Effects
 
-amSynth_bin_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a GUI/libGUI.a Effects/libEffects.a
+amSynth_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a GUI/libGUI.a Effects/libEffects.a
 
 amSynth_ptest_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a Effects/libEffects.a
 
-LIBS = -lstdc++ -lm -lpthread
-amSynth_bin_LDFLAGS = $(DEPS_LIBS)
+amSynth_CFLAGS = $(CFLAGS) -DENABLE_BINRELOC
+amSynth_CXXFLAGS = $(CXXFLAGS) -DENABLE_BINRELOC
+amSynth_LIBS = -lstdc++ -lm -lpthread
+amSynth_LDFLAGS = $(DEPS_LIBS)
 
 install-exec-hook):
-	chown root $(DESTDIR)$(libexecdir)/amSynth.bin;\
-	chmod +s $(DESTDIR)$(libexecdir)/amSynth.bin
+	chown root $(DESTDIR)$(bindir)/amSynth;\
+	chmod +s $(DESTDIR)$(bindir)/amSynth

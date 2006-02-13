@@ -11,6 +11,8 @@
 #include "Config.h"
 #include "../config.h"
 
+#include "binreloc.h"
+
 #include <gtkmm/main.h>
 #include <iostream>
 #include <fstream>
@@ -82,11 +84,41 @@ pipe_event( void *arg, int foo, GdkInputCondition ic )
 	gui->serve_request();
 }
 
+int fcopy (const char * dest, const char *source)
+{
+	FILE *in = fopen (source,"r");
+	if (in == NULL) {
+		fprintf (stderr, "error reading source file %s\n", source);
+		return -1;
+	}
+	FILE *out = fopen (dest,"w");
+	if (out == NULL) {
+		fprintf (stderr, "error creating destination file %s\n", dest);
+		return -1;
+	}
+	fseek (in, 0, SEEK_END);
+	long size = ftell (in);
+	rewind (in);
+	char * tmp = (char *) malloc (size);
+	fread (tmp, 1, size, in);
+	fwrite (tmp, 1, size, out);
+	free (tmp);
+	fclose (in);
+	fclose (out);
+	return 0;
+}
+
 int main( int argc, char *argv[] )
 {
+	BrInitError br_err;
+	if (br_init (&br_err) == 0 && br_err != BR_INIT_ERROR_DISABLED) { 
+		printf ("Warning: BinReloc failed to initialize (error code %d)\n", br_err); 
+		printf ("Will fallback to hardcoded default path.\n"); 
+	}
+	
 	std::cout << 
 "amSynth " VERSION "\n\
-Copyright 2001-2004 Nick Dowell and others.\n\
+Copyright 2001-2006 Nick Dowell and others.\n\
 amSynth comes with ABSOLUTELY NO WARRANTY\n\
 This is free software, and you are welcome to redistribute it\n\
 under certain conditions; see the file COPYING for details\n";
@@ -124,6 +156,41 @@ under certain conditions; see the file COPYING for details\n";
 
 	string amsynth_bank_file = config.current_bank_file;
 
+	
+	//
+	// setup local config files if first run..
+	// 
+#define PREFIX "/usr/local"
+	char * homedir = getenv ("HOME");
+	char * data_dir = br_find_data_dir (PREFIX"/share");
+	char * amsynth_data_dir = br_strcat (data_dir, "/amSynth");
+	char * factory_controllers = br_strcat (amsynth_data_dir, "/Controllersrc");
+	char * factory_bank = br_strcat (amsynth_data_dir, "/presets");
+	char * user_controllers = br_strcat (homedir, "/.amSynthControllersrc");
+	char * user_bank = br_strcat (homedir, "/.amSynth.presets");
+	
+	if (fopen (user_controllers,"r") == NULL)
+	{
+		printf ("installing default controller map\n");
+		fcopy (user_controllers, factory_controllers);
+	}
+	if (fopen (user_bank,"r") == NULL)
+	{
+		printf ("installing default sound bank\n");
+		fcopy (user_bank, factory_bank);
+	}
+
+	free (homedir);
+	free (data_dir);
+	free (amsynth_data_dir);
+	free (factory_controllers);
+	free (factory_bank);
+	free (user_controllers);
+	free (user_bank);
+	//
+	//
+	//
+	
 	presetController = new PresetController();
 	
 	
