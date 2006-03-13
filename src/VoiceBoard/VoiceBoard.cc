@@ -193,3 +193,42 @@ VoiceBoard::setVelocity(float velocity)
 {
 	mKeyVelocity = velocity;
 }
+
+#if 0 
+////////////////////////////////// profiling code
+
+#include <stdio.h>
+
+#define rdtscl(low) \
+	__asm__ __volatile__("rdtsc" : "=a" (low) : : "edx")
+
+int main ()
+{
+#define kSamples 64
+	VoiceBoardProcessMemory mem (kSamples);
+	VoiceBoard vb (&mem);
+	float buf [kSamples];
+
+        
+	unsigned long before, after, elapsed;
+#define best_time(code,tries,time) \
+	        time = 0xffffffff; \
+	        for (int i=0; i<tries; i++) { \
+			rdtscl(before); \
+			code; \
+			rdtscl(after); \
+			elapsed = after - before; \
+			if (elapsed < time) time = elapsed; \
+		}
+
+	unsigned long base, proc;
+	best_time(,16,base);
+	best_time(vb.ProcessSamplesMix (buf, kSamples, 1.f),1000,proc);
+	proc -= base;
+
+	printf ("base time : %u\n", base);
+	printf ("proc time : %u\n", proc);
+	printf ("per sample: %u\n", proc/kSamples);
+}
+#endif
+
