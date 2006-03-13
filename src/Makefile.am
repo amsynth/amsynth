@@ -1,5 +1,4 @@
 bin_PROGRAMS = amSynth
-noinst_PROGRAMS = amSynth.ptest
 
 INCLUDES = $(DEPS_CFLAGS)
 
@@ -15,15 +14,9 @@ amSynth_SOURCES = \
 	Config.cc Config.h UpdateListener.h Thread.h controls.h \
 	binreloc.h binreloc.c
 
-amSynth_ptest_SOURCES = \
-	ptest.cc Parameter.cc Preset.cc \
-	PresetController.cc VoiceAllocationUnit.cc Config.cc
-
 SUBDIRS = drivers VoiceBoard GUI Effects
 
 amSynth_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a GUI/libGUI.a Effects/libEffects.a
-
-amSynth_ptest_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a Effects/libEffects.a
 
 amSynth_CFLAGS = $(CFLAGS) -DENABLE_BINRELOC
 amSynth_CXXFLAGS = $(CXXFLAGS) -DENABLE_BINRELOC
