@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001-2003 Nick Dowell
+ * (c) 2001-2006 Nick Dowell
  **/
 
 #include "ALSAMidiDriver.h"
@@ -60,7 +60,8 @@ ALSAMidiDriver::write_cc(unsigned int channel, unsigned int param, unsigned int 
 int ALSAMidiDriver::close()
 {
 #ifdef with_alsa
-	snd_seq_close (seq_handle);
+	if (seq_handle) snd_seq_close (seq_handle);
+	seq_handle = NULL;
 #endif
 	return 0;
 }
@@ -68,7 +69,19 @@ int ALSAMidiDriver::close()
 int ALSAMidiDriver::open( Config & config )
 {
 #ifdef with_alsa
-	if (snd_seq_open(&seq_handle, "hw", SND_SEQ_OPEN_DUPLEX, 0) < 0) {
+	if (seq_handle) return 0;
+	
+	// sometimes the alsa sequencer just doesn't get loaded..
+	// and snd_seq_open crashes out on an assert. gah, c'mon alsa guys! :-S
+	FILE *file = fopen ("/dev/snd/seq", "r");
+	if (!file)
+	{
+		cerr << "ALSA sequencer not loaded at /dev/snd/seq\n";
+		return -1;
+	}
+	else fclose (file);
+
+	if (snd_seq_open(&seq_handle, "default", SND_SEQ_OPEN_DUPLEX, 0) < 0) {
 		cerr << "Error opening ALSA sequencer.\n";
 		return -1;
 	}
@@ -107,6 +120,7 @@ int ALSAMidiDriver::open( Config & config )
 }
 
 ALSAMidiDriver::ALSAMidiDriver()
+:	seq_handle (NULL)
 {
 #ifdef with_alsa
 	if( snd_midi_event_new( 32, &seq_midi_parser ) )
