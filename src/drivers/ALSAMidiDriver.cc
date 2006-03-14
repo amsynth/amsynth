@@ -71,16 +71,6 @@ int ALSAMidiDriver::open( Config & config )
 #ifdef with_alsa
 	if (seq_handle) return 0;
 	
-	// sometimes the alsa sequencer just doesn't get loaded..
-	// and snd_seq_open crashes out on an assert. gah, c'mon alsa guys! :-S
-	FILE *file = fopen ("/dev/snd/seq", "r");
-	if (!file)
-	{
-		cerr << "ALSA sequencer not loaded at /dev/snd/seq\n";
-		return -1;
-	}
-	else fclose (file);
-
 	if (snd_seq_open(&seq_handle, "default", SND_SEQ_OPEN_DUPLEX, 0) < 0) {
 		cerr << "Error opening ALSA sequencer.\n";
 		return -1;
