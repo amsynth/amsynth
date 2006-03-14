@@ -168,6 +168,7 @@ src/VoiceBoard/Makefile
 src/GUI/Makefile
 src/Effects/Makefile
 skel/Makefile
+autopackage/default.apspec
 ])
 
 
