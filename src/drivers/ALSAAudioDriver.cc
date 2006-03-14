@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2006 Nick Dowell
  **/
 
 #include "ALSAAudioDriver.h"
@@ -37,6 +37,8 @@ ALSAAudioDriver::write(float *buffer, int frames)
 int 
 ALSAAudioDriver::open( Config & config )
 {
+	if (playback_handle != NULL) return 0;
+
 	_channels = config.channels;
 	_rate = config.sample_rate;
 #ifdef with_alsa
@@ -68,7 +70,8 @@ ALSAAudioDriver::open( Config & config )
 void ALSAAudioDriver::close()
 {
 #ifdef with_alsa
-	snd_pcm_close( playback_handle );
+	if (playback_handle != NULL) snd_pcm_close (playback_handle);
+	playback_handle = NULL;
 #endif
 }
 
@@ -78,6 +81,7 @@ int ALSAAudioDriver::setChannels(int channels)
   _channels = channels;
   return 0;
 }
+
 
 int ALSAAudioDriver::setRate(int rate)
 {
@@ -93,6 +97,7 @@ int ALSAAudioDriver::setRealtime()
 }
 
 ALSAAudioDriver::ALSAAudioDriver()
+:	playback_handle (NULL)
 {
 }
 

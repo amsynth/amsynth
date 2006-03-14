@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2006 Nick Dowell
  * (c) 2002 Karsten Wiese
  **/
 
@@ -110,6 +110,8 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 int
 ALSAmmapAudioDriver::open( Config & config )
 {
+	if (playback_handle != NULL) return 0;
+	
 	_channels = config.channels;
 	_rate = config.sample_rate;
 #ifdef with_alsa
@@ -142,7 +144,8 @@ ALSAmmapAudioDriver::open( Config & config )
 void ALSAmmapAudioDriver::close()
 {
 #ifdef with_alsa
-	snd_pcm_close( playback_handle );
+	if (playback_handle != NULL) snd_pcm_close (playback_handle);
+	playback_handle = NULL;
 #endif
 }
 
@@ -167,8 +170,8 @@ int ALSAmmapAudioDriver::setRealtime()
 }
 
 ALSAmmapAudioDriver::ALSAmmapAudioDriver()
+:	playback_handle (NULL)
 {
-  // WRITE ME!
 }
 
 ALSAmmapAudioDriver::~ALSAmmapAudioDriver()
