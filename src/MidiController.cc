@@ -261,12 +261,13 @@ MidiController::controller_change(unsigned char controller,
 			else _va->sustainOn();
 			break;
 			
-		case 122:
-			if( !value )
-				_va->killAllVoices();
-		case 123:
-		// All Notes Off
-			_va->killAllVoices();
+		case 120:	// ALL SOUND OFF
+			if (value == 0) _va->killAllVoices();
+			break;
+			
+		case 123:	// ALL NOTES OFF
+			if (value == 0) _va->killAllVoices();
+			break;
 
 		default:
 			if( last_active_controller.getValue() != controller )
