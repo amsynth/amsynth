@@ -280,7 +280,7 @@ under certain conditions; see the file COPYING for details\n";
 	setreuid( getuid(), getuid() );
 	setregid( getgid(), getgid() );
 	
-	midi_controller->setVAU( *vau );
+	midi_controller->SetMidiEventHandler(vau);
 	midi_controller->setPresetController( *presetController );
   
 	presetController->getCurrentPreset().AddListenerToAll (vau);
@@ -349,7 +349,7 @@ void ptest ()
 	vau->SetSampleRate (kTestSampleRate);
 	
 	// trigger off some notes for amSynth to render.
-	for (int v=0; v<kNumVoices; v++) vau->noteOn (60+v, 127);
+	for (int v=0; v<kNumVoices; v++) vau->HandleMidiNoteOn (60+v, 127);
 	
 	struct rusage usage_before; 
 	getrusage (RUSAGE_SELF, &usage_before);

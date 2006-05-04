@@ -11,11 +11,11 @@ void sched_realtime (); // defined in main.cc
 
 MidiController::MidiController( Config & config )
 :	last_active_controller ("last_active_cc", (Param) -1, 0, 0, MAX_CC, 1)
+,	_handler(NULL)
 {
 	this->config = &config;
 	_buffer = new unsigned char[MIDI_BUF_SIZE];
 	presetController = 0;
-	_va = 0;
 	for( int i=0; i<MAX_CC; i++ ) midi_controllers[i] = 0;
 }
 
@@ -54,12 +54,6 @@ MidiController::setPresetController(PresetController & pc)
 		file >> buffer;
 	}
 	file.close();
-}
-
-void
-MidiController::setVAU(VoiceAllocationUnit & vau)
-{
-    _va = &vau;
 }
 
 int
@@ -168,9 +162,13 @@ MidiController::HandleMidiData(unsigned char* bytes, unsigned numBytes)
 
 		case 0xc0:
 			// program change
+//			if (_handler) {
+//				_handler->HandleMidiAllSoundOff();
+//				_handler->HandleMidiProgramChange(byte);
+//			}
 			if( presetController->getCurrPresetNumber() != byte )
 			{
-				_va->killAllVoices();
+				if (_handler) _handler->HandleMidiAllSoundOff();
 				presetController->selectPreset((int) byte);
 			}
 			data = 0xff;
@@ -210,17 +208,16 @@ MidiController::HandleMidiData(unsigned char* bytes, unsigned numBytes)
 void
 MidiController::pitch_wheel_change(float val)
 {
-    if (_va)
-		_va->pwChange(val);
+	if (_handler) _handler->HandleMidiPitchWheel(val);
 }
 
 void
 MidiController::dispatch_note(unsigned char, unsigned char note, unsigned char vel)
 {
 	static const float scale = 1.f/127.f;
-    if (!_va) return;
-	if (vel) _va->noteOn((int) note, (float)vel * scale);
-	else     _va->noteOff((int) note);
+    if (!_handler) return;
+	if (vel) _handler->HandleMidiNoteOn((int) note, (float)vel * scale);
+	else     _handler->HandleMidiNoteOff((int) note, (float)vel * scale);
 }
 
 void
@@ -241,16 +238,15 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 		
 		case 64:
 		// sustain pedal
-			if (!value) _va->sustainOff();
-			else _va->sustainOn();
+			if (_handler) _handler->HandleMidiSustainPedal(value);
 			break;
 			
 		case 120:	// ALL SOUND OFF
-			if (value == 0) _va->killAllVoices();
+			if (value == 0) _handler->HandleMidiAllSoundOff();
 			break;
 			
 		case 123:	// ALL NOTES OFF
-			if (value == 0) _va->killAllVoices();
+			if (value == 0) _handler->HandleMidiAllNotesOff();
 			break;
 
 		default:
@@ -293,7 +289,7 @@ MidiController::saveConfig()
 void
 MidiController::set_midi_channel	( int ch )
 {
-	if (ch)	_va->killAllVoices ();
+	if (ch)	_handler->HandleMidiAllSoundOff();
 	config->midi_channel = ch;
 }
 

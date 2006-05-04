@@ -55,29 +55,8 @@ VoiceAllocationUnit::SetSampleRate	(int rate)
 }
 
 void
-VoiceAllocationUnit::pwChange( float value )
+VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 {
-	float newval = pow(2.0f,value);
-	for (unsigned i=0; i<_voices.size(); i++) _voices[i]->SetPitchBend (newval);
-}
-
-void
-VoiceAllocationUnit::sustainOff()
-{
-	sustain = 0;
-	for(unsigned i=0; i<_voices.size(); i++)
-		if (!keyPressed[i]) 
-			_voices[i]->triggerOff();
-}
-
-void
-VoiceAllocationUnit::noteOn(int note, float velocity)
-{
-#ifdef _DEBUG
-	cout << "<VoiceAllocationUnit> noteOn(note:" << note 
-	<< " vel:" << velocity << ")" << endl;
-#endif
-
 	assert (note >= 0);
 	assert (note < 128);
   
@@ -96,17 +75,50 @@ VoiceAllocationUnit::noteOn(int note, float velocity)
 	_voices[note]->triggerOn();
 }
 
-void 
-VoiceAllocationUnit::noteOff(int note)
+void
+VoiceAllocationUnit::HandleMidiNoteOff(int note, float velocity)
 {
-#ifdef _DEBUG
-	cout << "<VoiceAllocationUnit> noteOff(note:" << note << ")" << endl;
-#endif
 	keyPressed[note] = 0;
 	if (!sustain){
 		_voices[note]->triggerOff();
 	}
 }
+
+void
+VoiceAllocationUnit::HandleMidiPitchWheel(float value)
+{
+	float newval = pow(2.0f,value);
+	for (unsigned i=0; i<_voices.size(); i++) _voices[i]->SetPitchBend (newval);
+}
+
+void
+VoiceAllocationUnit::HandleMidiAllSoundOff()
+{
+	for (unsigned i=0; i<_voices.size(); i++) active[i] = false;
+	reverb->mute();
+	mActiveVoices = 0;
+	sustain = 0;
+}
+
+void
+VoiceAllocationUnit::HandleMidiAllNotesOff()
+{
+	for (unsigned i=0; i<_voices.size(); i++) active[i] = false;
+	reverb->mute();
+	mActiveVoices = 0;
+	sustain = 0;
+}
+
+void
+VoiceAllocationUnit::HandleMidiSustainPedal(uchar value)
+{
+	sustain = value ? 1 : 0;
+	if (!sustain) return;
+	for(unsigned i=0; i<_voices.size(); i++) {
+		if (!keyPressed[i]) _voices[i]->triggerOff();
+	}
+}
+
 
 void 
 VoiceAllocationUnit::purgeVoices()
@@ -119,14 +131,6 @@ VoiceAllocationUnit::purgeVoices()
 		}
 }
 
-void
-VoiceAllocationUnit::killAllVoices()
-{
-	for (unsigned i=0; i<_voices.size(); i++) active[i] = false;
-	reverb->mute();
-	mActiveVoices = 0;
-	sustain = 0;
-}
 
 void
 VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)

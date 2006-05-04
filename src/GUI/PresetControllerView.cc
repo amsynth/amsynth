@@ -66,13 +66,13 @@ PresetControllerView::ev_handler(string text)
 		if (inhibit_combo_callback==false){
 			inhibit_combo_update = true;
 			string preset_name = presets_combo.get_entry()->get_text();
-			vau->killAllVoices();
+			vau->HandleMidiAllSoundOff();
 			presetController->selectPreset( preset_name );
 			inhibit_combo_update = false;
 		} else
 		return;
 	} else if (text == "panic") {
-		vau->killAllVoices();
+		vau->HandleMidiAllSoundOff();
 	} else {
 #ifdef _DEBUG
 		cout << "<PresetController::ev_handler> couldnt find action for '"

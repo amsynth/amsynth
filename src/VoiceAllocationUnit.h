@@ -8,13 +8,14 @@
 #include <vector>
 
 #include "UpdateListener.h"
+#include "MidiController.h"
 
 class VoiceBoard;
 class SoftLimiter;
 class revmodel;
 class Distortion;
 
-class VoiceAllocationUnit : public UpdateListener
+class VoiceAllocationUnit : public UpdateListener, public MidiEventHandler
 {
 public:
 			VoiceAllocationUnit		();
@@ -23,15 +24,14 @@ public:
 	void	UpdateParameter		(Param, float);
 
 	void	SetSampleRate		(int);
-  
-  void noteOn(int note, float velocity);
-  void noteOff(int note);
-  void pwChange( float value );
-  void sustainOn()
-  { sustain = 1; };
-  void sustainOff();
-  void killAllVoices();
-  
+	
+	virtual void HandleMidiNoteOn(int note, float velocity);
+	virtual void HandleMidiNoteOff(int note, float velocity);
+	virtual void HandleMidiPitchWheel(float value);
+	virtual void HandleMidiAllSoundOff();
+	virtual void HandleMidiAllNotesOff();
+	virtual void HandleMidiSustainPedal(uchar value);
+
 	void	SetMaxVoices	(int voices) { mMaxVoices = voices; }
 	int		GetActiveVoices	() { return mActiveVoices; }
 

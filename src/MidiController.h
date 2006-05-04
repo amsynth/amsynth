@@ -7,7 +7,6 @@
 
 #include "PresetController.h"
 #include "drivers/MidiInterface.h"
-#include "VoiceAllocationUnit.h"
 #include "Parameter.h"
 #include "Thread.h"
 
@@ -19,6 +18,23 @@
  * decodes the incoming messages and performs the appropriate actions on the
  * rest of the system.
  */
+
+typedef unsigned char uchar;
+
+class MidiEventHandler
+{
+public:
+	virtual ~MidiEventHandler() {}
+	
+	virtual void HandleMidiNoteOn(int note, float velocity) {}
+	virtual void HandleMidiNoteOff(int note, float velocity) {}
+	virtual void HandleMidiPitchWheel(float value) {}
+	virtual void HandleMidiAllSoundOff() {}
+	virtual void HandleMidiAllNotesOff() {}
+	virtual void HandleMidiSustainPedal(uchar value) {}
+	virtual void HandleMidiProgramChange(uchar program) {}
+};
+
 class MidiController : public Thread
 {
 public:
@@ -30,7 +46,7 @@ public:
 	void	Stop ();
 
 	void	setPresetController	(PresetController & pc);
-	void	setVAU			(VoiceAllocationUnit & vau);
+	void	SetMidiEventHandler(MidiEventHandler* h) { _handler = h; }
 
 	void	saveConfig ();
 
@@ -51,7 +67,6 @@ private:
     void controller_change(unsigned char controller, unsigned char value);
     void pitch_wheel_change(float val);
 
-    VoiceAllocationUnit *_va;
     MidiInterface midi;
     PresetController *presetController;
 	Config *config;
@@ -59,5 +74,6 @@ private:
     unsigned char status, data, channel;
 	Parameter last_active_controller;
 	Parameter *midi_controllers[MAX_CC];
+	MidiEventHandler* _handler;
 };
 #endif

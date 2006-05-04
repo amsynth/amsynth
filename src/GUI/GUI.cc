@@ -18,6 +18,7 @@ using namespace Gtk;
 #include "../AudioOutput.h"
 #include "../MidiController.h"
 #include "../Preset.h"
+#include "../VoiceAllocationUnit.h"
 
 #include "EditorPanel.h"
 #include "../../config.h"
