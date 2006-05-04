@@ -113,9 +113,7 @@ int fcopy (const char * dest, const char *source)
 	return 0;
 }
 
-void ptest ();
-
-int main( int argc, char *argv[] )
+void install_default_files_if_reqd()
 {
 	BrInitError br_err;
 	if (br_init (&br_err) == 0 && br_err != BR_INIT_ERROR_DISABLED) { 
@@ -123,6 +121,39 @@ int main( int argc, char *argv[] )
 		printf ("Will fallback to hardcoded default path.\n"); 
 	}
 	
+	#define DEFAULT_PREFIX "/usr/local"
+	char * homedir = getenv ("HOME");
+	char * data_dir = br_find_data_dir (DEFAULT_PREFIX"/share");
+	char * amsynth_data_dir = br_strcat (data_dir, "/amSynth");
+	char * factory_controllers = br_strcat (amsynth_data_dir, "/Controllersrc");
+	char * factory_bank = br_strcat (amsynth_data_dir, "/presets");
+	char * user_controllers = br_strcat (homedir, "/.amSynthControllersrc");
+	char * user_bank = br_strcat (homedir, "/.amSynth.presets");
+	
+	if (fopen (user_controllers,"r") == NULL)
+	{
+		printf ("installing default controller map\n");
+		fcopy (user_controllers, factory_controllers);
+	}
+	if (fopen (user_bank,"r") == NULL)
+	{
+		printf ("installing default sound bank\n");
+		fcopy (user_bank, factory_bank);
+	}
+
+	free (homedir);
+	free (data_dir);
+	free (amsynth_data_dir);
+	free (factory_controllers);
+	free (factory_bank);
+	free (user_controllers);
+	free (user_bank);
+}
+
+void ptest ();
+
+int main( int argc, char *argv[] )
+{
 	std::cout << 
 "amSynth " VERSION "\n\
 Copyright 2001-2006 Nick Dowell and others.\n\
@@ -151,6 +182,7 @@ under certain conditions; see the file COPYING for details\n";
 		}
 	}
 	
+	install_default_files_if_reqd();
 	
 	// setup the configuration
 	config.Defaults ();
@@ -166,41 +198,7 @@ under certain conditions; see the file COPYING for details\n";
 
 	string amsynth_bank_file = config.current_bank_file;
 
-	
-	//
-	// setup local config files if first run..
-	// 
-#define PREFIX "/usr/local"
-	char * homedir = getenv ("HOME");
-	char * data_dir = br_find_data_dir (PREFIX"/share");
-	char * amsynth_data_dir = br_strcat (data_dir, "/amSynth");
-	char * factory_controllers = br_strcat (amsynth_data_dir, "/Controllersrc");
-	char * factory_bank = br_strcat (amsynth_data_dir, "/presets");
-	char * user_controllers = br_strcat (homedir, "/.amSynthControllersrc");
-	char * user_bank = br_strcat (homedir, "/.amSynth.presets");
-	
-	if (fopen (user_controllers,"r") == NULL)
-	{
-		printf ("installing default controller map\n");
-		fcopy (user_controllers, factory_controllers);
-	}
-	if (fopen (user_bank,"r") == NULL)
-	{
-		printf ("installing default sound bank\n");
-		fcopy (user_bank, factory_bank);
-	}
 
-	free (homedir);
-	free (data_dir);
-	free (amsynth_data_dir);
-	free (factory_controllers);
-	free (factory_bank);
-	free (user_controllers);
-	free (user_bank);
-	//
-	//
-	//
-	
 	presetController = new PresetController();
 	
 	
