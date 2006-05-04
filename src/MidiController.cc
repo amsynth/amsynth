@@ -13,7 +13,7 @@ MidiController::MidiController( Config & config )
 :	last_active_controller ("last_active_cc", (Param) -1, 0, 0, MAX_CC, 1)
 {
 	this->config = &config;
-	buffer = new unsigned char[MIDI_BUF_SIZE];
+	_buffer = new unsigned char[MIDI_BUF_SIZE];
 	presetController = 0;
 	_va = 0;
 	for( int i=0; i<MAX_CC; i++ ) midi_controllers[i] = 0;
@@ -21,7 +21,7 @@ MidiController::MidiController( Config & config )
 
 MidiController::~MidiController()
 {
-	delete[]buffer;
+	delete[] _buffer;
 }
 
 void
@@ -78,7 +78,17 @@ void
 MidiController::ThreadAction ()
 {
 	sched_realtime ();
-    while (!ShouldStop ()) doMidi();
+    while (!ShouldStop ())
+	{
+		bzero(_buffer, MIDI_BUF_SIZE);
+		int bytes_read = midi.read(_buffer);
+		if (bytes_read == -1)
+		{
+			cout << "error reading from midi device" << endl;
+			break;
+		}
+		if (bytes_read > 0)	HandleMidiData(_buffer, bytes_read);
+	}
     midi.close();
 }
 
@@ -92,124 +102,108 @@ MidiController::Stop ()
 
 
 void
-MidiController::doMidi()
+MidiController::HandleMidiData(unsigned char* bytes, unsigned numBytes)
 {
-	if ((bytes_read = midi.read(buffer)) == -1)
+    for (unsigned i=0; i<numBytes; i++)
 	{
-		cout << "error reading from midi device" << endl;
-		Stop ();
-		return;
-	}
-
-    int receiveChannel = config->midi_channel;
-
-    for (int i = 0; i < bytes_read; i++) {
-	byte = buffer[i];
-#ifdef _DEBUG
-	if (byte < 0xf0)
-	    cout << "raw_midi: " << hex << (int) byte << endl;
-#endif
-	if (byte & 0x80) {	// then byte is a status byte
-	    if (byte < 0xf0) {	// dont deal with system messages
-		status = byte;
-		channel = (byte & 0x0f);
-		data = 0xff;
-	    }
-	    continue;
-	}
-	// so we have a data byte
-
-	// this filters out messages on other channels:
-	if (receiveChannel && ((int) (status & 0x0f) != receiveChannel-1)) 
-		break;
-
-	switch (status & 0xf0) {
-
-	case 0x80:
-	    /* note off.
-	       data byte 1 = note, data byte 2 = velocity
-
-	       NOTE - many (most?) devices send a 'note on' event with
-	       velocity
-	       0 rather than a distinct 'note off' event...
-		   BUT - Cubase does! and vel!=0 !!
-		*/
-	    if (data == 0xff) {
-		data = byte;
-		break;
-	    }
-	    dispatch_note( channel, data, 0 );
-	    data = 0xff;
-	    break;
-
-	case 0x90:
-	    // note on.
-	    // data byte 1 = note, data byte 2 = velocity
-	    if (data == 0xff) {
-			data = byte;
-			break;
-	    }
-	    dispatch_note(channel, data, byte);
-	    data = 0xff;
-	    break;
-
-	case 0xa0:
-	    // key pressure. 
-	    // data byte 1 = note, data byte 2 = pressure (after-touch)
-	    break;
-
-	case 0xb0:
-	    // parameter change
-	    // data byte 1 = controller, data byte 2 = value
-	    if (data == 0xFF) {
-			data = byte;
-			break;
-	    }
-	    controller_change(data, byte);
-	    data = 0xFF;
-	    break;
-
-	case 0xc0:
-	    // program change
-		if( presetController->getCurrPresetNumber() != byte )
-		{
-			_va->killAllVoices();
-			presetController->selectPreset((int) byte);
-#ifdef _DEBUG
-		cout << "<MidiController> program change: " << (int) byte <<
-		endl;
-#endif
+		const unsigned char byte = bytes[i];
+		
+		if (byte & 0x80) {	// then byte is a status byte
+			if (byte < 0xf0) {	// dont deal with system messages
+			status = byte;
+			channel = (byte & 0x0f);
+			data = 0xff;
+			}
+			continue;
 		}
-		data = 0xff;
-	    break;
+		// now we have at least one data byte
 
-	case 0xd0:
-	    // channel pressure
-	    // data byte = pressure (after-touch)
-	    break;
+		if (config->midi_channel && ((int) channel != config->midi_channel-1)) break;
 
-	case 0xe0:
-	    // pitch wheel
-	    // 2 data bytes give a 14 bit value, least significant 7 bits
-	    // first
-	    if (data == 0xFF)
-			data = byte;
-	    else {
+		switch (status & 0xf0)
+		{
+		case 0x80:
+			// note off : data byte 1 = note, data byte 2 = velocity
+			// N.B. many devices send a 'note on' event with 0 velocity
+			// rather than a distinct 'note off' event.
+			if (data == 0xff) { // wait until we receive the second data byte
+				data = byte;
+				break;
+			}
+			dispatch_note( channel, data, 0 );
+			data = 0xff;
+			break;
+	
+		case 0x90:
+			// note on.
+			// data byte 1 = note, data byte 2 = velocity
+			if (data == 0xff) {
+				data = byte;
+				break;
+			}
+			dispatch_note(channel, data, byte);
+			data = 0xff;
+			break;
+	
+		case 0xa0:
+			// key pressure. 
+			// data byte 1 = note, data byte 2 = pressure (after-touch)
+			if (data == 0xff) { // wait until we receive the second data byte
+				data = byte;
+				break;
+			}
+			data = 0xff;
+			break;
+
+		case 0xb0:
+			// parameter change
+			// data byte 1 = controller, data byte 2 = value
+			if (data == 0xFF) {
+				data = byte;
+				break;
+			}
+			controller_change(data, byte);
+			data = 0xFF;
+			break;
+
+		case 0xc0:
+			// program change
+			if( presetController->getCurrPresetNumber() != byte )
+			{
+				_va->killAllVoices();
+				presetController->selectPreset((int) byte);
+			}
+			data = 0xff;
+			break;
+	
+		case 0xd0:
+			// channel pressure
+			// data byte = pressure (after-touch)
+			data = 0xff;
+			break;
+	
+		case 0xe0:
+			// pitch wheel
+			// 2 data bytes give a 14 bit value, least significant 7 bits
+			// first
+			if (data == 0xFF) {
+				data = byte;
+				break;
+			}
 			int bend = (int) ((data & 0x7F) | ((byte & 0x7F) << 7));
 			float fbend = (float) (bend - 0x2000) / (float) (0x2000);
 			pitch_wheel_change(fbend);
 			data = 0xFF;
-	    }
-	    break;
-
-	default:
+			break;
+	
+		default:
 #ifdef _DEBUG
-	    cout << "<MidiController> unknown status :" << hex <<
-		(int) status << "for data byte: " << hex << (int) byte <<
-		endl;
+			cout << "<MidiController> unknown status :" << hex <<
+			(int) status << "for data byte: " << hex << (int) byte <<
+			endl;
 #endif
-	    break;
-	}
+			break;
+		}
     }
 }
 
@@ -221,27 +215,18 @@ MidiController::pitch_wheel_change(float val)
 }
 
 void
-MidiController::dispatch_note(unsigned char ch, unsigned char note,
-			      unsigned char vel)
+MidiController::dispatch_note(unsigned char, unsigned char note, unsigned char vel)
 {
-#ifdef _DEBUG
-    cout << "<MidiController> note: " << (int) note
-	<< " velocity: " << (int) vel << endl;
-#endif
-    ch = 0;
-    float           v = (float) vel / (float) 127;
-    if (_va) {
-	if ((int) vel == 0)
-	    _va->noteOff((int) note);
-	else
-	    _va->noteOn((int) note, v);
-    }
+	static const float scale = 1.f/127.f;
+    if (!_va) return;
+	if (vel) _va->noteOn((int) note, (float)vel * scale);
+	else     _va->noteOff((int) note);
 }
 
 void
-MidiController::controller_change(unsigned char controller,
-				  unsigned char value)
+MidiController::controller_change(unsigned char cc, unsigned char value)
 {
+	static const float scale = 1.f/127.f;
     // controllers:
     // 0 - 31 continuous controllers 0 - 31, most significant byte
     // 32 - 63 continuous controllers 0 - 31, least significant byte
@@ -252,8 +237,7 @@ MidiController::controller_change(unsigned char controller,
 
     // from experimentation (with yamaha keyboards)
     // controller 0x40 (64) is the sustain pedal. (0 if off, 127 is on)
-
-    switch (controller) {
+    switch (cc) {
 		
 		case 64:
 		// sustain pedal
@@ -270,19 +254,10 @@ MidiController::controller_change(unsigned char controller,
 			break;
 
 		default:
-			if( last_active_controller.getValue() != controller )
-				last_active_controller.setValue( controller );
-			float fval = value/(float)127;
-#ifdef _DEBUG
-			cout << "<MidiController> controller: " 
-				<< (float) controller << " value: " 
-				<< (float) value << "fval " << fval << endl;
-#endif
-			if (controller<MAX_CC) 
-			midi_controllers[controller]->setValue(
-				fval*(midi_controllers[controller]->getMax()-
-					midi_controllers[controller]->getMin())
-				+midi_controllers[controller]->getMin() );
+			if( last_active_controller.getValue() != cc ) {
+				last_active_controller.setValue( cc );
+			}
+			getController(cc).SetNormalisedValue(value*scale);
 			break;
     }
 	return;
@@ -295,11 +270,10 @@ MidiController::setController( int controller_no, Parameter & param )
 		midi_controllers[controller_no] = &param;
 }
 
-Parameter &
-MidiController::getController( int controller_no )
+Parameter&
+MidiController::getController( int idx )
 {
-	if(controller_no>MAX_CC) return presetController->getCurrentPreset().getParameter("null");
-	else return *midi_controllers[controller_no];
+	return (idx < MAX_CC) ? *midi_controllers[idx] : presetController->getCurrentPreset().getParameter("null");
 }
 
 void
