@@ -25,13 +25,6 @@
 
 using namespace std;
 
-PresetController *presetController;
-MidiController *midi_controller;
-VoiceAllocationUnit *vau;
-GenericOutput *out;
-Config config;
-GUI *gui;
-
 
 string help_text =
 "usage: amSynth [options]\n\
@@ -51,9 +44,11 @@ options:\n\
 -z		run a performance benchmark\n\
 -h		show this usage message\n";
 
+Config config;
 
 
-int the_pipe[2];
+
+
 
 void sched_realtime()
 {
@@ -83,9 +78,11 @@ void sched_realtime()
 	}
 }
 
-void
-pipe_event( void *arg, int foo, GdkInputCondition ic )
+
+int gdk_input_pipe[2];
+void gdk_input_function(gpointer data, gint source, GdkInputCondition condition)
 {
+	GUI *gui = (GUI *)data;
 	gui->serve_request();
 }
 
@@ -161,7 +158,6 @@ amSynth comes with ABSOLUTELY NO WARRANTY\n\
 This is free software, and you are welcome to redistribute it\n\
 under certain conditions; see the file COPYING for details\n";
 
-	if( pipe( the_pipe ) ) cout << "pipe() error\n";
 	bool jack = false;
 	
 	int opt;
@@ -183,7 +179,7 @@ under certain conditions; see the file COPYING for details\n";
 	}
 	
 	install_default_files_if_reqd();
-	
+
 	// setup the configuration
 	config.Defaults ();
 	config.load ();
@@ -198,7 +194,16 @@ under certain conditions; see the file COPYING for details\n";
 
 	string amsynth_bank_file = config.current_bank_file;
 
-
+	//
+	// subsystem initialisation
+	//
+	
+	PresetController *presetController;
+	MidiController *midi_controller;
+	VoiceAllocationUnit *vau;
+	GenericOutput *out;
+	GUI *gui;
+	
 	presetController = new PresetController();
 	
 	
@@ -238,13 +243,7 @@ under certain conditions; see the file COPYING for details\n";
 		std::cerr << "failed to open any audio device\n\n";
 		exit (-1);
 	}
-	
-	//~ out = new AudioOutput ();
-	//~ int res = out->init (config);
-	//~ if (0 != res)
-	//~ {
-		//~ std::cerr << "AudioOutput::init() failed with code %d" << res;
-	//~ }
+
 	
 	vau = new VoiceAllocationUnit;
 	vau->SetSampleRate (config.sample_rate);
@@ -287,17 +286,18 @@ under certain conditions; see the file COPYING for details\n";
 	presetController->getCurrentPreset().AddListenerToAll (vau);
 
 	Gtk::Main kit( &argc, &argv ); // this can be called SUID
-	
-	// make GDK loop read events from the pipe
-	gdk_input_add( the_pipe[0], GDK_INPUT_READ, &pipe_event, (void*)NULL );
 
 	// give audio/midi threads time to start up first..
 	if (jack) sleep (1);
 
 	// this can be called SUID:
-	gui = new GUI (config, *midi_controller, *vau, the_pipe, out, out->getTitle());
+	if( pipe( gdk_input_pipe ) ) cout << "pipe() error\n";
+	gui = new GUI (config, *midi_controller, *vau, gdk_input_pipe, out, out->getTitle());
 	gui->setPresetController ( *presetController );
 	gui->init();
+	
+	// make GDK loop read events from the pipe
+	gdk_input_add( gdk_input_pipe[0], GDK_INPUT_READ, &gdk_input_function, gui );
 	
 	// cannot be called SUID:
 	kit.run();
