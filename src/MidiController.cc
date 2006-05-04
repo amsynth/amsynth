@@ -1,5 +1,5 @@
 /* amSynth 
- * (c) 2001-2005 Nick Dowell 
+ * (c) 2001-2006 Nick Dowell 
  */
 
 #include "MidiController.h"
@@ -7,23 +7,17 @@
 
 using namespace std;
 
-#define MIDI_BUF_SIZE 64
-
-void sched_realtime (); // defined in main.cc
-
 MidiController::MidiController( Config & config )
 :	last_active_controller ("last_active_cc", (Param) -1, 0, 0, MAX_CC, 1)
 ,	_handler(NULL)
 {
 	this->config = &config;
-	_buffer = new unsigned char[MIDI_BUF_SIZE];
 	presetController = 0;
 	for( int i=0; i<MAX_CC; i++ ) midi_controllers[i] = 0;
 }
 
 MidiController::~MidiController()
 {
-	delete[] _buffer;
 }
 
 void
@@ -57,45 +51,6 @@ MidiController::setPresetController(PresetController & pc)
 	}
 	file.close();
 }
-
-int
-MidiController::init	( )
-{
-	if( midi.open( *config ) == -1 )
-	{
-		cout << "<MidiController> failed to init MIDI. midi_driver:" 
-			<< config->midi_driver << endl;
-		return -1;
-	}
-	return 0;
-}
-
-void
-MidiController::ThreadAction ()
-{
-	sched_realtime ();
-    while (!ShouldStop ())
-	{
-		bzero(_buffer, MIDI_BUF_SIZE);
-		int bytes_read = midi.read(_buffer, MIDI_BUF_SIZE);
-		if (bytes_read == -1)
-		{
-			cout << "error reading from midi device" << endl;
-			break;
-		}
-		if (bytes_read > 0)	HandleMidiData(_buffer, bytes_read);
-	}
-    midi.close();
-}
-
-// need to kill the thread, otherwise it waits indefinitely for the next incoming byte
-void
-MidiController::Stop ()
-{ 
-	Thread::Kill (); 
-	Thread::Join ();
-}
-
 
 void
 MidiController::HandleMidiData(unsigned char* bytes, unsigned numBytes)
@@ -311,7 +266,7 @@ MidiController::sendMidi_values       ()
                       << midi_controllers[i]->getValue() 
                       << " midiValue = " << midiValue << endl;
 #endif
-                      midi.write_cc(0,i,midiValue);
+                      if (_midiIface) _midiIface->write_cc(0,i,midiValue);
               }
       }
       return 0;

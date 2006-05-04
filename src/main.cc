@@ -200,6 +200,7 @@ under certain conditions; see the file COPYING for details\n";
 	
 	PresetController *presetController;
 	MidiController *midi_controller;
+	MidiInterface* midi_interface;
 	VoiceAllocationUnit *vau;
 	GenericOutput *out;
 	GUI *gui;
@@ -263,15 +264,17 @@ under certain conditions; see the file COPYING for details\n";
 	if (config.debug_drivers) std::cerr << "\n\n*** INITIALISING MIDI ENGINE...\n";
 	
 	config.alsa_seq_client_name = out->getTitle();
-
-	midi_controller = new MidiController( config );
-	if (midi_controller->init () != 0)
+	
+	midi_interface = new MidiInterface();
+	if (midi_interface->open(config) != 0)
 	{
-		std::cerr << "failed to open any midi device\n\n";
+		std::cerr << "couldn't to open a midi device\n\n";
 		exit (-1);
 	}
-	
-	midi_controller->Run ();
+
+	midi_controller = new MidiController( config );
+	midi_interface->SetMidiStreamReceiver(midi_controller);
+	midi_interface->Run();
 
 	if (config.debug_drivers) std::cerr << "*** DONE :)\n\n";
   
@@ -322,10 +325,11 @@ under certain conditions; see the file COPYING for details\n";
 	
 	if (config.xruns) std::cerr << config.xruns << " audio buffer underruns occurred\n";
 	
-	midi_controller->Stop ();
+	midi_interface->Stop ();
 
 	delete presetController;
 	delete midi_controller;
+	delete midi_interface;
 	delete vau;
 	delete out;
 	return 0;

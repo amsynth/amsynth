@@ -4,31 +4,19 @@
 
 #include "MidiInterface.h"
 
+#define MIDI_BUF_SIZE 64
+void sched_realtime (); // defined in main.cc
 using namespace std;
 
-int
-MidiInterface::read(unsigned char *bytes, unsigned maxBytes)
+int MidiInterface::write_cc(unsigned int channel, unsigned int param, unsigned int val)
 {
-	return midi->read(bytes, maxBytes);
-}
-
-int
-MidiInterface::write_cc(unsigned int channel, unsigned int param, unsigned int val)
-{
-      return midi->write_cc(channel, param, val);
-}
-
-void MidiInterface::close()
-{
-	midi->close();
-#ifdef _DEBUG
-	cout << "<MidiInterface::close()> closed Midi Device" << endl;
-#endif
-	//  delete midi; // this is (was) causing a Segfault....
+	return (midi) ? midi->write_cc(channel, param, val) : -7;
 }
 
 int MidiInterface::open( Config & config )
 {
+	if (midi) return 0;
+	
 	if (config.midi_driver == "auto")
 	{
 		//try ALSA
@@ -102,11 +90,56 @@ if (config.debug_drivers)
 	return -1;
 }
 
-MidiInterface::MidiInterface()
+
+void MidiInterface::close()
 {
+	if (midi) {
+		midi->close();
+		delete midi;
+	}
+}
+
+void
+MidiInterface::ThreadAction ()
+{
+	sched_realtime ();
+    while (!ShouldStop () && midi)
+	{
+		bzero(_buffer, MIDI_BUF_SIZE);
+		int bytes_read = midi->read(_buffer, MIDI_BUF_SIZE);
+		if (bytes_read == -1)
+		{
+			cout << "error reading from midi device" << endl;
+			break;
+		}
+		if (bytes_read > 0 && _handler) _handler->HandleMidiData(_buffer, bytes_read);
+	}
+}
+
+// need to kill the thread, otherwise it waits indefinitely for the next incoming byte
+void MidiInterface::Stop ()
+{ 
+	Thread::Kill (); 
+	Thread::Join ();
+}
+
+void MidiInterface::SetMidiStreamReceiver(MidiStreamReceiver* in)
+{
+	if (_handler) _handler->SetMidiInterface(NULL);
+	_handler = in;
+	if (_handler) _handler->SetMidiInterface(this);
+}
+	
+MidiInterface::MidiInterface()
+:	midi(NULL)
+,	_handler(NULL)
+{
+	_buffer = new unsigned char[MIDI_BUF_SIZE];
 }
 
 MidiInterface::~MidiInterface()
 {
+	delete[] _buffer;
     close();
 }
+

@@ -35,18 +35,18 @@ public:
 	virtual void HandleMidiProgramChange(uchar program) {}
 };
 
-class MidiController : public Thread
+class MidiController : public MidiStreamReceiver
 {
 public:
 	MidiController( Config & config );
 	virtual ~MidiController();
 
-	int	init			( );
-
-	void	Stop ();
+	int		init();
 
 	void	setPresetController	(PresetController & pc);
 	void	SetMidiEventHandler(MidiEventHandler* h) { _handler = h; }
+	
+	virtual void HandleMidiData(unsigned char* bytes, unsigned numBytes);
 
 	void	saveConfig ();
 
@@ -57,20 +57,14 @@ public:
 	void	set_midi_channel	( int ch );
 	int     sendMidi_values		();
 
-protected:
-	void	ThreadAction ();
-
 private:
-    void HandleMidiData(unsigned char* bytes, unsigned numBytes);
     void dispatch_note(unsigned char ch,
 		       unsigned char note, unsigned char vel);
     void controller_change(unsigned char controller, unsigned char value);
     void pitch_wheel_change(float val);
 
-    MidiInterface midi;
     PresetController *presetController;
 	Config *config;
-    unsigned char *_buffer;
     unsigned char status, data, channel;
 	Parameter last_active_controller;
 	Parameter *midi_controllers[MAX_CC];
