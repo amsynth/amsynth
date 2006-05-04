@@ -1,5 +1,5 @@
 /* Synth--
- * (c) 2001 Nick Dowell
+ * (c) 2001-2006 Nick Dowell
  **/
 
 #ifndef _OSS_MIDI_DRIVER_H
@@ -20,7 +20,7 @@ class OSSMidiDriver:public MidiDriver {
 public:
   OSSMidiDriver();
   virtual ~OSSMidiDriver();
-  int read(unsigned char *midi_event_buffer);
+  int read(unsigned char *bytes, unsigned maxBytes);
   int write_cc(unsigned int channel, unsigned int param, unsigned int value);
   int open( Config & config );
   int close();

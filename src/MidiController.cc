@@ -7,6 +7,8 @@
 
 using namespace std;
 
+#define MIDI_BUF_SIZE 64
+
 void sched_realtime (); // defined in main.cc
 
 MidiController::MidiController( Config & config )
@@ -75,7 +77,7 @@ MidiController::ThreadAction ()
     while (!ShouldStop ())
 	{
 		bzero(_buffer, MIDI_BUF_SIZE);
-		int bytes_read = midi.read(_buffer);
+		int bytes_read = midi.read(_buffer, MIDI_BUF_SIZE);
 		if (bytes_read == -1)
 		{
 			cout << "error reading from midi device" << endl;

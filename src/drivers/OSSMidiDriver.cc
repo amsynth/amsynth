@@ -1,13 +1,12 @@
 /* amSynth
- * (c) 2001,2002 Nick Dowell
+ * (c) 2001-2006 Nick Dowell
  **/
 #include "OSSMidiDriver.h"
 
 int
- OSSMidiDriver::read(unsigned char *midi_event_buffer)
+ OSSMidiDriver::read(unsigned char *bytes, unsigned maxBytes)
 {
-    int bar =::read(_oss_midi_fd, midi_event_buffer, MIDI_BUF_SIZE);
-    return bar;
+    return ::read(_oss_midi_fd, bytes, maxBytes);
 }
 
 

@@ -1,22 +1,18 @@
 /* Synth--
- * (c) 2001 Nick Dowell
+ * (c) 2001-2006 Nick Dowell
  **/
 
 #include "ALSAMidiDriver.h"
 #include "OSSMidiDriver.h"
 #include "../Config.h"
 
-/**
- * \class MidiInterface
- * \brief An all-singing all-dancing midi interface driver.
- */
 class MidiInterface {
   public:
     MidiInterface();
     ~MidiInterface();
     int open( Config & config );
     void close();
-    int read(unsigned char *buffer);
+    int read(unsigned char *bytes, unsigned maxBytes);
     int write_cc(unsigned int channel, unsigned int param, unsigned int value);
   private:
      MidiDriver * midi;

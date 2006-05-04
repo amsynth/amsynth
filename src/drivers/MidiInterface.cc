@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2001 Nick Dowell
+ * (c) 2001-2006 Nick Dowell
  **/
 
 #include "MidiInterface.h"
@@ -7,9 +7,9 @@
 using namespace std;
 
 int
-MidiInterface::read(unsigned char *buffer)
+MidiInterface::read(unsigned char *bytes, unsigned maxBytes)
 {
-	return midi->read(buffer);
+	return midi->read(bytes, maxBytes);
 }
 
 int

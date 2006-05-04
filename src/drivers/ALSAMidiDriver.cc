@@ -8,15 +8,14 @@
 using namespace std;
 
 int
-ALSAMidiDriver::read(unsigned char *midi_event_buffer)
+ALSAMidiDriver::read(unsigned char *bytes, unsigned maxBytes)
 {
 	client_id = 0;
 #ifdef with_alsa
 	snd_seq_event_t *ev;
 	
 	snd_seq_event_input( seq_handle, &ev );
-	_bytes_read = snd_midi_event_decode
-		( seq_midi_parser, midi_event_buffer, 32, ev );
+	_bytes_read = snd_midi_event_decode(seq_midi_parser, bytes, maxBytes, ev);
 	snd_seq_free_event( ev );
 
 	return _bytes_read;
