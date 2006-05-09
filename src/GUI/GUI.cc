@@ -52,17 +52,10 @@ GUI::delete_event_impl(GdkEventAny *)
 	return true;
 }
 
-void
-GUI::serve_request()
-{
-	Request *r = (Request*) malloc (sizeof (Request)); if (!r) return;
-	if (read (pipe[0], r, sizeof(Request)) == sizeof(Request)) r->slot();
-	free (r);
-}
-
 GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 		int pipe[2], GenericOutput *audio, const char *title )
 :	clipboard_preset (new Preset)
+,	controller_map_dialog(NULL)
 {
 #ifdef _DEBUG
 	cout << "<GUI::GUI()>" << endl;
@@ -324,7 +317,7 @@ GUI::create_menus	( )
 void
 GUI::config_controllers()
 {
-    manage(new ControllerMapDialog( pipe[1], *midi_controller, *preset_controller ));
+	if (controller_map_dialog) controller_map_dialog->show_all();
 }
 
 
@@ -568,6 +561,7 @@ GUI::idle_callback()
 
 GUI::~GUI()
 {
+	delete controller_map_dialog;
 }
 
 void
@@ -589,6 +583,7 @@ void
 GUI::setPresetController(PresetController & p_c)
 {
     preset_controller = &p_c;
+//	controller_map_dialog = new ControllerMapDialog(pipe[1], midi_controller, preset_controller);
 }
 
 void
@@ -680,4 +675,11 @@ GUI::changed_voices	( )
 {
 	config->polyphony = (int)(adj_voices->get_value ());
 	if (vau) vau->SetMaxVoices (config->polyphony);
+}
+
+void GUI::GdkInputFunction(gpointer data, gint source, GdkInputCondition condition)
+{
+	static Request req;
+	if (read (source, &req, sizeof(Request)) == sizeof(Request)) req.slot();
+
 }

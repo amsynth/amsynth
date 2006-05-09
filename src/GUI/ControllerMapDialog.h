@@ -19,8 +19,8 @@ class ControllerMapDialog : public Gtk::Window, public UpdateListener
 {
 public:
 		ControllerMapDialog	( int pipe_d,
-					MidiController & mc,
-					PresetController & pc );
+					MidiController* mc,
+					PresetController* pc );
 		~ControllerMapDialog	( );
     
 	void	update			( );

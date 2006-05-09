@@ -78,14 +78,6 @@ void sched_realtime()
 	}
 }
 
-
-int gdk_input_pipe[2];
-void gdk_input_function(gpointer data, gint source, GdkInputCondition condition)
-{
-	GUI *gui = (GUI *)data;
-	gui->serve_request();
-}
-
 int fcopy (const char * dest, const char *source)
 {
 	FILE *in = fopen (source,"r");
@@ -294,13 +286,14 @@ under certain conditions; see the file COPYING for details\n";
 	if (jack) sleep (1);
 
 	// this can be called SUID:
+	int gdk_input_pipe[2];
 	if( pipe( gdk_input_pipe ) ) cout << "pipe() error\n";
 	gui = new GUI (config, *midi_controller, *vau, gdk_input_pipe, out, out->getTitle());
 	gui->setPresetController ( *presetController );
 	gui->init();
 	
 	// make GDK loop read events from the pipe
-	gdk_input_add( gdk_input_pipe[0], GDK_INPUT_READ, &gdk_input_function, gui );
+	gdk_input_add(gdk_input_pipe[0], GDK_INPUT_READ, &GUI::GdkInputFunction, NULL);
 	
 	// cannot be called SUID:
 	kit.run();

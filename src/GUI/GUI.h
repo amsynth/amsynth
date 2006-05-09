@@ -52,7 +52,8 @@ public:
 	int	delete_events		(GdkEventAny *, Gtk::Window *dialog)
 					{ dialog->hide_all(); return 0; };
 	void	update();
-	void	serve_request();
+
+	static void GdkInputFunction(gpointer data, gint source, GdkInputCondition condition);
 
 protected:
 	virtual void	on_hide () { Gtk::Main::quit(); }

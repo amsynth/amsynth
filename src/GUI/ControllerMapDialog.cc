@@ -20,12 +20,15 @@ using std::cout;
 using namespace std;
 
 ControllerMapDialog::ControllerMapDialog
-		( int pipe_d, MidiController & mc, PresetController & pc )
+		( int pipe_d, MidiController* mc, PresetController* pc )
+:	piped( pipe_d )
+,	midi_controller( mc )
+,	preset_controller( pc )
 {
-	piped = pipe_d;
-	midi_controller = &mc;
-	preset_controller = &pc;
 	m_cc = 0;
+
+	assert(midi_controller);
+	assert(preset_controller);
 	
 	set_title( "MIDI Controller Config" );
 	set_resizable (false);
@@ -102,8 +105,6 @@ ControllerMapDialog::ControllerMapDialog
 	hbox->add( *vbox );
 	hbox->add( *(manage( new Gtk::Label () )) );
 	add( *hbox );
-	
-	show_all();
 }
 
 
