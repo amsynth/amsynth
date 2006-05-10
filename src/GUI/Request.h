@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2002-2005 Nick Dowell
+ * (c) 2002-2006 Nick Dowell
  */
 
 #ifndef _REQUEST_H
@@ -7,10 +7,8 @@
 
 #include <sigc++/slot.h>
 
-struct __Request {
+typedef struct {
   sigc::slot<void> slot;
-};
-
-typedef struct __Request Request;
+} Request;
 
 #endif
