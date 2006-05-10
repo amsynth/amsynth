@@ -110,11 +110,12 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 int
 ALSAmmapAudioDriver::open( Config & config )
 {
+#ifdef with_alsa
 	if (playback_handle != NULL) return 0;
 	
 	_channels = config.channels;
 	_rate = config.sample_rate;
-#ifdef with_alsa
+
 	if(snd_pcm_open(&playback_handle, config.alsa_audio_device.c_str(), SND_PCM_STREAM_PLAYBACK, 0)<0){
 		cerr << "ALSA: cannot open audio device " << config.alsa_audio_device << endl;
 		return -1;
@@ -170,8 +171,10 @@ int ALSAmmapAudioDriver::setRealtime()
 }
 
 ALSAmmapAudioDriver::ALSAmmapAudioDriver()
-:	playback_handle (NULL)
 {
+#ifdef with_alsa
+	playback_handle = NULL;
+#endif
 }
 
 ALSAmmapAudioDriver::~ALSAmmapAudioDriver()

@@ -109,9 +109,9 @@ int ALSAMidiDriver::open( Config & config )
 }
 
 ALSAMidiDriver::ALSAMidiDriver()
-:	seq_handle (NULL)
 {
 #ifdef with_alsa
+	seq_handle = NULL;
 	if( snd_midi_event_new( 32, &seq_midi_parser ) )
 		cout << "Error creating midi event parser\n";
 #endif
