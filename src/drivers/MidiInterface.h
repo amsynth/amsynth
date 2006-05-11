@@ -2,6 +2,9 @@
  * (c) 2001-2006 Nick Dowell
  **/
 
+#ifndef _MidiInterface_h
+#define _MidiInterface_h
+
 #include "ALSAMidiDriver.h"
 #include "OSSMidiDriver.h"
 
@@ -25,22 +28,25 @@ class MidiInterface : public Thread
 {
 public:
     MidiInterface();
-    ~MidiInterface();
+    virtual ~MidiInterface();
 	
-	int open(Config&);
-	void close();
+	virtual int open(Config&);
+	virtual void close();
 	
-	void SetMidiStreamReceiver(MidiStreamReceiver* in);
+	virtual void SetMidiStreamReceiver(MidiStreamReceiver* in);
 
-    int write_cc(unsigned int channel, unsigned int param, unsigned int value);
+    virtual int write_cc(unsigned int channel, unsigned int param, unsigned int value);
 	
 	virtual void Stop();
 	
 protected:
 	virtual void ThreadAction();
+
+	MidiStreamReceiver* _handler;
 	
 private:
      MidiDriver * midi;
 	 unsigned char *_buffer;
-	 MidiStreamReceiver* _handler;
 };
+
+#endif
