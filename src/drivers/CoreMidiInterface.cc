@@ -18,9 +18,11 @@ public:
 	
 	virtual int open(Config&);
 	virtual void close();
-
+	
 protected:
-		
+
+	virtual void ThreadAction() {};
+	
 	static void midiNotifyProc (const MIDINotification*, void*);
 	static void midiReadProc (const MIDIPacketList*, void*, void*);
 	
