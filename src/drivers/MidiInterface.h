@@ -5,9 +5,6 @@
 #ifndef _MidiInterface_h
 #define _MidiInterface_h
 
-#include "ALSAMidiDriver.h"
-#include "OSSMidiDriver.h"
-
 #include "../Config.h"
 #include "../Thread.h"
 
@@ -45,8 +42,8 @@ protected:
 	MidiStreamReceiver* _handler;
 	
 private:
-     MidiDriver * midi;
-	 unsigned char *_buffer;
+	class MidiDriver * midi;
+	unsigned char *_buffer;
 };
 
 #endif

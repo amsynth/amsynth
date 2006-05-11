@@ -3,15 +3,41 @@
  **/
 
 #include "ALSAMidiDriver.h"
+
+#ifdef with_alsa
+
+#define ALSA_PCM_OLD_HW_PARAMS_API
+#define ALSA_PCM_OLD_SW_PARAMS_API
+#include <alsa/asoundlib.h>
 #include <unistd.h>
+#include <iostream>
 
 using namespace std;
+
+
+class ALSAMidiDriver : public MidiDriver
+{
+public:
+	ALSAMidiDriver		( );
+	virtual ~ALSAMidiDriver		( );
+	int 	read			(unsigned char *bytes, unsigned maxBytes);
+	int		write_cc		(unsigned int channel, unsigned int param, unsigned int value);
+	int 	open			( Config & config );
+	int 	close			( );
+	int 	get_alsa_client_id	( )	{ return client_id; };
+private:
+	snd_seq_t		*seq_handle;
+	snd_midi_event_t	*seq_midi_parser;
+	int 			portid;
+	int				portid_out;
+	int			client_id;
+	int 			_bytes_read;
+};
 
 int
 ALSAMidiDriver::read(unsigned char *bytes, unsigned maxBytes)
 {
 	client_id = 0;
-#ifdef with_alsa
 	snd_seq_event_t *ev;
 	
 	snd_seq_event_input( seq_handle, &ev );
@@ -19,9 +45,6 @@ ALSAMidiDriver::read(unsigned char *bytes, unsigned maxBytes)
 	snd_seq_free_event( ev );
 
 	return _bytes_read;
-#else
-	return -1;
-#endif
 }
 
 int
@@ -29,7 +52,6 @@ ALSAMidiDriver::write_cc(unsigned int channel, unsigned int param, unsigned int 
 {
       int ret=0;
       client_id = 0;
-#ifdef with_alsa
       snd_seq_event_t ev;
 
 
@@ -49,25 +71,18 @@ ALSAMidiDriver::write_cc(unsigned int channel, unsigned int param, unsigned int 
       snd_seq_free_event( &ev );
 
       return ret;
-#else
-      return -1;
-#endif
 }
 
 
 
 int ALSAMidiDriver::close()
 {
-#ifdef with_alsa
 	if (seq_handle) snd_seq_close (seq_handle);
 	seq_handle = NULL;
-#endif
-	return 0;
 }
 
 int ALSAMidiDriver::open( Config & config )
 {
-#ifdef with_alsa
 	if (seq_handle) return 0;
 	
 	if (snd_seq_open(&seq_handle, "default", SND_SEQ_OPEN_DUPLEX, 0) < 0) {
@@ -103,21 +118,21 @@ int ALSAMidiDriver::open( Config & config )
 	}
 
 	return 0;
-#else
-	return -1;
-#endif
 }
 
 ALSAMidiDriver::ALSAMidiDriver()
 {
-#ifdef with_alsa
 	seq_handle = NULL;
 	if( snd_midi_event_new( 32, &seq_midi_parser ) )
 		cout << "Error creating midi event parser\n";
-#endif
 }
 
 ALSAMidiDriver::~ALSAMidiDriver()
 {
 	close();
 }
+
+MidiDriver* CreateAlsaMidiDriver() { return new ALSAMidiDriver; }
+#else
+MidiDriver* CreateAlsaMidiDriver() { return NULL; }
+#endif

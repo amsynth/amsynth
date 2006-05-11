@@ -4,6 +4,11 @@
 
 #include "MidiInterface.h"
 
+#include "ALSAMidiDriver.h"
+#include "OSSMidiDriver.h"
+
+#include <iostream>
+
 #define MIDI_BUF_SIZE 64
 void sched_realtime (); // defined in main.cc
 using namespace std;
@@ -20,34 +25,30 @@ int MidiInterface::open( Config & config )
 	if (config.midi_driver == "auto")
 	{
 		//try ALSA
-		midi = new ALSAMidiDriver;
-if (config.debug_drivers)
-		cout << "<MidiInterface> Trying to open ALSA midi device...\n";
-
-		if ((midi->open(config)) == 0)
+		if (config.debug_drivers) cout << "<MidiInterface> Trying to open ALSA midi device...\n";
+		if (midi = CreateAlsaMidiDriver())
 		{
-			config.current_midi_driver = "ALSA";
-			config.alsa_seq_client_id = midi->get_alsa_client_id();
-if (config.debug_drivers)
-			cout << "<MidiInterface> opened ALSA midi device\n";
-
-			return 0;
+			if ((midi->open(config)) == 0)
+			{
+				config.current_midi_driver = "ALSA";
+				config.alsa_seq_client_id = midi->get_alsa_client_id();
+				if (config.debug_drivers) cout << "<MidiInterface> opened ALSA midi device\n";
+				return 0;
+			}
+			if (config.debug_drivers) cout << "<MidiInterface> failed to open ALSA midi device, falling back to OSS.." << endl;
+			delete midi; midi = NULL;
 		}
-if (config.debug_drivers)
-		cout << "<MidiInterface> failed to open ALSA midi device, " <<
-		"falling back to OSS.." << endl;
-
-		delete midi;
 
 		//try OSS
-		midi = new OSSMidiDriver;
-		if ((midi->open(config)) == 0) 
+		if (midi = CreateOSSMidiDriver())
 		{
-			config.current_midi_driver = "OSS";
-if (config.debug_drivers)
-			cout << "<MidiInterface> opened OSS midi device\n";
-
-			return 0;
+			if ((midi->open(config)) == 0) 
+			{
+				config.current_midi_driver = "OSS";
+				if (config.debug_drivers) cout << "<MidiInterface> opened OSS midi device\n";
+				return 0;
+			}
+			delete midi; midi = NULL;
 		}
 
 		cout << "<MidiInterface> failed to open OSS midi device.\n";
@@ -56,36 +57,34 @@ if (config.debug_drivers)
 	}
 	else if (config.midi_driver == "oss" || config.midi_driver == "OSS")
 	{
-		midi = new OSSMidiDriver;
-		if ((midi->open(config)) == 0)
+		if (midi = CreateOSSMidiDriver())
 		{
-			config.current_midi_driver = "OSS";
-if (config.debug_drivers)
-			cout << "<MidiInterface> opened OSS midi device\n";
-
-			return 0;
+			if ((midi->open(config)) == 0) 
+			{
+				config.current_midi_driver = "OSS";
+				if (config.debug_drivers) cout << "<MidiInterface> opened OSS midi device\n";
+				return 0;
+			}
+			delete midi; midi = NULL;
 		}
-
 		cout << "<MidiInterface> failed to open OSS midi device.\n";
 		cout << "<MidiInterface> couldn't open any MIDI drivers :-(\n";
 		return -1;
 	} 
 	else if (config.midi_driver == "alsa" || config.midi_driver == "ALSA")
 	{
-		midi = new ALSAMidiDriver;
-if (config.debug_drivers)
-		cout << "<MidiInterface> Trying to open ALSA midi device...\n";
-
-		if ((midi->open(config)) == 0)
+		if (midi = CreateAlsaMidiDriver())
 		{
-			config.current_midi_driver = "ALSA";
-			config.alsa_seq_client_id = midi->get_alsa_client_id();
-if (config.debug_drivers)
-			cout << "<MidiInterface> opened ALSA midi device!\n";
-
-			return 0;
+			if ((midi->open(config)) == 0)
+			{
+				config.current_midi_driver = "ALSA";
+				config.alsa_seq_client_id = midi->get_alsa_client_id();
+				if (config.debug_drivers) cout << "<MidiInterface> opened ALSA midi device\n";
+				return 0;
+			}
+			if (config.debug_drivers) cout << "<MidiInterface> failed to open ALSA midi device, falling back to OSS.." << endl;
+			delete midi; midi = NULL;
 		}
-		return -1;
 	}
 	return -1;
 }

@@ -9,6 +9,23 @@
 
 #include "OSSMidiDriver.h"
 
+class OSSMidiDriver : public MidiDriver
+{
+public:
+	OSSMidiDriver();
+  	virtual ~OSSMidiDriver();
+	
+	int open( Config & config );
+	int close();
+	
+	int read(unsigned char *bytes, unsigned maxBytes);
+	int write_cc(unsigned int channel, unsigned int param, unsigned int value);
+	
+private:
+		int _fd;
+};
+
+
 OSSMidiDriver::OSSMidiDriver()
 :	_fd(-1)
 {
@@ -48,3 +65,5 @@ int OSSMidiDriver::write_cc(unsigned int channel, unsigned int param, unsigned i
 {
     return -1;
 }
+
+MidiDriver* CreateOSSMidiDriver() { return new OSSMidiDriver; }
