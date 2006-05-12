@@ -26,7 +26,7 @@ int MidiInterface::open( Config & config )
 	{
 		//try ALSA
 		if (config.debug_drivers) cout << "<MidiInterface> Trying to open ALSA midi device...\n";
-		if (midi = CreateAlsaMidiDriver())
+		if (NULL != (midi = CreateAlsaMidiDriver()))
 		{
 			if ((midi->open(config)) == 0)
 			{
@@ -40,7 +40,7 @@ int MidiInterface::open( Config & config )
 		}
 
 		//try OSS
-		if (midi = CreateOSSMidiDriver())
+		if (NULL != (midi = CreateOSSMidiDriver()))
 		{
 			if ((midi->open(config)) == 0) 
 			{
@@ -57,7 +57,7 @@ int MidiInterface::open( Config & config )
 	}
 	else if (config.midi_driver == "oss" || config.midi_driver == "OSS")
 	{
-		if (midi = CreateOSSMidiDriver())
+		if (NULL != (midi = CreateOSSMidiDriver()))
 		{
 			if ((midi->open(config)) == 0) 
 			{
@@ -73,7 +73,7 @@ int MidiInterface::open( Config & config )
 	} 
 	else if (config.midi_driver == "alsa" || config.midi_driver == "ALSA")
 	{
-		if (midi = CreateAlsaMidiDriver())
+		if (NULL != (midi = CreateAlsaMidiDriver()))
 		{
 			if ((midi->open(config)) == 0)
 			{
@@ -130,8 +130,8 @@ void MidiInterface::SetMidiStreamReceiver(MidiStreamReceiver* in)
 }
 	
 MidiInterface::MidiInterface()
-:	midi(NULL)
-,	_handler(NULL)
+:	_handler(NULL)
+,	midi(NULL)
 {
 	_buffer = new unsigned char[MIDI_BUF_SIZE];
 }

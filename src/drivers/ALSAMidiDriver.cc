@@ -79,6 +79,7 @@ int ALSAMidiDriver::close()
 {
 	if (seq_handle) snd_seq_close (seq_handle);
 	seq_handle = NULL;
+	return 0;
 }
 
 int ALSAMidiDriver::open( Config & config )

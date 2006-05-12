@@ -54,8 +54,8 @@ GUI::delete_event_impl(GdkEventAny *)
 
 GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 		int pipe[2], GenericOutput *audio, const char *title )
-:	clipboard_preset (new Preset)
-,	controller_map_dialog(NULL)
+:	controller_map_dialog(NULL)
+,	clipboard_preset (new Preset)
 {
 #ifdef _DEBUG
 	cout << "<GUI::GUI()>" << endl;
