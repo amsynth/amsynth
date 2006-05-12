@@ -33,6 +33,13 @@ PresetControllerView::PresetControllerView( int pipe_d, VoiceAllocationUnit & va
 
 	Gtk::Label *blank = manage (new Gtk::Label ("    "));
 	add (*blank);
+	
+	
+	Gtk::Button* aud = manage(new Gtk::Button);
+	aud->add_label("Audition");
+	aud->signal_pressed().connect(bind(sigc::mem_fun(vau, &VoiceAllocationUnit::HandleMidiNoteOn), 60, 1.0f));
+	aud->signal_released().connect(bind(sigc::mem_fun(vau, &VoiceAllocationUnit::HandleMidiNoteOff), 60, 0.0f));
+	add(*aud);
 
 	Gtk::Button *panic = manage (new Gtk::Button);
 	panic->add_label ("Kill all voices");
