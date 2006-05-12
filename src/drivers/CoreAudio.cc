@@ -1,9 +1,9 @@
 /*
- *  CoreMidiInterface.cc
+ *  CoreAudio.cc
  *  amsynth
  */
 
-#include "CoreMidiInterface.h"
+#include "CoreAudio.h"
 
 #if (__APPLE__)
 

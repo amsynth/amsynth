@@ -1,10 +1,10 @@
 /*
- *  CoreMidiInterface.h
+ *  CoreAudio.h
  *  amsynth
  */
 
-#ifndef _CoreMidiInterface_h
-#define _CoreMidiInterface_h
+#ifndef _CoreAudio_h
+#define _CoreAudio_h
 
 #include "AudioOutput.h"
 #include "MidiInterface.h"
