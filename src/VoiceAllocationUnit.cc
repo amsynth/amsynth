@@ -135,19 +135,21 @@ VoiceAllocationUnit::purgeVoices()
 void
 VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 {
-	memset (l, 0, nframes * sizeof (float));
+	// if stream is interleaved, do mono processing (non-interleaved) in the end part of the buffer.
+	float* vb = (1 < stride) ? l+nframes : l;
+	memset(vb, 0, nframes * sizeof (float));
 
 	int framesLeft=nframes; int j=0;
 	while (0 < framesLeft)
 	{
 		int fr = (framesLeft < kMaxGrainSize) ? framesLeft : kMaxGrainSize;
-		for (unsigned i=0; i<_voices.size(); i++) if (active[i]) _voices[i]->ProcessSamplesMix (l+j, fr, mMasterVol);
+		for (unsigned i=0; i<_voices.size(); i++) if (active[i]) _voices[i]->ProcessSamplesMix (vb+j, fr, mMasterVol);
 		j += fr; framesLeft -= fr;
 	}
 
-	distortion->Process (l, nframes);
-	reverb->processreplace (l, l,r, nframes, 1, 1);
-	limiter->Process (l,r, nframes);
+	distortion->Process (vb, nframes);
+	reverb->processreplace (vb, l,r, nframes, 1, stride); // mono -> stereo
+	limiter->Process (l,r, nframes, stride);
 }
 
 void
