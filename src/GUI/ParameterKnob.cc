@@ -18,7 +18,7 @@ ParameterKnob::ParameterKnob( int pipe_d )
   
   adj->signal_value_changed().
     connect(sigc::bind(mem_fun(*this, &ParameterKnob::updateParam), adj));
-  knob.set_adjustment( *adj );
+  knob.set_adjustment(adj);
 	
   label.set_justify(Gtk::JUSTIFY_CENTER);
   pack_start(label,0,0);

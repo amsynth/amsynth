@@ -20,8 +20,8 @@ public:
 
 	void setFrames(const Glib::RefPtr<Gdk::Pixbuf>&, int x, int y, int frames);
 
-	void set_adjustment( Gtk::Adjustment & adjustment );
-	void adjUpdate( Gtk::Adjustment * _adj );
+	void set_adjustment(Gtk::Adjustment*);
+	void on_adj_value_changed();
 	
 protected:
 	virtual bool on_expose_event			(GdkEventExpose*);
@@ -31,11 +31,8 @@ protected:
   
 private:
 	void mouse_pos_change					(gint x, gint y);
-	bool pixmap_loaded;
 	Glib::RefPtr<Gdk::Pixbuf> pixmap;
-	GdkBitmap *bitmap;
-	bool				myadj;
-	Gtk::Adjustment		*adj;
+	Glib::RefPtr<Gtk::Adjustment> adj;
 	gint widget_x, widget_y;
 	gint frame, width, height, frames, center_x, center_y;
 };

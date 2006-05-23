@@ -9,20 +9,15 @@
 using namespace std;
 
 Knob::Knob()
-:	pixmap_loaded (false)
-,	bitmap (0)
-,	myadj (false)
-,	adj (0)
+:	adj(Glib::RefPtr<Gtk::Adjustment>::RefPtr(new Gtk::Adjustment(0.0, 0.0, 1.0, 0.01, 1.0, 0)))
 ,	frame (0)
 {
 	set_events (Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::POINTER_MOTION_MASK);
 	set_double_buffered(true);
-	if (NULL != (adj = new Gtk::Adjustment(0.0, 0.0, 1.0, 0.01, 1.0, 0))) myadj = true;
 }
 
 Knob::~Knob()
 {
-	if (myadj) delete adj;
 }
 
 void
@@ -38,29 +33,30 @@ Knob::setFrames(const Glib::RefPtr<Gdk::Pixbuf>& pix, int x, int y, int frames)
 }
 
 void
-Knob::set_adjustment( Gtk::Adjustment & adjustment )
+Knob::set_adjustment(Gtk::Adjustment* adjustment)
 {
-	delete adj;
-	myadj = false;
-	adj = &adjustment;
-	adj->signal_value_changed().connect(sigc::bind(mem_fun(*this, &Knob::adjUpdate), adj));
-	queue_draw();
+	adj = Glib::RefPtr<Gtk::Adjustment>::RefPtr(adjustment);
+	adj->signal_value_changed().connect(mem_fun(*this, &Knob::on_adj_value_changed));
+	on_adj_value_changed();
 }
 
 void
-Knob::adjUpdate(Gtk::Adjustment * _adj)
+Knob::on_adj_value_changed()
 {
-	queue_draw();
+	int newFrame = (int)(-0.5f + frames *
+						 (adj->get_value() - adj->get_lower()) /
+						 (adj->get_upper() - adj->get_lower()) );
+	
+	if (frame != newFrame)
+	{
+		frame = newFrame;
+		queue_draw();
+	}
 }
 
 bool
 Knob::on_expose_event			(GdkEventExpose *ev)
 {
-	frame = (gint)( ((adj->get_value()-adj->get_lower())/
-			(adj->get_upper()-adj->get_lower())) *frames);
-	
-	if(frame >= frames) frame = (frames-1);
-	
 	if (pixmap && ev)
 	{
 		GdkWindow* window = ev->window;
@@ -140,8 +136,6 @@ Knob::mouse_pos_change			(gint x_abs, gint y_abs)
 	float val = (angle-M_PI/6)/(M_PI*10/6);
 	val *= (adj->get_upper()-adj->get_lower());
 	val += (adj->get_lower());
-//	val *= (adj->get_upper()-adj->get_lower());
+	
 	adj->set_value(val);
-  
-	queue_draw();
 }
