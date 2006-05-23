@@ -25,7 +25,7 @@ public:
   void _update_();
   Gtk::Widget * getGtkWidget();
   void drawValue( bool draw );
-  void setPixmap( GdkPixmap *pix, gint x, gint y, gint frames );
+  void setFrames(const Glib::RefPtr<Gdk::Pixbuf>&, int x, int y, int numFrames);
   void set_style( Gtk::Style& style );
 	
 private:

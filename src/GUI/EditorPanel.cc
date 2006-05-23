@@ -3,14 +3,15 @@
  */
 
 #include "EditorPanel.h"
-#include <gtkmm/alignment.h>
+
+#include <gtkmm.h>
 
 #include "../Preset.h"
 #include "ParameterKnob.h"
 #include "ParameterSwitch.h"
 #include "RadioButtonParameterView.h"
 
-#include "knob.xpm"
+#include "knob_med.h"
 
 EditorPanel::EditorPanel	( Preset* preset, int piped )
 {
@@ -338,17 +339,14 @@ EditorPanel::set_x_font( const char *x_font_desc )
 void
 EditorPanel::on_realize	( )
 {
-  Gtk::VBox::on_realize();
+	Gtk::VBox::on_realize();
 	
-  GdkPixmap *pixmap;
-  GdkBitmap *bitmap;
-
-  pixmap = gdk_pixmap_create_from_xpm_d(
-					get_window()->gobj(),
-					&bitmap,
-					get_style()->gobj()->bg, 
-					knob_xpm);
-
-  for(int i=0; i < 31; i++)
-    parameterView[i]->setPixmap( pixmap, 50, 50, 15 );
+	Glib::RefPtr<Gdk::PixbufLoader> ldr = Gdk::PixbufLoader::create();
+	ldr->write (knob_med_png, sizeof(knob_med_png)); ldr->close ();
+	Glib::RefPtr<Gdk::Pixbuf> pixbuf = ldr->get_pixbuf();
+  
+	for(int i=0; i < 31; i++)
+	{
+		parameterView[i]->setFrames(pixbuf, 48, 48, 49);
+	}
 }

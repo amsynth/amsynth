@@ -10,14 +10,13 @@ using namespace std;
 
 Knob::Knob()
 :	pixmap_loaded (false)
-,	pixmap (0)
 ,	bitmap (0)
 ,	myadj (false)
 ,	adj (0)
 ,	frame (0)
 {
 	set_events (Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::POINTER_MOTION_MASK);
-	
+	set_double_buffered(true);
 	if (NULL != (adj = new Gtk::Adjustment(0.0, 0.0, 1.0, 0.01, 1.0, 0))) myadj = true;
 }
 
@@ -27,7 +26,7 @@ Knob::~Knob()
 }
 
 void
-Knob::setPixmap( GdkPixmap *pix, gint x, gint y, gint frames )
+Knob::setFrames(const Glib::RefPtr<Gdk::Pixbuf>& pix, int x, int y, int frames)
 {
 	width = x;
 	center_x = (gint)(x/2);
@@ -45,13 +44,13 @@ Knob::set_adjustment( Gtk::Adjustment & adjustment )
 	myadj = false;
 	adj = &adjustment;
 	adj->signal_value_changed().connect(sigc::bind(mem_fun(*this, &Knob::adjUpdate), adj));
-	on_expose_event (NULL);
+	queue_draw();
 }
 
 void
 Knob::adjUpdate(Gtk::Adjustment * _adj)
 {
-	on_expose_event (NULL);
+	queue_draw();
 }
 
 bool
@@ -62,15 +61,20 @@ Knob::on_expose_event			(GdkEventExpose *ev)
 	
 	if(frame >= frames) frame = (frames-1);
 	
-	if(pixmap)
-		gdk_draw_pixmap(
-				get_window()->gobj(),
-				get_style()->get_black_gc()->gobj(), 
-				pixmap,
-				width*frame, 0, 
-				0, 0, 
-				width, height);
-
+	if (pixmap && ev)
+	{
+		GdkWindow* window = ev->window;
+		GdkRegion* region = ev->region;
+		GdkGC* gc = get_style()->get_bg_gc(Gtk::STATE_NORMAL)->gobj();
+		
+		gdk_draw_rectangle(window, gc, 1 /*filled*/, 0, 0, width, height);
+		
+		gdk_pixbuf_render_to_drawable(pixmap->gobj(),
+									  window, gc,
+									  width, height*frame,
+									  0, 0, width, height,
+									  GDK_RGB_DITHER_NONE, 0, 0);
+	}
 	return TRUE;
 }
 
@@ -139,5 +143,5 @@ Knob::mouse_pos_change			(gint x_abs, gint y_abs)
 //	val *= (adj->get_upper()-adj->get_lower());
 	adj->set_value(val);
   
-	on_expose_event (NULL);
+	queue_draw();
 }

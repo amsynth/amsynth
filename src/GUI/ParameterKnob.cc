@@ -35,9 +35,9 @@ ParameterKnob::ParameterKnob( int pipe_d )
 }
 
 void
-ParameterKnob::setPixmap(GdkPixmap * pix, gint x, gint y, gint frames)
+ParameterKnob::setFrames(const Glib::RefPtr<Gdk::Pixbuf>& src, int x, int y, int numFrames)
 {
-  knob.setPixmap( pix, x, y, frames );
+	knob.setFrames(src, x,y, numFrames);
 }
 
 void 

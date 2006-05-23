@@ -2,8 +2,6 @@ noinst_LIBRARIES = libGUI.a
 
 INCLUDES = $(DEPS_CFLAGS)
 
-EXTRA_DIST = 	knob.xpm
-
 libGUI_a_SOURCES =	GUI.cc GUI.h \
 			ParameterKnob.cc ParameterKnob.h \
 			PresetControllerView.cc PresetControllerView.h \
@@ -14,4 +12,4 @@ libGUI_a_SOURCES =	GUI.cc GUI.h \
 			ParameterView.h controllers.h \
 			EditorPanel.h EditorPanel.cc \
 			ConfigDialog.h ConfigDialog.cpp \
-			amsynth_logo.h
+			amsynth_logo.h knob_med.h
