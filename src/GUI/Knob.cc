@@ -59,16 +59,10 @@ Knob::on_expose_event			(GdkEventExpose *ev)
 {
 	if (pixmap && ev)
 	{
-		GdkWindow* window = ev->window;
-		GdkRegion* region = ev->region;
-		GdkGC* gc = get_style()->get_bg_gc(Gtk::STATE_NORMAL)->gobj();
-		
-		gdk_draw_rectangle(window, gc, 1 /*filled*/, 0, 0, width, height);
-		
-		gdk_pixbuf_render_to_drawable(pixmap->gobj(),
-									  window, gc,
-									  width, height*frame,
-									  0, 0, width, height,
+		gdk_pixbuf_render_to_drawable(pixmap->gobj(), ev->window,
+									  get_style()->get_black_gc()->gobj(),
+									  get_width(), get_height()*frame,
+									  0, 0, get_width(), get_height(),
 									  GDK_RGB_DITHER_NONE, 0, 0);
 	}
 	return TRUE;
