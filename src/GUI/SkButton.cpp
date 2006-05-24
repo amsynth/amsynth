@@ -38,7 +38,6 @@ bool SkButton::on_expose_event			(GdkEventExpose* ev)
 {
 	if (ev && mPixbuf)
 	{
-		gdk_window_clear(ev->window);
 		gdk_pixbuf_render_to_drawable(mPixbuf->gobj(), ev->window,
 									  get_style()->get_black_gc()->gobj(),
 									  mSize.width, mSize.height*mState,
@@ -53,17 +52,16 @@ bool SkButton::on_button_press_event	(GdkEventButton* ev)
 	if (mParam) {
 		mParam->SetNormalisedValue(mState);
 	}
-	queue_draw();
 }
 
 void SkButton::BindToParameter(Parameter* p)
 {
-	p->addUpdateListener(*this);
 	mParam = p;
+	mParam->addUpdateListener(*this);
 }
 
 void SkButton::UpdateParameter(Param, float value)
 {
-	mState = (value > 0.5f) ? 1 : 0;
+	mState = (mParam->GetNormalisedValue() > 0.5f) ? 1 : 0;
 	queue_draw();
 }
