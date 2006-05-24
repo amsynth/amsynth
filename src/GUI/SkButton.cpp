@@ -7,13 +7,15 @@
 #include "SkButton.h"
 
 SkButton::SkButton()
-:	mState(0)
+:	mParam(NULL)
+,	mState(0)
 {	
 	set_events(Gdk::BUTTON_PRESS_MASK);	
 }
 
 SkButton::SkButton(const Glib::RefPtr<Gdk::Pixbuf>& img, int width, int height)
-:	mState(0)
+:	mParam(NULL)
+,	mState(0)
 {	
 	set_events(Gdk::BUTTON_PRESS_MASK);
 	SetPixbuf(img, width, height);
@@ -48,5 +50,20 @@ bool SkButton::on_expose_event			(GdkEventExpose* ev)
 bool SkButton::on_button_press_event	(GdkEventButton* ev)
 {
 	mState = mState ? 0 : 1;
+	if (mParam) {
+		mParam->SetNormalisedValue(mState);
+	}
+	queue_draw();
+}
+
+void SkButton::BindToParameter(Parameter* p)
+{
+	p->addUpdateListener(*this);
+	mParam = p;
+}
+
+void SkButton::UpdateParameter(Param, float value)
+{
+	mState = (value > 0.5f) ? 1 : 0;
 	queue_draw();
 }
