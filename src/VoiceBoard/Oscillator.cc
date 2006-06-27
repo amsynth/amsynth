@@ -8,9 +8,7 @@
 #include "Oscillator.h"
 
 // fmod is sloooooooooooow.
-#undef fmodf
-#undef fmodf
-inline float fmodf (float x, float y) {
+inline float ffmodf (float x, float y) {
 	while (x > y) x -= y;
 	return x;
 }
@@ -77,13 +75,13 @@ Oscillator::doSine(float *buffer, int nFrames)
 			if( rads > TWO_PI )			// then weve completed a circle
 				sync_offset = i;		// remember the offset
 	}
-	rads = fmodf((float)rads, (float)TWO_PI);			// overflows are bad!
+	rads = ffmodf((float)rads, (float)TWO_PI);			// overflows are bad!
 }
 
 float 
 Oscillator::sqr(float foo)
 {
-    if ((fmodf((float)foo, (float)TWO_PI)) < (mPulseWidth + 1) * PI)
+    if ((ffmodf((float)foo, (float)TWO_PI)) < (mPulseWidth + 1) * PI)
 	return 1.0;
     else
 	return -1.0;
@@ -103,14 +101,14 @@ Oscillator::doSquare(float *buffer, int nFrames)
 			if( rads > TWO_PI )			// then weve completed a circle
 				sync_offset = i;		// remember the offset
 	}
-    rads = fmodf((float)rads, (float)TWO_PI);
+    rads = ffmodf((float)rads, (float)TWO_PI);
 }
 
 
 float 
 Oscillator::saw(float foo)
 {
-    foo = fmodf((float)foo, (float)TWO_PI);
+    foo = ffmodf((float)foo, (float)TWO_PI);
     register float t = (float) (foo / (2 * PI));
     register float a = (mPulseWidth + 1) / 2;
     if (t < a / 2)
@@ -119,7 +117,7 @@ Oscillator::saw(float foo)
 	return (2 * t - 2) / a;
     else
 	return (1 - 2 * t) / (1 - a);
-//    return 1.0 - (fmodf((float)foo, (float)TWO_PI) / PI);
+//    return 1.0 - (ffmodf((float)foo, (float)TWO_PI) / PI);
 }
 
 void 
@@ -136,7 +134,7 @@ Oscillator::doSaw(float *buffer, int nFrames)
 			if( rads > TWO_PI )			// then weve completed a circle
 				sync_offset = i;		// remember the offset
 	}
-    rads = fmodf((float)rads, (float)TWO_PI);
+    rads = ffmodf((float)rads, (float)TWO_PI);
 }
 
 void 
