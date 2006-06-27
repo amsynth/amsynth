@@ -145,8 +145,8 @@ MidiController::HandleMidiData(unsigned char* bytes, unsigned numBytes)
 				data = byte;
 				break;
 			}
-			int bend = (int) ((data & 0x7F) | ((byte & 0x7F) << 7));
-			float fbend = (float) (bend - 0x2000) / (float) (0x2000);
+			int bend; bend = (int) ((data & 0x7F) | ((byte & 0x7F) << 7));
+			float fbend; fbend = (float) (bend - 0x2000) / (float) (0x2000);
 			pitch_wheel_change(fbend);
 			data = 0xFF;
 			break;
