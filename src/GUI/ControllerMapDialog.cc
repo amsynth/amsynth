@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <unistd.h>
+#include <assert.h>
 
 using sigc::slot;
 using sigc::bind;
