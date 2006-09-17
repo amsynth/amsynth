@@ -31,8 +31,8 @@ public:
 	virtual	bool		canRecord	( )	{ return false; }
 	virtual	void		startRecording	( )			{;}
 	virtual	void		stopRecording	( )			{;};
-	virtual	void		setOutputFile	( string file )		= 0;
-	virtual	string		getOutputFile	( )			= 0;
+	virtual	void		setOutputFile	( string file )	{}
+	virtual	string		getOutputFile	( ) { return ""; }
 
 
 	virtual	const char*	getTitle	( )	{ return "amSynth"; };
