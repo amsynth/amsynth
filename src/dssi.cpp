@@ -109,11 +109,11 @@ static void run_synth (LADSPA_Handle instance, unsigned long sample_count, snd_s
 	    switch (e->type)
 	    {
 		    case SND_SEQ_EVENT_NOTEON:
-			    a->vau->noteOn (e->data.note.note, e->data.note.velocity * kMidiScaler);
+			    a->vau->HandleMidiNoteOn (e->data.note.note, e->data.note.velocity * kMidiScaler);
 			    break;
 
 		    case SND_SEQ_EVENT_NOTEOFF:
-			    a->vau->noteOff (e->data.note.note);
+			    a->vau->HandleMidiNoteOff (e->data.note.note, e->data.note.velocity * kMidiScaler);
 			    break;
 
 		    default:
