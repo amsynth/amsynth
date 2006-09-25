@@ -74,10 +74,17 @@ Knob::on_button_press_event		(GdkEventButton *ev)
 	widget_x = (gint)(ev->x_root - ev->x);
 	widget_y = (gint)(ev->y_root - ev->y);
 	
+	gint x, y; GdkModifierType modifiers;
+	gdk_window_get_pointer(ev->window, &x, &y, &modifiers);
+	
 	switch(ev->button){
 		case 1:
-			add_modal_grab ();
-			mouse_pos_change( (gint)ev->x_root, (gint)ev->y_root );
+			if (modifiers & GDK_CONTROL_MASK) {
+				adj->set_value((adj->get_lower() + adj->get_upper()) / 2);
+			} else {
+				add_modal_grab ();
+				mouse_pos_change( (gint)ev->x_root, (gint)ev->y_root );
+			}
 			break;
 		case 4: // mouse wheel up
 			adj->set_value( (adj->get_value()+adj->get_step_increment()) );
