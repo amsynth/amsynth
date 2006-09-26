@@ -33,7 +33,7 @@ namespace Gtk {
 class GUI:public Gtk::Window, public UpdateListener {
 public:
 	GUI				( Config & config, MidiController & mc, 
-					VoiceAllocationUnit & vau, int pipe[2],
+					VoiceAllocationUnit & vau, int pipe_write,
 					GenericOutput *audio, const char *title );
 	~GUI				( );
 	/**
@@ -61,7 +61,7 @@ protected:
 private:		
 	Gtk::MenuBar*	create_menus		( );
 
-	int *pipe, lnav;
+	int			m_pipe_write, lnav;
 	void		event_handler	(const int);
 	void config_controllers();
 	

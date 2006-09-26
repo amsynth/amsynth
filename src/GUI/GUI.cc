@@ -53,7 +53,7 @@ GUI::delete_event_impl(GdkEventAny *)
 }
 
 GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
-		int pipe[2], GenericOutput *audio, const char *title )
+		int pipe_write, GenericOutput *audio, const char *title )
 :	controller_map_dialog(NULL)
 ,	clipboard_preset (new Preset)
 {
@@ -64,7 +64,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	
 	this->config = &config;
 	this->midi_controller = &mc;
-	this->pipe = pipe;
+	this->m_pipe_write = pipe_write;
 	this->vau = &vau;
 	this->audio_out = audio;
 	
@@ -81,7 +81,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 //	style = Gtk::Style::create ( );
 	
 	
-	presetCV = new PresetControllerView( pipe[1], *this->vau );
+	presetCV = new PresetControllerView( pipe_write, *this->vau );
 
 #ifdef _DEBUG
 	cout << "<GUI::GUI()> created presetCV" << endl;
@@ -328,7 +328,7 @@ GUI::init()
 {
 	Preset *preset = &(preset_controller->getCurrentPreset());
 	
-	editor_panel = new EditorPanel (preset, pipe[1]);
+	editor_panel = new EditorPanel (preset, m_pipe_write);
 	
 	adj_midi = manage (new Gtk::Adjustment(config->midi_channel,0,16,1));
 	adj_midi->signal_value_changed().connect (mem_fun (*this, &GUI::changed_midi_channel));
@@ -584,7 +584,7 @@ void
 GUI::setPresetController(PresetController & p_c)
 {
     preset_controller = &p_c;
-//	controller_map_dialog = new ControllerMapDialog(pipe[1], midi_controller, preset_controller);
+	controller_map_dialog = new ControllerMapDialog(m_pipe_write, midi_controller, preset_controller);
 }
 
 void

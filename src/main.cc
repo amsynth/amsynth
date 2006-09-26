@@ -11,6 +11,10 @@
 #include "Config.h"
 #include "../config.h"
 
+#if __APPLE__
+#include "drivers/CoreAudio.h"
+#endif
+
 #include "binreloc.h"
 
 #include <gtkmm/main.h>
@@ -52,6 +56,7 @@ Config config;
 
 void sched_realtime()
 {
+#ifdef __LINUX__
 	struct sched_param sched;
 
 	sched.sched_priority = 50;
@@ -76,6 +81,7 @@ void sched_realtime()
 		cout << "main: scheduling priority is " << sched.sched_priority << endl;
 #endif
 	}
+#endif //__LINUX__
 }
 
 int fcopy (const char * dest, const char *source)
@@ -130,7 +136,7 @@ void install_default_files_if_reqd()
 		fcopy (user_bank, factory_bank);
 	}
 
-	free (homedir);
+//	free (homedir); // NO!
 	free (data_dir);
 	free (amsynth_data_dir);
 	free (factory_controllers);
@@ -205,6 +211,9 @@ under certain conditions; see the file COPYING for details\n";
 	//
 	if (config.debug_drivers) std::cerr << "\n\n*** INITIALISING AUDIO ENGINE...\n";
 	
+#if	__APPLE__
+	out = CreateCoreAudioOutput();
+#else
 	if (config.audio_driver=="jack"||config.audio_driver=="JACK")
 	{
 		jack = 1;
@@ -236,6 +245,7 @@ under certain conditions; see the file COPYING for details\n";
 		std::cerr << "failed to open any audio device\n\n";
 		exit (-1);
 	}
+#endif
 
 	
 	vau = new VoiceAllocationUnit;
@@ -248,16 +258,19 @@ under certain conditions; see the file COPYING for details\n";
 	out->Start ();
 	
 	if (config.debug_drivers) std::cerr << "*** DONE :)\n";
-	
-	
+
 	//
 	// init midi
 	//
+#if __APPLE__
+	midi_interface = CreateCoreMidiInterface();
+#else
 	if (config.debug_drivers) std::cerr << "\n\n*** INITIALISING MIDI ENGINE...\n";
 	
 	config.alsa_seq_client_name = out->getTitle();
 	
 	midi_interface = new MidiInterface();
+#endif
 	if (midi_interface->open(config) != 0)
 	{
 		std::cerr << "couldn't to open a midi device\n\n";
@@ -288,7 +301,7 @@ under certain conditions; see the file COPYING for details\n";
 	// this can be called SUID:
 	int gdk_input_pipe[2];
 	if( pipe( gdk_input_pipe ) ) cout << "pipe() error\n";
-	gui = new GUI (config, *midi_controller, *vau, gdk_input_pipe, out, out->getTitle());
+	gui = new GUI (config, *midi_controller, *vau, gdk_input_pipe[1], out, out->getTitle());
 	gui->setPresetController ( *presetController );
 	gui->init();
 	
