@@ -38,7 +38,7 @@ Config::Defaults	()
 bool
 Config::ParseCOpts	(int argc, char* argv[])
 {
-	optind = 1; optreset = 1; // reset getopt
+	optind = 1; // reset getopt
 	int opt;
 	while( (opt=getopt(argc, argv, "vhstdm:c:a:r:p:b:"))!= -1 ) {
 		switch(opt) {
