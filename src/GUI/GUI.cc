@@ -73,6 +73,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 //		Gtk::Main::timeout.connect( mem_fun(*this,&GUI::idle_callback), 200 );
 
 	set_title (title);
+	set_resizable(false);
 
 	active_param = 0;
 
