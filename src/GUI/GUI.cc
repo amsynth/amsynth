@@ -72,8 +72,11 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 		// messes up the audio thread's timing if not realtime...
 //		Gtk::Main::timeout.connect( mem_fun(*this,&GUI::idle_callback), 200 );
 
-	set_title (title);
+        m_baseName = title + string(" : ");
+	set_title(m_baseName);
 	set_resizable(false);
+        
+        m_requestUpdate.slot = mem_fun(*this, &GUI::onUpdate);
 
 	active_param = 0;
 
@@ -81,7 +84,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 //	style = Gtk::Style::create ( );
 	
 	
-	presetCV = new PresetControllerView( pipe_write, *this->vau );
+	presetCV = new PresetControllerView(pipe_write, *this->vau);
 
 #ifdef _DEBUG
 	cout << "<GUI::GUI()> created presetCV" << endl;
@@ -355,8 +358,6 @@ GUI::init()
 	vbox.pack_start (*editor_panel,Gtk::PACK_EXPAND_WIDGET,0);
 	vbox.pack_start (statusBar,PACK_SHRINK);
 	add(vbox);
-		
-	presetCV->setPresetController(*preset_controller);
 	
 	
 	// set up a fancy status bar.... why? i dont know.
@@ -568,7 +569,15 @@ GUI::~GUI()
 void
 GUI::update()
 {
+    write(m_pipe_write, &m_requestUpdate, sizeof(Request));
 }
+void
+GUI::onUpdate()
+{
+    set_title(m_baseName + preset_controller->getCurrentPreset().getName());
+    presetCV->update();
+}
+
 
 void 
 GUI::run()
@@ -584,7 +593,10 @@ void
 GUI::setPresetController(PresetController & p_c)
 {
     preset_controller = &p_c;
-	controller_map_dialog = new ControllerMapDialog(m_pipe_write, midi_controller, preset_controller);
+    set_title(preset_controller->getCurrentPreset().getName());
+    preset_controller->setUpdateListener(*this);
+    presetCV->setPresetController(*preset_controller);
+    controller_map_dialog = new ControllerMapDialog(m_pipe_write, midi_controller, preset_controller);
 }
 
 void

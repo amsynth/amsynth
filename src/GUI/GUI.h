@@ -10,6 +10,7 @@
 
 #include "PresetControllerView.h"
 #include "ControllerMapDialog.h"
+#include "Request.h"
 
 class PresetController;
 class Parameter;
@@ -52,6 +53,7 @@ public:
 	int	delete_events		(GdkEventAny *, Gtk::Window *dialog)
 					{ dialog->hide_all(); return 0; };
 	void	update();
+        void    onUpdate();
 
 	static void GdkInputFunction(gpointer data, gint source, GdkInputCondition condition);
 
@@ -130,5 +132,8 @@ private:
 	EditorPanel		*editor_panel;
 	
 	Preset			*clipboard_preset;
+        
+        std::string             m_baseName;
+        Request                 m_requestUpdate;
 };
 #endif

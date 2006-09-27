@@ -13,7 +13,7 @@ using sigc::bind;
 using std::cout;
 using namespace std;
 
-PresetControllerView::PresetControllerView( int pipe_d, VoiceAllocationUnit & vau )
+PresetControllerView::PresetControllerView(int pipe_d, VoiceAllocationUnit & vau )
 {
 	this->vau = &vau;
 	inhibit_combo_callback = false;
@@ -47,7 +47,6 @@ PresetControllerView::PresetControllerView( int pipe_d, VoiceAllocationUnit & va
 	add (*panic);
 
 	piped = pipe_d;
-	request.slot = mem_fun(*this, &PresetControllerView::_update_ );
 }
 
 PresetControllerView::~PresetControllerView()
@@ -58,7 +57,6 @@ void
 PresetControllerView::setPresetController(PresetController & p_c)
 {
     presetController = &p_c;
-    p_c.setUpdateListener(*this);
     update();
 }
 
@@ -91,14 +89,6 @@ PresetControllerView::ev_handler(string text)
 
 void
 PresetControllerView::update()
-{
-	if(!inhibit_combo_callback)
-		if( write( piped, &request, sizeof(request) ) != sizeof(request) )
-			cout << "ParameterSwitch: error writing to pipe" << endl;
-}
-
-void 
-PresetControllerView::_update_()
 {
 	inhibit_combo_callback = true;
 	

@@ -19,11 +19,10 @@ class VoiceAllocationUnit;
 
 class PresetControllerView : public UpdateListener, public Gtk::HBox {
 public:
-    PresetControllerView( int pipe_d, VoiceAllocationUnit & vau );
+    PresetControllerView(int pipe_d, VoiceAllocationUnit & vau );
     ~PresetControllerView();
     void setPresetController(PresetController & p_c);
     void update();
-	void _update_();
 private:
 	void ev_handler(string text);
     PresetController *presetController;
@@ -32,7 +31,6 @@ private:
     Gtk::Label preset_no_entry; // preset_name_entry;
 	volatile bool inhibit_combo_callback, inhibit_combo_update;
 	int piped;
-	Request request;
 	VoiceAllocationUnit *vau;
 };
 
