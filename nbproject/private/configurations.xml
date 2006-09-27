@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="30">
+  <projectmakefile>amsynthe_Makefile.mk</projectmakefile>
+  <defaultConf>0</defaultConf>
+  <confs>
+    <conf name="Default" type="0">
+      <runprofile version="4">
+        <args></args>
+        <rundir>.</rundir>
+        <buildfirst>true</buildfirst>
+        <environment>
+        </environment>
+      </runprofile>
+      <gdbdebugger version="1">
+        <gdb_command>gdb</gdb_command>
+      </gdbdebugger>
+    </conf>
+  </confs>
+</configurationDescriptor>
