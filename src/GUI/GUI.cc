@@ -593,9 +593,10 @@ void
 GUI::setPresetController(PresetController & p_c)
 {
     preset_controller = &p_c;
-    set_title(preset_controller->getCurrentPreset().getName());
     preset_controller->setUpdateListener(*this);
     presetCV->setPresetController(*preset_controller);
+	onUpdate();
+	
     controller_map_dialog = new ControllerMapDialog(m_pipe_write, midi_controller, preset_controller);
 }
 
