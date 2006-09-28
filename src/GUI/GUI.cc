@@ -1,5 +1,5 @@
 /* amSynth
- * (c) 2002-2005 Nick Dowell
+ * (c) 2002-2006 Nick Dowell
  * portions of this file (c) 2003 Darrick Servis
  */
  
@@ -57,9 +57,6 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 :	controller_map_dialog(NULL)
 ,	clipboard_preset (new Preset)
 {
-#ifdef _DEBUG
-	cout << "<GUI::GUI()>" << endl;
-#endif
 	lnav = -1;
 	
 	this->config = &config;
@@ -86,16 +83,6 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	
 	presetCV = new PresetControllerView(pipe_write, *this->vau);
 
-#ifdef _DEBUG
-	cout << "<GUI::GUI()> created presetCV" << endl;
-#endif
-
-		
-#ifdef _DEBUG
-	cout << "<GUI::GUI()> put all controls" << endl;
-#endif
-	show_all();
-	
 	//
 	// the preset rename dialog
 	//
@@ -177,10 +164,6 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	
 	record_recording = false;
 	record_statusbar.push ("capture status: STOPPED", 1);
-
-#ifdef _DEBUG
-	cout << "<GUI::GUI()> success" << endl;
-#endif
 }
 
 Gtk::MenuBar*
