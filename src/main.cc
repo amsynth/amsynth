@@ -2,12 +2,12 @@
  * (c) 2001-2005 Nick Dowell
  */
 
+#include "GUI/GUI.h"
+#include "GUI/ParameterView.h"
 #include "MidiController.h"
 #include "VoiceAllocationUnit.h"
 #include "AudioOutput.h"
 #include "JackOutput.h"
-#include "GUI/GUI.h"
-#include "GUI/ParameterView.h"
 #include "Config.h"
 #include "../config.h"
 
