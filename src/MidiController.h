@@ -50,9 +50,9 @@ public:
 
 	void	saveConfig ();
 
-	void	setController		( int controller_no, Parameter &param );
+	void	setController		( unsigned int controller_no, Parameter &param );
 	Parameter & getLastControllerParam() { return last_active_controller; };
-	Parameter & getController( int controller_no );
+	Parameter & getController( unsigned int controller_no );
 	
 	void	set_midi_channel	( int ch );
 	int     sendMidi_values		();

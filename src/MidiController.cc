@@ -4,6 +4,7 @@
 
 #include "MidiController.h"
 #include <fstream>
+#include <assert.h>
 
 using namespace std;
 
@@ -217,16 +218,17 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 }
 
 void
-MidiController::setController( int controller_no, Parameter & param )
+MidiController::setController( unsigned int controller_no, Parameter & param )
 {
 	if(controller_no<MAX_CC)
 		midi_controllers[controller_no] = &param;
 }
 
 Parameter&
-MidiController::getController( int idx )
+MidiController::getController( unsigned int idx )
 {
-	return (idx < MAX_CC) ? *midi_controllers[idx] : presetController->getCurrentPreset().getParameter("null");
+    assert(idx < MAX_CC);
+    return (idx < MAX_CC) ? *midi_controllers[idx] : presetController->getCurrentPreset().getParameter("null");
 }
 
 void
