@@ -25,9 +25,8 @@ ControllerMapDialog::ControllerMapDialog
 :	piped( pipe_d )
 ,	midi_controller( mc )
 ,	preset_controller( pc )
+,       m_cc(0)
 {
-	m_cc = 0;
-
 	assert(midi_controller);
 	assert(preset_controller);
 	
@@ -154,10 +153,14 @@ ControllerMapDialog::select_parameter()
 	);
 }
 
+#define SIZEOF_ARRAY(a) (sizeof(a)/sizeof(a[0]))
+
 void 
-ControllerMapDialog::select_controller( int cc )
+ControllerMapDialog::select_controller(unsigned int cc)
 {
-	supress_callback = true;
+	assert(cc < SIZEOF_ARRAY(c_controller_names));
+	
+        supress_callback = true;
 	m_label_controller->set_text(c_controller_names[cc]);
 	m_combo->get_entry()->set_text( 
             midi_controller->getController(cc).getName() );

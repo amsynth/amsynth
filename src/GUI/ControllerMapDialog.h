@@ -26,7 +26,7 @@ public:
 	void	update			( );
 	gint	popup_menu		( GdkEvent * event );
 	void	midi_select_controller	( );
-	void	select_controller	( int cc );
+	void	select_controller	( unsigned int cc );
 	void	select_parameter	( );
         gint	delete_event_impl	( GdkEventAny * ) 
 			{ hide_all(); return 0; };
