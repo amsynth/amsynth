@@ -20,7 +20,7 @@
 #ifndef SEQ24_CONTROLLERS
 #define SEQ24_CONTROLLERS
 
-string c_controller_names[128] = {
+const char * c_controller_names[] = {
 
     "0  Bank Select", 
     "1  Modulation Wheel ",
