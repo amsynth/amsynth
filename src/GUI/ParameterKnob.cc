@@ -67,7 +67,7 @@ ParameterKnob::setParameter(Parameter & param)
 void 
 ParameterKnob::updateParam(Gtk::Adjustment * _adj)
 {
-  if (!supress_param_callback)
+  if (!supress_param_callback && parameter)
     parameter->setValue(_adj->get_value());
 }
 
