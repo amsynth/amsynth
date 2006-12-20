@@ -1,2 +1,1 @@
 SUBDIRS = src skel
-EXTRA_DIST = VERSION
