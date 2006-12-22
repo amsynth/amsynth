@@ -1,1 +1,1 @@
-data_DATA = presets Controllersrc
+dist_data_DATA = presets Controllersrc
