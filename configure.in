@@ -1,5 +1,5 @@
 AC_INIT(src/main.cc)
-AM_INIT_AUTOMAKE([amSynth], 'svn')
+AM_INIT_AUTOMAKE([amSynth], '1.2.0')
 AM_CONFIG_HEADER(config.h)
 
 
