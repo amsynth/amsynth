@@ -13,11 +13,11 @@ OTHER_OBJECTS = \
 	VoiceBoard/Oscillator.o \
 	VoiceBoard/VoiceBoard.o \
 	VoiceBoard/LowPassFilter.o \
-	Parameter.o \
-	Preset.o \
-	PresetController.o \
-	VoiceAllocationUnit.o \
-	Config.o 
+	amSynth-Parameter.o \
+	amSynth-Preset.o \
+	amSynth-PresetController.o \
+	amSynth-VoiceAllocationUnit.o \
+	amSynth-Config.o 
 
 all: $(TARGET)
 
