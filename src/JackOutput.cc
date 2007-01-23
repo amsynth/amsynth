@@ -1,11 +1,12 @@
 /* amSynth
- * (c) 2001-2004 Nick Dowell
+ * (c) 2001-2007 Nick Dowell
  **/
 
 #include "JackOutput.h"
 #include "VoiceAllocationUnit.h"
 
 #include <iostream>
+#include <string.h>
 #include <dlfcn.h>
 
 #ifdef with_jack
@@ -27,11 +28,35 @@ int				(*dl_jack_connect)					(jack_client_t *, const char *, const char *);
 void*			(*dl_jack_port_get_buffer)			(jack_port_t *, jack_nframes_t);
 const char*		(*dl_jack_port_name)				(const jack_port_t *);
 
+void find_library(const char * searchname, char * result, size_t size)
+{
+	char cmd[128]; sprintf(cmd, "ldconfig -p | grep %s", searchname);
+	FILE * output = popen(cmd, "r");
+	if (output)
+	{
+		char buffer[256] = "";
+		fread(buffer, 1, 1024, output);
+		pclose(output);
+		// now search for a string which looks like libXXXX.so
+		const char * lnBeg = strchr(buffer, 'l');
+		const char * lnEnd = strchr(buffer, ' ');
+		const size_t lnLen = lnEnd - lnBeg;
+		strncpy(result, lnBeg, lnLen);
+		result[lnLen] = '\0';
+	}
+	else
+	{
+		snprintf(result, size, "lib%s.so", searchname);
+	}
+}
+
 bool load_libjack()
 {
-	void* handle = dlopen("libjack.so", RTLD_LAZY);
+	char libjack[128] = "";
+	find_library("jack", libjack, 128);
+	void* handle = dlopen(libjack, RTLD_LAZY);
 	if (NULL == handle) {
-		std::cerr << "cannot load JACK library\n";
+		std::cerr << "cannot load JACK library (" << libjack << ")\n";
 		return false;
 	}
 	
@@ -126,7 +151,7 @@ bool load_libjack()
 	}
 
 	
-	std::cerr << "loaded & initialised libjack.so :)\n";
+	std::cerr << "loaded & initialised " << libjack << " :)\n";
 	return true;
 }
 
