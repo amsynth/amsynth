@@ -53,7 +53,7 @@ void find_library(const char * searchname, char * result, size_t size)
 bool load_libjack()
 {
 	char libjack[128] = "";
-	find_library("jack", libjack, 128);
+	find_library("libjack", libjack, 128);
 	void* handle = dlopen(libjack, RTLD_LAZY);
 	if (NULL == handle) {
 		std::cerr << "cannot load JACK library (" << libjack << ")\n";
