@@ -34,8 +34,9 @@ bool find_library(const char * searchname, char * result, size_t size)
 	FILE * output = popen(cmd, "r");
 	if (output)
 	{
-		char buffer[256] = "";
-		fread(buffer, 1, 1024, output);
+		const unsigned kBufferSize = 256;
+		char buffer[kBufferSize] = "";
+		fread(buffer, 1, kBufferSize, output);
 		pclose(output);
 		// now search for a string which looks like libXXXX.so
 		const char * lnBeg = strchr(buffer, 'l');
