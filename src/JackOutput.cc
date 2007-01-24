@@ -28,7 +28,7 @@ int				(*dl_jack_connect)					(jack_client_t *, const char *, const char *);
 void*			(*dl_jack_port_get_buffer)			(jack_port_t *, jack_nframes_t);
 const char*		(*dl_jack_port_name)				(const jack_port_t *);
 
-void find_library(const char * searchname, char * result, size_t size)
+bool find_library(const char * searchname, char * result, size_t size)
 {
 	char cmd[128]; sprintf(cmd, "ldconfig -p | grep %s", searchname);
 	FILE * output = popen(cmd, "r");
@@ -43,16 +43,14 @@ void find_library(const char * searchname, char * result, size_t size)
 		const size_t lnLen = lnEnd - lnBeg;
 		strncpy(result, lnBeg, lnLen);
 		result[lnLen] = '\0';
+		return true;
 	}
-	else
-	{
-		snprintf(result, size, "lib%s.so", searchname);
-	}
+	return false;
 }
 
 bool load_libjack()
 {
-	char libjack[128] = "";
+	char libjack[128] = "libjack.so";
 	find_library("libjack", libjack, 128);
 	void* handle = dlopen(libjack, RTLD_LAZY);
 	if (NULL == handle) {
