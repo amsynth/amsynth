@@ -9,6 +9,8 @@
 #include <string.h>
 #include <dlfcn.h>
 
+#define SIZEOF_ARRAY(a) (sizeof(a) / sizeof(a[0]))
+
 #ifdef with_jack
 
 jack_client_t*	(*dl_jack_client_new)				(const char *) = NULL;
@@ -30,7 +32,29 @@ const char*		(*dl_jack_port_name)				(const jack_port_t *);
 
 bool find_library(const char * searchname, char * result, size_t size)
 {
-	char cmd[128]; sprintf(cmd, "ldconfig -p | grep %s", searchname);
+	const char * ldconfig_cmd = NULL;
+	const char * ldconfig_paths[] =
+	{
+		"lsdconfig",
+		"/sbin/ldconfig",
+		"/usr/sbin/ldconfig",
+	};
+
+	for (size_t i=0; i<SIZEOF_ARRAY(ldconfig_paths); i++)
+	{
+		char cmd[128]; snprintf(cmd, 128, "%s -V", ldconfig_paths[i]);
+		if (system(cmd) == 0)
+		{
+			ldconfig_cmd = ldconfig_paths[i];
+			break;
+		}
+	}
+	if (!ldconfig_cmd)
+	{
+		printf("WARNING : could not find ldconfig executable.\n");
+	}
+
+	char cmd[128]; snprintf(cmd, 128, "%s -p | grep %s", ldconfig_cmd, searchname);
 	FILE * output = popen(cmd, "r");
 	if (output)
 	{
