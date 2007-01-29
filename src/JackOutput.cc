@@ -35,7 +35,7 @@ bool find_library(const char * searchname, char * result, size_t size)
 	const char * ldconfig_cmd = NULL;
 	const char * ldconfig_paths[] =
 	{
-		"lsdconfig",
+		"ldconfig",
 		"/sbin/ldconfig",
 		"/usr/sbin/ldconfig",
 	};
