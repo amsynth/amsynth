@@ -59,32 +59,30 @@ public:
 	virtual VstInt32 processEvents( VstEvents * events )
 	{
 		for (VstInt32 i=0; i<events->numEvents; i++)
-			processEvent( *reinterpret_cast<VstMidiEvent*>(events->events[i]) );
+			if (events->events[i]->type == kVstMidiType)
+				processEvent( *reinterpret_cast<VstMidiEvent*>(events->events[i]) );
 		return 1;
 	}
 
 	void processEvent( const VstMidiEvent & event )
 	{
-		if (event.type == kVstMidiType)
+		const char * midiData = event.midiData;
+		const VstInt32 status = midiData[0] & 0xf0;
+		
+		switch (status)
 		{
-			const char * midiData = event.midiData;
-			const VstInt32 status = midiData[0] & 0xf0;
+		case 0x80:
+		case 0x90:
+			static const float scale = 1.f / 127.f;
+			const VstInt32 note = midiData[1] & 0x7f;
+			const VstInt32 velocity = (status == 0x90) ? midiData[2] & 0x7f : 0;
 			
-			switch (status)
-			{
-			case 0x80:
-			case 0x90:
-				static const float scale = 1.f / 127.f;
-				const VstInt32 note = midiData[1] & 0x7f;
-				const VstInt32 velocity = (status == 0x90) ? midiData[2] & 0x7f : 0;
-				
-				if (velocity)
-					mVoiceAllocationUnit.HandleMidiNoteOn( note, velocity * scale );
-				else
-					mVoiceAllocationUnit.HandleMidiNoteOff( note, velocity * scale );
-				
-				break;
-			}
+			if (velocity)
+				mVoiceAllocationUnit.HandleMidiNoteOn( note, velocity * scale );
+			else
+				mVoiceAllocationUnit.HandleMidiNoteOff( note, velocity * scale );
+			
+			break;
 		}
 	}
 	
