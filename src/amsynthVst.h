@@ -7,8 +7,6 @@
  *
  */
 
-#include <vector>
-
 #include "PresetController.h"
 #include "VoiceAllocationUnit.h"
 #include "public.sdk/source/vst2.x/audioeffectx.h"
@@ -17,13 +15,15 @@ class AMSynthVst : public AudioEffectX
 {
 public:
 	AMSynthVst( audioMasterCallback callback )
-	:	AudioEffectX( callback, 0, kControls_End )
+	:	AudioEffectX( callback, PresetController::kNumPresets, kControls_End )
 	{
 		setUniqueID('amsy');
 		setNumInputs(0);
 		setNumOutputs(2);
 		canProcessReplacing(true);
 		isSynth(true);
+		
+		loadPresets();
 		
 		Preset & preset = mPresetController.getCurrentPreset();
 		for (int i=0; i<preset.ParameterCount(); i++) {
@@ -54,6 +54,17 @@ public:
 	virtual void getParameterName( VstInt32 index, char * text )
 	{
 		strncpy( text, mPresetController.getCurrentPreset().getParameter(index).getName().c_str(), 32 );
+	}
+	
+	virtual void setProgram (VstInt32 program) { mPresetController.selectPreset(program); }
+	
+	virtual void setProgramName (char* name)
+	{
+		mPresetController.getCurrentPreset().setName( std::string(name) );
+	}
+	virtual void getProgramName (char* name)
+	{
+		strncpy( name, mPresetController.getCurrentPreset().getName().c_str(), kVstMaxProgNameLen );
 	}
 	
 	virtual VstInt32 processEvents( VstEvents * events )
@@ -92,7 +103,16 @@ public:
 	}
 	
 protected:
+	
+	void loadPresets()
+	{
+		char filename[PATH_MAX] = "";
+		if (getPresetsFilename(filename, PATH_MAX))
+			mPresetController.loadPresets(filename);
+	}
 
+	bool getPresetsFilename(char * filename, size_t maxLen);
+	
 	VoiceAllocationUnit	mVoiceAllocationUnit;
 	PresetController	mPresetController;
 	
