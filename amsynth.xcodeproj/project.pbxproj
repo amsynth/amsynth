@@ -25,6 +25,7 @@
 		E2AAD21A0F84E27500167FA5 /* audioeffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2AAD2160F84E27500167FA5 /* audioeffect.cpp */; };
 		E2AAD21B0F84E27500167FA5 /* vstplugmain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2AAD2180F84E27500167FA5 /* vstplugmain.cpp */; };
 		E2AAD2230F84E2B800167FA5 /* amsynth.vst in CopyFiles */ = {isa = PBXBuildFile; fileRef = E2AAD1AD0F84E03900167FA5 /* amsynth.vst */; };
+		E2AAD4CB0F8507CB00167FA5 /* presets in Resources */ = {isa = PBXBuildFile; fileRef = E2AAD4CA0F8507CB00167FA5 /* presets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -83,6 +84,7 @@
 		E2AAD2160F84E27500167FA5 /* audioeffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = audioeffect.cpp; path = public.sdk/source/vst2.x/audioeffect.cpp; sourceTree = VSTSDK24; };
 		E2AAD2170F84E27500167FA5 /* audioeffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = audioeffect.h; path = public.sdk/source/vst2.x/audioeffect.h; sourceTree = VSTSDK24; };
 		E2AAD2180F84E27500167FA5 /* vstplugmain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vstplugmain.cpp; path = public.sdk/source/vst2.x/vstplugmain.cpp; sourceTree = VSTSDK24; };
+		E2AAD4CA0F8507CB00167FA5 /* presets */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = presets; path = skel/presets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 			children = (
 				E2AAD1C10F84E0A500167FA5 /* src */,
 				E2AAD2120F84E25300167FA5 /* vstsdk */,
+				E2AAD4C90F8507B900167FA5 /* Resources */,
 				E2AAD1AE0F84E03900167FA5 /* Products */,
 				E2AAD1AF0F84E03900167FA5 /* amsynth-Info.plist */,
 			);
@@ -186,6 +189,14 @@
 			name = vstsdk;
 			sourceTree = "<group>";
 		};
+		E2AAD4C90F8507B900167FA5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E2AAD4CA0F8507CB00167FA5 /* presets */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -230,6 +241,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2AAD4CB0F8507CB00167FA5 /* presets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
