@@ -103,3 +103,13 @@ bool AMSynthVst::getPresetsFilename(char * filename, size_t maxLen)
 }
 
 #endif
+
+#ifdef WIN32
+
+bool AMSynthVst::getPresetsFilename(char * filename, size_t maxLen)
+{
+	*filename = 0;
+	return false;
+}
+
+#endif

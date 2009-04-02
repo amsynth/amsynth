@@ -25,6 +25,13 @@
 #ifndef _THREAD_H
 #define _THREAD_H
 
+#ifdef _MSC_VER
+
+class Thread {
+};
+
+#else
+
 #include <pthread.h>
 #include <signal.h>
 
@@ -55,5 +62,7 @@ private:
 	pthread_t	mThread;
 	bool		mShouldStop;
 };
+
+#endif /* _MSC_VER */
 
 #endif /* _THREAD_H */

@@ -11,6 +11,11 @@
 #include "VoiceAllocationUnit.h"
 #include "public.sdk/source/vst2.x/audioeffectx.h"
 
+#ifdef WIN32
+#include <windows.h>
+#define PATH_MAX MAX_PATH
+#endif
+
 class AMSynthVst : public AudioEffectX
 {
 public:

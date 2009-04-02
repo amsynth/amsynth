@@ -18,7 +18,7 @@ PresetController::PresetController	()
 ,	currentPresetNo (0)
 {
 	presets = new Preset [kNumPresets];
-#ifndef _WINDOWS
+#ifndef _MSC_VER
 	bank_file = string (getenv ("HOME")) + "/.amSynth.presets";
 #endif
 }
