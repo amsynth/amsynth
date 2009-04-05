@@ -362,7 +362,7 @@ GUI::init()
 	
 	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
 	
-	static char cstr[10];
+	static char cstr[32];
 	sprintf( cstr, "Sample Rate: %d", config->sample_rate );
 	statusBar.pack_start (*manage(new Gtk::Label (cstr)), PACK_SHRINK, padding);
 
