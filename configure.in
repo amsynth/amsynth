@@ -1,5 +1,5 @@
 AC_INIT(src/main.cc)
-AM_INIT_AUTOMAKE([amSynth], '1.2.0')
+AM_INIT_AUTOMAKE([amSynth], '1.2.x')
 AM_CONFIG_HEADER(config.h)
 
 
@@ -10,6 +10,7 @@ CXXFLAGS="-Wall"
 AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
+AM_PROG_CC_C_O
 
 AC_LANG(C++)
 
