@@ -1,5 +1,5 @@
 AC_INIT(src/main.cc)
-AM_INIT_AUTOMAKE([amSynth], '1.2.x')
+AM_INIT_AUTOMAKE([amSynth], '1.2.1')
 AM_CONFIG_HEADER(config.h)
 
 
