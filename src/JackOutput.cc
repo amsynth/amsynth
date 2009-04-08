@@ -6,6 +6,7 @@
 #include "VoiceAllocationUnit.h"
 
 #include <iostream>
+#include <cstring>
 #include <dlfcn.h>
 
 #ifdef with_jack

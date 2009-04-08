@@ -8,6 +8,7 @@
 #include "OSSMidiDriver.h"
 
 #include <iostream>
+#include <cstring>
 
 #define MIDI_BUF_SIZE 64
 void sched_realtime (); // defined in main.cc

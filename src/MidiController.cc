@@ -4,6 +4,7 @@
 
 #include "MidiController.h"
 #include <fstream>
+#include <cstdlib>
 #include <assert.h>
 
 using namespace std;

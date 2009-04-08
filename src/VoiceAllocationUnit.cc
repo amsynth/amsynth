@@ -9,6 +9,7 @@
 #include "Effects/Distortion.h"
 
 #include <iostream>
+#include <cstring>
 #include <math.h>
 #include <assert.h>
 

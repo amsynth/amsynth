@@ -4,6 +4,8 @@
 
 #include "Parameter.h"
 
+#include <cstdlib>
+
 #ifdef _DEBUG
 #include <iostream>
 #endif
