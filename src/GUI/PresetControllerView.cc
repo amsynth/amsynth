@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <iostream>
 
-using SigC::slot;
+using sigc::mem_fun;
 using sigc::bind;
 using std::cout;
 using namespace std;
