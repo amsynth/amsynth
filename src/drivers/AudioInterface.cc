@@ -39,7 +39,7 @@ try_driver(AudioDriver * ad, Config & cfg)
 		return false;
 	
 	const size_t numFrames = 1024;
-	void *buffer = calloc(numFrames, 4);
+	void *buffer = calloc(numFrames, 8);
 	int write_res = ad->write((float *)buffer, numFrames);
 	free(buffer);
 	
