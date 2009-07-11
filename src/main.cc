@@ -191,7 +191,7 @@ int main( int argc, char *argv[] )
 	Gtk::Main kit( &argc, &argv ); // this can be called SUID
 	
 	// will need to change when we reach the year 10000 ;-)
-	std::string build_year(__DATE__, sizeof(__DATE__) - 5);
+	std::string build_year(std::string(__DATE__), sizeof(__DATE__) - 5);
 	
 	std::cout <<
 		"amSynth " VERSION "\n"
