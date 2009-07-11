@@ -147,6 +147,38 @@ void install_default_files_if_reqd()
 
 void ptest ();
 
+GenericOutput * open_audio()
+{	
+#if	__APPLE__
+
+	return CreateCoreAudioOutput();
+	
+#else
+
+	if (config.audio_driver == "jack" ||
+		config.audio_driver == "auto")
+	{
+		JackOutput *jack = new JackOutput();
+		if (jack->init(config) == 0)
+			return jack;
+		else
+		{
+			std::cerr << "JACK init failed: " << jack->get_error_msg() << "\n";
+			delete jack;
+			
+			// we were asked specifically for jack, so don't use anything else
+			if (config.audio_driver == "jack")
+				return NULL;
+		}
+	}
+	
+	AudioOutput *out = new AudioOutput();
+	out->init(config); // AudioOutput::init() always returns 0 so no need to check
+	return out;
+	
+#endif
+}
+
 int main( int argc, char *argv[] )
 {
 	std::cout << 
@@ -156,7 +188,7 @@ amSynth comes with ABSOLUTELY NO WARRANTY\n\
 This is free software, and you are welcome to redistribute it\n\
 under certain conditions; see the file COPYING for details\n";
 
-	bool jack = false;
+	// bool jack = false;
 	
 	int opt;
 	while( (opt=getopt(argc, argv, "vhstdzm:c:a:r:p:b:"))!= -1 ) {
@@ -196,58 +228,21 @@ under certain conditions; see the file COPYING for details\n";
 	// subsystem initialisation
 	//
 	
-	PresetController *presetController;
-	MidiController *midi_controller;
-	MidiInterface* midi_interface;
-	VoiceAllocationUnit *vau;
-	GenericOutput *out;
-	GUI *gui;
+	PresetController *presetController = NULL;
+	MidiController *midi_controller = NULL;
+	MidiInterface *midi_interface = NULL;
+	VoiceAllocationUnit *vau = NULL;
+	GenericOutput *out = NULL;
+	GUI *gui = NULL;
 	
 	presetController = new PresetController();
 	
-	
-	//
-	// initialise audio
-	//
-	if (config.debug_drivers) std::cerr << "\n\n*** INITIALISING AUDIO ENGINE...\n";
-	
-#if	__APPLE__
-	out = CreateCoreAudioOutput();
-#else
-	if (config.audio_driver=="jack"||config.audio_driver=="JACK")
-	{
-		jack = 1;
-		out = new JackOutput();
-		if (((JackOutput*)out)->init (config)!=0)
-		{
-			std::cerr << ((JackOutput*)out)->get_error_msg() << "\n";
-			std::cerr << "** failed to initialise JACK... aborting :'( **\n";
-			exit (10);
-		}
+	out = open_audio();
+	if (!out) {
+		std::cerr << "open_audio() failed\n";
+		return 1;
 	}
-	else if (config.audio_driver=="auto"||config.audio_driver=="AUTO")
-	{
-		jack = 1;
-		out = new JackOutput();
-		if (((JackOutput*) out)->init (config) != 0)
-		{
-			delete out;
-			jack = 0;
-			out = new AudioOutput();
-		}
-	}
-	else
-	{
-		out = new AudioOutput();
-	}
-	if ((!jack) && (out->init (config) != 0))
-	{
-		std::cerr << "failed to open any audio device\n\n";
-		exit (-1);
-	}
-#endif
 
-	
 	vau = new VoiceAllocationUnit;
 	vau->SetSampleRate (config.sample_rate);
 	vau->SetMaxVoices (config.polyphony);
@@ -296,7 +291,7 @@ under certain conditions; see the file COPYING for details\n";
 	Gtk::Main kit( &argc, &argv ); // this can be called SUID
 
 	// give audio/midi threads time to start up first..
-	if (jack) sleep (1);
+	// if (jack) sleep (1);
 
 	// this can be called SUID:
 	int gdk_input_pipe[2];
