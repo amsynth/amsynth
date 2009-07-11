@@ -129,6 +129,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	Glib::RefPtr<Gdk::PixbufLoader> ldr = Gdk::PixbufLoader::create();
 	ldr->write (amsynth_logo, sizeof(amsynth_logo)); ldr->close ();
 	aboutDlg.set_logo (ldr->get_pixbuf());
+	aboutDlg.signal_response().connect(sigc::hide(mem_fun(aboutDlg, &Gtk::Dialog::hide)));
 	
 	
 	//
