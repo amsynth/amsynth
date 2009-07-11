@@ -10,7 +10,7 @@
 
 #include <iostream>
 #include <math.h>
-#include <string.h>
+#include <cstring>
 #include <assert.h>
 
 using namespace std;

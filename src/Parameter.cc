@@ -4,7 +4,7 @@
 
 #include "Parameter.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #ifdef _DEBUG
 #include <iostream>
