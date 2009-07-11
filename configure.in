@@ -157,6 +157,7 @@ if test "$with_alsa" = "yes"; then
 fi
 if test "$with_jack" = "yes"; then 
 	CXXFLAGS="$CXXFLAGS -Dwith_jack"
+	LDFLAGS="$LDFLAGS -ljack"
 fi
 if test "$with_sndfile" = "yes"; then
 	CXXFLAGS="$CXXFLAGS -Dwith_sndfile"
