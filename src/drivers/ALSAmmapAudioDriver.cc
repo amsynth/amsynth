@@ -73,7 +73,10 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 	if( 0 > ( err = snd_pcm_mmap_begin( playback_handle, &areas, &offset, &lframes)))
 	{
 		cerr << "snd_pcm_mmap_begin error\n";
-		return xrun_recovery();
+		xrun_recovery();
+		// Return an error code so we can quickly test during initialisation.
+		// Won't stop playback at runtime because AudioOutput checks for a return code of -1
+		return 'xrun';
 	}
 
 	audiobuf = (short int*)areas[ 0].addr + 2*offset;

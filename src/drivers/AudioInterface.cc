@@ -3,6 +3,8 @@
  */
 #include "AudioInterface.h"
 
+#define SAFE_DELETE(o) if (o) { delete o; o = 0; }
+
 int
 AudioInterface::setRealtime()
 {
@@ -30,98 +32,71 @@ AudioInterface::setChannels(int channels)
 		return -1;
 }
 
+bool
+try_driver(AudioDriver * ad, Config & cfg)
+{
+	if (ad->open(cfg) != 0)
+		return false;
+	
+	const size_t numFrames = 1024;
+	void *buffer = calloc(numFrames, 4);
+	int write_res = ad->write((float *)buffer, numFrames);
+	free(buffer);
+	
+	return write_res == 0;
+}
+
 int
 AudioInterface::open( Config & config )
 {
-	if (driver) delete driver;
-	driver = 0;
+	SAFE_DELETE(driver);
 	
-	// auto-select - try all drivers, best first
-	if( config.audio_driver == "auto" || config.audio_driver == "AUTO" )
-	{
-		
-		// try ALSA-MMAP
+	// try ALSA-MMAP
+	if (config.audio_driver == "auto" ||
+		config.audio_driver == "alsa-mmap")
+	{	
 		driver = new ALSAmmapAudioDriver;
-		if ( driver->open( config ) == 0 )
+		if (try_driver(driver, config))
 		{
-if (config.debug_drivers)
-			cout << "<AudioInterface> opened ALSA-MMAP AudioDriver" << endl;
-
+			if (config.debug_drivers)
+				cout << "<AudioInterface> opened ALSA-MMAP AudioDriver" << endl;
 			return 0;
-		}
-		delete driver; driver = 0;
-		
-		// try ALSA
-		driver = new ALSAAudioDriver;
-		if ( driver->open( config ) == 0 )
-		{
-if (config.debug_drivers)
-			cout << "<AudioInterface> opened ALSA AudioDriver" << endl;
-
-			return 0;
-		}
-		delete driver; driver = 0;
-		
-		//try OSS
-		driver = new OSSAudioDriver;
-		if ( driver->open( config ) == 0 )
-		{
-if (config.debug_drivers)
-			cout << "<AudioInterface> opened OSS AudioDriver" << endl;
-
-			return 0;
-		}
-		delete driver; driver = 0;
-	} 
-	else if( config.audio_driver == "oss" || config.audio_driver == "OSS" )
-	{
-		driver = new OSSAudioDriver;
-		if ( driver->open( config ) == 0 )
-		{
-if (config.debug_drivers)
-			cout << "<AudioInterface> opened OSS AudioDriver" << endl;
-
-			return 0;
-		} 
-		else
-		{
-			delete driver;
-			driver = 0;
-		}
-	} 
-	else if( config.audio_driver == "alsa" || config.audio_driver == "ALSA" )
-	{
-		driver = new ALSAAudioDriver;
-		if ( driver->open( config ) == 0 )
-		{
-if (config.debug_drivers)
-			cout << "<AudioInterface> opened ALSA AudioDriver" << endl;
-
-			return 0;
-		} 
-		else
-		{
-			delete driver;
-			driver = 0;
 		}
 	}
-	else if( config.audio_driver == "alsa-mmap" || config.audio_driver == "ALSA-MMAP" )
-	{
-		driver = new ALSAmmapAudioDriver;
-		if ( driver->open( config ) == 0 )
+	
+	SAFE_DELETE(driver);
+	
+	// try ALSA
+	if (config.audio_driver == "auto" ||
+		config.audio_driver == "alsa")
+	{	
+		driver = new ALSAAudioDriver;
+		if (try_driver(driver, config))
 		{
-if (config.debug_drivers)
-			cout << "<AudioInterface> opened ALSA-MMAP AudioDriver" << endl;
-
+			if (config.debug_drivers)
+				cout << "<AudioInterface> opened ALSA AudioDriver" << endl;
 			return 0;
 		}
-		else
+	}
+	
+	SAFE_DELETE(driver);
+	
+	//try OSS
+	if (config.audio_driver == "auto" ||
+		config.audio_driver == "oss")
+	{	
+		driver = new OSSAudioDriver;
+		if (try_driver(driver, config))
 		{
-			delete driver;
-			driver = 0;
+			if (config.debug_drivers)
+				cout << "<AudioInterface> opened OSS AudioDriver" << endl;
+			return 0;
 		}
 	}
-	cerr << "error: could not find \"" << config.audio_driver << "\" audio driver\n";
+	
+	SAFE_DELETE(driver);
+	
+	cerr << "error: could not start audio driver: " << config.audio_driver << "\n";
 	return -1;
 }
 
@@ -142,5 +117,5 @@ AudioInterface::AudioInterface()
 
 AudioInterface::~AudioInterface()
 {
-	if (driver) delete driver;
+	SAFE_DELETE(driver);
 }
