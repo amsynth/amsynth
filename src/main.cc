@@ -179,8 +179,17 @@ GenericOutput * open_audio()
 #endif
 }
 
+void fatal_error(const std::string & msg)
+{
+	std::cerr << msg << "\n";
+	ShowModalErrorMessage(msg);
+	exit(1);
+}
+
 int main( int argc, char *argv[] )
 {
+	Gtk::Main kit( &argc, &argv ); // this can be called SUID
+	
 	std::cout << 
 "amSynth " VERSION "\n\
 Copyright 2001-2006 Nick Dowell and others.\n\
@@ -238,10 +247,8 @@ under certain conditions; see the file COPYING for details\n";
 	presetController = new PresetController();
 	
 	out = open_audio();
-	if (!out) {
-		std::cerr << "open_audio() failed\n";
-		return 1;
-	}
+	if (!out)
+		fatal_error("Error: Could not open the configured audio device");
 
 	vau = new VoiceAllocationUnit;
 	vau->SetSampleRate (config.sample_rate);
@@ -250,7 +257,8 @@ under certain conditions; see the file COPYING for details\n";
 	
 	presetController->loadPresets(config.current_bank_file.c_str());
 	
-	out->Start ();
+	if (!out->Start())
+		fatal_error("Error: Could not open the configured audio interface");
 	
 	if (config.debug_drivers) std::cerr << "*** DONE :)\n";
 
@@ -267,10 +275,7 @@ under certain conditions; see the file COPYING for details\n";
 	midi_interface = new MidiInterface();
 #endif
 	if (midi_interface->open(config) != 0)
-	{
-		std::cerr << "couldn't to open a midi device\n\n";
-		exit (-1);
-	}
+		fatal_error("Error: Could not open the configured MIDI interface");
 
 	midi_controller = new MidiController( config );
 	midi_interface->SetMidiStreamReceiver(midi_controller);
@@ -287,8 +292,6 @@ under certain conditions; see the file COPYING for details\n";
 	midi_controller->setPresetController( *presetController );
   
 	presetController->getCurrentPreset().AddListenerToAll (vau);
-
-	Gtk::Main kit( &argc, &argv ); // this can be called SUID
 
 	// give audio/midi threads time to start up first..
 	// if (jack) sleep (1);

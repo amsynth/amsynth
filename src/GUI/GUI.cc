@@ -680,3 +680,11 @@ void GUI::GdkInputFunction(gpointer data, gint source, GdkInputCondition conditi
 	if (read (source, &req, sizeof(Request)) == sizeof(Request)) req.slot();
 
 }
+
+void ShowModalErrorMessage(const string & msg)
+{
+	MessageDialog dlg ("amSynth", false, MESSAGE_ERROR, BUTTONS_OK, true);
+	dlg.set_secondary_text(msg);
+	dlg.run();
+}
+

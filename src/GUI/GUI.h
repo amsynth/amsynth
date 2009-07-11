@@ -136,4 +136,8 @@ private:
         std::string             m_baseName;
         Request                 m_requestUpdate;
 };
+
+void ShowModalErrorMessage(const string & msg);
+
 #endif
+
