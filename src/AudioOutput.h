@@ -77,4 +77,10 @@ private:
 #endif
 };
 
+class NullAudioOutput : public GenericOutput { public:
+	virtual	int  init  ( Config & config ) { return -1; }
+	virtual	bool Start () { return -1; }
+	virtual	void Stop  () {}
+};
+
 #endif				// _AUDIO_OUTPUT_H

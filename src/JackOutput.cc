@@ -50,13 +50,18 @@ jack_error	(const char* msg)
 
 #endif
 
+JackOutput::JackOutput()
+{
+	initialised = false;
+	client_name = "amSynth";	
+}
+
 int
 JackOutput::init	( Config & config )
 {
 #ifdef with_jack
-	initialised = false;
-	client_name = "amSynth";
-	
+	if (initialised)
+		return 0;
 	
 	// check if there are already any amSynth jack clients...
 	

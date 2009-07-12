@@ -15,7 +15,7 @@
 class JackOutput : public GenericOutput {
 
 public:
-//			JackOutput	( );
+				JackOutput	( );
 	virtual		~JackOutput	( ) {};
 	
 	int			init		( Config & config );// returns 0 on success
@@ -52,4 +52,4 @@ private:
 	bool	initialised;
 };
 
-#endif				// _AUDIO_OUTPUT_H
+#endif				// _JACK_OUTPUT_H

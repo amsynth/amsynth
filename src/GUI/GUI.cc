@@ -380,6 +380,36 @@ GUI::init()
 	
 	show_all();
 	
+	bool bad_config = false;
+	
+	if (config->current_audio_driver.empty())
+	{
+		bad_config = true;
+		MessageDialog dlg (*this, "amSynth configuration error", false, MESSAGE_ERROR, BUTTONS_OK, true);
+		dlg.set_secondary_text(
+			"amSynth could not initialise the selected audio device.\n\n"
+			"Please review the configuration and restart"
+		    );
+		dlg.run();
+	}
+	
+	if (config->current_midi_driver.empty())
+	{
+		bad_config = true;
+		MessageDialog dlg (*this, "amSynth configuration error", false, MESSAGE_ERROR, BUTTONS_OK, true);
+		dlg.set_secondary_text(
+			"amSynth could not initialise the selected midi device.\n\n"
+			"Please review the configuration and restart"
+		    );
+		dlg.run();
+	}
+	
+	if (bad_config)
+	{
+		// open config dialog
+		event_handler(evConfig);
+		return;
+	}
 	
 	// show realtime warning message if necessary
 	if (!config->realtime && config->current_audio_driver != "jack" && config->current_audio_driver != "JACK")

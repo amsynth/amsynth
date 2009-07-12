@@ -172,18 +172,18 @@ GenericOutput * open_audio()
 			return jack;
 		else
 		{
-			std::cerr << "JACK init failed: " << jack->get_error_msg() << "\n";
+			std::string jack_error = jack->get_error_msg();
 			delete jack;
 			
 			// we were asked specifically for jack, so don't use anything else
-			if (config.audio_driver == "jack")
-				return NULL;
+			if (config.audio_driver == "jack") {
+				std::cerr << "JACK init failed: " << jack_error << "\n";
+				return new NullAudioOutput;
+			}
 		}
 	}
 	
-	AudioOutput *out = new AudioOutput();
-	out->init(config); // AudioOutput::init() always returns 0 so no need to check
-	return out;
+	return new AudioOutput();
 	
 #endif
 }
@@ -260,8 +260,11 @@ int main( int argc, char *argv[] )
 	
 	out = open_audio();
 	if (!out)
-		fatal_error("Error: Could not open the configured audio interface: " +
-		            config.audio_driver);
+		fatal_error("Fatal Error: open_audio() returned NULL.\n"
+		            "config.audio_driver = " + config.audio_driver);
+
+	// errors now detected & reported in the GUI
+	out->init(config);
 
 	vau = new VoiceAllocationUnit;
 	vau->SetSampleRate (config.sample_rate);
@@ -270,9 +273,8 @@ int main( int argc, char *argv[] )
 	
 	presetController->loadPresets(config.current_bank_file.c_str());
 	
-	if (!out->Start())
-		fatal_error("Error: Could not open the configured audio interface: " +
-		            config.audio_driver);
+	// errors now detected & reported in the GUI
+	out->Start();
 	
 	if (config.debug_drivers) std::cerr << "*** DONE :)\n";
 
@@ -288,9 +290,10 @@ int main( int argc, char *argv[] )
 	
 	midi_interface = new MidiInterface();
 #endif
-	if (midi_interface->open(config) != 0)
-		fatal_error("Error: Could not open the configured MIDI interface");
-
+	
+	// errors now detected & reported in the GUI
+	midi_interface->open(config);
+	
 	midi_controller = new MidiController( config );
 	midi_interface->SetMidiStreamReceiver(midi_controller);
 	midi_interface->Run();
