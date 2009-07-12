@@ -260,7 +260,8 @@ int main( int argc, char *argv[] )
 	
 	out = open_audio();
 	if (!out)
-		fatal_error("Error: Could not open the configured audio device");
+		fatal_error("Error: Could not open the configured audio interface: " +
+		            config.audio_driver);
 
 	vau = new VoiceAllocationUnit;
 	vau->SetSampleRate (config.sample_rate);
@@ -270,7 +271,8 @@ int main( int argc, char *argv[] )
 	presetController->loadPresets(config.current_bank_file.c_str());
 	
 	if (!out->Start())
-		fatal_error("Error: Could not open the configured audio interface");
+		fatal_error("Error: Could not open the configured audio interface: " +
+		            config.audio_driver);
 	
 	if (config.debug_drivers) std::cerr << "*** DONE :)\n";
 
