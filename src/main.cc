@@ -121,18 +121,27 @@ void install_default_files_if_reqd()
 	char * data_dir = br_find_data_dir (DEFAULT_PREFIX"/share");
 	char * amsynth_data_dir = br_strcat (data_dir, "/amSynth");
 	char * factory_controllers = br_strcat (amsynth_data_dir, "/Controllersrc");
+	char * factory_config = br_strcat (amsynth_data_dir, "/rc");
 	char * factory_bank = br_strcat (amsynth_data_dir, "/presets");
 	char * user_controllers = br_strcat (homedir, "/.amSynthControllersrc");
+	char * user_config = br_strcat (homedir, "/.amSynthrc");
 	char * user_bank = br_strcat (homedir, "/.amSynth.presets");
 	
-	if (fopen (user_controllers,"r") == NULL)
+	struct stat st;
+	
+	if (stat (user_controllers, &st) == -1)
 	{
-		printf ("installing default controller map\n");
+		printf ("installing default controller map to %s\n", user_controllers);
 		fcopy (user_controllers, factory_controllers);
 	}
-	if (fopen (user_bank,"r") == NULL)
+	if (stat (user_config, &st) == -1)
 	{
-		printf ("installing default sound bank\n");
+		printf ("installing configuration file to %s\n", user_config);
+		fcopy (user_config, factory_config);
+	}
+	if (stat (user_bank, &st) == -1)
+	{
+		printf ("installing default sound bank to %s\n", user_bank);
 		fcopy (user_bank, factory_bank);
 	}
 

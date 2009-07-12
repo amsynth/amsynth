@@ -28,12 +28,14 @@ midi_channel		0
 #
 
 # select audio driver to use. (auto/alsa-mmap/alsa/oss/jack)
-# auto selects the best available driver (in the order jack alsa-mmap alsa oss)
-# 
+#
+# auto selects the best available driver (in the order jack alsa-mmap alsa oss) 
 # for most people 'auto' will always be the best choice
 #
+# 'jack' is the best choice for interoperating with other music programs,
+# and typically achieves the lowest latency
+#
 # 'alsa-mmap' has better performance than 'alsa', but may be less compatible
-# 'jack' is the best choice for interoperating with other music programs
 
 audio_driver		auto
 
