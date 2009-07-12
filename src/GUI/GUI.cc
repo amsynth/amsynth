@@ -130,6 +130,25 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	ldr->write (amsynth_logo, sizeof(amsynth_logo)); ldr->close ();
 	aboutDlg.set_logo (ldr->get_pixbuf());
 	aboutDlg.signal_response().connect(sigc::hide(mem_fun(aboutDlg, &Gtk::Dialog::hide)));
+	std::list<std::string> about_authors;
+	about_authors.push_back("Nick Dowell");
+	about_authors.push_back("Karsten Wiese");
+	about_authors.push_back("Jezar at dreampoint");
+	about_authors.push_back("Sebastien Cevey");
+	about_authors.push_back("Taybin Rutkin");
+	about_authors.push_back("Bob Ham"); 
+	about_authors.push_back("Darrick Servis");
+	about_authors.push_back("Johan Martinsson");
+	about_authors.push_back("Andy Ryan");
+	about_authors.push_back("Chris Cannam");
+	about_authors.push_back("Paul Winkler");
+	about_authors.push_back("Adam Sampson");
+	about_authors.push_back("Martin Tarenskeen");
+	about_authors.push_back("Adrian Knoth");
+	aboutDlg.set_authors(about_authors);
+	std::list<std::string> about_artists;
+	about_artists.push_back("Saul Cross");
+	aboutDlg.set_artists(about_artists);
 	
 	
 	//

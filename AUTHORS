@@ -31,3 +31,19 @@ Johan Martinsson
  
 Andy Ryan
  - Added midi out capabilities for control surfaces with feedback
+
+Chris Cannam
+ - Patch to Jack dynamic library loading
+
+Paul Winkler
+ - GCC compilation fixes
+
+Adam Sampson
+ - GCC compilation fixes
+
+Martin Tarenskeen
+ - GCC compilation fixes
+
+Adrian Knoth
+ - JACK support (removed dynamic loading code)
+
