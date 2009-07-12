@@ -3,6 +3,8 @@
  */
 #include "AudioInterface.h"
 
+#include <cstdlib>
+
 #define SAFE_DELETE(o) if (o) { delete o; o = 0; }
 
 int
