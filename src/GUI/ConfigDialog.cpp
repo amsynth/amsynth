@@ -81,6 +81,7 @@ ConfigDialog::WriteValues ()
 	mConfig.oss_audio_device = mOSSAudioDevice.get_text ();
 	mConfig.alsa_audio_device = mALSAAudioDevice.get_text ();
 	mConfig.sample_rate = strtol (mSampleRate.get_active_text().c_str(), NULL, 0);
+	mConfig.save();
 }
 
 void

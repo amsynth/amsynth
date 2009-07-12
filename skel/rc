@@ -1,0 +1,73 @@
+#	~/.amSynthrc - configuration file for amSynth
+#						http://amsynthe.sourceforge.net
+#							(C) '01-'09 Nick Dowell
+
+#
+#	MIDI Input Configuration
+#
+
+# select midi driver to use [ auto / alsa / oss ]
+# the ALSA driver uses the sequencer client interface. you will have to 
+# 'aconnect' it to something to get input.
+
+midi_driver 		auto
+
+# set the OSS compatible midi device file to read input data from. 
+# eg /dev/midi or /dev/midi00 for some systems.
+
+oss_midi_device		/dev/midi
+
+# midi channel to listen for events on. midi channels are numbered 1-16,
+# setting midi channel to 0 will listen on all channels
+
+midi_channel		0
+
+
+#
+#	AUDIO Output Configuration
+#
+
+# select audio driver to use. (auto/alsa-mmap/alsa/oss/jack)
+# auto selects the best available driver (in the order jack alsa-mmap alsa oss)
+# 
+# for most people 'auto' will always be the best choice
+#
+# 'alsa-mmap' has better performance than 'alsa', but may be less compatible
+# 'jack' is the best choice for interoperating with other music programs
+
+audio_driver		auto
+
+
+# set the OSS digital audio device to output to.
+
+oss_audio_device	/dev/dsp
+
+# set the ALSA pcm device to use
+# you should probably set this to hw:0 or similar, if you know what youre doing
+# when using alsa-mmap for audio out, you will probably need to specify hw:0
+
+alsa_audio_device	default
+
+# sets the sampling rate to use
+#
+# (this has no effect when using JACK - the jack server decides the sample rate)
+#
+# lower sampling rates use less CPU power, so more voices are usable at once.
+
+sample_rate		44100
+
+
+#
+#	General Options
+#
+
+# sets the default maximum polyphony (simultaneous notes played)
+# playing too many motes for your CPU power will do horrible things.
+#
+# Pentium3 class machines will safely do 16 voices, (pentium4 2.40GHz = 60)
+#
+# set this to 0 for unlimited polyphony
+
+polyphony		16
+
+

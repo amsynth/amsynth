@@ -323,7 +323,6 @@ int main( int argc, char *argv[] )
 
 	presetController->savePresets(config.current_bank_file.c_str ());
 	midi_controller->saveConfig();
-	config.save();
 	
 	out->Stop ();
 #ifdef _DEBUG
