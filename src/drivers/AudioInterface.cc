@@ -3,6 +3,8 @@
  */
 #include "AudioInterface.h"
 
+#include <cstdlib>
+
 #define SAFE_DELETE(o) if (o) { delete o; o = 0; }
 
 int
@@ -97,6 +99,7 @@ AudioInterface::open( Config & config )
 	SAFE_DELETE(driver);
 	
 	cerr << "error: could not start audio driver: " << config.audio_driver << "\n";
+	config.current_audio_driver = ""; // so the GUI know there is a problem
 	return -1;
 }
 
