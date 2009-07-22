@@ -23,6 +23,7 @@ amSynth_CXXFLAGS = $(CXXFLAGS) -DENABLE_BINRELOC
 amSynth_LIBS = -lstdc++ -lm -lpthread
 amSynth_LDFLAGS = $(DEPS_LIBS)
 
-install-exec-hook):
-	chown root $(DESTDIR)$(bindir)/amSynth;\
+install-exec-hook:
+	chown root $(DESTDIR)$(bindir)/amSynth
 	chmod +s $(DESTDIR)$(bindir)/amSynth
+
