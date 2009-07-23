@@ -78,12 +78,12 @@
 		E2AAD1FF0F84E20800167FA5 /* VoiceAllocationUnit.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoiceAllocationUnit.cc; path = src/VoiceAllocationUnit.cc; sourceTree = "<group>"; };
 		E2AAD2000F84E20800167FA5 /* Preset.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Preset.cc; path = src/Preset.cc; sourceTree = "<group>"; };
 		E2AAD2020F84E20800167FA5 /* VoiceAllocationUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VoiceAllocationUnit.h; path = src/VoiceAllocationUnit.h; sourceTree = "<group>"; };
-		E2AAD2130F84E27500167FA5 /* audioeffectx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = audioeffectx.h; path = public.sdk/source/vst2.x/audioeffectx.h; sourceTree = VSTSDK24; };
-		E2AAD2140F84E27500167FA5 /* audioeffectx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = audioeffectx.cpp; path = public.sdk/source/vst2.x/audioeffectx.cpp; sourceTree = VSTSDK24; };
-		E2AAD2150F84E27500167FA5 /* aeffeditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = aeffeditor.h; path = public.sdk/source/vst2.x/aeffeditor.h; sourceTree = VSTSDK24; };
-		E2AAD2160F84E27500167FA5 /* audioeffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = audioeffect.cpp; path = public.sdk/source/vst2.x/audioeffect.cpp; sourceTree = VSTSDK24; };
-		E2AAD2170F84E27500167FA5 /* audioeffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = audioeffect.h; path = public.sdk/source/vst2.x/audioeffect.h; sourceTree = VSTSDK24; };
-		E2AAD2180F84E27500167FA5 /* vstplugmain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vstplugmain.cpp; path = public.sdk/source/vst2.x/vstplugmain.cpp; sourceTree = VSTSDK24; };
+		E2AAD2130F84E27500167FA5 /* audioeffectx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = audioeffectx.h; path = /Users/nick/Code/amsynthe/vstsdk/audioeffectx.h; sourceTree = "<absolute>"; };
+		E2AAD2140F84E27500167FA5 /* audioeffectx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = audioeffectx.cpp; path = /Users/nick/Code/amsynthe/vstsdk/audioeffectx.cpp; sourceTree = "<absolute>"; };
+		E2AAD2150F84E27500167FA5 /* aeffeditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = aeffeditor.h; path = /Users/nick/Code/amsynthe/vstsdk/aeffeditor.h; sourceTree = "<absolute>"; };
+		E2AAD2160F84E27500167FA5 /* audioeffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = audioeffect.cpp; path = /Users/nick/Code/amsynthe/vstsdk/audioeffect.cpp; sourceTree = "<absolute>"; };
+		E2AAD2170F84E27500167FA5 /* audioeffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = audioeffect.h; path = /Users/nick/Code/amsynthe/vstsdk/audioeffect.h; sourceTree = "<absolute>"; };
+		E2AAD2180F84E27500167FA5 /* vstplugmain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vstplugmain.cpp; path = /Users/nick/Code/amsynthe/vstsdk/vstplugmain.cpp; sourceTree = "<absolute>"; };
 		E2AAD4CA0F8507CB00167FA5 /* presets */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = presets; path = skel/presets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -186,7 +186,7 @@
 				E2AAD2170F84E27500167FA5 /* audioeffect.h */,
 				E2AAD2180F84E27500167FA5 /* vstplugmain.cpp */,
 			);
-			name = vstsdk;
+			path = vstsdk;
 			sourceTree = "<group>";
 		};
 		E2AAD4C90F8507B900167FA5 /* Resources */ = {

@@ -9,7 +9,7 @@
 
 #include "PresetController.h"
 #include "VoiceAllocationUnit.h"
-#include "public.sdk/source/vst2.x/audioeffectx.h"
+#include "audioeffectx.h"
 
 #ifdef WIN32
 #include <windows.h>
