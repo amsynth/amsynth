@@ -5,7 +5,7 @@ AM_CONFIG_HEADER(config.h)
 
 
 addCXXFLAGS="-D_REENTRANT"
-CXXFLAGS="-Wall"
+CXXFLAGS="$CXXFLAGS -Wall"
 
 AC_PROG_CXX
 AC_PROG_INSTALL
@@ -113,15 +113,13 @@ if test "$enable_profile" = "yes" ; then
                 CXXFLAGS="$CXXFLAGS -p"
         fi
 else
+	if test "$GCC" = "yes" ; then
+		CXXFLAGS="$CXXFLAGS -O3 -ffast-math -fno-exceptions -fomit-frame-pointer"
+	fi
 	AC_MSG_RESULT([no])
 	profiling=no
 fi
 
-if test $profiling = "no"; then 
-  if test $debugging = "no"; then
-    CXXFLAGS="$CXXFLAGS -O3 -ffast-math -fno-exceptions -fomit-frame-pointer"
-  fi 
-fi
 
 
 dnl
@@ -153,16 +151,18 @@ if test "$with_oss" = "yes";  then
 fi
 if test "$with_alsa" = "yes"; then 
 	CXXFLAGS="$CXXFLAGS -Dwith_alsa"
-	LDFLAGS="$LDFLAGS -lasound"
+	LIBS="$LIBS -lasound"
 fi
 if test "$with_jack" = "yes"; then 
 	CXXFLAGS="$CXXFLAGS -Dwith_jack"
-	LDFLAGS="$LDFLAGS -ljack"
+	LIBS="$LIBS -ljack"
 fi
 if test "$with_sndfile" = "yes"; then
 	CXXFLAGS="$CXXFLAGS -Dwith_sndfile"
-	LDFLAGS="$LDFLAGS -lsndfile"
+	LIBS="$LIBS -lsndfile"
 fi
+
+AC_SUBST(LIBS)
 
 AC_OUTPUT([
 Makefile

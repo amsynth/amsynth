@@ -47,3 +47,6 @@ Martin Tarenskeen
 Adrian Knoth
  - JACK support (removed dynamic loading code)
 
+Samuli Suominen
+ - Autoconf improvements
+

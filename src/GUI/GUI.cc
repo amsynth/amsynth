@@ -145,6 +145,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	about_authors.push_back("Adam Sampson");
 	about_authors.push_back("Martin Tarenskeen");
 	about_authors.push_back("Adrian Knoth");
+	about_authors.push_back("Samuli Suominen");
 	aboutDlg.set_authors(about_authors);
 	std::list<std::string> about_artists;
 	about_artists.push_back("Saul Cross");
