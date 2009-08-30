@@ -28,8 +28,13 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-
 using namespace std;
+
+#ifdef _DEBUG
+#define DEBUGMSG( ... ) fprintf( stderr, __VA_ARGS__ )
+#else
+#define DEBUGMSG( ... )
+#endif
 
 
 string help_text =
@@ -54,36 +59,25 @@ Config config;
 
 
 
-
-
 void sched_realtime()
 {
-#ifdef __LINUX__
-	struct sched_param sched;
-
+#ifdef linux
+	struct sched_param sched = {0};
 	sched.sched_priority = 50;
 	int foo = sched_setscheduler(0, SCHED_FIFO, &sched);
 	sched_getparam(0, &sched);
 
 	if (foo) {
+		DEBUGMSG("Failed to set SCHED_FIFO\n");
 		config.realtime = 0;
-		/*
-		cout << endl << "		 - - WARNING - -" << endl
-		<< "    amSynth could not set realtime priority." << endl
-		<< "You may experience audio buffer underruns "
-		<< "resulting in 'clicks' in the audio." << endl
-		<< "This is most likely because the program is not SUID root." << endl
-		<< "Please read the documentation for information on how to "
-		<< "remedy this." << endl << endl;
-		*/
 	}
 	else {
+		DEBUGMSG("Set SCHED_FIFO\n");
 		config.realtime = 1;
-#ifdef _DEBUG
-		cout << "main: scheduling priority is " << sched.sched_priority << endl;
-#endif
 	}
-#endif //__LINUX__
+#else
+#warning "sched_realtime not implemented for this OS"
+#endif
 }
 
 int fcopy (const char * dest, const char *source)
@@ -199,7 +193,14 @@ void fatal_error(const std::string & msg)
 
 int main( int argc, char *argv[] )
 {
-	Gtk::Main kit( &argc, &argv ); // this can be called SUID
+	sched_realtime();
+
+	// need to drop our suid-root permissions :-
+	// GTK will not work SUID for security reasons..
+	setreuid( getuid(), getuid() );
+	setregid( getgid(), getgid() );	
+
+	Gtk::Main kit( &argc, &argv ); // this can't be called SUID
 	
 	// will need to change when we reach the year 10000 ;-)
 	std::string build_year(__DATE__, sizeof(__DATE__) - 5, 4);
@@ -302,11 +303,6 @@ int main( int argc, char *argv[] )
 
 	if (config.debug_drivers) std::cerr << "*** DONE :)\n\n";
   
-	// need to drop our suid-root permissions :-
-	// GTK will not work SUID for security reasons..
-	setreuid( getuid(), getuid() );
-	setregid( getgid(), getgid() );
-	
 	midi_controller->SetMidiEventHandler(vau);
 	midi_controller->setPresetController( *presetController );
   
@@ -329,9 +325,7 @@ int main( int argc, char *argv[] )
 	kit.run();
 	
 
-#ifdef _DEBUG
-	cout << "main() : GUI was terminated, shutting down cleanly.." << endl;
-#endif
+	DEBUGMSG("main() : GUI was terminated, shutting down cleanly..\n");
 	
 	/*
 	 * code to shut down cleanly..
@@ -341,10 +335,7 @@ int main( int argc, char *argv[] )
 	midi_controller->saveConfig();
 	
 	out->Stop ();
-#ifdef _DEBUG
-	cout << "joined audioThread" << endl;
-#endif		
-	
+
 	if (config.xruns) std::cerr << config.xruns << " audio buffer underruns occurred\n";
 	
 	midi_interface->Stop ();

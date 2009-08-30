@@ -93,13 +93,9 @@ AudioOutput::Stop ()
 	out.close ();
 }
 
-extern void sched_realtime ();
-
 void 
 AudioOutput::ThreadAction	()
 {
-	sched_realtime ();
-	
 	int bufsize = config->buffer_size;
 	while (!ShouldStop ())
 	{

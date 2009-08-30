@@ -11,7 +11,6 @@
 #include <string.h>
 
 #define MIDI_BUF_SIZE 64
-void sched_realtime (); // defined in main.cc
 using namespace std;
 
 int MidiInterface::write_cc(unsigned int channel, unsigned int param, unsigned int val)
@@ -102,7 +101,6 @@ void MidiInterface::close()
 void
 MidiInterface::ThreadAction ()
 {
-	sched_realtime ();
     while (!ShouldStop () && midi)
 	{
 		bzero(_buffer, MIDI_BUF_SIZE);
