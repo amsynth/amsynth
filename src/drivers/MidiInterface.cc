@@ -117,8 +117,9 @@ MidiInterface::ThreadAction ()
 // need to kill the thread, otherwise it waits indefinitely for the next incoming byte
 void MidiInterface::Stop ()
 { 
-	Thread::Kill (); 
-	Thread::Join ();
+	Thread::Stop();
+	Thread::Kill(); 
+	Thread::Join();
 }
 
 void MidiInterface::SetMidiStreamReceiver(MidiStreamReceiver* in)

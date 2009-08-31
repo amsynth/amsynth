@@ -11,6 +11,7 @@
 #include <alsa/asoundlib.h>
 #include <unistd.h>
 #include <iostream>
+#include <poll.h>
 
 using namespace std;
 
@@ -25,26 +26,34 @@ public:
 	int 	open			( Config & config );
 	int 	close			( );
 	int 	get_alsa_client_id	( )	{ return client_id; };
+	bool	input_pending	( );
 private:
 	snd_seq_t		*seq_handle;
 	snd_midi_event_t	*seq_midi_parser;
 	int 			portid;
 	int				portid_out;
 	int			client_id;
-	int 			_bytes_read;
+	struct pollfd pollfd_in;
 };
+
+bool
+ALSAMidiDriver::input_pending()
+{
+	return (0 < snd_seq_event_input_pending( seq_handle, 1 ))
+		|| (0 < poll( &pollfd_in, 1, 100 ));
+}
 
 int
 ALSAMidiDriver::read(unsigned char *bytes, unsigned maxBytes)
 {
-	client_id = 0;
-	snd_seq_event_t *ev;
-	
-	snd_seq_event_input( seq_handle, &ev );
-	_bytes_read = snd_midi_event_decode(seq_midi_parser, bytes, maxBytes, ev);
-	snd_seq_free_event( ev );
-
-	return _bytes_read;
+	int bytes_read = 0;
+	if (input_pending() && seq_handle) {
+		snd_seq_event_t *ev = NULL;
+		snd_seq_event_input( seq_handle, &ev );
+		bytes_read = snd_midi_event_decode( seq_midi_parser, bytes, maxBytes, ev );
+		snd_seq_free_event( ev );
+	}
+	return bytes_read;
 }
 
 int
@@ -117,6 +126,8 @@ int ALSAMidiDriver::open( Config & config )
 		cerr << "Error creating sequencer port.\n";
 		return -1;
 	}
+	
+	snd_seq_poll_descriptors( seq_handle, &pollfd_in, 1, POLLIN );
 
 	return 0;
 }
@@ -124,6 +135,7 @@ int ALSAMidiDriver::open( Config & config )
 ALSAMidiDriver::ALSAMidiDriver()
 {
 	seq_handle = NULL;
+	memset( &pollfd_in, 0, sizeof(pollfd_in) );
 	if( snd_midi_event_new( 32, &seq_midi_parser ) )
 		cout << "Error creating midi event parser\n";
 }
