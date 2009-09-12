@@ -24,7 +24,6 @@ public:
 	void setDescription( int button, string text );
 	void setParameter( Parameter & param );
 	void _update_();
-	void set_style( Gtk::Style& style );
 private:
 	void toggle_handler( int button );
 	gfloat last_toggle;

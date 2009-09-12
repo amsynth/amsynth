@@ -26,13 +26,13 @@ class MidiEventHandler
 public:
 	virtual ~MidiEventHandler() {}
 	
-	virtual void HandleMidiNoteOn(int note, float velocity) {}
-	virtual void HandleMidiNoteOff(int note, float velocity) {}
-	virtual void HandleMidiPitchWheel(float value) {}
+	virtual void HandleMidiNoteOn(int /*note*/, float /*velocity*/) {}
+	virtual void HandleMidiNoteOff(int /*note*/, float /*velocity*/) {}
+	virtual void HandleMidiPitchWheel(float /*value*/) {}
 	virtual void HandleMidiAllSoundOff() {}
 	virtual void HandleMidiAllNotesOff() {}
-	virtual void HandleMidiSustainPedal(uchar value) {}
-	virtual void HandleMidiProgramChange(uchar program) {}
+	virtual void HandleMidiSustainPedal(uchar /*value*/) {}
+	virtual void HandleMidiProgramChange(uchar /*program*/) {}
 };
 
 class MidiController : public MidiStreamReceiver

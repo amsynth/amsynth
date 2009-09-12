@@ -77,7 +77,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 }
 
 void
-VoiceAllocationUnit::HandleMidiNoteOff(int note, float velocity)
+VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 {
 	keyPressed[note] = 0;
 	if (!sustain){

@@ -107,9 +107,3 @@ ParameterKnob::getGtkWidget()
   return (Gtk::Widget *) & knob;
 }
 
-void 
-ParameterKnob::set_style( Gtk::Style& style )
-{
-  //	value_label.set_style( style );
-  //	label.set_style( style );
-}

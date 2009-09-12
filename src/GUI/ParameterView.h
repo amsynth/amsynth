@@ -30,7 +30,7 @@ public:
 	 * Update the GUI to reflect changes in associated Parameter. 
 	 * This function is safe to be called by any thread.
 	 **/
-	void 				update		( ) { write (piped, &request, sizeof(request)); }
+	void 				update		( ) { ssize_t res = write(piped, &request, sizeof(request)); res = 0; }
 	
 protected:
 	Parameter	*parameter;

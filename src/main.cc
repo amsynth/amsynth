@@ -96,8 +96,9 @@ int fcopy (const char * dest, const char *source)
 	long size = ftell (in);
 	rewind (in);
 	char * tmp = (char *) malloc (size);
-	fread (tmp, 1, size, in);
-	fwrite (tmp, 1, size, out);
+	if (fread(tmp, 1, size, in) && 
+		fwrite(tmp, 1, size, out))
+		{}
 	free (tmp);
 	fclose (in);
 	fclose (out);

@@ -296,7 +296,7 @@ EditorPanel::~EditorPanel()
 }
 
 void
-EditorPanel::set_x_font( const char *x_font_desc )
+EditorPanel::set_x_font( const char * )
 {
   // apply font to current style.
   //	Gdk_Font font = style->get_font ( );

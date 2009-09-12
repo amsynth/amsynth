@@ -5,6 +5,7 @@
  
 #include "GUI.h"
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <list>
@@ -550,7 +551,8 @@ GUI::event_handler(const int e)
 		    sprintf( tc, "%d", config->alsa_seq_client_id );
 		    tmp += string(tc);
 		    tmp += ":0 &";
-		    system( tmp.c_str() );
+		    int res = system( tmp.c_str() );
+		    assert(res == 0);
 	    }
 		break;
 	
@@ -604,7 +606,8 @@ GUI::~GUI()
 void
 GUI::update()
 {
-    write(m_pipe_write, &m_requestUpdate, sizeof(Request));
+    ssize_t res = write(m_pipe_write, &m_requestUpdate, sizeof(Request));
+    assert(res);
 }
 void
 GUI::onUpdate()
@@ -710,7 +713,8 @@ GUI::command_run	(const char *command)
 	string full_command = command;
 	full_command += " &";
 	
-	system (full_command.c_str ());
+	int res = system(full_command.c_str());
+	assert(res == 0);
 }
 
 void
@@ -726,7 +730,7 @@ GUI::changed_voices	( )
 	if (vau) vau->SetMaxVoices (config->polyphony);
 }
 
-void GUI::GdkInputFunction(gpointer data, gint source, GdkInputCondition condition)
+void GUI::GdkInputFunction(gpointer, gint source, GdkInputCondition)
 {
 	static Request req;
 	if (read (source, &req, sizeof(Request)) == sizeof(Request)) req.slot();

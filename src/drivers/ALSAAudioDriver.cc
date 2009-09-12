@@ -30,6 +30,8 @@ ALSAAudioDriver::write(float *buffer, int frames)
 	free( audiobuf );
 	return 0;
 #else
+	UNUSED_PARAM(buffer);
+	UNUSED_PARAM(frames);
 	return -1;
 #endif
 }
@@ -64,6 +66,7 @@ ALSAAudioDriver::open( Config & config )
 
 	return 0;
 #else
+	UNUSED_PARAM(config);
 	return -1;
 #endif
 }
@@ -108,3 +111,4 @@ ALSAAudioDriver::~ALSAAudioDriver()
 {
   close();
 }
+

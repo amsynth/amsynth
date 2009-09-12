@@ -35,6 +35,8 @@ OSSAudioDriver::write(float *buffer, int frames)
 	
     return 0;
 #else
+    UNUSED_PARAM(buffer);
+    UNUSED_PARAM(frames);
     return -1;
 #endif
 }
@@ -70,6 +72,7 @@ int OSSAudioDriver::open( Config & config )
 	
     return 0;
 #else
+    UNUSED_PARAM(config);
     return -1;
 #endif
 }
@@ -95,6 +98,7 @@ int OSSAudioDriver::setChannels(int channels)
     }
     return 0;
 #else
+    UNUSED_PARAM(channels);
     return -1;
 #endif
 }
@@ -113,6 +117,7 @@ int OSSAudioDriver::setRate(int rate)
 #endif //_DEBUG
     return 0;
 #else // not with_oss
+    UNUSED_PARAM(rate);
     return -1;
 #endif //with_oss
 }

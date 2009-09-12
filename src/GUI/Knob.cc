@@ -100,7 +100,7 @@ Knob::on_button_press_event		(GdkEventButton *ev)
 }
 
 bool
-Knob::on_button_release_event	(GdkEventButton *ev)
+Knob::on_button_release_event	(GdkEventButton *)
 {
 	if(has_grab()) remove_modal_grab ();
 	return TRUE;

@@ -61,7 +61,7 @@ int OSSMidiDriver::read(unsigned char *bytes, unsigned maxBytes)
 }
 
 
-int OSSMidiDriver::write_cc(unsigned int channel, unsigned int param, unsigned int value)
+int OSSMidiDriver::write_cc(unsigned int /*channel*/, unsigned int /*param*/, unsigned int /*value*/)
 {
     return -1;
 }

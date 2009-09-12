@@ -116,6 +116,7 @@ JackOutput::init	( Config & config )
 	
 	return 0;
 #endif
+	UNUSED_PARAM(config);
 	return -1;
 }
 

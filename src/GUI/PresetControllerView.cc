@@ -21,11 +21,11 @@ PresetControllerView::PresetControllerView(int pipe_d, VoiceAllocationUnit & vau
 	
     commit.add_label("Save Changes",0.5);
     commit.signal_clicked().connect(
-		bind <char*>(mem_fun(*this, &PresetControllerView::ev_handler),"commit"));
+		bind <const char*>(mem_fun(*this, &PresetControllerView::ev_handler),"commit"));
 
 	presets_combo.get_entry()->set_editable( false );
 	presets_combo.get_entry()->signal_changed().connect(
-		bind <char*>(mem_fun(*this, &PresetControllerView::ev_handler),"presets_combo"));
+		bind <const char*>(mem_fun(*this, &PresetControllerView::ev_handler),"presets_combo"));
 
     add( preset_no_entry );
     add( presets_combo );

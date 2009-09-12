@@ -76,7 +76,7 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 		xrun_recovery();
 		// Return an error code so we can quickly test during initialisation.
 		// Won't stop playback at runtime because AudioOutput checks for a return code of -1
-		return 'xrun';
+		return 0xfeedface;
 	}
 
 	audiobuf = (short int*)areas[ 0].addr + 2*offset;
@@ -106,6 +106,8 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 	}*/
 	return 0;
 #else //with_alsa
+	UNUSED_PARAM(buffer);
+	UNUSED_PARAM(frames);
 	return -1;
 #endif
 }
@@ -141,6 +143,7 @@ ALSAmmapAudioDriver::open( Config & config )
 	periods = 0;
 	return 0;
 #else
+	UNUSED_PARAM(config);
 	return -1;
 #endif
 }

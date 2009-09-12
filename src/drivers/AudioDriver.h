@@ -7,6 +7,9 @@
 
 #include "../Config.h"
 
+// useful for avoiding compiler warnings
+#define UNUSED_PARAM( x ) (void)x
+
 using namespace std;
 
 /** 

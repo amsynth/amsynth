@@ -32,7 +32,7 @@ public:
 	void	SetSustain	(float);
 	void	SetRelease	(float);
 	
-	float * const getNFData (int nFrames);
+	float * getNFData (int nFrames);
 	
 	void	triggerOn	();
 	void	triggerOff	();

@@ -31,7 +31,7 @@ public:
 	virtual	bool		canRecord	( )	{ return false; }
 	virtual	void		startRecording	( )			{;}
 	virtual	void		stopRecording	( )			{;};
-	virtual	void		setOutputFile	( string file )	{}
+	virtual	void		setOutputFile	( string /*file*/ )	{}
 	virtual	string		getOutputFile	( ) { return ""; }
 
 
@@ -78,7 +78,7 @@ private:
 };
 
 class NullAudioOutput : public GenericOutput { public:
-	virtual	int  init  ( Config & config ) { return -1; }
+	virtual	int  init  ( Config & ) { return -1; }
 	virtual	bool Start () { return -1; }
 	virtual	void Stop  () {}
 };
