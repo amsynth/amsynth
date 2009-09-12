@@ -2,7 +2,8 @@
 
 function testOptions()
 {
-	./configure $1 && make clean all
+	echo "[+] testing configuration: $1"
+	./configure $1 1>/dev/null && make clean all 1>/dev/null
 	if [ $? -ne 0 ]; then
 		echo "************************************************";
 		echo ""
