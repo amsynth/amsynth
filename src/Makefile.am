@@ -1,7 +1,5 @@
 bin_PROGRAMS = amSynth
 
-INCLUDES = $(DEPS_CFLAGS)
-
 amSynth_SOURCES = \
 	main.cc \
 	AudioOutput.cc AudioOutput.h \

@@ -737,10 +737,3 @@ void GUI::GdkInputFunction(gpointer, gint source, GdkInputCondition)
 
 }
 
-void ShowModalErrorMessage(const string & msg)
-{
-	MessageDialog dlg ("amSynth", false, MESSAGE_ERROR, BUTTONS_OK, true);
-	dlg.set_secondary_text(msg);
-	dlg.run();
-}
-

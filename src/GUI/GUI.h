@@ -137,7 +137,5 @@ private:
         Request                 m_requestUpdate;
 };
 
-void ShowModalErrorMessage(const string & msg);
-
 #endif
 

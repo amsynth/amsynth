@@ -2,8 +2,7 @@
  * (c) 2001-2005 Nick Dowell
  */
 
-#include "GUI/GUI.h"
-#include "GUI/ParameterView.h"
+#include "GUI/gui_main.h"
 #include "MidiController.h"
 #include "VoiceAllocationUnit.h"
 #include "AudioOutput.h"
@@ -17,7 +16,6 @@
 
 #include "binreloc.h"
 
-#include <gtkmm/main.h>
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
@@ -200,8 +198,8 @@ int main( int argc, char *argv[] )
 	// GTK will not work SUID for security reasons..
 	setreuid( getuid(), getuid() );
 	setregid( getgid(), getgid() );	
-
-	Gtk::Main kit( &argc, &argv ); // this can't be called SUID
+	
+	gui_kit_init(argc, argv);
 	
 	// will need to change when we reach the year 10000 ;-)
 	std::string build_year(__DATE__, sizeof(__DATE__) - 5, 4);
@@ -258,7 +256,6 @@ int main( int argc, char *argv[] )
 	MidiInterface *midi_interface = NULL;
 	VoiceAllocationUnit *vau = NULL;
 	GenericOutput *out = NULL;
-	GUI *gui = NULL;
 	
 	presetController = new PresetController();
 	
@@ -311,20 +308,10 @@ int main( int argc, char *argv[] )
 
 	// give audio/midi threads time to start up first..
 	// if (jack) sleep (1);
-
-	// this can be called SUID:
-	int gdk_input_pipe[2];
-	if( pipe( gdk_input_pipe ) ) cout << "pipe() error\n";
-	gui = new GUI (config, *midi_controller, *vau, gdk_input_pipe[1], out, out->getTitle());
-	gui->setPresetController ( *presetController );
-	gui->init();
 	
-	// make GDK loop read events from the pipe
-	gdk_input_add(gdk_input_pipe[0], GDK_INPUT_READ, &GUI::GdkInputFunction, NULL);
+	gui_init(config, *midi_controller, *vau, *presetController, out);
 	
-	// cannot be called SUID:
-	kit.run();
-	
+	gui_kit_run();
 
 	DEBUGMSG("main() : GUI was terminated, shutting down cleanly..\n");
 	
