@@ -5,11 +5,7 @@
 #ifndef _PARAMETERKNOB_H
 #define _PARAMETERKNOB_H
 
-#include <gtkmm/box.h>
-#include <gtkmm/menu.h>
-#include <gtkmm/frame.h>
-#include <gtkmm/label.h>
-#include <gtkmm/adjustment.h>
+#include <gtkmm.h>
 #include <stdlib.h>
 #include "ParameterView.h"
 #include "Knob.h"

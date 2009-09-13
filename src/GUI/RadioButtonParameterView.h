@@ -5,11 +5,7 @@
 #ifndef _RADIOBUTTONPARAMETERVIEW_H
 #define _RADIOBUTTONPARAMETERVIEW_H
 
-#include <gtkmm/box.h>
-#include <gtkmm/frame.h>
-#include <gtkmm/label.h>
-#include <gtkmm/radiobutton.h>
-#include <gtkmm/style.h>
+#include <gtkmm.h>
 #include <stdlib.h>
 #include <list>
 #include <string>

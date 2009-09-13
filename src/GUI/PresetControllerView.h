@@ -5,10 +5,7 @@
 #ifndef _PRESETCONTROLLERVIEW_H
 #define _PRESETCONTROLLERVIEW_H
 
-#include <gtkmm/box.h>
-#include <gtkmm/button.h>
-#include <gtkmm/combo.h>
-#include <gtkmm/label.h>
+#include <gtkmm.h>
 #include <string>
 #include <list>
 #include "ParameterView.h"

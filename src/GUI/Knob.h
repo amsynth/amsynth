@@ -5,10 +5,7 @@
 #ifndef _KNOB_H
 #define _KNOB_H
 
-#include <gtkmm/misc.h>
-#include <gtkmm/main.h>
-#include <gtkmm/style.h>
-#include <gtkmm/adjustment.h>
+#include <gtkmm.h>
  
 // the knob turns from 30 degrees to 330 degrees, so graphics should fit that..
 

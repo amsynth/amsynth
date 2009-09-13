@@ -7,11 +7,7 @@
 #include "../UpdateListener.h"
 #include "Request.h"
 
-#include <gtkmm/dialog.h>
-#include <gtkmm/label.h>
-#include <gtkmm/combo.h>
-#include <gtkmm/button.h>
-#include <gtkmm/menu.h>
+#include <gtkmm.h>
 
 class MidiController;
 class PresetController;

@@ -5,9 +5,7 @@
 #ifndef _PARAMETERSWITCH_H
 #define _PARAMETERSWITCH_H
 
-#include <gtkmm/box.h>
-#include <gtkmm/label.h>
-#include <gtkmm/checkbutton.h>
+#include <gtkmm.h>
 #include <stdlib.h>
 
 #include "ParameterView.h"

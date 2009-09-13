@@ -5,10 +5,7 @@
 #ifndef _EDITOR_PANEL_H
 #define _EDITOR_PANEL_H
 
-#include <gtkmm/box.h>
-#include <gtkmm/frame.h>
-#include <gtkmm/fixed.h>
-#include <gtkmm/style.h>
+#include <gtkmm.h>
 
 // forward definition of classes: speeds up compilation
 

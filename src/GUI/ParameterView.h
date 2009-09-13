@@ -5,7 +5,7 @@
 #ifndef _PARAMETERVIEW_H
 #define _PARAMETERVIEW_H
 
-#include <gtkmm/widget.h>
+#include <gtkmm.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "../Parameter.h"
