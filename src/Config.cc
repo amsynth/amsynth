@@ -10,8 +10,6 @@
 
 using namespace std;
 
-static string amsynthrc_fname;
-
 Config::Config()
 {
 	amsynthrc_fname = string(getenv("HOME")) + string("/.amSynthrc");

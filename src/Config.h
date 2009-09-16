@@ -84,6 +84,8 @@ public:
 	
 	string	default_bank_file;
 	string	current_bank_file;
+
+	string	amsynthrc_fname;
 	
 	/* internal */
 	string	alsa_seq_client_name;
