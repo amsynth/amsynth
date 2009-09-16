@@ -81,9 +81,14 @@ public:
 		m_DeviceListSize = 0;
 	}
 	
-	virtual int init(Config&)
+	virtual int init(Config & config)
 	{
-		return (m_DeviceList && 0 < m_DeviceListSize) ? 0 : -1;
+		if (m_DeviceList && 0 < m_DeviceListSize)
+		{
+			config.current_audio_driver = "CoreAudio";
+			return 0;
+		}
+		return -1;
 	}
 	
 	virtual bool Start()
@@ -159,16 +164,21 @@ CoreMidiInterface::~CoreMidiInterface()
 }
 
 int
-CoreMidiInterface::open(Config&)
+CoreMidiInterface::open(Config & config)
 {
 	m_currInput = MIDIGetSource(0);
 	if (m_currInput)
 	{
 		MIDIPortConnectSource(m_inPort, m_currInput, NULL);
 		
-		CFStringRef name;
+		CFStringRef name = NULL;
 		MIDIObjectGetStringProperty(m_currInput, kMIDIPropertyName, &name);
-		CFShow(name);		
+		if (name)
+		{
+			char cstring[64] = "";
+			CFStringGetCString(name, cstring, sizeof(cstring), kCFStringEncodingUTF8);
+			config.current_midi_driver = std::string(cstring);
+		}
 	}
 	return (m_currInput) ? 0 : -1;
 }
