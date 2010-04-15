@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <string>
 #include <unistd.h>
+#include <stdlib.h>
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <sys/types.h>
