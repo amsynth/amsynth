@@ -567,6 +567,7 @@ GUI::event_handler(const int e)
 	{
 		ConfigDialog dlg (*this, *config);
 		dlg.run ();
+		break;
 	}
 		
 	default:
