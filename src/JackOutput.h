@@ -39,7 +39,6 @@ public:
 private:
 	int	running;
 	int	channels;
-	Config	*config;
 	string	wavoutfile;
 	int	recording;
 	string	client_name, error_msg;
