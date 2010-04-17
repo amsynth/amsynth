@@ -43,7 +43,7 @@ public:
 private:
     float rads, twopi_rate, random, freq;
 	double a0, a1, b1, d; // for the low-pass filter
-    int waveform, rate, random_count, period;
+    int waveform, rate, random_count;
 
 	float	mPulseWidth;
 	
