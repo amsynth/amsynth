@@ -10,8 +10,6 @@ LowPassFilter::LowPassFilter() :
 	rate (4100.0)
 ,	nyquist (22050.0)
 {
-	d1 = d2 = d3 = d4 = f = k = p = r = 0.0f;
-	a0 = a1 = a2 = b1 = b2 = 0.0f;
 }
 
 void

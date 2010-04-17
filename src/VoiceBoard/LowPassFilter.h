@@ -24,9 +24,7 @@ public:
 private:
 	float rate;
 	float nyquist;
-	double a0, a1, a2, b1, b2, res;
-	float f, k, p, r;
-	double d1, d2, d3, d4, x, y;
+	double d1, d2, d3, d4;
 };
 
 #endif
