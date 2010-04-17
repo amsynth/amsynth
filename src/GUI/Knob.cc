@@ -33,8 +33,9 @@ Knob::setFrames(const Glib::RefPtr<Gdk::Pixbuf>& pix, int x, int y, int frames)
 }
 
 void
-Knob::set_adjustment(Gtk::Adjustment* adj)
+Knob::set_adjustment(Gtk::Adjustment* adjustment)
 {
+	adj = adjustment;
 	adj->signal_value_changed().connect(mem_fun(*this, &Knob::on_adj_value_changed));
 	on_adj_value_changed();
 }

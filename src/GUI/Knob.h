@@ -29,7 +29,7 @@ protected:
 private:
 	void mouse_pos_change					(gint x, gint y);
 	Glib::RefPtr<Gdk::Pixbuf> pixmap;
-	Glib::RefPtr<Gtk::Adjustment> adj;
+	Gtk::Adjustment *adj;
 	gint widget_x, widget_y;
 	gint frame, width, height, frames, center_x, center_y;
 };
