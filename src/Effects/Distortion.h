@@ -16,7 +16,6 @@ public:
 	void	SetCrunch		(float);
 	void	Process			(float *buffer, unsigned);
 private:
-	float *buffer;
 	float drive, crunch;
 	int done;
 };
