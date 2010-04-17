@@ -95,7 +95,13 @@ public:
 	{
 		if (!m_DeviceID)
 		{
-			m_DeviceID = m_DeviceList[0];
+			OSStatus status = noErr;
+			AudioDeviceID defaultDeviceID = 0;
+			UInt32 propertySize = sizeof(defaultDeviceID);
+			status = AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice, &propertySize, &defaultDeviceID);
+			if (status != kAudioHardwareNoError) return false;
+			m_DeviceID = defaultDeviceID;
+
 			AudioDeviceAddIOProc(m_DeviceID, audioDeviceIOProc, &mInput);
 			AudioDeviceStart(m_DeviceID, audioDeviceIOProc);
 		}
