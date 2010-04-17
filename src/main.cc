@@ -74,6 +74,8 @@ void sched_realtime()
 		DEBUGMSG("Set SCHED_FIFO\n");
 		config.realtime = 1;
 	}
+#elif defined(__APPLE__)
+	// CoreAudio apps don't need realtime priority for decent performance
 #else
 #warning "sched_realtime not implemented for this OS"
 #endif
