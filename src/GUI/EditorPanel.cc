@@ -296,47 +296,6 @@ EditorPanel::~EditorPanel()
 }
 
 void
-EditorPanel::set_x_font( const char * )
-{
-  // apply font to current style.
-  //	Gdk_Font font = style->get_font ( );
-  //	font.load ( x_font_desc );
-  //	style->set_font ( font );
-  //	
-  //
-  for (int i = 0; i < 31; i++)
-    {
-      //		parameterView[i]->set_style ( *style );
-      parameterView[i]->queue_resize ( );
-    }
-  for (int i = 0; i < 10; i++)
-    {
-      //		rb_pv[i]->set_style ( *style );
-      rb_pv[i]->queue_resize ( );
-    }
-  //	param_switch->set_style ( *style );
-  param_switch->queue_resize ( );
-  //	
-  //	osc1_frame.set_style ( *style );
-  osc1_frame.queue_resize ( );
-  //	osc2_frame.set_style ( *style );
-  osc2_frame.queue_resize ( );
-  //	osc_mix_frame.set_style ( *style );
-  osc_mix_frame.queue_resize ( );
-  //	reverb_frame.set_style ( *style );
-  reverb_frame.queue_resize ( );
-  //	distortion_frame.set_style ( *style );
-  distortion_frame.queue_resize ( );
-  //	filter_frame.set_style ( *style );
-  filter_frame.queue_resize ( );
-  //	amp_frame.set_style ( *style );
-  amp_frame.queue_resize ( );
-  //	mod_frame.set_style ( *style );
-  mod_frame.queue_resize ( );
-  queue_resize ( );
-}
-
-void
 EditorPanel::on_realize	( )
 {
 	Gtk::VBox::on_realize();

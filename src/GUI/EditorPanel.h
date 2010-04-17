@@ -22,8 +22,6 @@ class EditorPanel : public Gtk::VBox
   EditorPanel	( Preset* preset, int piped );
   ~EditorPanel	( );
 	
-  void		set_x_font	( const char *x_font_desc );
-
  private:
   virtual void	on_realize	( );
 	
