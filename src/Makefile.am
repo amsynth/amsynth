@@ -14,7 +14,12 @@ amSynth_SOURCES = \
 
 SUBDIRS = drivers VoiceBoard GUI Effects
 
-amSynth_LDADD = drivers/libdrivers.a VoiceBoard/libVoiceBoard.a GUI/libGUI.a Effects/libEffects.a -lstdc++ -lm -lpthread $(DEPS_LIBS) $(LIBS)
+amSynth_LDADD = \
+	drivers/libdrivers.a \
+	VoiceBoard/libVoiceBoard.a \
+	GUI/libGUI.a \
+	Effects/libEffects.a \
+	-lstdc++ -lm -lpthread $(DEPS_LIBS) $(LIBS)
 
 amSynth_CFLAGS = $(CFLAGS) -DENABLE_BINRELOC
 amSynth_CXXFLAGS = $(CXXFLAGS) -DENABLE_BINRELOC
