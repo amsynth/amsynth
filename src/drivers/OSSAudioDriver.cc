@@ -67,6 +67,7 @@ int OSSAudioDriver::open( Config & config )
 	config.sample_rate = getRate();
 	
 	config.current_audio_driver = "OSS";
+	config.current_audio_driver_wants_realtime = 1;
 	
 	this->config = &config;
 	

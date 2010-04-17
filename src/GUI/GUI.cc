@@ -433,7 +433,8 @@ GUI::init()
 	}
 	
 	// show realtime warning message if necessary
-	if (!config->realtime && config->current_audio_driver != "jack" && config->current_audio_driver != "JACK")
+	if (config->current_audio_driver_wants_realtime == 1 &&
+		config->realtime == 0)
 	{
 		MessageDialog dlg (*this, "amSynth could not set realtime priority");
 		dlg.set_secondary_text ("You may experience audio buffer underruns resulting in 'clicks' in the audio.\n\nThis is most likely because the program is not SUID root.\n\nUsing the JACK audio subsystem can also help");

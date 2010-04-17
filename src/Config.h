@@ -38,6 +38,7 @@ public:
 	 * priorities, 0 otherwise
 	 */
 	int realtime;
+	int current_audio_driver_wants_realtime;
 	/**
 	 * A count of the number of voices currently active and producing a signal
 	 */
