@@ -31,7 +31,7 @@ public:
 		loadPresets();
 		
 		Preset & preset = mPresetController.getCurrentPreset();
-		for (int i=0; i<preset.ParameterCount(); i++) {
+		for (unsigned i=0; i<preset.ParameterCount(); i++) {
 			Parameter & param = preset.getParameter(i);
 			mVoiceAllocationUnit.UpdateParameter( param.GetId(), param.getControlValue() );
 		}
