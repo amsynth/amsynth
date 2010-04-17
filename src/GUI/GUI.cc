@@ -391,13 +391,12 @@ GUI::init()
 
 	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
 	
-	status = "Realtime : ";
-	if (this->config->current_audio_driver!="jack" && 
-		this->config->current_audio_driver!="JACK" &&
-		config->realtime
-		){ status += "YES"; }
-	else { status += "NO"; }
-	statusBar.pack_start (*manage(new Gtk::Label (status)), PACK_SHRINK, padding);
+	if (config->current_audio_driver_wants_realtime)
+	{
+		status = "Realtime : ";
+		status += config->realtime ? "YES" : "NO";
+		statusBar.pack_start(*manage(new Gtk::Label (status)), PACK_SHRINK, padding);
+	}
 	
 	show_all();
 	
