@@ -247,9 +247,9 @@ GUI::create_menus	( )
 
 	MenuItem *menu_item = manage (new MenuItem("Virtual Keyboard"));
 	menu_item->signal_activate().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evVkeybd));
-	if (config->alsa_seq_client_id==0) menu_item->set_sensitive( false );
-	// test for presence of vkeybd.
-	if (command_exists ("vkeybd") != 0) menu_item->set_sensitive( false );
+	// vkeybd must exist, and we must be using ALSA MIDI
+	if (config->alsa_seq_client_id == 0 || command_exists("vkeybd") != 0)
+		menu_item->set_sensitive( false );
 	list_utils.push_back (*menu_item);
 
 	menu_item = manage (new MenuItem("Record to .wav file..."));
@@ -546,13 +546,9 @@ GUI::event_handler(const int e)
 	
 	case evVkeybd:
 	    {
-		    string tmp = "vkeybd --addr ";
-		    char tc[5];
-		    sprintf( tc, "%d", config->alsa_seq_client_id );
-		    tmp += string(tc);
-		    tmp += ":0 &";
-		    int res = system( tmp.c_str() );
-		    assert(res == 0);
+			char tmp[255] = "";
+			snprintf(tmp, sizeof(tmp), "vkeybd --addr %d:0", config->alsa_seq_client_id);
+			command_run(tmp);
 	    }
 		break;
 	
@@ -695,27 +691,23 @@ GUI::bank_save_as	( )
 int
 GUI::command_exists	(const char *command)
 {
-	string test_command = "which ";
+	string test_command = "/usr/bin/which ";
 	test_command += command;
 	test_command += " &> /dev/null";
 	
 	int res = system (test_command.c_str ());
-	
-	if (WEXITSTATUS (res) == 0)
-		// exit code 0 - program exists in $PATH
-		return 0;
-	else
-		return 1;
+	// returns 0 if executable was found
+	return WEXITSTATUS(res);
 }
 
 void
 GUI::command_run	(const char *command)
 {
-	string full_command = command;
-	full_command += " &";
+	// TODO: would be better to fork() and exec()
 	
-	int res = system(full_command.c_str());
-	assert(res == 0);
+	string full_command = std::string(command) + std::string(" &");
+	// returns 0 even if command could not be run
+	system(full_command.c_str());
 }
 
 void
