@@ -52,9 +52,9 @@ public:
 
 	// The control value for this parameter.
 	// The control value is what the synthesis will use to get its values.
-	inline float	getControlValue	() const { return controlValue; }
+	inline float	getControlValue	() const { return _controlValue; }
 
-	const string	GetStringValue	() const { std::ostringstream o; o << controlValue; return o.str(); }
+	const string	GetStringValue	() const { std::ostringstream o; o << _controlValue; return o.str(); }
 
 	const string	getName			() const { return _name; }
 	Param			GetId			() const { return mParamId; }
@@ -78,14 +78,14 @@ public:
 	void			random_val		();
 
 	// The label assocaited with this Parameter. (e.g. "seconds")
-	const string	getLabel		() const { return label; }
+	const string	getLabel		() const { return _label; }
 	
 private:
 	Param							mParamId;
-	string							_name, label;
-	int								controlMode;
-	float							_value, _min, _max, _step, controlValue, base, offset;
-	vector<UpdateListener*>			updateListeners;
+	string							_name, _label;
+	int								_controlMode;
+	float							_value, _min, _max, _step, _controlValue, _base, _offset;
+	vector<UpdateListener*>			_updateListeners;
 };
 
 #endif

@@ -14,14 +14,14 @@ using namespace std;
 Parameter::Parameter	(string name, Param id, float value, float min, float max, float inc, ControlType type, float base, float offset, string label)
 :	mParamId	(id)
 ,	_name		(name)
-,	label		(label)
-,	controlMode	(type)
+,	_label		(label)
+,	_controlMode	(type)
 ,	_min		(min)
 ,	_max		(max)
 ,	_step		(inc)
-,	controlValue(0)
-,	base		(base)
-,	offset		(offset)
+,	_controlValue(0)
+,	_base		(base)
+,	_offset		(offset)
 {
 	setValue (value);
 }
@@ -29,16 +29,16 @@ Parameter::Parameter	(string name, Param id, float value, float min, float max, 
 void
 Parameter::addUpdateListener	(UpdateListener& ul)
 {
-	for (unsigned i=0; i<updateListeners.size(); i++) if (updateListeners[i] == &ul) return;
-	updateListeners.push_back (&ul);
-	updateListeners.back()->UpdateParameter (mParamId, controlValue);
+	for (unsigned i=0; i<_updateListeners.size(); i++) if (_updateListeners[i] == &ul) return;
+	_updateListeners.push_back (&ul);
+	_updateListeners.back()->UpdateParameter (mParamId, _controlValue);
 }
 
 void
 Parameter::removeUpdateListener( UpdateListener & ul )
 {
-	for (unsigned i=0; i<updateListeners.size(); i++)
-		if (updateListeners[i] == &ul) updateListeners.erase(updateListeners.begin()+i);
+	for (unsigned i=0; i<_updateListeners.size(); i++)
+		if (_updateListeners[i] == &ul) _updateListeners.erase(_updateListeners.begin()+i);
 }
 
 void
@@ -63,37 +63,38 @@ Parameter::setValue(float value)
 		_value = value;
 	
 	// set the control value
-	switch(controlMode){
+	switch (_controlMode) {
 		case PARAM_DIRECT:
-			controlValue = offset + base*_value;
-		break;
+			_controlValue = _offset + _base * _value;
+			break;
 		case PARAM_EXP:
-			controlValue = offset + ::pow((float)base,_value);
-		break;
+			_controlValue = _offset + ::pow( (float)_base, _value );
+			break;
 		case PARAM_POWER:
-			controlValue = offset + ::pow( _value, (float)base );
+			_controlValue = _offset + ::pow( _value, (float)_base );
+			break;
 #ifdef _DEBUG
 		default:
-		cout << "<Parameter> mode is undefined" << endl;
-		break;
+			cout << "<Parameter> mode is undefined" << endl;
+			break;
 #endif
 	}
 	
 #ifdef _DEBUG
 	cout << "<Parameter::setValue( " << foo 
 	<< " ) min=" << _min << " max=" << _max << " value set to " << _value 
-	<< " controlValue set to " << controlValue << endl;
+	<< " _controlValue set to " << _controlValue << endl;
 #endif
 	
 	// TODO: only update() Listeners it there _was_ a change?
 	// messes up the GUI - it needs to be better behaved (respect step value)
 	if (old_value!=_value)
-		for (unsigned i=0; i<updateListeners.size(); i++)
+		for (unsigned i=0; i<_updateListeners.size(); i++)
 		{
 #ifdef _DEBUG
 			cout << "updating UpdateListener " << updateListeners[i] << endl;
 #endif
-			updateListeners[i]->UpdateParameter (mParamId, controlValue);
+			_updateListeners[i]->UpdateParameter (mParamId, _controlValue);
 		}
 }
 
