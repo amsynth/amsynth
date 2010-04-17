@@ -9,7 +9,7 @@
 using namespace std;
 
 Knob::Knob()
-:	adj(Glib::RefPtr<Gtk::Adjustment>::RefPtr(new Gtk::Adjustment(0.0, 0.0, 1.0, 0.01, 1.0, 0)))
+:	adj(new Gtk::Adjustment(0.0, 0.0, 1.0, 0.01, 1.0, 0))
 ,	frame (0)
 {
 	set_events (Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::POINTER_MOTION_MASK);
@@ -33,9 +33,8 @@ Knob::setFrames(const Glib::RefPtr<Gdk::Pixbuf>& pix, int x, int y, int frames)
 }
 
 void
-Knob::set_adjustment(Gtk::Adjustment* adjustment)
+Knob::set_adjustment(Gtk::Adjustment* adj)
 {
-	adj = Glib::RefPtr<Gtk::Adjustment>::RefPtr(adjustment);
 	adj->signal_value_changed().connect(mem_fun(*this, &Knob::on_adj_value_changed));
 	on_adj_value_changed();
 }
