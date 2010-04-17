@@ -19,7 +19,7 @@ class RadioButtonParameterView;
 class EditorPanel : public Gtk::VBox
 {
  public:
-  EditorPanel	( Preset* preset, int piped );
+  EditorPanel	( Preset* preset );
   ~EditorPanel	( );
 	
  private:

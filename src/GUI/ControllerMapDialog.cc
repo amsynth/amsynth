@@ -20,10 +20,8 @@ using sigc::bind;
 using std::cout;
 using namespace std;
 
-ControllerMapDialog::ControllerMapDialog
-		( int pipe_d, MidiController* mc, PresetController* pc )
-:	piped( pipe_d )
-,	midi_controller( mc )
+ControllerMapDialog::ControllerMapDialog( MidiController* mc, PresetController* pc )
+:	midi_controller( mc )
 ,	preset_controller( pc )
 ,       m_cc(0)
 {
@@ -78,8 +76,6 @@ ControllerMapDialog::ControllerMapDialog
 	m_combo->get_entry()->signal_changed().connect(
             mem_fun(*this, &ControllerMapDialog::select_parameter));
 
-	request.slot = mem_fun(*this, &ControllerMapDialog::midi_select_controller );
-	
 	midi_controller->getLastControllerParam().addUpdateListener( *this );
 	
 	hbox = manage( new Gtk::HBox());
@@ -116,8 +112,7 @@ ControllerMapDialog::~ControllerMapDialog()
 void
 ControllerMapDialog::update()
 {
-	if( ::write( piped, &request, sizeof(request) ) != sizeof(request) )
-		cout << "ParameterSwitch: error writing to pipe" << endl;
+	CALL_ON_GUI_THREAD( *this, &ControllerMapDialog::midi_select_controller );
 }
 
 gint

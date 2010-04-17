@@ -5,9 +5,8 @@
 #include "ParameterSwitch.h"
 #include <iostream>
 
-ParameterSwitch::ParameterSwitch( int pipe_d )
-:	ParameterView (pipe_d)
-,	supress_param_callback (false)
+ParameterSwitch::ParameterSwitch()
+:	supress_param_callback (false)
 {
 	check_button.add (label);
 	add (check_button);

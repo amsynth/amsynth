@@ -11,8 +11,8 @@
 
 using namespace std;
 
-ParameterKnob::ParameterKnob( int pipe_d )
-  : ParameterView (pipe_d), draw_value(false)
+ParameterKnob::ParameterKnob()
+  : draw_value(false)
 {
   adj = new Gtk::Adjustment(0.0, 0.0, 1.0, 0.01, 1.0, 0);
   

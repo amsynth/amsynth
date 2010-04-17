@@ -13,7 +13,7 @@
 
 #include "knob_med.h"
 
-EditorPanel::EditorPanel	( Preset* preset, int piped )
+EditorPanel::EditorPanel	( Preset* preset )
 {
   //	style = Gtk::Style::create ( );
 	
@@ -23,11 +23,11 @@ EditorPanel::EditorPanel	( Preset* preset, int piped )
 	
 	
   for (int i = 0; i < 31; i++)
-    parameterView[i] = new ParameterKnob( piped );
+    parameterView[i] = new ParameterKnob;
   for (int i = 0; i < 10; i++)
-    rb_pv[i] = new RadioButtonParameterView( piped );
+    rb_pv[i] = new RadioButtonParameterView;
 	
-  param_switch = new ParameterSwitch( piped );
+  param_switch = new ParameterSwitch;
 	
 	
 	

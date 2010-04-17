@@ -44,7 +44,6 @@ enum {
 	evConfig,
 };
 
-
 int
 GUI::delete_event_impl(GdkEventAny *)
 {
@@ -54,7 +53,7 @@ GUI::delete_event_impl(GdkEventAny *)
 }
 
 GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
-		int pipe_write, GenericOutput *audio, const char *title )
+		  GenericOutput *audio, const char *title )
 :	controller_map_dialog(NULL)
 ,	clipboard_preset (new Preset)
 {
@@ -62,7 +61,6 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	
 	this->config = &config;
 	this->midi_controller = &mc;
-	this->m_pipe_write = pipe_write;
 	this->vau = &vau;
 	this->audio_out = audio;
 	
@@ -74,15 +72,13 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	set_title(m_baseName);
 	set_resizable(false);
         
-        m_requestUpdate.slot = mem_fun(*this, &GUI::onUpdate);
-
 	active_param = 0;
 
 
 //	style = Gtk::Style::create ( );
 	
 	
-	presetCV = new PresetControllerView(pipe_write, *this->vau);
+	presetCV = new PresetControllerView(*this->vau);
 
 	//
 	// the preset rename dialog
@@ -337,7 +333,7 @@ GUI::init()
 {
 	Preset *preset = &(preset_controller->getCurrentPreset());
 	
-	editor_panel = new EditorPanel (preset, m_pipe_write);
+	editor_panel = new EditorPanel (preset);
 	
 	adj_midi = manage (new Gtk::Adjustment(config->midi_channel,0,16,1));
 	adj_midi->signal_value_changed().connect (mem_fun (*this, &GUI::changed_midi_channel));
@@ -400,6 +396,17 @@ GUI::init()
 	
 	show_all();
 	
+	//
+	// show any error dialogs after entering gtk's run loop, otherwise the user
+	// will see the window's controls adjust their layout after dismissing the
+	// dialog (which looks ugly).
+	//
+	CALL_ON_GUI_THREAD( *this, &GUI::post_init );
+}
+
+void
+GUI::post_init()
+{
 	bool bad_config = false;
 	
 	if (config->current_audio_driver.empty())
@@ -603,16 +610,15 @@ GUI::~GUI()
 void
 GUI::update()
 {
-    ssize_t res = write(m_pipe_write, &m_requestUpdate, sizeof(Request));
-    assert(res);
+	CALL_ON_GUI_THREAD( *this, &GUI::onUpdate );
 }
+
 void
 GUI::onUpdate()
 {
     set_title(m_baseName + preset_controller->getCurrentPreset().getName());
     presetCV->update();
 }
-
 
 void 
 GUI::run()
@@ -632,7 +638,7 @@ GUI::setPresetController(PresetController & p_c)
     presetCV->setPresetController(*preset_controller);
 	onUpdate();
 	
-    controller_map_dialog = new ControllerMapDialog(m_pipe_write, midi_controller, preset_controller);
+    controller_map_dialog = new ControllerMapDialog(midi_controller, preset_controller);
 }
 
 void
@@ -722,11 +728,3 @@ GUI::changed_voices	( )
 	config->polyphony = (int)(adj_voices->get_value ());
 	if (vau) vau->SetMaxVoices (config->polyphony);
 }
-
-void GUI::GdkInputFunction(gpointer, gint source, GdkInputCondition)
-{
-	static Request req;
-	if (read (source, &req, sizeof(Request)) == sizeof(Request)) req.slot();
-
-}
-

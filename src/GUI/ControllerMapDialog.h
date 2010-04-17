@@ -14,7 +14,7 @@ class PresetController;
 class ControllerMapDialog : public Gtk::Window, public UpdateListener
 {
 public:
-		ControllerMapDialog	( int pipe_d,
+		ControllerMapDialog	(
 					MidiController* mc,
 					PresetController* pc );
 		~ControllerMapDialog	( );
@@ -29,11 +29,9 @@ public:
     
 private:
 	gboolean		supress_callback;
-	int			piped;
     
 	MidiController		*midi_controller;
 	PresetController	*preset_controller;
-	Request			request;
 
 	Gtk::Menu		*m_menu_controllers;
 	Gtk::Button		*m_button_controller;

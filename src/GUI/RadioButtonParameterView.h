@@ -15,7 +15,7 @@
 
 class RadioButtonParameterView : public ParameterView, public Gtk::VBox {
 public:
-	RadioButtonParameterView( int pipe_d );
+	RadioButtonParameterView();
 	void setName( string name );
 	void setDescription( int button, string text );
 	void setParameter( Parameter & param );

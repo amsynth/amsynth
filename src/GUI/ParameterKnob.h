@@ -14,7 +14,7 @@
 class ParameterKnob : public ParameterView, public Gtk::VBox
 {
 public:
-  ParameterKnob( int pipe_d );
+  ParameterKnob();
  
   void setParameter(Parameter & param);
   void setName(string name);

@@ -33,9 +33,11 @@ namespace Gtk {
  */
 class GUI:public Gtk::Window, public UpdateListener {
 public:
-	GUI				( Config & config, MidiController & mc, 
-					VoiceAllocationUnit & vau, int pipe_write,
-					GenericOutput *audio, const char *title );
+	GUI				( Config & config,
+					  MidiController & mc, 
+					  VoiceAllocationUnit & vau,
+					  GenericOutput *audio,
+					  const char *title );
 	~GUI				( );
 	/**
 	 * Sets up all the Interface controls etc..
@@ -63,7 +65,7 @@ protected:
 private:		
 	Gtk::MenuBar*	create_menus		( );
 
-	int			m_pipe_write, lnav;
+	int			lnav;
 	void		event_handler	(const int);
 	void config_controllers();
 	
@@ -80,6 +82,8 @@ private:
 	
 	void		changed_midi_channel	( );
 	void		changed_voices		( );
+	
+	void		post_init();
 
 	gint idle_callback();
 	gint setActiveParam( GdkEventButton *event, Parameter * param );
@@ -134,7 +138,6 @@ private:
 	Preset			*clipboard_preset;
         
         std::string             m_baseName;
-        Request                 m_requestUpdate;
 };
 
 #endif

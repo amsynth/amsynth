@@ -13,7 +13,7 @@ using sigc::bind;
 using std::cout;
 using namespace std;
 
-PresetControllerView::PresetControllerView(int pipe_d, VoiceAllocationUnit & vau )
+PresetControllerView::PresetControllerView(VoiceAllocationUnit & vau )
 {
 	this->vau = &vau;
 	inhibit_combo_callback = false;
@@ -45,8 +45,6 @@ PresetControllerView::PresetControllerView(int pipe_d, VoiceAllocationUnit & vau
 	panic->add_label ("Kill all voices");
 	panic->signal_clicked().connect(bind(mem_fun(*this, &PresetControllerView::ev_handler),"panic"));
 	add (*panic);
-
-	piped = pipe_d;
 }
 
 PresetControllerView::~PresetControllerView()

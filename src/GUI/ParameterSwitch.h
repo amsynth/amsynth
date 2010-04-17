@@ -12,7 +12,7 @@
 
 class ParameterSwitch : public ParameterView, public Gtk::VBox {
   public:
-    ParameterSwitch( int pipe_d );
+    ParameterSwitch();
 
     void setParameter(Parameter & param);
     void setName(string name);

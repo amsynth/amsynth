@@ -8,8 +8,7 @@
 
 using sigc::bind;
 
-RadioButtonParameterView::RadioButtonParameterView( int pipe_d )
-:	ParameterView (pipe_d)
+RadioButtonParameterView::RadioButtonParameterView()
 {
 	last_toggle = 0.0;
 	local_style = 0;

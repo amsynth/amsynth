@@ -15,7 +15,7 @@
 class ParameterView : public UpdateListener
 {
 public:
-						ParameterView	(int pipe_d) : parameter (0), piped (pipe_d) { request.slot = sigc::mem_fun (*this, &ParameterView::_update_); }
+						ParameterView	() : parameter (NULL) { }
 	virtual				~ParameterView	() { if (parameter) parameter->removeUpdateListener (*this); parameter = 0; }
 
 	virtual void		setParameter	(Parameter& param) { parameter = &param; param.addUpdateListener (*this); update (); }
@@ -30,13 +30,10 @@ public:
 	 * Update the GUI to reflect changes in associated Parameter. 
 	 * This function is safe to be called by any thread.
 	 **/
-	void 				update		( ) { ssize_t res = write(piped, &request, sizeof(request)); res = 0; }
+	void 				update		( ) { CALL_ON_GUI_THREAD( *this, &ParameterView::_update_ ); }
 	
 protected:
 	Parameter	*parameter;
-private:
-	Request		request;
-	int 		piped; 
 };
 
 

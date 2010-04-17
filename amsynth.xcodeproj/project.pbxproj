@@ -106,7 +106,6 @@
 		0186A97B117A16E80076FCB9 /* ParameterKnob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParameterKnob.h; path = src/GUI/ParameterKnob.h; sourceTree = "<group>"; };
 		0186A97D117A16E80076FCB9 /* ParameterSwitch.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParameterSwitch.cc; path = src/GUI/ParameterSwitch.cc; sourceTree = "<group>"; };
 		0186A97E117A16E80076FCB9 /* ParameterSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParameterSwitch.h; path = src/GUI/ParameterSwitch.h; sourceTree = "<group>"; };
-		0186A980117A16E80076FCB9 /* ParameterView.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParameterView.cc; path = src/GUI/ParameterView.cc; sourceTree = "<group>"; };
 		0186A981117A16E80076FCB9 /* ParameterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParameterView.h; path = src/GUI/ParameterView.h; sourceTree = "<group>"; };
 		0186A982117A16E80076FCB9 /* PrefixHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrefixHeader.h; path = src/GUI/PrefixHeader.h; sourceTree = "<group>"; };
 		0186A983117A16E80076FCB9 /* PresetControllerView.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PresetControllerView.cc; path = src/GUI/PresetControllerView.cc; sourceTree = "<group>"; };
@@ -241,7 +240,6 @@
 				0186A97B117A16E80076FCB9 /* ParameterKnob.h */,
 				0186A97D117A16E80076FCB9 /* ParameterSwitch.cc */,
 				0186A97E117A16E80076FCB9 /* ParameterSwitch.h */,
-				0186A980117A16E80076FCB9 /* ParameterView.cc */,
 				0186A981117A16E80076FCB9 /* ParameterView.h */,
 				0186A982117A16E80076FCB9 /* PrefixHeader.h */,
 				0186A983117A16E80076FCB9 /* PresetControllerView.cc */,

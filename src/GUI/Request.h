@@ -7,8 +7,9 @@
 
 #include <sigc++/slot.h>
 
-typedef struct {
-  sigc::slot<void> slot;
-} Request;
+#define CALL_ON_GUI_THREAD( object, method ) \
+	call_slot_on_gui_thread( sigc::mem_fun((object), (method)) )
+
+void call_slot_on_gui_thread( sigc::slot<void> sigc_slot );
 
 #endif
