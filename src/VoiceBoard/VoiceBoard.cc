@@ -4,8 +4,8 @@
 
 #include "VoiceBoard.h"
 
-VoiceBoard::VoiceBoard(const VoiceBoardProcessMemory * mem):
-	mem				(mem)
+VoiceBoard::VoiceBoard(const VoiceBoardProcessMemory * vbpm):
+	mem				(vbpm)
 ,	mKeyVelocity	(1.0)
 ,	mKeyPitch		(440.0)
 ,	mPitchBend		(1.0)
