@@ -57,8 +57,6 @@ public:
 	void	update();
         void    onUpdate();
 
-	static void GdkInputFunction(gpointer data, gint source, GdkInputCondition condition);
-
 protected:
 	virtual void	on_hide () { Gtk::Main::quit(); }
 
