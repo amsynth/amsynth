@@ -56,6 +56,8 @@ public:
 					{ dialog->hide_all(); return 0; };
 	void	update();
         void    onUpdate();
+	
+	virtual void	UpdateParameter(Param, float);
 
 protected:
 	virtual void	on_hide () { Gtk::Main::quit(); }
@@ -82,6 +84,8 @@ private:
 	void		changed_voices		( );
 	
 	void		post_init();
+	void		update_title();
+	void		UpdateParameterOnMainThread(Param, float);
 
 	gint idle_callback();
 	gint setActiveParam( GdkEventButton *event, Parameter * param );
@@ -136,6 +140,7 @@ private:
 	Preset			*clipboard_preset;
         
         std::string             m_baseName;
+	bool			m_presetIsNotSaved;
 };
 
 #endif

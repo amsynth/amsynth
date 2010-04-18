@@ -20,6 +20,8 @@ public:
 					Preset			(const string name = "New Preset");
 					
 	Preset&			operator =		(Preset& p);
+	
+	bool			isEqual			(Preset &);
 
 	const string	getName			() const { return mName; }
 	void			setName			(const string name) { mName = name; }

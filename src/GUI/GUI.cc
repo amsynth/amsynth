@@ -47,8 +47,12 @@ enum {
 int
 GUI::delete_event_impl(GdkEventAny *)
 {
-	MessageDialog dlg (*this, "Really quit amSynth?\n\nYou will lose any changes\nwhich you haven't explicitly commited", false, MESSAGE_QUESTION, BUTTONS_YES_NO, true);
-	if (RESPONSE_YES == dlg.run()) hide_all();
+	if (m_presetIsNotSaved) {
+		MessageDialog dlg (*this, "Really quit amSynth?\n\nYou will lose any changes\nwhich you haven't explicitly commited", false, MESSAGE_QUESTION, BUTTONS_YES_NO, true);
+		if (RESPONSE_YES != dlg.run())
+			return false;
+	}
+	hide_all();
 	return true;
 }
 
@@ -614,10 +618,43 @@ GUI::update()
 }
 
 void
-GUI::onUpdate()
+GUI::onUpdate()	// called whenever the preset selection has changed
 {
-    set_title(m_baseName + preset_controller->getCurrentPreset().getName());
+	update_title();
     presetCV->update();
+}
+
+void
+GUI::update_title()
+{
+	std::string title = m_baseName + preset_controller->getCurrentPreset().getName();
+	if (m_presetIsNotSaved) {
+		title += std::string(" *");
+	}
+	set_title(title);
+}
+
+void
+GUI::UpdateParameter(Param paramID, float paramValue)
+{
+	call_slot_on_gui_thread(
+		sigc::bind( 
+			sigc::mem_fun(
+				*this, &GUI::UpdateParameterOnMainThread
+			),
+			paramID, paramValue
+		)
+	);
+}
+
+void
+GUI::UpdateParameterOnMainThread(Param paramID, float paramValue)	// called whenever a parameter value has changed
+{
+	bool isModified = preset_controller->isCurrentPresetModified();
+	if (m_presetIsNotSaved != isModified) {
+		m_presetIsNotSaved = isModified;
+		update_title();
+	}
 }
 
 void 
@@ -637,6 +674,13 @@ GUI::setPresetController(PresetController & p_c)
     preset_controller->setUpdateListener(*this);
     presetCV->setPresetController(*preset_controller);
 	onUpdate();
+	
+	// register for notification of all parameter changes
+	Preset &preset = preset_controller->getCurrentPreset();
+	unsigned paramCount = preset.ParameterCount();
+	for (unsigned i=0; i<paramCount; i++) {
+		preset.getParameter(i).addUpdateListener(*this);
+	}
 	
     controller_map_dialog = new ControllerMapDialog(midi_controller, preset_controller);
 }

@@ -64,6 +64,18 @@ Preset::operator =		(Preset& preset)
     return *this;
 }
 
+bool
+Preset::isEqual(Preset &otherPreset)
+{
+	for (unsigned i = 0; i < mParameters.size(); i++) {
+		if (            getParameter(i).getValue() !=
+			otherPreset.getParameter(i).getValue()) {
+			return false;
+		}
+	}
+	return true;
+}
+
 Parameter & 
 Preset::getParameter(const string name)
 {
