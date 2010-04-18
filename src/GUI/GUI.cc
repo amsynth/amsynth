@@ -56,16 +56,19 @@ GUI::delete_event_impl(GdkEventAny *)
 	return true;
 }
 
-GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
+GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 		  GenericOutput *audio, const char *title )
 :	controller_map_dialog(NULL)
 ,	clipboard_preset (new Preset)
+,	m_vkeybdOctave(4)
+,	m_vkeybdIsActive(false)
+,	m_vkeybdState(128)
 {
 	lnav = -1;
 	
-	this->config = &config;
+	this->config = &config_in;
 	this->midi_controller = &mc;
-	this->vau = &vau;
+	this->vau = &vau_in;
 	this->audio_out = audio;
 	
 //	if(this->config->realtime)
@@ -77,8 +80,7 @@ GUI::GUI( Config & config, MidiController & mc, VoiceAllocationUnit & vau,
 	set_resizable(false);
         
 	active_param = 0;
-
-
+	
 //	style = Gtk::Style::create ( );
 	
 	
@@ -631,6 +633,9 @@ GUI::update_title()
 	if (m_presetIsNotSaved) {
 		title += std::string(" *");
 	}
+	if (m_vkeybdIsActive) {
+		title += std::string(" (midikeys active)");
+	}
 	set_title(title);
 }
 
@@ -771,4 +776,129 @@ GUI::changed_voices	( )
 {
 	config->polyphony = (int)(adj_voices->get_value ());
 	if (vau) vau->SetMaxVoices (config->polyphony);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Virtual Keyboard functionality
+//
+// Uses the computer's typing keyboard to play the synth.
+// Handy for testing and general playing with amSynth :)
+//
+//     W E   T Y U   O P
+//    A S D F G H J K L ; '
+//
+
+#define SIZEOF_ARRAY( a ) ( sizeof(a) / sizeof((a)[0]) )
+
+//
+// List of hardware keycodes for midi notes
+//
+// Raw hardware keycodes are used because we want the physical layout
+// to remain the same no matter what type of keyboard layout is used.
+// This particular layout is based on that used by Logic Studio.
+//                                               
+static guint16 s_vkeybd_hardware_keycodes[] = {
+//	A   W   S   E   D   F   T   G   Y   H   U   J   K   O   L   P   ;   '
+	8, 21,  9, 22, 10, 11, 25, 13, 24, 12, 40, 46, 48, 39, 45, 43, 49, 47
+};
+
+//
+// returns -1 if hardware_keycode is not mapped to a midi note
+//
+static inline char midi_note_for_hardware_keycode( guint16 hardware_keycode )
+{
+	const guint16 kGreatestValidKeycode = 64;
+	static char value_for_code[kGreatestValidKeycode+1] = {0};
+	static bool initialised = false;
+	
+	// first-time initialisation (build the lookup table)
+	if (initialised == false) { initialised = true;
+		for (unsigned note=0; note<SIZEOF_ARRAY(s_vkeybd_hardware_keycodes); note++) {
+			guint16 code = s_vkeybd_hardware_keycodes[note];
+			value_for_code[code] = note + 1;
+		}
+	}
+	
+	if (hardware_keycode < kGreatestValidKeycode)
+		return value_for_code[hardware_keycode] - 1;
+
+	return -1;
+}
+
+bool GUI::on_key_press_event(GdkEventKey *inEvent)
+{
+	char midiNote = -1;
+	
+	if (inEvent->keyval == GDK_Caps_Lock) {
+		if ((inEvent->state & GDK_LOCK_MASK) == GDK_LOCK_MASK) {
+			// will be disabled by this key press
+			m_vkeybdIsActive = false;
+			vkeybd_kill_all_notes();
+		} else {
+			m_vkeybdIsActive = true;
+		}
+		update_title();
+	}
+	
+	if ((inEvent->state & GDK_LOCK_MASK) == 0)
+		goto delegate;
+	
+	//
+	// switch between octaves using the number keys
+	//
+	switch (inEvent->keyval) {
+		case GDK_1: m_vkeybdOctave = 0; vkeybd_kill_all_notes(); return true;
+		case GDK_2: m_vkeybdOctave = 1; vkeybd_kill_all_notes(); return true;
+		case GDK_3: m_vkeybdOctave = 2; vkeybd_kill_all_notes(); return true;
+		case GDK_4: m_vkeybdOctave = 3; vkeybd_kill_all_notes(); return true;
+		case GDK_5: m_vkeybdOctave = 4; vkeybd_kill_all_notes(); return true;
+		case GDK_6: m_vkeybdOctave = 5; vkeybd_kill_all_notes(); return true;
+		case GDK_7: m_vkeybdOctave = 6; vkeybd_kill_all_notes(); return true;
+		case GDK_8: m_vkeybdOctave = 7; vkeybd_kill_all_notes(); return true;
+		case GDK_9: m_vkeybdOctave = 8; vkeybd_kill_all_notes(); return true;
+		case GDK_0: m_vkeybdOctave = 9; vkeybd_kill_all_notes(); return true;
+	}
+	
+	if ((midiNote = midi_note_for_hardware_keycode( inEvent->hardware_keycode )) == -1)
+		goto delegate;
+	
+	midiNote += (m_vkeybdOctave * 12);
+	if (m_vkeybdState[midiNote] == false) {
+		m_vkeybdState[midiNote]  = true;
+		vau->HandleMidiNoteOn(midiNote, 0.7f);
+	}
+	return true;
+	
+delegate:
+	return Gtk::Window::on_key_press_event(inEvent);
+}
+
+bool GUI::on_key_release_event(GdkEventKey *inEvent)
+{
+	char midiNote = -1;
+	
+	if ((inEvent->state & GDK_LOCK_MASK) != GDK_LOCK_MASK)
+		goto delegate;
+	
+	if ((midiNote = midi_note_for_hardware_keycode( inEvent->hardware_keycode )) == -1)
+		goto delegate;
+
+	midiNote += (m_vkeybdOctave * 12);
+	if (m_vkeybdState[midiNote] == true) {
+		m_vkeybdState[midiNote]  = false;
+		vau->HandleMidiNoteOff(midiNote, 0.7f);
+	}
+	return true;
+	
+delegate:
+	return Gtk::Window::on_key_press_event(inEvent);
+}
+
+void GUI::vkeybd_kill_all_notes()
+{
+	for (unsigned i=0; i<m_vkeybdState.size(); i++) {
+		vau->HandleMidiNoteOff(i, 0.0f);
+		m_vkeybdState[i] = false;
+	}
 }

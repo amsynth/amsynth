@@ -61,6 +61,10 @@ public:
 
 protected:
 	virtual void	on_hide () { Gtk::Main::quit(); }
+	
+	virtual bool on_key_press_event(GdkEventKey *);
+	virtual bool on_key_release_event(GdkEventKey *);
+	void vkeybd_kill_all_notes();
 
 private:		
 	Gtk::MenuBar*	create_menus		( );
@@ -141,6 +145,10 @@ private:
         
         std::string             m_baseName;
 	bool			m_presetIsNotSaved;
+
+	int					m_vkeybdOctave;
+	bool				m_vkeybdIsActive;
+	std::vector<bool>	m_vkeybdState;
 };
 
 #endif
