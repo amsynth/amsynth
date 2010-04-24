@@ -796,11 +796,19 @@ GUI::changed_voices	( )
 //
 // Raw hardware keycodes are used because we want the physical layout
 // to remain the same no matter what type of keyboard layout is used.
+//
+// Hardware keycodes seem to vary between platforms, although it's
+// difficult to find any decent documentation that covers this :-/
+//
 // This particular layout is based on that used by Logic Studio.
 //                                               
 static guint16 s_vkeybd_hardware_keycodes[] = {
-//	A   W   S   E   D   F   T   G   Y   H   U   J   K   O   L   P   ;   '
-	8, 21,  9, 22, 10, 11, 25, 13, 24, 12, 40, 46, 48, 39, 45, 43, 49, 47
+//	   A     W     S     E     D     F     T     G     Y     H     U     J     K     O     L     P     ;     '
+#if defined(__linux)
+	0x26, 0x19, 0x27, 0x1a, 0x28, 0x29, 0x1c, 0x2a, 0x1d, 0x2b, 0x1e, 0x2c, 0x2d, 0x20, 0x2e, 0x21, 0x2f, 0x30
+#elif defined(__APPLE__)
+	   8,   21,    9,   22,   10,   11,   25,   13,   24,   12,   40,   46,   48,   39,   45,   43,   49,   47
+#endif
 };
 
 //
@@ -829,6 +837,11 @@ static inline char midi_note_for_hardware_keycode( guint16 hardware_keycode )
 bool GUI::on_key_press_event(GdkEventKey *inEvent)
 {
 	char midiNote = -1;
+
+//	fprintf(stderr, "string '%s' keyval 0x%02x keycode 0x%02x\n",
+//			inEvent->string,
+//			inEvent->keyval,
+//			inEvent->hardware_keycode);
 	
 	if (inEvent->keyval == GDK_Caps_Lock) {
 		if ((inEvent->state & GDK_LOCK_MASK) == GDK_LOCK_MASK) {
