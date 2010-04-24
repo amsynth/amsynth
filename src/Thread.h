@@ -42,7 +42,7 @@ public:
 	
 	int		Run		() { return pthread_create (&mThread, NULL, Thread::start_routine, this); }
 	void	Stop	() { mShouldStop = true; }
-	int		Kill	(int sig = 2) { return mThread ? pthread_kill(mThread, sig) : 0; }
+	int		Kill	() { return mThread ? pthread_cancel(mThread) : 0; }
 	int		Join	() { return mThread ? pthread_join(mThread, NULL) : 0; }
 
 protected:
