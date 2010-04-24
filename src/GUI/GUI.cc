@@ -753,7 +753,7 @@ static gchar *which(gchar *command)
 	gint exit_status = -1;
 	gchar *standard_output = NULL;
 	gchar *argv[] = { (gchar *)"/usr/bin/which", (gchar *)command };
-	g_spawn_sync(NULL, argv, NULL, (GSpawnFlags)0, NULL, NULL, &standard_output, NULL, &exit_status, NULL);
+	g_spawn_sync(NULL, argv, NULL, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &standard_output, NULL, &exit_status, NULL);
 	if (exit_status != 0)
 	{
 		g_free(standard_output);
