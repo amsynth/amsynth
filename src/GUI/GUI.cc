@@ -906,6 +906,7 @@ bool GUI::on_key_release_event(GdkEventKey *inEvent)
 	// XkbSetDetectableAutoRepeat() seems to be broken on some Linux configurations,
 	// which means we can receive key release events for autorepeat. Therefore, we
 	// need to filter out these 'fake' key release events.
+	// http://bugs.freedesktop.org/show_bug.cgi?id=22515
 	{
 		char pressed_keys[32];
 		XQueryKeymap(gdk_x11_get_default_xdisplay(), pressed_keys);
