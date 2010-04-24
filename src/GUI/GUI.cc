@@ -14,6 +14,11 @@
 #include <gtkmm.h>
 #include <sigc++/bind.h>
 
+#if defined(__linux)
+#include <X11/Xlib.h>
+#include <gdk/gdkx.h>
+#endif
+
 using namespace Gtk;
 
 #include "../AudioOutput.h"
@@ -896,6 +901,20 @@ bool GUI::on_key_release_event(GdkEventKey *inEvent)
 	
 	if ((midiNote = midi_note_for_hardware_keycode( inEvent->hardware_keycode )) == -1)
 		goto delegate;
+	
+#if defined(__linux)
+	// XkbSetDetectableAutoRepeat() seems to be broken on some Linux configurations,
+	// which means we can receive key release events for autorepeat. Therefore, we
+	// need to filter out these 'fake' key release events.
+	{
+		char pressed_keys[32];
+		XQueryKeymap(gdk_x11_get_default_xdisplay(), pressed_keys);
+		bool isPressed = (pressed_keys[inEvent->hardware_keycode >> 3] >> (inEvent->hardware_keycode & 0x07)) & 0x01;
+		if (isPressed) {
+			goto delegate;
+		}
+	}
+#endif
 
 	midiNote += (m_vkeybdOctave * 12);
 	if (m_vkeybdState[midiNote] == true) {
