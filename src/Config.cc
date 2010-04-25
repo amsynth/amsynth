@@ -13,7 +13,10 @@ using namespace std;
 Config::Config()
 {
 	amsynthrc_fname = string(getenv("HOME")) + string("/.amSynthrc");
-	realtime = sample_rate = midi_channel = active_voices = polyphony = debug_drivers = xruns = 0;
+	sample_rate = midi_channel = active_voices = polyphony = debug_drivers = xruns = 0;
+#ifdef ENABLE_REALTIME
+	realtime = 0;
+#endif
 }
 
 void

@@ -1,6 +1,6 @@
 AC_INIT(src/main.cc)
 AM_INIT_AUTOMAKE([amSynth], 'svn')
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h])
 
 
 
@@ -133,6 +133,17 @@ AC_ARG_ENABLE(pch,
 esac],[pch=true])
 AM_CONDITIONAL(USE_PRECOMPILED_HEADER, test x$pch = xtrue)
 
+dnl
+dnl
+dnl
+AC_ARG_ENABLE([realtime], [AS_HELP_STRING([--enable-realtime],
+               [use the Linux SCHED_FIFO scheduler to improve performance,
+                requires binary to be installed as root with suid bit enabled
+                (default is no)])],
+              [AC_DEFINE([ENABLE_REALTIME], [],
+               [Use the Linux SCHED_FIFO scheduler to improve performance.])]
+              )
+AM_CONDITIONAL([ENABLE_REALTIME], [test x$enable_realtime != x])
 
 dnl
 dnl

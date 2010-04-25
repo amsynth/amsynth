@@ -398,12 +398,14 @@ GUI::init()
 
 	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
 	
+#ifdef ENABLE_REALTIME
 	if (config->current_audio_driver_wants_realtime)
 	{
 		status = "Realtime : ";
 		status += config->realtime ? "YES" : "NO";
 		statusBar.pack_start(*manage(new Gtk::Label (status)), PACK_SHRINK, padding);
 	}
+#endif
 	
 	show_all();
 	
@@ -449,6 +451,7 @@ GUI::post_init()
 		return;
 	}
 	
+#ifdef ENABLE_REALTIME
 	// show realtime warning message if necessary
 	if (config->current_audio_driver_wants_realtime == 1 &&
 		config->realtime == 0)
@@ -457,6 +460,7 @@ GUI::post_init()
 		dlg.set_secondary_text ("You may experience audio buffer underruns resulting in 'clicks' in the audio.\n\nThis is most likely because the program is not SUID root.\n\nUsing the JACK audio subsystem can also help");
 		dlg.run();
 	}
+#endif
 }
 
 

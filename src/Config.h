@@ -4,7 +4,11 @@
  
 #ifndef CONFIG_H
 #define CONFIG_H
- 
+
+#ifdef HAVE_CONFIG_H
+#include "../config.h"
+#endif
+
 #include <string>
 using std::string;
 
@@ -33,12 +37,14 @@ public:
 	 * If set to 0, all MIDI channels are listened to.
 	 */
 	int midi_channel;
+#ifdef ENABLE_REALTIME
 	/**
 	 * Set to 1 if the audio & midi threads are running with realtime scheduling
 	 * priorities, 0 otherwise
 	 */
 	int realtime;
 	int current_audio_driver_wants_realtime;
+#endif
 	/**
 	 * A count of the number of voices currently active and producing a signal
 	 */

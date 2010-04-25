@@ -61,7 +61,9 @@ ALSAAudioDriver::open( Config & config )
 	
 	config.sample_rate = snd_pcm_hw_params_get_rate( hw_params, 0 );
 	config.current_audio_driver = "ALSA";
+#ifdef ENABLE_REALTIME
 	config.current_audio_driver_wants_realtime = 1;
+#endif
 	
 	this->config = &config;
 

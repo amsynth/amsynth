@@ -57,7 +57,7 @@ options:\n\
 Config config;
 
 
-
+#ifdef ENABLE_REALTIME
 void sched_realtime()
 {
 #ifdef linux
@@ -80,6 +80,7 @@ void sched_realtime()
 #warning "sched_realtime not implemented for this OS"
 #endif
 }
+#endif
 
 int fcopy (const char * dest, const char *source)
 {
@@ -195,7 +196,9 @@ void fatal_error(const std::string & msg)
 
 int main( int argc, char *argv[] )
 {
+#ifdef ENABLE_REALTIME
 	sched_realtime();
+#endif
 
 	// need to drop our suid-root permissions :-
 	// GTK will not work SUID for security reasons..
