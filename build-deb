@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ ! -d debian ]; then
+	mkdir debian
+	ln debian.changelog debian/changelog
+	ln debian.control   debian/control
+	ln debian.rules     debian/rules
+fi
+
+dpkg-buildpackage
+

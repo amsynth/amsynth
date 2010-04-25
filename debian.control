@@ -1,10 +1,10 @@
-Source: amSynth
+Source: amsynth
 Section: Sound
 Priority: optional
 Maintainer: Nick Dowell <nixx2097@users.sourceforge.net>
 Build-Depends: debhelper (>> 4.0.0), dpatch, libgtkmm-2.4-dev, libsndfile1-dev, libasound2-dev [!kfreebsd-i386 !kfreebsd-amd64 !hurd-i386], libjack-dev
 
-Package: amSynth
+Package: amsynth
 Architecture: any
 Depends: ${shlibs:Depends}
 Description: This first line is a brief description
