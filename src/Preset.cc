@@ -33,7 +33,7 @@ Preset::Preset			(const string name)
 	mParameters.push_back (Parameter		("filter_cutoff",		kFilterCutoff,		1.5, -0.5, 1.5, 0,	Parameter::PARAM_EXP, 16, 0));
     mParameters.push_back (Parameter		("osc2_detune",			kOsc2Detune,		0, -1, 1, 0,		Parameter::PARAM_EXP, 1.25f, 0));
     mParameters.push_back (Parameter		("osc2_waveform",		kOsc2Waveform,		2, 0, 4, 1));
-    mParameters.push_back (Parameter		("master_vol",			kMasterVol,			1, 0, 1, 0,			Parameter::PARAM_POWER, 2, 0));
+    mParameters.push_back (Parameter		("master_vol",			kMasterVol,			0.67, 0, 1, 0,		Parameter::PARAM_POWER, 2, 0));
     mParameters.push_back (Parameter		("lfo_freq",			kLFOFreq,			0, 0, 7.5, 0,		Parameter::PARAM_POWER, 2, 0,	"Hz"));
     mParameters.push_back (Parameter		("lfo_waveform",		kLFOWaveform,		0, 0, 4, 1));
     mParameters.push_back (Parameter		("osc2_range",			kOsc2Octave,		0, -1, 2, 1,		Parameter::PARAM_EXP, 2, 0));
