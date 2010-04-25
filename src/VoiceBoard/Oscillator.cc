@@ -91,6 +91,13 @@ Oscillator::sqr(float foo)
 void 
 Oscillator::doSquare(float *buffer, int nFrames)
 {
+	// pulsewidth 0 =  50% duty cycle
+	// pulsewidth 1 = 100% duty cycle (i.e. pure DC)
+	// therefore clamp maximum value to make sure some sound is produced!
+	const float kMaxPulseWidth = 0.9f;
+	if (mPulseWidth > kMaxPulseWidth)
+		mPulseWidth = kMaxPulseWidth;
+
     for (int i = 0; i < nFrames; i++) {
 		buffer[i] = sqr(rads += (twopi_rate * freq));
 		//-- sync to other oscillator --
