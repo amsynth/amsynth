@@ -7,6 +7,8 @@
 #include <iostream>
 #include "Oscillator.h"
 
+#define ALIAS_REDUCTION
+
 // fmod is sloooooooooooow.
 inline float ffmodf (float x, float y) {
 	while (x > y) x -= y;
@@ -122,6 +124,16 @@ Oscillator::saw(float foo)
 void 
 Oscillator::doSaw(float *buffer, int nFrames)
 {
+#ifdef ALIAS_REDUCTION
+	// Clamp the maximum slope to reduce amount of aliasing in high octaves.
+	// This is not proper anti-aliasing ;-)
+	const float requestedPW = mPulseWidth;
+	const float kAliasReductionAmount = 2.0f;
+	const float f = requestedPW - (kAliasReductionAmount * freq / (float)rate);
+	if (mPulseWidth > f)
+		mPulseWidth = f;
+#endif
+
     for (int i = 0; i < nFrames; i++) {
 		buffer[i] = saw(rads += (twopi_rate * freq));
 		//-- sync to other oscillator --
@@ -134,6 +146,10 @@ Oscillator::doSaw(float *buffer, int nFrames)
 				sync_offset = i;		// remember the offset
 	}
     rads = ffmodf((float)rads, (float)TWO_PI);
+
+#ifdef ALIAS_REDUCTION
+	mPulseWidth = requestedPW;
+#endif
 }
 
 void 
