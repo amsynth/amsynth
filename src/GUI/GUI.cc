@@ -662,7 +662,7 @@ GUI::UpdateParameter(Param paramID, float paramValue)
 }
 
 void
-GUI::UpdateParameterOnMainThread(Param paramID, float paramValue)	// called whenever a parameter value has changed
+GUI::UpdateParameterOnMainThread(Param, float)	// called whenever a parameter value has changed
 {
 	bool isModified = preset_controller->isCurrentPresetModified();
 	if (m_presetIsNotSaved != isModified) {
@@ -782,7 +782,8 @@ GUI::command_run	(const char *command)
 	
 	string full_command = std::string(command) + std::string(" &");
 	// returns 0 even if command could not be run
-	system(full_command.c_str());
+	int result = system(full_command.c_str());
+	result = 0;
 }
 
 void
