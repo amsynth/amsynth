@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstdlib>		// required for rand()
 #include <iostream>
+#include <limits.h>
 #include "Oscillator.h"
 
 #define ALIAS_REDUCTION
@@ -159,6 +160,17 @@ Oscillator::doSaw(float *buffer, int nFrames)
 #endif
 }
 
+static const float kTwoOverUlongMax = 2.0f / (float)ULONG_MAX;
+
+static inline float randf()
+{
+	// Calculate pseudo-random 32 bit number based on linear congruential method.
+	// http://www.musicdsp.org/showone.php?id=59
+	static unsigned long random = 22222;
+	random = (random * 196314165) + 907633515;
+	return (float)random * kTwoOverUlongMax - 1.0f;
+}
+
 void 
 Oscillator::doRandom(float *buffer, int nFrames)
 {
@@ -166,7 +178,7 @@ Oscillator::doRandom(float *buffer, int nFrames)
     for (int i = 0; i < nFrames; i++) {
 	if (random_count > period) {
 	    random_count = 0;
-		random = ((float)::rand() / (RAND_MAX / 2.0f)) - 1.0f;
+		random = randf();
 	}
 	random_count++;
 	buffer[i] = random;
@@ -177,5 +189,5 @@ void
 Oscillator::doNoise(float *buffer, int nFrames)
 {
     for (int i = 0; i < nFrames; i++)
-		buffer[i] = ((float)::rand() / (RAND_MAX / 2.0f)) - 1.0f;
+		buffer[i] = randf();
 }
