@@ -3,6 +3,7 @@
  */
 
 #include <iostream>
+#include <cassert>
 #include <cstdlib>
 #include <string>
 #include <fstream>
@@ -222,8 +223,18 @@ PresetController::loadPresets		(const char *filename)
 				cout << "<PresetController::loadPresets()>: Parameter:- name="
 				<< name << " value=" << buffer << endl;
 #endif
-				if(name!="unused")
-					presets[preset].getParameter(name).setValue( atof(buffer) );
+				if(name!="unused") // is this really necessary?
+				{
+					float fval = 0.0f;
+					// atof() and friends are affected by currently configured locale,
+					// which can change the decimal point character.
+					std::istringstream istr(buffer);
+					istr.imbue(std::locale("C")); // be absolutely sure of the locale
+					istr >> fval;
+					Parameter &param = presets[preset].getParameter(name);
+					param.setValue(fval);
+					assert( param.getValue() == fval );
+				}
 				file >> buffer;
 			}
 		} else {
