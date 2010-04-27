@@ -632,7 +632,8 @@ void
 GUI::onUpdate()	// called whenever the preset selection has changed
 {
 	update_title();
-    presetCV->update();
+	UpdateParameterOnMainThread((Param)-1, 0); // to update the '*' in window title
+    presetCV->update(); // note: PresetControllerView::update() is expensive
 }
 
 void

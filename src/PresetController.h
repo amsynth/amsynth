@@ -33,7 +33,7 @@ public:
 	bool	isCurrentPresetModified() { return !currentPreset.isEqual(presets[currentPresetNo]); }
 	
 	// Commit the current preset to memory
-	void	commitPreset		() { presets[currentPresetNo] = currentPreset; }
+	void	commitPreset		() { presets[currentPresetNo] = currentPreset; notify(); }
 
 	// Selects a new, unused preset ready for editing.
 	int		newPreset			();
