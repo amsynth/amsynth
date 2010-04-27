@@ -73,7 +73,7 @@ Preset::isEqual(Preset &otherPreset)
 			return false;
 		}
 	}
-	return true;
+	return getName() == otherPreset.getName();
 }
 
 Parameter & 

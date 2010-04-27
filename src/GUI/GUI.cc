@@ -483,6 +483,7 @@ GUI::event_handler(const int e)
 	
 	case evPresetRenameOk:
 		preset_controller->getCurrentPreset().setName(preset_rename_entry.get_text());
+		onUpdate();
 		presetCV->update();
 		preset_rename.hide();
 		break;
