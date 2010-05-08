@@ -391,12 +391,14 @@ GUI::init()
 
 	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
 	
+#ifdef ENABLE_REALTIME
 	if (config->current_audio_driver_wants_realtime)
 	{
 		status = "Realtime : ";
 		status += config->realtime ? "YES" : "NO";
 		statusBar.pack_start(*manage(new Gtk::Label (status)), PACK_SHRINK, padding);
 	}
+#endif
 	
 	show_all();
 	
@@ -442,6 +444,7 @@ GUI::post_init()
 		return;
 	}
 	
+#ifdef ENABLE_REALTIME
 	// show realtime warning message if necessary
 	if (config->current_audio_driver_wants_realtime == 1 &&
 		config->realtime == 0)
@@ -450,6 +453,7 @@ GUI::post_init()
 		dlg.set_secondary_text ("You may experience audio buffer underruns resulting in 'clicks' in the audio.\n\nThis is most likely because the program is not SUID root.\n\nUsing the JACK audio subsystem can also help");
 		dlg.run();
 	}
+#endif
 }
 
 
@@ -472,6 +476,7 @@ GUI::event_handler(const int e)
 	
 	case evPresetRenameOk:
 		preset_controller->getCurrentPreset().setName(preset_rename_entry.get_text());
+		onUpdate();
 		presetCV->update();
 		preset_rename.hide();
 		break;
@@ -621,7 +626,8 @@ void
 GUI::onUpdate()	// called whenever the preset selection has changed
 {
 	update_title();
-    presetCV->update();
+	UpdateParameterOnMainThread((Param)-1, 0); // to update the '*' in window title
+    presetCV->update(); // note: PresetControllerView::update() is expensive
 }
 
 void
@@ -648,7 +654,7 @@ GUI::UpdateParameter(Param paramID, float paramValue)
 }
 
 void
-GUI::UpdateParameterOnMainThread(Param paramID, float paramValue)	// called whenever a parameter value has changed
+GUI::UpdateParameterOnMainThread(Param, float)	// called whenever a parameter value has changed
 {
 	bool isModified = preset_controller->isCurrentPresetModified();
 	if (m_presetIsNotSaved != isModified) {
@@ -738,16 +744,27 @@ GUI::bank_save_as	( )
 	}
 }
 
+static gchar *which(gchar *command)
+{
+	gint exit_status = -1;
+	gchar *standard_output = NULL;
+	gchar *argv[] = { (gchar *)"/usr/bin/which", (gchar *)command };
+	g_spawn_sync(NULL, argv, NULL, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &standard_output, NULL, &exit_status, NULL);
+	if (exit_status != 0)
+	{
+		g_free(standard_output);
+		return NULL;
+	}
+	return standard_output;
+}
+
+// returns 0 if executable was found
 int
 GUI::command_exists	(const char *command)
 {
-	string test_command = "/usr/bin/which ";
-	test_command += command;
-	test_command += " &> /dev/null";
-	
-	int res = system (test_command.c_str ());
-	// returns 0 if executable was found
-	return WEXITSTATUS(res);
+	gchar *path = which((gchar *)command);
+	if (path) g_free(path);
+	return path == NULL ? 1 : 0;
 }
 
 void
@@ -757,7 +774,8 @@ GUI::command_run	(const char *command)
 	
 	string full_command = std::string(command) + std::string(" &");
 	// returns 0 even if command could not be run
-	system(full_command.c_str());
+	int result = system(full_command.c_str());
+	result = 0;
 }
 
 void

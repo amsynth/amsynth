@@ -92,7 +92,7 @@ Parameter::setValue(float value)
 		for (unsigned i=0; i<_updateListeners.size(); i++)
 		{
 #ifdef _DEBUG
-			cout << "updating UpdateListener " << updateListeners[i] << endl;
+			cout << "updating UpdateListener " << _updateListeners[i] << endl;
 #endif
 			_updateListeners[i]->UpdateParameter (mParamId, _controlValue);
 		}

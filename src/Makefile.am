@@ -24,7 +24,9 @@ amSynth_LDADD = \
 amSynth_CFLAGS = $(CFLAGS) -DENABLE_BINRELOC
 amSynth_CXXFLAGS = $(CXXFLAGS) -DENABLE_BINRELOC
 
+if ENABLE_REALTIME
 install-exec-hook:
 	chown root $(DESTDIR)$(bindir)/amSynth
-	chmod +s $(DESTDIR)$(bindir)/amSynth
+	chmod   +s $(DESTDIR)$(bindir)/amSynth
+endif
 

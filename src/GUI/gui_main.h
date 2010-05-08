@@ -8,7 +8,7 @@ class PresetController;
 class VoiceAllocationUnit;
 
 // Gtk::Main()
-void gui_kit_init(int argc, char *argv[]);
+void gui_kit_init(int & argc, char ** & argv);
 
 // Gtk::Main::run()
 void gui_kit_run();

@@ -88,7 +88,7 @@ AudioOutput::Start ()
 void
 AudioOutput::Stop ()
 {
-	Thread::Stop ();
+	Thread::Kill ();
 	Thread::Join ();
 	out.close ();
 }
