@@ -11,7 +11,7 @@ static Gtk::Main *kit = NULL;
 static int  gdk_input_pipe[2];
 static void gdk_input_function(gpointer, gint, GdkInputCondition);
 
-void gui_kit_init(int argc, char *argv[])
+void gui_kit_init(int & argc, char ** & argv)
 {
 	kit = new Gtk::Main(argc, argv);
 }
