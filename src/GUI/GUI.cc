@@ -406,7 +406,7 @@ GUI::init()
 		statusBar.pack_start(*manage(new Gtk::Label (status)), PACK_SHRINK, padding);
 	}
 #endif
-	
+
 	show_all();
 	
 	//
@@ -664,8 +664,18 @@ GUI::UpdateParameter(Param paramID, float paramValue)
 }
 
 void
-GUI::UpdateParameterOnMainThread(Param, float)	// called whenever a parameter value has changed
+GUI::UpdateParameterOnMainThread(Param paramID, float)	// called whenever a parameter value has changed
 {
+	if (0 <= paramID && paramID < kControls_End)
+	{
+		char tmpstr[32] = "";
+		snprintf (tmpstr, 32, "%s = %.3f",
+			preset_controller->getCurrentPreset().getParameter(paramID).getName().c_str(),
+			preset_controller->getCurrentPreset().getParameter(paramID).getControlValue());
+		statusBar.pop (0);
+		statusBar.push (Glib::ustring (tmpstr), 0);
+	}
+	
 	bool isModified = preset_controller->isCurrentPresetModified();
 	if (m_presetIsNotSaved != isModified) {
 		m_presetIsNotSaved = isModified;
