@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include <iostream>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 #include "OSSAudioDriver.h"
@@ -18,22 +19,28 @@ int
 OSSAudioDriver::write(float *buffer, int frames)
 {
 #ifdef with_oss
-    unsigned char outBuf[frames * 2 * channels_];
     int p = 0;
 	int i;
 	signed short _tmp;
+	
+	if (_outputBufferFrames < frames) {
+		_outputBufferFrames = frames;
+		if (_outputBuffer) { free(_outputBuffer); }
+		_outputBuffer = (unsigned char*)malloc(frames * 2 * channels_);
+	}
+	
     for ( i = 0; i < (frames * channels_); i++) {
 		_tmp = (signed short) (buffer[i] * 30000);
-		outBuf[p++] = (unsigned char) (_tmp & 0xff);
-		outBuf[p++] = (unsigned char) ((_tmp >> 8) & 0xff);
+		_outputBuffer[p++] = (unsigned char) (_tmp & 0xff);
+		_outputBuffer[p++] = (unsigned char) ((_tmp >> 8) & 0xff);
     }
 
-    if ((::write(dsp_handle_, outBuf, frames*2 )) != frames * 2) {
+    if ((::write(dsp_handle_, _outputBuffer, frames*2 )) != frames * 2) {
 		perror("<OSSAudioDriver> error writing to dsp_handle_");
 		return -1;
 	}
 	
-    return 0;
+	return 0;
 #else
     UNUSED_PARAM(buffer);
     UNUSED_PARAM(frames);
@@ -160,6 +167,9 @@ void OSSAudioDriver::close()
 #ifdef with_oss
     if (dsp_handle_ != -1) {
 	::close(dsp_handle_);
+	free(_outputBuffer);
+	_outputBuffer = NULL;
+	_outputBufferFrames = 0;
 #ifdef _DEBUG
 	cout << "<OSSAudioDriver> closed OSS dsp device." << endl;
 #endif
@@ -174,6 +184,8 @@ OSSAudioDriver::OSSAudioDriver()
     stereo_ = 1;
     format_ = AFMT_S16_LE;
     dsp_handle_ = -1;
+    _outputBuffer = NULL;
+    _outputBufferFrames = 0;
 #endif
 }
 

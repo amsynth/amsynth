@@ -25,6 +25,8 @@ class OSSAudioDriver:public AudioDriver {
 
   private:
     int dsp_handle_, rate_, stereo_, format_, channels_, bufsize_;
+    unsigned char *_outputBuffer;
+    unsigned int _outputBufferFrames;
 	Config *config;
 };
 
