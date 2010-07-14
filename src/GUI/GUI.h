@@ -18,7 +18,6 @@ class Preset;
 class VoiceAllocationUnit;
 class GenericOutput;
 class Config;
-class EditorPanel;
 
 namespace Gtk {
 	class Adjustment;
@@ -139,9 +138,9 @@ private:
 	ControllerMapDialog *controller_map_dialog;
 	GenericOutput *audio_out;
 	
-	EditorPanel		*editor_panel;
-	
 	Preset			*clipboard_preset;
+	
+	GtkAdjustment 	*m_adjustments[kControls_End];
         
         std::string             m_baseName;
 	bool			m_presetIsNotSaved;
