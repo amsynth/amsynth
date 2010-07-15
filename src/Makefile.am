@@ -9,7 +9,7 @@ amSynth_SOURCES = \
 	Preset.cc Preset.h \
 	PresetController.cc PresetController.h \
 	VoiceAllocationUnit.cc VoiceAllocationUnit.h \
-	Config.cc Config.h UpdateListener.h Thread.h controls.h \
+	Config.cc Config.h UpdateListener.h Thread.h controls.h controls.c \
 	binreloc.h binreloc.c
 
 SUBDIRS = drivers VoiceBoard GUI Effects
