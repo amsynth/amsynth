@@ -321,6 +321,8 @@ int main( int argc, char *argv[] )
 
 	DEBUGMSG("main() : GUI was terminated, shutting down cleanly..\n");
 	
+	gui_dealloc();
+	
 	/*
 	 * code to shut down cleanly..
 	 */

@@ -19,5 +19,7 @@ void gui_init(Config &,
               PresetController &,
               GenericOutput *);
 
+void gui_dealloc();
+
 void ShowModalErrorMessage(const std::string & msg);
 
