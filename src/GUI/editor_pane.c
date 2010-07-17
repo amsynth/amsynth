@@ -5,6 +5,8 @@
 #include "bitmap_knob.h"
 #include "bitmap_popup.h"
 
+#define ENABLE_LAYOUT_EDIT 1
+
 ////////////////////////////////////////////////////////////////////////////////
 
 #define SIZEOF_ARRAY( a ) ( sizeof((a)) / sizeof((a)[0]) )
@@ -67,12 +69,12 @@ editor_pane_expose_event_handler (GtkWidget *widget, gpointer data)
 
 int deldir (const char *dir_path)
 {
-	g_assert (dir_path);
-	gchar *command = g_strdup_printf("rm -r \"%s\"", dir_path);
-	printf ("%s\n", command); return 0;
-	int result = system (command);
-	g_free (command);
-	return result;
+//	g_assert (dir_path);
+//	gchar *command = g_strdup_printf("rm -r \"%s\"", dir_path);
+//	int result = system (command);
+//	g_free (command);
+//	return result;
+	return 0;
 }
 
 gchar *extract_skin (char *skin_file)
@@ -84,7 +86,8 @@ gchar *extract_skin (char *skin_file)
 		return NULL;
 	}
 	
-	gchar *command = g_strdup_printf("/usr/bin/unzip -qq -o -j \"%s\" -d %s", skin_file, tempdir);
+	gchar *unzip_bin = "/usr/bin/unzip";
+	gchar *command = g_strdup_printf("%s -qq -o -j \"%s\" -d %s", unzip_bin, skin_file, tempdir);
 	int result = system (command);
 	g_free (command);
 	command = NULL;
@@ -100,6 +103,86 @@ gchar *extract_skin (char *skin_file)
 
 ////////////////////////////////////////////////////////////////////////////////
 
+#if ENABLE_LAYOUT_EDIT /////////////////////////////////////////////////////////
+
+static gboolean
+control_move_handler (GtkWidget *widget, GdkEventMotion *event)
+{
+	static GtkWidget *current_widget = NULL;
+	static gint drag_offset_x = 0;
+	static gint drag_offset_y = 0;
+	
+	if (event->type == GDK_MOTION_NOTIFY && event->state & GDK_BUTTON2_MASK)
+	{
+		if (current_widget != widget) {
+			// remember where the drag operation began
+			current_widget = widget;
+			drag_offset_x = event->x;
+			drag_offset_y = event->y;
+			return TRUE;
+		}
+		GtkFixed *parent = GTK_FIXED (gtk_widget_get_parent (widget));
+		GtkAllocation widget_allocation = {0}, parent_allocation = {0};
+		gtk_widget_get_allocation (GTK_WIDGET (widget), &widget_allocation);
+		gtk_widget_get_allocation (GTK_WIDGET (parent), &parent_allocation);
+		gtk_fixed_move (parent, widget,
+			widget_allocation.x - parent_allocation.x + event->x - drag_offset_x,
+			widget_allocation.y - parent_allocation.y + event->y - drag_offset_y);
+//		gtk_widget_get_allocation (GTK_WIDGET (widget), &widget_allocation);
+//		const gchar *name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
+//		printf ("%16s x=%3d y=%3d\n", name,
+//			widget_allocation.x - parent_allocation.x,
+//			widget_allocation.y - parent_allocation.y);
+		return TRUE;
+	}
+    return FALSE;
+}
+
+static void
+foreach_containter_widget (GtkWidget *widget, gpointer data)
+{
+	GtkContainer *container = GTK_CONTAINER (data);
+	
+	GtkAllocation widget_allocation = {0};
+	GtkAllocation parent_allocation = {0};
+	gtk_widget_get_allocation (GTK_WIDGET (widget), &widget_allocation);
+	gtk_widget_get_allocation (GTK_WIDGET (container), &parent_allocation);
+	const gchar *name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
+
+	gchar *type = NULL, *resname = NULL;
+	g_object_get (G_OBJECT (widget),
+		"tooltip-text", &type,
+		"name", &resname,
+		NULL);
+	
+	printf (
+		"[%s]\n"
+		"resource=%s\n"
+		"type=%s\n"
+		"pos_x=%d\n"
+		"pos_y=%d\n",
+		name, resname, type,
+		widget_allocation.x - parent_allocation.x,
+		widget_allocation.y - parent_allocation.y);
+	
+	printf ("\n");
+}
+
+static gboolean
+on_unrealize (GtkWidget *widget, gpointer user_data)
+{
+	printf ("%s\n", __func__);
+	
+	GtkContainer *container = GTK_CONTAINER (widget);
+	gtk_container_foreach (container, foreach_containter_widget, container);
+	
+	return FALSE;
+}
+
+#endif /////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+
 GtkWidget *
 editor_pane_new (GtkAdjustment **adjustments)
 {
@@ -108,11 +191,13 @@ editor_pane_new (GtkAdjustment **adjustments)
 	
 	g_signal_connect (GTK_OBJECT (fixed), "expose-event", (GtkSignalFunc) editor_pane_expose_event_handler, (gpointer) NULL);
 	
+#if ENABLE_LAYOUT_EDIT
+	g_signal_connect (GTK_OBJECT (fixed), "unrealize", (GtkSignalFunc) on_unrealize, (gpointer) NULL);
+#endif
+	
 	gsize i;
 	
-//	const gchar *skin_path = "/home/nixx/Code/amsynthe-new-gui-1/src/GUI";
-	
-	gchar *skin_path = extract_skin ("/home/nixx/Code/amsynthe-new-gui-1/src/GUI/default.zip");
+	gchar *skin_path = extract_skin ("amsynth-skin.zip");
 	if (skin_path == NULL) {
 		g_message ("Could not load skin :-(");
 		return fixed;
@@ -164,7 +249,6 @@ editor_pane_new (GtkAdjustment **adjustments)
 				gint frames = g_key_file_get_integer (gkey_file, resource_name, "frames", &gerror); HANDLE_GERROR (gerror);
 				
 				gchar *path = g_strconcat (skin_path, "/", file, NULL);
-				printf ("%s\n", path);
 				
 				GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (path, &gerror); HANDLE_GERROR (gerror); g_assert (pixbuf);
 				
@@ -176,7 +260,6 @@ editor_pane_new (GtkAdjustment **adjustments)
 				info->fr_height = height;
 				info->fr_count  = frames;
 				
-				printf ("adding resource '%s'\n", resource_name);
 				g_datalist_set_data (&resdata, resource_name, (gpointer)pixbuf);
 				g_datalist_set_data (&resinfo, resource_name, (gpointer)info);
 				
@@ -196,7 +279,6 @@ editor_pane_new (GtkAdjustment **adjustments)
 			for (i=0; i<num_controls; i++)
 			{
 				gchar *control_name = control_list[i]; g_strstrip (control_name);
-				printf ("adding control '%s'\n", control_name);
 				
 				gint pos_x = g_key_file_get_integer (gkey_file, control_name, KEY_CONTROL_POS_X, &gerror); HANDLE_GERROR (gerror);
 				gint pos_y = g_key_file_get_integer (gkey_file, control_name, KEY_CONTROL_POS_Y, &gerror); HANDLE_GERROR (gerror);
@@ -209,7 +291,6 @@ editor_pane_new (GtkAdjustment **adjustments)
 				/////////////////////////
 								
 				GtkWidget *widget = NULL;
-				printf ("using resource '%s'\n", resn);
 				resource_info *res = g_datalist_get_data (&resinfo, resn); g_assert (res);
 				GdkPixbuf *frames = GDK_PIXBUF (g_datalist_get_data (&resdata, resn)); g_assert (frames);
 				GdkPixbuf *subpixpuf = gdk_pixbuf_new_subpixbuf (editor_pane_bg, pos_x, pos_y, res->fr_width, res->fr_height);
@@ -232,6 +313,14 @@ editor_pane_new (GtkAdjustment **adjustments)
 				
 				g_object_unref (G_OBJECT (subpixpuf));
 				gtk_fixed_put (GTK_FIXED (fixed), widget, pos_x, pos_y);
+				
+#if ENABLE_LAYOUT_EDIT
+				gtk_buildable_set_name (GTK_BUILDABLE (widget), control_name);
+				gchar *strings = g_key_file_get_string (gkey_file, control_name, "strings", &gerror); gerror = NULL;
+				g_object_set (G_OBJECT (widget), "name", resn, "tooltip-text", type, NULL);
+			    g_signal_connect(widget, "motion-notify-event", G_CALLBACK(control_move_handler), NULL);
+				gtk_widget_add_events(widget, GDK_BUTTON2_MOTION_MASK);
+#endif
 				
 				g_free (resn);
 				g_free (type);

@@ -162,22 +162,30 @@ bitmap_knob_expose( GtkWidget *widget, GdkEventExpose *event )
 gboolean
 bitmap_knob_button_press ( GtkWidget *widget, GdkEventButton *event )
 {
-	BitmapKnob *self = BITMAP_KNOB( widget );
-	self->origin_val = gtk_adjustment_get_value (self->adjustment);
-	self->origin_y = event->y;
+	if (event->state & GDK_BUTTON1_MASK)
+	{
+		BitmapKnob *self = BITMAP_KNOB( widget );
+		self->origin_val = gtk_adjustment_get_value (self->adjustment);
+		self->origin_y = event->y;
+		return TRUE;
+	}
 	return FALSE;
 }
 
 gboolean
 bitmap_knob_motion_notify ( GtkWidget *widget, GdkEventMotion *event )
 {
-	BitmapKnob *self = BITMAP_KNOB( widget );
-	gdouble lower = gtk_adjustment_get_lower (self->adjustment);
-	gdouble upper = gtk_adjustment_get_upper (self->adjustment);
-	gdouble range = upper - lower;
-	gdouble offset = (self->origin_y - event->y) * range / 400;
-	gdouble newval = self->origin_val + offset;
-	gtk_adjustment_set_value (self->adjustment, newval);
+	if (event->state & GDK_BUTTON1_MASK)
+	{
+		BitmapKnob *self = BITMAP_KNOB( widget );
+		gdouble lower = gtk_adjustment_get_lower (self->adjustment);
+		gdouble upper = gtk_adjustment_get_upper (self->adjustment);
+		gdouble range = upper - lower;
+		gdouble offset = (self->origin_y - event->y) * range / 400;
+		gdouble newval = self->origin_val + offset;
+		gtk_adjustment_set_value (self->adjustment, newval);
+		return TRUE;
+	}
 	return FALSE;
 }
 
