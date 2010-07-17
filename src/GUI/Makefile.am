@@ -15,9 +15,6 @@ endif
 bin2c: bin2c.c
 	$(CC) -o $@ $<
 
-%_png.c: %.png bin2c
-	./bin2c $*_png < $< > $@
-
 libGUI_a_SOURCES = \
 	bitmap_knob.c \
 	bitmap_knob.h \
@@ -25,11 +22,6 @@ libGUI_a_SOURCES = \
 	bitmap_popup.h \
 	editor_pane.c \
 	editor_pane.h \
-	background_png.c \
-	knob_png.c \
-	slider_boost_1_png.c \
-	slider_boost_2_png.c \
-	waveform_png.c \
 	amsynth_logo.h \
 	ConfigDialog.cpp \
 	ConfigDialog.h \
