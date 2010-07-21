@@ -121,18 +121,10 @@ control_move_handler (GtkWidget *widget, GdkEventMotion *event)
 			drag_offset_y = event->y;
 			return TRUE;
 		}
-		GtkFixed *parent = GTK_FIXED (gtk_widget_get_parent (widget));
-		GtkAllocation widget_allocation = {0}, parent_allocation = {0};
-		gtk_widget_get_allocation (GTK_WIDGET (widget), &widget_allocation);
-		gtk_widget_get_allocation (GTK_WIDGET (parent), &parent_allocation);
-		gtk_fixed_move (parent, widget,
-			widget_allocation.x - parent_allocation.x + event->x - drag_offset_x,
-			widget_allocation.y - parent_allocation.y + event->y - drag_offset_y);
-//		gtk_widget_get_allocation (GTK_WIDGET (widget), &widget_allocation);
-//		const gchar *name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
-//		printf ("%16s x=%3d y=%3d\n", name,
-//			widget_allocation.x - parent_allocation.x,
-//			widget_allocation.y - parent_allocation.y);
+		GtkWidget *parent = gtk_widget_get_parent (widget);
+		gtk_fixed_move (GTK_FIXED (parent), widget,
+			widget->allocation.x - parent->allocation.x + event->x - drag_offset_x,
+			widget->allocation.y - parent->allocation.y + event->y - drag_offset_y);
 		return TRUE;
 	}
     return FALSE;
@@ -143,10 +135,6 @@ foreach_containter_widget (GtkWidget *widget, gpointer data)
 {
 	GtkContainer *container = GTK_CONTAINER (data);
 	
-	GtkAllocation widget_allocation = {0};
-	GtkAllocation parent_allocation = {0};
-	gtk_widget_get_allocation (GTK_WIDGET (widget), &widget_allocation);
-	gtk_widget_get_allocation (GTK_WIDGET (container), &parent_allocation);
 	const gchar *name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
 
 	gchar *type = NULL, *resname = NULL;
@@ -162,8 +150,8 @@ foreach_containter_widget (GtkWidget *widget, gpointer data)
 		"pos_x=%d\n"
 		"pos_y=%d\n",
 		name, resname, type,
-		widget_allocation.x - parent_allocation.x,
-		widget_allocation.y - parent_allocation.y);
+		widget->allocation.x - parent->allocation.x,
+		widget->allocation.y - parent->allocation.y);
 	
 	printf ("\n");
 }
@@ -230,7 +218,7 @@ editor_pane_new (GtkAdjustment **adjustments)
 			g_free (bg_name);
 			g_free (path);
 			
-			gtk_widget_set_usize (fixed, gdk_pixbuf_get_width (editor_pane_bg), gdk_pixbuf_get_height (editor_pane_bg));
+			gtk_widget_set_size_request (fixed, gdk_pixbuf_get_width (editor_pane_bg), gdk_pixbuf_get_height (editor_pane_bg));
 		}
 		
 		//// Load resources
