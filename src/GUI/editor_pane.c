@@ -133,6 +133,7 @@ control_move_handler (GtkWidget *widget, GdkEventMotion *event)
 static void
 foreach_containter_widget (GtkWidget *widget, gpointer data)
 {
+	GtkWidget *parent = GTK_WIDGET (data);
 	GtkContainer *container = GTK_CONTAINER (data);
 	
 	const gchar *name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
