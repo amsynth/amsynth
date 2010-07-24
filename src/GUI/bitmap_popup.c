@@ -178,7 +178,7 @@ bitmap_popup_expose( GtkWidget *widget, GdkEventExpose *event )
 gboolean
 bitmap_popup_button_press ( GtkWidget *widget, GdkEventButton *event )
 {
-	if (event->state & GDK_BUTTON1_MASK)
+	if (event->type == GDK_BUTTON_PRESS && event->button == 1)
 	{
 		BitmapPopup *self = BITMAP_POPUP (widget);
 		gtk_menu_popup (GTK_MENU (self->menu), NULL, NULL, NULL, NULL, event->button, event->time);

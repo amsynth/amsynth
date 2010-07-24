@@ -1,6 +1,8 @@
 
 #include "bitmap_knob.h"
 
+#include <math.h>
+
 ////////////////////////////////////////////////////////////////////////////////
 
 #define BITMAP_KNOB(obj)				(G_TYPE_CHECK_INSTANCE_CAST	((obj), bitmap_knob_get_type(), BitmapKnob))
@@ -162,7 +164,7 @@ bitmap_knob_expose( GtkWidget *widget, GdkEventExpose *event )
 gboolean
 bitmap_knob_button_press ( GtkWidget *widget, GdkEventButton *event )
 {
-	if (event->state & GDK_BUTTON1_MASK)
+	if (event->type == GDK_BUTTON_PRESS && event->button == 1)
 	{
 		BitmapKnob *self = BITMAP_KNOB( widget );
 		self->origin_val = gtk_adjustment_get_value (self->adjustment);
@@ -180,10 +182,11 @@ bitmap_knob_motion_notify ( GtkWidget *widget, GdkEventMotion *event )
 		BitmapKnob *self = BITMAP_KNOB( widget );
 		gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 		gdouble upper = gtk_adjustment_get_upper (self->adjustment);
+		gdouble step  = gtk_adjustment_get_step_increment (self->adjustment);
 		gdouble range = upper - lower;
 		gdouble offset = (self->origin_y - event->y) * range / 400;
-		gdouble newval = self->origin_val + offset;
-		gtk_adjustment_set_value (self->adjustment, newval);
+		gdouble newval = self->origin_val + ((step == 0.0) ? offset : step * floor ((offset / step) + 0.5));
+		gtk_adjustment_set_value (self->adjustment, CLAMP (newval, lower, upper));
 		return TRUE;
 	}
 	return FALSE;
