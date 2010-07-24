@@ -17,11 +17,12 @@ OTHER_OBJECTS = \
 	amSynth-Preset.o \
 	amSynth-PresetController.o \
 	amSynth-VoiceAllocationUnit.o \
-	amSynth-Config.o 
+	amSynth-Config.o \
+	amSynth-controls.o
 
 all: $(TARGET)
 
-CFLAGS = -Wall -O2
+CFLAGS = -Wall -O0 -g
 CXXFLAGS = $(CFLAGS)
 
 $(TARGET): $(OBJECTS)

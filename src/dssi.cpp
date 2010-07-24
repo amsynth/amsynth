@@ -15,15 +15,15 @@
 #include <dssi.h>
 #include <ladspa.h>
 
+#include "controls.h"
 #include "PresetController.h"
 #include "VoiceAllocationUnit.h"
 
+#define TRACE( fmt ) fprintf (stderr, "[amsynth-dssi] %s(): " fmt "\n", __func__)
+#define TRACE_ARGS( fmt, ... ) fprintf (stderr, "[amsynth-dssi] %s(): " fmt "\n", __func__, __VA_ARGS__)
 
 static LADSPA_Descriptor *	s_ladspaDescriptor = NULL;
 static DSSI_Descriptor *	s_dssiDescriptor   = NULL;
-
-
-Preset s_preset;
 
 
 typedef struct _amsynth_wrapper {
@@ -64,17 +64,20 @@ const DSSI_Descriptor *dssi_descriptor (unsigned long index)
 
 static LADSPA_Handle instantiate (const LADSPA_Descriptor * descriptor, unsigned long s_rate)
 {
+	TRACE();
+    Preset amsynth_preset;
     amsynth_wrapper * a = new amsynth_wrapper;
     a->vau = new VoiceAllocationUnit;
     a->vau->SetSampleRate (s_rate);
     a->bank = new PresetController;
     a->bank->getCurrentPreset().AddListenerToAll (a->vau);
-    a->params = (LADSPA_Data **) malloc (s_preset.ParameterCount() * sizeof (LADSPA_Data));
+    a->params = (LADSPA_Data **) calloc (kControls_End, sizeof (LADSPA_Data));
     return (LADSPA_Handle) a;
 }
 
 static void cleanup (LADSPA_Handle instance)
 {
+	TRACE();
     amsynth_wrapper * a = (amsynth_wrapper *) instance;
     delete a->vau;
     delete a->bank;
@@ -91,7 +94,9 @@ static void connect_port (LADSPA_Handle instance, unsigned long port, LADSPA_Dat
     {
     case 0: a->out_l = data; break;
     case 1: a->out_r = data; break;
-    default: a->params[port-2] = data; break;
+    default:
+		if ((port - 2) < kControls_End) { a->params[port-2] = data; }
+		break;
     }
 }
 
@@ -122,15 +127,15 @@ static void run_synth (LADSPA_Handle instance, unsigned long sample_count, snd_s
     }
 
     // push through changes to parameters
-    /*
-    for (unsigned i=0; i<s_preset.ParameterCount(); i++)
+    for (unsigned i=0; i<kControls_End; i++)
     {
-	    if (a->bank->getCurrentPreset().getParameter(i).getValue() != *(a->params[i]))
+		const LADSPA_Data host_value = *(a->params[i]);
+	    if (a->bank->getCurrentPreset().getParameter(i).getValue() != host_value)
 	    {
-		    a->bank->getCurrentPreset().getParameter(i).setValue (*(a->params[i]));
+			TRACE_ARGS("parameter %32s = %f", a->bank->getCurrentPreset().getParameter(i).getName().c_str(), host_value);
+		    a->bank->getCurrentPreset().getParameter(i).setValue(host_value);
 	    }
     }
-    */
 
     a->vau->Process ((float *) a->out_l, (float *) a->out_r, sample_count);
 }
@@ -149,50 +154,70 @@ void __attribute__ ((constructor)) my_init ()
     LADSPA_PortRangeHint *port_range_hints;
 
 	/* LADSPA descriptor */
-    s_ladspaDescriptor =	(LADSPA_Descriptor *) malloc (sizeof (LADSPA_Descriptor));
+    s_ladspaDescriptor = (LADSPA_Descriptor *) calloc (1, sizeof (LADSPA_Descriptor));
     if (s_ladspaDescriptor)
 	{
 		s_ladspaDescriptor->UniqueID = 23;
-		s_ladspaDescriptor->Label = "TS";
-		s_ladspaDescriptor->Properties = 0;
-		s_ladspaDescriptor->Name = "amSynth";
+		s_ladspaDescriptor->Label = "amsynth";
+		s_ladspaDescriptor->Properties = LADSPA_PROPERTY_REALTIME;
+		s_ladspaDescriptor->Name = "amsynth DSSI plugin";
 		s_ladspaDescriptor->Maker = "Nick Dowell <nick@nickdowell.com>";
-		s_ladspaDescriptor->Copyright = "(C) 2005";
-
+		s_ladspaDescriptor->Copyright = "(c) 2005";
 
 		//
 		// set up ladspa 'Ports' - used to perform audio and parameter communication...
 		//
 		
-		const unsigned numParams = s_preset.ParameterCount();
-		
-		port_descriptors = new LADSPA_PortDescriptor [numParams+2];
-		port_names = new const char * [numParams+2];
-		port_range_hints = new LADSPA_PortRangeHint [numParams+2];
+		port_descriptors = (LADSPA_PortDescriptor *) calloc (kControls_End+2, sizeof (LADSPA_PortDescriptor));
+		port_range_hints = (LADSPA_PortRangeHint *) calloc (kControls_End+2, sizeof (LADSPA_PortRangeHint));
+		port_names = (const char **) calloc (kControls_End+2, sizeof (char *));
 		
 		// we need ports to transmit the audio data...
 		port_descriptors[0] = LADSPA_PORT_OUTPUT | LADSPA_PORT_AUDIO;
-		port_names[0] = "OutL";
 		port_range_hints[0].HintDescriptor = 0;
+		port_names[0] = "OutL";
 
 		port_descriptors[1] = LADSPA_PORT_OUTPUT | LADSPA_PORT_AUDIO;
-		port_names[1] = "OutR";
 		port_range_hints[1].HintDescriptor = 0;
+		port_names[1] = "OutR";
 
-		for (unsigned i=0; i<numParams; i++)
+		Preset amsynth_preset;
+		for (unsigned i=0; i<kControls_End; i++)
 		{
+			const Parameter &parameter = amsynth_preset.getParameter(i);
+			const int numSteps = parameter.getSteps();
 			port_descriptors[i+2] = LADSPA_PORT_INPUT | LADSPA_PORT_CONTROL;
-			port_names[i+2] = s_preset.getParameter(i).getName().c_str();
-			port_range_hints[i+2].HintDescriptor = LADSPA_HINT_BOUNDED_BELOW | LADSPA_HINT_BOUNDED_ABOVE;
-			port_range_hints[i+2].LowerBound = s_preset.getParameter(i).getMin();
-			port_range_hints[i+2].UpperBound = s_preset.getParameter(i).getMax();
+			port_range_hints[i+2].LowerBound = parameter.getMin();
+			port_range_hints[i+2].UpperBound = parameter.getMax();
+			port_range_hints[i+2].HintDescriptor = LADSPA_HINT_BOUNDED_BELOW | LADSPA_HINT_BOUNDED_ABOVE
+				| ((numSteps == 2) ? LADSPA_HINT_TOGGLED : 0)
+				| ((numSteps  > 2) ? LADSPA_HINT_INTEGER : 0);
+				
+			// Try to map onto LADSPA's insane take on 'default' values
+			const float def = parameter.getValue();
+			const float min = parameter.getMin();
+			const float max = parameter.getMax();
+			const float med = (parameter.getMin() + parameter.getMax()) / 2.0;
+			const float rng = parameter.getMax() - parameter.getMin();
+			//
+			if (def == 0)			port_range_hints[i+2].HintDescriptor |= LADSPA_HINT_DEFAULT_0;
+			else if (def == 1)		port_range_hints[i+2].HintDescriptor |= LADSPA_HINT_DEFAULT_1;
+			else if (def == 100)	port_range_hints[i+2].HintDescriptor |= LADSPA_HINT_DEFAULT_100;
+			else if (def == 440)	port_range_hints[i+2].HintDescriptor |= LADSPA_HINT_DEFAULT_440;
+			else if (def == min)	port_range_hints[i+2].HintDescriptor |= LADSPA_HINT_DEFAULT_MINIMUM;
+			else if (def == max)	port_range_hints[i+2].HintDescriptor |= LADSPA_HINT_DEFAULT_MAXIMUM;
+			else if (def  < med)	port_range_hints[i+2].HintDescriptor |= LADSPA_HINT_DEFAULT_LOW;
+			else if (def == med)	port_range_hints[i+2].HintDescriptor |= LADSPA_HINT_DEFAULT_MIDDLE;
+			else if (def  > med)	port_range_hints[i+2].HintDescriptor |= LADSPA_HINT_DEFAULT_HIGH;
+			
+			port_names[i+2] = parameter_name_from_index(i); // returns a pointer to a static string
+			TRACE_ARGS("port hints for %32s : %x", parameter_name_from_index(i), port_range_hints[i+2]);
 		}
 	
 		s_ladspaDescriptor->PortDescriptors = port_descriptors;
 		s_ladspaDescriptor->PortRangeHints  = port_range_hints;
 		s_ladspaDescriptor->PortNames       = port_names;
-		s_ladspaDescriptor->PortCount       = numParams+2;
-	
+		s_ladspaDescriptor->PortCount       = kControls_End+2;
 	
 	
 		s_ladspaDescriptor->instantiate = instantiate;
