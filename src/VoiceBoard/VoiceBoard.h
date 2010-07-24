@@ -93,6 +93,7 @@ private:
 	ADSR 			filter_env;
 	
 	// amp section
+	IIRFilterFirstOrder _vcaFilter;
 	float			mAmpModAmount;
 	ADSR 			amp_env;
 };

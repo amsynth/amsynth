@@ -4,6 +4,9 @@
 
 #include "VoiceBoard.h"
 
+// Low-pass filter the VCA control signal to prevent nasty clicking sounds
+const float kVCALowPassFreq = 4000.0f;
+
 VoiceBoard::VoiceBoard(const VoiceBoardProcessMemory * vbpm):
 	mem				(vbpm)
 ,	mKeyVelocity	(1.0)
@@ -131,9 +134,11 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	// VCA
 	// 
 	float *ampenvbuf = amp_env.getNFData (numSamples);
-	for (int i=0; i<numSamples; i++) 
-		osc1buf[i] = osc1buf[i]*ampenvbuf[i]*mKeyVelocity *
-			( ((lfo1buf[i]*0.5f)+0.5f)*mAmpModAmount + 1-mAmpModAmount);
+	for (int i=0; i<numSamples; i++) {
+		const float amplitude = ampenvbuf[i] * mKeyVelocity * 
+			( ((lfo1buf[i] * 0.5f) + 0.5f) * mAmpModAmount + 1 - mAmpModAmount);
+		osc1buf[i] = osc1buf[i] * _vcaFilter.processSample(amplitude);
+	}
 
 	//
 	// Copy, with overall volume
@@ -150,6 +155,7 @@ VoiceBoard::SetSampleRate	(int rate)
 	filter.SetSampleRate (rate);
 	filter_env.SetSampleRate (rate);
 	amp_env.SetSampleRate (rate);
+	_vcaFilter.setCoefficients(rate, kVCALowPassFreq, IIRFilterFirstOrder::LowPass);
 }
 
 int 
