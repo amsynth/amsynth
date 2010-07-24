@@ -15,7 +15,8 @@
 
 using namespace std;
 
-const int kMaxGrainSize = 64;
+const unsigned kMaxGrainSize = 64;
+const unsigned kBufferSize = 1024;
 
 static const VoiceBoardProcessMemory s_procMem (kMaxGrainSize);
 
@@ -28,6 +29,7 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 	limiter = new SoftLimiter;
 	reverb = new revmodel;
 	distortion = new Distortion;
+	mBuffer = new float [kBufferSize * 2];
 
 	for (int i = 0; i < 128; i++)
 	{
@@ -46,6 +48,7 @@ VoiceAllocationUnit::~VoiceAllocationUnit	()
 	delete limiter;
 	delete reverb;
 	delete distortion;
+	delete [] mBuffer;
 }
 
 void
@@ -136,11 +139,16 @@ VoiceAllocationUnit::purgeVoices()
 void
 VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 {
-	// if stream is interleaved, do mono processing (non-interleaved) in the end part of the buffer.
-	float* vb = (1 < stride) ? l+nframes : l;
+	if (nframes > kBufferSize) {
+		this->Process(l,               r,                         kBufferSize, stride);
+		this->Process(l + kBufferSize, r + kBufferSize, nframes - kBufferSize, stride);
+		return;
+	}
+	
+	float* vb = mBuffer;
 	memset(vb, 0, nframes * sizeof (float));
 
-	int framesLeft=nframes; int j=0;
+	unsigned framesLeft = nframes, j = 0;
 	while (0 < framesLeft)
 	{
 		int fr = (framesLeft < kMaxGrainSize) ? framesLeft : kMaxGrainSize;

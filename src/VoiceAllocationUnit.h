@@ -51,6 +51,8 @@ private:
 	SoftLimiter	*limiter;
 	revmodel	*reverb;
 	Distortion	*distortion;
+	
+	float	*mBuffer;
 
 	float	mMasterVol;
 };
