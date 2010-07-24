@@ -34,9 +34,6 @@ libGUI_a_SOURCES = \
 	GUI.h \
 	gui_main.cc \
 	gui_main.h \
-	Knob.cc \
-	Knob.h \
-	knob_med.h \
 	PrefixHeader.h \
 	PresetControllerView.cc \
 	PresetControllerView.h \
