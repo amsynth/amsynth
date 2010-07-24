@@ -16,6 +16,8 @@ bin2c: bin2c.c
 	$(CC) -o $@ $<
 
 libGUI_a_SOURCES = \
+	bitmap_button.c \
+	bitmap_button.h \
 	bitmap_knob.c \
 	bitmap_knob.h \
 	bitmap_popup.c \

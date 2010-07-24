@@ -2,6 +2,7 @@
 
 #include "editor_pane.h"
 #include "../controls.h"
+#include "bitmap_button.h"
 #include "bitmap_knob.h"
 #include "bitmap_popup.h"
 
@@ -42,8 +43,8 @@ editor_pane_expose_event_handler (GtkWidget *widget, gpointer data)
 		0,	// src_y
 		widget->allocation.x,
 		widget->allocation.y,
-		widget->allocation.width,
-		widget->allocation.height,
+		gdk_pixbuf_get_width (editor_pane_bg),
+		gdk_pixbuf_get_height (editor_pane_bg),
 		GDK_RGB_DITHER_NONE, 0, 0
 	);
 }
@@ -59,6 +60,7 @@ editor_pane_expose_event_handler (GtkWidget *widget, gpointer data)
 	}
 
 #define KEY_CONTROL_TYPE		"type"
+#define KEY_CONTROL_TYPE_BUTTON	"button"
 #define KEY_CONTROL_TYPE_KNOB	"knob"
 #define KEY_CONTROL_TYPE_POPUP	"popup"
 #define KEY_CONTROL_POS_X		"pos_x"
@@ -160,11 +162,8 @@ foreach_containter_widget (GtkWidget *widget, gpointer data)
 static gboolean
 on_unrealize (GtkWidget *widget, gpointer user_data)
 {
-	printf ("%s\n", __func__);
-	
 	GtkContainer *container = GTK_CONTAINER (widget);
 	gtk_container_foreach (container, foreach_containter_widget, container);
-	
 	return FALSE;
 }
 
@@ -185,11 +184,27 @@ editor_pane_new (GtkAdjustment **adjustments)
 #endif
 	
 	gsize i;
-	
-	gchar *skin_path = extract_skin ("amsynth-skin.zip");
+	gchar *skin_dir = NULL;
+	gchar *skin_path = (gchar *)g_getenv ("AMSYNTH_SKIN");
 	if (skin_path == NULL) {
-		g_message ("Could not load skin :-(");
+		skin_path = "amsynth-skin.zip";
+	}
+	
+	if (!g_file_test (skin_path, G_FILE_TEST_EXISTS)) {
+		g_error ("cannot find skin '%s'", skin_path);
 		return fixed;
+	}
+	
+	if (g_file_test (skin_path, G_FILE_TEST_IS_DIR)) {
+		skin_dir = g_strdup (skin_path);
+	}
+	
+	if (g_file_test (skin_path, G_FILE_TEST_IS_REGULAR)) {
+		skin_dir = extract_skin (skin_path);
+		if (skin_dir == NULL) {
+			g_message ("Could not unpack skin file '%s'", skin_path);
+			return fixed;
+		}
 	}
 	
 	{
@@ -202,7 +217,7 @@ editor_pane_new (GtkAdjustment **adjustments)
 		
 		GError *gerror = NULL;
 		GKeyFile *gkey_file = g_key_file_new ();
-		gchar *ini_path = g_strconcat (skin_path, "/layout.ini", NULL);
+		gchar *ini_path = g_strconcat (skin_dir, "/layout.ini", NULL);
 		gboolean ok = g_key_file_load_from_file (gkey_file, ini_path, G_KEY_FILE_NONE, &gerror);
 		g_key_file_set_list_separator (gkey_file, ',');
 		g_free (ini_path); ini_path = NULL;
@@ -213,7 +228,7 @@ editor_pane_new (GtkAdjustment **adjustments)
 		
 		{
 			gchar *bg_name = g_key_file_get_string  (gkey_file, "layout", "background", &gerror); HANDLE_GERROR (gerror); g_strstrip (bg_name);
-			gchar *path = g_strconcat (skin_path, "/", bg_name, NULL);
+			gchar *path = g_strconcat (skin_dir, "/", bg_name, NULL);
 			editor_pane_bg = gdk_pixbuf_new_from_file (path, &gerror); HANDLE_GERROR (gerror);
 			g_assert (editor_pane_bg);
 			g_free (bg_name);
@@ -237,7 +252,7 @@ editor_pane_new (GtkAdjustment **adjustments)
 				gint height = g_key_file_get_integer (gkey_file, resource_name, "height", &gerror); HANDLE_GERROR (gerror);
 				gint frames = g_key_file_get_integer (gkey_file, resource_name, "frames", &gerror); HANDLE_GERROR (gerror);
 				
-				gchar *path = g_strconcat (skin_path, "/", file, NULL);
+				gchar *path = g_strconcat (skin_dir, "/", file, NULL);
 				
 				GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (path, &gerror); HANDLE_GERROR (gerror); g_assert (pixbuf);
 				
@@ -290,6 +305,11 @@ editor_pane_new (GtkAdjustment **adjustments)
 					widget = bitmap_knob_new (adj, frames, res->fr_width, res->fr_height, res->fr_count);
 					bitmap_knob_set_bg (widget, subpixpuf);
 				}
+				else if (g_strcmp0 (KEY_CONTROL_TYPE_BUTTON, type) == 0)
+				{
+					widget = bitmap_button_new (adj, frames, res->fr_width, res->fr_height, res->fr_count);
+					bitmap_button_set_bg (widget, subpixpuf);
+				}
 				else if (g_strcmp0 (KEY_CONTROL_TYPE_POPUP, type) == 0)
 				{
 					gsize nstrings = 0;
@@ -322,8 +342,8 @@ editor_pane_new (GtkAdjustment **adjustments)
 		g_key_file_free (gkey_file);
 	}
 	
-	deldir (skin_path);
-	g_free (skin_path);
+	//deldir (skin_dir);
+	g_free (skin_dir);
 
 	return fixed;
 }
