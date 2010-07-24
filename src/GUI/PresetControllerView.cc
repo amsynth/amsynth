@@ -19,7 +19,7 @@ PresetControllerView::PresetControllerView(VoiceAllocationUnit & vau )
 	inhibit_combo_callback = false;
 	inhibit_combo_update = false;
 	
-    commit.add_label("Save Changes",0.5);
+    commit.add_label("Save",0.5);
     commit.signal_clicked().connect(
 		bind <const char*>(mem_fun(*this, &PresetControllerView::ev_handler),"commit"));
 
@@ -42,7 +42,7 @@ PresetControllerView::PresetControllerView(VoiceAllocationUnit & vau )
 	add(*aud);
 
 	Gtk::Button *panic = manage (new Gtk::Button);
-	panic->add_label ("Kill all voices");
+	panic->add_label ("Panic");
 	panic->signal_clicked().connect(bind(mem_fun(*this, &PresetControllerView::ev_handler),"panic"));
 	add (*panic);
 }
