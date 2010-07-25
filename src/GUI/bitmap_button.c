@@ -24,8 +24,6 @@ struct _BitmapButton
 	guint frame_width;
 	guint frame_height;
 	guint frame_count;
-	
-	GtkWidget *menu;
 };
 
 struct _BitmapButtonClass
@@ -64,7 +62,6 @@ bitmap_button_init( BitmapButton *self )
 	self->frame_width	= 1;
 	self->frame_height	= 1;
 	self->frame_count	= 1;
-	self->menu			= NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
