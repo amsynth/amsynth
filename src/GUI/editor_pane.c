@@ -16,8 +16,6 @@
 
 static GdkPixbuf *editor_pane_bg = NULL;
 
-static GtkAdjustment *adjustments[kControls_End];
-
 ////////////////////////////////////////////////////////////////////////////////
 
 typedef struct
@@ -114,6 +112,9 @@ control_move_handler (GtkWidget *widget, GdkEventMotion *event)
 	static gint drag_offset_x = 0;
 	static gint drag_offset_y = 0;
 	
+	if (!widget || !event)
+		return FALSE;
+	
 	if (event->type == GDK_MOTION_NOTIFY && event->state & GDK_BUTTON2_MASK)
 	{
 		if (current_widget != widget) {
@@ -136,7 +137,6 @@ static void
 foreach_containter_widget (GtkWidget *widget, gpointer data)
 {
 	GtkWidget *parent = GTK_WIDGET (data);
-	GtkContainer *container = GTK_CONTAINER (data);
 	
 	const gchar *name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
 
@@ -325,7 +325,6 @@ editor_pane_new (GtkAdjustment **adjustments)
 				
 #if ENABLE_LAYOUT_EDIT
 				gtk_buildable_set_name (GTK_BUILDABLE (widget), control_name);
-				gchar *strings = g_key_file_get_string (gkey_file, control_name, "strings", &gerror); gerror = NULL;
 				g_object_set (G_OBJECT (widget), "name", resn, "tooltip-text", type, NULL);
 			    g_signal_connect(widget, "motion-notify-event", G_CALLBACK(control_move_handler), NULL);
 				gtk_widget_add_events(widget, GDK_BUTTON2_MOTION_MASK);
