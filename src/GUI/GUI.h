@@ -92,7 +92,7 @@ private:
 
 	gint idle_callback();
 	gint setActiveParam( GdkEventButton *event, Parameter * param );
-	string status;
+	std::string status;
 	Gtk::VBox vbox;
 
 	Gtk::Style 		*style;

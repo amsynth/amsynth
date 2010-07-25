@@ -101,7 +101,6 @@
 		0186A971117A16E80076FCB9 /* gui_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gui_main.h; path = src/GUI/gui_main.h; sourceTree = "<group>"; };
 		0186A972117A16E80076FCB9 /* GUI.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GUI.cc; path = src/GUI/GUI.cc; sourceTree = "<group>"; };
 		0186A973117A16E80076FCB9 /* GUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GUI.h; path = src/GUI/GUI.h; sourceTree = "<group>"; };
-		0186A981117A16E80076FCB9 /* ParameterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParameterView.h; path = src/GUI/ParameterView.h; sourceTree = "<group>"; };
 		0186A982117A16E80076FCB9 /* PrefixHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrefixHeader.h; path = src/GUI/PrefixHeader.h; sourceTree = "<group>"; };
 		0186A983117A16E80076FCB9 /* PresetControllerView.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PresetControllerView.cc; path = src/GUI/PresetControllerView.cc; sourceTree = "<group>"; };
 		0186A984117A16E80076FCB9 /* PresetControllerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PresetControllerView.h; path = src/GUI/PresetControllerView.h; sourceTree = "<group>"; };
@@ -227,7 +226,6 @@
 				0186A971117A16E80076FCB9 /* gui_main.h */,
 				0186A972117A16E80076FCB9 /* GUI.cc */,
 				0186A973117A16E80076FCB9 /* GUI.h */,
-				0186A981117A16E80076FCB9 /* ParameterView.h */,
 				0186A982117A16E80076FCB9 /* PrefixHeader.h */,
 				0186A983117A16E80076FCB9 /* PresetControllerView.cc */,
 				0186A984117A16E80076FCB9 /* PresetControllerView.h */,

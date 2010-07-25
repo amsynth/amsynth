@@ -6,7 +6,7 @@
 #include "bitmap_knob.h"
 #include "bitmap_popup.h"
 
-#define ENABLE_LAYOUT_EDIT 1
+//#define ENABLE_LAYOUT_EDIT 1
 
 ////////////////////////////////////////////////////////////////////////////////
 

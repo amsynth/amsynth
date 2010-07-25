@@ -8,10 +8,10 @@
 #include <gtkmm.h>
 #include <string>
 #include <list>
-#include "ParameterView.h"
+
+#include "../UpdateListener.h"
 
 class PresetController;
-class UpdateListener;
 class VoiceAllocationUnit;
 
 class PresetControllerView : public UpdateListener, public Gtk::HBox {
@@ -21,7 +21,7 @@ public:
     void setPresetController(PresetController & p_c);
     void update();
 private:
-	void ev_handler(string text);
+	void ev_handler(std::string text);
     PresetController *presetController;
     Gtk::Button prev, next, commit;
     Gtk::Combo presets_combo;
