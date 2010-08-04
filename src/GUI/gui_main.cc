@@ -10,9 +10,11 @@ static GUI *gui = NULL;
 static Gtk::Main *kit = NULL;
 static int  gdk_input_pipe[2];
 static void gdk_input_function(gpointer, gint, GdkInputCondition);
+static char **_argv = NULL;
 
 void gui_kit_init(int & argc, char ** & argv)
 {
+	_argv = g_strdupv(argv);
 	kit = new Gtk::Main(argc, argv);
 }
 
@@ -67,4 +69,9 @@ void gdk_input_function(gpointer, gint source, GdkInputCondition)
 		request->slot();
 		delete request;
 	}
+}
+
+void spawn_new_instance()
+{
+	g_spawn_async(NULL, _argv, NULL, (GSpawnFlags)0, NULL, NULL, NULL, NULL);
 }

@@ -21,3 +21,4 @@ void gui_init(Config &,
 
 void ShowModalErrorMessage(const std::string & msg);
 
+void spawn_new_instance();

@@ -31,6 +31,8 @@ using namespace Gtk;
 #include "amsynth_logo.h"
 #include "ConfigDialog.h"
 
+#include "gui_main.h"
+
 enum {
 	evLoad,
 	evCommit,
@@ -47,6 +49,9 @@ enum {
 	evVkeybd,
 	evMidiSend,
 	evConfig,
+	evNewInstance,
+	
+	evMax
 };
 
 int
@@ -208,8 +213,13 @@ GUI::create_menus	( )
 	//
 	Menu *menu_file = manage (new Menu());
 	MenuList& list_file = menu_file->items ();
-	list_file.push_back (MenuElem("New Instance", sigc::bind(mem_fun(*this, &GUI::command_run),"amSynth")));
+	
+#if defined(__linux)
+	// create-new-instance currently only supported on Linux
+	list_file.push_back (MenuElem("New Instance", sigc::bind(mem_fun(this, &GUI::event_handler),(int)evNewInstance)));
 	list_file.push_back (SeparatorElem());
+#endif
+	
 	list_file.push_back (MenuElem("_Open Bank",Gtk::AccelKey("<control>O"), mem_fun(*this, &GUI::bank_open)));
 //	list_file.push_back (MenuElem("_Save Bank","<control>S", mem_fun(*this, &GUI::bank_save)));
 	list_file.push_back (MenuElem("_Save Bank As...",Gtk::AccelKey("<control>S"), mem_fun(*this, &GUI::bank_save_as)));
@@ -588,6 +598,10 @@ GUI::event_handler(const int e)
 		dlg.run ();
 		break;
 	}
+	
+	case evNewInstance:
+		spawn_new_instance();
+		break;
 		
 	default:
 		cout << "no handler for event: " << e << endl;
