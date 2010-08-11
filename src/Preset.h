@@ -34,6 +34,9 @@ public:
     void			randomise		();
     
     void			AddListenerToAll(UpdateListener*);
+    
+    string			toString		();
+    bool			fromString		(string str);
 
 private:
     std::string				mName;

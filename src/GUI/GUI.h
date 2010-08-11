@@ -90,6 +90,9 @@ private:
 	void		post_init();
 	void		update_title();
 	void		UpdateParameterOnMainThread(Param, float);
+	
+	static void preset_paste_callback(GtkClipboard *clipboard, const gchar *text, gpointer data);
+	static void preset_paste_as_new_callback(GtkClipboard *clipboard, const gchar *text, gpointer data);
 
 	gint idle_callback();
 	gint setActiveParam( GdkEventButton *event, Parameter * param );
@@ -140,8 +143,6 @@ private:
 	GenericOutput *audio_out;
 	
 	EditorPanel		*editor_panel;
-	
-	Preset			*clipboard_preset;
         
         std::string             m_baseName;
 	bool			m_presetIsNotSaved;

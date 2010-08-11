@@ -30,6 +30,7 @@ public:
 	Preset&	getPreset			(const int preset) { return presets[preset]; }
 	Preset&	getPreset			(const string name);
 
+	bool	containsPresetWithName(const string name);
 	bool	isCurrentPresetModified() { return !currentPreset.isEqual(presets[currentPresetNo]); }
 	
 	// Commit the current preset to memory

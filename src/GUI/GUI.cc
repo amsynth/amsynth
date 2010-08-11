@@ -69,7 +69,6 @@ GUI::delete_event_impl(GdkEventAny *)
 GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 		  GenericOutput *audio, const char *title )
 :	controller_map_dialog(NULL)
-,	clipboard_preset (new Preset)
 ,	m_vkeybdOctave(4)
 ,	m_vkeybdIsActive(false)
 ,	m_vkeybdState(128)
@@ -731,24 +730,54 @@ GUI::preset_new		( )
 	preset_controller->newPreset ();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 void
 GUI::preset_copy	( )
 {
-	*clipboard_preset = preset_controller->getCurrentPreset ();
+	std::string presetData = preset_controller->getCurrentPreset().toString();
+	gtk_clipboard_set_text(gtk_clipboard_get(GDK_SELECTION_CLIPBOARD), presetData.c_str(), -1);
 }
 
 void
 GUI::preset_paste	( )
 {
-	preset_controller->getCurrentPreset() = *clipboard_preset;
+	gtk_clipboard_request_text(gtk_clipboard_get(GDK_SELECTION_CLIPBOARD), GUI::preset_paste_callback, this);
+}
+
+void
+GUI::preset_paste_callback(GtkClipboard *, const gchar *text, gpointer userdata)
+{
+	GUI *_this = reinterpret_cast<GUI *>(userdata);
+	
+	Preset pastedPreset;
+	if (!pastedPreset.fromString(std::string(text)))
+		return;
+	
+	// enure preset has a unique name
+	for (int suffixNumber = 1; _this->preset_controller->containsPresetWithName(pastedPreset.getName()); suffixNumber++) {
+		std::stringstream str; str <<  pastedPreset.getName() << " " << suffixNumber;
+		pastedPreset.setName(str.str());
+	}
+	
+	_this->preset_controller->getCurrentPreset() = pastedPreset;
+	_this->presetCV->update();
 }
 
 void
 GUI::preset_paste_as_new( )
 {
-	preset_new ();
-	preset_controller->getCurrentPreset() = *clipboard_preset;
+	gtk_clipboard_request_text(gtk_clipboard_get(GDK_SELECTION_CLIPBOARD), GUI::preset_paste_as_new_callback, this);
 }
+
+void
+GUI::preset_paste_as_new_callback(GtkClipboard *clipboard, const gchar *text, gpointer userdata)
+{
+	reinterpret_cast<GUI *>(userdata)->preset_new ();
+	preset_paste_callback(clipboard, text, userdata);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 void
 GUI::bank_open		( )

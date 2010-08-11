@@ -49,6 +49,15 @@ PresetController::selectPreset		(const string name)
 	return -1;
 }
 
+bool
+PresetController::containsPresetWithName(const string name)
+{
+	for (int i=0; i<kNumPresets; i++) 
+		if (getPreset(i).getName() == name) 
+			return true;
+	return false;
+}
+
 Preset&
 PresetController::getPreset			(const string name)
 {
@@ -74,59 +83,19 @@ int
 PresetController::exportPreset		(const string filename)
 {
 	ofstream file( filename.c_str(), ios::out );
-	file << "amSynth1.0preset" << endl;
-	
-	file << "<preset> " << "<name> " << currentPreset.getName() << endl;
-	for (unsigned n = 0; n < currentPreset.ParameterCount(); n++)
-	{
-		file << "<parameter> " << currentPreset.getParameter(n).getName() 
-		<< " " << currentPreset.getParameter(n).getValue() << endl;
-	}
+	file << currentPreset.toString();
 	file.close();
-	
 	return 0;
 }
 
 int
 PresetController::importPreset		(const string filename)
 {	
-	ifstream file( filename.c_str(), ios::in );
-	char buffer[100];
-  
-	if (file.bad())	return -1;
-  
-	file >> buffer;
-  
-	if (string(buffer) != "amSynth1.0preset") return -1;
-  
-	file >> buffer;
-	if (string(buffer) == "<preset>") {
-		file >> buffer;
-		
-		//get the preset's name
-		file >> buffer;
-		string presetName = "Imported: ";
-		presetName += string(buffer);
-		file >> buffer;
-		while (string(buffer) != "<parameter>") {
-			presetName += " ";
-			presetName += string(buffer);
-			file >> buffer;
-		}
-		currentPreset.setName(presetName); 
-		//get the parameters
-		while (string(buffer) == "<parameter>") {
-			string name;
-			file >> buffer;
-			name = string(buffer);
-			file >> buffer;
-			if(name!="unused")
-				currentPreset.getParameter(name).setValue( atof(buffer) );
-			file >> buffer;
-		}
-		currentPreset.setName(presetName);
-		notify ();
-	} else file.close();
+	ifstream ifs( filename.c_str(), ios::in );
+	std::string str( (std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>() );
+	if (!currentPreset.fromString( str )) return -1;
+	currentPreset.setName("Imported: " + currentPreset.getName());
+	notify ();
 	return 1;
 }
 

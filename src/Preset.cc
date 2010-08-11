@@ -3,6 +3,7 @@
  */
 
 #include "Preset.h"
+#include <cstdlib>
 
 #ifdef _DEBUG
 #include <iostream>
@@ -95,4 +96,57 @@ void
 Preset::AddListenerToAll	(UpdateListener* ul)
 {
 	for (unsigned i=0; i<mParameters.size(); i++) getParameter(i).addUpdateListener (*ul);
+}
+
+string
+Preset::toString()
+{
+	std::stringstream stream;
+	stream << "amSynth1.0preset" << std::endl;
+	stream << "<preset> " << "<name> " << getName() << std::endl;
+	for (unsigned n = 0; n < ParameterCount(); n++) {
+		stream << "<parameter> " << getParameter(n).getName() << " " << getParameter(n).getValue() << std::endl;
+	}
+	return stream.str();
+}
+
+bool
+Preset::fromString(string str)
+{
+	std::stringstream stream (str);
+
+	char buffer[100];
+  
+	stream >> buffer;
+  
+	if (string(buffer) != "amSynth1.0preset") return false;
+  
+	stream >> buffer;
+	if (string(buffer) == "<preset>") {
+		stream >> buffer;
+		
+		//get the preset's name
+		stream >> buffer;
+		string presetName;
+		presetName += string(buffer);
+		stream >> buffer;
+		while (string(buffer) != "<parameter>") {
+			presetName += " ";
+			presetName += string(buffer);
+			stream >> buffer;
+		}
+		setName(presetName); 
+		
+		//get the parameters
+		while (string(buffer) == "<parameter>") {
+			string name;
+			stream >> buffer;
+			name = string(buffer);
+			stream >> buffer;
+			if(name!="unused")
+				getParameter(name).setValue( atof(buffer) );
+			stream >> buffer;
+		}
+	};
+	return true;
 }
