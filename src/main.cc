@@ -115,9 +115,8 @@ void install_default_files_if_reqd()
 		printf ("Will fallback to hardcoded default path.\n"); 
 	}
 	
-	#define DEFAULT_PREFIX "/usr/local"
 	char * homedir = getenv ("HOME");
-	char * data_dir = br_find_data_dir (DEFAULT_PREFIX"/share");
+	char * data_dir = br_find_data_dir (DEFAULT_PREFIX "/share");
 	char * amsynth_data_dir = br_strcat (data_dir, "/amSynth");
 	char * factory_controllers = br_strcat (amsynth_data_dir, "/Controllersrc");
 	char * factory_config = br_strcat (amsynth_data_dir, "/rc");

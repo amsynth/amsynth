@@ -1,5 +1,8 @@
 bin_PROGRAMS = amSynth
 
+# http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
+AM_CPPFLAGS = -DENABLE_BINRELOC -DDEFAULT_PREFIX='"$(prefix)"'
+
 amSynth_SOURCES = \
 	main.cc \
 	AudioOutput.cc AudioOutput.h \
@@ -20,9 +23,6 @@ amSynth_LDADD = \
 	GUI/libGUI.a \
 	Effects/libEffects.a \
 	-lstdc++ -lm -lpthread $(DEPS_LIBS) $(LIBS)
-
-amSynth_CFLAGS = $(CFLAGS) -DENABLE_BINRELOC
-amSynth_CXXFLAGS = $(CXXFLAGS) -DENABLE_BINRELOC
 
 if ENABLE_REALTIME
 install-exec-hook:
