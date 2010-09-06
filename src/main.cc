@@ -325,7 +325,6 @@ int main( int argc, char *argv[] )
 	 * code to shut down cleanly..
 	 */
 
-	presetController->savePresets(config.current_bank_file.c_str ());
 	midi_controller->saveConfig();
 	
 	out->Stop ();

@@ -13,6 +13,8 @@ using sigc::bind;
 using std::cout;
 using namespace std;
 
+extern Config config;
+
 PresetControllerView::PresetControllerView(VoiceAllocationUnit & vau )
 {
 	this->vau = &vau;
@@ -63,6 +65,7 @@ PresetControllerView::ev_handler(string text)
 {
 	if (text == "commit") {
 		presetController->commitPreset();
+		presetController->savePresets(config.current_bank_file.c_str());
 		update();
 		return;
 	} else if (text == "presets_combo") {
