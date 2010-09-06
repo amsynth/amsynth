@@ -12,6 +12,7 @@
 #include <sys/types.h>
 
 #include <gtkmm.h>
+#include <gtk/gtk.h>
 #include <sigc++/bind.h>
 
 #if defined(__linux)
