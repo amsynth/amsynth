@@ -1,0 +1,29 @@
+
+                         SKINNING AMSYNTH
+
+amsynth's GUI is now (almost) completely data-driven, so it is possible to
+change the layout and appearance of the synth controls (knobs and buttons)
+based on a skin-file.
+
+A skin file is simply a zip file that contains:
+ * layout.ini - lists the position of and images used for each control
+ * a collection of bitmap resources, referenced by layout.ini
+
+The names of the controls are hard-coded into amsynth.
+
+To run amsynth with a different skin, use the AMSYNTH_SKIN environment
+variable to specify the path of the skin. The path can either be a skin zip
+file, or a directory containing the contents of a skin zip. By using a skin
+directory you can quickly test changes without having to re-zip all the 
+resources :-)
+
+e.g.
+
+  AMSYNTH_SKIN=~/skin-2 amSynth
+
+Will instruct amsynth to use the skin in the directory ~/skin-2
+
+
+Have a look at the default skin to get a feel for the layout.ini format and
+see how frames are stitched together. Have fun ;-)
+
