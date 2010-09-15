@@ -18,7 +18,6 @@ class Preset;
 class VoiceAllocationUnit;
 class GenericOutput;
 class Config;
-class EditorPanel;
 
 namespace Gtk {
 	class Adjustment;
@@ -96,7 +95,7 @@ private:
 
 	gint idle_callback();
 	gint setActiveParam( GdkEventButton *event, Parameter * param );
-	string status;
+	std::string status;
 	Gtk::VBox vbox;
 
 	Gtk::Style 		*style;
@@ -142,7 +141,9 @@ private:
 	ControllerMapDialog *controller_map_dialog;
 	GenericOutput *audio_out;
 	
-	EditorPanel		*editor_panel;
+	Preset			*clipboard_preset;
+	
+	GtkAdjustment 	*m_adjustments[kControls_End];
         
         std::string             m_baseName;
 	bool			m_presetIsNotSaved;

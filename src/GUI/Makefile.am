@@ -11,32 +11,31 @@ endif
 
 %.gch: %
 	$(CXXCOMPILE) -c $<
+	
+bin2c: bin2c.c
+	$(CC) -o $@ $<
 
 libGUI_a_SOURCES = \
+	bitmap_button.c \
+	bitmap_button.h \
+	bitmap_knob.c \
+	bitmap_knob.h \
+	bitmap_popup.c \
+	bitmap_popup.h \
+	editor_pane.c \
+	editor_pane.h \
 	amsynth_logo.h \
 	ConfigDialog.cpp \
 	ConfigDialog.h \
 	ControllerMapDialog.cc \
 	ControllerMapDialog.h \
 	controllers.h \
-	EditorPanel.cc \
-	EditorPanel.h \
 	GUI.cc \
 	GUI.h \
 	gui_main.cc \
 	gui_main.h \
-	Knob.cc \
-	Knob.h \
-	knob_med.h \
-	ParameterKnob.cc \
-	ParameterKnob.h \
-	ParameterSwitch.cc \
-	ParameterSwitch.h \
-	ParameterView.h \
 	PrefixHeader.h \
 	PresetControllerView.cc \
 	PresetControllerView.h \
-	RadioButtonParameterView.cc \
-	RadioButtonParameterView.h \
 	Request.h
 

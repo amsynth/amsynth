@@ -27,12 +27,12 @@ using namespace Gtk;
 #include "../Preset.h"
 #include "../VoiceAllocationUnit.h"
 
-#include "EditorPanel.h"
 #include "../../config.h"
 #include "amsynth_logo.h"
 #include "ConfigDialog.h"
 
 #include "gui_main.h"
+#include "editor_pane.h"
 
 enum {
 	evLoad,
@@ -347,14 +347,33 @@ GUI::config_controllers()
 	if (controller_map_dialog) controller_map_dialog->show_all();
 }
 
-
+void
+adjustment_value_changed (GtkAdjustment *adjustment, gpointer data)
+{
+	Parameter *param = (Parameter *)data;
+	param->setValue (gtk_adjustment_get_value (adjustment));
+}
 
 void 
 GUI::init()
 {
 	Preset *preset = &(preset_controller->getCurrentPreset());
 	
-	editor_panel = new EditorPanel (preset);
+	
+	for (int i=0; i<kControls_End; i++) {
+		Parameter &param = preset->getParameter(i);
+		m_adjustments[i] = (GtkAdjustment *) gtk_adjustment_new (
+			param.getValue(),
+			param.getMin(),
+			param.getMax(),
+			param.getStep(),
+			0, 0);
+		gtk_signal_connect (GTK_OBJECT (m_adjustments[i]), "value_changed",
+			(GtkSignalFunc) adjustment_value_changed,
+			(gpointer) &param );
+	}
+	
+	Gtk::Widget *editor = Glib::wrap (editor_pane_new (m_adjustments));
 	
 	adj_midi = manage (new Gtk::Adjustment(config->midi_channel,0,16,1));
 	adj_midi->signal_value_changed().connect (mem_fun (*this, &GUI::changed_midi_channel));
@@ -378,7 +397,7 @@ GUI::init()
 	align->add(*midibox);
 	tmphbox->pack_start(*align);
 	vbox.pack_start (*tmphbox,0,0);
-	vbox.pack_start (*editor_panel,Gtk::PACK_EXPAND_WIDGET,0);
+	vbox.pack_start (*editor, Gtk::PACK_EXPAND_WIDGET,0);
 	vbox.pack_start (statusBar,PACK_SHRINK);
 	add(vbox);
 	
@@ -682,10 +701,12 @@ GUI::UpdateParameterOnMainThread(Param paramID, float)	// called whenever a para
 {
 	if (0 <= paramID && paramID < kControls_End)
 	{
+		const Parameter &param = preset_controller->getCurrentPreset().getParameter(paramID);
+	
+		gtk_adjustment_set_value (m_adjustments[paramID], param.getValue());
+	
 		char tmpstr[32] = "";
-		snprintf (tmpstr, 32, "%s = %.3f",
-			preset_controller->getCurrentPreset().getParameter(paramID).getName().c_str(),
-			preset_controller->getCurrentPreset().getParameter(paramID).getControlValue());
+		snprintf (tmpstr, 32, "%s = %.3f", param.getName().c_str(), param.getControlValue());
 		statusBar.pop (0);
 		statusBar.push (Glib::ustring (tmpstr), 0);
 	}

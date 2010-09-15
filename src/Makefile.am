@@ -1,5 +1,8 @@
 bin_PROGRAMS = amSynth
 
+# http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
+AM_CPPFLAGS = -DENABLE_BINRELOC -DDEFAULT_PREFIX='"$(prefix)"'
+
 amSynth_SOURCES = \
 	main.cc \
 	AudioOutput.cc AudioOutput.h \
@@ -9,7 +12,7 @@ amSynth_SOURCES = \
 	Preset.cc Preset.h \
 	PresetController.cc PresetController.h \
 	VoiceAllocationUnit.cc VoiceAllocationUnit.h \
-	Config.cc Config.h UpdateListener.h Thread.h controls.h \
+	Config.cc Config.h UpdateListener.h Thread.h controls.h controls.c \
 	binreloc.h binreloc.c
 
 SUBDIRS = drivers VoiceBoard GUI Effects
@@ -20,9 +23,6 @@ amSynth_LDADD = \
 	GUI/libGUI.a \
 	Effects/libEffects.a \
 	-lstdc++ -lm -lpthread $(DEPS_LIBS) $(LIBS)
-
-amSynth_CFLAGS = $(CFLAGS) -DENABLE_BINRELOC
-amSynth_CXXFLAGS = $(CXXFLAGS) -DENABLE_BINRELOC
 
 if ENABLE_REALTIME
 install-exec-hook:

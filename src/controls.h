@@ -50,4 +50,15 @@ enum Param
 	kControls_End
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+const char *parameter_name_from_index (int param_index);
+int parameter_index_from_name (const char *param_name);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

@@ -40,6 +40,14 @@ void gui_init(Config &config,
 	gdk_input_add(gdk_input_pipe[0], GDK_INPUT_READ, gdk_input_function, NULL);
 }
 
+void gui_dealloc()
+{
+	if (gui) {
+		delete gui;
+		gui = NULL;
+	}
+}
+
 void ShowModalErrorMessage(const string & msg)
 {
 	Gtk::MessageDialog dlg ("amSynth", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
@@ -75,3 +83,4 @@ void spawn_new_instance()
 {
 	g_spawn_async(NULL, _argv, NULL, (GSpawnFlags)0, NULL, NULL, NULL, NULL);
 }
+

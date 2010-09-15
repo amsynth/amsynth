@@ -115,9 +115,8 @@ void install_default_files_if_reqd()
 		printf ("Will fallback to hardcoded default path.\n"); 
 	}
 	
-	#define DEFAULT_PREFIX "/usr/local"
 	char * homedir = getenv ("HOME");
-	char * data_dir = br_find_data_dir (DEFAULT_PREFIX"/share");
+	char * data_dir = br_find_data_dir (DEFAULT_PREFIX "/share");
 	char * amsynth_data_dir = br_strcat (data_dir, "/amSynth");
 	char * factory_controllers = br_strcat (amsynth_data_dir, "/Controllersrc");
 	char * factory_config = br_strcat (amsynth_data_dir, "/rc");
@@ -238,7 +237,13 @@ int main( int argc, char *argv[] )
 	}
 	
 	install_default_files_if_reqd();
-
+	
+	char *data_dir = br_find_data_dir (DEFAULT_PREFIX "/share");
+	char *amsynth_data_dir = br_strcat (data_dir, "/amSynth");
+	setenv ("AMSYNTH_DATA_DIR", amsynth_data_dir, 0); // don't override value passed from command line
+	free (amsynth_data_dir);
+	free (data_dir);
+	
 	// setup the configuration
 	config.Defaults ();
 	config.load ();
@@ -320,6 +325,8 @@ int main( int argc, char *argv[] )
 	gui_kit_run();
 
 	DEBUGMSG("main() : GUI was terminated, shutting down cleanly..\n");
+	
+	gui_dealloc();
 	
 	/*
 	 * code to shut down cleanly..
