@@ -55,6 +55,7 @@ private:
 	float	*mBuffer;
 
 	float	mMasterVol;
+	float	mPitchBendRangeSemitones;
 };
 
 #endif

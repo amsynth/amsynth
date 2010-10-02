@@ -25,6 +25,7 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 ,	mActiveVoices (0)
 ,	sustain (0)
 ,	mMasterVol (1.0)
+,	mPitchBendRangeSemitones(2)
 {
 	limiter = new SoftLimiter;
 	reverb = new revmodel;
@@ -91,7 +92,7 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 void
 VoiceAllocationUnit::HandleMidiPitchWheel(float value)
 {
-	float newval = pow(2.0f,value);
+	float newval = pow(2.0f, value * mPitchBendRangeSemitones / 12.0f);
 	for (unsigned i=0; i<_voices.size(); i++) _voices[i]->SetPitchBend (newval);
 }
 
