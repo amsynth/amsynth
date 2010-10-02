@@ -2,6 +2,7 @@
  * (c) 2001-2005 Nick Dowell
  */
 
+#include "main.h"
 #include "GUI/gui_main.h"
 #include "MidiController.h"
 #include "VoiceAllocationUnit.h"
@@ -9,6 +10,7 @@
 #include "JackOutput.h"
 #include "Config.h"
 #include "../config.h"
+#include "lash.h"
 
 #if __APPLE__
 #include "drivers/CoreAudio.h"
@@ -193,6 +195,11 @@ void fatal_error(const std::string & msg)
 	exit(1);
 }
 
+MidiController *midi_controller = NULL;
+PresetController *presetController = NULL;
+
+unsigned amsynth_timer_callback();
+
 int main( int argc, char *argv[] )
 {
 #ifdef ENABLE_REALTIME
@@ -218,6 +225,9 @@ int main( int argc, char *argv[] )
 
 	// bool jack = false;
 	
+	// needs to be called before our own command line parsing code
+	amsynth_lash_init(&argc, &argv);
+
 	int opt;
 	while( (opt=getopt(argc, argv, "vhstdzm:c:a:r:p:b:"))!= -1 ) {
 		switch(opt) {
@@ -262,8 +272,6 @@ int main( int argc, char *argv[] )
 	// subsystem initialisation
 	//
 	
-	PresetController *presetController = NULL;
-	MidiController *midi_controller = NULL;
 	MidiInterface *midi_interface = NULL;
 	VoiceAllocationUnit *vau = NULL;
 	GenericOutput *out = NULL;
@@ -322,7 +330,7 @@ int main( int argc, char *argv[] )
 	
 	gui_init(config, *midi_controller, *vau, *presetController, out);
 	
-	gui_kit_run();
+	gui_kit_run(&amsynth_timer_callback);
 
 	DEBUGMSG("main() : GUI was terminated, shutting down cleanly..\n");
 	
@@ -346,6 +354,46 @@ int main( int argc, char *argv[] )
 	delete vau;
 	delete out;
 	return 0;
+}
+
+unsigned
+amsynth_timer_callback()
+{
+	amsynth_lash_poll_events();
+	return 1;
+}
+
+void
+amsynth_midi_callback(unsigned /* timestamp */, unsigned num_bytes, unsigned char *midi_data)
+{
+	if (midi_controller)
+		midi_controller->HandleMidiData(midi_data, num_bytes);
+}
+
+void
+amsynth_save_bank(const char *filename)
+{
+	presetController->commitPreset();
+	presetController->savePresets(filename);
+}
+
+void
+amsynth_load_bank(const char *filename)
+{
+	presetController->commitPreset();
+	presetController->savePresets(filename);
+}
+
+int
+amsynth_get_preset_number()
+{
+	return presetController->getCurrPresetNumber();
+}
+
+void
+amsynth_set_preset_number(int preset_no)
+{
+	presetController->selectPreset(preset_no);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -72,6 +72,17 @@ AC_ARG_WITH(jack,
   fi
 ], with_jack=yes)
 
+dnl	LASH support
+AC_ARG_WITH(lash, 
+[  --with-lash             enable LASH support (default=yes)],
+[
+   if test $withval = "yes"; then
+     with_lash=yes
+   else
+     with_lash=no
+  fi
+], with_lash=yes)
+
 dnl     .WAV OUT support
 AC_ARG_WITH(sndfile, 
 [  --with-sndfile          enable .WAV file output support (default=yes)],
@@ -180,6 +191,14 @@ if test "$with_jack" = "yes"; then
 	CXXFLAGS="$CXXFLAGS -Dwith_jack"
 	LIBS="$LIBS -ljack"
 fi
+if test "$with_lash" = "yes"; then 
+	PKG_CHECK_MODULES(LASH, [lash-1.0 >= 0.5.0], with_lash="yes", with_lash="no")
+fi
+if test "$with_lash" = "yes"; then 
+	CPPFLAGS="$CPPFLAGS -Dwith_lash"
+	AC_SUBST(LASH_CFLAGS)
+	AC_SUBST(LASH_LIBS)
+fi
 if test "$with_sndfile" = "yes"; then
 	CXXFLAGS="$CXXFLAGS -Dwith_sndfile"
 	LIBS="$LIBS -lsndfile"
@@ -213,6 +232,7 @@ echo \|
 echo \| Build with OSS support................................ : $with_oss
 echo \| Build with ALSA support............................... : $with_alsa
 echo \| Build with JACK support............................... : $with_jack
+echo \| Build with LASH support............................... : $with_lash
 echo \|
 echo \| Use libsndfile for .wav output support................ : $with_sndfile
 echo 

@@ -11,7 +11,7 @@ class VoiceAllocationUnit;
 void gui_kit_init(int & argc, char ** & argv);
 
 // Gtk::Main::run()
-void gui_kit_run();
+void gui_kit_run(unsigned (*timer_callback)());
 
 void gui_init(Config &,
               MidiController &,

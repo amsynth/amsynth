@@ -1,10 +1,12 @@
 bin_PROGRAMS = amSynth
 
+INCLUDES = $(LASH_CFLAGS)
+
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
 AM_CPPFLAGS = -DENABLE_BINRELOC -DDEFAULT_PREFIX='"$(prefix)"'
 
 amSynth_SOURCES = \
-	main.cc \
+	main.cc lash.c \
 	AudioOutput.cc AudioOutput.h \
 	JackOutput.cc JackOutput.h \
 	MidiController.cc MidiController.h \
@@ -22,7 +24,7 @@ amSynth_LDADD = \
 	VoiceBoard/libVoiceBoard.a \
 	GUI/libGUI.a \
 	Effects/libEffects.a \
-	-lstdc++ -lm -lpthread $(DEPS_LIBS) $(LIBS)
+	-lstdc++ -lm -lpthread $(DEPS_LIBS) $(LASH_LIBS) $(LIBS)
 
 if ENABLE_REALTIME
 install-exec-hook:

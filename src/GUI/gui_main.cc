@@ -18,8 +18,9 @@ void gui_kit_init(int & argc, char ** & argv)
 	kit = new Gtk::Main(argc, argv);
 }
 
-void gui_kit_run()
+void gui_kit_run(unsigned (*timer_callback)())
 {
+	g_timeout_add(250, (GSourceFunc)timer_callback, NULL);
 	kit->run();
 }
 

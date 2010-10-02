@@ -12,6 +12,7 @@
 #include "drivers/AudioInterface.h"
 #include "Config.h"
 #include "Thread.h"
+#include "main.h"
 
 class VoiceAllocationUnit;
 
