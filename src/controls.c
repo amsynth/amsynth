@@ -1,4 +1,6 @@
 
+#include <string.h>
+
 #include "controls.h"
 
 #define SIZEOF_ARRAY( a ) ( sizeof((a)) / sizeof((a)[0]) )
