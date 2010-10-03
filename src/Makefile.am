@@ -25,7 +25,7 @@ amSynth_LDADD = \
 	VoiceBoard/libVoiceBoard.a \
 	GUI/libGUI.a \
 	Effects/libEffects.a \
-	-lstdc++ -lm -lpthread $(DEPS_LIBS) $(LASH_LIBS) $(LIBS)
+	-lstdc++ -lm -lpthread -lX11 $(DEPS_LIBS) $(LASH_LIBS) $(LIBS)
 
 if ENABLE_REALTIME
 install-exec-hook:
