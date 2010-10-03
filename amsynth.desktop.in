@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=amsynth
+GenericName=Analog Modelling SYNTHesizer
+Comment=Two oscillator subtractive software synthesizer
+Type=Application
+Categories=AudioVideo;Audio;X-Synthesis;
+Exec=@prefix@/bin/amSynth
+Icon=@prefix@/share/pixmaps/amsynth.png
+Terminal=false

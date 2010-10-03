@@ -214,6 +214,7 @@ src/VoiceBoard/Makefile
 src/GUI/Makefile
 src/Effects/Makefile
 skel/Makefile
+amsynth.desktop
 autopackage/default.apspec
 ])
 
