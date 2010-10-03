@@ -6,7 +6,8 @@ INCLUDES = $(LASH_CFLAGS)
 AM_CPPFLAGS = -DENABLE_BINRELOC -DDEFAULT_PREFIX='"$(prefix)"'
 
 amSynth_SOURCES = \
-	main.cc lash.c \
+	main.cc main.h \
+	lash.c lash.h \
 	AudioOutput.cc AudioOutput.h \
 	JackOutput.cc JackOutput.h \
 	MidiController.cc MidiController.h \
