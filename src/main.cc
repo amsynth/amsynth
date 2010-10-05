@@ -386,8 +386,8 @@ amsynth_save_bank(const char *filename)
 void
 amsynth_load_bank(const char *filename)
 {
-	presetController->commitPreset();
-	presetController->savePresets(filename);
+	presetController->loadPresets(filename);
+	presetController->selectPreset(presetController->getCurrPresetNumber());
 }
 
 int
