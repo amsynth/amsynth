@@ -114,6 +114,9 @@ JackOutput::init	( Config & config )
 	config.sample_rate = sample_rate;
 	config.buffer_size = buf_size;
 	config.current_audio_driver = "JACK";
+	config.jack_client_name = (jack_get_client_name) ?
+		std::string(jack_get_client_name(client)) :
+		client_name;
 	
 	return 0;
 #endif

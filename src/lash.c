@@ -50,6 +50,22 @@ void amsynth_lash_init(int *argc, char ***argv)
 #endif
 }
 
+void amsynth_lash_set_jack_client_name(const char *name)
+{
+#ifdef with_lash
+	if (lash_client)
+		lash_jack_client_name(lash_client, name);
+#endif
+}
+
+void amsynth_lash_set_alsa_client_id(unsigned char id)
+{
+#ifdef with_lash
+	if (lash_client)
+		lash_alsa_client_id(lash_client, id);
+#endif
+}
+
 void amsynth_lash_poll_events()
 {
 #ifdef with_lash

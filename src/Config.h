@@ -95,6 +95,7 @@ public:
 	string	amsynthrc_fname;
 	
 	/* internal */
+	string	jack_client_name;
 	string	alsa_seq_client_name;
 	int 	alsa_seq_client_id;
 	int	debug_drivers;
