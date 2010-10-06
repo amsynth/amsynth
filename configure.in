@@ -133,18 +133,6 @@ fi
 
 
 dnl
-dnl Precompiled headers are available in GCC version 3.4 and later
-dnl
-AC_ARG_ENABLE(pch,
-[  --enable-pch            use precompiled headers [default=yes]],
-[case "${enableval}" in
-  yes) pch=true ;;
-  no)  pch=false ;;
-  *) AC_MSG_ERROR(bad value ${enableval} for --enable-pch) ;;
-esac],[pch=true])
-AM_CONDITIONAL(USE_PRECOMPILED_HEADER, test x$pch = xtrue)
-
-dnl
 dnl
 dnl
 AC_ARG_ENABLE([realtime], [AS_HELP_STRING([--enable-realtime],

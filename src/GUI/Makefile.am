@@ -2,18 +2,8 @@ noinst_LIBRARIES = libGUI.a
 
 INCLUDES = $(DEPS_CFLAGS)
 
-if USE_PRECOMPILED_HEADER
-PREFIX_HEADER = PrefixHeader.h
-BUILT_SOURCES = $(PREFIX_HEADER).gch
-CLEANFILES = $(BUILT_SOURCES)
-AM_CXXFLAGS=$(CXXFLAGS) -include $(PREFIX_HEADER)
-endif
-
-%.gch: %
-	$(CXXCOMPILE) -c $<
-	
 bin2c: bin2c.c
-	$(CC) -o $@ $<
+	@CC@ -o $@ $<
 
 libGUI_a_SOURCES = \
 	bitmap_button.c \
