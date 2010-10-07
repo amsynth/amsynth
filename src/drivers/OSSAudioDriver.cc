@@ -23,8 +23,8 @@ OSSAudioDriver::write(float *buffer, int frames)
 	int i;
 	signed short _tmp;
 	
-	if (_outputBufferFrames < frames) {
-		_outputBufferFrames = frames;
+	if (_outputBufferFrames < (unsigned int)frames) {
+		_outputBufferFrames = (unsigned int)frames;
 		if (_outputBuffer) { free(_outputBuffer); }
 		_outputBuffer = (unsigned char*)malloc(frames * 2 * channels_);
 	}
