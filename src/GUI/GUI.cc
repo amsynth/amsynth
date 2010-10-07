@@ -1018,7 +1018,7 @@ bool GUI::on_key_release_event(GdkEventKey *inEvent)
 	return true;
 	
 delegate:
-	return Gtk::Window::on_key_press_event(inEvent);
+	return Gtk::Window::on_key_release_event(inEvent);
 }
 
 void GUI::vkeybd_kill_all_notes()
