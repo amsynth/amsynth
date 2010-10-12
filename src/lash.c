@@ -53,8 +53,12 @@ void amsynth_lash_init(int *argc, char ***argv)
 void amsynth_lash_set_jack_client_name(const char *name)
 {
 #ifdef with_lash
-	if (lash_client)
+	if (lash_client) {
 		lash_jack_client_name(lash_client, name);
+		lash_event_t *event = lash_event_new_with_type(LASH_Client_Name);
+		lash_event_set_string(event, name);
+		lash_send_event(lash_client, event);
+	}
 #endif
 }
 

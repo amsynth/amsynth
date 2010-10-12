@@ -328,7 +328,7 @@ int main( int argc, char *argv[] )
 	if (config.alsa_seq_client_id != 0) // alsa midi is active
 		amsynth_lash_set_alsa_client_id(config.alsa_seq_client_id);
 
-	if (config.audio_driver == "JACK")
+	if (!config.jack_client_name.empty())
 		amsynth_lash_set_jack_client_name(config.jack_client_name.c_str());
 
 	// give audio/midi threads time to start up first..
