@@ -26,7 +26,11 @@ static char *read_file_contents(const char *filename)
 	FILE *stream = fopen(filename, "r");
 	size_t length = fsize(stream);
 	char *buffer = calloc(1, length);
-	fread(buffer, 1, length, stream);
+	if (fread(buffer, 1, length, stream) != length) {
+		perror("fread");
+		free(buffer);
+		buffer = NULL;
+	}
 	fclose(stream);
 	return buffer;
 }
