@@ -1,6 +1,6 @@
 noinst_LIBRARIES = libGUI.a
 
-INCLUDES = $(DEPS_CFLAGS)
+INCLUDES = @DEPS_CFLAGS@
 
 bin2c: bin2c.c
 	@CC@ -o $@ $<
