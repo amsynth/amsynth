@@ -1,7 +1,7 @@
 CFLAGS='-g -O0'
 if ccache --version > /dev/null ; then
-	${0%/*}/configure CC='ccache gcc' CXX='ccache g++' CFLAGS="$CFLAGS" CXXFLAGS="$CFLAGS"
+	${0%/*}/configure $* CC='ccache gcc' CXX='ccache g++' CFLAGS="$CFLAGS" CXXFLAGS="$CFLAGS"
 else
-	${0%/*}/configure CFLAGS="$CFLAGS" CXXFLAGS="$CFLAGS"
+	${0%/*}/configure $* CFLAGS="$CFLAGS" CXXFLAGS="$CFLAGS"
 fi
 
