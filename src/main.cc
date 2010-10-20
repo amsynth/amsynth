@@ -156,6 +156,9 @@ void install_default_files_if_reqd()
 
 void ptest ();
 
+static MidiController *midi_controller = NULL;
+static PresetController *presetController = NULL;
+
 GenericOutput * open_audio()
 {	
 #if	__APPLE__
@@ -169,7 +172,14 @@ GenericOutput * open_audio()
 	{
 		JackOutput *jack = new JackOutput();
 		if (jack->init(config) == 0)
+		{
+			if (config.current_midi_driver == "JACK" ||
+				config.current_midi_driver == "jack" )
+			{
+				jack->setMidiHandler(midi_controller);
+			}
 			return jack;
+		}
 		else
 		{
 			std::string jack_error = jack->get_error_msg();
@@ -194,9 +204,6 @@ void fatal_error(const std::string & msg)
 	ShowModalErrorMessage(msg);
 	exit(1);
 }
-
-MidiController *midi_controller = NULL;
-PresetController *presetController = NULL;
 
 unsigned amsynth_timer_callback();
 
@@ -278,6 +285,8 @@ int main( int argc, char *argv[] )
 	
 	presetController = new PresetController();
 	
+	midi_controller = new MidiController( config );
+
 	out = open_audio();
 	if (!out)
 		fatal_error("Fatal Error: open_audio() returned NULL.\n"
@@ -308,15 +317,16 @@ int main( int argc, char *argv[] )
 	
 	config.alsa_seq_client_name = out->getTitle();
 	
-	midi_interface = new MidiInterface();
+	if (config.current_midi_driver.empty())
+		midi_interface = new MidiInterface();
 #endif
 	
 	// errors now detected & reported in the GUI
-	midi_interface->open(config);
-	
-	midi_controller = new MidiController( config );
-	midi_interface->SetMidiStreamReceiver(midi_controller);
-	midi_interface->Run();
+	if (midi_interface) {
+		midi_interface->open(config);
+		midi_interface->SetMidiStreamReceiver(midi_controller);
+		midi_interface->Run();
+	}
 
 	if (config.debug_drivers) std::cerr << "*** DONE :)\n\n";
   
@@ -352,11 +362,13 @@ int main( int argc, char *argv[] )
 
 	if (config.xruns) std::cerr << config.xruns << " audio buffer underruns occurred\n";
 	
-	midi_interface->Stop ();
+	if (midi_interface) {
+		midi_interface->Stop ();
+		delete midi_interface;
+	}
 
 	delete presetController;
 	delete midi_controller;
-	delete midi_interface;
 	delete vau;
 	delete out;
 	return 0;

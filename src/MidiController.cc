@@ -257,6 +257,12 @@ MidiController::set_midi_channel	( int ch )
 int
 MidiController::sendMidi_values       ()
 {
+	if (!_midiIface)
+	{
+		std::cerr << "error: cannot send midi values, no midi output interface present\n";
+		return -1;
+	}
+
       for (unsigned i = 0; i < MAX_CC; i++)
       {
               if (midi_controllers[i]->getName() != "null")

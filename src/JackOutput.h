@@ -12,6 +12,8 @@
 #include "AudioOutput.h"
 #include "Config.h"
 
+class MidiStreamReceiver;
+
 class JackOutput : public GenericOutput {
 
 public:
@@ -26,6 +28,8 @@ public:
 	void		setOutputFile	( string file )	{ wavoutfile = file; };
 	string		getOutputFile	( )		{ return wavoutfile; };
 
+	void		setMidiHandler(MidiStreamReceiver *midiHandler) { _midiHandler = midiHandler; }
+
 #ifdef with_jack
 	static int process(jack_nframes_t nframes, void *arg);
 #endif
@@ -35,9 +39,10 @@ private:
 	int	recording;
 	string	error_msg;
 #ifdef with_jack
-	jack_port_t 	*l_port, *r_port;
+	jack_port_t 	*l_port, *r_port, *m_port;
 	jack_client_t 	*client;
 #endif
+	MidiStreamReceiver *_midiHandler;
 };
 
 #endif				// _JACK_OUTPUT_H

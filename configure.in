@@ -148,6 +148,7 @@ if test "$with_alsa" = "yes"; then
 	LIBS="$LIBS -lasound"
 fi
 if test "$with_jack" = "yes"; then 
+	AC_CHECK_HEADERS(jack/midiport.h)
 	AM_CPPFLAGS="$AM_CPPFLAGS -Dwith_jack"
 	LIBS="$LIBS -ljack"
 fi

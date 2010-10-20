@@ -11,6 +11,7 @@
 class MidiStreamReceiver
 {
 public:
+	MidiStreamReceiver() : _midiIface(0) {}
 	virtual ~MidiStreamReceiver() {}
 	virtual void HandleMidiData(unsigned char* bytes, unsigned numBytes) = 0;
 	
