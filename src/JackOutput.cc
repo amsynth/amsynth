@@ -14,10 +14,19 @@
 #include <jack/midiport.h>
 #endif
 
+#ifdef HAVE_JACK_SESSION_H
+#include <jack/session.h>
+#include "binreloc.h"
+#endif
+
 #include <iostream>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef HAVE_JACK_SESSION_H
+static void session_callback(jack_session_event_t *event, void *arg);
+#endif
 
 int
 JackOutput::init	( Config & config )
@@ -28,9 +37,19 @@ JackOutput::init	( Config & config )
 
 	l_port = r_port = m_port = 0;
 
-	client = jack_client_open("amsynth", JackNoStartServer, NULL);
+	jack_status_t status = (jack_status_t)0;
+
+#if HAVE_JACK_SESSION_H
+	if (!config.jack_session_uuid.empty())
+		client = jack_client_open("amysnth", JackSessionID,
+				&status, config.jack_session_uuid.c_str());
+	else
+#endif
+		client = jack_client_open("amsynth", JackNoStartServer, &status);
 	if (!client) {
-		error_msg = "jack_client_open() failed";
+		std::ostringstream o;
+		o << "jack_client_open() failed, status = 0x" << std::hex << status;
+		error_msg = o.str();
 		return -1;
 	}
 	
@@ -45,6 +64,10 @@ JackOutput::init	( Config & config )
 	m_port = jack_port_register(client, "midi_in", JACK_DEFAULT_MIDI_TYPE, JackPortIsInput, 0);
 #endif
 	
+#if HAVE_JACK_SESSION_H
+	jack_set_session_callback(client, session_callback, client);
+#endif
+
 	config.current_audio_driver = "JACK";
 	config.sample_rate = jack_get_sample_rate(client);
 	config.buffer_size = jack_get_buffer_size(client);
@@ -52,6 +75,10 @@ JackOutput::init	( Config & config )
 
 	if (m_port)
 		config.current_midi_driver = "JACK";
+
+	// don't auto connect ports if under jack session control...
+	// the jack session manager is responsible for restoring port connections
+	_auto_connect = config.jack_session_uuid.empty();
 	
 	return 0;
 #endif
@@ -98,8 +125,11 @@ JackOutput::Start	()
 		std::cerr << "cannot activate JACK client\n";
 		return false;
 	}
-	jack_connect(client, jack_port_name(l_port), "alsa_pcm:playback_1");
-	jack_connect(client, jack_port_name(r_port), "alsa_pcm:playback_2");
+	if (_auto_connect)
+	{
+		jack_connect(client, jack_port_name(l_port), "alsa_pcm:playback_1");
+		jack_connect(client, jack_port_name(r_port), "alsa_pcm:playback_2");
+	}
 	return true;
 #else
 	return false;
@@ -116,3 +146,44 @@ JackOutput::Stop()
 	client = 0;
 #endif
 }
+
+#ifdef HAVE_JACK_SESSION_H
+
+static void session_callback(jack_session_event_t *event, void *arg)
+{
+	char filename[1024]; snprintf(filename, sizeof(filename),
+		"%s%s.amsynth.bank", event->session_dir, event->client_uuid);
+
+#if DEBUG
+	printf("%s() : saving bank to %s\n", __FUNCTION__, filename);
+#endif
+	
+	amsynth_save_bank(filename);
+
+	// construct a command line that the session manager can use to re-launch the synth
+	int len; len = asprintf(&event->command_line,
+		"%s -b \"${SESSION_DIR}%s.amsynth.bank\" -P %d -U %s",
+		br_find_exe("amSynth"), event->client_uuid, amsynth_get_preset_number(), event->client_uuid);
+
+#if DEBUG
+	printf("%s() : jack_session command_line = %s\n", __FUNCTION__, event->command_line);
+#endif
+	
+	jack_session_reply( (jack_client_t *)arg, event );
+	
+	switch (event->type)
+	{
+	case JackSessionSave:
+		break;
+	case JackSessionSaveAndQuit:
+		exit(0);
+		break;
+	case JackSessionSaveTemplate:
+		break;
+	}
+	
+	jack_session_event_free (event);
+}
+
+#endif
+

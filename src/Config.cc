@@ -42,7 +42,7 @@ Config::ParseCOpts	(int argc, char* argv[])
 {
 	optind = 1; // reset getopt
 	int opt;
-	while( (opt=getopt(argc, argv, "vhstdm:c:a:r:p:b:"))!= -1 ) {
+	while( (opt=getopt(argc, argv, "vhstdzm:c:a:r:p:b:U:P:"))!= -1 ) {
 		switch(opt) {
 			case 'm': 
 				midi_driver = optarg;
@@ -65,6 +65,9 @@ Config::ParseCOpts	(int argc, char* argv[])
 			case 'p':
 				polyphony = atoi( optarg );
 				break;	
+			case 'U':
+				jack_session_uuid = optarg;
+				break;
 			default:
 				break;
 		}

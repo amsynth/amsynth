@@ -96,6 +96,7 @@ public:
 	
 	/* internal */
 	string	jack_client_name;
+	string	jack_session_uuid;
 	string	alsa_seq_client_name;
 	int 	alsa_seq_client_id;
 	int	debug_drivers;

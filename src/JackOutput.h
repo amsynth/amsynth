@@ -38,6 +38,7 @@ private:
 	string	wavoutfile;
 	int	recording;
 	string	error_msg;
+	bool _auto_connect;
 #ifdef with_jack
 	jack_port_t 	*l_port, *r_port, *m_port;
 	jack_client_t 	*client;

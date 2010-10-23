@@ -230,13 +230,13 @@ int main( int argc, char *argv[] )
 		"This is free software, and you are welcome to redistribute it\n"
 		"under certain conditions; see the file COPYING for details\n";
 
-	// bool jack = false;
+	int initial_preset_no = 0;
 	
 	// needs to be called before our own command line parsing code
 	amsynth_lash_init(&argc, &argv);
 
 	int opt;
-	while( (opt=getopt(argc, argv, "vhstdzm:c:a:r:p:b:"))!= -1 ) {
+	while( (opt=getopt(argc, argv, "vhstdzm:c:a:r:p:b:U:P:"))!= -1 ) {
 		switch(opt) {
 			case 'v':
 				cout << "amSynth " << VERSION << " -- compiled "
@@ -248,6 +248,9 @@ int main( int argc, char *argv[] )
 			case 'z':
 				ptest();
 				return 0;
+			case 'P':
+				initial_preset_no = atoi(optarg);
+				break;
 			default:
 				break;
 		}
@@ -299,8 +302,9 @@ int main( int argc, char *argv[] )
 	vau->SetSampleRate (config.sample_rate);
 	vau->SetMaxVoices (config.polyphony);
 	out->setInput( vau );
-	
-	presetController->loadPresets(config.current_bank_file.c_str());
+
+	amsynth_load_bank(config.current_bank_file.c_str());
+	amsynth_set_preset_number(initial_preset_no);
 	
 	// errors now detected & reported in the GUI
 	out->Start();
