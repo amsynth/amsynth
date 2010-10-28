@@ -47,6 +47,7 @@
 		0186AA29117A1BBF0076FCB9 /* OSSMidiDriver.cc in Sources */ = {isa = PBXBuildFile; fileRef = 0186AA20117A1BBF0076FCB9 /* OSSMidiDriver.cc */; };
 		0186AA2D117A1BD30076FCB9 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0186AA2C117A1BD30076FCB9 /* CoreMIDI.framework */; };
 		01A2B63B11FC4725007ED4CB /* controls.c in Sources */ = {isa = PBXBuildFile; fileRef = 01A2B63A11FC4725007ED4CB /* controls.c */; };
+		01DD987A127A0EEF00D2322E /* lash.c in Sources */ = {isa = PBXBuildFile; fileRef = 01DD9877127A0EEF00D2322E /* lash.c */; };
 		E2AAD1C50F84E0B100167FA5 /* amsynthVst.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2AAD1C30F84E0B100167FA5 /* amsynthVst.cpp */; };
 		E2AAD1DF0F84E1E100167FA5 /* allpass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2AAD1D20F84E1E100167FA5 /* allpass.cpp */; };
 		E2AAD1E00F84E1E100167FA5 /* comb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2AAD1D40F84E1E100167FA5 /* comb.cpp */; };
@@ -139,6 +140,9 @@
 		0186AA21117A1BBF0076FCB9 /* OSSMidiDriver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OSSMidiDriver.h; path = src/drivers/OSSMidiDriver.h; sourceTree = "<group>"; };
 		0186AA2C117A1BD30076FCB9 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = /System/Library/Frameworks/CoreMIDI.framework; sourceTree = "<absolute>"; };
 		01A2B63A11FC4725007ED4CB /* controls.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = controls.c; path = src/controls.c; sourceTree = "<group>"; };
+		01DD9877127A0EEF00D2322E /* lash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lash.c; path = src/lash.c; sourceTree = "<group>"; };
+		01DD9878127A0EEF00D2322E /* lash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lash.h; path = src/lash.h; sourceTree = "<group>"; };
+		01DD9879127A0EEF00D2322E /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = src/main.h; sourceTree = "<group>"; };
 		E2AAD1AD0F84E03900167FA5 /* amsynth.vst */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = amsynth.vst; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2AAD1AF0F84E03900167FA5 /* amsynth-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "amsynth-Info.plist"; sourceTree = "<group>"; };
 		E2AAD1C30F84E0B100167FA5 /* amsynthVst.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = amsynthVst.cpp; path = src/amsynthVst.cpp; sourceTree = "<group>"; };
@@ -310,7 +314,10 @@
 				0186A9D2117A19CE0076FCB9 /* dssi.cpp */,
 				0186A9D3117A19CE0076FCB9 /* JackOutput.cc */,
 				0186A9D4117A19CE0076FCB9 /* JackOutput.h */,
+				01DD9877127A0EEF00D2322E /* lash.c */,
+				01DD9878127A0EEF00D2322E /* lash.h */,
 				0186A9D5117A19CE0076FCB9 /* main.cc */,
+				01DD9879127A0EEF00D2322E /* main.h */,
 				0186A9D6117A19CE0076FCB9 /* MidiController.cc */,
 				0186A9D7117A19CE0076FCB9 /* MidiController.h */,
 				E2AAD1FE0F84E20800167FA5 /* Parameter.cc */,
@@ -495,6 +502,7 @@
 				014F22FF11FC43760081582D /* bitmap_popup.c in Sources */,
 				014F230011FC43760081582D /* editor_pane.c in Sources */,
 				01A2B63B11FC4725007ED4CB /* controls.c in Sources */,
+				01DD987A127A0EEF00D2322E /* lash.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

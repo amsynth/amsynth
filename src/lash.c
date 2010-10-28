@@ -1,16 +1,15 @@
-#include <stdio.h>
-#include <stdlib.h>
 
 #ifdef with_lash
-#include <lash/lash.h>
-#endif
 
 #include "lash.h"
 #include "main.h"
 
-#ifdef with_lash
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <lash/lash.h>
+
 static lash_client_t *lash_client = NULL;
-#endif
 
 static size_t fsize(FILE *stream)
 {
@@ -37,7 +36,6 @@ static char *read_file_contents(const char *filename)
 
 void amsynth_lash_init(int *argc, char ***argv)
 {
-#ifdef with_lash
 	lash_client = lash_init(
 			lash_extract_args(argc, argv),
 			"amsynth",
@@ -51,32 +49,26 @@ void amsynth_lash_init(int *argc, char ***argv)
 		lash_event_set_string(event, "amsynth");
 		lash_send_event(lash_client, event);
 	}
-#endif
 }
 
 void amsynth_lash_set_jack_client_name(const char *name)
 {
-#ifdef with_lash
 	if (lash_client) {
 		lash_jack_client_name(lash_client, name);
 		lash_event_t *event = lash_event_new_with_type(LASH_Client_Name);
 		lash_event_set_string(event, name);
 		lash_send_event(lash_client, event);
 	}
-#endif
 }
 
 void amsynth_lash_set_alsa_client_id(unsigned char id)
 {
-#ifdef with_lash
 	if (lash_client)
 		lash_alsa_client_id(lash_client, id);
-#endif
 }
 
 void amsynth_lash_poll_events()
 {
-#ifdef with_lash
 	int quit = 0;
 	lash_event_t *event = NULL;
 
@@ -131,6 +123,13 @@ void amsynth_lash_poll_events()
 
 	if (quit)
 		exit(0);
-#endif
 }
 
+#else
+
+void amsynth_lash_init(int *argc, char ***argv) {}
+void amsynth_lash_poll_events() {}
+void amsynth_lash_set_jack_client_name(const char *name) {}
+void amsynth_lash_set_alsa_client_id(unsigned char id) {}
+
+#endif
