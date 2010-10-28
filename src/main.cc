@@ -37,6 +37,10 @@ using namespace std;
 #define DEBUGMSG( ... )
 #endif
 
+#ifndef DEFAULT_PREFIX
+#define DEFAULT_PREFIX "/usr/local"
+#endif
+
 
 string help_text =
 "usage: amSynth [options]\n\
