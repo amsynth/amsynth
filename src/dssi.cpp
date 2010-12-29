@@ -159,7 +159,7 @@ void __attribute__ ((constructor)) my_init ()
 	{
 		s_ladspaDescriptor->UniqueID = 23;
 		s_ladspaDescriptor->Label = "amsynth";
-		s_ladspaDescriptor->Properties = LADSPA_PROPERTY_REALTIME;
+		s_ladspaDescriptor->Properties = LADSPA_PROPERTY_REALTIME | LADSPA_PROPERTY_HARD_RT_CAPABLE;
 		s_ladspaDescriptor->Name = "amsynth DSSI plugin";
 		s_ladspaDescriptor->Maker = "Nick Dowell <nick@nickdowell.com>";
 		s_ladspaDescriptor->Copyright = "(c) 2005";
