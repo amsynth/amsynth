@@ -38,6 +38,7 @@ class Thread {
 class Thread
 {
 public:
+	Thread() : mThread(0), mShouldStop(false) {}
 	virtual ~Thread () {}
 	
 	int		Run		() { return pthread_create (&mThread, NULL, Thread::start_routine, this); }
