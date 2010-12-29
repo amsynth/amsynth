@@ -235,9 +235,9 @@ int main( int argc, char *argv[] )
 		"under certain conditions; see the file COPYING for details\n";
 
 	int initial_preset_no = 0;
-	
+
 	// needs to be called before our own command line parsing code
-	amsynth_lash_init(&argc, &argv);
+	amsynth_lash_process_args(&argc, &argv);
 
 	int opt;
 	while( (opt=getopt(argc, argv, "vhstdzm:c:a:r:p:b:U:P:"))!= -1 ) {
@@ -342,6 +342,13 @@ int main( int argc, char *argv[] )
 	midi_controller->setPresetController( *presetController );
   
 	presetController->getCurrentPreset().AddListenerToAll (vau);
+
+	// prevent lash from spawning a new jack server
+	setenv("JACK_NO_START_SERVER", "1", 0);
+	
+	if (config.alsa_seq_client_id != 0 || !config.jack_client_name.empty())
+		// LASH only works with ALSA MIDI and JACK
+		amsynth_lash_init();
 
 	if (config.alsa_seq_client_id != 0) // alsa midi is active
 		amsynth_lash_set_alsa_client_id(config.alsa_seq_client_id);

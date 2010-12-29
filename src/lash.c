@@ -10,6 +10,7 @@
 #include <lash/lash.h>
 
 static lash_client_t *lash_client = NULL;
+static lash_args_t   *lash_args   = NULL;
 
 static size_t fsize(FILE *stream)
 {
@@ -34,10 +35,15 @@ static char *read_file_contents(const char *filename)
 	return buffer;
 }
 
-void amsynth_lash_init(int *argc, char ***argv)
+void amsynth_lash_process_args(int *argc, char ***argv)
+{
+	lash_args = lash_extract_args(argc, argv);
+}
+
+void amsynth_lash_init()
 {
 	lash_client = lash_init(
-			lash_extract_args(argc, argv),
+			lash_args,
 			"amsynth",
 			LASH_Config_File, // save data in files
 			LASH_PROTOCOL(2, 0));
