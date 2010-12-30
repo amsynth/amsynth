@@ -29,6 +29,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <xmmintrin.h>
+
 using namespace std;
 
 #ifdef _DEBUG
@@ -61,6 +63,15 @@ options:\n\
 -h		show this usage message\n";
 
 Config config;
+
+void disable_denormals()
+{
+#if __SSE_MATH__
+	printf("Disabling SSE denormal handling\n");
+	int csr = _mm_getcsr();
+	_mm_setcsr(csr | 0x8040);
+#endif
+}
 
 
 #ifdef ENABLE_REALTIME
@@ -216,6 +227,8 @@ int main( int argc, char *argv[] )
 #ifdef ENABLE_REALTIME
 	sched_realtime();
 #endif
+	
+	disable_denormals();
 
 	// need to drop our suid-root permissions :-
 	// GTK will not work SUID for security reasons..
