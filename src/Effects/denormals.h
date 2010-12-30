@@ -8,13 +8,13 @@
 #ifndef _denormals_
 #define _denormals_
 
-#if __SSE_MATH__
+#if __SSE2_MATH__
 
 //
 // The preferred way to prevent denormal processing and its associated performance penalty is to
-// configure the compiler to generate SSE instructions for all floating point operations, and
+// configure the compiler to generate SSE2 instructions for all floating point operations, and
 // disable denormal processing by setting the 'Denormals Are Zero' and 'Flush to Zero' (DAZ and FZ)
-// bits in the MXCSR.
+// bits in the MXCSR. Note that the DAZ flag was assed in SSE2.
 //
 // -mfpmath=sse (This is the default choice for the x86-64 compiler)
 //

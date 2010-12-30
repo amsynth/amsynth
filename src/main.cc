@@ -66,7 +66,7 @@ Config config;
 
 void disable_denormals()
 {
-#if __SSE_MATH__
+#if __SSE2_MATH__
 	printf("Disabling SSE denormal handling\n");
 	int csr = _mm_getcsr();
 	_mm_setcsr(csr | 0x8040);
