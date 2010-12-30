@@ -129,8 +129,7 @@ void
 VoiceAllocationUnit::purgeVoices()
 {
 	for (unsigned note = 0; note < _voices.size(); note++) 
-		if (active[note] && (0 == _voices[note]->getState()))
-		{
+		if (active[note] && (_voices[note]->isSilent())) {
 			mActiveVoices--;
 			active[note] = 0;
 		}

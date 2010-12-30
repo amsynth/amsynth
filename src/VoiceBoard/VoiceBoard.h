@@ -47,7 +47,7 @@ class VoiceBoard
 public:
 	VoiceBoard(const VoiceBoardProcessMemory * mem);
 
-	int	getState		();
+	bool	isSilent		();
 	void	triggerOn		();
 	void	triggerOff		();
 	void	setVelocity		(float velocity);

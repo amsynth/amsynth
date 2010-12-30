@@ -158,10 +158,10 @@ VoiceBoard::SetSampleRate	(int rate)
 	_vcaFilter.setCoefficients(rate, kVCALowPassFreq, IIRFilterFirstOrder::LowPass);
 }
 
-int 
-VoiceBoard::getState()
+bool 
+VoiceBoard::isSilent()
 {
-	return amp_env.getState();
+	return amp_env.getState() == ADSR::off && _vcaFilter._z < 0.0000001;
 }
 
 void 
