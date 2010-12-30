@@ -5,6 +5,9 @@ INCLUDES = @DEPS_CFLAGS@
 bin2c: bin2c.c
 	@CC@ -o $@ $<
 
+# http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
+libGUI_a_CPPFLAGS = $(AM_CPPFLAGS) -DDEFAULT_PREFIX='"$(prefix)"'
+
 libGUI_a_SOURCES = \
 	bitmap_button.c \
 	bitmap_button.h \

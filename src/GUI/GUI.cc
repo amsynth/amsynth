@@ -34,6 +34,10 @@ using namespace Gtk;
 #include "gui_main.h"
 #include "editor_pane.h"
 
+#ifndef DEFAULT_PREFIX
+#define DEFAULT_PREFIX "/usr/local"
+#endif
+
 enum {
 	evLoad,
 	evCommit,
@@ -199,6 +203,8 @@ GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 	
 	record_recording = false;
 	record_statusbar.push ("capture status: STOPPED", 1);
+
+	gtk_window_set_icon_from_file(this->gobj(), DEFAULT_PREFIX "/share/pixmaps/amsynth.png", NULL);
 }
 
 Gtk::MenuBar*
