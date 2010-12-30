@@ -125,10 +125,12 @@ JackOutput::Start	()
 		std::cerr << "cannot activate JACK client\n";
 		return false;
 	}
-	if (_auto_connect)
-	{
-		jack_connect(client, jack_port_name(l_port), "alsa_pcm:playback_1");
-		jack_connect(client, jack_port_name(r_port), "alsa_pcm:playback_2");
+	if (_auto_connect) {
+		const char **port_names = jack_get_ports(client, NULL, NULL, JackPortIsPhysical | JackPortIsInput);
+		if (port_names) {
+			jack_connect(client, jack_port_name(l_port), port_names[0]);
+			jack_connect(client, jack_port_name(l_port), port_names[1]);
+		}
 	}
 	return true;
 #else
