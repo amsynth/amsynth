@@ -7,16 +7,17 @@
 #define BUFFER_SIZE 1024
 #define NUM_ITERATIONS 4096
 
+#if __SSE2_MATH__
 #include <xmmintrin.h>
-
-void disable_denormals()
-{
-#if __SSE_MATH__
-	printf("Disabling SSE denormal handling\n");
-	int csr = _mm_getcsr();
-	_mm_setcsr(csr | 0x8040);
 #endif
-}
+
+//void disable_denormals()
+//{
+//#if __SSE2_MATH__
+//	int csr = _mm_getcsr();
+//	_mm_setcsr(csr | 0x8040);
+//#endif
+//}
 
 int main(int argc, char *argv[])
 {
@@ -32,7 +33,6 @@ int main(int argc, char *argv[])
 	memset(buffer_r, 0, sizeof(float) * BUFFER_SIZE);
 
 	if (argc > 1) {
-		printf("starting with audio pulse");
 		fflush(stdout);
 		buffer_l[ 1] = 0.2;
 		buffer_l[ 2] = 0.4;

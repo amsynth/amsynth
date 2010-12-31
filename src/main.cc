@@ -29,7 +29,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include <xmmintrin.h>
+#include "Effects/denormals.h"
 
 using namespace std;
 
@@ -63,16 +63,6 @@ options:\n\
 -h		show this usage message\n";
 
 Config config;
-
-void disable_denormals()
-{
-#if __SSE2_MATH__
-	printf("Disabling SSE denormal handling\n");
-	int csr = _mm_getcsr();
-	_mm_setcsr(csr | 0x8040);
-#endif
-}
-
 
 #ifdef ENABLE_REALTIME
 void sched_realtime()
