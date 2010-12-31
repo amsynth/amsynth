@@ -168,7 +168,26 @@ GenericOutput * open_audio()
 {	
 #if	__APPLE__
 
-	return CreateCoreAudioOutput();
+	if (config.audio_driver == "jack" ||
+		config.audio_driver == "JACK" ){
+		JackOutput *jack = new JackOutput();
+		if (jack->init(config) != 0) {
+			delete jack;
+			return NULL;
+		}
+		if (config.current_midi_driver == "JACK" ||
+			config.current_midi_driver == "jack" ){
+			jack->setMidiHandler(midi_controller);
+			printf("Using JACK MIDI\n");
+		}
+		return jack;
+	}
+
+	if (config.audio_driver == "coreaudio" ||
+		config.audio_driver == "auto")
+		return CreateCoreAudioOutput();
+
+	return NULL;
 	
 #else
 
