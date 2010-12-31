@@ -17,6 +17,8 @@ class MidiStreamReceiver;
 class JackOutput : public GenericOutput {
 
 public:
+
+	JackOutput();
 	
 	int			init		( Config & config );// returns 0 on success
 	bool		Start		();

@@ -7,7 +7,7 @@
 #include "drivers/MidiInterface.h" // for class MidiStreamReceiver
 
 #if HAVE_CONFIG_H
-#include "config.h"
+#include "../config.h"
 #endif
 
 #if HAVE_JACK_MIDIPORT_H
@@ -27,6 +27,14 @@
 #ifdef HAVE_JACK_SESSION_H
 static void session_callback(jack_session_event_t *event, void *arg);
 #endif
+
+JackOutput::JackOutput()
+:	running(false)
+#ifdef with_jack
+,	client(NULL)
+#endif
+{
+}
 
 int
 JackOutput::init	( Config & config )
