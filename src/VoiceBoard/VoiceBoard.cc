@@ -161,7 +161,7 @@ VoiceBoard::SetSampleRate	(int rate)
 bool 
 VoiceBoard::isSilent()
 {
-	return amp_env.getState() == ADSR::off && _vcaFilter._z < 0.0000001;
+	return amp_env.getState() == 0 && _vcaFilter._z < 0.0000001;
 }
 
 void 

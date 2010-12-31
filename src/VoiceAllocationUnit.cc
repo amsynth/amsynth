@@ -65,8 +65,6 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 	assert (note >= 0);
 	assert (note < 128);
   
-	purgeVoices ();
-	
 	keyPressed[note] = 1;
 	
 	if ((!mMaxVoices || (mActiveVoices < mMaxVoices)) && !active[note])
@@ -159,6 +157,8 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 	distortion->Process (vb, nframes);
 	reverb->processreplace (vb, l,r, nframes, 1, stride); // mono -> stereo
 	limiter->Process (l,r, nframes, stride);
+
+	purgeVoices();
 }
 
 void
