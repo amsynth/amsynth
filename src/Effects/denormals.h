@@ -18,14 +18,12 @@
 // SSE is not available on all processors, though, so cannot be reiled upon.
 //
 
-static inline void undenormalise(volatile float & s)
-{
-#if __SSE2_MATH__
-	// assuming disable_denormals() was called, denormals will not occur
+#if __SSE2_MATH__ && !defined(ALWAYS_UNDENORMALISE)
+// assuming disable_denormals() was called, denormals will not occur
+#define undenormalise(s) (s)
 #else
-	if (s < FLT_MIN) s = 0.0f;
+#define undenormalise(s) if ((s) < FLT_MIN) { (s) = 0.0f; }
 #endif
-}
 
 static inline void disable_denormals()
 {
