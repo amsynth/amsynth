@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <sys/resource.h>
 
 /* returns number of usecs by test run */
 unsigned long run_test(bool trigger_denormal, bool kill_denormals)
