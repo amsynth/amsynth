@@ -8,8 +8,8 @@
 #include <string>
 #include <gtkmm.h>
 
+#include "../MidiController.h"
 #include "PresetControllerView.h"
-#include "ControllerMapDialog.h"
 #include "Request.h"
 
 class PresetController;
