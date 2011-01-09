@@ -20,8 +20,6 @@ libGUI_a_SOURCES = \
 	amsynth_logo.h \
 	ConfigDialog.cpp \
 	ConfigDialog.h \
-	ControllerMapDialog.cc \
-	ControllerMapDialog.h \
 	controllers.h \
 	GUI.cc \
 	GUI.h \

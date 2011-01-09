@@ -70,7 +70,6 @@ private:
 
 	int			lnav;
 	void		event_handler	(const int);
-	void config_controllers();
 	
 	void		preset_new		( );
 	void		preset_copy		( );
@@ -138,7 +137,6 @@ private:
 	Config *config;
 	MidiController *midi_controller;
 	VoiceAllocationUnit *vau;
-	ControllerMapDialog *controller_map_dialog;
 	GenericOutput *audio_out;
 	
 	Preset			*clipboard_preset;

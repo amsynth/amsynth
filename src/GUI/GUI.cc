@@ -82,8 +82,7 @@ GUI::delete_event_impl(GdkEventAny *)
 
 GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 		  GenericOutput *audio, const char *title )
-:	controller_map_dialog(NULL)
-,	m_vkeybdOctave(4)
+:	m_vkeybdOctave(4)
 ,	m_vkeybdIsActive(false)
 ,	m_vkeybdState(128)
 {
@@ -268,7 +267,6 @@ GUI::create_menus	( )
 	Menu *menu_config = manage (new Menu());
 	MenuList& list_config = menu_config->items ();
 	list_config.push_back (MenuElem("Audio & MIDI...", bind(mem_fun(*this, &GUI::event_handler), (int)evConfig)));
-	list_config.push_back (MenuElem("MIDI Controllers...", Gtk::AccelKey("<control>M"), mem_fun(*this, &GUI::config_controllers)));
 	
 	
 	//
@@ -355,12 +353,6 @@ GUI::create_menus	( )
 	return menu_bar;
 }
 
-
-void
-GUI::config_controllers()
-{
-	if (controller_map_dialog) controller_map_dialog->show_all();
-}
 
 void
 adjustment_value_changed (GtkAdjustment *adjustment, gpointer data)
@@ -667,7 +659,6 @@ GUI::idle_callback()
 
 GUI::~GUI()
 {
-	delete controller_map_dialog;
 }
 
 void
@@ -757,8 +748,6 @@ GUI::setPresetController(PresetController & p_c)
 		preset.getParameter(i).addUpdateListener(*this);
 	}
 	
-    controller_map_dialog = new ControllerMapDialog(midi_controller, preset_controller);
-
 	g_midiLearn = new MIDILearnDialog(midi_controller, preset_controller, this->gobj());
 }
 

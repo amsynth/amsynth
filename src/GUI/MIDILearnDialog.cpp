@@ -4,9 +4,7 @@
 #include "../MidiController.h"
 #include "../PresetController.h"
 #include "Request.h"
-
-// defined in controllers.h, but only one module may include that header
-extern const char *c_controller_names[];
+#include "controllers.h"
 
 static gboolean on_output(GtkSpinButton *spin, gpointer data);
 
