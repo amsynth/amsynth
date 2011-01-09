@@ -82,8 +82,8 @@ private:
 	int		command_exists		(const char *command);
 	void		command_run		(const char *command);
 	
-	void		changed_midi_channel	( );
-	void		changed_voices		( );
+	void		on_midi_channel_change	(int value);
+	void		on_ployphony_change		(int value);
 	
 	void		post_init();
 	void		update_title();
@@ -127,9 +127,6 @@ private:
 	Gtk::Statusbar		record_statusbar;
 	gboolean		record_recording;
 		
-	Gtk::Adjustment		*adj_midi,
-				*adj_voices;
-
 	Parameter *active_param;
 	PresetController *preset_controller;
 	PresetControllerView *presetCV;

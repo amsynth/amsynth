@@ -55,7 +55,9 @@ public:
 	Parameter & getLastControllerParam() { return last_active_controller; };
 	Parameter & getController( unsigned int controller_no );
 	
+	int		get_midi_channel	() { return channel; }
 	void	set_midi_channel	( int ch );
+	
 	int     sendMidi_values		();
 
 private:

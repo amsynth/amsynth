@@ -266,6 +266,55 @@ GUI::create_menus	( )
 	//
 	Menu *menu_config = manage (new Menu());
 	MenuList& list_config = menu_config->items ();
+
+	//
+	// Config > MIDI Channel
+	//
+	{
+		Gtk::RadioButtonGroup grp;
+		Gtk::RadioMenuItem *item = NULL;
+		Gtk::Menu *menu = Gtk::manage( new Gtk::Menu );
+		const int currentValue = midi_controller->get_midi_channel();
+		
+		item = Gtk::manage(new Gtk::RadioMenuItem(grp, "All"));
+		item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_midi_channel_change), 0) );
+		menu->items().push_back(*item);
+		
+		for (int i=1; i<=16; i++) {
+			char name[32] = ""; sprintf(name, "%d", i);
+			item = Gtk::manage(new Gtk::RadioMenuItem(grp, name));
+			item->set_active((i == currentValue));
+			item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_midi_channel_change), i) );
+			menu->items().push_back(*item);
+		}
+
+		menu_config->items().push_back(MenuElem("MIDI Channel", *menu));
+	}
+	
+	//
+	// Config > Polyphony
+	//
+	{
+		Gtk::RadioButtonGroup grp;
+		Gtk::RadioMenuItem *item = NULL;
+		Gtk::Menu *menu = Gtk::manage( new Gtk::Menu );
+		const int currentValue = vau->GetMaxVoices();
+		
+		item = Gtk::manage(new Gtk::RadioMenuItem(grp, "Unlimited"));
+		item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_midi_channel_change), 0) );
+		menu->items().push_back(*item);
+		
+		for (int i=1; i<=16; i++) {
+			char name[32] = ""; sprintf(name, "%d", i);
+			Gtk::RadioMenuItem *item = Gtk::manage(new Gtk::RadioMenuItem(grp, name));
+			item->set_active((i == currentValue));
+			item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_ployphony_change), i) );
+			menu->items().push_back(*item);
+		}
+		
+		menu_config->items().push_back(MenuElem("Max. Polyphony", *menu));
+	}
+	
 	list_config.push_back (MenuElem("Audio & MIDI...", bind(mem_fun(*this, &GUI::event_handler), (int)evConfig)));
 	
 	
@@ -382,27 +431,10 @@ GUI::init()
 	
 	Gtk::Widget *editor = Glib::wrap (editor_pane_new (m_adjustments));
 	
-	adj_midi = manage (new Gtk::Adjustment(config->midi_channel,0,16,1));
-	adj_midi->signal_value_changed().connect (mem_fun (*this, &GUI::changed_midi_channel));
-	Gtk::SpinButton *sb_midi = manage (new Gtk::SpinButton(*adj_midi,1,0));
-	
-	adj_voices = manage (new Gtk::Adjustment(config->polyphony,1,128,1));
-	adj_voices->signal_value_changed().connect (mem_fun (*this, &GUI::changed_voices));
-	Gtk::SpinButton *sb_voices = manage (new Gtk::SpinButton(*adj_voices,1,0));
-	
 	vbox.pack_start (*(create_menus ()),0,0);
 	Gtk::HBox *tmphbox = manage (new Gtk::HBox());
 	tmphbox->pack_start(*presetCV,0,0);
-	Gtk::HBox *midibox = manage(new Gtk::HBox());
-	midibox->pack_start(*(manage( new Gtk::Label (" midi ch:") )),0,0);
-	midibox->pack_start(*sb_midi,0,0);
-	midibox->pack_start(*(manage( new Gtk::Label (" poly:") )),0,0);
-	midibox->pack_start(*sb_voices,0,0);
-	Gtk::Alignment *align = manage(new Gtk::Alignment(Gtk::ALIGN_RIGHT,
-							  Gtk::ALIGN_CENTER,
-							  0,0));
-	align->add(*midibox);
-	tmphbox->pack_start(*align);
+
 	vbox.pack_start (*tmphbox,0,0);
 	vbox.pack_start (*editor, Gtk::PACK_EXPAND_WIDGET,0);
 	vbox.pack_start (statusBar,PACK_SHRINK);
@@ -869,16 +901,15 @@ GUI::command_run	(const char *command)
 }
 
 void
-GUI::changed_midi_channel( )
+GUI::on_midi_channel_change(int value)
 {
-	if (midi_controller) midi_controller->set_midi_channel ((int)(adj_midi->get_value ()));
+	midi_controller->set_midi_channel(value);
 }
 
 void
-GUI::changed_voices	( )
+GUI::on_ployphony_change(int value)
 {
-	config->polyphony = (int)(adj_voices->get_value ());
-	if (vau) vau->SetMaxVoices (config->polyphony);
+	vau->SetMaxVoices(value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

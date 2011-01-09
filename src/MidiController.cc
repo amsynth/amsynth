@@ -16,6 +16,7 @@ MidiController::MidiController( Config & config )
 {
 	this->config = &config;
 	presetController = 0;
+	channel = config.midi_channel;
 	for( int i=0; i<MAX_CC; i++ ) midi_controllers[i] = 0;
 }
 

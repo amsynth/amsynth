@@ -33,6 +33,7 @@ public:
 	virtual void HandleMidiSustainPedal(uchar value);
 
 	void	SetMaxVoices	(int voices) { mMaxVoices = voices; }
+	int		GetMaxVoices	() { return mMaxVoices; }
 	int		GetActiveVoices	() { return mActiveVoices; }
 
 	// processing with stride (interleaved) is not functional yet!!!
