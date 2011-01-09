@@ -150,6 +150,17 @@ on_unrealize (GtkWidget *widget, gpointer user_data)
 
 #endif /////////////////////////////////////////////////////////////////////////
 
+static void
+on_control_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
+	if (event->type == GDK_BUTTON_PRESS && event->button == 3)
+	{
+		const size_t param_index = (size_t)data;
+		const char *name = parameter_name_from_index(param_index);
+		modal_midi_learn(param_index);
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 #define HANDLE_GERROR( gerror ) \
@@ -314,6 +325,7 @@ editor_pane_new (GtkAdjustment **adjustments)
 				g_strfreev (strings);
 			}
 			
+			g_signal_connect_after(G_OBJECT(widget), "button-press-event", G_CALLBACK (on_control_press), i);
 			gtk_fixed_put (GTK_FIXED (fixed), widget, pos_x, pos_y);
 			
 #if ENABLE_LAYOUT_EDIT

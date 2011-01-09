@@ -30,6 +30,7 @@ using namespace Gtk;
 #include "../../config.h"
 #include "amsynth_logo.h"
 #include "ConfigDialog.h"
+#include "MIDILearnDialog.h"
 
 #include "gui_main.h"
 #include "editor_pane.h"
@@ -58,6 +59,14 @@ enum {
 	
 	evMax
 };
+
+static MIDILearnDialog *g_midiLearn = NULL;
+
+void modal_midi_learn(int param_index) // called by editor_pane upon right-clicking a control
+{
+	if (g_midiLearn)
+		g_midiLearn->run_modal(param_index);
+}
 
 int
 GUI::delete_event_impl(GdkEventAny *)
@@ -498,7 +507,6 @@ GUI::post_init()
 #endif
 }
 
-
 void 
 GUI::event_handler(const int e)
 {
@@ -750,6 +758,8 @@ GUI::setPresetController(PresetController & p_c)
 	}
 	
     controller_map_dialog = new ControllerMapDialog(midi_controller, preset_controller);
+
+	g_midiLearn = new MIDILearnDialog(midi_controller, preset_controller, this->gobj());
 }
 
 void

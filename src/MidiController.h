@@ -51,6 +51,7 @@ public:
 	void	saveConfig ();
 
 	void	setController		( unsigned int controller_no, Parameter &param );
+	int     getControllerForParam(unsigned paramIdx);
 	Parameter & getLastControllerParam() { return last_active_controller; };
 	Parameter & getController( unsigned int controller_no );
 	

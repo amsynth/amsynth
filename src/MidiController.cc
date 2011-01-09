@@ -233,6 +233,18 @@ MidiController::getController( unsigned int idx )
     return (idx < MAX_CC) ? *midi_controllers[idx] : presetController->getCurrentPreset().getParameter("null");
 }
 
+int
+MidiController::getControllerForParam(unsigned paramIdx)
+{
+	for (unsigned int i=0; i<MAX_CC; i++) {
+		if (midi_controllers[i] &&
+			midi_controllers[i]->GetId() == i) {
+			i;
+		}
+	}
+	return -1;
+}
+
 void
 MidiController::saveConfig()
 {
