@@ -82,9 +82,11 @@ GUI::delete_event_impl(GdkEventAny *)
 
 GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 		  GenericOutput *audio, const char *title )
+#if ENABLE_MIDIKEYS
 :	m_vkeybdOctave(4)
 ,	m_vkeybdIsActive(false)
 ,	m_vkeybdState(128)
+#endif
 {
 	lnav = -1;
 	
@@ -714,9 +716,11 @@ GUI::update_title()
 	if (m_presetIsNotSaved) {
 		title += std::string(" *");
 	}
+#if ENABLE_MIDIKEYS
 	if (m_vkeybdIsActive) {
 		title += std::string(" (midikeys active)");
 	}
+#endif
 	set_title(title);
 }
 
@@ -912,6 +916,8 @@ GUI::on_ployphony_change(int value)
 	vau->SetMaxVoices(value);
 }
 
+#if ENABLE_MIDIKEYS
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Virtual Keyboard functionality
@@ -1064,3 +1070,5 @@ void GUI::vkeybd_kill_all_notes()
 		m_vkeybdState[i] = false;
 	}
 }
+
+#endif
