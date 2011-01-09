@@ -41,7 +41,10 @@ static const char *param_names[] = {
 
 const char *parameter_name_from_index (int param_index)
 {
-	return param_names[param_index];
+	if (0 <= param_index && param_index < SIZEOF_ARRAY(param_names))
+		return param_names[param_index];
+	
+	return NULL;
 }
 
 int parameter_index_from_name (const char *param_name)
