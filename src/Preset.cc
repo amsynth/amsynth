@@ -143,8 +143,8 @@ Preset::fromString(string str)
 			stream >> buffer;
 			name = string(buffer);
 			stream >> buffer;
-			if(name!="unused")
-				getParameter(name).setValue( atof(buffer) );
+			if (name!="unused")
+				getParameter(name).setValue(Parameter::valueFromString(buffer));
 			stream >> buffer;
 		}
 	};

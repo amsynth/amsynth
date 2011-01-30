@@ -47,6 +47,16 @@ public:
 	float			getValue		() const { return _value; }
 	void			setValue		(float value);
 
+	static float	valueFromString	(const string &str) {
+		float value = 0.0f;
+		// atof() and friends are affected by currently configured locale,
+		// which can change the decimal point character.
+		std::istringstream istr(str);
+		istr.imbue(std::locale("C")); // be absolutely sure of the locale
+		istr >> value;
+		return value;
+	}
+
 	float			GetNormalisedValue	() const { return (getValue()-getMin())/(getMax()-getMin()); }
 	void			SetNormalisedValue	(float val) { setValue (val*(getMax()-getMin())+getMin()); }
 

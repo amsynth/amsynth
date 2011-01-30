@@ -196,12 +196,7 @@ PresetController::loadPresets		(const char *filename)
 				Parameter &param = presets[preset].getParameter(name);
 				if (param.getName() == name) // make sure parameter name is supported
 				{
-					float fval = 0.0f;
-					// atof() and friends are affected by currently configured locale,
-					// which can change the decimal point character.
-					std::istringstream istr(buffer);
-					istr.imbue(std::locale("C")); // be absolutely sure of the locale
-					istr >> fval;
+					float fval = Parameter::valueFromString(buffer);
 					param.setValue(fval);
 					if (param.getValue() != fval)
 					{
