@@ -97,7 +97,7 @@ GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 	
 //	if(this->config->realtime)
 		// messes up the audio thread's timing if not realtime...
-//		Gtk::Main::timeout.connect( mem_fun(*this,&GUI::idle_callback), 200 );
+//		Glib::signal_timeout().connect( mem_fun(*this,&GUI::idle_callback), 200 );
 
         m_baseName = title + string(" : ");
 	set_title(m_baseName);
@@ -287,8 +287,8 @@ GUI::create_menus	( )
 		menu->items().push_back(*item);
 		
 		for (int i=1; i<=16; i++) {
-			char name[32] = ""; sprintf(name, "%d", i);
-			item = Gtk::manage(new Gtk::RadioMenuItem(grp, name));
+			ostringstream name; name << i;
+			item = Gtk::manage(new Gtk::RadioMenuItem(grp, name.str()));
 			item->set_active((i == currentValue));
 			item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_midi_channel_change), i) );
 			menu->items().push_back(*item);
@@ -311,8 +311,8 @@ GUI::create_menus	( )
 		menu->items().push_back(*item);
 		
 		for (int i=1; i<=16; i++) {
-			char name[32] = ""; sprintf(name, "%d", i);
-			Gtk::RadioMenuItem *item = Gtk::manage(new Gtk::RadioMenuItem(grp, name));
+			ostringstream name; name << i;
+			Gtk::RadioMenuItem *item = Gtk::manage(new Gtk::RadioMenuItem(grp, name.str()));
 			item->set_active((i == currentValue));
 			item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_ployphony_change), i) );
 			menu->items().push_back(*item);
@@ -466,9 +466,9 @@ GUI::init()
 	
 	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
 	
-	static char cstr[32];
-	sprintf( cstr, "Sample Rate: %d", config->sample_rate );
-	statusBar.pack_start (*manage(new Gtk::Label (cstr)), PACK_SHRINK, padding);
+	ostringstream oss;
+	oss << "Sample Rate: " << config->sample_rate;
+	statusBar.pack_start (*manage(new Gtk::Label (oss.str())), PACK_SHRINK, padding);
 
 	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
 	
@@ -677,20 +677,15 @@ GUI::idle_callback()
 {
 	if (vau->GetActiveVoices() != lnav)
 	{
-		string txt = status;
-		txt += "   ";
-		char cstr[3];
-		sprintf (cstr, "%d", vau->GetActiveVoices());
-		txt += string( cstr );
+		ostringstream txt;
+		txt << status << "   " << vau->GetActiveVoices();
 		if( config->polyphony != 0 )
 		{
-			sprintf( cstr, "%d", config->polyphony );
-			txt += "/";
-			txt += string(cstr);
+			txt << "/" << config->polyphony;
 		}
-		txt += " Voices Active";
+		txt << " Voices Active";
 		statusBar.pop( 1 );
-		statusBar.push (txt, 1);
+		statusBar.push (txt.str(), 1);
 	}
 	return true;
 }

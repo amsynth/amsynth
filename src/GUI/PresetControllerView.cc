@@ -108,12 +108,9 @@ PresetControllerView::update()
 	}
 	
 	// set the display entries
-    char cstr[3];
-    sprintf(cstr, "%d", presetController->getCurrPresetNumber());
-	string txt("Preset ");
-	txt += string(cstr);
-	txt += " : ";
-    preset_no_entry.set_text(txt);	
-	
+	ostringstream oss;
+	oss << "Preset " << presetController->getCurrPresetNumber() << " : ";
+	preset_no_entry.set_text(oss.str());
+
 	inhibit_combo_callback = false;
 }

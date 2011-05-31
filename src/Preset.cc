@@ -115,33 +115,33 @@ Preset::fromString(string str)
 {
 	std::stringstream stream (str);
 
-	char buffer[100];
+	string buffer;
   
 	stream >> buffer;
   
-	if (string(buffer) != "amSynth1.0preset") return false;
+	if (buffer != "amSynth1.0preset") return false;
   
 	stream >> buffer;
-	if (string(buffer) == "<preset>") {
+	if (buffer == "<preset>") {
 		stream >> buffer;
 		
 		//get the preset's name
 		stream >> buffer;
 		string presetName;
-		presetName += string(buffer);
+		presetName += buffer;
 		stream >> buffer;
-		while (string(buffer) != "<parameter>") {
+		while (buffer != "<parameter>") {
 			presetName += " ";
-			presetName += string(buffer);
+			presetName += buffer;
 			stream >> buffer;
 		}
 		setName(presetName); 
 		
 		//get the parameters
-		while (string(buffer) == "<parameter>") {
+		while (buffer == "<parameter>") {
 			string name;
 			stream >> buffer;
-			name = string(buffer);
+			name = buffer;
 			stream >> buffer;
 			if (name!="unused")
 				getParameter(name).setValue(Parameter::valueFromString(buffer));

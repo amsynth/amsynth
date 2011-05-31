@@ -68,8 +68,8 @@ ConfigDialog::ReadValues ()
 	mAudioDriver.set_active_text (stringToLower (mConfig.audio_driver));
 	mOSSAudioDevice.set_text (mConfig.oss_audio_device);
 	mALSAAudioDevice.set_text (mConfig.alsa_audio_device);
-	static char rateStr[10]; sprintf (rateStr, "%d", mConfig.sample_rate);
-	mSampleRate.set_active_text (rateStr);
+	std::ostringstream rateStr; rateStr << mConfig.sample_rate;
+	mSampleRate.set_active_text (rateStr.str());
 }
 
 void

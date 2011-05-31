@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
+#include <sstream>
 
 using namespace std;
 
@@ -78,42 +79,42 @@ Config::ParseCOpts	(int argc, char* argv[])
 int
 Config::load	()
 {
-	char buffer[100];
+	string buffer;
 
 	fstream file( amsynthrc_fname.c_str(), ios::in );
 	while( file.good() ) {
 		file >> buffer;
-		if( string(buffer)=="#" ){
+		if( buffer[0]=='#' ){
 			// ignore lines beginning with '#' (comments)
 			// this next line is needed to deal with a line with 
 			// just a '#'
 			file.unget();
 			// this moves file on by a whole line, so we ignore it
-			file.get(buffer,100);
-		} else if (string(buffer)=="audio_driver"){
+			getline(file, buffer);
+		} else if (buffer=="audio_driver"){
 			file >> buffer;
-			audio_driver = string(buffer);
-		} else if (string(buffer)=="midi_driver"){
+			audio_driver = buffer;
+		} else if (buffer=="midi_driver"){
 			file >> buffer;
 			midi_driver = buffer;
-		} else if (string(buffer)=="oss_midi_device"){
+		} else if (buffer=="oss_midi_device"){
 			file >> buffer;
-			oss_midi_device = string(buffer);
-		} else if (string(buffer)=="midi_channel"){
+			oss_midi_device = buffer;
+		} else if (buffer=="midi_channel"){
 			file >> buffer;
-			midi_channel = atoi(buffer);
-		} else if (string(buffer)=="oss_audio_device"){
+			istringstream(buffer) >> midi_channel;
+		} else if (buffer=="oss_audio_device"){
 			file >> buffer;
-			oss_audio_device = string(buffer);
-		} else if (string(buffer)=="alsa_audio_device"){
+			oss_audio_device = buffer;
+		} else if (buffer=="alsa_audio_device"){
 			file >> buffer;
-			alsa_audio_device = string(buffer);
-		} else if (string(buffer)=="sample_rate"){
+			alsa_audio_device = buffer;
+		} else if (buffer=="sample_rate"){
 			file >> buffer;
-			sample_rate = atoi(buffer);
-		} else if (string(buffer)=="polyphony"){
+			istringstream(buffer) >> sample_rate;
+		} else if (buffer=="polyphony"){
 			file >> buffer;
-			polyphony = atoi(buffer);
+			istringstream(buffer) >> polyphony;
 		} else {
 			file >> buffer;
 		}

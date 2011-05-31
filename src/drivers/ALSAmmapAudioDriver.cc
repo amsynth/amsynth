@@ -54,8 +54,8 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 		avail = snd_pcm_avail_update( playback_handle);
 		if (avail < 0)
 		{
-			char b[ 80];
-			sprintf( b, "%i", err = avail);
+//			char b[ 80];
+//			sprintf( b, "%i", err = avail);
 //			cerr << "snd_pcm_avail_update error " << b << "=\"" 
 //			<< snd_strerror( err) << "\"\n";
 			return xrun_recovery();

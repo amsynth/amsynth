@@ -141,7 +141,7 @@ PresetController::loadPresets		(const char *filename)
 	cout << "<PresetController::loadPresets()>" << endl;
 #endif
 	ifstream file( filename, ios::in );
-	char buffer[100];
+	string buffer;
   
 	if (file.bad()) {
 #ifdef _DEBUG
@@ -152,7 +152,7 @@ PresetController::loadPresets		(const char *filename)
   
 	file >> buffer;
   
-	if (string(buffer) != "amSynth") {
+	if (buffer != "amSynth") {
 #ifdef _DEBUG
 		cout <<
 		"<PresetController::loadPresets()> not an amSynth file, bailing out"
@@ -164,17 +164,17 @@ PresetController::loadPresets		(const char *filename)
 	int preset = -1;
 	file >> buffer;
 	while (file.good()) {
-		if (string(buffer) == "<preset>") {
+		if (buffer == "<preset>") {
 			preset++;
 			file >> buffer;
 			
 			//get the preset's name
 			file >> buffer;
-			string presetName = string(buffer);
+			string presetName(buffer);
 			file >> buffer;
-			while (string(buffer) != "<parameter>") {
+			while (buffer != "<parameter>") {
 				presetName += " ";
-				presetName += string(buffer);
+				presetName += buffer;
 				file >> buffer;
 			}
 #ifdef _DEBUG
@@ -183,10 +183,10 @@ PresetController::loadPresets		(const char *filename)
 #endif
 			presets[preset].setName(presetName);
 			//get the parameters
-			while (string(buffer) == "<parameter>") {
+			while (buffer == "<parameter>") {
 				string name;
 				file >> buffer;
-				name = string(buffer);
+				name = buffer;
 				file >> buffer;
 #ifdef _DEBUG
 				cout << "<PresetController::loadPresets()>: Parameter:- name="

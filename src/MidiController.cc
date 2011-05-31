@@ -43,14 +43,14 @@ MidiController::setPresetController(PresetController & pc)
 	fname += "/.amSynthControllersrc";
 	ifstream file(fname.c_str(), ios::out);
 	int i=0;
-	char buffer[100];
+	string buffer;
 	if (file.bad())	return;
   
 	file >> buffer;
 	while( file.good() )
 	{
 		midi_controllers[i++] = &(presetController->getCurrentPreset().
-				getParameter( string(buffer) ));
+				getParameter( buffer ));
 		file >> buffer;
 	}
 	file.close();
