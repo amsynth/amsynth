@@ -37,8 +37,9 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 		keyPressed[i] = 0;
 		active[i] = false;
 		_voices.push_back (new VoiceBoard (&s_procMem));
-		_voices.back()->setFrequency ((440.0f/32.0f) * pow (2.0f, (float)((i-9.0)/12.0)));
 	}
+
+	updateTuning();
 
 	SetSampleRate (44100);
 }
@@ -67,7 +68,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
   
 	keyPressed[note] = 1;
 	
-	if ((!mMaxVoices || (mActiveVoices < mMaxVoices)) && !active[note])
+	if ((!mMaxVoices || (mActiveVoices < mMaxVoices)) && !active[note] && !mute[note])
 	{
 		_voices[note]->reset();
 		active[note]=1;
@@ -150,7 +151,9 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 	while (0 < framesLeft)
 	{
 		int fr = (framesLeft < kMaxGrainSize) ? framesLeft : kMaxGrainSize;
-		for (unsigned i=0; i<_voices.size(); i++) if (active[i]) _voices[i]->ProcessSamplesMix (vb+j, fr, mMasterVol);
+		for (unsigned i=0; i<_voices.size(); i++)
+			if (active[i] && !mute[i])
+				_voices[i]->ProcessSamplesMix (vb+j, fr, mMasterVol);
 		j += fr; framesLeft -= fr;
 	}
 
@@ -176,3 +179,54 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	default: for (unsigned i=0; i<_voices.size(); i++) _voices[i]->UpdateParameter (param, value); break;
 	}
 }
+
+int
+VoiceAllocationUnit::loadScale		(const string & sclFileName)
+{
+	int error = tuningMap.loadScale(sclFileName);
+	if (error)
+		return error;
+	else
+	{
+		updateTuning();
+		return 0;
+	}
+}
+
+int
+VoiceAllocationUnit::loadKeyMap		(const string & kbmFileName)
+{
+	int error = tuningMap.loadKeyMap(kbmFileName);
+	if (error)
+		return error;
+	else
+	{
+		updateTuning();
+		return 0;
+	}
+}
+
+void
+VoiceAllocationUnit::defaultTuning	()
+{
+	tuningMap.defaultScale();
+	tuningMap.defaultKeyMap();
+	updateTuning();
+}
+
+void
+VoiceAllocationUnit::updateTuning	()
+{
+	for (int i = 0; i < 128; i++)
+	{
+		double pitch = tuningMap.noteToPitch(i);
+		if (pitch < 0)
+			mute[i] = true; // unmapped key
+		else
+		{
+			_voices[i]->setFrequency(pitch);
+			mute[i] = false;
+		}
+	}
+}
+

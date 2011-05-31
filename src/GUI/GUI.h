@@ -81,6 +81,10 @@ private:
 	void		bank_open		( );
 	void		bank_save_as		( );
 
+	void		scale_open		( );
+	void		key_map_open		( );
+	void		tuning_reset		( );
+
 	int		command_exists		(const char *command);
 	void		command_run		(const char *command);
 	

@@ -240,6 +240,10 @@ GUI::create_menus	( )
 //	list_file.push_back (MenuElem("_Save Bank","<control>S", mem_fun(*this, &GUI::bank_save)));
 	list_file.push_back (MenuElem("_Save Bank As...",Gtk::AccelKey("<control>S"), mem_fun(*this, &GUI::bank_save_as)));
 	list_file.push_back (SeparatorElem());
+	list_file.push_back (MenuElem("Open Alternate Tuning File", mem_fun(*this, &GUI::scale_open)));
+	list_file.push_back (MenuElem("Open Alternate Keyboard Map", mem_fun(*this, &GUI::key_map_open)));
+	list_file.push_back (MenuElem("Reset All Tuning Settings to Default", mem_fun(*this, &GUI::tuning_reset)));
+	list_file.push_back (SeparatorElem());
 	list_file.push_back (MenuElem("_Quit",Gtk::AccelKey("<control>Q"), bind(mem_fun(this, &GUI::event_handler),(int)evQuit)));
 	
 	
@@ -867,6 +871,67 @@ GUI::bank_save_as	( )
 	{
 		config->current_bank_file = dlg.get_filename ();
 		preset_controller->savePresets (config->current_bank_file.c_str ());
+	}
+}
+
+void
+GUI::scale_open		( )
+{
+	FileChooserDialog dlg (*this, "Open Scala (.scl) alternate tuning file...", FILE_CHOOSER_ACTION_OPEN);
+	dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);	dlg.add_button("Select", RESPONSE_OK);
+
+	FileFilter filter;
+	filter.set_name("Scala scale files");
+	filter.add_pattern("*.[Ss][Cc][Ll]");
+	dlg.add_filter(filter);
+
+	if (dlg.run() == RESPONSE_OK)
+	{
+		dlg.hide();
+		int error = vau->loadScale(dlg.get_filename());
+		if (error)
+		{
+			MessageDialog msg(*this, "Failed to load new tuning.");
+			msg.set_secondary_text("Reading the tuning file failed for some reason. \
+Make sure your file has the correct format and try again.");
+			msg.run();
+		}
+	}
+}
+
+void
+GUI::key_map_open	( )
+{
+	FileChooserDialog dlg (*this, "Open alternate keybord map (Scala .kbm format)...", FILE_CHOOSER_ACTION_OPEN);
+	dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);	dlg.add_button("Select", RESPONSE_OK);
+
+	FileFilter filter;
+	filter.set_name("Scala keyboard map files");
+	filter.add_pattern("*.[Kk][Bb][Mm]");
+	dlg.add_filter(filter);
+
+	if (dlg.run() == RESPONSE_OK)
+	{
+		dlg.hide();
+		int error = vau->loadKeyMap(dlg.get_filename());
+		if (error)
+		{
+			MessageDialog msg(*this, "Failed to load new keyboard map.");
+			msg.set_secondary_text("Reading the keyboard map file failed for some reason. \
+Make sure your file has the correct format and try again.");
+			msg.run();
+		}
+	}
+}
+
+void
+GUI::tuning_reset	( )
+{
+	MessageDialog dlg (*this, "Discard the current scale and keyboard map?");
+
+	if (dlg.run() == RESPONSE_OK)
+	{
+		vau->defaultTuning();
 	}
 }
 

@@ -9,6 +9,7 @@
 
 #include "UpdateListener.h"
 #include "MidiController.h"
+#include "TuningMap.h"
 
 class VoiceBoard;
 class SoftLimiter;
@@ -39,6 +40,10 @@ public:
 	// processing with stride (interleaved) is not functional yet!!!
 	void	Process			(float *l, float *r, unsigned nframes, int stride=1);
 
+	int	loadScale		(const string & sclFileName);
+	int	loadKeyMap		(const string & kbmFileName);
+	void	defaultTuning		();
+
 private:
 	void	purgeVoices		();
 
@@ -47,6 +52,7 @@ private:
 
 	char	keyPressed[128], sustain;
 	bool	active[128];
+	bool	mute[128];
 	std::vector<VoiceBoard*>	_voices;
 	
 	SoftLimiter	*limiter;
@@ -57,6 +63,9 @@ private:
 
 	float	mMasterVol;
 	float	mPitchBendRangeSemitones;
+
+	TuningMap	tuningMap;
+	void		updateTuning	();
 };
 
 #endif
