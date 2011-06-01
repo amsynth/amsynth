@@ -19,8 +19,10 @@
 #include "PresetController.h"
 #include "VoiceAllocationUnit.h"
 
-#define TRACE( fmt ) fprintf (stderr, "[amsynth-dssi] %s(): " fmt "\n", __func__)
+#ifdef DEBUG
+#define TRACE( msg ) fprintf (stderr, "[amsynth-dssi] %s(): " msg "\n", __func__)
 #define TRACE_ARGS( fmt, ... ) fprintf (stderr, "[amsynth-dssi] %s(): " fmt "\n", __func__, __VA_ARGS__)
+#endif
 
 static LADSPA_Descriptor *	s_ladspaDescriptor = NULL;
 static DSSI_Descriptor *	s_dssiDescriptor   = NULL;
@@ -65,11 +67,15 @@ const DSSI_Descriptor *dssi_descriptor (unsigned long index)
 static LADSPA_Handle instantiate (const LADSPA_Descriptor * descriptor, unsigned long s_rate)
 {
 	TRACE();
+    Config config;
+    config.Defaults();
     Preset amsynth_preset;
     amsynth_wrapper * a = new amsynth_wrapper;
     a->vau = new VoiceAllocationUnit;
     a->vau->SetSampleRate (s_rate);
     a->bank = new PresetController;
+    a->bank->loadPresets(config.current_bank_file.c_str());
+    a->bank->selectPreset(0);
     a->bank->getCurrentPreset().AddListenerToAll (a->vau);
     a->params = (LADSPA_Data **) calloc (kControls_End, sizeof (LADSPA_Data));
     return (LADSPA_Handle) a;
@@ -83,6 +89,42 @@ static void cleanup (LADSPA_Handle instance)
     delete a->bank;
     free (a->params);
     delete a;
+}
+
+//////////////////// Program handling //////////////////////////////////////////
+
+static const DSSI_Program_Descriptor *get_program(LADSPA_Handle Instance, unsigned long Index)
+{
+	amsynth_wrapper * a = (amsynth_wrapper *) Instance;
+
+	static DSSI_Program_Descriptor descriptor;
+	memset(&descriptor, 0, sizeof(descriptor));
+
+	if (Index < PresetController::kNumPresets) {
+		Preset &preset = a->bank->getPreset(Index);
+		descriptor.Bank = 0;
+		descriptor.Program = Index;
+		descriptor.Name = preset.getName().c_str();
+		TRACE_ARGS("%d %d %s", descriptor.Bank, descriptor.Program, descriptor.Name);
+		return &descriptor;
+	}
+	
+	return NULL;
+}
+
+static void select_program(LADSPA_Handle Instance, unsigned long Bank, unsigned long Index)
+{
+	amsynth_wrapper * a = (amsynth_wrapper *) Instance;
+
+	TRACE_ARGS("Bank = %d Index = %d", Bank, Index);
+
+	if (Bank == 0 && Index < PresetController::kNumPresets) {
+		a->bank->selectPreset(Index);
+		// now update DSSI host's view of the parameters
+		for (unsigned int i=0; i<kControls_End; i++) {
+			*(a->params[i]) = a->bank->getCurrentPreset().getParameter(i).getValue();
+		}
+	}
 }
 
 //////////////////// LADSPA port setup /////////////////////////////////////////
@@ -239,9 +281,9 @@ void __attribute__ ((constructor)) my_init ()
 		s_dssiDescriptor->DSSI_API_Version				= 1;
 		s_dssiDescriptor->LADSPA_Plugin				= s_ladspaDescriptor;
 		s_dssiDescriptor->configure					= NULL;
-		s_dssiDescriptor->get_program 					= NULL;
+		s_dssiDescriptor->get_program 					= get_program;
 		s_dssiDescriptor->get_midi_controller_for_port	= NULL;
-		s_dssiDescriptor->select_program 				= NULL;
+		s_dssiDescriptor->select_program 				= select_program;
 		s_dssiDescriptor->run_synth 					= run_synth;
 		s_dssiDescriptor->run_synth_adding 			= NULL;
 		s_dssiDescriptor->run_multiple_synths 			= NULL;
