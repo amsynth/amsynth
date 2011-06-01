@@ -22,6 +22,9 @@
 #ifdef DEBUG
 #define TRACE( msg ) fprintf (stderr, "[amsynth-dssi] %s(): " msg "\n", __func__)
 #define TRACE_ARGS( fmt, ... ) fprintf (stderr, "[amsynth-dssi] %s(): " fmt "\n", __func__, __VA_ARGS__)
+#else
+#define TRACE( msg ) (void)0
+#define TRACE_ARGS( ... ) (void)0
 #endif
 
 static LADSPA_Descriptor *	s_ladspaDescriptor = NULL;
