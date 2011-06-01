@@ -17,6 +17,7 @@ OTHER_OBJECTS = \
 	amSynth-Preset.o \
 	amSynth-PresetController.o \
 	amSynth-VoiceAllocationUnit.o \
+	amSynth-TuningMap.o \
 	amSynth-Config.o \
 	amSynth-controls.o
 
