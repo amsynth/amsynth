@@ -80,7 +80,7 @@ static LADSPA_Handle instantiate (const LADSPA_Descriptor * descriptor, unsigned
     a->bank->loadPresets(config.current_bank_file.c_str());
     a->bank->selectPreset(0);
     a->bank->getCurrentPreset().AddListenerToAll (a->vau);
-    a->params = (LADSPA_Data **) calloc (kControls_End, sizeof (LADSPA_Data));
+    a->params = (LADSPA_Data **) calloc (kControls_End, sizeof (LADSPA_Data *));
     return (LADSPA_Handle) a;
 }
 
