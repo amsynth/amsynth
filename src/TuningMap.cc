@@ -126,13 +126,16 @@ TuningMap::loadScale		(const string & filename)
 	int scaleSize = -1;
 	vector<double> newScale;
 
-	while (!file.eof())
+	while (file.good())
 	{
 		getline(file, line);
 		unsigned i = 0;
 		while (i < line.size() && isspace(line[i])) ++i;
-		if (i == line.size()) continue;	// skip all-whitespace lines
 		if (line[i] == '!') continue;	// skip comment lines
+
+		// skip all-whitespace lines after description
+		if (i == line.size() && gotDesc) continue;
+
 		if (!gotDesc)
 		{
 			newScaleDesc = line;
@@ -175,7 +178,7 @@ TuningMap::loadKeyMap		(const string & filename)
 	int newMapRepeatInc = -1;
 	vector<int> newMapping;
 
-	while (!file.eof())
+	while (file.good())
 	{
 		getline(file, line);
 		unsigned i = 0;
