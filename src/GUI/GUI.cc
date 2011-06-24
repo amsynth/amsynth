@@ -72,7 +72,7 @@ int
 GUI::delete_event_impl(GdkEventAny *)
 {
 	if (m_presetIsNotSaved) {
-		MessageDialog dlg (*this, "Really quit amSynth?\n\nYou will lose any changes\nwhich you haven't explicitly commited", false, MESSAGE_QUESTION, BUTTONS_YES_NO, true);
+		MessageDialog dlg (*this, "Really quit amSynth?\n\nYou will lose any changes\nwhich you haven't explicitly committed", false, MESSAGE_QUESTION, BUTTONS_YES_NO, true);
 		if (RESPONSE_YES != dlg.run())
 			return false;
 	}
