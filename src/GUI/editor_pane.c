@@ -301,7 +301,11 @@ editor_pane_new (GtkAdjustment **adjustments)
 			/////////////////////////
 			
 			GtkWidget *widget = NULL;
-			resource_info *res = g_datalist_get_data (&resources, resn); g_assert (res);
+			resource_info *res = g_datalist_get_data (&resources, resn);
+			if (!res) {
+				g_warning ("layout.ini error: control '%s' references a non-existent resource '%s'", control_name, resn);
+				continue;
+			}
 			GdkPixbuf *subpixpuf = gdk_pixbuf_new_subpixbuf (editor_pane_bg, pos_x, pos_y, res->fr_width, res->fr_height);
 			GtkAdjustment *adj = adjustments[i];
 			

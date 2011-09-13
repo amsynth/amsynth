@@ -123,10 +123,12 @@ void bitmap_popup_set_strings (GtkWidget *widget, const gchar **strings)
 	
 	gtk_menu_attach_to_widget (GTK_MENU (self->menu), widget, NULL);
 	
-	guint i, max = gtk_adjustment_get_upper (self->adjustment);
-	for (i = 0; i <= max; i++)
+	gint i;
+	const gint min = gtk_adjustment_get_lower (self->adjustment);
+	const gint max = gtk_adjustment_get_upper (self->adjustment);
+	for (i = min; i <= max; i++)
 	{
-		gchar *label = g_strstrip (g_strdup(strings[i]));
+		gchar *label = g_strstrip (g_strdup(strings[i - min]));
 		GtkWidget *menu_item = gtk_menu_item_new_with_label (label);
 		gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
 			(GtkSignalFunc) bitmap_popup_menuitem_activated,
@@ -198,7 +200,8 @@ bitmap_popup_menuitem_activated (GtkWidget *menu_item, gpointer data)
 	int i = g_list_index (list, menu_item);
 	g_list_free (list);
 	
-	gtk_adjustment_set_value (self->adjustment, i);
+	gdouble lower = gtk_adjustment_get_lower (self->adjustment);
+	gtk_adjustment_set_value (self->adjustment, lower + i);
 }
 
 void
