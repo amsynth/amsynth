@@ -81,9 +81,6 @@ JackOutput::init	( Config & config )
 	config.buffer_size = jack_get_buffer_size(client);
 	config.jack_client_name = std::string(jack_get_client_name(client));
 
-	if (m_port)
-		config.current_midi_driver = "JACK";
-
 	// don't auto connect ports if under jack session control...
 	// the jack session manager is responsible for restoring port connections
 	_auto_connect = config.jack_session_uuid.empty();
