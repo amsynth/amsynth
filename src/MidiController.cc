@@ -263,6 +263,8 @@ MidiController::saveConfig()
 void
 MidiController::set_midi_channel	( int ch )
 {
+	printf("set_midi_channel: %d\n", ch);
+	assert(ch != 0);
 	if (ch)	_handler->HandleMidiAllSoundOff();
 	config->midi_channel = ch;
 }
