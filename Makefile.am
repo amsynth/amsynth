@@ -1,6 +1,4 @@
-SUBDIRS = src skel
-
-dist_pkgdata_DATA = amsynth-skin.zip
+SUBDIRS = src skel skins
 
 EXTRA_DIST = amsynth.png
 
