@@ -173,11 +173,7 @@ GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 	about_authors.push_back("Martin Tarenskeen");
 	about_authors.push_back("Adrian Knoth");
 	about_authors.push_back("Samuli Suominen");
-	aboutDlg.set_authors(about_authors);
-	std::list<std::string> about_artists;
-	about_artists.push_back("Saul Cross");
-	aboutDlg.set_artists(about_artists);
-	
+	aboutDlg.set_authors(about_authors);	
 	
 	//
 	// the record dialog

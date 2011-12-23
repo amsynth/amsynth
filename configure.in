@@ -1,5 +1,5 @@
 AC_INIT(src/main.cc)
-AM_INIT_AUTOMAKE([amSynth], 'svn')
+AM_INIT_AUTOMAKE([amSynth], '1.3.0')
 AC_CONFIG_HEADERS([config.h])
 
 # capture user-supplied compiler flags before AC_PROG_CC clobbers them
@@ -176,6 +176,8 @@ src/VoiceBoard/Makefile
 src/GUI/Makefile
 src/Effects/Makefile
 skel/Makefile
+skins/Makefile
+skins/default/Makefile
 amsynth.desktop
 autopackage/default.apspec
 ])
