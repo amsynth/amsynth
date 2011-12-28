@@ -185,6 +185,13 @@ static void run_synth (LADSPA_Handle instance, unsigned long sample_count, snd_s
     a->vau->Process ((float *) a->out_l, (float *) a->out_r, sample_count);
 }
 
+// renoise ignores DSSI plugins that don't implement run
+
+static void run (LADSPA_Handle instance, unsigned long sample_count)
+{
+    run_synth (instance, sample_count, NULL, 0);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 /*
@@ -272,7 +279,7 @@ void __attribute__ ((constructor)) my_init ()
 		s_ladspaDescriptor->deactivate = NULL;
 
 		s_ladspaDescriptor->connect_port = connect_port;
-		s_ladspaDescriptor->run = NULL;
+		s_ladspaDescriptor->run = run;
 		s_ladspaDescriptor->run_adding = NULL;
 		s_ladspaDescriptor->set_run_adding_gain = NULL;
     }
