@@ -6,6 +6,7 @@
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
+#define _GNU_SOURCE
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,11 +15,17 @@
 #include <gtk/gtk.h>
 #include <lo/lo.h>
 
+#include "controls.h"
+#include "Preset.h"
+#include "GUI/editor_pane.h"
+
 ////////////////////////////////////////////////////////////////////////////////
 
 #define MAX_PATH 160
 
 static GtkWindow *_window = NULL;
+static GtkAdjustment *_adjustments[kControls_End] = {0};
+static gboolean _dont_send_control_changes = FALSE;
 
 static char *_osc_path = NULL;
 lo_server _osc_server = NULL;
@@ -63,7 +70,14 @@ int osc_control_handler(const char *path, const char *types, lo_arg **argv, int 
 {
     assert(types[0] == 'i');
     assert(types[1] == 'f');
-    printf("OSC: control %2d = %f\n", argv[0]->i, argv[1]->f);
+    float value = argv[1]->f;
+    int port_number = argv[0]->i;
+    int parameter_index = port_number - 2;
+    printf("OSC: control %2d = %f\n", port_number, value);
+    g_assert(parameter_index < kControls_End);
+    _dont_send_control_changes = TRUE;
+    gtk_adjustment_set_value(_adjustments[parameter_index], value);
+    _dont_send_control_changes = FALSE;
     return 0;
 }
 
@@ -126,15 +140,14 @@ int host_request_update()
 
 int host_set_control(int control, float value)
 {
-    lo_arg data[2]; data[0].i = control; data[1].f = value;
-    int err = lo_send(_osc_host_addr, tmpstr("%s/control", _osc_path), "if", data[0], data[1]);
+    fprintf(stderr, "host_set_control(%d, %f)\n", control, value);
+    int err = lo_send(_osc_host_addr, tmpstr("%s/control", _osc_path), "if", control, value);
     return err;
 }
 
 int host_set_program(int bank, int program)
 {
-    lo_arg data[2]; data[0].i = bank; data[1].i = program;
-    int err = lo_send(_osc_host_addr, tmpstr("%s/program", _osc_path), "ii", data[0], data[1]);
+    int err = lo_send(_osc_host_addr, tmpstr("%s/program", _osc_path), "ii", bank, program);
     return err;
 }
 
@@ -153,10 +166,25 @@ void on_window_deleted()
     gtk_main_quit();
 }
 
+void on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
+{
+    if (_dont_send_control_changes)
+        return;
+    int parameter_index = (int)user_data;
+    g_assert(parameter_index < kControls_End);
+    int port_number = parameter_index + 2;
+    host_set_control(port_number, gtk_adjustment_get_value(adjustment));
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char *argv[])
 {
+    if (argc < 5) {
+        g_critical("not enough arguments supplied");
+        return 1;
+    }
+
     gtk_init(&argc, &argv);
 
     char *exe_path = argv[0];
@@ -184,12 +212,29 @@ int main(int argc, char *argv[])
     _window = GTK_WINDOW(gtk_window_new(GTK_WINDOW_TOPLEVEL));
 
     gtk_window_set_title(_window, tmpstr("%s - %s", plug_name, identifier));
-    
 	gtk_signal_connect(GTK_OBJECT(_window), "delete-event", on_window_deleted, NULL);
+
+    g_setenv("AMSYNTH_DATA_DIR", g_build_filename(DEFAULT_PREFIX, "share", "amSynth", NULL), FALSE);
+
+    guint i; for (i=0; i<kControls_End; i++) {
+        gdouble value = 0, lower = 0, upper = 0, step_increment = 0;
+        get_parameter_properties(i, &lower, &upper, &value, &step_increment);
+        _adjustments[i] = gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);
+        g_signal_connect(_adjustments[i], "value-changed", (GCallback)&on_adjustment_value_changed, (gpointer)i);
+    }
+
+    GtkWidget *editor = editor_pane_new(_adjustments);
+    gtk_container_add(GTK_CONTAINER(_window), editor);
+    gtk_widget_show_all(GTK_WIDGET(editor));
     
     gtk_main();
     
     return 0;
 }
 
+void modal_midi_learn(int param_index)
+{
+}
+
 ////////////////////////////////////////////////////////////////////////////////
+

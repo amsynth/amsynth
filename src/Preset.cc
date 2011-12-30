@@ -150,3 +150,23 @@ Preset::fromString(string str)
 	};
 	return true;
 }
+
+void get_parameter_properties(int parameter_index, double *minimum, double *maximum, double *default_value, double *step_size)
+{
+    Preset preset;
+    Parameter &parameter = preset.getParameter(parameter_index);
+    
+    if (minimum) {
+        *minimum = parameter.getMin();
+    }
+    if (maximum) {
+        *maximum = parameter.getMax();
+    }
+    if (default_value) {
+        *default_value = parameter.getValue();
+    }
+    if (step_size) {
+        *step_size = parameter.getStep();
+    }
+}
+
