@@ -1,5 +1,5 @@
 
-#ifdef with_lash
+#ifdef WITH_LASH
 
 #include "lash.h"
 #include "main.h"

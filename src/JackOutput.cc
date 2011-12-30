@@ -6,10 +6,6 @@
 #include "VoiceAllocationUnit.h"
 #include "drivers/MidiInterface.h" // for class MidiStreamReceiver
 
-#if HAVE_CONFIG_H
-#include "../config.h"
-#endif
-
 #if HAVE_JACK_MIDIPORT_H
 #include <jack/midiport.h>
 #endif
@@ -30,7 +26,7 @@ static void session_callback(jack_session_event_t *event, void *arg);
 
 JackOutput::JackOutput()
 :	running(false)
-#ifdef with_jack
+#ifdef WITH_JACK
 ,	client(NULL)
 #endif
 {
@@ -39,7 +35,7 @@ JackOutput::JackOutput()
 int
 JackOutput::init	( Config & config )
 {
-#ifdef with_jack
+#ifdef WITH_JACK
 	if (client) // already initialised
 		return 0;
 
@@ -91,7 +87,7 @@ JackOutput::init	( Config & config )
 	return -1;
 }
 
-#ifdef with_jack
+#ifdef WITH_JACK
 int
 JackOutput::process (jack_nframes_t nframes, void *arg)
 {
@@ -122,7 +118,7 @@ JackOutput::process (jack_nframes_t nframes, void *arg)
 bool 
 JackOutput::Start	()
 {
-#ifdef with_jack
+#ifdef WITH_JACK
 	if (!client) return false;
 	if (!mInput) return false;
 	if (jack_activate(client)) 
@@ -146,7 +142,7 @@ JackOutput::Start	()
 void
 JackOutput::Stop()
 {
-#ifdef with_jack
+#ifdef WITH_JACK
 	if (!client) return;
 	jack_deactivate(client);
 	jack_client_close(client);

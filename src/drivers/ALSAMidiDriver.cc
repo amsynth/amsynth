@@ -4,7 +4,7 @@
 
 #include "ALSAMidiDriver.h"
 
-#ifdef with_alsa
+#ifdef WITH_ALSA
 
 #define ALSA_PCM_OLD_HW_PARAMS_API
 #define ALSA_PCM_OLD_SW_PARAMS_API

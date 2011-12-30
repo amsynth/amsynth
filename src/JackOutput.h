@@ -5,7 +5,11 @@
 #ifndef _JACK_OUTPUT_H
 #define _JACK_OUTPUT_H
 
-#ifdef with_jack
+#if HAVE_CONFIG_H
+#include "../config.h"
+#endif
+
+#ifdef WITH_JACK
 #include <jack/jack.h>
 #endif
 
@@ -32,7 +36,7 @@ public:
 
 	void		setMidiHandler(MidiStreamReceiver *midiHandler) { _midiHandler = midiHandler; }
 
-#ifdef with_jack
+#ifdef WITH_JACK
 	static int process(jack_nframes_t nframes, void *arg);
 #endif
 private:
@@ -41,7 +45,7 @@ private:
 	int	recording;
 	string	error_msg;
 	bool _auto_connect;
-#ifdef with_jack
+#ifdef WITH_JACK
 	jack_port_t 	*l_port, *r_port, *m_port;
 	jack_client_t 	*client;
 #endif

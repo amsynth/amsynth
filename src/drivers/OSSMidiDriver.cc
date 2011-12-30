@@ -2,6 +2,10 @@
  * (c) 2001-2006 Nick Dowell
  **/
 
+#if HAVE_CONFIG_H
+#include "../../config.h"
+#endif
+
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>

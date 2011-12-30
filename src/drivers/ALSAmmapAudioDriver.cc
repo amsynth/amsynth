@@ -3,6 +3,10 @@
  * (c) 2002 Karsten Wiese
  **/
 
+#if HAVE_CONFIG_H
+#include "../../config.h"
+#endif
+
 #include <iostream>
 
 #include "ALSAmmapAudioDriver.h"
@@ -10,7 +14,7 @@
 int
 ALSAmmapAudioDriver::xrun_recovery()
 {
-#ifdef with_alsa
+#ifdef WITH_ALSA
         if (err == -EPIPE) {    /* under-run */
 				periods = 0;
                 err = snd_pcm_prepare(playback_handle);
@@ -42,7 +46,7 @@ return -1;
 int
 ALSAmmapAudioDriver::write(float *buffer, int frames)
 {
-#ifdef with_alsa
+#ifdef WITH_ALSA
 	int i,p;
 	snd_pcm_sframes_t avail;
 	snd_pcm_uframes_t offset, lframes = frames / 2;
@@ -115,7 +119,7 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 int
 ALSAmmapAudioDriver::open( Config & config )
 {
-#ifdef with_alsa
+#ifdef WITH_ALSA
 	if (playback_handle != NULL) return 0;
 	
 	_channels = config.channels;
@@ -153,7 +157,7 @@ ALSAmmapAudioDriver::open( Config & config )
 
 void ALSAmmapAudioDriver::close()
 {
-#ifdef with_alsa
+#ifdef WITH_ALSA
 	if (playback_handle != NULL) snd_pcm_close (playback_handle);
 	playback_handle = NULL;
 #endif
@@ -181,7 +185,7 @@ int ALSAmmapAudioDriver::setRealtime()
 
 ALSAmmapAudioDriver::ALSAmmapAudioDriver()
 {
-#ifdef with_alsa
+#ifdef WITH_ALSA
 	playback_handle = NULL;
 #endif
 }

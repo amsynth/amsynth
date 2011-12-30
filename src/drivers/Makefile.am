@@ -1,5 +1,11 @@
 noinst_LIBRARIES = libdrivers.a
 
+libdrivers_a_CPPFLAGS = \
+    @ALSA_CFLAGS@ \
+    @JACK_CFLAGS@ \
+    @LASH_CFLAGS@ \
+    @SNDFILE_CFLAGS@
+
 libdrivers_a_SOURCES = \
 	ALSAAudioDriver.cc \
 	ALSAAudioDriver.h \
@@ -19,3 +25,4 @@ libdrivers_a_SOURCES = \
 	OSSAudioDriver.h \
 	OSSMidiDriver.cc \
 	OSSMidiDriver.h
+

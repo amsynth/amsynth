@@ -21,94 +21,63 @@ AC_LANG(C++)
 #   ./configure CFLAGS='-g -O0' CXXFLAGS='-g -O0'
 #
 AC_MSG_CHECKING([whether optimized CFLAGS should be used])
-if test "$user_CFLAGS" = "" -a "$user_CXXFLAGS" = "" ; then
+AS_IF([test "$user_CFLAGS" = "" -a "$user_CXXFLAGS" = ""], [
 	CFLAGS="-Wall -W -O3 -ffast-math -fno-exceptions -fomit-frame-pointer"
 	CXXFLAGS="$CFLAGS"
-	AC_MSG_RESULT(yes)
-else
-	AC_MSG_RESULT(no)
-fi
+	AC_MSG_RESULT([yes])
+], [
+	AC_MSG_RESULT([no])
+])
 
+dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
-dnl
-dnl	Check for required headers & libraries
-dnl
+dnl Required libraries & packages
 dnl
 
-AC_CHECK_LIB(m, sin,, exit)
-AC_CHECK_LIB(dl, dlopen,, exit)
-AC_CHECK_LIB(pthread, pthread_create,, exit)
-
+AC_CHECK_LIB(m, sin, , exit)
+AC_CHECK_LIB(pthread, pthread_create, [], exit)
 
 dnl ## http://www.gtkmm.org/docs/gtkmm-2.4/docs/reference/html/newin2p6s.html
 dnl ## we use the following APIs only available in gtkmm 2.6 and up:
 dnl ## Gtk::MessageDialog::set_secondary_text()
 dnl ## Gtk::AboutDialog
-PKG_CHECK_MODULES(DEPS, gtkmm-2.4 >= 2.6.0)
-AC_SUBST(DEPS_CFLAGS)
-AC_SUBST(DEPS_LIBS)
+PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.6.0])
 
+dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
-dnl
-dnl	User Options
-dnl
-dnl	sets variables like "with_feature=[yes|no]"
+dnl Optional packages
 dnl
 
-dnl	OSS support
-AC_ARG_WITH(oss, 
-[  --with-oss              enable OSS support (default=yes)],
-[
-   if test $withval = "yes"; then
-     with_oss=yes
-   else
-     with_oss=no
-  fi
-], with_oss=yes)
+AC_ARG_WITH([oss], [AS_HELP_STRING([--with-oss], [build support for Open Sound System])])
+AS_IF([test "x$with_oss" != "xno"], [
+    AC_CHECK_HEADERS([sys/soundcard.h], [
+        AC_DEFINE([WITH_OSS],, [Use this optional package])
+        with_oss="yes"], [with_oss="no"])])
 
-dnl	ALSA support
-AC_ARG_WITH(alsa, 
-[  --with-alsa             enable ALSA support (default=yes)],
-[
-   if test $withval = "yes"; then
-     with_alsa=yes
-   else
-     with_alsa=no
-  fi
-], with_alsa=yes)
+AC_ARG_WITH([alsa], [AS_HELP_STRING([--with-alsa], [build support for ALSA])])
+AS_IF([test "x$with_alsa" != "xno"], [
+    PKG_CHECK_MODULES([ALSA], [alsa], [
+        AC_DEFINE([WITH_ALSA],, [Use this optional package])
+        with_alsa="yes"], [with_alsa="no"])])
 
-dnl	JACK support
-AC_ARG_WITH(jack, 
-[  --with-jack             enable JACK support (default=yes)],
-[
-   if test $withval = "yes"; then
-     with_jack=yes
-   else
-     with_jack=no
-  fi
-], with_jack=yes)
+AC_ARG_WITH([jack], [AS_HELP_STRING([--with-jack], [build support for Jack Audio Connection Kit])])
+AS_IF([test "x$with_jack" != "xno"],
+    [PKG_CHECK_MODULES([JACK], [jack], [
+        AC_DEFINE([WITH_JACK],, [Use this optional package])
+        AC_CHECK_HEADERS([jack/midiport.h jack/session.h])
+        with_jack="yes"], [with_jack="no"])])
 
-dnl	LASH support
-AC_ARG_WITH(lash, 
-[  --with-lash             enable LASH support (default=yes)],
-[
-   if test $withval = "yes"; then
-     with_lash=yes
-   else
-     with_lash=no
-  fi
-], with_lash=yes)
+AC_ARG_WITH([lash], [AS_HELP_STRING([--with-lash], [build support for LASH])])
+AS_IF([test "x$with_lash" != "xno"], [
+    PKG_CHECK_MODULES([LASH], [lash-1.0], [
+        AC_DEFINE([WITH_LASH],, [Use this optional package])
+        with_lash="yes"], [with_lash="no"])])
 
-dnl     .WAV OUT support
-AC_ARG_WITH(sndfile, 
-[  --with-sndfile          enable .WAV file output support (default=yes)],
-[
-   if test $withval = "yes"; then
-     with_sndfile=yes
-   else
-     with_sndfile=no
-  fi
-], with_sndfile=yes)
+AC_ARG_WITH([sndfile], [AS_HELP_STRING([--with-sndfile], [use libsndfile for recording audio])])
+AS_IF([test "x$with_sndfile" != "xno"], [
+    PKG_CHECK_MODULES([SNDFILE], [sndfile], [
+        AC_DEFINE([WITH_SNDFILE],, [Use this optional package])
+        with_sndfile="yes"], [with_sndfile="no"])])
 
 dnl
 dnl
@@ -122,67 +91,19 @@ AC_ARG_ENABLE([realtime], [AS_HELP_STRING([--enable-realtime],
               )
 AM_CONDITIONAL([ENABLE_REALTIME], [test x$enable_realtime != x])
 
-dnl
-dnl
-dnl	Check for optional headers & libraries
-dnl
-dnl
-
-AC_CHECK_HEADERS(sys/soundcard.h,, 	with_oss=no)
-AC_CHECK_HEADERS(alsa/asoundlib.h,, 	with_alsa=no)
-AC_CHECK_HEADERS(jack/jack.h,, 		with_jack=no)
-AC_CHECK_HEADERS(sndfile.h,,            with_sndfile=no)
-
-
-
-dnl
-dnl
-dnl	Set compiler options accordingly
-dnl
-dnl
-
-if test "$with_oss" = "yes"; then
-	AM_CPPFLAGS="$AM_CPPFLAGS -Dwith_oss"
-fi
-if test "$with_alsa" = "yes"; then 
-	AM_CPPFLAGS="$AM_CPPFLAGS -Dwith_alsa"
-	LIBS="$LIBS -lasound"
-fi
-if test "$with_jack" = "yes"; then 
-	AC_CHECK_HEADERS([jack/midiport.h jack/session.h])
-	AM_CPPFLAGS="$AM_CPPFLAGS -Dwith_jack"
-	LIBS="$LIBS -ljack"
-fi
-if test "$with_lash" = "yes"; then 
-	PKG_CHECK_MODULES(LASH, [lash-1.0 >= 0.5.0], with_lash="yes", with_lash="no")
-fi
-if test "$with_lash" = "yes"; then 
-	AM_CPPFLAGS="$AM_CPPFLAGS -Dwith_lash"
-	AC_SUBST(LASH_CFLAGS)
-	AC_SUBST(LASH_LIBS)
-fi
-if test "$with_sndfile" = "yes"; then
-	AM_CPPFLAGS="$AM_CPPFLAGS -Dwith_sndfile"
-	LIBS="$LIBS -lsndfile"
-fi
-
-AC_SUBST(AM_CPPFLAGS)
-AC_SUBST(LIBS)
-
 AC_OUTPUT([
-Makefile
-src/Makefile 
-src/drivers/Makefile
-src/VoiceBoard/Makefile
-src/GUI/Makefile
-src/Effects/Makefile
-skel/Makefile
-skins/Makefile
-skins/default/Makefile
-amsynth.desktop
-autopackage/default.apspec
+    Makefile
+    src/Makefile 
+    src/drivers/Makefile
+    src/VoiceBoard/Makefile
+    src/GUI/Makefile
+    src/Effects/Makefile
+    skel/Makefile
+    skins/Makefile
+    skins/default/Makefile
+    amsynth.desktop
+    autopackage/default.apspec
 ])
-
 
 dnl
 dnl
@@ -198,6 +119,10 @@ echo \|
 echo \| Build with OSS support................................ : $with_oss
 echo \| Build with ALSA support............................... : $with_alsa
 echo \| Build with JACK support............................... : $with_jack
+AS_IF([test "x$with_jack" != "xno"], [
+echo \| Build with JACK MIDI support.......................... : $ac_cv_header_jack_midiport_h
+echo \| Build with JACK session support....................... : $ac_cv_header_jack_session_h
+])
 echo \| Build with LASH support............................... : $with_lash
 echo \|
 echo \| Use libsndfile for .wav output support................ : $with_sndfile
@@ -205,3 +130,4 @@ echo
 echo configure complete. now type \'make\' to build $PACKAGE
 echo and then, as root, \'make install\' to install
 echo
+

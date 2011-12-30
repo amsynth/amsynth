@@ -2,6 +2,10 @@
  * (c) 2001-2006 Nick Dowell
  **/
 
+#if HAVE_CONFIG_H
+#include "../../config.h"
+#endif
+
 #include "ALSAAudioDriver.h"
 #include <iostream>
 
@@ -10,7 +14,7 @@ using namespace std;
 int
 ALSAAudioDriver::write(float *buffer, int frames)
 {
-#ifdef with_alsa
+#ifdef WITH_ALSA
 	int i,p,tmp;
 //	if (!audiobuf)
 	audiobuf = (unsigned char*)malloc((frames*_channels*2));
@@ -39,7 +43,7 @@ ALSAAudioDriver::write(float *buffer, int frames)
 int 
 ALSAAudioDriver::open( Config & config )
 {
-#ifdef with_alsa
+#ifdef WITH_ALSA
 	if (playback_handle != NULL) return 0;
 
 	_channels = config.channels;
@@ -76,7 +80,7 @@ ALSAAudioDriver::open( Config & config )
 
 void ALSAAudioDriver::close()
 {
-#ifdef with_alsa
+#ifdef WITH_ALSA
 	if (playback_handle != NULL) snd_pcm_close (playback_handle);
 	playback_handle = NULL;
 #endif
@@ -105,7 +109,7 @@ int ALSAAudioDriver::setRealtime()
 
 ALSAAudioDriver::ALSAAudioDriver()
 {
-#ifdef with_alsa
+#ifdef WITH_ALSA
 	playback_handle = NULL;
 #endif
 }
