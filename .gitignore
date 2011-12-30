@@ -18,7 +18,15 @@ ltmain.sh
 Makefile
 missing
 *.o
+*.lo
+*.la
+*.tar.gz
+.libs
 src/amSynth
+src/amsynth_dssi_gtk
 stamp-h1
-
 *.swp
+*~
+
+compile
+build
