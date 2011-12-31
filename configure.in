@@ -113,7 +113,6 @@ AC_OUTPUT([
     skins/Makefile
     skins/default/Makefile
     amsynth.desktop
-    autopackage/default.apspec
 ])
 
 dnl
