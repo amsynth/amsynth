@@ -20,7 +20,7 @@
 
 #if __SSE2_MATH__ && !defined(ALWAYS_UNDENORMALISE)
 // assuming disable_denormals() was called, denormals will not occur
-#define undenormalise(s) (s)
+#define undenormalise(s)
 #else
 #define undenormalise(s) if ((s) < FLT_MIN) { (s) = 0.0f; }
 #endif
