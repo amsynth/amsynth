@@ -418,7 +418,7 @@ GUI::init()
 	Preset *preset = &(preset_controller->getCurrentPreset());
 	
 	
-	for (int i=0; i<kControls_End; i++) {
+	for (int i=0; i<kAmsynthParameterCount; i++) {
 		Parameter &param = preset->getParameter(i);
 		m_adjustments[i] = (GtkAdjustment *) gtk_adjustment_new (
 			param.getValue(),
@@ -735,7 +735,7 @@ GUI::UpdateParameter(Param paramID, float paramValue)
 void
 GUI::UpdateParameterOnMainThread(Param paramID, float)	// called whenever a parameter value has changed
 {
-	if (0 <= paramID && paramID < kControls_End)
+	if (0 <= paramID && paramID < kAmsynthParameterCount)
 	{
 		const Parameter &param = preset_controller->getCurrentPreset().getParameter(paramID);
 	

@@ -80,7 +80,7 @@ static LADSPA_Handle instantiate (const LADSPA_Descriptor * descriptor, unsigned
     a->bank->loadPresets(config.current_bank_file.c_str());
     a->bank->selectPreset(0);
     a->bank->getCurrentPreset().AddListenerToAll (a->vau);
-    a->params = (LADSPA_Data **) calloc (kControls_End, sizeof (LADSPA_Data *));
+    a->params = (LADSPA_Data **) calloc (kAmsynthParameterCount, sizeof (LADSPA_Data *));
     return (LADSPA_Handle) a;
 }
 
@@ -124,7 +124,7 @@ static void select_program(LADSPA_Handle Instance, unsigned long Bank, unsigned 
 	if (Bank == 0 && Index < PresetController::kNumPresets) {
 		a->bank->selectPreset(Index);
 		// now update DSSI host's view of the parameters
-		for (unsigned int i=0; i<kControls_End; i++) {
+		for (unsigned int i=0; i<kAmsynthParameterCount; i++) {
 			*(a->params[i]) = a->bank->getCurrentPreset().getParameter(i).getValue();
 		}
 	}
@@ -140,7 +140,7 @@ static void connect_port (LADSPA_Handle instance, unsigned long port, LADSPA_Dat
     case 0: a->out_l = data; break;
     case 1: a->out_r = data; break;
     default:
-		if ((port - 2) < kControls_End) { a->params[port-2] = data; }
+		if ((port - 2) < kAmsynthParameterCount) { a->params[port-2] = data; }
 		break;
     }
 }
@@ -172,7 +172,7 @@ static void run_synth (LADSPA_Handle instance, unsigned long sample_count, snd_s
     }
 
     // push through changes to parameters
-    for (unsigned i=0; i<kControls_End; i++)
+    for (unsigned i=0; i<kAmsynthParameterCount; i++)
     {
 		const LADSPA_Data host_value = *(a->params[i]);
 	    if (a->bank->getCurrentPreset().getParameter(i).getValue() != host_value)
@@ -220,9 +220,9 @@ void __attribute__ ((constructor)) my_init ()
 		// set up ladspa 'Ports' - used to perform audio and parameter communication...
 		//
 		
-		port_descriptors = (LADSPA_PortDescriptor *) calloc (kControls_End+2, sizeof (LADSPA_PortDescriptor));
-		port_range_hints = (LADSPA_PortRangeHint *) calloc (kControls_End+2, sizeof (LADSPA_PortRangeHint));
-		port_names = (const char **) calloc (kControls_End+2, sizeof (char *));
+		port_descriptors = (LADSPA_PortDescriptor *) calloc (kAmsynthParameterCount+2, sizeof (LADSPA_PortDescriptor));
+		port_range_hints = (LADSPA_PortRangeHint *) calloc (kAmsynthParameterCount+2, sizeof (LADSPA_PortRangeHint));
+		port_names = (const char **) calloc (kAmsynthParameterCount+2, sizeof (char *));
 		
 		// we need ports to transmit the audio data...
 		port_descriptors[0] = LADSPA_PORT_OUTPUT | LADSPA_PORT_AUDIO;
@@ -234,7 +234,7 @@ void __attribute__ ((constructor)) my_init ()
 		port_names[1] = "OutR";
 
 		Preset amsynth_preset;
-		for (unsigned i=0; i<kControls_End; i++)
+		for (unsigned i=0; i<kAmsynthParameterCount; i++)
 		{
 			const Parameter &parameter = amsynth_preset.getParameter(i);
 			const int numSteps = parameter.getSteps();
@@ -269,7 +269,7 @@ void __attribute__ ((constructor)) my_init ()
 		s_ladspaDescriptor->PortDescriptors = port_descriptors;
 		s_ladspaDescriptor->PortRangeHints  = port_range_hints;
 		s_ladspaDescriptor->PortNames       = port_names;
-		s_ladspaDescriptor->PortCount       = kControls_End+2;
+		s_ladspaDescriptor->PortCount       = kAmsynthParameterCount+2;
 	
 	
 		s_ladspaDescriptor->instantiate = instantiate;

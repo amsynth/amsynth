@@ -20,7 +20,7 @@ class AMSynthVst : public AudioEffectX
 {
 public:
 	AMSynthVst( audioMasterCallback callback )
-	:	AudioEffectX( callback, PresetController::kNumPresets, kControls_End )
+	:	AudioEffectX( callback, PresetController::kNumPresets, kAmsynthParameterCount )
 	{
 		setUniqueID('amsy');
 		setNumInputs(0);

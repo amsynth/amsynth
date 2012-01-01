@@ -36,39 +36,39 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 {
 	switch (param)
 	{
-	case kAmpModAmount:	mAmpModAmount = (value+1.0f)/2.0f;break;
-	case kLFOFreq:		mLFO1Freq = value; 		break;
-	case kLFOWaveform:	lfo1.SetWaveform ((Oscillator::Waveform) (int)value);
+	case kAmsynthParameter_LFOToAmp:	mAmpModAmount = (value+1.0f)/2.0f;break;
+	case kAmsynthParameter_LFOFreq:		mLFO1Freq = value; 		break;
+	case kAmsynthParameter_LFOWaveform:	lfo1.SetWaveform ((Oscillator::Waveform) (int)value);
 				break;
-	case kFreqModAmount:	mFreqModAmount=(value/2.0f)+0.5f;	break;
+	case kAmsynthParameter_LFOToOscillators:	mFreqModAmount=(value/2.0f)+0.5f;	break;
 	
-	case kOsc1Waveform:	osc1.SetWaveform ((Oscillator::Waveform) (int)value);
+	case kAmsynthParameter_Oscillator1Waveform:	osc1.SetWaveform ((Oscillator::Waveform) (int)value);
 				break;
-	case kOsc1Pulsewidth:	mOsc1PulseWidth = value;	break;
-	case kOsc2Waveform:	osc2.SetWaveform ((Oscillator::Waveform) (int)value);
+	case kAmsynthParameter_Oscillator1Pulsewidth:	mOsc1PulseWidth = value;	break;
+	case kAmsynthParameter_Oscillator2Waveform:	osc2.SetWaveform ((Oscillator::Waveform) (int)value);
 				break;
-	case kOsc2Pulsewidth:	mOsc2PulseWidth = value;	break;
-	case kOsc2Octave:	mOsc2Octave = value;		break;
-	case kOsc2Detune:	mOsc2Detune = value;		break;
-	case kOsc2Sync:		osc1.SetSync (value>0.5 ? &osc2 : 0);	break;
+	case kAmsynthParameter_Oscillator2Pulsewidth:	mOsc2PulseWidth = value;	break;
+	case kAmsynthParameter_Oscillator2Octave:	mOsc2Octave = value;		break;
+	case kAmsynthParameter_Oscillator2Detune:	mOsc2Detune = value;		break;
+	case kAmsynthParameter_Oscillator2Sync:		osc1.SetSync (value>0.5 ? &osc2 : 0);	break;
 
-	case kFilterModAmount:	mFilterModAmt = (value+1.0f)/2.0f;break;
-	case kFilterEnvAmount:	mFilterEnvAmt = value;		break;
-	case kFilterCutoff:	mFilterCutoff = value;		break;
-	case kFilterResonance:	mFilterRes = value;		break;
-	case kFilterAttack:	filter_env.SetAttack (value);	break;
-	case kFilterDecay:	filter_env.SetDecay (value);	break;
-	case kFilterSustain:	filter_env.SetSustain (value);	break;
-	case kFilterRelease:	filter_env.SetRelease (value);	break;
+	case kAmsynthParameter_LFOToFilterCutoff:	mFilterModAmt = (value+1.0f)/2.0f;break;
+	case kAmsynthParameter_FilterEnvAmount:	mFilterEnvAmt = value;		break;
+	case kAmsynthParameter_FilterCutoff:	mFilterCutoff = value;		break;
+	case kAmsynthParameter_FilterResonance:	mFilterRes = value;		break;
+	case kAmsynthParameter_FilterEnvAttack:	filter_env.SetAttack (value);	break;
+	case kAmsynthParameter_FilterEnvDecay:	filter_env.SetDecay (value);	break;
+	case kAmsynthParameter_FilterEnvSustain:	filter_env.SetSustain (value);	break;
+	case kAmsynthParameter_FilterEnvRelease:	filter_env.SetRelease (value);	break;
 
-	case kOscMixRingMod:	mRingModAmt = value;		break;
-	case kOscMix:		mOsc1Vol = (1-value)/2.0f;
+	case kAmsynthParameter_OscillatorMixRingMod:	mRingModAmt = value;		break;
+	case kAmsynthParameter_OscillatorMix:		mOsc1Vol = (1-value)/2.0f;
 				mOsc2Vol = (value+1)/2.0f;	break;
 	
-	case kAmpAttack:	amp_env.SetAttack (value);	break;
-	case kAmpDecay:		amp_env.SetDecay (value);	break;
-	case kAmpSustain:	amp_env.SetSustain (value);	break;
-	case kAmpRelease:	amp_env.SetRelease (value);	break;
+	case kAmsynthParameter_AmpEnvAttack:	amp_env.SetAttack (value);	break;
+	case kAmsynthParameter_AmpEnvDecay:		amp_env.SetDecay (value);	break;
+	case kAmsynthParameter_AmpEnvSustain:	amp_env.SetSustain (value);	break;
+	case kAmsynthParameter_AmpEnvRelease:	amp_env.SetRelease (value);	break;
 		
 	default: break;
 	}

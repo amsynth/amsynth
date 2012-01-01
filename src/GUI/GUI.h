@@ -144,7 +144,7 @@ private:
 	
 	Preset			*clipboard_preset;
 	
-	GtkAdjustment 	*m_adjustments[kControls_End];
+	GtkAdjustment 	*m_adjustments[kAmsynthParameterCount];
         
         std::string             m_baseName;
 	bool			m_presetIsNotSaved;

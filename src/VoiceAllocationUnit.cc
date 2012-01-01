@@ -169,12 +169,12 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 {
 	switch (param)
 	{
-	case kMasterVol:		mMasterVol = value;		break;
-	case kReverbRoomsize:	reverb->setroomsize (value);	break;
-	case kReverbDamp:		reverb->setdamp (value);	break;
-	case kReverbWet:		reverb->setwet (value); reverb->setdry(1.0f-value); break;
-	case kReverbWidth:		reverb->setwidth (value);	break;
-	case kDistortionCrunch:	distortion->SetCrunch (value);	break;
+	case kAmsynthParameter_MasterVolume:		mMasterVol = value;		break;
+	case kAmsynthParameter_ReverbRoomsize:	reverb->setroomsize (value);	break;
+	case kAmsynthParameter_ReverbDamp:		reverb->setdamp (value);	break;
+	case kAmsynthParameter_ReverbWet:		reverb->setwet (value); reverb->setdry(1.0f-value); break;
+	case kAmsynthParameter_ReverbWidth:		reverb->setwidth (value);	break;
+	case kAmsynthParameter_AmpDistortion:	distortion->SetCrunch (value);	break;
 	
 	default: for (unsigned i=0; i<_voices.size(); i++) _voices[i]->UpdateParameter (param, value); break;
 	}

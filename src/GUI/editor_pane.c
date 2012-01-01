@@ -284,7 +284,7 @@ editor_pane_new (GtkAdjustment **adjustments)
 		
 		//// Create controls
 		
-		for (i=0; i<kControls_End; i++)
+		for (i=0; i<kAmsynthParameterCount; i++)
 		{
 			const gchar *control_name = parameter_name_from_index (i);
 			

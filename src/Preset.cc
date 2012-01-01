@@ -17,40 +17,40 @@ Parameter TimeParameter (const string name, Param id)
 
 Preset::Preset			(const string name)
 :	mName (name)
-,	nullparam ("null", kControls_End)
+,	nullparam ("null", kAmsynthParameterCount)
 {
 	//										name					id					def min max inc		ControlType			base offset label
-	mParameters.push_back (TimeParameter	("amp_attack",			kAmpAttack));
-	mParameters.push_back (TimeParameter	("amp_decay",			kAmpDecay));
-    mParameters.push_back (Parameter		("amp_sustain",			kAmpSustain,		1));
-    mParameters.push_back (TimeParameter	("amp_release",			kAmpRelease));
-    mParameters.push_back (Parameter		("osc1_waveform",		kOsc1Waveform,		2, 0, 4, 1));
-    mParameters.push_back (TimeParameter	("filter_attack",		kFilterAttack));
-    mParameters.push_back (TimeParameter	("filter_decay",		kFilterDecay));
-    mParameters.push_back (Parameter		("filter_sustain",		kFilterSustain,		1));
-    mParameters.push_back (TimeParameter	("filter_release",		kFilterRelease));
-    mParameters.push_back (Parameter		("filter_resonance",	kFilterResonance,	0, 0, 0.97f));
-	mParameters.push_back (Parameter		("filter_env_amount",	kFilterEnvAmount,	0, -16, 16));
-	mParameters.push_back (Parameter		("filter_cutoff",		kFilterCutoff,		1.5, -0.5, 1.5, 0,	Parameter::PARAM_EXP, 16, 0));
-    mParameters.push_back (Parameter		("osc2_detune",			kOsc2Detune,		0, -1, 1, 0,		Parameter::PARAM_EXP, 1.25f, 0));
-    mParameters.push_back (Parameter		("osc2_waveform",		kOsc2Waveform,		2, 0, 4, 1));
-    mParameters.push_back (Parameter		("master_vol",			kMasterVol,			0.67, 0, 1, 0,		Parameter::PARAM_POWER, 2, 0));
-    mParameters.push_back (Parameter		("lfo_freq",			kLFOFreq,			0, 0, 7.5, 0,		Parameter::PARAM_POWER, 2, 0,	"Hz"));
-    mParameters.push_back (Parameter		("lfo_waveform",		kLFOWaveform,		0, 0, 4, 1));
-    mParameters.push_back (Parameter		("osc2_range",			kOsc2Octave,		0, -1, 2, 1,		Parameter::PARAM_EXP, 2, 0));
-	mParameters.push_back (Parameter		("osc_mix",				kOscMix,			0, -1, 1));
-	mParameters.push_back (Parameter		("freq_mod_amount",		kFreqModAmount,		0, 0, 1.25992105f,0,Parameter::PARAM_POWER, 3, -1));
-	mParameters.push_back (Parameter		("filter_mod_amount",	kFilterModAmount,	-1, -1, 1));
-	mParameters.push_back (Parameter		("amp_mod_amount",		kAmpModAmount,		-1, -1, 1));
-	mParameters.push_back (Parameter		("osc_mix_mode",		kOscMixRingMod,		0, 0, 1, 1));
-	mParameters.push_back (Parameter		("osc1_pulsewidth",		kOsc1Pulsewidth,	1));
-	mParameters.push_back (Parameter		("osc2_pulsewidth",		kOsc2Pulsewidth,	1));
-	mParameters.push_back (Parameter		("reverb_roomsize",		kReverbRoomsize));
-	mParameters.push_back (Parameter		("reverb_damp",			kReverbDamp));
-	mParameters.push_back (Parameter		("reverb_wet",			kReverbWet));
-	mParameters.push_back (Parameter		("reverb_width",		kReverbWidth,		1));
-	mParameters.push_back (Parameter		("distortion_crunch",	kDistortionCrunch,	0, 0, 0.9f));
-	mParameters.push_back (Parameter		("osc2_sync",			kOsc2Sync,			0, 0, 1, 1));
+	mParameters.push_back (TimeParameter	("amp_attack",			kAmsynthParameter_AmpEnvAttack));
+	mParameters.push_back (TimeParameter	("amp_decay",			kAmsynthParameter_AmpEnvDecay));
+    mParameters.push_back (Parameter		("amp_sustain",			kAmsynthParameter_AmpEnvSustain,		1));
+    mParameters.push_back (TimeParameter	("amp_release",			kAmsynthParameter_AmpEnvRelease));
+    mParameters.push_back (Parameter		("osc1_waveform",		kAmsynthParameter_Oscillator1Waveform,		2, 0, 4, 1));
+    mParameters.push_back (TimeParameter	("filter_attack",		kAmsynthParameter_FilterEnvAttack));
+    mParameters.push_back (TimeParameter	("filter_decay",		kAmsynthParameter_FilterEnvDecay));
+    mParameters.push_back (Parameter		("filter_sustain",		kAmsynthParameter_FilterEnvSustain,		1));
+    mParameters.push_back (TimeParameter	("filter_release",		kAmsynthParameter_FilterEnvRelease));
+    mParameters.push_back (Parameter		("filter_resonance",	kAmsynthParameter_FilterResonance,	0, 0, 0.97f));
+	mParameters.push_back (Parameter		("filter_env_amount",	kAmsynthParameter_FilterEnvAmount,	0, -16, 16));
+	mParameters.push_back (Parameter		("filter_cutoff",		kAmsynthParameter_FilterCutoff,		1.5, -0.5, 1.5, 0,	Parameter::PARAM_EXP, 16, 0));
+    mParameters.push_back (Parameter		("osc2_detune",			kAmsynthParameter_Oscillator2Detune,		0, -1, 1, 0,		Parameter::PARAM_EXP, 1.25f, 0));
+    mParameters.push_back (Parameter		("osc2_waveform",		kAmsynthParameter_Oscillator2Waveform,		2, 0, 4, 1));
+    mParameters.push_back (Parameter		("master_vol",			kAmsynthParameter_MasterVolume,			0.67, 0, 1, 0,		Parameter::PARAM_POWER, 2, 0));
+    mParameters.push_back (Parameter		("lfo_freq",			kAmsynthParameter_LFOFreq,			0, 0, 7.5, 0,		Parameter::PARAM_POWER, 2, 0,	"Hz"));
+    mParameters.push_back (Parameter		("lfo_waveform",		kAmsynthParameter_LFOWaveform,		0, 0, 4, 1));
+    mParameters.push_back (Parameter		("osc2_range",			kAmsynthParameter_Oscillator2Octave,		0, -1, 2, 1,		Parameter::PARAM_EXP, 2, 0));
+	mParameters.push_back (Parameter		("osc_mix",				kAmsynthParameter_OscillatorMix,			0, -1, 1));
+	mParameters.push_back (Parameter		("freq_mod_amount",		kAmsynthParameter_LFOToOscillators,		0, 0, 1.25992105f,0,Parameter::PARAM_POWER, 3, -1));
+	mParameters.push_back (Parameter		("filter_mod_amount",	kAmsynthParameter_LFOToFilterCutoff,	-1, -1, 1));
+	mParameters.push_back (Parameter		("amp_mod_amount",		kAmsynthParameter_LFOToAmp,		-1, -1, 1));
+	mParameters.push_back (Parameter		("osc_mix_mode",		kAmsynthParameter_OscillatorMixRingMod,		0, 0, 1, 1));
+	mParameters.push_back (Parameter		("osc1_pulsewidth",		kAmsynthParameter_Oscillator1Pulsewidth,	1));
+	mParameters.push_back (Parameter		("osc2_pulsewidth",		kAmsynthParameter_Oscillator2Pulsewidth,	1));
+	mParameters.push_back (Parameter		("reverb_roomsize",		kAmsynthParameter_ReverbRoomsize));
+	mParameters.push_back (Parameter		("reverb_damp",			kAmsynthParameter_ReverbDamp));
+	mParameters.push_back (Parameter		("reverb_wet",			kAmsynthParameter_ReverbWet));
+	mParameters.push_back (Parameter		("reverb_width",		kAmsynthParameter_ReverbWidth,		1));
+	mParameters.push_back (Parameter		("distortion_crunch",	kAmsynthParameter_AmpDistortion,	0, 0, 0.9f));
+	mParameters.push_back (Parameter		("osc2_sync",			kAmsynthParameter_Oscillator2Sync,			0, 0, 1, 1));
 }
 
 Preset&

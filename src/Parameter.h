@@ -37,7 +37,7 @@ public:
 		PARAM_POWER		// controlValue = offset + value ^ base
 	};
 
-					Parameter		(const string name = "unused", Param id = kControls_End, 
+					Parameter		(const string name = "unused", Param id = kAmsynthParameterCount, 
 									 float value = 0.0, float min = 0.0, float max = 1.0, float inc = 0.0,
 									 ControlType = PARAM_DIRECT, float base = 1.0, float offset = 0.0,
 									 const string label = "");

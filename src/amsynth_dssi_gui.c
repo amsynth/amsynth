@@ -24,7 +24,7 @@
 #define MAX_PATH 160
 
 static GtkWindow *_window = NULL;
-static GtkAdjustment *_adjustments[kControls_End] = {0};
+static GtkAdjustment *_adjustments[kAmsynthParameterCount] = {0};
 static gboolean _dont_send_control_changes = FALSE;
 
 static char *_osc_path = NULL;
@@ -74,7 +74,7 @@ int osc_control_handler(const char *path, const char *types, lo_arg **argv, int 
     int port_number = argv[0]->i;
     int parameter_index = port_number - 2;
     printf("OSC: control %2d = %f\n", port_number, value);
-    g_assert(parameter_index < kControls_End);
+    g_assert(parameter_index < kAmsynthParameterCount);
     _dont_send_control_changes = TRUE;
     gtk_adjustment_set_value(_adjustments[parameter_index], value);
     _dont_send_control_changes = FALSE;
@@ -171,7 +171,7 @@ void on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
     if (_dont_send_control_changes)
         return;
     int parameter_index = (int)user_data;
-    g_assert(parameter_index < kControls_End);
+    g_assert(parameter_index < kAmsynthParameterCount);
     int port_number = parameter_index + 2;
     host_set_control(port_number, gtk_adjustment_get_value(adjustment));
 }
@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
 
     g_setenv("AMSYNTH_DATA_DIR", g_build_filename(DEFAULT_PREFIX, "share", "amSynth", NULL), FALSE);
 
-    guint i; for (i=0; i<kControls_End; i++) {
+    guint i; for (i=0; i<kAmsynthParameterCount; i++) {
         gdouble value = 0, lower = 0, upper = 0, step_increment = 0;
         get_parameter_properties(i, &lower, &upper, &value, &step_increment);
         _adjustments[i] = gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);

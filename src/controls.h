@@ -3,51 +3,51 @@
 
 enum Param 
 {
-	kAmpAttack,
-	kAmpDecay,
-	kAmpSustain,
-	kAmpRelease,
+	kAmsynthParameter_AmpEnvAttack             = 1,
+	kAmsynthParameter_AmpEnvDecay              = 2,
+	kAmsynthParameter_AmpEnvSustain            = 3,
+	kAmsynthParameter_AmpEnvRelease            = 4,
 	
-	kOsc1Waveform,
+	kAmsynthParameter_Oscillator1Waveform      = 5,
 	
-	kFilterAttack,
-	kFilterDecay,
-	kFilterSustain,
-	kFilterRelease,
-	kFilterResonance,
-	kFilterEnvAmount,
-	kFilterCutoff,
+	kAmsynthParameter_FilterEnvAttack          = 6,
+	kAmsynthParameter_FilterEnvDecay           = 7,
+	kAmsynthParameter_FilterEnvSustain         = 8,
+	kAmsynthParameter_FilterEnvRelease         = 9,
+	kAmsynthParameter_FilterResonance          = 10,
+	kAmsynthParameter_FilterEnvAmount          = 11,
+	kAmsynthParameter_FilterCutoff             = 12,
 	
-	kOsc2Detune,
-	kOsc2Waveform,
+	kAmsynthParameter_Oscillator2Detune        = 13,
+	kAmsynthParameter_Oscillator2Waveform      = 14,
 	
-	kMasterVol,
+	kAmsynthParameter_MasterVolume             = 15,
 	
-	kLFOFreq,
-	kLFOWaveform,
+	kAmsynthParameter_LFOFreq                  = 16,
+	kAmsynthParameter_LFOWaveform              = 17,
 	
-	kOsc2Octave,
-	kOscMix,
+	kAmsynthParameter_Oscillator2Octave        = 18,
+	kAmsynthParameter_OscillatorMix            = 19,
 	
-	kFreqModAmount,
-	kFilterModAmount,
-	kAmpModAmount,
+	kAmsynthParameter_LFOToOscillators         = 20,
+	kAmsynthParameter_LFOToFilterCutoff        = 21,
+	kAmsynthParameter_LFOToAmp                 = 22,
 	
-	kOscMixRingMod,
+	kAmsynthParameter_OscillatorMixRingMod     = 23,
 	
-	kOsc1Pulsewidth,
-	kOsc2Pulsewidth,
+	kAmsynthParameter_Oscillator1Pulsewidth    = 24,
+	kAmsynthParameter_Oscillator2Pulsewidth    = 25,
 	
-	kReverbRoomsize,
-	kReverbDamp,
-	kReverbWet,
-	kReverbWidth,
+	kAmsynthParameter_ReverbRoomsize           = 26,
+	kAmsynthParameter_ReverbDamp               = 27,
+	kAmsynthParameter_ReverbWet                = 28,
+	kAmsynthParameter_ReverbWidth              = 29,
 	
-	kDistortionCrunch,
+	kAmsynthParameter_AmpDistortion            = 30,
 	
-	kOsc2Sync,
+	kAmsynthParameter_Oscillator2Sync          = 31,
 	
-	kControls_End
+	kAmsynthParameterCount
 };
 
 #ifdef __cplusplus
