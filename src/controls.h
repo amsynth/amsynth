@@ -3,49 +3,49 @@
 
 enum Param 
 {
-	kAmsynthParameter_AmpEnvAttack             = 1,
-	kAmsynthParameter_AmpEnvDecay              = 2,
-	kAmsynthParameter_AmpEnvSustain            = 3,
-	kAmsynthParameter_AmpEnvRelease            = 4,
+	kAmsynthParameter_AmpEnvAttack             = 0,
+	kAmsynthParameter_AmpEnvDecay              = 1,
+	kAmsynthParameter_AmpEnvSustain            = 2,
+	kAmsynthParameter_AmpEnvRelease            = 3,
 	
-	kAmsynthParameter_Oscillator1Waveform      = 5,
+	kAmsynthParameter_Oscillator1Waveform      = 4,
 	
-	kAmsynthParameter_FilterEnvAttack          = 6,
-	kAmsynthParameter_FilterEnvDecay           = 7,
-	kAmsynthParameter_FilterEnvSustain         = 8,
-	kAmsynthParameter_FilterEnvRelease         = 9,
-	kAmsynthParameter_FilterResonance          = 10,
-	kAmsynthParameter_FilterEnvAmount          = 11,
-	kAmsynthParameter_FilterCutoff             = 12,
+	kAmsynthParameter_FilterEnvAttack          = 5,
+	kAmsynthParameter_FilterEnvDecay           = 6,
+	kAmsynthParameter_FilterEnvSustain         = 7,
+	kAmsynthParameter_FilterEnvRelease         = 8,
+	kAmsynthParameter_FilterResonance          = 9,
+	kAmsynthParameter_FilterEnvAmount          = 10,
+	kAmsynthParameter_FilterCutoff             = 11,
 	
-	kAmsynthParameter_Oscillator2Detune        = 13,
-	kAmsynthParameter_Oscillator2Waveform      = 14,
+	kAmsynthParameter_Oscillator2Detune        = 12,
+	kAmsynthParameter_Oscillator2Waveform      = 13,
 	
-	kAmsynthParameter_MasterVolume             = 15,
+	kAmsynthParameter_MasterVolume             = 14,
 	
-	kAmsynthParameter_LFOFreq                  = 16,
-	kAmsynthParameter_LFOWaveform              = 17,
+	kAmsynthParameter_LFOFreq                  = 15,
+	kAmsynthParameter_LFOWaveform              = 16,
 	
-	kAmsynthParameter_Oscillator2Octave        = 18,
-	kAmsynthParameter_OscillatorMix            = 19,
+	kAmsynthParameter_Oscillator2Octave        = 17,
+	kAmsynthParameter_OscillatorMix            = 18,
 	
-	kAmsynthParameter_LFOToOscillators         = 20,
-	kAmsynthParameter_LFOToFilterCutoff        = 21,
-	kAmsynthParameter_LFOToAmp                 = 22,
+	kAmsynthParameter_LFOToOscillators         = 19,
+	kAmsynthParameter_LFOToFilterCutoff        = 20,
+	kAmsynthParameter_LFOToAmp                 = 21,
 	
-	kAmsynthParameter_OscillatorMixRingMod     = 23,
+	kAmsynthParameter_OscillatorMixRingMod     = 22,
 	
-	kAmsynthParameter_Oscillator1Pulsewidth    = 24,
-	kAmsynthParameter_Oscillator2Pulsewidth    = 25,
+	kAmsynthParameter_Oscillator1Pulsewidth    = 23,
+	kAmsynthParameter_Oscillator2Pulsewidth    = 24,
 	
-	kAmsynthParameter_ReverbRoomsize           = 26,
-	kAmsynthParameter_ReverbDamp               = 27,
-	kAmsynthParameter_ReverbWet                = 28,
-	kAmsynthParameter_ReverbWidth              = 29,
+	kAmsynthParameter_ReverbRoomsize           = 25,
+	kAmsynthParameter_ReverbDamp               = 26,
+	kAmsynthParameter_ReverbWet                = 27,
+	kAmsynthParameter_ReverbWidth              = 28,
 	
-	kAmsynthParameter_AmpDistortion            = 30,
+	kAmsynthParameter_AmpDistortion            = 29,
 	
-	kAmsynthParameter_Oscillator2Sync          = 31,
+	kAmsynthParameter_Oscillator2Sync          = 30,
 	
 	kAmsynthParameterCount
 };
