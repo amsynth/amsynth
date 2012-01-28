@@ -16,6 +16,17 @@ amsynth_core_libs = \
     VoiceBoard/libVoiceBoard.a \
     Effects/libEffects.a
 
+amsynth_dsp_sources = \
+	Effects/allpass.cpp \
+	Effects/comb.cpp \
+	Effects/Distortion.cc \
+	Effects/revmodel.cpp \
+	Effects/SoftLimiter.cc \
+	VoiceBoard/ADSR.cc \
+	VoiceBoard/LowPassFilter.cc \
+	VoiceBoard/Oscillator.cc \
+	VoiceBoard/VoiceBoard.cc
+
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
 amSynth_CPPFLAGS = $(AM_CPPFLAGS) -DENABLE_BINRELOC -DDEFAULT_PREFIX='"$(prefix)"' \
     @ALSA_CFLAGS@ \
@@ -51,9 +62,8 @@ if BUILD_DSSI
 dssidir = $(libdir)/dssi
 # using noinst to prevent .a and .la files being installed, plugin gets installed via custom install-exec-hook
 noinst_LTLIBRARIES = amsynth_dssi.la
-amsynth_dssi_la_SOURCES = $(amsynth_core_sources) dssi.cpp
+amsynth_dssi_la_SOURCES = $(amsynth_core_sources) $(amsynth_dsp_sources) dssi.cpp
 amsynth_dssi_la_CPPFLAGS = $(AM_CPPFLAGS) @DSSI_CFLAGS@
-amsynth_dssi_la_LIBADD = $(amsynth_core_libs) @DSSI_LIBS@
 amsynth_dssi_la_LDFLAGS = -rpath $(dssidir) -avoid-version -module -export-symbols-regex "dssi_descriptor" -disable-static
 endif
 
