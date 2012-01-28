@@ -61,7 +61,7 @@ int deldir (const char *dir_path)
 gchar *extract_skin (char *skin_file)
 {
 	gchar *tempdir = g_strconcat(g_get_tmp_dir(), "/amsynth.skin.XXXXXXXX", NULL);
-	if (!mkdtemp(tempdir)) {
+	if (!g_mkdtemp(tempdir)) {
 		g_message("Failed to create temporary directory. Unable to load skin.");
 		g_free(tempdir);
 		return NULL;
@@ -69,11 +69,13 @@ gchar *extract_skin (char *skin_file)
 	
 	gchar *unzip_bin = "/usr/bin/unzip";
 	gchar *command = g_strdup_printf("%s -qq -o -j \"%s\" -d %s", unzip_bin, skin_file, tempdir);
-	int result = system (command);
+	GError *error = NULL;
+	gint exit_status = 0;
+	gboolean result = g_spawn_command_line_sync(command, NULL, NULL, &exit_status, &error);
 	g_free (command);
 	command = NULL;
 	
-	if (result != 0) {
+	if (result != TRUE || exit_status != 0) {
 		g_message("Failed to extract archive. Unable to load skin.");
 		deldir (tempdir);
 		g_free (tempdir);
@@ -156,7 +158,6 @@ on_control_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
 	if (event->type == GDK_BUTTON_PRESS && event->button == 3)
 	{
 		const size_t param_index = (size_t)data;
-		const char *name = parameter_name_from_index(param_index);
 		modal_midi_learn(param_index);
 	}
 }

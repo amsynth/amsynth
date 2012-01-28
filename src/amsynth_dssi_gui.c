@@ -170,7 +170,7 @@ void on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
 {
     if (_dont_send_control_changes)
         return;
-    int parameter_index = (int)user_data;
+    size_t parameter_index = (size_t)user_data;
     g_assert(parameter_index < kAmsynthParameterCount);
     int port_number = parameter_index + 2;
     host_set_control(port_number, gtk_adjustment_get_value(adjustment));
@@ -187,9 +187,9 @@ int main(int argc, char *argv[])
 
     gtk_init(&argc, &argv);
 
-    char *exe_path = argv[0];
+    //char *exe_path = argv[0];
     char *host_url = argv[1];
-    char *lib_name = argv[2];
+    //char *lib_name = argv[2];
     char *plug_name = argv[3];
     char *identifier = argv[4];
     
@@ -216,10 +216,10 @@ int main(int argc, char *argv[])
 
     g_setenv("AMSYNTH_DATA_DIR", g_build_filename(DEFAULT_PREFIX, "share", "amSynth", NULL), FALSE);
 
-    guint i; for (i=0; i<kAmsynthParameterCount; i++) {
+    size_t i; for (i=0; i<kAmsynthParameterCount; i++) {
         gdouble value = 0, lower = 0, upper = 0, step_increment = 0;
         get_parameter_properties(i, &lower, &upper, &value, &step_increment);
-        _adjustments[i] = gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);
+        _adjustments[i] = (GtkAdjustment *)gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);
         g_signal_connect(_adjustments[i], "value-changed", (GCallback)&on_adjustment_value_changed, (gpointer)i);
     }
 
