@@ -926,27 +926,13 @@ GUI::tuning_reset	( )
 	}
 }
 
-static gchar *which(gchar *command)
-{
-	gint exit_status = -1;
-	gchar *standard_output = NULL;
-	gchar *argv[] = { (gchar *)"/usr/bin/which", (gchar *)command };
-	g_spawn_sync(NULL, argv, NULL, G_SPAWN_STDERR_TO_DEV_NULL, NULL, NULL, &standard_output, NULL, &exit_status, NULL);
-	if (exit_status != 0)
-	{
-		g_free(standard_output);
-		return NULL;
-	}
-	return standard_output;
-}
-
 // returns 0 if executable was found
 int
 GUI::command_exists	(const char *command)
 {
-	gchar *path = which((gchar *)command);
-	if (path) g_free(path);
-	return path == NULL ? 1 : 0;
+	std::string cmdline = "which " + std::string(command);
+	int result = system(cmdline.c_str());
+	return result;
 }
 
 void
