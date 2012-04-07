@@ -13,7 +13,9 @@ using namespace std;
 
 Config::Config()
 {
+#ifndef _WIN32
 	amsynthrc_fname = string(getenv("HOME")) + string("/.amSynthrc");
+#endif
 	sample_rate = midi_channel = active_voices = polyphony = debug_drivers = xruns = 0;
 #ifdef ENABLE_REALTIME
 	realtime = 0;
@@ -41,6 +43,7 @@ Config::Defaults	()
 bool
 Config::ParseCOpts	(int argc, char* argv[])
 {
+#ifndef _WIN32
 	optind = 1; // reset getopt
 	int opt;
 	while( (opt=getopt(argc, argv, "vhstdzm:c:a:r:p:b:U:P:"))!= -1 ) {
@@ -74,6 +77,9 @@ Config::ParseCOpts	(int argc, char* argv[])
 		}
 	}
 	return true;
+#else
+	return false;
+#endif
 }
 
 int
