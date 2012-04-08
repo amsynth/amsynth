@@ -3,6 +3,7 @@
  */
 
 #include "VoiceBoard.h"
+#include <assert.h>
 
 // Low-pass filter the VCA control signal to prevent nasty clicking sounds
 const float kVCALowPassFreq = 4000.0f;
@@ -197,6 +198,7 @@ VoiceBoard::setFrequency(float frequency)
 void 
 VoiceBoard::setVelocity(float velocity)
 {
+	assert(velocity <= 1.0f);
 	mKeyVelocity = velocity;
 }
 
