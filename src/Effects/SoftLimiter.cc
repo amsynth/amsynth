@@ -17,7 +17,6 @@ SoftLimiter::SetSampleRate	(int rate)
 	attack=1-exp(-2.2/(AT*(float)rate));
 	release=1-exp(-2.2/(RT*(float)rate));
 	thresh=(float)log(THRESHOLD); // thresh in linear scale :)
-	ch=1;
 }
 
 void
