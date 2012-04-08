@@ -27,7 +27,8 @@ public:
 	Preset&	getCurrentPreset	() { return currentPreset; }
 	
 	// access presets in the memory bank
-	Preset&	getPreset			(const int preset) { return presets[preset]; }
+	Preset&	getPreset			(int preset) { return presets[preset]; }
+	const Preset & getPreset	(int preset) const { return presets[preset]; }
 	Preset&	getPreset			(const string name);
 
 	bool	containsPresetWithName(const string name);
