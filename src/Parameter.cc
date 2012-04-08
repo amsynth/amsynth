@@ -118,3 +118,12 @@ Parameter::random_val()
 {
 	setValue( ((rand()/(float)RAND_MAX) * (getMax()-getMin()) + getMin()) );
 }
+
+void
+Parameter::setParameterValueStrings(const char **names, size_t count)
+{
+	_parameterValueStrings.clear();
+	for (size_t i=0; i<count; i++) {
+		_parameterValueStrings.push_back(std::string(names[i]));
+	}
+}

@@ -10,10 +10,20 @@
 using namespace std;
 #endif
 
+#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
+
 Parameter TimeParameter (const string name, Param id)
 {
 	return Parameter (name, id, 0, 0, 2.5f, 0, Parameter::PARAM_POWER, 3, 0.0005f, "s");
 }
+
+const char *osc_waveform_names[] = {
+	"sine", "square / pulse", "saw / triangle", "white noise", "noise + sample & hold"
+};
+
+const char *lfo_waveform_names[] = {
+	"sine", "square", "triangle", "noise", "noise + sample & hold"
+};
 
 Preset::Preset			(const string name)
 :	mName (name)
@@ -51,6 +61,10 @@ Preset::Preset			(const string name)
 	mParameters.push_back (Parameter		("reverb_width",		kAmsynthParameter_ReverbWidth,		1));
 	mParameters.push_back (Parameter		("distortion_crunch",	kAmsynthParameter_AmpDistortion,	0, 0, 0.9f));
 	mParameters.push_back (Parameter		("osc2_sync",			kAmsynthParameter_Oscillator2Sync,			0, 0, 1, 1));
+	
+	getParameter(kAmsynthParameter_Oscillator1Waveform).setParameterValueStrings(osc_waveform_names, ARRAY_SIZE(osc_waveform_names));
+	getParameter(kAmsynthParameter_Oscillator2Waveform).setParameterValueStrings(osc_waveform_names, ARRAY_SIZE(osc_waveform_names));
+	getParameter(kAmsynthParameter_LFOWaveform).setParameterValueStrings(lfo_waveform_names, ARRAY_SIZE(lfo_waveform_names));
 }
 
 Preset&
