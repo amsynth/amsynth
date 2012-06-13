@@ -117,7 +117,7 @@ void
 VoiceAllocationUnit::HandleMidiSustainPedal(uchar value)
 {
 	sustain = value ? 1 : 0;
-	if (!sustain) return;
+	if (sustain) return;
 	for(unsigned i=0; i<_voices.size(); i++) {
 		if (!keyPressed[i]) _voices[i]->triggerOff();
 	}
