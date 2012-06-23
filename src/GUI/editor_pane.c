@@ -61,7 +61,7 @@ int deldir (const char *dir_path)
 gchar *extract_skin (char *skin_file)
 {
 	gchar *tempdir = g_strconcat(g_get_tmp_dir(), "/amsynth.skin.XXXXXXXX", NULL);
-	if (!g_mkdtemp(tempdir)) {
+	if (!mkdtemp(tempdir)) {
 		g_message("Failed to create temporary directory. Unable to load skin.");
 		g_free(tempdir);
 		return NULL;
