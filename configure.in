@@ -1,5 +1,5 @@
 AC_INIT(src/main.cc)
-AM_INIT_AUTOMAKE([amSynth], 'svn')
+AM_INIT_AUTOMAKE([amSynth], '1.3.2')
 AC_CONFIG_HEADERS([config.h])
 
 # capture user-supplied compiler flags before AC_PROG_CC clobbers them
