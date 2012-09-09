@@ -236,6 +236,8 @@ int main( int argc, char *argv[] )
 #ifdef ENABLE_REALTIME
 	sched_realtime();
 #endif
+
+	srand(time(NULL));
 	
 	disable_denormals();
 
