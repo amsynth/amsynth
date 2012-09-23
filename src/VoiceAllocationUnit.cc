@@ -15,10 +15,7 @@
 
 using namespace std;
 
-const unsigned kMaxGrainSize = 64;
 const unsigned kBufferSize = 1024;
-
-static const VoiceBoardProcessMemory s_procMem (kMaxGrainSize);
 
 VoiceAllocationUnit::VoiceAllocationUnit ()
 :	mMaxVoices (0)
@@ -36,7 +33,7 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 	{
 		keyPressed[i] = 0;
 		active[i] = false;
-		_voices.push_back (new VoiceBoard (&s_procMem));
+		_voices.push_back (new VoiceBoard);
 	}
 
 	updateTuning();
@@ -150,7 +147,7 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 	unsigned framesLeft = nframes, j = 0;
 	while (0 < framesLeft)
 	{
-		int fr = (framesLeft < kMaxGrainSize) ? framesLeft : kMaxGrainSize;
+		int fr = std::min(framesLeft, (unsigned)VoiceBoard::kMaxProcessBufferSize);
 		for (unsigned i=0; i<_voices.size(); i++)
 			if (active[i] && !mute[i])
 				_voices[i]->ProcessSamplesMix (vb+j, fr, mMasterVol);

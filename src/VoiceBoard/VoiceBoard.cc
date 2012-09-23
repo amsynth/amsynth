@@ -8,9 +8,34 @@
 // Low-pass filter the VCA control signal to prevent nasty clicking sounds
 const float kVCALowPassFreq = 4000.0f;
 
-VoiceBoard::VoiceBoard(const VoiceBoardProcessMemory * vbpm):
-	mem				(vbpm)
-,	mKeyVelocity	(1.0)
+class VoiceBoardProcessMemory
+{
+public:
+	VoiceBoardProcessMemory	(int bufsize)
+	:	buffer		(new float[bufsize*5])
+	,	osc_1		(buffer+bufsize*0)
+	,	osc_2		(buffer+bufsize*1)
+	,	lfo_osc_1	(buffer+bufsize*2)
+	,	filter_env	(buffer+bufsize*3)
+	,	amp_env		(buffer+bufsize*4)
+	{}
+	~VoiceBoardProcessMemory () { delete [] buffer; }
+
+private:
+	float * buffer;
+
+public:
+	float *	const osc_1;
+	float *	const osc_2;
+	float *	const lfo_osc_1;
+	float *	const filter_env;
+	float *	const amp_env;
+};
+
+static VoiceBoardProcessMemory s_processMem (VoiceBoard::kMaxProcessBufferSize);
+
+VoiceBoard::VoiceBoard():
+	mKeyVelocity	(1.0)
 ,	mKeyPitch		(440.0)
 ,	mPitchBend		(1.0)
 ,	mLFO1Freq		(0.0)
@@ -26,9 +51,9 @@ VoiceBoard::VoiceBoard(const VoiceBoardProcessMemory * vbpm):
 ,	mFilterModAmt	(0.0)
 ,	mFilterCutoff	(16.0)
 ,	mFilterRes		(0.0)
-,	filter_env		(mem->filter_env)
+,	filter_env		(s_processMem.filter_env)
 ,	mAmpModAmount	(0.0)
-,	amp_env			(mem->amp_env)
+,	amp_env			(s_processMem.amp_env)
 {
 }
 
@@ -84,10 +109,12 @@ VoiceBoard::SetPitchBend	(float val)
 void
 VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 {
+	assert(numSamples <= kMaxProcessBufferSize);
+
 	//
 	// Control Signals
 	//
-	float *lfo1buf = mem->lfo_osc_1;
+	float *lfo1buf = s_processMem.lfo_osc_1;
 	lfo1.ProcessSamples (lfo1buf, numSamples, mLFO1Freq, 0);
 
 	float osc1freq = mPitchBend*mKeyPitch * ( mFreqModAmount*(lfo1buf[0]+1.0f) + 1.0f - mFreqModAmount );
@@ -109,8 +136,8 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	//
 	// VCOs
 	//
-	float *osc1buf = mem->osc_1;
-	float *osc2buf = mem->osc_2;
+	float *osc1buf = s_processMem.osc_1;
+	float *osc2buf = s_processMem.osc_2;
 	osc1.ProcessSamples (osc1buf, numSamples, osc1freq, osc1pw);
 	osc2.ProcessSamples (osc2buf, numSamples, osc2freq, osc2pw);
 

@@ -10,31 +10,6 @@
 #include "Oscillator.h"
 #include "LowPassFilter.h"
 
-class VoiceBoardProcessMemory
-{
-public:
-	VoiceBoardProcessMemory	(int bufsize)
-	:	buffer		(new float[bufsize*5])
-	,	osc_1		(buffer+bufsize*0)
-	,	osc_2		(buffer+bufsize*1)
-	,	lfo_osc_1	(buffer+bufsize*2)
-	,	filter_env	(buffer+bufsize*3)
-	,	amp_env		(buffer+bufsize*4)
-	{}
-	~VoiceBoardProcessMemory () { delete [] buffer; }
-
-private:
-	float * buffer;
-
-public:	
-	float *	const osc_1;
-	float *	const osc_2;
-	float *	const lfo_osc_1;
-	float *	const filter_env;
-	float *	const amp_env;
-};
-	
-
 /**
  * the VoiceBoard is what makes the nice noises... ;-)
  *
@@ -45,7 +20,12 @@ public:
 class VoiceBoard
 {
 public:
-	VoiceBoard(const VoiceBoardProcessMemory * mem);
+
+	enum {
+		kMaxProcessBufferSize = 64,
+	};
+
+	VoiceBoard();
 
 	bool	isSilent		();
 	void	triggerOn		();
@@ -63,8 +43,6 @@ public:
 
 private:
 
-	const VoiceBoardProcessMemory * mem;
-	
 	float			mKeyVelocity;
 	float			mKeyPitch;
 	float			mPitchBend;
