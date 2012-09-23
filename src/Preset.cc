@@ -3,6 +3,8 @@
  */
 
 #include "Preset.h"
+#include "controls.h"
+
 #include <cstdlib>
 
 #ifdef _DEBUG
