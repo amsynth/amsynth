@@ -8,31 +8,17 @@
 // Low-pass filter the VCA control signal to prevent nasty clicking sounds
 const float kVCALowPassFreq = 4000.0f;
 
-class VoiceBoardProcessMemory
+template <unsigned int size>
+struct VoiceBoardProcessMemory
 {
-public:
-	VoiceBoardProcessMemory	(int bufsize)
-	:	buffer		(new float[bufsize*5])
-	,	osc_1		(buffer+bufsize*0)
-	,	osc_2		(buffer+bufsize*1)
-	,	lfo_osc_1	(buffer+bufsize*2)
-	,	filter_env	(buffer+bufsize*3)
-	,	amp_env		(buffer+bufsize*4)
-	{}
-	~VoiceBoardProcessMemory () { delete [] buffer; }
-
-private:
-	float * buffer;
-
-public:
-	float *	const osc_1;
-	float *	const osc_2;
-	float *	const lfo_osc_1;
-	float *	const filter_env;
-	float *	const amp_env;
+	float osc_1[size];
+	float osc_2[size];
+	float lfo_osc_1[size];
+	float filter_env[size];
+	float amp_env[size];
 };
 
-static VoiceBoardProcessMemory s_processMem (VoiceBoard::kMaxProcessBufferSize);
+static VoiceBoardProcessMemory<VoiceBoard::kMaxProcessBufferSize> s_processMem;
 
 VoiceBoard::VoiceBoard():
 	mKeyVelocity	(1.0)
