@@ -14,15 +14,14 @@
 #include "Thread.h"
 #include "main.h"
 
-class VoiceAllocationUnit;
+typedef void (* AudioCallback)(float *buffer_l, float *buffer_r, unsigned num_frames, int stride);
 
 class GenericOutput
 {
 public:
 	virtual ~GenericOutput () {}
 
-	virtual	void		setInput	(VoiceAllocationUnit* src)
-				{ mInput = src; }
+	virtual void		setAudioCallback(AudioCallback callback) { mAudioCallback = callback; }
 
 	virtual	int		init		( Config & config )	= 0;
 	
@@ -39,7 +38,7 @@ public:
 	virtual	const char*	getTitle	( )	{ return "amSynth"; };
 
 protected:
-	VoiceAllocationUnit*	mInput;
+	AudioCallback mAudioCallback;
 };
 
 class AudioOutput : public GenericOutput, public Thread

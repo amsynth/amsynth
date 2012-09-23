@@ -3,7 +3,6 @@
  **/
 
 #include "AudioOutput.h"
-#include "VoiceAllocationUnit.h"
 
 AudioOutput::AudioOutput()
 :	buffer (NULL)
@@ -99,11 +98,10 @@ AudioOutput::ThreadAction	()
 	int bufsize = config->buffer_size;
 	while (!ShouldStop ())
 	{
-//		mInput->Process (buffer, buffer+1, bufsize, 2);
+		if (mAudioCallback != NULL)
+			(*mAudioCallback)(buffer+bufsize*2, buffer+bufsize*3, bufsize, 1);
 
-		mInput->Process (buffer+bufsize*2, buffer+bufsize*3, bufsize, 1);
-		for (int i=0; i<bufsize; i++)
-		{
+		for (int i=0; i<bufsize; i++) {
 			buffer[2*i]   = buffer[bufsize*2+i];
 			buffer[2*i+1] = buffer[bufsize*3+i];
 		}

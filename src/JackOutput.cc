@@ -109,7 +109,9 @@ JackOutput::process (jack_nframes_t nframes, void *arg)
 		}
 	}
 #endif
-	self->mInput->Process (lout, rout, nframes);
+	if (self->mAudioCallback != NULL) {
+		(*self->mAudioCallback)(lout, rout, nframes, 1);
+	}
 	return 0;
 }
 #endif
@@ -119,7 +121,6 @@ JackOutput::Start	()
 {
 #ifdef WITH_JACK
 	if (!client) return false;
-	if (!mInput) return false;
 	if (jack_activate(client)) 
 	{
 		std::cerr << "cannot activate JACK client\n";

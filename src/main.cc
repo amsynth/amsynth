@@ -156,10 +156,16 @@ void install_default_files_if_reqd()
 	free((void *)user_bank);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 void ptest ();
 
 static MidiController *midi_controller = NULL;
+static MidiInterface *midiInterface = NULL;
 static PresetController *presetController = NULL;
+static VoiceAllocationUnit *voiceAllocationUnit = NULL;
+
+////////////////////////////////////////////////////////////////////////////////
 
 GenericOutput * open_audio()
 {	
@@ -302,15 +308,11 @@ int main( int argc, char *argv[] )
 	// subsystem initialisation
 	//
 	
-	MidiInterface *midi_interface = NULL;
-	VoiceAllocationUnit *vau = NULL;
-	GenericOutput *out = NULL;
-	
 	presetController = new PresetController();
 	
 	midi_controller = new MidiController( config );
 
-	out = open_audio();
+	GenericOutput *out = open_audio();
 	if (!out)
 		fatal_error("Fatal Error: open_audio() returned NULL.\n"
 		            "config.audio_driver = " + config.audio_driver);
@@ -318,10 +320,10 @@ int main( int argc, char *argv[] )
 	// errors now detected & reported in the GUI
 	out->init(config);
 
-	vau = new VoiceAllocationUnit;
-	vau->SetSampleRate (config.sample_rate);
-	vau->SetMaxVoices (config.polyphony);
-	out->setInput( vau );
+	voiceAllocationUnit = new VoiceAllocationUnit;
+	voiceAllocationUnit->SetSampleRate (config.sample_rate);
+	voiceAllocationUnit->SetMaxVoices (config.polyphony);
+	out->setAudioCallback (&amsynth_audio_callback);
 
 	amsynth_load_bank(config.current_bank_file.c_str());
 	amsynth_set_preset_number(initial_preset_no);
@@ -335,29 +337,29 @@ int main( int argc, char *argv[] )
 	// init midi
 	//
 #if __APPLE__
-	midi_interface = CreateCoreMidiInterface();
+	midiInterface = CreateCoreMidiInterface();
 #else
 	if (config.debug_drivers) std::cerr << "\n\n*** INITIALISING MIDI ENGINE...\n";
 	
 	config.alsa_seq_client_name = out->getTitle();
 	
 	if (config.current_midi_driver.empty())
-		midi_interface = new MidiInterface();
+		midiInterface = new MidiInterface();
 #endif
 	
 	// errors now detected & reported in the GUI
-	if (midi_interface) {
-		midi_interface->open(config);
-		midi_interface->SetMidiStreamReceiver(midi_controller);
-		midi_interface->Run();
+	if (midiInterface) {
+		midiInterface->open(config);
+		midiInterface->SetMidiStreamReceiver(midi_controller);
+		midiInterface->Run();
 	}
 
 	if (config.debug_drivers) std::cerr << "*** DONE :)\n\n";
   
-	midi_controller->SetMidiEventHandler(vau);
+	midi_controller->SetMidiEventHandler(voiceAllocationUnit);
 	midi_controller->setPresetController( *presetController );
   
-	presetController->getCurrentPreset().AddListenerToAll (vau);
+	presetController->getCurrentPreset().AddListenerToAll (voiceAllocationUnit);
 
 	// prevent lash from spawning a new jack server
 	setenv("JACK_NO_START_SERVER", "1", 0);
@@ -375,7 +377,7 @@ int main( int argc, char *argv[] )
 	// give audio/midi threads time to start up first..
 	// if (jack) sleep (1);
 	
-	gui_init(config, *midi_controller, *vau, *presetController, out);
+	gui_init(config, *midi_controller, *voiceAllocationUnit, *presetController, out);
 	
 	gui_kit_run(&amsynth_timer_callback);
 
@@ -393,14 +395,14 @@ int main( int argc, char *argv[] )
 
 	if (config.xruns) std::cerr << config.xruns << " audio buffer underruns occurred\n";
 	
-	if (midi_interface) {
-		midi_interface->Stop ();
-		delete midi_interface;
+	if (midiInterface) {
+		midiInterface->Stop ();
+		delete midiInterface;
 	}
 
 	delete presetController;
 	delete midi_controller;
-	delete vau;
+	delete voiceAllocationUnit;
 	delete out;
 	return 0;
 }
@@ -410,6 +412,13 @@ amsynth_timer_callback()
 {
 	amsynth_lash_poll_events();
 	return 1;
+}
+
+void
+amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride)
+{
+	if (voiceAllocationUnit != NULL)
+		voiceAllocationUnit->Process(buffer_l, buffer_r, num_frames, stride);
 }
 
 void
@@ -459,11 +468,11 @@ void ptest ()
 
 	float *buffer = new float [kTestBufSize];
 
-	VoiceAllocationUnit *vau = new VoiceAllocationUnit;
-	vau->SetSampleRate (kTestSampleRate);
+	VoiceAllocationUnit *voiceAllocationUnit = new VoiceAllocationUnit;
+	voiceAllocationUnit->SetSampleRate (kTestSampleRate);
 	
 	// trigger off some notes for amSynth to render.
-	for (int v=0; v<kNumVoices; v++) vau->HandleMidiNoteOn (60+v, 127);
+	for (int v=0; v<kNumVoices; v++) voiceAllocationUnit->HandleMidiNoteOn (60+v, 127);
 	
 	struct rusage usage_before; 
 	getrusage (RUSAGE_SELF, &usage_before);
@@ -471,8 +480,8 @@ void ptest ()
 	long total_samples = kTestSampleRate * kTimeSeconds;
 	long total_calls = total_samples / kTestBufSize;
 	long remain_samples = total_samples % kTestBufSize;
-	for (int i=0; i<total_calls; i++) vau->Process (buffer, buffer, kTestBufSize);
-	vau->Process (buffer, buffer, remain_samples);
+	for (int i=0; i<total_calls; i++) voiceAllocationUnit->Process (buffer, buffer, kTestBufSize);
+	voiceAllocationUnit->Process (buffer, buffer, remain_samples);
 
 	struct rusage usage_after; 
 	getrusage (RUSAGE_SELF, &usage_after);
@@ -490,6 +499,6 @@ void ptest ()
 	fprintf (stderr, "performance index: %f\n", (float) usec_audio / (float) usec_cpu);
 	
 	delete [] buffer;
-	delete vau;
+	delete voiceAllocationUnit;
 }
 
