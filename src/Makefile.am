@@ -9,7 +9,7 @@ amsynth_core_sources = \
     VoiceAllocationUnit.cc VoiceAllocationUnit.h \
     TuningMap.cc TuningMap.h \
     Config.cc Config.h \
-    controls.c controls.h \
+    controls.h \
     UpdateListener.h
 
 amsynth_core_libs = \

@@ -184,3 +184,21 @@ void get_parameter_properties(int parameter_index, double *minimum, double *maxi
     }
 }
 
+static Preset _preset;
+
+const char *parameter_name_from_index (int param_index)
+{
+	if (param_index >= (int)_preset.ParameterCount())
+		return NULL;
+	return _preset.getParameter(param_index).getName().c_str();
+}
+
+int parameter_index_from_name (const char *param_name)
+{
+	for (unsigned i=0; i<_preset.ParameterCount(); i++) {
+		if (std::string(param_name) == _preset.getParameter(i).getName()) {
+			return i;
+		}
+	}
+	return -1;
+}
