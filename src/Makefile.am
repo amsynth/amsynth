@@ -28,7 +28,7 @@ amsynth_dsp_sources = \
 	VoiceBoard/VoiceBoard.cc
 
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
-amSynth_CPPFLAGS = $(AM_CPPFLAGS) -DENABLE_BINRELOC -DDEFAULT_PREFIX='"$(prefix)"' \
+amSynth_CPPFLAGS = $(AM_CPPFLAGS) -DENABLE_BINRELOC -DINSTALL_PREFIX='"$(prefix)"' \
     @ALSA_CFLAGS@ \
     @GTKMM_CFLAGS@ \
     @JACK_CFLAGS@ \
@@ -70,7 +70,7 @@ endif
 if BUILD_DSSI_GUI
 noinst_PROGRAMS = amsynth_dssi_gtk
 amsynth_dssi_gtk_SOURCES = amsynth_dssi_gui.c controls.c Parameter.cc Preset.cc GUI/bitmap_button.c GUI/bitmap_knob.c GUI/bitmap_popup.c GUI/editor_pane.c
-amsynth_dssi_gtk_CPPFLAGS = $(AM_CPPFLAGS) -DDEFAULT_PREFIX='"$(prefix)"' @DSSI_CFLAGS@ @GTK_CFLAGS@ @LIBLO_CFLAGS@
+amsynth_dssi_gtk_CPPFLAGS = $(AM_CPPFLAGS) -DINSTALL_PREFIX='"$(prefix)"' @DSSI_CFLAGS@ @GTK_CFLAGS@ @LIBLO_CFLAGS@
 amsynth_dssi_gtk_LDADD = @DSSI_LIBS@ @GTK_LIBS@ @LIBLO_LIBS@
 endif
 

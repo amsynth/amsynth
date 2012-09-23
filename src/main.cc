@@ -39,8 +39,8 @@ using namespace std;
 #define DEBUGMSG( ... )
 #endif
 
-#ifndef DEFAULT_PREFIX
-#define DEFAULT_PREFIX "/usr/local"
+#ifndef INSTALL_PREFIX
+#define INSTALL_PREFIX "/usr/local"
 #endif
 
 
@@ -123,7 +123,7 @@ void install_default_files_if_reqd()
 	}
 	
 	char * homedir = getenv ("HOME");
-	char * data_dir = br_find_data_dir (DEFAULT_PREFIX "/share");
+	char * data_dir = br_find_data_dir (INSTALL_PREFIX "/share");
 	char * amsynth_data_dir = br_strcat (data_dir, "/amSynth");
 	char * factory_controllers = br_strcat (amsynth_data_dir, "/Controllersrc");
 	char * factory_config = br_strcat (amsynth_data_dir, "/rc");
@@ -286,7 +286,7 @@ int main( int argc, char *argv[] )
 	
 	install_default_files_if_reqd();
 	
-	char *data_dir = br_find_data_dir (DEFAULT_PREFIX "/share");
+	char *data_dir = br_find_data_dir (INSTALL_PREFIX "/share");
 	char *amsynth_data_dir = br_strcat (data_dir, "/amSynth");
 	setenv ("AMSYNTH_DATA_DIR", amsynth_data_dir, 0); // don't override value passed from command line
 	free (amsynth_data_dir);
