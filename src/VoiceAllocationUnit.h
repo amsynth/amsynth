@@ -45,7 +45,6 @@ public:
 	void	defaultTuning		();
 
 private:
-	void	purgeVoices		();
 
 	int		mMaxVoices;
 	int 	mActiveVoices;

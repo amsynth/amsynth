@@ -121,17 +121,6 @@ VoiceAllocationUnit::HandleMidiSustainPedal(uchar value)
 }
 
 
-void 
-VoiceAllocationUnit::purgeVoices()
-{
-	for (unsigned note = 0; note < _voices.size(); note++) 
-		if (active[note] && (_voices[note]->isSilent())) {
-			mActiveVoices--;
-			active[note] = 0;
-		}
-}
-
-
 void
 VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 {
@@ -145,20 +134,26 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 	memset(vb, 0, nframes * sizeof (float));
 
 	unsigned framesLeft = nframes, j = 0;
-	while (0 < framesLeft)
-	{
+	while (0 < framesLeft) {
 		int fr = std::min(framesLeft, (unsigned)VoiceBoard::kMaxProcessBufferSize);
-		for (unsigned i=0; i<_voices.size(); i++)
-			if (active[i] && !mute[i])
-				_voices[i]->ProcessSamplesMix (vb+j, fr, mMasterVol);
+		for (unsigned i=0; i<_voices.size(); i++) {
+			if (active[i]) {
+				if (_voices[i]->isSilent()) {
+					active[i] = false;
+					mActiveVoices--;
+				} else {
+					if (!mute[i]) {
+						_voices[i]->ProcessSamplesMix (vb+j, fr, mMasterVol);
+					}
+				}
+			}
+		}
 		j += fr; framesLeft -= fr;
 	}
 
 	distortion->Process (vb, nframes);
 	reverb->processreplace (vb, l,r, nframes, 1, stride); // mono -> stereo
 	limiter->Process (l,r, nframes, stride);
-
-	purgeVoices();
 }
 
 void
