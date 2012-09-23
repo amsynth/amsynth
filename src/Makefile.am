@@ -28,7 +28,7 @@ amsynth_dsp_sources = \
 	VoiceBoard/VoiceBoard.cc
 
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
-amSynth_CPPFLAGS = $(AM_CPPFLAGS) -DENABLE_BINRELOC -DINSTALL_PREFIX='"$(prefix)"' \
+amSynth_CPPFLAGS = $(AM_CPPFLAGS) -DINSTALL_PREFIX='"$(prefix)"' \
     @ALSA_CFLAGS@ \
     @GTKMM_CFLAGS@ \
     @JACK_CFLAGS@ \
@@ -42,8 +42,7 @@ amSynth_SOURCES = \
 	AudioOutput.cc AudioOutput.h \
 	JackOutput.cc JackOutput.h \
 	MidiController.cc MidiController.h \
-	Thread.h \
-	binreloc.h binreloc.c
+	Thread.h
 
 amSynth_LDADD = \
 	$(amsynth_core_libs) \

@@ -12,7 +12,6 @@
 
 #ifdef HAVE_JACK_SESSION_H
 #include <jack/session.h>
-#include "binreloc.h"
 #endif
 
 #include <iostream>
@@ -163,10 +162,13 @@ static void session_callback(jack_session_event_t *event, void *arg)
 	
 	amsynth_save_bank(filename);
 
+	char exe_path[4096] = "";
+	readlink("/proc/self/exe", exe_path, sizeof(exe_path));
+
 	// construct a command line that the session manager can use to re-launch the synth
-	int len; len = asprintf(&event->command_line,
+	asprintf(&event->command_line,
 		"%s -b \"${SESSION_DIR}%s.amsynth.bank\" -P %d -U %s",
-		br_find_exe("amSynth"), event->client_uuid, amsynth_get_preset_number(), event->client_uuid);
+		exe_path, event->client_uuid, amsynth_get_preset_number(), event->client_uuid);
 
 #if DEBUG
 	printf("%s() : jack_session command_line = %s\n", __FUNCTION__, event->command_line);
@@ -189,4 +191,3 @@ static void session_callback(jack_session_event_t *event, void *arg)
 }
 
 #endif
-

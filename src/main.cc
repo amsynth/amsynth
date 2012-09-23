@@ -16,8 +16,6 @@
 #include "drivers/CoreAudio.h"
 #endif
 
-#include "binreloc.h"
-
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
@@ -114,23 +112,22 @@ int fcopy (const char * dest, const char *source)
 	return 0;
 }
 
+const char *build_path(const char *path, const char *suffix)
+{
+	char *result = NULL;
+	asprintf(&result, "%s/%s", path, suffix);
+	return result;
+}
+
 void install_default_files_if_reqd()
 {
-	BrInitError br_err;
-	if (br_init (&br_err) == 0 && br_err != BR_INIT_ERROR_DISABLED) { 
-		printf ("Warning: BinReloc failed to initialize (error code %d)\n", br_err); 
-		printf ("Will fallback to hardcoded default path.\n"); 
-	}
-	
-	char * homedir = getenv ("HOME");
-	char * data_dir = br_find_data_dir (INSTALL_PREFIX "/share");
-	char * amsynth_data_dir = br_strcat (data_dir, "/amSynth");
-	char * factory_controllers = br_strcat (amsynth_data_dir, "/Controllersrc");
-	char * factory_config = br_strcat (amsynth_data_dir, "/rc");
-	char * factory_bank = br_strcat (amsynth_data_dir, "/presets");
-	char * user_controllers = br_strcat (homedir, "/.amSynthControllersrc");
-	char * user_config = br_strcat (homedir, "/.amSynthrc");
-	char * user_bank = br_strcat (homedir, "/.amSynth.presets");
+	const char * factory_controllers = build_path (getenv ("AMSYNTH_DATA_DIR"), "Controllersrc");
+	const char * factory_config = build_path (getenv ("AMSYNTH_DATA_DIR"), "rc");
+	const char * factory_bank = build_path (getenv ("AMSYNTH_DATA_DIR"), "presets");
+
+	const char * user_controllers = build_path (getenv ("HOME"), ".amSynthControllersrc");
+	const char * user_config = build_path (getenv ("HOME"), ".amSynthrc");
+	const char * user_bank = build_path (getenv ("HOME"), ".amSynth.presets");
 	
 	struct stat st;
 	
@@ -150,13 +147,13 @@ void install_default_files_if_reqd()
 		fcopy (user_bank, factory_bank);
 	}
 
-//	free (homedir); // NO!
-	free (data_dir);
-	free (amsynth_data_dir);
-	free (factory_controllers);
-	free (factory_bank);
-	free (user_controllers);
-	free (user_bank);
+	free((void *)factory_controllers);
+	free((void *)factory_config);
+	free((void *)factory_bank);
+	
+	free((void *)user_controllers);
+	free((void *)user_config);
+	free((void *)user_bank);
 }
 
 void ptest ();
@@ -283,15 +280,10 @@ int main( int argc, char *argv[] )
 				break;
 		}
 	}
-	
+
+	setenv ("AMSYNTH_DATA_DIR", INSTALL_PREFIX "/share" "/amSynth", 0); // don't override value passed from command line
 	install_default_files_if_reqd();
-	
-	char *data_dir = br_find_data_dir (INSTALL_PREFIX "/share");
-	char *amsynth_data_dir = br_strcat (data_dir, "/amSynth");
-	setenv ("AMSYNTH_DATA_DIR", amsynth_data_dir, 0); // don't override value passed from command line
-	free (amsynth_data_dir);
-	free (data_dir);
-	
+
 	// setup the configuration
 	config.Defaults ();
 	config.load ();
