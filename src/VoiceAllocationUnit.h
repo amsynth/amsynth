@@ -40,9 +40,10 @@ public:
 	// processing with stride (interleaved) is not functional yet!!!
 	void	Process			(float *l, float *r, unsigned nframes, int stride=1);
 
-	int	loadScale		(const string & sclFileName);
-	int	loadKeyMap		(const string & kbmFileName);
-	void	defaultTuning		();
+	double	noteToPitch		(int note) const;
+	int		loadScale		(const string & sclFileName);
+	int		loadKeyMap		(const string & kbmFileName);
+	void	defaultTuning	();
 
 private:
 
@@ -51,7 +52,6 @@ private:
 
 	char	keyPressed[128], sustain;
 	bool	active[128];
-	bool	mute[128];
 	std::vector<VoiceBoard*>	_voices;
 	
 	SoftLimiter	*limiter;
@@ -64,7 +64,6 @@ private:
 	float	mPitchBendRangeSemitones;
 
 	TuningMap	tuningMap;
-	void		updateTuning	();
 };
 
 #endif

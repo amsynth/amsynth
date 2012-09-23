@@ -36,8 +36,6 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 		_voices.push_back (new VoiceBoard);
 	}
 
-	updateTuning();
-
 	SetSampleRate (44100);
 }
 
@@ -62,11 +60,17 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 {
 	assert (note >= 0);
 	assert (note < 128);
+
+	double pitch = noteToPitch(note);
+	if (pitch < 0) { // unmapped key
+		return;
+	}
   
 	keyPressed[note] = 1;
 	
-	if ((!mMaxVoices || (mActiveVoices < mMaxVoices)) && !active[note] && !mute[note])
+	if ((!mMaxVoices || (mActiveVoices < mMaxVoices)) && !active[note])
 	{
+		_voices[note]->setFrequency(pitch);
 		_voices[note]->reset();
 		active[note]=1;
 		mActiveVoices++;
@@ -142,9 +146,7 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 					active[i] = false;
 					mActiveVoices--;
 				} else {
-					if (!mute[i]) {
-						_voices[i]->ProcessSamplesMix (vb+j, fr, mMasterVol);
-					}
+					_voices[i]->ProcessSamplesMix (vb+j, fr, mMasterVol);
 				}
 			}
 		}
@@ -172,30 +174,24 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+double
+VoiceAllocationUnit::noteToPitch	(int note) const
+{
+	return tuningMap.noteToPitch(note);
+}
+
 int
 VoiceAllocationUnit::loadScale		(const string & sclFileName)
 {
-	int error = tuningMap.loadScale(sclFileName);
-	if (error)
-		return error;
-	else
-	{
-		updateTuning();
-		return 0;
-	}
+	return tuningMap.loadScale(sclFileName);
 }
 
 int
 VoiceAllocationUnit::loadKeyMap		(const string & kbmFileName)
 {
-	int error = tuningMap.loadKeyMap(kbmFileName);
-	if (error)
-		return error;
-	else
-	{
-		updateTuning();
-		return 0;
-	}
+	return tuningMap.loadKeyMap(kbmFileName);
 }
 
 void
@@ -203,22 +199,4 @@ VoiceAllocationUnit::defaultTuning	()
 {
 	tuningMap.defaultScale();
 	tuningMap.defaultKeyMap();
-	updateTuning();
 }
-
-void
-VoiceAllocationUnit::updateTuning	()
-{
-	for (int i = 0; i < 128; i++)
-	{
-		double pitch = tuningMap.noteToPitch(i);
-		if (pitch < 0)
-			mute[i] = true; // unmapped key
-		else
-		{
-			_voices[i]->setFrequency(pitch);
-			mute[i] = false;
-		}
-	}
-}
-
