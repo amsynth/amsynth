@@ -50,6 +50,7 @@ private:
 	int		mMaxVoices;
 	int 	mActiveVoices;
 
+	float	mGlissandoTime;
 	char	keyPressed[128], sustain;
 	bool	active[128];
 	std::vector<VoiceBoard*>	_voices;
@@ -62,6 +63,7 @@ private:
 
 	float	mMasterVol;
 	float	mPitchBendRangeSemitones;
+	float	mLastNoteFrequency;
 
 	TuningMap	tuningMap;
 };

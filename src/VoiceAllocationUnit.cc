@@ -20,9 +20,11 @@ const unsigned kBufferSize = 1024;
 VoiceAllocationUnit::VoiceAllocationUnit ()
 :	mMaxVoices (0)
 ,	mActiveVoices (0)
+,	mGlissandoTime (0.0f)
 ,	sustain (0)
 ,	mMasterVol (1.0)
 ,	mPitchBendRangeSemitones(2)
+,	mLastNoteFrequency (0.0f)
 {
 	limiter = new SoftLimiter;
 	reverb = new revmodel;
@@ -70,7 +72,11 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 	
 	if ((!mMaxVoices || (mActiveVoices < mMaxVoices)) && !active[note])
 	{
-		_voices[note]->setFrequency(pitch);
+		if (mLastNoteFrequency > 0.0f) {
+			_voices[note]->setFrequency(mLastNoteFrequency, pitch, mGlissandoTime);
+		} else {
+			_voices[note]->setFrequency(pitch);
+		}
 		_voices[note]->reset();
 		active[note]=1;
 		mActiveVoices++;
@@ -78,6 +84,8 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 
 	_voices[note]->setVelocity(velocity);
 	_voices[note]->triggerOn();
+
+	mLastNoteFrequency = pitch;
 }
 
 void
@@ -169,6 +177,7 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_ReverbWet:		reverb->setwet (value); reverb->setdry(1.0f-value); break;
 	case kAmsynthParameter_ReverbWidth:		reverb->setwidth (value);	break;
 	case kAmsynthParameter_AmpDistortion:	distortion->SetCrunch (value);	break;
+	case kAmsynthParameter_GlissandoTime: 	mGlissandoTime = value; break;
 	
 	default: for (unsigned i=0; i<_voices.size(); i++) _voices[i]->UpdateParameter (param, value); break;
 	}

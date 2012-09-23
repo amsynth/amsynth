@@ -46,6 +46,8 @@ enum Param
 	kAmsynthParameter_AmpDistortion            = 29,
 	
 	kAmsynthParameter_Oscillator2Sync          = 30,
+
+	kAmsynthParameter_GlissandoTime            = 31,
 	
 	kAmsynthParameterCount
 };

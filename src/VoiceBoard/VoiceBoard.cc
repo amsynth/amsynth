@@ -22,7 +22,6 @@ static VoiceBoardProcessMemory<VoiceBoard::kMaxProcessBufferSize> s_processMem;
 
 VoiceBoard::VoiceBoard():
 	mKeyVelocity	(1.0)
-,	mKeyPitch		(440.0)
 ,	mPitchBend		(1.0)
 ,	mLFO1Freq		(0.0)
 ,	mFreqModAmount	(0.0)
@@ -103,15 +102,18 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	float *lfo1buf = s_processMem.lfo_osc_1;
 	lfo1.ProcessSamples (lfo1buf, numSamples, mLFO1Freq, 0);
 
-	float osc1freq = mPitchBend*mKeyPitch * ( mFreqModAmount*(lfo1buf[0]+1.0f) + 1.0f - mFreqModAmount );
+	const float frequency = mFrequency.nextValue();
+	for (int i=1; i<numSamples; i++) { mFrequency.nextValue(); }
+
+	float osc1freq = mPitchBend * frequency * ( mFreqModAmount*(lfo1buf[0]+1.0f) + 1.0f - mFreqModAmount );
 	float osc1pw = mOsc1PulseWidth;
 
 	float osc2freq = osc1freq * mOsc2Detune * mOsc2Octave;
 	float osc2pw = mOsc2PulseWidth;
 
 	float env_f = *filter_env.getNFData (numSamples);
-	float cutoff = ( mKeyPitch * mKeyVelocity * mFilterCutoff ) * ( (lfo1buf[0]*0.5f + 0.5f) * mFilterModAmt + 1-mFilterModAmt );
-	if (mFilterEnvAmt > 0.f) cutoff += (mKeyPitch * env_f * mFilterEnvAmt);
+	float cutoff = ( frequency * mKeyVelocity * mFilterCutoff ) * ( (lfo1buf[0]*0.5f + 0.5f) * mFilterModAmt + 1-mFilterModAmt );
+	if (mFilterEnvAmt > 0.f) cutoff += (frequency * env_f * mFilterEnvAmt);
 	else
 	{
 		static const float r16 = 1.f/16.f; // scale if from -16 to -1
@@ -163,6 +165,7 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 void
 VoiceBoard::SetSampleRate	(int rate)
 {
+	mSampleRate = rate;
 	lfo1.SetSampleRate (rate);
 	osc1.SetSampleRate (rate);
 	osc2.SetSampleRate (rate);
@@ -202,13 +205,20 @@ VoiceBoard::reset()
 	filter.reset();
 	lfo1.reset();
 }
-void 
+
+void
 VoiceBoard::setFrequency(float frequency)
 {
-	mKeyPitch = frequency;
+	mFrequency.configure(frequency, frequency, 0);
 }
 
-void 
+void
+VoiceBoard::setFrequency(float startFrequency, float targetFrequency, float glissandoTime)
+{
+	mFrequency.configure(startFrequency, targetFrequency, glissandoTime * mSampleRate);
+}
+
+void
 VoiceBoard::setVelocity(float velocity)
 {
 	assert(velocity <= 1.0f);

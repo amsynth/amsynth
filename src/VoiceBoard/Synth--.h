@@ -39,6 +39,39 @@
 #define MIN(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
+class Lerper
+{
+
+public:
+	
+	void configure(float startValue, float finalValue, unsigned int numSteps)
+	{
+		_start = startValue;
+		_final = finalValue;
+		_steps = numSteps;
+		if (0 < _steps) {
+			_inc = (_final - _start) / (float)_steps;
+		} else {
+			_inc = 0.0f;
+			_start = finalValue;
+		}
+		_i = 0;
+	}
+
+	inline float nextValue()
+	{
+		float y = _start + _i * (float)_inc;
+		_i = MIN(_i + 1, _steps);
+		return y;
+	}
+
+private:
+
+	float _start, _final, _inc;
+	unsigned int _steps, _i;
+
+};
+
 struct IIRFilterFirstOrder
 {
 	enum Mode

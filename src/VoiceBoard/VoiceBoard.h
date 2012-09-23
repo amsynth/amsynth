@@ -31,8 +31,9 @@ public:
 	void	triggerOn		();
 	void	triggerOff		();
 	void	setVelocity		(float velocity);
-	void	setFrequency		(float frequency);
-	void	SetPitchBend		(float);
+	void	setFrequency	(float frequency);
+	void	setFrequency	(float startFrequency, float targetFrequency, float glissandoTime);
+	void	SetPitchBend	(float);
 	void	reset			();
 
 	void	UpdateParameter		(Param, float);
@@ -43,8 +44,9 @@ public:
 
 private:
 
+	Lerper			mFrequency;
+	float			mSampleRate;
 	float			mKeyVelocity;
-	float			mKeyPitch;
 	float			mPitchBend;
 	
 	// modulation section
