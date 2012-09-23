@@ -6,7 +6,6 @@
 #define _MidiInterface_h
 
 #include "../Config.h"
-#include "../Thread.h"
 
 class MidiStreamReceiver
 {
@@ -22,7 +21,7 @@ protected:
 };
 
 
-class MidiInterface : public Thread
+class MidiInterface
 {
 public:
     MidiInterface();
@@ -33,12 +32,10 @@ public:
 	
 	virtual void SetMidiStreamReceiver(MidiStreamReceiver* in);
 
+	virtual void poll();
     virtual int write_cc(unsigned int channel, unsigned int param, unsigned int value);
 	
-	virtual void Stop();
-	
 protected:
-	virtual void ThreadAction();
 
 	MidiStreamReceiver* _handler;
 	

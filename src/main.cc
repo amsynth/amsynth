@@ -351,7 +351,6 @@ int main( int argc, char *argv[] )
 	if (midiInterface) {
 		midiInterface->open(config);
 		midiInterface->SetMidiStreamReceiver(midi_controller);
-		midiInterface->Run();
 	}
 
 	if (config.debug_drivers) std::cerr << "*** DONE :)\n\n";
@@ -394,11 +393,6 @@ int main( int argc, char *argv[] )
 	out->Stop ();
 
 	if (config.xruns) std::cerr << config.xruns << " audio buffer underruns occurred\n";
-	
-	if (midiInterface) {
-		midiInterface->Stop ();
-		delete midiInterface;
-	}
 
 	delete presetController;
 	delete midi_controller;
@@ -417,6 +411,9 @@ amsynth_timer_callback()
 void
 amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride)
 {
+	if (midiInterface != NULL)
+		midiInterface->poll();
+
 	if (voiceAllocationUnit != NULL)
 		voiceAllocationUnit->Process(buffer_l, buffer_r, num_frames, stride);
 }

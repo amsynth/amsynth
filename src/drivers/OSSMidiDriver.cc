@@ -10,6 +10,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <stdio.h>
 
 #include "OSSMidiDriver.h"
 
@@ -44,7 +45,8 @@ int OSSMidiDriver::open( Config & config )
 {
 	if (_fd == -1) 
 	{
-		_fd = ::open(config.oss_audio_device.c_str(), O_RDONLY, 0);
+		const char *dev = config.oss_midi_device.c_str();
+		_fd = ::open(dev, O_RDONLY | O_NONBLOCK, 0);
 	}
 	return (_fd > -1) ? 0 : -1;
 }

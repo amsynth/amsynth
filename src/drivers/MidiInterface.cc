@@ -99,27 +99,18 @@ void MidiInterface::close()
 }
 
 void
-MidiInterface::ThreadAction ()
+MidiInterface::poll()
 {
-    while (!ShouldStop () && midi)
+	while (midi)
 	{
 		bzero(_buffer, MIDI_BUF_SIZE);
 		int bytes_read = midi->read(_buffer, MIDI_BUF_SIZE);
-		if (bytes_read == -1)
-		{
-			cout << "error reading from midi device" << endl;
+		if (_handler != NULL && bytes_read > 0) {
+			_handler->HandleMidiData(_buffer, bytes_read);
+		} else {
 			break;
 		}
-		if (bytes_read > 0 && _handler) _handler->HandleMidiData(_buffer, bytes_read);
 	}
-}
-
-// need to kill the thread, otherwise it waits indefinitely for the next incoming byte
-void MidiInterface::Stop ()
-{ 
-	Thread::Stop();
-	Thread::Kill(); 
-	Thread::Join();
 }
 
 void MidiInterface::SetMidiStreamReceiver(MidiStreamReceiver* in)

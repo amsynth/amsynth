@@ -25,8 +25,6 @@ public:
 	int		write_cc		(unsigned int channel, unsigned int param, unsigned int value);
 	int 	open			( Config & config );
 	int 	close			( );
-	int 	get_alsa_client_id	( )	{ return client_id; };
-	bool	input_pending	( );
 private:
 	snd_seq_t		*seq_handle;
 	snd_midi_event_t	*seq_midi_parser;
@@ -36,18 +34,11 @@ private:
 	struct pollfd pollfd_in;
 };
 
-bool
-ALSAMidiDriver::input_pending()
-{
-	return (0 < snd_seq_event_input_pending( seq_handle, 1 ))
-		|| (0 < poll( &pollfd_in, 1, 100 ));
-}
-
 int
 ALSAMidiDriver::read(unsigned char *bytes, unsigned maxBytes)
 {
 	int bytes_read = 0;
-	if (input_pending() && seq_handle) {
+	if (0 < snd_seq_event_input_pending( seq_handle, 1 )) {
 		snd_seq_event_t *ev = NULL;
 		snd_seq_event_input( seq_handle, &ev );
 		bytes_read = snd_midi_event_decode( seq_midi_parser, bytes, maxBytes, ev );
@@ -128,6 +119,8 @@ int ALSAMidiDriver::open( Config & config )
 	}
 	
 	snd_seq_poll_descriptors( seq_handle, &pollfd_in, 1, POLLIN );
+
+	snd_seq_nonblock( seq_handle, 1 );
 
 	return 0;
 }
