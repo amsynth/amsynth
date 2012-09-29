@@ -82,6 +82,10 @@ void gdk_input_function(gpointer, gint source, GdkInputCondition)
 
 void spawn_new_instance()
 {
+#ifdef linux
+	static char exe_path[4096] = "";
+	readlink("/proc/self/exe", exe_path, sizeof(exe_path));
+	_argv[0] = exe_path;
+#endif
 	g_spawn_async(NULL, _argv, NULL, (GSpawnFlags)0, NULL, NULL, NULL, NULL);
 }
-
