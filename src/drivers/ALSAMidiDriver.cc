@@ -37,14 +37,14 @@ private:
 int
 ALSAMidiDriver::read(unsigned char *bytes, unsigned maxBytes)
 {
-	int bytes_read = 0;
-	if (0 < snd_seq_event_input_pending( seq_handle, 1 )) {
-		snd_seq_event_t *ev = NULL;
-		snd_seq_event_input( seq_handle, &ev );
-		bytes_read = snd_midi_event_decode( seq_midi_parser, bytes, maxBytes, ev );
-		snd_seq_free_event( ev );
+	snd_seq_event_t *ev = NULL;
+	int res = snd_seq_event_input( seq_handle, &ev );
+	if (res == -EAGAIN) {
+		return 0;
 	}
-	return bytes_read;
+	int num_bytes = snd_midi_event_decode( seq_midi_parser, bytes, maxBytes, ev );
+	snd_seq_free_event( ev );
+	return num_bytes;
 }
 
 int
