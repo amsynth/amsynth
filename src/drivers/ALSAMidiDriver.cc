@@ -37,6 +37,9 @@ private:
 int
 ALSAMidiDriver::read(unsigned char *bytes, unsigned maxBytes)
 {
+	if (seq_handle == NULL) {
+		return 0;
+	}
 	snd_seq_event_t *ev = NULL;
 	int res = snd_seq_event_input( seq_handle, &ev );
 	if (res == -EAGAIN) {
@@ -86,8 +89,13 @@ int ALSAMidiDriver::open( Config & config )
 {
 	if (seq_handle) return 0;
 	
-	if (snd_seq_open(&seq_handle, "default", SND_SEQ_OPEN_DUPLEX, 0) < 0) {
+	if (snd_seq_open(&seq_handle, "default", SND_SEQ_OPEN_DUPLEX, SND_SEQ_NONBLOCK) != 0) {
 		cerr << "Error opening ALSA sequencer.\n";
+		return -1;
+	}
+
+	if (seq_handle == NULL) {
+		cerr << "error: snd_seq_open() claimed to succeed but seq_handle is NULL.\n";
 		return -1;
 	}
 	
@@ -119,8 +127,6 @@ int ALSAMidiDriver::open( Config & config )
 	}
 	
 	snd_seq_poll_descriptors( seq_handle, &pollfd_in, 1, POLLIN );
-
-	snd_seq_nonblock( seq_handle, 1 );
 
 	return 0;
 }
