@@ -57,10 +57,12 @@ amSynth_LDADD = \
 
 ####
 
+noinst_LTLIBRARIES =
+
 if BUILD_DSSI
 dssidir = $(libdir)/dssi
 # using noinst to prevent .a and .la files being installed, plugin gets installed via custom install-exec-hook
-noinst_LTLIBRARIES = amsynth_dssi.la
+noinst_LTLIBRARIES += amsynth_dssi.la
 amsynth_dssi_la_SOURCES = $(amsynth_core_sources) $(amsynth_dsp_sources) dssi.cpp
 amsynth_dssi_la_CPPFLAGS = $(AM_CPPFLAGS) @DSSI_CFLAGS@
 amsynth_dssi_la_LDFLAGS = -rpath $(dssidir) -avoid-version -module -export-symbols-regex "dssi_descriptor" -disable-static
@@ -71,6 +73,16 @@ noinst_PROGRAMS = amsynth_dssi_gtk
 amsynth_dssi_gtk_SOURCES = amsynth_dssi_gui.c Parameter.cc Preset.cc GUI/bitmap_button.c GUI/bitmap_knob.c GUI/bitmap_popup.c GUI/editor_pane.c
 amsynth_dssi_gtk_CPPFLAGS = $(AM_CPPFLAGS) -DINSTALL_PREFIX='"$(prefix)"' @DSSI_CFLAGS@ @GTK_CFLAGS@ @LIBLO_CFLAGS@
 amsynth_dssi_gtk_LDADD = @DSSI_LIBS@ @GTK_LIBS@ @LIBLO_LIBS@
+endif
+
+if BUILD_LV2
+lv2dir = $(libdir)/lv2/amsynth.lv2
+# using noinst to prevent .a and .la files being installed, plugin gets installed via custom install-exec-hook
+noinst_LTLIBRARIES += amsynth_lv2.la
+amsynth_lv2_la_SOURCES = $(amsynth_core_sources) $(amsynth_dsp_sources) lv2/lv2.cpp MidiController.cc
+amsynth_lv2_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@
+amsynth_lv2_la_LDFLAGS = -rpath $(lv2dir) -avoid-version -module -export-symbols-regex "lv2_descriptor" -disable-static
+dist_lv2_DATA = lv2/manifest.ttl lv2/amsynth.ttl
 endif
 
 ####
@@ -86,6 +98,9 @@ endif
 if BUILD_DSSI_GUI
 	install -c -D -m 755 $(top_builddir)/src/amsynth_dssi_gtk $(DESTDIR)$(dssidir)/amsynth_dssi/amsynth_dssi_gtk
 endif
+if BUILD_LV2
+	install -c -D -m 755 $(top_builddir)/src/.libs/amsynth_lv2.so $(DESTDIR)$(lv2dir)/amsynth_lv2.so
+endif
 
 uninstall-hook:
 if BUILD_DSSI
@@ -93,5 +108,8 @@ if BUILD_DSSI
 endif
 if BUILD_DSSI_GUI
 	rm -rf $(DESTDIR)$(dssidir)/amsynth_dssi
+endif
+if BUILD_LV2
+	rm -rf $(DESTDIR)($lv2dir)
 endif
 
