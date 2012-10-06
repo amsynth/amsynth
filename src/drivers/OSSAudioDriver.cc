@@ -59,7 +59,6 @@ int OSSAudioDriver::open( Config & config )
 #ifdef _DEBUG
 	cout << "<OSSAudioDriver::open()>" << endl;
 #endif
-	bufsize_ = config.buffer_size;
     if ((dsp_handle_ =::open(config.oss_audio_device.c_str(), O_WRONLY)) == -1){
 		cout << "<OSSAudioDriver> error: could not open dsp device " 
 			<< config.oss_audio_device << endl;

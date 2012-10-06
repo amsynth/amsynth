@@ -24,7 +24,7 @@ class OSSAudioDriver:public AudioDriver {
     int setRealtime();
 
   private:
-    int dsp_handle_, rate_, stereo_, format_, channels_, bufsize_;
+    int dsp_handle_, rate_, stereo_, format_, channels_;
     unsigned char *_outputBuffer;
     unsigned int _outputBufferFrames;
 	Config *config;
