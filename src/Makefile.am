@@ -82,6 +82,10 @@ noinst_LTLIBRARIES += amsynth_lv2.la
 amsynth_lv2_la_SOURCES = $(amsynth_core_sources) $(amsynth_dsp_sources) lv2/lv2.cpp MidiController.cc
 amsynth_lv2_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@
 amsynth_lv2_la_LDFLAGS = -rpath $(lv2dir) -avoid-version -module -export-symbols-regex "lv2_descriptor" -disable-static
+noinst_LTLIBRARIES += amsynth_lv2_gtk.la
+amsynth_lv2_gtk_la_SOURCES = lv2/lv2_ui_gtk.c Parameter.cc Preset.cc GUI/bitmap_button.c GUI/bitmap_knob.c GUI/bitmap_popup.c GUI/editor_pane.c
+amsynth_lv2_gtk_la_CPPFLAGS = $(AM_CPPFLAGS) -DINSTALL_PREFIX='"$(prefix)"' @LV2_CFLAGS@ @GTK_CFLAGS@
+amsynth_lv2_gtk_la_LDFLAGS = -rpath $(lv2dir) -avoid-version -module -export-symbols-regex "lv2ui_descriptor" -disable-static
 dist_lv2_DATA = lv2/manifest.ttl lv2/amsynth.ttl
 endif
 
@@ -100,6 +104,7 @@ if BUILD_DSSI_GUI
 endif
 if BUILD_LV2
 	install -c -D -m 755 $(top_builddir)/src/.libs/amsynth_lv2.so $(DESTDIR)$(lv2dir)/amsynth_lv2.so
+	install -c -D -m 755 $(top_builddir)/src/.libs/amsynth_lv2_gtk.so $(DESTDIR)$(lv2dir)/amsynth_lv2_gtk.so
 endif
 
 uninstall-hook:
