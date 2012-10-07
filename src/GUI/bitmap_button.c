@@ -3,66 +3,30 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define BITMAP_BUTTON(obj)				(G_TYPE_CHECK_INSTANCE_CAST	((obj), bitmap_button_get_type(),	AmsynthBitmapButton))
-#define BITMAP_BUTTON_CLASS(obj)		(G_TYPE_CHECK_CLASS_CAST	((obj), BITMAP_BUTTON,				AmsynthBitmapButtonClass))
-#define GTK_IS_BITMAP_BUTTON(obj)		(G_TYPE_CHECK_INSTANCE_TYPE	((obj), bitmap_button_get_type()))
-#define GTK_IS_BITMAP_BUTTON_CLASS(obj)	(G_TYPE_CHECK_CLASS_TYPE	((obj), bitmap_button_get_type()))
-#define BITMAP_BUTTON_GET_CLASS			(G_TYPE_INSTANCE_GET_CLASS	((obj), bitmap_button_get_type(),	AmsynthBitmapButtonClass))
+typedef struct {
 
-typedef struct _AmsynthBitmapButton		AmsynthBitmapButton;
-typedef struct _AmsynthBitmapButtonClass	AmsynthBitmapButtonClass;
-
-struct _AmsynthBitmapButton
-{
-	GtkDrawingArea parent;
-
+	GtkWidget *drawing_area;
 	GtkAdjustment *adjustment;
-	
 	GdkPixbuf *pixbuf;
 	GdkPixbuf *background;
 	guint current_frame;
 	guint frame_width;
 	guint frame_height;
 	guint frame_count;
-};
 
-struct _AmsynthBitmapButtonClass
-{
-	GtkDrawingAreaClass parent_class;
-};
+} bitmap_button;
+
+static const gchar *bitmap_button_key = "bitmap_button";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-G_DEFINE_TYPE( AmsynthBitmapButton, bitmap_button, GTK_TYPE_DRAWING_AREA );
-
-static gboolean bitmap_button_expose		( GtkWidget *wigdet, GdkEventExpose *event );
-static gboolean bitmap_button_button_press	( GtkWidget *wigdet, GdkEventButton *event );
+static gboolean bitmap_button_destroy		( GtkWidget *widget, gpointer user_data );
+static gboolean bitmap_button_expose		( GtkWidget *widget, GdkEventExpose *event );
+static gboolean bitmap_button_button_press	( GtkWidget *widget, GdkEventButton *event );
 
 static void		bitmap_button_set_adjustment			( GtkWidget *widget, GtkAdjustment *adjustment );
 static void		bitmap_button_adjustment_changed		( GtkAdjustment *adjustment, gpointer data );
 static void		bitmap_button_adjustment_value_changed	( GtkAdjustment *adjustment, gpointer data );
-
-////////////////////////////////////////////////////////////////////////////////
-
-static void
-bitmap_button_class_init( AmsynthBitmapButtonClass *aclass )
-{
-	GtkWidgetClass *widget_class		= GTK_WIDGET_CLASS( aclass );
-	widget_class->expose_event			= bitmap_button_expose;
-	widget_class->button_press_event	= bitmap_button_button_press;
-}
-
-static void
-bitmap_button_init( AmsynthBitmapButton *self )
-{
-	self->adjustment	= NULL;
-	self->pixbuf		= NULL;
-	self->background	= NULL;
-	self->current_frame	= 0;
-	self->frame_width	= 1;
-	self->frame_height	= 1;
-	self->frame_count	= 1;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -73,46 +37,63 @@ bitmap_button_new( GtkAdjustment *adjustment,
                  guint frame_height,
                  guint frame_count )
 {
-	GtkWidget *widget = g_object_new (bitmap_button_get_type(), NULL);
+	bitmap_button *self = g_malloc0 (sizeof(bitmap_button));
 
-	AmsynthBitmapButton *self = BITMAP_BUTTON (widget);
-	
+	self->drawing_area = gtk_drawing_area_new ();
 	self->pixbuf		= g_object_ref (pixbuf);
 	self->frame_width	= frame_width;
 	self->frame_height	= frame_height;
 	self->frame_count	= frame_count;
+
+	g_object_set_data (G_OBJECT (self->drawing_area), bitmap_button_key, self);
+	g_assert (g_object_get_data (G_OBJECT (self->drawing_area), bitmap_button_key));
+
+	g_signal_connect (G_OBJECT (self->drawing_area), "destroy", G_CALLBACK (bitmap_button_destroy), NULL);
 	
-	gtk_widget_set_usize (widget, frame_width, frame_height);
+	g_signal_connect (G_OBJECT (self->drawing_area), "expose-event", G_CALLBACK (bitmap_button_expose), NULL);
+
+	g_signal_connect (G_OBJECT (self->drawing_area), "button-press-event", G_CALLBACK (bitmap_button_button_press), NULL);
+	
+	gtk_widget_set_usize (self->drawing_area, frame_width, frame_height);
 	
 	// set up event mask
-	gint event_mask = gtk_widget_get_events (widget);
+	gint event_mask = gtk_widget_get_events (self->drawing_area);
 	event_mask |= GDK_BUTTON_PRESS_MASK;
-	gtk_widget_set_events (widget, event_mask);
+	gtk_widget_set_events (self->drawing_area, event_mask);
 	
-	bitmap_button_set_adjustment (widget, adjustment);
+	bitmap_button_set_adjustment (self->drawing_area, adjustment);
 	
-	return widget;
+	return self->drawing_area;
+}
+
+gboolean
+bitmap_button_destroy ( GtkWidget *widget, gpointer user_data )
+{
+	bitmap_button *self = g_object_get_data (G_OBJECT (widget), bitmap_button_key); g_assert (self);
+	bitmap_button_set_bg (widget, NULL);
+	g_free (self);
 }
 
 void bitmap_button_set_bg (GtkWidget *widget, GdkPixbuf *pixbuf)
 {
-	AmsynthBitmapButton *self = BITMAP_BUTTON (widget);
+	bitmap_button *self = g_object_get_data (G_OBJECT (widget), bitmap_button_key);
 
-	if (self->background)
-	{
-		gtk_object_unref (GTK_OBJECT (self->background));
+	if (self->background) {
+		g_object_unref (G_OBJECT (self->background));
 	}
-	
-	self->background = g_object_ref (G_OBJECT (pixbuf));
+
+	self->background = pixbuf ? g_object_ref (G_OBJECT (pixbuf)) : NULL;
+
+	gtk_widget_queue_draw (widget);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static gboolean
-bitmap_button_expose( GtkWidget *widget, GdkEventExpose *event )
+gboolean
+bitmap_button_expose ( GtkWidget *widget, GdkEventExpose *event )
 {
-	AmsynthBitmapButton *self = BITMAP_BUTTON (widget);
-	
+	bitmap_button *self = g_object_get_data (G_OBJECT (widget), bitmap_button_key); g_assert (self);
+
 	if (self->background) {
 		gdk_draw_pixbuf (
 			widget->window,
@@ -140,7 +121,7 @@ bitmap_button_expose( GtkWidget *widget, GdkEventExpose *event )
 		self->frame_height,
 		GDK_RGB_DITHER_NONE, 0, 0
 	);
-	
+
 	return FALSE;
 }
 
@@ -149,11 +130,11 @@ bitmap_button_button_press ( GtkWidget *widget, GdkEventButton *event )
 {
 	if (event->type == GDK_BUTTON_PRESS && event->button == 1)
 	{
-		AmsynthBitmapButton *self = BITMAP_BUTTON (widget);
+		bitmap_button *self = g_object_get_data (G_OBJECT (widget), bitmap_button_key); g_assert (self);
 		gdouble value = gtk_adjustment_get_value (self->adjustment);
 		gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 		gdouble upper = gtk_adjustment_get_upper (self->adjustment);
-		gdouble middl = (upper - lower) / 2.0;		
+		gdouble middl = (upper - lower) / 2.0;
 		gtk_adjustment_set_value (self->adjustment, (value < middl) ? 1.0 : 0.0);
 		return TRUE;
 	}
@@ -163,7 +144,7 @@ bitmap_button_button_press ( GtkWidget *widget, GdkEventButton *event )
 void
 bitmap_button_update (GtkWidget *widget)
 {
-	AmsynthBitmapButton *self = BITMAP_BUTTON (widget);
+	bitmap_button *self = g_object_get_data (G_OBJECT (widget), bitmap_button_key); g_assert (self);
 	
 	gdouble value = gtk_adjustment_get_value (self->adjustment);
 	gdouble lower = gtk_adjustment_get_lower (self->adjustment);
@@ -190,7 +171,7 @@ bitmap_button_adjustment_value_changed	( GtkAdjustment *adjustment, gpointer dat
 void
 bitmap_button_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 {
-	AmsynthBitmapButton *self = BITMAP_BUTTON (widget);
+	bitmap_button *self = g_object_get_data (G_OBJECT (widget), bitmap_button_key); g_assert (self);
 
 	if (self->adjustment)
 	{

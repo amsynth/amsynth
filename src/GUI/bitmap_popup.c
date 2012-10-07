@@ -3,18 +3,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define BITMAP_POPUP(obj)				(G_TYPE_CHECK_INSTANCE_CAST	((obj), bitmap_popup_get_type(), AmsynthBitmapPopup))
-#define BITMAP_POPUP_CLASS(obj)			(G_TYPE_CHECK_CLASS_CAST	((obj), BITMAP_POPUP,			AmsynthBitmapPopupClass))
-#define GTK_IS_BITMAP_POPUP(obj)		(G_TYPE_CHECK_INSTANCE_TYPE	((obj), bitmap_popup_get_type()))
-#define GTK_IS_BITMAP_POPUP_CLASS(obj)	(G_TYPE_CHECK_CLASS_TYPE	((obj), bitmap_popup_get_type()))
-#define BITMAP_POPUP_GET_CLASS			(G_TYPE_INSTANCE_GET_CLASS	((obj), bitmap_popup_get_type(),	AmsynthBitmapPopupClass))
+typedef struct {
 
-typedef struct _AmsynthBitmapPopup		AmsynthBitmapPopup;
-typedef struct _AmsynthBitmapPopupClass	AmsynthBitmapPopupClass;
-
-struct _AmsynthBitmapPopup
-{
-	GtkDrawingArea parent;
+	GtkWidget *drawing_area;
 
 	GtkAdjustment *adjustment;
 	
@@ -26,17 +17,14 @@ struct _AmsynthBitmapPopup
 	guint frame_count;
 	
 	GtkWidget *menu;
-};
 
-struct _AmsynthBitmapPopupClass
-{
-	GtkDrawingAreaClass parent_class;
-};
+} bitmap_popup;
+
+static const gchar *bitmap_popup_key = "bitmap_popup";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-G_DEFINE_TYPE( AmsynthBitmapPopup, bitmap_popup, GTK_TYPE_DRAWING_AREA );
-
+static gboolean bitmap_popup_destroy		( GtkWidget *widget, gpointer user_data );
 static gboolean bitmap_popup_expose			( GtkWidget *wigdet, GdkEventExpose *event );
 static gboolean bitmap_popup_button_press	( GtkWidget *wigdet, GdkEventButton *event );
 
@@ -47,29 +35,6 @@ static void		bitmap_popup_menuitem_activated			( GtkWidget *menu_item, gpointer 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static void
-bitmap_popup_class_init( AmsynthBitmapPopupClass *aclass )
-{
-	GtkWidgetClass *widget_class		= GTK_WIDGET_CLASS( aclass );
-	widget_class->expose_event			= bitmap_popup_expose;
-	widget_class->button_press_event	= bitmap_popup_button_press;
-}
-
-static void
-bitmap_popup_init( AmsynthBitmapPopup *self )
-{
-	self->adjustment	= NULL;
-	self->pixbuf		= NULL;
-	self->background	= NULL;
-	self->current_frame	= 0;
-	self->frame_width	= 1;
-	self->frame_height	= 1;
-	self->frame_count	= 1;
-	self->menu			= NULL;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 GtkWidget *
 bitmap_popup_new( GtkAdjustment *adjustment,
                  GdkPixbuf *pixbuf,
@@ -77,47 +42,61 @@ bitmap_popup_new( GtkAdjustment *adjustment,
                  guint frame_height,
                  guint frame_count )
 {
-	GtkWidget *widget = g_object_new (bitmap_popup_get_type(), NULL);
-	
-	AmsynthBitmapPopup *self = BITMAP_POPUP (widget);
-	
+	bitmap_popup *self = g_malloc0 (sizeof(bitmap_popup));
+
+	self->drawing_area = gtk_drawing_area_new ();
 	self->pixbuf		= g_object_ref (pixbuf);
 	self->frame_width	= frame_width;
 	self->frame_height	= frame_height;
 	self->frame_count	= frame_count;
+
+	g_object_set_data (G_OBJECT (self->drawing_area), bitmap_popup_key, self);
+	g_assert (g_object_get_data (G_OBJECT (self->drawing_area), bitmap_popup_key));
+
+	g_signal_connect (G_OBJECT (self->drawing_area), "destroy", G_CALLBACK (bitmap_popup_destroy), NULL);
 	
-	gtk_widget_set_usize (widget, frame_width, frame_height);
+	g_signal_connect (G_OBJECT (self->drawing_area), "expose-event", G_CALLBACK (bitmap_popup_expose), NULL);
+
+	g_signal_connect (G_OBJECT (self->drawing_area), "button-press-event", G_CALLBACK (bitmap_popup_button_press), NULL);
+	
+	gtk_widget_set_usize (self->drawing_area, frame_width, frame_height);
 	
 	// set up event mask
-	gint event_mask = gtk_widget_get_events (widget);
+	gint event_mask = gtk_widget_get_events (self->drawing_area);
 	event_mask |= GDK_BUTTON_PRESS_MASK;
-	gtk_widget_set_events (widget, event_mask);
+	gtk_widget_set_events (self->drawing_area, event_mask);
 	
-	bitmap_popup_set_adjustment (widget, adjustment);
+	bitmap_popup_set_adjustment (self->drawing_area, adjustment);
 	
-	return widget;
+	return self->drawing_area;
+}
+
+static gboolean
+bitmap_popup_destroy( GtkWidget *widget, gpointer user_data )
+{
+	bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
+	bitmap_popup_set_bg (widget, NULL);
+	g_free (self);
 }
 
 void bitmap_popup_set_bg (GtkWidget *widget, GdkPixbuf *pixbuf)
 {
-	AmsynthBitmapPopup *self = BITMAP_POPUP (widget);
+	bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
 
-	if (self->background)
-	{
-		gtk_object_unref (GTK_OBJECT (self->background));
+	if (self->background) {
+		g_object_unref (G_OBJECT (self->background));
 	}
-	
-	self->background = g_object_ref (G_OBJECT (pixbuf));
+
+	self->background = pixbuf ? g_object_ref (G_OBJECT (pixbuf)) : NULL;
+
+	gtk_widget_queue_draw (widget);
 }
 
 void bitmap_popup_set_strings (GtkWidget *widget, const gchar **strings)
 {
-	AmsynthBitmapPopup *self = BITMAP_POPUP (widget);
-	
-	if (self->menu)
-	{
-		g_object_unref (G_OBJECT (self->menu));
-	}
+	bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
+
+	g_assert (!self->menu);
 
 	self->menu = gtk_menu_new ();
 	
@@ -146,7 +125,7 @@ void bitmap_popup_set_strings (GtkWidget *widget, const gchar **strings)
 static gboolean
 bitmap_popup_expose( GtkWidget *widget, GdkEventExpose *event )
 {
-	AmsynthBitmapPopup *self = BITMAP_POPUP (widget);
+	bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
 	
 	if (self->background) {
 		gdk_draw_pixbuf (
@@ -184,7 +163,7 @@ bitmap_popup_button_press ( GtkWidget *widget, GdkEventButton *event )
 {
 	if (event->type == GDK_BUTTON_PRESS && event->button == 1)
 	{
-		AmsynthBitmapPopup *self = BITMAP_POPUP (widget);
+		bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
 		gtk_menu_popup (GTK_MENU (self->menu), NULL, NULL, NULL, NULL, event->button, event->time);
 		return TRUE;
 	}
@@ -194,7 +173,7 @@ bitmap_popup_button_press ( GtkWidget *widget, GdkEventButton *event )
 void
 bitmap_popup_menuitem_activated (GtkWidget *menu_item, gpointer data)
 {
-	AmsynthBitmapPopup *self = BITMAP_POPUP (data);
+	bitmap_popup *self = data;
 	
 	GList *list = gtk_container_get_children (GTK_CONTAINER (self->menu));
 	int i = g_list_index (list, menu_item);
@@ -207,7 +186,7 @@ bitmap_popup_menuitem_activated (GtkWidget *menu_item, gpointer data)
 void
 bitmap_popup_update (GtkWidget *widget)
 {
-	AmsynthBitmapPopup *self = BITMAP_POPUP (widget);
+	bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
 	
 	gdouble value = gtk_adjustment_get_value (self->adjustment);
 	gdouble lower = gtk_adjustment_get_lower (self->adjustment);
@@ -234,7 +213,7 @@ bitmap_popup_adjustment_value_changed	( GtkAdjustment *adjustment, gpointer data
 void
 bitmap_popup_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 {
-	AmsynthBitmapPopup *self = BITMAP_POPUP (widget);
+	bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
 
 	if (self->adjustment)
 	{
