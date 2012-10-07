@@ -3,16 +3,16 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define BITMAP_BUTTON(obj)				(G_TYPE_CHECK_INSTANCE_CAST	((obj), bitmap_button_get_type(),	BitmapButton))
-#define BITMAP_BUTTON_CLASS(obj)		(G_TYPE_CHECK_CLASS_CAST	((obj), BITMAP_BUTTON,				BitmapButtonClass))
+#define BITMAP_BUTTON(obj)				(G_TYPE_CHECK_INSTANCE_CAST	((obj), bitmap_button_get_type(),	AmsynthBitmapButton))
+#define BITMAP_BUTTON_CLASS(obj)		(G_TYPE_CHECK_CLASS_CAST	((obj), BITMAP_BUTTON,				AmsynthBitmapButtonClass))
 #define GTK_IS_BITMAP_BUTTON(obj)		(G_TYPE_CHECK_INSTANCE_TYPE	((obj), bitmap_button_get_type()))
 #define GTK_IS_BITMAP_BUTTON_CLASS(obj)	(G_TYPE_CHECK_CLASS_TYPE	((obj), bitmap_button_get_type()))
-#define BITMAP_BUTTON_GET_CLASS			(G_TYPE_INSTANCE_GET_CLASS	((obj), bitmap_button_get_type(),	BitmapButtonClass))
+#define BITMAP_BUTTON_GET_CLASS			(G_TYPE_INSTANCE_GET_CLASS	((obj), bitmap_button_get_type(),	AmsynthBitmapButtonClass))
 
-typedef struct _BitmapButton		BitmapButton;
-typedef struct _BitmapButtonClass	BitmapButtonClass;
+typedef struct _AmsynthBitmapButton		AmsynthBitmapButton;
+typedef struct _AmsynthBitmapButtonClass	AmsynthBitmapButtonClass;
 
-struct _BitmapButton
+struct _AmsynthBitmapButton
 {
 	GtkDrawingArea parent;
 
@@ -26,14 +26,14 @@ struct _BitmapButton
 	guint frame_count;
 };
 
-struct _BitmapButtonClass
+struct _AmsynthBitmapButtonClass
 {
 	GtkDrawingAreaClass parent_class;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-G_DEFINE_TYPE( BitmapButton, bitmap_button, GTK_TYPE_DRAWING_AREA );
+G_DEFINE_TYPE( AmsynthBitmapButton, bitmap_button, GTK_TYPE_DRAWING_AREA );
 
 static gboolean bitmap_button_expose		( GtkWidget *wigdet, GdkEventExpose *event );
 static gboolean bitmap_button_button_press	( GtkWidget *wigdet, GdkEventButton *event );
@@ -45,7 +45,7 @@ static void		bitmap_button_adjustment_value_changed	( GtkAdjustment *adjustment,
 ////////////////////////////////////////////////////////////////////////////////
 
 static void
-bitmap_button_class_init( BitmapButtonClass *aclass )
+bitmap_button_class_init( AmsynthBitmapButtonClass *aclass )
 {
 	GtkWidgetClass *widget_class		= GTK_WIDGET_CLASS( aclass );
 	widget_class->expose_event			= bitmap_button_expose;
@@ -53,7 +53,7 @@ bitmap_button_class_init( BitmapButtonClass *aclass )
 }
 
 static void
-bitmap_button_init( BitmapButton *self )
+bitmap_button_init( AmsynthBitmapButton *self )
 {
 	self->adjustment	= NULL;
 	self->pixbuf		= NULL;
@@ -75,7 +75,7 @@ bitmap_button_new( GtkAdjustment *adjustment,
 {
 	GtkWidget *widget = g_object_new (bitmap_button_get_type(), NULL);
 
-	BitmapButton *self = BITMAP_BUTTON (widget);
+	AmsynthBitmapButton *self = BITMAP_BUTTON (widget);
 	
 	self->pixbuf		= g_object_ref (pixbuf);
 	self->frame_width	= frame_width;
@@ -96,7 +96,7 @@ bitmap_button_new( GtkAdjustment *adjustment,
 
 void bitmap_button_set_bg (GtkWidget *widget, GdkPixbuf *pixbuf)
 {
-	BitmapButton *self = BITMAP_BUTTON (widget);
+	AmsynthBitmapButton *self = BITMAP_BUTTON (widget);
 
 	if (self->background)
 	{
@@ -111,7 +111,7 @@ void bitmap_button_set_bg (GtkWidget *widget, GdkPixbuf *pixbuf)
 static gboolean
 bitmap_button_expose( GtkWidget *widget, GdkEventExpose *event )
 {
-	BitmapButton *self = BITMAP_BUTTON (widget);
+	AmsynthBitmapButton *self = BITMAP_BUTTON (widget);
 	
 	if (self->background) {
 		gdk_draw_pixbuf (
@@ -149,7 +149,7 @@ bitmap_button_button_press ( GtkWidget *widget, GdkEventButton *event )
 {
 	if (event->type == GDK_BUTTON_PRESS && event->button == 1)
 	{
-		BitmapButton *self = BITMAP_BUTTON (widget);
+		AmsynthBitmapButton *self = BITMAP_BUTTON (widget);
 		gdouble value = gtk_adjustment_get_value (self->adjustment);
 		gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 		gdouble upper = gtk_adjustment_get_upper (self->adjustment);
@@ -163,7 +163,7 @@ bitmap_button_button_press ( GtkWidget *widget, GdkEventButton *event )
 void
 bitmap_button_update (GtkWidget *widget)
 {
-	BitmapButton *self = BITMAP_BUTTON (widget);
+	AmsynthBitmapButton *self = BITMAP_BUTTON (widget);
 	
 	gdouble value = gtk_adjustment_get_value (self->adjustment);
 	gdouble lower = gtk_adjustment_get_lower (self->adjustment);
@@ -190,7 +190,7 @@ bitmap_button_adjustment_value_changed	( GtkAdjustment *adjustment, gpointer dat
 void
 bitmap_button_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 {
-	BitmapButton *self = BITMAP_BUTTON (widget);
+	AmsynthBitmapButton *self = BITMAP_BUTTON (widget);
 
 	if (self->adjustment)
 	{

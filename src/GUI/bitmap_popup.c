@@ -3,16 +3,16 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define BITMAP_POPUP(obj)				(G_TYPE_CHECK_INSTANCE_CAST	((obj), bitmap_popup_get_type(), BitmapPopup))
-#define BITMAP_POPUP_CLASS(obj)			(G_TYPE_CHECK_CLASS_CAST	((obj), BITMAP_POPUP,			BitmapPopupClass))
+#define BITMAP_POPUP(obj)				(G_TYPE_CHECK_INSTANCE_CAST	((obj), bitmap_popup_get_type(), AmsynthBitmapPopup))
+#define BITMAP_POPUP_CLASS(obj)			(G_TYPE_CHECK_CLASS_CAST	((obj), BITMAP_POPUP,			AmsynthBitmapPopupClass))
 #define GTK_IS_BITMAP_POPUP(obj)		(G_TYPE_CHECK_INSTANCE_TYPE	((obj), bitmap_popup_get_type()))
 #define GTK_IS_BITMAP_POPUP_CLASS(obj)	(G_TYPE_CHECK_CLASS_TYPE	((obj), bitmap_popup_get_type()))
-#define BITMAP_POPUP_GET_CLASS			(G_TYPE_INSTANCE_GET_CLASS	((obj), bitmap_popup_get_type(),	BitmapPopupClass))
+#define BITMAP_POPUP_GET_CLASS			(G_TYPE_INSTANCE_GET_CLASS	((obj), bitmap_popup_get_type(),	AmsynthBitmapPopupClass))
 
-typedef struct _BitmapPopup		BitmapPopup;
-typedef struct _BitmapPopupClass	BitmapPopupClass;
+typedef struct _AmsynthBitmapPopup		AmsynthBitmapPopup;
+typedef struct _AmsynthBitmapPopupClass	AmsynthBitmapPopupClass;
 
-struct _BitmapPopup
+struct _AmsynthBitmapPopup
 {
 	GtkDrawingArea parent;
 
@@ -28,14 +28,14 @@ struct _BitmapPopup
 	GtkWidget *menu;
 };
 
-struct _BitmapPopupClass
+struct _AmsynthBitmapPopupClass
 {
 	GtkDrawingAreaClass parent_class;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-G_DEFINE_TYPE( BitmapPopup, bitmap_popup, GTK_TYPE_DRAWING_AREA );
+G_DEFINE_TYPE( AmsynthBitmapPopup, bitmap_popup, GTK_TYPE_DRAWING_AREA );
 
 static gboolean bitmap_popup_expose			( GtkWidget *wigdet, GdkEventExpose *event );
 static gboolean bitmap_popup_button_press	( GtkWidget *wigdet, GdkEventButton *event );
@@ -48,7 +48,7 @@ static void		bitmap_popup_menuitem_activated			( GtkWidget *menu_item, gpointer 
 ////////////////////////////////////////////////////////////////////////////////
 
 static void
-bitmap_popup_class_init( BitmapPopupClass *aclass )
+bitmap_popup_class_init( AmsynthBitmapPopupClass *aclass )
 {
 	GtkWidgetClass *widget_class		= GTK_WIDGET_CLASS( aclass );
 	widget_class->expose_event			= bitmap_popup_expose;
@@ -56,7 +56,7 @@ bitmap_popup_class_init( BitmapPopupClass *aclass )
 }
 
 static void
-bitmap_popup_init( BitmapPopup *self )
+bitmap_popup_init( AmsynthBitmapPopup *self )
 {
 	self->adjustment	= NULL;
 	self->pixbuf		= NULL;
@@ -79,7 +79,7 @@ bitmap_popup_new( GtkAdjustment *adjustment,
 {
 	GtkWidget *widget = g_object_new (bitmap_popup_get_type(), NULL);
 	
-	BitmapPopup *self = BITMAP_POPUP (widget);
+	AmsynthBitmapPopup *self = BITMAP_POPUP (widget);
 	
 	self->pixbuf		= g_object_ref (pixbuf);
 	self->frame_width	= frame_width;
@@ -100,7 +100,7 @@ bitmap_popup_new( GtkAdjustment *adjustment,
 
 void bitmap_popup_set_bg (GtkWidget *widget, GdkPixbuf *pixbuf)
 {
-	BitmapPopup *self = BITMAP_POPUP (widget);
+	AmsynthBitmapPopup *self = BITMAP_POPUP (widget);
 
 	if (self->background)
 	{
@@ -112,7 +112,7 @@ void bitmap_popup_set_bg (GtkWidget *widget, GdkPixbuf *pixbuf)
 
 void bitmap_popup_set_strings (GtkWidget *widget, const gchar **strings)
 {
-	BitmapPopup *self = BITMAP_POPUP (widget);
+	AmsynthBitmapPopup *self = BITMAP_POPUP (widget);
 	
 	if (self->menu)
 	{
@@ -146,7 +146,7 @@ void bitmap_popup_set_strings (GtkWidget *widget, const gchar **strings)
 static gboolean
 bitmap_popup_expose( GtkWidget *widget, GdkEventExpose *event )
 {
-	BitmapPopup *self = BITMAP_POPUP (widget);
+	AmsynthBitmapPopup *self = BITMAP_POPUP (widget);
 	
 	if (self->background) {
 		gdk_draw_pixbuf (
@@ -184,7 +184,7 @@ bitmap_popup_button_press ( GtkWidget *widget, GdkEventButton *event )
 {
 	if (event->type == GDK_BUTTON_PRESS && event->button == 1)
 	{
-		BitmapPopup *self = BITMAP_POPUP (widget);
+		AmsynthBitmapPopup *self = BITMAP_POPUP (widget);
 		gtk_menu_popup (GTK_MENU (self->menu), NULL, NULL, NULL, NULL, event->button, event->time);
 		return TRUE;
 	}
@@ -194,7 +194,7 @@ bitmap_popup_button_press ( GtkWidget *widget, GdkEventButton *event )
 void
 bitmap_popup_menuitem_activated (GtkWidget *menu_item, gpointer data)
 {
-	BitmapPopup *self = BITMAP_POPUP (data);
+	AmsynthBitmapPopup *self = BITMAP_POPUP (data);
 	
 	GList *list = gtk_container_get_children (GTK_CONTAINER (self->menu));
 	int i = g_list_index (list, menu_item);
@@ -207,7 +207,7 @@ bitmap_popup_menuitem_activated (GtkWidget *menu_item, gpointer data)
 void
 bitmap_popup_update (GtkWidget *widget)
 {
-	BitmapPopup *self = BITMAP_POPUP (widget);
+	AmsynthBitmapPopup *self = BITMAP_POPUP (widget);
 	
 	gdouble value = gtk_adjustment_get_value (self->adjustment);
 	gdouble lower = gtk_adjustment_get_lower (self->adjustment);
@@ -234,7 +234,7 @@ bitmap_popup_adjustment_value_changed	( GtkAdjustment *adjustment, gpointer data
 void
 bitmap_popup_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 {
-	BitmapPopup *self = BITMAP_POPUP (widget);
+	AmsynthBitmapPopup *self = BITMAP_POPUP (widget);
 
 	if (self->adjustment)
 	{
