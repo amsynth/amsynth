@@ -106,7 +106,28 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 			uint8_t *data = NULL;
 			LV2_Event *ev = lv2_event_get(&ev_it, &data);
 			if (ev->type == a->midi_event_type) {
-				a->mc->HandleMidiData(data, ev->size);
+				// MidiController's midi parsing code is broken, so bypassing for now
+				// a->mc->HandleMidiData(data, ev->size);
+				switch (data[0] & 0xF0) {
+					case 0x80: // NOTE OFF
+						a->vau->HandleMidiNoteOff(data[1], data[2] / 127.0f);
+						break;
+					case 0x90: // NOTE ON
+						a->vau->HandleMidiNoteOn(data[1], data[2] / 127.0f);
+						break;
+					case 0xa0: // KEY PRESSURE
+					case 0xb0: // CONTROLLER CHANGE
+					case 0xc0: // PROGRAM CHANGE
+					case 0xd0: // CHANNEL PRESSURE
+						break;
+					case 0xe0: // PITCH WHEEL
+					{
+						int bend; bend = (int) ((data[1] & 0x7F) | ((data[2] & 0x7F) << 7));
+						float value = (float) (bend - 0x2000) / (float) (0x2000);
+						a->vau->HandleMidiPitchWheel(value);
+						break;
+					}
+				}
 			}
 			lv2_event_increment(&ev_it);
 		}
