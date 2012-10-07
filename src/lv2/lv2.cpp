@@ -2,6 +2,7 @@
 #include <lv2.h>
 #include <lv2/lv2plug.in/ns/ext/event/event.h>
 #include <lv2/lv2plug.in/ns/ext/event/event-helpers.h>
+#include <lv2/lv2plug.in/ns/ext/uri-map/uri-map.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,6 +20,7 @@ struct amsynth_wrapper {
 	MidiController *mc;
 	float * out_l;
 	float * out_r;
+	uint32_t midi_event_type;
 	LV2_Event_Buffer *midi_in_port;
 	float ** params;
 };
@@ -41,6 +43,18 @@ lv2_instantiate(const struct _LV2_Descriptor *descriptor, double sample_rate, co
 	a->mc->SetMidiEventHandler(a->vau);
 	a->mc->setPresetController(*a->bank);
 	a->params = (float **) calloc (kAmsynthParameterCount, sizeof (float *));
+
+	while (*features != NULL) {
+		if (strcmp((*features)->URI, LV2_URI_MAP_URI) == 0) {
+			LV2_URI_Map_Feature *uri_map = (LV2_URI_Map_Feature *)((*features)->data);
+			a->midi_event_type = uri_map->uri_to_id(
+				uri_map->callback_data,
+				"http://lv2plug.in/ns/ext/event",
+				"http://lv2plug.in/ns/ext/midi#MidiEvent");
+		}
+		features++;
+	}
+
 	return (LV2_Handle) a;
 }
 
@@ -91,8 +105,9 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 		for (uint32_t i=0; i < event_count; ++i) {
 			uint8_t *data = NULL;
 			LV2_Event *ev = lv2_event_get(&ev_it, &data);
-#warning should check ev->type before using data
-			a->mc->HandleMidiData(data, ev->size);
+			if (ev->type == a->midi_event_type) {
+				a->mc->HandleMidiData(data, ev->size);
+			}
 			lv2_event_increment(&ev_it);
 		}
 	}
