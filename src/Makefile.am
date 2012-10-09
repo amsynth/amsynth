@@ -84,7 +84,7 @@ amsynth_lv2_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@
 amsynth_lv2_la_LDFLAGS = -rpath $(lv2dir) -avoid-version -module -export-symbols-regex "lv2_descriptor" -disable-static
 noinst_LTLIBRARIES += amsynth_lv2_gtk.la
 amsynth_lv2_gtk_la_SOURCES = lv2/lv2_ui_gtk.c Parameter.cc Preset.cc GUI/bitmap_button.c GUI/bitmap_knob.c GUI/bitmap_popup.c GUI/editor_pane.c
-amsynth_lv2_gtk_la_CPPFLAGS = $(AM_CPPFLAGS) -DINSTALL_PREFIX='"$(prefix)"' @LV2_CFLAGS@ @GTK_CFLAGS@
+amsynth_lv2_gtk_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@ -DINSTALL_PREFIX='"$(prefix)"'
 amsynth_lv2_gtk_la_LDFLAGS = -rpath $(lv2dir) -avoid-version -module -export-symbols-regex "lv2ui_descriptor" -disable-static
 dist_lv2_DATA = lv2/manifest.ttl lv2/amsynth.ttl
 endif

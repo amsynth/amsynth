@@ -97,6 +97,7 @@ AS_IF([test "x$with_lv2" != "xno"], [
         lv2-lv2plug.in-ns-ext-uri-map
         lv2-lv2plug.in-ns-ext-midi
         lv2-lv2plug.in-ns-extensions-ui
+        gtk+-2.0 >= 2.20.0
         ], [with_lv2="yes"], [with_lv2="no"])])
 AM_CONDITIONAL([BUILD_LV2], [test "x$with_lv2" != "xno"])
 
