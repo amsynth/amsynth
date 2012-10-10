@@ -19,7 +19,7 @@
 class Preset
 {
 public:
-					Preset			(const string name = "New Preset");
+					Preset			(const string name = "");
 					
 	Preset&			operator =		(Preset& p);
 	
