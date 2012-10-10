@@ -64,6 +64,8 @@ private:
 	Preset			blankPreset;
 	Preset 			nullpreset;
 	int 			currentPresetNo;
+	std::string		lastPresetsFilePath;
+	unsigned long 	lastPresetsFileModifiedTime;
 };
 
 #endif

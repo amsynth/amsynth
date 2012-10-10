@@ -2,13 +2,17 @@
  * (c) 2001-2005 Nick Dowell
  */
 
+#include "PresetController.h"
+
 #include <iostream>
 #include <cassert>
 #include <cstdlib>
+#include <cstring>
 #include <string>
 #include <fstream>
-
-#include "PresetController.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -16,7 +20,7 @@ using namespace std;
 PresetController::PresetController	()
 :	updateListener (0)
 ,	nullpreset ("null preset")
-,	currentPresetNo (0)
+,	currentPresetNo (-1)
 {
 	presets = new Preset [kNumPresets];
 #ifndef _MSC_VER
@@ -99,6 +103,14 @@ PresetController::importPreset		(const string filename)
 	return 1;
 }
 
+static unsigned long mtime(const char *filename)
+{
+	struct stat st;
+	if (stat(filename, &st) != 0) {
+		return 0;
+	}
+	return st.st_mtime;
+}
 
 int 
 PresetController::savePresets		(const char *filename)
@@ -131,6 +143,10 @@ PresetController::savePresets		(const char *filename)
 #ifdef _DEBUG
 	cout << "<PresetController::savePresets() success" << endl;
 #endif
+
+	lastPresetsFileModifiedTime = mtime(filename);
+	lastPresetsFilePath = std::string(filename);
+
 	return 0;
 }
 
@@ -140,6 +156,11 @@ PresetController::loadPresets		(const char *filename)
 #ifdef _DEBUG
 	cout << "<PresetController::loadPresets()>" << endl;
 #endif
+
+	if (strcmp(filename, lastPresetsFilePath.c_str()) == 0 && lastPresetsFileModifiedTime == mtime(filename)) {
+		return 0; // file not modified since last load
+	}
+
 	ifstream file( filename, ios::in );
 	string buffer;
   
@@ -213,10 +234,14 @@ PresetController::loadPresets		(const char *filename)
 		}
 	}
 
-	currentPreset = presets[currentPresetNo];
+	lastPresetsFileModifiedTime = mtime(filename);
+	lastPresetsFilePath = std::string(filename);
+	
 	notify ();
+	
 #ifdef _DEBUG
 	cout << "<PresetController::loadPresets()>: success" << endl;
 #endif
+
 	return 0;
 }

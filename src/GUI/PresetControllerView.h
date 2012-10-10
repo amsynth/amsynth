@@ -6,28 +6,36 @@
 #define _PRESETCONTROLLERVIEW_H
 
 #include <gtkmm.h>
-#include <string>
-#include <list>
 
 #include "../UpdateListener.h"
 
 class PresetController;
 class VoiceAllocationUnit;
 
-class PresetControllerView : public UpdateListener, public Gtk::HBox {
+class PresetControllerView : public UpdateListener, public Gtk::HBox
+{
 public:
+	
     PresetControllerView(VoiceAllocationUnit & vau );
     ~PresetControllerView();
+	
     void setPresetController(PresetController & p_c);
+	
     void update();
+	
 private:
-	void ev_handler(std::string text);
-    PresetController *presetController;
-    Gtk::Button prev, next, commit;
-    Gtk::Combo presets_combo;
-    Gtk::Label preset_no_entry; // preset_name_entry;
-	volatile bool inhibit_combo_callback, inhibit_combo_update;
+	
+	static void on_combo_changed (GtkWidget *widget, PresetControllerView *);
+	static void on_combo_popup_shown (GObject *gobject, GParamSpec *pspec, PresetControllerView *);
+	static void on_save_clicked (GtkWidget *widget, PresetControllerView *);
+	static void on_audition_pressed (GtkWidget *widget, PresetControllerView *);
+	static void on_audition_released (GtkWidget *widget, PresetControllerView *);
+	static void on_panic_clicked (GtkWidget *widget, PresetControllerView *);
+
 	VoiceAllocationUnit *vau;
+    PresetController *presetController;
+	GtkWidget *combo;
+	bool inhibit_combo_callback;
 };
 
 #endif

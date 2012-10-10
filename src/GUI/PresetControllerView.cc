@@ -3,114 +3,108 @@
  */
 
 #include "PresetControllerView.h"
+
 #include "../PresetController.h"
 #include "../VoiceAllocationUnit.h"
+
 #include <stdio.h>
 #include <iostream>
-
-using sigc::mem_fun;
-using sigc::bind;
-using std::cout;
-using namespace std;
 
 extern Config config;
 
 PresetControllerView::PresetControllerView(VoiceAllocationUnit & vau )
+:	vau(&vau)
+,	presetController(NULL)
+,	combo(NULL)
+,	inhibit_combo_callback(false)
 {
-	this->vau = &vau;
-	inhibit_combo_callback = false;
-	inhibit_combo_update = false;
+	combo = gtk_combo_box_text_new ();
+	gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (combo), 4);
+	g_signal_connect (G_OBJECT (combo), "changed", G_CALLBACK (&PresetControllerView::on_combo_changed), this);
+	g_signal_connect (G_OBJECT (combo), "notify::popup-shown", G_CALLBACK (&PresetControllerView::on_combo_popup_shown), this);
+	add (* Glib::wrap (combo));
 	
-    commit.add_label("Save",0.5);
-    commit.signal_clicked().connect(
-		bind <const char*>(mem_fun(*this, &PresetControllerView::ev_handler),"commit"));
-
-	presets_combo.get_entry()->set_editable( false );
-	presets_combo.get_entry()->signal_changed().connect(
-		bind <const char*>(mem_fun(*this, &PresetControllerView::ev_handler),"presets_combo"));
-
-    add( preset_no_entry );
-    add( presets_combo );
-	add( commit );
-
+	GtkWidget *widget = NULL;
+	
+	widget = gtk_button_new_with_label ("Save");
+	g_signal_connect (G_OBJECT (widget), "clicked", G_CALLBACK (&PresetControllerView::on_save_clicked), this);
+	add (* Glib::wrap (widget));
+	
 	Gtk::Label *blank = manage (new Gtk::Label ("    "));
 	add (*blank);
 	
+	widget = gtk_button_new_with_label ("Audition");
+	g_signal_connect (G_OBJECT (widget), "pressed", G_CALLBACK (&PresetControllerView::on_audition_pressed), this);
+	g_signal_connect (G_OBJECT (widget), "released", G_CALLBACK (&PresetControllerView::on_audition_released), this);
+	add (* Glib::wrap (widget));
 	
-	Gtk::Button* aud = manage(new Gtk::Button);
-	aud->add_label("Audition");
-	aud->signal_pressed().connect(bind(sigc::mem_fun(vau, &VoiceAllocationUnit::HandleMidiNoteOn), 60, 1.0f));
-	aud->signal_released().connect(bind(sigc::mem_fun(vau, &VoiceAllocationUnit::HandleMidiNoteOff), 60, 0.0f));
-	add(*aud);
-
-	Gtk::Button *panic = manage (new Gtk::Button);
-	panic->add_label ("Panic");
-	panic->signal_clicked().connect(bind(mem_fun(*this, &PresetControllerView::ev_handler),"panic"));
-	add (*panic);
+	widget = gtk_button_new_with_label ("Panic");
+	g_signal_connect (G_OBJECT (widget), "clicked", G_CALLBACK (&PresetControllerView::on_panic_clicked), this);
+	add (* Glib::wrap (widget));
 }
 
 PresetControllerView::~PresetControllerView()
 {
 }
 
-void
-PresetControllerView::setPresetController(PresetController & p_c)
+void PresetControllerView::setPresetController(PresetController & p_c)
 {
     presetController = &p_c;
     update();
 }
 
-void 
-PresetControllerView::ev_handler(string text)
+void PresetControllerView::on_combo_changed (GtkWidget *widget, PresetControllerView *that)
 {
-	if (text == "commit") {
-		presetController->commitPreset();
-		presetController->savePresets(config.current_bank_file.c_str());
-		update();
+	if (that->inhibit_combo_callback)
 		return;
-	} else if (text == "presets_combo") {
-		if (inhibit_combo_callback==false){
-			inhibit_combo_update = true;
-			string preset_name = presets_combo.get_entry()->get_text();
-			vau->HandleMidiAllSoundOff();
-			presetController->selectPreset( preset_name );
-			inhibit_combo_update = false;
-		} else
-		return;
-	} else if (text == "panic") {
-		vau->HandleMidiAllSoundOff();
-	} else {
-#ifdef _DEBUG
-		cout << "<PresetController::ev_handler> couldnt find action for '"
-		<< text << " '" << endl;
-#endif
-		return;
-    }
+	gint active = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
+	that->presetController->selectPreset(active);
 }
 
-void
-PresetControllerView::update()
+void PresetControllerView::on_combo_popup_shown (GObject *gobject, GParamSpec *pspec, PresetControllerView *that)
+{
+	const char *filename = config.current_bank_file.c_str();
+	that->presetController->loadPresets(filename);
+}
+
+void PresetControllerView::on_save_clicked (GtkWidget *widget, PresetControllerView *that)
+{
+	const char *filename = config.current_bank_file.c_str();
+	that->presetController->loadPresets(filename); // in case another instance has changed any of the other presets
+	that->presetController->commitPreset();
+	that->presetController->savePresets(filename);
+	that->update();
+}
+
+void PresetControllerView::on_audition_pressed (GtkWidget *widget, PresetControllerView *that)
+{
+	that->vau->HandleMidiNoteOn(60, 1.0f);
+}
+
+void PresetControllerView::on_audition_released (GtkWidget *widget, PresetControllerView *that)
+{
+	that->vau->HandleMidiNoteOff(60, 0.0f);
+}
+
+void PresetControllerView::on_panic_clicked (GtkWidget *widget, PresetControllerView *that)
+{
+	that->vau->HandleMidiAllSoundOff();
+}
+
+void PresetControllerView::update()
 {
 	inhibit_combo_callback = true;
 	
-	// update our list of preset names
-	if(inhibit_combo_update==false){
-		inhibit_combo_callback = true;
-		list<string> gl;
-		for (int preset=0; preset<PresetController::kNumPresets; preset++){
-			string preset_name = presetController->getPreset(preset).getName();
-			if ( preset_name != "New Preset" ) gl.push_back( preset_name );
-		}
-		// set the popdown list of preset names
-		presets_combo.set_popdown_strings( gl );
-		presets_combo.get_entry()->set_text(presetController->getCurrentPreset().getName());
-		inhibit_combo_callback = false;
+	for (gint i = 0; i < PresetController::kNumPresets; i++) {
+		gtk_combo_box_text_remove (GTK_COMBO_BOX_TEXT (combo), 0);
 	}
+	char text [256] = "";
+	for (gint i = 0; i < PresetController::kNumPresets; i++) {
+		memset (text, 0, sizeof(text));
+		sprintf (text, "%d: %s", i, presetController->getPreset(i).getName().c_str());
+		gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (combo), i, text);
+	}
+	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), presetController->getCurrPresetNumber());
 	
-	// set the display entries
-	ostringstream oss;
-	oss << "Preset " << presetController->getCurrPresetNumber() << " : ";
-	preset_no_entry.set_text(oss.str());
-
 	inhibit_combo_callback = false;
 }
