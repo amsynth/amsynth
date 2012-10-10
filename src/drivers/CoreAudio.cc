@@ -45,8 +45,9 @@ OSStatus audioDeviceIOProc (   AudioDeviceID           inDevice,
 		return kAudioDeviceUnsupportedFormatError;
 	}
 	
-	VoiceAllocationUnit** vau = (VoiceAllocationUnit **)inClientData;
-	if (*vau) (*vau)->Process(outL, outR, numSampleFrames, stride);
+	if (inClientData != NULL) {
+		(*(AudioCallback)inClientData)(outL, outR, numSampleFrames, stride);
+	}
 	
 	return noErr;
 }
@@ -102,7 +103,7 @@ public:
 			if (status != kAudioHardwareNoError) return false;
 			m_DeviceID = defaultDeviceID;
 
-			AudioDeviceAddIOProc(m_DeviceID, audioDeviceIOProc, &mInput);
+			AudioDeviceAddIOProc(m_DeviceID, audioDeviceIOProc, (void *)mAudioCallback);
 			AudioDeviceStart(m_DeviceID, audioDeviceIOProc);
 		}
 		return 0;
