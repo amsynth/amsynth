@@ -94,8 +94,8 @@ AC_ARG_WITH([lv2], [AS_HELP_STRING([--with-lv2], [build support for LV2])])
 AS_IF([test "x$with_lv2" != "xno"], [
     PKG_CHECK_MODULES([LV2], [lv2core
         lv2-lv2plug.in-ns-ext-event
-        lv2-lv2plug.in-ns-ext-uri-map
         lv2-lv2plug.in-ns-ext-midi
+        lv2-lv2plug.in-ns-ext-urid
         lv2-lv2plug.in-ns-extensions-ui
         gtk+-2.0 >= 2.20.0
         ], [with_lv2="yes"], [with_lv2="no"])])

@@ -76,17 +76,16 @@ amsynth_dssi_gtk_LDADD = @DSSI_LIBS@ @GTK_LIBS@ @LIBLO_LIBS@
 endif
 
 if BUILD_LV2
-lv2dir = $(libdir)/lv2/amsynth.lv2
+amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
 # using noinst to prevent .a and .la files being installed, plugin gets installed via custom install-exec-hook
 noinst_LTLIBRARIES += amsynth_lv2.la
-amsynth_lv2_la_SOURCES = $(amsynth_core_sources) $(amsynth_dsp_sources) lv2/lv2.cpp MidiController.cc
+amsynth_lv2_la_SOURCES = $(amsynth_core_sources) $(amsynth_dsp_sources) amsynth_lv2.cpp MidiController.cc
 amsynth_lv2_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@
-amsynth_lv2_la_LDFLAGS = -rpath $(lv2dir) -avoid-version -module -export-symbols-regex "lv2_descriptor" -disable-static
+amsynth_lv2_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2_descriptor" -disable-static
 noinst_LTLIBRARIES += amsynth_lv2_gtk.la
-amsynth_lv2_gtk_la_SOURCES = lv2/lv2_ui_gtk.c Parameter.cc Preset.cc GUI/bitmap_button.c GUI/bitmap_knob.c GUI/bitmap_popup.c GUI/editor_pane.c
+amsynth_lv2_gtk_la_SOURCES = amsynth_lv2_ui_gtk.c Parameter.cc Preset.cc GUI/bitmap_button.c GUI/bitmap_knob.c GUI/bitmap_popup.c GUI/editor_pane.c
 amsynth_lv2_gtk_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@ -DINSTALL_PREFIX='"$(prefix)"'
-amsynth_lv2_gtk_la_LDFLAGS = -rpath $(lv2dir) -avoid-version -module -export-symbols-regex "lv2ui_descriptor" -disable-static
-dist_lv2_DATA = lv2/manifest.ttl lv2/amsynth.ttl
+amsynth_lv2_gtk_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2ui_descriptor" -disable-static
 endif
 
 ####
@@ -103,8 +102,8 @@ if BUILD_DSSI_GUI
 	install -c -D -m 755 $(top_builddir)/src/amsynth_dssi_gtk $(DESTDIR)$(dssidir)/amsynth_dssi/amsynth_dssi_gtk
 endif
 if BUILD_LV2
-	install -c -D -m 755 $(top_builddir)/src/.libs/amsynth_lv2.so $(DESTDIR)$(lv2dir)/amsynth_lv2.so
-	install -c -D -m 755 $(top_builddir)/src/.libs/amsynth_lv2_gtk.so $(DESTDIR)$(lv2dir)/amsynth_lv2_gtk.so
+	install -c -D -m 755 $(top_builddir)/src/.libs/amsynth_lv2.so $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2.so
+	install -c -D -m 755 $(top_builddir)/src/.libs/amsynth_lv2_gtk.so $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2_gtk.so
 endif
 
 uninstall-hook:
