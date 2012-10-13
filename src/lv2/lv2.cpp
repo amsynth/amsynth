@@ -1,8 +1,11 @@
 
-#include <lv2.h>
-#include <lv2/lv2plug.in/ns/ext/event/event.h>
+#include <lv2/lv2plug.in/ns/lv2core/lv2.h>
+#include <lv2/lv2plug.in/ns/ext/atom/atom.h>
 #include <lv2/lv2plug.in/ns/ext/event/event-helpers.h>
-#include <lv2/lv2plug.in/ns/ext/uri-map/uri-map.h>
+#include <lv2/lv2plug.in/ns/ext/event/event.h>
+#include <lv2/lv2plug.in/ns/ext/midi/midi.h>
+#include <lv2/lv2plug.in/ns/ext/state/state.h>
+#include <lv2/lv2plug.in/ns/ext/urid/urid.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,6 +16,11 @@
 #include "PresetController.h"
 #include "VoiceAllocationUnit.h"
 
+#define AMSYNTH_LV2_URI			"http://code.google.com/p/amsynth/amsynth"
+#define AMSYNTH_LV2__Preset		AMSYNTH_LV2_URI "#preset"
+
+#define LOG_ERROR(msg) fprintf(stderr, AMSYNTH_LV2_URI " error: " msg "\n")
+
 struct amsynth_wrapper {
 	const char *bundle_path;
 	VoiceAllocationUnit *vau;
@@ -20,18 +28,41 @@ struct amsynth_wrapper {
 	MidiController *mc;
 	float * out_l;
 	float * out_r;
-	uint32_t midi_event_type;
 	LV2_Event_Buffer *midi_in_port;
 	float ** params;
+	struct {
+		LV2_URID atom;
+		LV2_URID midiEvent;
+	} uris;
 };
 
 static LV2_Handle
 lv2_instantiate(const struct _LV2_Descriptor *descriptor, double sample_rate, const char *bundle_path, const LV2_Feature *const *features)
 {
+	LV2_URID_Map *urid_map = NULL;
+	for (int i = 0; features[i]; ++i) {
+		if (!strcmp(features[i]->URI, LV2_URID__map)) {
+			urid_map = (LV2_URID_Map *)features[i]->data;
+		}
+	}
+	if (urid_map == NULL) {
+		LOG_ERROR("host does not support " LV2_URID__map);
+		return NULL;
+	}
+	if (!urid_map->map(urid_map->handle, LV2_ATOM__Atom)) {
+		LOG_ERROR("host does not support " LV2_ATOM__Atom);
+		return NULL;
+	}
+	if (!urid_map->map(urid_map->handle, LV2_MIDI__MidiEvent)) {
+		LOG_ERROR("host does not support " LV2_MIDI__MidiEvent);
+		return NULL;
+	}
+
 	static Config config;
 	config.Defaults();
 	Preset amsynth_preset;
-	amsynth_wrapper * a = (amsynth_wrapper *)calloc(1, sizeof(amsynth_wrapper));
+
+	amsynth_wrapper *a = (amsynth_wrapper *)calloc(1, sizeof(amsynth_wrapper));
 	a->bundle_path = strdup(bundle_path);
 	a->vau = new VoiceAllocationUnit;
 	a->vau->SetSampleRate (sample_rate);
@@ -44,17 +75,8 @@ lv2_instantiate(const struct _LV2_Descriptor *descriptor, double sample_rate, co
 	a->mc->setPresetController(*a->bank);
 	a->mc->set_midi_channel(0);
 	a->params = (float **) calloc (kAmsynthParameterCount, sizeof (float *));
-
-	while (*features != NULL) {
-		if (strcmp((*features)->URI, LV2_URI_MAP_URI) == 0) {
-			LV2_URI_Map_Feature *uri_map = (LV2_URI_Map_Feature *)((*features)->data);
-			a->midi_event_type = uri_map->uri_to_id(
-				uri_map->callback_data,
-				"http://lv2plug.in/ns/ext/event",
-				"http://lv2plug.in/ns/ext/midi#MidiEvent");
-		}
-		features++;
-	}
+	a->uris.atom        = urid_map->map(urid_map->handle, LV2_ATOM__Atom);
+	a->uris.midiEvent   = urid_map->map(urid_map->handle, LV2_MIDI__MidiEvent);
 
 	return (LV2_Handle) a;
 }
@@ -106,7 +128,7 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 		for (uint32_t i=0; i < event_count; ++i) {
 			uint8_t *data = NULL;
 			LV2_Event *ev = lv2_event_get(&ev_it, &data);
-			if (ev->type == a->midi_event_type) {
+			if (ev->type == a->uris.midiEvent) {
 				a->mc->HandleMidiData(data, ev->size);
 			}
 			lv2_event_increment(&ev_it);
