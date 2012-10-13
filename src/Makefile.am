@@ -114,6 +114,6 @@ if BUILD_DSSI_GUI
 	rm -rf $(DESTDIR)$(dssidir)/amsynth_dssi
 endif
 if BUILD_LV2
-	rm -rf $(DESTDIR)($lv2dir)
+	rm -rf $(DESTDIR)$(amsynth_lv2dir)
 endif
 
