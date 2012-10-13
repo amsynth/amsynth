@@ -17,9 +17,13 @@
 #include "VoiceAllocationUnit.h"
 
 #define AMSYNTH_LV2_URI			"http://code.google.com/p/amsynth/amsynth"
-#define AMSYNTH_LV2__Preset		AMSYNTH_LV2_URI "#preset"
 
-#define LOG_ERROR(msg) fprintf(stderr, AMSYNTH_LV2_URI " error: " msg "\n")
+#define LOG_ERROR(msg)			fprintf(stderr, AMSYNTH_LV2_URI " error: " msg "\n")
+#ifdef DEBUG
+#define LOG_FUNCTION_CALL()		fprintf(stderr, AMSYNTH_LV2_URI " %s\n", __FUNCTION__)
+#else
+#define LOG_FUNCTION_CALL()
+#endif
 
 struct amsynth_wrapper {
 	const char *bundle_path;
@@ -31,7 +35,6 @@ struct amsynth_wrapper {
 	LV2_Event_Buffer *midi_in_port;
 	float ** params;
 	struct {
-		LV2_URID atom;
 		LV2_URID midiEvent;
 	} uris;
 };
@@ -39,6 +42,8 @@ struct amsynth_wrapper {
 static LV2_Handle
 lv2_instantiate(const struct _LV2_Descriptor *descriptor, double sample_rate, const char *bundle_path, const LV2_Feature *const *features)
 {
+	LOG_FUNCTION_CALL();
+
 	LV2_URID_Map *urid_map = NULL;
 	for (int i = 0; features[i]; ++i) {
 		if (!strcmp(features[i]->URI, LV2_URID__map)) {
@@ -47,14 +52,6 @@ lv2_instantiate(const struct _LV2_Descriptor *descriptor, double sample_rate, co
 	}
 	if (urid_map == NULL) {
 		LOG_ERROR("host does not support " LV2_URID__map);
-		return NULL;
-	}
-	if (!urid_map->map(urid_map->handle, LV2_ATOM__Atom)) {
-		LOG_ERROR("host does not support " LV2_ATOM__Atom);
-		return NULL;
-	}
-	if (!urid_map->map(urid_map->handle, LV2_MIDI__MidiEvent)) {
-		LOG_ERROR("host does not support " LV2_MIDI__MidiEvent);
 		return NULL;
 	}
 
@@ -75,8 +72,7 @@ lv2_instantiate(const struct _LV2_Descriptor *descriptor, double sample_rate, co
 	a->mc->setPresetController(*a->bank);
 	a->mc->set_midi_channel(0);
 	a->params = (float **) calloc (kAmsynthParameterCount, sizeof (float *));
-	a->uris.atom        = urid_map->map(urid_map->handle, LV2_ATOM__Atom);
-	a->uris.midiEvent   = urid_map->map(urid_map->handle, LV2_MIDI__MidiEvent);
+	a->uris.midiEvent       = urid_map->map(urid_map->handle, LV2_MIDI__MidiEvent);
 
 	return (LV2_Handle) a;
 }
@@ -84,6 +80,8 @@ lv2_instantiate(const struct _LV2_Descriptor *descriptor, double sample_rate, co
 static void
 lv2_cleanup(LV2_Handle instance)
 {
+	LOG_FUNCTION_CALL();
+
 	amsynth_wrapper * a = (amsynth_wrapper *) instance;
 	free ((void *)a->bundle_path);
 	delete a->vau;
@@ -109,11 +107,13 @@ lv2_connect_port(LV2_Handle instance, uint32_t port, void *data_location)
 static void
 lv2_activate(LV2_Handle instance)
 {
+	LOG_FUNCTION_CALL();
 }
 
 static void
 lv2_deactivate(LV2_Handle instance)
 {
+	LOG_FUNCTION_CALL();
 }
 
 static void
@@ -147,14 +147,50 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 	a->vau->Process (a->out_l, a->out_r, sample_count);
 }
 
+static LV2_State_Status
+save(LV2_Handle                instance,
+     LV2_State_Store_Function  store,
+     LV2_State_Handle          handle,
+     uint32_t                  flags,
+     const LV2_Feature* const* features)
+{
+	LOG_FUNCTION_CALL();
+
+	// host takes care of saving port values
+	// we have no additional state to save
+
+	return LV2_STATE_SUCCESS;
+}
+
+static LV2_State_Status
+restore(LV2_Handle                  instance,
+        LV2_State_Retrieve_Function retrieve,
+        LV2_State_Handle            handle,
+        uint32_t                    flags,
+        const LV2_Feature* const*   features)
+{
+	LOG_FUNCTION_CALL();
+
+	// host takes care of restoring port values
+	// we have no additional state to restore
+	
+	return LV2_STATE_SUCCESS;
+}
+
 static const void *
 lv2_extension_data(const char *uri)
 {
+	LOG_FUNCTION_CALL();
+
+	if (!strcmp(uri, LV2_STATE__interface)) {
+		static const LV2_State_Interface state = { save, restore };
+		return &state;
+	}
 	return NULL;
 }
 
 static const LV2_Descriptor amsynth1_descriptor = {
-	"http://code.google.com/p/amsynth/amsynth",
+	AMSYNTH_LV2_URI,
 	&lv2_instantiate,
 	&lv2_connect_port,
 	&lv2_activate,
@@ -168,6 +204,8 @@ LV2_SYMBOL_EXPORT
 const LV2_Descriptor *
 lv2_descriptor(uint32_t index)
 {
+	LOG_FUNCTION_CALL();
+
 	switch (index) {
 	case 0:
 		return &amsynth1_descriptor;
