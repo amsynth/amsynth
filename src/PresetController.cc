@@ -188,11 +188,17 @@ PresetController::loadPresets		(const char *filename)
 		if (buffer == "<preset>") {
 			preset++;
 			file >> buffer;
+
+			string presetName = "";
 			
 			//get the preset's name
 			file >> buffer;
-			string presetName(buffer);
-			file >> buffer;
+
+			if (buffer != "<parameter>") {
+				presetName = buffer;
+				file >> buffer;
+			}
+
 			while (buffer != "<parameter>") {
 				presetName += " ";
 				presetName += buffer;
