@@ -58,13 +58,18 @@ public:
 		_i = 0;
 	}
 
+	inline float getValue()
+	{
+		return _start + _i * (float)_inc;
+	}
+	
 	inline float nextValue()
 	{
-		float y = _start + _i * (float)_inc;
+		float y = getValue();
 		_i = MIN(_i + 1, _steps);
 		return y;
 	}
-
+	
 private:
 
 	float _start, _final, _inc;

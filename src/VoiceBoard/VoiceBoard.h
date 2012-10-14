@@ -31,8 +31,10 @@ public:
 	void	triggerOn		();
 	void	triggerOff		();
 	void	setVelocity		(float velocity);
-	void	setFrequency	(float frequency);
-	void	setFrequency	(float startFrequency, float targetFrequency, float glissandoTime);
+	
+	void	setFrequency	(float targetFrequency, float glissandoTime = 0.0f);
+	float	getFrequency	() { return mFrequency.getValue(); }
+	
 	void	SetPitchBend	(float);
 	void	reset			();
 

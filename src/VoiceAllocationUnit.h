@@ -36,6 +36,8 @@ public:
 	void	SetMaxVoices	(int voices) { mMaxVoices = voices; }
 	int		GetMaxVoices	() { return mMaxVoices; }
 	int		GetActiveVoices	() { return mActiveVoices; }
+	
+	void	setKeyboardMode(KeyboardMode);
 
 	// processing with stride (interleaved) is not functional yet!!!
 	void	Process			(float *l, float *r, unsigned nframes, int stride=1);
@@ -51,8 +53,13 @@ private:
 	int 	mActiveVoices;
 
 	float	mGlissandoTime;
-	char	keyPressed[128], sustain;
+	bool	keyPressed[128], sustain;
 	bool	active[128];
+	
+	uint32_t	_keyboardMode;
+	uint32_t	_keyPresses[128];
+	uint32_t	_keyPressCounter;
+	
 	std::vector<VoiceBoard*>	_voices;
 	
 	SoftLimiter	*limiter;

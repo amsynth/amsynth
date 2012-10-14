@@ -49,8 +49,16 @@ enum Param
 
 	kAmsynthParameter_GlissandoTime            = 31,
 	
+	kAmsynthParameter_KeyboardMode             = 32,
+	
 	kAmsynthParameterCount
 };
+
+typedef enum {
+	KeyboardModePoly,
+	KeyboardModeMono,
+	KeyboardModeLegato,
+} KeyboardMode;
 
 #ifdef __cplusplus
 extern "C" {

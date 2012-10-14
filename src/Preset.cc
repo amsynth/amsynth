@@ -27,6 +27,10 @@ const char *lfo_waveform_names[] = {
 	"sine", "square", "triangle", "noise", "noise + sample & hold"
 };
 
+const char *keyboard_mode_names[] = {
+	"poly", "mono", "legato"
+};
+
 Preset::Preset			(const string name)
 :	mName (name)
 ,	nullparam ("null", kAmsynthParameterCount)
@@ -64,10 +68,12 @@ Preset::Preset			(const string name)
 	mParameters.push_back (Parameter		("distortion_crunch",	kAmsynthParameter_AmpDistortion,	0, 0, 0.9f));
 	mParameters.push_back (Parameter		("osc2_sync",			kAmsynthParameter_Oscillator2Sync,			0, 0, 1, 1));
 	mParameters.push_back (Parameter		("glissando_time",		kAmsynthParameter_GlissandoTime, 0.0f, 0.0f, 1.0f));
+	mParameters.push_back (Parameter		("keyboard_mode",		kAmsynthParameter_KeyboardMode, KeyboardModePoly, 0, KeyboardModeLegato, 1));
 	
 	getParameter(kAmsynthParameter_Oscillator1Waveform).setParameterValueStrings(osc_waveform_names, ARRAY_SIZE(osc_waveform_names));
 	getParameter(kAmsynthParameter_Oscillator2Waveform).setParameterValueStrings(osc_waveform_names, ARRAY_SIZE(osc_waveform_names));
 	getParameter(kAmsynthParameter_LFOWaveform).setParameterValueStrings(lfo_waveform_names, ARRAY_SIZE(lfo_waveform_names));
+	getParameter(kAmsynthParameter_KeyboardMode).setParameterValueStrings(keyboard_mode_names, ARRAY_SIZE(keyboard_mode_names));
 }
 
 Preset&

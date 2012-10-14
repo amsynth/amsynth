@@ -22,6 +22,7 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 ,	mActiveVoices (0)
 ,	mGlissandoTime (0.0f)
 ,	sustain (0)
+,	_keyboardMode(KeyboardModePoly)
 ,	mMasterVol (1.0)
 ,	mPitchBendRangeSemitones(2)
 ,	mLastNoteFrequency (0.0f)
@@ -33,10 +34,12 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 
 	for (int i = 0; i < 128; i++)
 	{
-		keyPressed[i] = 0;
+		keyPressed[i] = false;
 		active[i] = false;
 		_voices.push_back (new VoiceBoard);
 	}
+	
+	memset(&_keyPresses, 0, sizeof(_keyPresses));
 
 	SetSampleRate (44100);
 }
@@ -67,33 +70,107 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 	if (pitch < 0) { // unmapped key
 		return;
 	}
-  
-	keyPressed[note] = 1;
 	
-	if ((!mMaxVoices || (mActiveVoices < mMaxVoices)) && !active[note])
-	{
+	keyPressed[note] = true;
+	
+	if (_keyboardMode == KeyboardModePoly) {
+		
+		if ((0 < mMaxVoices) && (mMaxVoices <= mActiveVoices))
+			return;
+		
 		if (mLastNoteFrequency > 0.0f) {
-			_voices[note]->setFrequency(mLastNoteFrequency, pitch, mGlissandoTime);
+			_voices[note]->setFrequency(mLastNoteFrequency, 0.0);
+			_voices[note]->setFrequency(pitch, mGlissandoTime);
 		} else {
 			_voices[note]->setFrequency(pitch);
 		}
+		
 		_voices[note]->reset();
-		active[note]=1;
+		_voices[note]->setVelocity(velocity);
+		_voices[note]->triggerOn();
+		
+		active[note] = true;
 		mActiveVoices++;
+		mLastNoteFrequency = pitch;
 	}
+	
+	if (_keyboardMode == KeyboardModeMono || _keyboardMode == KeyboardModeLegato) {
+		
+		int previousNote = -1;
+		uint32_t keyPress = 0;
+		for (int i = 0; i < 128; i++) {
+			if (keyPress < _keyPresses[i]) {
+				keyPress = _keyPresses[i];
+				previousNote = i;
+			}
+		}
 
-	_voices[note]->setVelocity(velocity);
-	_voices[note]->triggerOn();
-
-	mLastNoteFrequency = pitch;
+		_keyPresses[note] = (++_keyPressCounter);
+		
+		VoiceBoard *voice = _voices[0];
+		
+		voice->setVelocity(velocity);
+		voice->setFrequency(pitch, mGlissandoTime);
+		
+		if (_keyboardMode == KeyboardModeMono || previousNote == -1)
+			voice->triggerOn();
+		
+		mLastNoteFrequency = pitch;
+		mActiveVoices = 1;
+		active[0] = true;
+	}
 }
 
 void
 VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 {
-	keyPressed[note] = 0;
-	if (!sustain){
-		_voices[note]->triggerOff();
+	keyPressed[note] = false;
+
+	if (_keyboardMode == KeyboardModePoly) {
+		if (!sustain){
+			_voices[note]->triggerOff();
+		}
+	}
+	
+	if (_keyboardMode == KeyboardModeMono || _keyboardMode == KeyboardModeLegato) {
+
+		int currentNote = -1;
+		uint32_t keyPress = 0;
+		for (int i = 0; i < 128; i++) {
+			if (keyPress < _keyPresses[i]) {
+				keyPress = _keyPresses[i];
+				currentNote = i;
+			}
+		}
+		
+		_keyPresses[note] = 0;
+		
+		int nextNote = -1;
+		for (int i = 0, keyPress = 0; i < 128; i++) {
+			if (keyPress < _keyPresses[i]) {
+				keyPress = _keyPresses[i];
+				nextNote = i;
+			}
+		}
+		
+		if (!keyPress) {
+			_keyPressCounter = 0;
+		}
+		
+		if (note != currentNote) {
+			return;
+		}
+		
+		VoiceBoard *voice = _voices[0];
+		
+		if (0 <= nextNote) {
+			double pitch = noteToPitch(nextNote);
+			voice->setFrequency(pitch, mGlissandoTime);
+			if (_keyboardMode == KeyboardModeMono)
+				voice->triggerOn();
+		} else {
+			voice->triggerOff();
+		}
 	}
 }
 
@@ -167,6 +244,22 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 }
 
 void
+VoiceAllocationUnit::setKeyboardMode(KeyboardMode keyboardMode)
+{
+	_keyboardMode = keyboardMode;
+	if (_keyboardMode == KeyboardModePoly) {
+		active[0] = false; // stop the mono voice
+	} else {
+		// stop any voices that were started in poly mode
+		for (int i = 1; i < 128; i++) {
+			if (active[i]) {
+				active[i] = false;
+			}
+		}
+	}
+}
+
+void
 VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 {
 	switch (param)
@@ -178,6 +271,7 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_ReverbWidth:		reverb->setwidth (value);	break;
 	case kAmsynthParameter_AmpDistortion:	distortion->SetCrunch (value);	break;
 	case kAmsynthParameter_GlissandoTime: 	mGlissandoTime = value; break;
+	case kAmsynthParameter_KeyboardMode:	setKeyboardMode((KeyboardMode)value); break;
 	
 	default: for (unsigned i=0; i<_voices.size(); i++) _voices[i]->UpdateParameter (param, value); break;
 	}
