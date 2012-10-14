@@ -207,9 +207,9 @@ VoiceBoard::reset()
 }
 
 void
-VoiceBoard::setFrequency(float targetFrequency, float glissandoTime)
+VoiceBoard::setFrequency(float targetFrequency, float time)
 {
-	mFrequency.configure(mFrequency.getValue(), targetFrequency, glissandoTime * mSampleRate);
+	mFrequency.configure(mFrequency.getValue(), targetFrequency, time * mSampleRate);
 }
 
 void

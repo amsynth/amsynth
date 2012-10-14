@@ -47,7 +47,7 @@ enum Param
 	
 	kAmsynthParameter_Oscillator2Sync          = 30,
 
-	kAmsynthParameter_GlissandoTime            = 31,
+	kAmsynthParameter_PortamentoTime            = 31,
 	
 	kAmsynthParameter_KeyboardMode             = 32,
 	

@@ -20,7 +20,7 @@ const unsigned kBufferSize = 1024;
 VoiceAllocationUnit::VoiceAllocationUnit ()
 :	mMaxVoices (0)
 ,	mActiveVoices (0)
-,	mGlissandoTime (0.0f)
+,	mPortamentoTime (0.0f)
 ,	sustain (0)
 ,	_keyboardMode(KeyboardModePoly)
 ,	mMasterVol (1.0)
@@ -80,7 +80,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 		
 		if (mLastNoteFrequency > 0.0f) {
 			_voices[note]->setFrequency(mLastNoteFrequency, 0.0);
-			_voices[note]->setFrequency(pitch, mGlissandoTime);
+			_voices[note]->setFrequency(pitch, mPortamentoTime);
 		} else {
 			_voices[note]->setFrequency(pitch);
 		}
@@ -110,7 +110,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 		VoiceBoard *voice = _voices[0];
 		
 		voice->setVelocity(velocity);
-		voice->setFrequency(pitch, mGlissandoTime);
+		voice->setFrequency(pitch, mPortamentoTime);
 		
 		if (_keyboardMode == KeyboardModeMono || previousNote == -1)
 			voice->triggerOn();
@@ -165,7 +165,7 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 		
 		if (0 <= nextNote) {
 			double pitch = noteToPitch(nextNote);
-			voice->setFrequency(pitch, mGlissandoTime);
+			voice->setFrequency(pitch, mPortamentoTime);
 			if (_keyboardMode == KeyboardModeMono)
 				voice->triggerOn();
 		} else {
@@ -270,7 +270,7 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_ReverbWet:		reverb->setwet (value); reverb->setdry(1.0f-value); break;
 	case kAmsynthParameter_ReverbWidth:		reverb->setwidth (value);	break;
 	case kAmsynthParameter_AmpDistortion:	distortion->SetCrunch (value);	break;
-	case kAmsynthParameter_GlissandoTime: 	mGlissandoTime = value; break;
+	case kAmsynthParameter_PortamentoTime: 	mPortamentoTime = value; break;
 	case kAmsynthParameter_KeyboardMode:	setKeyboardMode((KeyboardMode)value); break;
 	
 	default: for (unsigned i=0; i<_voices.size(); i++) _voices[i]->UpdateParameter (param, value); break;

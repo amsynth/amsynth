@@ -67,7 +67,7 @@ Preset::Preset			(const string name)
 	mParameters.push_back (Parameter		("reverb_width",		kAmsynthParameter_ReverbWidth,		1));
 	mParameters.push_back (Parameter		("distortion_crunch",	kAmsynthParameter_AmpDistortion,	0, 0, 0.9f));
 	mParameters.push_back (Parameter		("osc2_sync",			kAmsynthParameter_Oscillator2Sync,			0, 0, 1, 1));
-	mParameters.push_back (Parameter		("glissando_time",		kAmsynthParameter_GlissandoTime, 0.0f, 0.0f, 1.0f));
+	mParameters.push_back (Parameter		("portamento_time",		kAmsynthParameter_PortamentoTime, 0.0f, 0.0f, 1.0f));
 	mParameters.push_back (Parameter		("keyboard_mode",		kAmsynthParameter_KeyboardMode, KeyboardModePoly, 0, KeyboardModeLegato, 1));
 	
 	getParameter(kAmsynthParameter_Oscillator1Waveform).setParameterValueStrings(osc_waveform_names, ARRAY_SIZE(osc_waveform_names));

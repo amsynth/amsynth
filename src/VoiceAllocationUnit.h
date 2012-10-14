@@ -52,7 +52,7 @@ private:
 	int		mMaxVoices;
 	int 	mActiveVoices;
 
-	float	mGlissandoTime;
+	float	mPortamentoTime;
 	bool	keyPressed[128], sustain;
 	bool	active[128];
 	
