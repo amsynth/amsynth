@@ -97,7 +97,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 	if (_keyboardMode == KeyboardModeMono || _keyboardMode == KeyboardModeLegato) {
 		
 		int previousNote = -1;
-		uint32_t keyPress = 0;
+		unsigned keyPress = 0;
 		for (int i = 0; i < 128; i++) {
 			if (keyPress < _keyPresses[i]) {
 				keyPress = _keyPresses[i];
@@ -135,7 +135,7 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 	if (_keyboardMode == KeyboardModeMono || _keyboardMode == KeyboardModeLegato) {
 
 		int currentNote = -1;
-		uint32_t keyPress = 0;
+		unsigned keyPress = 0;
 		for (int i = 0; i < 128; i++) {
 			if (keyPress < _keyPresses[i]) {
 				keyPress = _keyPresses[i];

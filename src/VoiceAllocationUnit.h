@@ -56,9 +56,9 @@ private:
 	bool	keyPressed[128], sustain;
 	bool	active[128];
 	
-	uint32_t	_keyboardMode;
-	uint32_t	_keyPresses[128];
-	uint32_t	_keyPressCounter;
+	unsigned	_keyboardMode;
+	unsigned	_keyPresses[128];
+	unsigned	_keyPressCounter;
 	
 	std::vector<VoiceBoard*>	_voices;
 	
