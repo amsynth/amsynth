@@ -78,6 +78,14 @@ private:
 	IIRFilterFirstOrder _vcaFilter;
 	float			mAmpModAmount;
 	ADSR 			amp_env;
+
+	struct {
+		float osc_1[kMaxProcessBufferSize];
+		float osc_2[kMaxProcessBufferSize];
+		float lfo_osc_1[kMaxProcessBufferSize];
+		float filter_env[kMaxProcessBufferSize];
+		float amp_env[kMaxProcessBufferSize];
+	} mProcessBuffers;
 };
 
 #endif

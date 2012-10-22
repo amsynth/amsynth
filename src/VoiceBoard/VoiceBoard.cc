@@ -8,18 +8,6 @@
 // Low-pass filter the VCA control signal to prevent nasty clicking sounds
 const float kVCALowPassFreq = 4000.0f;
 
-template <unsigned int size>
-struct VoiceBoardProcessMemory
-{
-	float osc_1[size];
-	float osc_2[size];
-	float lfo_osc_1[size];
-	float filter_env[size];
-	float amp_env[size];
-};
-
-static VoiceBoardProcessMemory<VoiceBoard::kMaxProcessBufferSize> s_processMem;
-
 VoiceBoard::VoiceBoard():
 	mKeyVelocity	(1.0)
 ,	mPitchBend		(1.0)
@@ -36,9 +24,9 @@ VoiceBoard::VoiceBoard():
 ,	mFilterModAmt	(0.0)
 ,	mFilterCutoff	(16.0)
 ,	mFilterRes		(0.0)
-,	filter_env		(s_processMem.filter_env)
+,	filter_env		(mProcessBuffers.filter_env)
 ,	mAmpModAmount	(0.0)
-,	amp_env			(s_processMem.amp_env)
+,	amp_env			(mProcessBuffers.amp_env)
 {
 }
 
@@ -99,7 +87,7 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	//
 	// Control Signals
 	//
-	float *lfo1buf = s_processMem.lfo_osc_1;
+	float *lfo1buf = mProcessBuffers.lfo_osc_1;
 	lfo1.ProcessSamples (lfo1buf, numSamples, mLFO1Freq, 0);
 
 	const float frequency = mFrequency.nextValue();
@@ -124,8 +112,8 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	//
 	// VCOs
 	//
-	float *osc1buf = s_processMem.osc_1;
-	float *osc2buf = s_processMem.osc_2;
+	float *osc1buf = mProcessBuffers.osc_1;
+	float *osc2buf = mProcessBuffers.osc_2;
 	osc1.ProcessSamples (osc1buf, numSamples, osc1freq, osc1pw);
 	osc2.ProcessSamples (osc2buf, numSamples, osc2freq, osc2pw);
 

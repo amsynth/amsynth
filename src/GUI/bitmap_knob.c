@@ -11,18 +11,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define BITMAP_KNOB(obj)				(G_TYPE_CHECK_INSTANCE_CAST	((obj), bitmap_knob_get_type(), BitmapKnob))
-#define BITMAP_KNOB_CLASS(obj)			(G_TYPE_CHECK_CLASS_CAST	((obj), BITMAP_KNOB,			BitmapKnobClass))
-#define GTK_IS_BITMAP_KNOB(obj)			(G_TYPE_CHECK_INSTANCE_TYPE	((obj), bitmap_knob_get_type()))
-#define GTK_IS_BITMAP_KNOB_CLASS(obj)	(G_TYPE_CHECK_CLASS_TYPE	((obj), bitmap_knob_get_type()))
-#define BITMAP_KNOB_GET_CLASS			(G_TYPE_INSTANCE_GET_CLASS	((obj), bitmap_knob_get_type(),	BitmapKnobClass))
+typedef struct {
 
-typedef struct _BitmapKnob		BitmapKnob;
-typedef struct _BitmapKnobClass	BitmapKnobClass;
-
-struct _BitmapKnob
-{
-	GtkDrawingArea parent;
+	GtkWidget *drawing_area;
 
 	GtkAdjustment *adjustment;
 	
@@ -36,17 +27,14 @@ struct _BitmapKnob
 	
 	gdouble origin_y;
 	gdouble origin_val;
-};
 
-struct _BitmapKnobClass
-{
-	GtkDrawingAreaClass parent_class;
-};
+} bitmap_knob;
+
+static const gchar *bitmap_knob_key = "bitmap_knob";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-G_DEFINE_TYPE( BitmapKnob, bitmap_knob, GTK_TYPE_DRAWING_AREA );
-
+static gboolean bitmap_knob_destroy			( GtkWidget *widget, gpointer user_data );
 static gboolean bitmap_knob_expose			( GtkWidget *wigdet, GdkEventExpose *event );
 static gboolean bitmap_knob_button_press	( GtkWidget *wigdet, GdkEventButton *event );
 static gboolean bitmap_knob_motion_notify	( GtkWidget *wigdet, GdkEventMotion *event );
@@ -57,32 +45,6 @@ static void		bitmap_knob_adjustment_value_changed	( GtkAdjustment *adjustment, g
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static void
-bitmap_knob_class_init( BitmapKnobClass *aclass )
-{
-	GtkWidgetClass *widget_class		= GTK_WIDGET_CLASS( aclass );
-	widget_class->expose_event			= bitmap_knob_expose;
-	widget_class->button_press_event	= bitmap_knob_button_press;
-	widget_class->motion_notify_event	= bitmap_knob_motion_notify;
-}
-
-static void
-bitmap_knob_init( BitmapKnob *self )
-{
-	self->adjustment	= NULL;
-	self->pixbuf		= NULL;
-	self->background	= NULL;
-	self->current_frame	= 0;
-	self->frame_width	= 1;
-	self->frame_height	= 1;
-	self->frame_count	= 1;
-	self->sensitivity	= 0;
-	self->origin_val	= 0;
-	self->origin_y		= 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 GtkWidget *
 bitmap_knob_new( GtkAdjustment *adjustment,
                  GdkPixbuf *pixbuf,
@@ -90,38 +52,57 @@ bitmap_knob_new( GtkAdjustment *adjustment,
                  guint frame_height,
                  guint frame_count )
 {
-	GtkWidget *widget = g_object_new (bitmap_knob_get_type(), NULL);
-	
-	BitmapKnob *self = BITMAP_KNOB (widget);
-	
+	bitmap_knob *self = g_malloc0 (sizeof(bitmap_knob));
+
+	self->drawing_area = gtk_drawing_area_new ();
 	self->pixbuf		= g_object_ref (pixbuf);
 	self->frame_width	= frame_width;
 	self->frame_height	= frame_height;
 	self->frame_count	= frame_count;
+
+	g_object_set_data (G_OBJECT (self->drawing_area), bitmap_knob_key, self);
+	g_assert (g_object_get_data (G_OBJECT (self->drawing_area), bitmap_knob_key));
+
+	g_signal_connect (G_OBJECT (self->drawing_area), "destroy", G_CALLBACK (bitmap_knob_destroy), NULL);
 	
-	gtk_widget_set_usize (widget, frame_width, frame_height);
+	g_signal_connect (G_OBJECT (self->drawing_area), "expose-event", G_CALLBACK (bitmap_knob_expose), NULL);
+
+	g_signal_connect (G_OBJECT (self->drawing_area), "button-press-event", G_CALLBACK (bitmap_knob_button_press), NULL);
+
+	g_signal_connect (G_OBJECT (self->drawing_area), "motion-notify-event", G_CALLBACK (bitmap_knob_motion_notify), NULL);
+	
+	gtk_widget_set_usize (self->drawing_area, frame_width, frame_height);
 	
 	// set up event mask
-	gint event_mask = gtk_widget_get_events (widget);
+	gint event_mask = gtk_widget_get_events (self->drawing_area);
 	event_mask |= GDK_BUTTON_PRESS_MASK;
 	event_mask |= GDK_BUTTON1_MOTION_MASK;
-	gtk_widget_set_events (widget, event_mask);
+	gtk_widget_set_events (self->drawing_area, event_mask);
 	
-	bitmap_knob_set_adjustment (widget, adjustment);
+	bitmap_knob_set_adjustment (self->drawing_area, adjustment);
 	
-	return widget;
+	return self->drawing_area;
+}
+
+static gboolean
+bitmap_knob_destroy( GtkWidget *widget, gpointer user_data )
+{
+	bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
+	bitmap_knob_set_bg (widget, NULL);
+	g_free (self);
 }
 
 void bitmap_knob_set_bg (GtkWidget *widget, GdkPixbuf *pixbuf)
 {
-	BitmapKnob *self = BITMAP_KNOB (widget);
+	bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 
-	if (self->background)
-	{
-		gtk_object_unref (GTK_OBJECT (self->background));
+	if (self->background) {
+		g_object_unref (G_OBJECT (self->background));
 	}
-	
-	self->background = g_object_ref (G_OBJECT (pixbuf));
+
+	self->background = pixbuf ? g_object_ref (G_OBJECT (pixbuf)) : NULL;
+
+	gtk_widget_queue_draw (widget);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -129,7 +110,7 @@ void bitmap_knob_set_bg (GtkWidget *widget, GdkPixbuf *pixbuf)
 static gboolean
 bitmap_knob_expose( GtkWidget *widget, GdkEventExpose *event )
 {
-	BitmapKnob *self = BITMAP_KNOB (widget);
+	bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 	
 	if (self->background) {
 		gdk_draw_pixbuf (
@@ -174,7 +155,7 @@ bitmap_knob_button_press ( GtkWidget *widget, GdkEventButton *event )
 {
 	if (event->type == GDK_BUTTON_PRESS && event->button == 1)
 	{
-		BitmapKnob *self = BITMAP_KNOB( widget );
+		bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 		gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 		gdouble upper = gtk_adjustment_get_upper (self->adjustment);
 		gdouble step  = gtk_adjustment_get_step_increment (self->adjustment);
@@ -195,7 +176,7 @@ bitmap_knob_motion_notify ( GtkWidget *widget, GdkEventMotion *event )
 {
 	if (event->state & GDK_BUTTON1_MASK)
 	{
-		BitmapKnob *self = BITMAP_KNOB( widget );
+		bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 		gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 		gdouble upper = gtk_adjustment_get_upper (self->adjustment);
 		gdouble step  = gtk_adjustment_get_step_increment (self->adjustment);
@@ -211,7 +192,7 @@ bitmap_knob_motion_notify ( GtkWidget *widget, GdkEventMotion *event )
 void
 bitmap_knob_update ( GtkWidget *widget )
 {
-	BitmapKnob *self = BITMAP_KNOB (widget);
+	bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 	
 	gdouble value = gtk_adjustment_get_value (self->adjustment);
 	gdouble lower = gtk_adjustment_get_lower (self->adjustment);
@@ -238,7 +219,7 @@ bitmap_knob_adjustment_value_changed	( GtkAdjustment *adjustment, gpointer data 
 void
 bitmap_knob_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 {
-	BitmapKnob *self = BITMAP_KNOB (widget);
+	bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 
 	if (self->adjustment)
 	{
