@@ -1,12 +1,12 @@
 amsynth -- http://code.google.com/p/amsynth/
 --------------------------------------------
 
-amsynth is a analog modelling (or virtual analog) synthesizer.
+amsynth is an analog modelling (a.k.a virtual analog) synthesizer.
 
-It mimics the operation of early analogue subtractive synthesizers, with
-classic oscillator waveformcs, envelopes, filter, modulation and effects.
+It mimics the operation of early analog subtractive synthesizers with
+classic oscillator waveforms, envelopes, filter, modulation and effects.
 
-The aim was to keep the synth easy to use, so you can  more easily get the
+The aim was to keep the synth easy to use, so you can more easily get the
 sounds you want ;-)
 
 
