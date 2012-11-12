@@ -86,6 +86,7 @@ noinst_LTLIBRARIES += amsynth_lv2_gtk.la
 amsynth_lv2_gtk_la_SOURCES = amsynth_lv2_ui_gtk.c Parameter.cc Preset.cc GUI/bitmap_button.c GUI/bitmap_knob.c GUI/bitmap_popup.c GUI/editor_pane.c
 amsynth_lv2_gtk_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@ -DINSTALL_PREFIX='"$(prefix)"'
 amsynth_lv2_gtk_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2ui_descriptor" -disable-static
+amsynth_lv2_gtk_la_LIBADD = @LV2_LIBS@
 endif
 
 ####
