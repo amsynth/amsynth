@@ -31,10 +31,13 @@
 #define LV2_UI_URI    "http://lv2plug.in/ns/extensions/ui"
 #define LV2_UI_PREFIX LV2_UI_URI "#"
 
+#define LV2_UI__CocoaUI          LV2_UI_PREFIX "CocoaUI"
+#define LV2_UI__Gtk3UI           LV2_UI_PREFIX "Gtk3UI"
 #define LV2_UI__GtkUI            LV2_UI_PREFIX "GtkUI"
 #define LV2_UI__PortNotification LV2_UI_PREFIX "PortNotification"
 #define LV2_UI__Qt4UI            LV2_UI_PREFIX "Qt4UI"
 #define LV2_UI__UI               LV2_UI_PREFIX "UI"
+#define LV2_UI__WindowsUI        LV2_UI_PREFIX "WindowsUI"
 #define LV2_UI__X11UI            LV2_UI_PREFIX "X11UI"
 #define LV2_UI__binary           LV2_UI_PREFIX "binary"
 #define LV2_UI__fixedSize        LV2_UI_PREFIX "fixedSize"
@@ -370,6 +373,7 @@ typedef struct _LV2UI_Peak_Data {
    the host should just iterate from 0 and upwards until the function returns
    NULL or a descriptor with an URI matching the one the host is looking for.
 */
+LV2_SYMBOL_EXPORT
 const LV2UI_Descriptor* lv2ui_descriptor(uint32_t index);
 
 /**

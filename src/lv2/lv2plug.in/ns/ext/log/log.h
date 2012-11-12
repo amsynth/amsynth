@@ -44,7 +44,7 @@ extern "C" {
 /** Allow type checking of printf-like functions. */
 #    define LV2_LOG_FUNC(fmt, arg1) __attribute__((format(printf, fmt, arg1)))
 #else
-#    define LV2_LOG_FUNC
+#    define LV2_LOG_FUNC(fmt, arg1)
 #endif
 
 /**

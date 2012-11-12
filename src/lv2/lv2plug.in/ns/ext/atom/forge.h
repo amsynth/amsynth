@@ -426,7 +426,7 @@ lv2_atom_forge_literal(LV2_Atom_Forge* forge,
                        uint32_t        lang)
 {
 	const LV2_Atom_Literal a = {
-		{ sizeof(LV2_Atom_Literal) - sizeof(LV2_Atom) + len + 1,
+		{ (uint32_t)(sizeof(LV2_Atom_Literal) - sizeof(LV2_Atom) + len + 1),
 		  forge->Literal },
 		{ datatype,
 		  lang }
@@ -466,7 +466,8 @@ lv2_atom_forge_vector(LV2_Atom_Forge* forge,
                       const void*     elems)
 {
 	const LV2_Atom_Vector a = {
-		{ sizeof(LV2_Atom_Vector_Body) + n_elems * child_size, forge->Vector },
+		{ (uint32_t)(sizeof(LV2_Atom_Vector_Body) + n_elems * child_size),
+		  forge->Vector },
 		{ child_size, child_type }
 	};
 	LV2_Atom_Forge_Ref out = lv2_atom_forge_write(forge, &a, sizeof(a));
@@ -558,7 +559,7 @@ lv2_atom_forge_blank(LV2_Atom_Forge*       forge,
 
 /**
    Write the header for a property body (likely in an Object).
-   See lv2_atom_forge_object() documentation for an example.
+   See lv2_atom_forge_resource() documentation for an example.
 */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_property_head(LV2_Atom_Forge* forge,
@@ -571,8 +572,6 @@ lv2_atom_forge_property_head(LV2_Atom_Forge* forge,
 
 /**
    Write the header for a Sequence.
-   The size of the returned sequence will be 0, so passing it as the parent
-   parameter to other forge methods will do the right thing.
 */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_sequence_head(LV2_Atom_Forge*       forge,
@@ -589,8 +588,8 @@ lv2_atom_forge_sequence_head(LV2_Atom_Forge*       forge,
 
 /**
    Write the time stamp header of an Event (in a Sequence) in audio frames.
-   After this, call the appropriate forge method(s) to write the body, passing
-   the same @p parent parameter.  Note the returned LV2_Event is NOT an Atom.
+   After this, call the appropriate forge method(s) to write the body.  Note
+   the returned reference is to an LV2_Event which is NOT an Atom.
 */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_frame_time(LV2_Atom_Forge* forge, int64_t frames)
@@ -599,9 +598,9 @@ lv2_atom_forge_frame_time(LV2_Atom_Forge* forge, int64_t frames)
 }
 
 /**
-   Write the time stamp header of an Event (in a Sequence) in beats.
-   After this, call the appropriate forge method(s) to write the body, passing
-   the same @p parent parameter.  Note the returned LV2_Event is NOT an Atom.
+   Write the time stamp header of an Event (in a Sequence) in beats.  After
+   this, call the appropriate forge method(s) to write the body.  Note the
+   returned reference is to an LV2_Event which is NOT an Atom.
 */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_beat_time(LV2_Atom_Forge* forge, double beats)

@@ -204,10 +204,11 @@ lv2_atom_object_is_end(const LV2_Atom_Object_Body* body,
 static inline LV2_Atom_Property_Body*
 lv2_atom_object_next(const LV2_Atom_Property_Body* i)
 {
-	const LV2_Atom* const value = (LV2_Atom*)((uint8_t*)i + sizeof(i));
-	return (LV2_Atom_Property_Body*)((uint8_t*)i
-	                              + sizeof(LV2_Atom_Property_Body)
-	                              + lv2_atom_pad_size(value->size));
+	const LV2_Atom* const value = (LV2_Atom*)(
+		(uint8_t*)i + 2 * sizeof(uint32_t));
+	return (LV2_Atom_Property_Body*)(
+		(uint8_t*)i + lv2_atom_pad_size(sizeof(LV2_Atom_Property_Body)
+		                                + value->size));
 }
 
 /**
@@ -299,7 +300,44 @@ lv2_atom_object_query(const LV2_Atom_Object* object,
 }
 
 /**
-   Variable argument version of lv2_atom_object_get().
+   Body only version of lv2_atom_object_get().
+*/
+static inline int
+lv2_atom_object_body_get(uint32_t size, const LV2_Atom_Object_Body* body, ...)
+{
+	int matches   = 0;
+	int n_queries = 0;
+
+	/* Count number of keys so we can short-circuit when done */
+	va_list args;
+	va_start(args, body);
+	for (n_queries = 0; va_arg(args, uint32_t); ++n_queries) {
+		if (!va_arg(args, const LV2_Atom**)) {
+			return -1;
+		}
+	}
+	va_end(args);
+
+	LV2_ATOM_OBJECT_BODY_FOREACH(body, size, prop) {
+		va_start(args, body);
+		for (int i = 0; i < n_queries; ++i) {
+			uint32_t         qkey = va_arg(args, uint32_t);
+			const LV2_Atom** qval = va_arg(args, const LV2_Atom**);
+			if (qkey == prop->key && !*qval) {
+				*qval = &prop->value;
+				if (++matches == n_queries) {
+					return matches;
+				}
+				break;
+			}
+		}
+		va_end(args);
+	}
+	return matches;
+}
+
+/**
+   Variable argument version of lv2_atom_object_query().
 
    This is nicer-looking in code, but a bit more error-prone since it is not
    type safe and the argument list must be terminated.

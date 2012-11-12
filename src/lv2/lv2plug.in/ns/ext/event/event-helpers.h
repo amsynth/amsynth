@@ -23,11 +23,16 @@
 #define LV2_EVENT_HELPERS_H
 
 #include <stdint.h>
-#include <stdbool.h>
-#include <string.h>
 #include <stdlib.h>
-#include <assert.h>
+#include <string.h>
+
 #include "lv2/lv2plug.in/ns/ext/event/event.h"
+
+#ifdef __cplusplus
+extern "C" {
+#else
+#    include <stdbool.h>
+#endif
 
 /** @file
  * Helper functions for the LV2 Event extension
@@ -108,7 +113,7 @@ lv2_event_begin(LV2_Event_Iterator* iter,
 static inline bool
 lv2_event_is_valid(LV2_Event_Iterator* iter)
 {
-	return (iter->offset < iter->buf->size);
+	return (iter->buf && (iter->offset < iter->buf->size));
 }
 
 
@@ -118,7 +123,9 @@ lv2_event_is_valid(LV2_Event_Iterator* iter)
 static inline bool
 lv2_event_increment(LV2_Event_Iterator* iter)
 {
-	assert(lv2_event_is_valid(iter));
+	if (!lv2_event_is_valid(iter)) {
+		return false;
+	}
 
 	LV2_Event* const ev = (LV2_Event*)(
 			(uint8_t*)iter->buf->data + iter->offset);
@@ -140,7 +147,9 @@ static inline LV2_Event*
 lv2_event_get(LV2_Event_Iterator* iter,
               uint8_t**           data)
 {
-	assert(lv2_event_is_valid(iter));
+	if (!lv2_event_is_valid(iter)) {
+		return false;
+	}
 
 	LV2_Event* const ev = (LV2_Event*)(
 			(uint8_t*)iter->buf->data + iter->offset);
@@ -165,6 +174,9 @@ lv2_event_write(LV2_Event_Iterator* iter,
                 uint16_t            size,
                 const uint8_t*      data)
 {
+	if (!iter->buf)
+		return false;
+
 	if (iter->buf->capacity - iter->buf->size < sizeof(LV2_Event) + size)
 		return false;
 
@@ -242,6 +254,10 @@ lv2_event_write_event(LV2_Event_Iterator* iter,
 
 	return true;
 }
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif /* LV2_EVENT_HELPERS_H */
 

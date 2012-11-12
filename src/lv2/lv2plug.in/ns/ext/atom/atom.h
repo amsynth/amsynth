@@ -80,10 +80,21 @@ typedef char lv2_atom_assert_double_fits_in_64_bits[
 	((void*)((uint8_t*)(atom) + sizeof(type)))
 
 /**
+   Const version of LV2_ATOM_CONTENTS.
+*/
+#define LV2_ATOM_CONTENTS_CONST(type, atom) \
+	((const void*)((const uint8_t*)(atom) + sizeof(type)))
+
+/**
    Return a pointer to the body of an Atom.  The "body" of an atom is the
    data just past the LV2_Atom head (i.e. the same offset for all types).
 */
 #define LV2_ATOM_BODY(atom) LV2_ATOM_CONTENTS(LV2_Atom, atom)
+
+/**
+   Const version of LV2_ATOM_BODY.
+*/
+#define LV2_ATOM_BODY_CONST(atom) LV2_ATOM_CONTENTS_CONST(LV2_Atom, atom)
 
 /** The header of an atom:Atom. */
 typedef struct {
