@@ -1,11 +1,12 @@
 
-#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
-#include "lv2/lv2plug.in/ns/ext/event/event-helpers.h"
-#include "lv2/lv2plug.in/ns/ext/event/event.h"
-#include "lv2/lv2plug.in/ns/ext/midi/midi.h"
+#include "lv2/lv2plug.in/ns/ext/atom/util.h"
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
+#include "lv2/lv2plug.in/ns/ext/worker/worker.h"
+#include "lv2/lv2plug.in/ns/ext/midi/midi.h"
+#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,7 +32,7 @@ struct amsynth_wrapper {
 	MidiController *mc;
 	float * out_l;
 	float * out_r;
-	LV2_Event_Buffer *midi_in_port;
+	const LV2_Atom_Sequence *midi_in_port;
 	float ** params;
 	struct {
 		LV2_URID midiEvent;
@@ -96,7 +97,7 @@ lv2_connect_port(LV2_Handle instance, uint32_t port, void *data_location)
 	switch (port) {
 	case 0: a->out_l = (float *)data_location; break;
 	case 1: a->out_r = (float *)data_location; break;
-	case 2: a->midi_in_port = (LV2_Event_Buffer *)data_location; break;
+	case 2: a->midi_in_port = (LV2_Atom_Sequence *)data_location; break;
 	default:
 		if ((port - 3) < kAmsynthParameterCount) { a->params[port-3] = (float *)data_location; }
 		break;
@@ -120,17 +121,11 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 {
 	amsynth_wrapper * a = (amsynth_wrapper *) instance;
 
-	if (a->midi_in_port != NULL) {
-		LV2_Event_Iterator ev_it;
-		lv2_event_begin(&ev_it, a->midi_in_port);
-		const uint32_t event_count = ev_it.buf->event_count;
-		for (uint32_t i=0; i < event_count; ++i) {
-			uint8_t *data = NULL;
-			LV2_Event *ev = lv2_event_get(&ev_it, &data);
-			if (ev->type == a->uris.midiEvent) {
-				a->mc->HandleMidiData(data, ev->size);
-			}
-			lv2_event_increment(&ev_it);
+	LV2_ATOM_SEQUENCE_FOREACH(a->midi_in_port, ev) {
+		if (ev->body.type == a->uris.midiEvent) {
+			uint32_t size = ev->body.size;
+			uint8_t *data = (uint8_t *)(ev + 1);
+			a->mc->HandleMidiData(data, size);
 		}
 	}
 

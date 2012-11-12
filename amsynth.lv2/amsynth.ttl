@@ -1,3 +1,4 @@
+@prefix atom:    <http://lv2plug.in/ns/ext/atom#> .
 @prefix lv2:     <http://lv2plug.in/ns/lv2core#> .
 @prefix lv2midi: <http://lv2plug.in/ns/ext/midi#> .
 @prefix lv2ev:   <http://lv2plug.in/ns/ext/event#>.
@@ -9,6 +10,7 @@
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix pset:    <http://lv2plug.in/ns/ext/presets#> .
+@prefix urid:    <http://lv2plug.in/ns/ext/urid#> .
 
 <http://code.google.com/p/amsynth/amsynth/ui/gtk>
     a uiext:GtkUI ;
@@ -20,12 +22,9 @@
     doap:name "amsynth" ;
     doap:maintainer [ foaf:name "Nick Dowell" ; ] ;
     doap:license <http://usefulinc.com/doap/licenses/gpl> ;
-    lv2:requiredFeature <http://lv2plug.in/ns/ext/event> ;
-    lv2:requiredFeature <http://lv2plug.in/ns/ext/midi> ;
-    lv2:requiredFeature <http://lv2plug.in/ns/ext/urid> ;
+    lv2:requiredFeature urid:map ;
     lv2:optionalFeature lv2:hardRtCapable;
     uiext:ui <http://code.google.com/p/amsynth/amsynth/ui/gtk> ;
-    
     lv2:port [
         a lv2:OutputPort ;
         a lv2:AudioPort ;
@@ -41,13 +40,13 @@
         lv2:name "out_r" ;
         pg:membership [ pg:group <#stereoOut>; pg:role pg:rightChannel ] ;
     ] , [
-        a lv2:InputPort;
-        a lv2ev:EventPort;
+        a lv2:InputPort ,
+            atom:AtomPort ;
+        atom:bufferType atom:Sequence ;
+        atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ;
         lv2:index 2 ;
         lv2:symbol "midi";
         lv2:name "MIDI Input";
-        lv2ev:supportsEvent lv2midi:MidiEvent ;
-        lv2ev:supportsTimestamp <lv2ev:TimeStamp> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
