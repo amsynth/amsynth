@@ -24,7 +24,6 @@ static const gchar *bitmap_popup_key = "bitmap_popup";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static gboolean bitmap_popup_destroy		( GtkWidget *widget, gpointer user_data );
 static gboolean bitmap_popup_expose			( GtkWidget *wigdet, GdkEventExpose *event );
 static gboolean bitmap_popup_button_press	( GtkWidget *wigdet, GdkEventButton *event );
 
@@ -50,10 +49,8 @@ bitmap_popup_new( GtkAdjustment *adjustment,
 	self->frame_height	= frame_height;
 	self->frame_count	= frame_count;
 
-	g_object_set_data (G_OBJECT (self->drawing_area), bitmap_popup_key, self);
+	g_object_set_data_full (G_OBJECT (self->drawing_area), bitmap_popup_key, self, (GtkDestroyNotify) g_free);
 	g_assert (g_object_get_data (G_OBJECT (self->drawing_area), bitmap_popup_key));
-
-	g_signal_connect (G_OBJECT (self->drawing_area), "destroy", G_CALLBACK (bitmap_popup_destroy), NULL);
 	
 	g_signal_connect (G_OBJECT (self->drawing_area), "expose-event", G_CALLBACK (bitmap_popup_expose), NULL);
 
@@ -69,14 +66,6 @@ bitmap_popup_new( GtkAdjustment *adjustment,
 	bitmap_popup_set_adjustment (self->drawing_area, adjustment);
 	
 	return self->drawing_area;
-}
-
-static gboolean
-bitmap_popup_destroy( GtkWidget *widget, gpointer user_data )
-{
-	bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
-	bitmap_popup_set_bg (widget, NULL);
-	g_free (self);
 }
 
 void bitmap_popup_set_bg (GtkWidget *widget, GdkPixbuf *pixbuf)

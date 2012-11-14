@@ -20,7 +20,6 @@ static const gchar *bitmap_button_key = "bitmap_button";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static gboolean bitmap_button_destroy		( GtkWidget *widget, gpointer user_data );
 static gboolean bitmap_button_expose		( GtkWidget *widget, GdkEventExpose *event );
 static gboolean bitmap_button_button_press	( GtkWidget *widget, GdkEventButton *event );
 
@@ -45,11 +44,9 @@ bitmap_button_new( GtkAdjustment *adjustment,
 	self->frame_height	= frame_height;
 	self->frame_count	= frame_count;
 
-	g_object_set_data (G_OBJECT (self->drawing_area), bitmap_button_key, self);
+	g_object_set_data_full (G_OBJECT (self->drawing_area), bitmap_button_key, self, (GtkDestroyNotify) g_free);
 	g_assert (g_object_get_data (G_OBJECT (self->drawing_area), bitmap_button_key));
 
-	g_signal_connect (G_OBJECT (self->drawing_area), "destroy", G_CALLBACK (bitmap_button_destroy), NULL);
-	
 	g_signal_connect (G_OBJECT (self->drawing_area), "expose-event", G_CALLBACK (bitmap_button_expose), NULL);
 
 	g_signal_connect (G_OBJECT (self->drawing_area), "button-press-event", G_CALLBACK (bitmap_button_button_press), NULL);
@@ -64,14 +61,6 @@ bitmap_button_new( GtkAdjustment *adjustment,
 	bitmap_button_set_adjustment (self->drawing_area, adjustment);
 	
 	return self->drawing_area;
-}
-
-gboolean
-bitmap_button_destroy ( GtkWidget *widget, gpointer user_data )
-{
-	bitmap_button *self = g_object_get_data (G_OBJECT (widget), bitmap_button_key); g_assert (self);
-	bitmap_button_set_bg (widget, NULL);
-	g_free (self);
 }
 
 void bitmap_button_set_bg (GtkWidget *widget, GdkPixbuf *pixbuf)
