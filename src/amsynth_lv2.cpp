@@ -1,4 +1,9 @@
 
+#include "controls.h"
+#include "MidiController.h"
+#include "PresetController.h"
+#include "VoiceAllocationUnit.h"
+
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
@@ -10,11 +15,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "controls.h"
-#include "MidiController.h"
-#include "PresetController.h"
-#include "VoiceAllocationUnit.h"
 
 #define AMSYNTH_LV2_URI			"http://code.google.com/p/amsynth/amsynth"
 

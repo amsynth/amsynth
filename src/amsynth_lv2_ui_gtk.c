@@ -1,13 +1,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "controls.h"
+#include "Preset.h"
+#include "GUI/editor_pane.h"
+
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 #include "lv2/lv2plug.in/ns/extensions/ui/ui.h"
 
 #include <stdio.h>
-
-#include "controls.h"
-#include "Preset.h"
-#include "GUI/editor_pane.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
