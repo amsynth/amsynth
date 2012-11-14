@@ -36,7 +36,7 @@ lv2_ui_instantiate(const struct _LV2UI_Descriptor* descriptor,
 				   LV2UI_Widget*                   widget,
 				   const LV2_Feature* const*       features)
 {
-	lv2_ui *ui = calloc(1, sizeof(lv2_ui));
+	lv2_ui *ui = g_malloc0 (sizeof(lv2_ui));
 	ui->_write_function = write_function;
 	ui->_controller = controller;
 
@@ -62,7 +62,7 @@ lv2_ui_cleanup(LV2UI_Handle ui)
 	size_t i; for (i=0; i<kAmsynthParameterCount; i++) {
 		g_object_unref (((lv2_ui *)ui)->_adjustments[i]);
 	}
-	free(ui);
+	g_free (ui);
 }
 
 static void
