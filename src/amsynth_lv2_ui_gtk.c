@@ -59,7 +59,9 @@ lv2_ui_instantiate(const struct _LV2UI_Descriptor* descriptor,
 static void
 lv2_ui_cleanup(LV2UI_Handle ui)
 {
-	// TODO: free gtk_adjustments
+	size_t i; for (i=0; i<kAmsynthParameterCount; i++) {
+		g_object_unref (((lv2_ui *)ui)->_adjustments[i]);
+	}
 	free(ui);
 }
 
