@@ -1,7 +1,0 @@
-CFLAGS='-g -O0 -DDEBUG -Wall -Wextra'
-if ccache --version > /dev/null ; then
-	${0%/*}/configure $* CC='ccache gcc' CXX='ccache g++' CFLAGS="$CFLAGS" CXXFLAGS="$CFLAGS"
-else
-	${0%/*}/configure $* CFLAGS="$CFLAGS" CXXFLAGS="$CFLAGS"
-fi
-
