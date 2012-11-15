@@ -368,13 +368,3 @@
         lv2:minimum 0.000000 ;
         lv2:maximum 1.000000 ;
     ].
-
-<http://code.google.com/p/amsynth/amsynth#default>
-    a pset:Preset ;
-    rdfs:seeAlso <default.ttl> ;
-    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> .
-
-<http://code.google.com/p/amsynth/amsynth#square5>
-    a pset:Preset ;
-    rdfs:seeAlso <square5.ttl> ;
-    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> .
