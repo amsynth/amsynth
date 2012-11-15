@@ -14,3 +14,5 @@ dist_skinsdefault_DATA = \
 	waveform_lfo.png \
 	waveform_pics.png
 
+uninstall-hook:
+	rm -rf $(DESTDIR)$(skinsdefaultdir)
