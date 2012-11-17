@@ -95,6 +95,7 @@ int
 JackOutput::process (jack_nframes_t nframes, void *arg)
 {
 	JackOutput *self = (JackOutput *)arg;
+	assert(self->_midiHandler);
 	float *lout = (jack_default_audio_sample_t *) jack_port_get_buffer(self->l_port, nframes);
 	float *rout = (jack_default_audio_sample_t *) jack_port_get_buffer(self->r_port, nframes);
 #if HAVE_JACK_MIDIPORT_H
@@ -107,8 +108,7 @@ JackOutput::process (jack_nframes_t nframes, void *arg)
 			jack_midi_event_get(&midi_event, port_buf, i);
 			if (midi_event.size && midi_event.buffer) {
 				// TODO: use midi_event.time to reduce midi event jitter
-				if (self->_midiHandler)
-					self->_midiHandler->HandleMidiData(midi_event.buffer, midi_event.size);
+				self->_midiHandler->HandleMidiData(midi_event.buffer, midi_event.size);
 			}
 		}
 	}
@@ -124,6 +124,7 @@ bool
 JackOutput::Start	()
 {
 #ifdef WITH_JACK
+	assert(_midiHandler);
 	if (!client) return false;
 	if (jack_activate(client)) 
 	{

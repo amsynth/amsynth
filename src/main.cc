@@ -178,11 +178,7 @@ GenericOutput * open_audio()
 			delete jack;
 			return NULL;
 		}
-		if (config.current_midi_driver == "JACK" ||
-			config.current_midi_driver == "jack" ){
-			jack->setMidiHandler(midi_controller);
-			printf("Using JACK MIDI\n");
-		}
+		jack->setMidiHandler(midi_controller);
 		return jack;
 	}
 
@@ -200,11 +196,7 @@ GenericOutput * open_audio()
 		JackOutput *jack = new JackOutput();
 		if (jack->init(config) == 0)
 		{
-			if (config.current_midi_driver == "JACK" ||
-				config.current_midi_driver == "jack" )
-			{
-				jack->setMidiHandler(midi_controller);
-			}
+			jack->setMidiHandler(midi_controller);
 			return jack;
 		}
 		else
