@@ -6,6 +6,7 @@
 #include "controls.h"
 
 #include <cstdlib>
+#include <cstdio>
 
 #ifdef _DEBUG
 #include <iostream>
@@ -193,6 +194,8 @@ void get_parameter_properties(int parameter_index, double *minimum, double *maxi
     }
 }
 
+/* this implements the C API in controls.h */
+
 static Preset _preset;
 
 const char *parameter_name_from_index (int param_index)
@@ -210,4 +213,12 @@ int parameter_index_from_name (const char *param_name)
 		}
 	}
 	return -1;
+}
+
+void parameter_get_display (int parameter_index, float parameter_value, char *buffer, size_t maxlen)
+{
+	Parameter parameter = _preset.getParameter(parameter_index);
+	parameter.setValue(parameter_value);
+	float real_value = parameter.getControlValue();
+	snprintf(buffer, maxlen, "%.3f", real_value);
 }
