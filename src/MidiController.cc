@@ -3,10 +3,13 @@
  */
 
 #include "MidiController.h"
+
+#include "midi.h"
+
+#include <assert.h>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include <cstdlib>
-#include <assert.h>
 
 using namespace std;
 
@@ -77,11 +80,10 @@ MidiController::HandleMidiData(unsigned char* bytes, unsigned numBytes)
 
 		switch (status & 0xf0)
 		{
-		case 0x80:
-			// note off : data byte 1 = note, data byte 2 = velocity
+		case MIDI_STATUS_NOTE_OFF:
 			// N.B. many devices send a 'note on' event with 0 velocity
 			// rather than a distinct 'note off' event.
-			if (data == 0xff) { // wait until we receive the second data byte
+			if (data == 0xff) {
 				data = byte;
 				break;
 			}
@@ -89,9 +91,7 @@ MidiController::HandleMidiData(unsigned char* bytes, unsigned numBytes)
 			data = 0xff;
 			break;
 	
-		case 0x90:
-			// note on.
-			// data byte 1 = note, data byte 2 = velocity
+		case MIDI_STATUS_NOTE_ON:
 			if (data == 0xff) {
 				data = byte;
 				break;
@@ -100,19 +100,15 @@ MidiController::HandleMidiData(unsigned char* bytes, unsigned numBytes)
 			data = 0xff;
 			break;
 	
-		case 0xa0:
-			// key pressure. 
-			// data byte 1 = note, data byte 2 = pressure (after-touch)
-			if (data == 0xff) { // wait until we receive the second data byte
+		case MIDI_STATUS_NOTE_PRESSURE:
+			if (data == 0xff) {
 				data = byte;
 				break;
 			}
 			data = 0xff;
 			break;
 
-		case 0xb0:
-			// parameter change
-			// data byte 1 = controller, data byte 2 = value
+		case MIDI_STATUS_CONTROLLER:
 			if (data == 0xFF) {
 				data = byte;
 				break;
@@ -121,28 +117,19 @@ MidiController::HandleMidiData(unsigned char* bytes, unsigned numBytes)
 			data = 0xFF;
 			break;
 
-		case 0xc0:
-			// program change
-//			if (_handler) {
-//				_handler->HandleMidiAllSoundOff();
-//				_handler->HandleMidiProgramChange(byte);
-//			}
-			if( presetController->getCurrPresetNumber() != byte )
-			{
+		case MIDI_STATUS_PROGRAM_CHANGE:
+			if (presetController->getCurrPresetNumber() != byte) {
 				if (_handler) _handler->HandleMidiAllSoundOff();
 				presetController->selectPreset((int) byte);
 			}
 			data = 0xff;
 			break;
 	
-		case 0xd0:
-			// channel pressure
-			// data byte = pressure (after-touch)
+		case MIDI_STATUS_CHANNEL_PRESSURE:
 			data = 0xff;
 			break;
 	
-		case 0xe0:
-			// pitch wheel
+		case MIDI_STATUS_PITCH_WHEEL:
 			// 2 data bytes give a 14 bit value, least significant 7 bits
 			// first
 			if (data == 0xFF) {
@@ -184,39 +171,45 @@ MidiController::dispatch_note(unsigned char, unsigned char note, unsigned char v
 void
 MidiController::controller_change(unsigned char cc, unsigned char value)
 {
-	static const float scale = 1.f/127.f;
-    // controllers:
-    // 0 - 31 continuous controllers 0 - 31, most significant byte
-    // 32 - 63 continuous controllers 0 - 31, least significant byte
-    // 64 - 95 on / off switches
-    // 96 - 121 unspecified, reserved for future.
-    // 122 - 127 channel mode messages
-    // Controller number 1 IS standardized to be the modulation wheel.
-
-    // from experimentation (with yamaha keyboards)
-    // controller 0x40 (64) is the sustain pedal. (0 if off, 127 is on)
-    switch (cc) {
-		
-		case 64:
-		// sustain pedal
-			if (_handler) _handler->HandleMidiSustainPedal(value);
+	switch (cc) {
+		case MIDI_CC_BANK_SELECT_LSB:
+		case MIDI_CC_BANK_SELECT_MSB:
 			break;
-			
-		case 120:	// ALL SOUND OFF
-			if (value == 0) _handler->HandleMidiAllSoundOff();
+		case MIDI_CC_SUSTAIN_PEDAL:
+			if (_handler)
+				_handler->HandleMidiSustainPedal(value);
 			break;
-			
-		case 123:	// ALL NOTES OFF
-			if (value == 0) _handler->HandleMidiAllNotesOff();
+		case MIDI_CC_PORTAMENTO:
+		case MIDI_CC_SOSTENUTO:
+		case MIDI_CC_NRPN_LSB:
+		case MIDI_CC_NRPN_MSB:
+		case MIDI_CC_RPN_LSB:
+		case MIDI_CC_RPM_MSB:
 			break;
-
+		case MIDI_CC_ALL_SOUND_OFF:
+			if (_handler && value == 0)
+				_handler->HandleMidiAllSoundOff();
+			break;
+		case MIDI_CC_RESET_ALL_CONTROLLERS:
+		case MIDI_CC_LOCAL_CONTROL:
+			break;
+		case MIDI_CC_ALL_NOTES_OFF:
+			if (_handler && value == 0)
+				_handler->HandleMidiAllNotesOff();
+			break;
+		case MIDI_CC_OMNI_MODE_OFF:
+		case MIDI_CC_OMNI_MODE_ON:
+		case MIDI_CC_MONO_MODE_ON:
+		case MIDI_CC_POLY_MODE_ON:
+			_handler->HandleMidiAllNotesOff();
+		case MIDI_CC_MODULATION_WHEEL:
 		default:
-			if( last_active_controller.getValue() != cc ) {
-				last_active_controller.setValue( cc );
+			if (last_active_controller.getValue() != cc) {
+				last_active_controller.setValue(cc);
 			}
-			getController(cc).SetNormalisedValue(value*scale);
+			getController(cc).SetNormalisedValue(value / 127.0f);
 			break;
-    }
+	}
 	return;
 }
 
