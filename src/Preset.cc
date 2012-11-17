@@ -215,7 +215,7 @@ int parameter_index_from_name (const char *param_name)
 	return -1;
 }
 
-void parameter_get_display (int parameter_index, float parameter_value, char *buffer, size_t maxlen)
+int parameter_get_display (int parameter_index, float parameter_value, char *buffer, size_t maxlen)
 {
 	Parameter parameter = _preset.getParameter(parameter_index);
 	parameter.setValue(parameter_value);
@@ -228,28 +228,36 @@ void parameter_get_display (int parameter_index, float parameter_value, char *bu
 		case kAmsynthParameter_FilterEnvAttack:
 		case kAmsynthParameter_FilterEnvDecay:
 		case kAmsynthParameter_FilterEnvRelease:
+		case kAmsynthParameter_PortamentoTime:
 			if (real_value < 1.0) {
-				snprintf(buffer, maxlen, "%.0f ms", real_value * 1000);
+				return snprintf(buffer, maxlen, "%.0f ms", real_value * 1000);
 			} else {
-				snprintf(buffer, maxlen, "%.1f s", real_value);
+				return snprintf(buffer, maxlen, "%.1f s", real_value);
 			}
-			break;
 		case kAmsynthParameter_LFOFreq:
-			snprintf(buffer, maxlen, "%.1f Hz", real_value);
-			break;
+			return snprintf(buffer, maxlen, "%.1f Hz", real_value);
 		case kAmsynthParameter_Oscillator2Detune:
-			snprintf(buffer, maxlen, "%+.1f Cents", 1200.0 * log2(real_value));
-			break;
+			return snprintf(buffer, maxlen, "%+.1f Cents", 1200.0 * log2(real_value));
 		case kAmsynthParameter_AmpEnvSustain:
 		case kAmsynthParameter_FilterEnvSustain:
 		case kAmsynthParameter_MasterVolume:
-			snprintf(buffer, maxlen, "%+.1f dB", 20.0 * log10(real_value));
-			break;
+			return snprintf(buffer, maxlen, "%+.1f dB", 20.0 * log10(real_value));
 		case kAmsynthParameter_Oscillator2Octave:
-			snprintf(buffer, maxlen, "%+d Octave", (int)log2(real_value));
-			break;
-		default:
-			snprintf(buffer, maxlen, "%.3f", real_value);
+			return snprintf(buffer, maxlen, "%+d Octave", (int)log2(real_value));
+		case kAmsynthParameter_FilterEnvAmount:
+			return snprintf(buffer, maxlen, "%+d %%", (int)roundf(real_value / 16.0 * 100.0));
+		case kAmsynthParameter_FilterResonance:
+		case kAmsynthParameter_FilterCutoff:
+		case kAmsynthParameter_LFOToOscillators:
+		case kAmsynthParameter_LFOToFilterCutoff:
+		case kAmsynthParameter_LFOToAmp:
+		case kAmsynthParameter_ReverbRoomsize:
+		case kAmsynthParameter_ReverbDamp:
+		case kAmsynthParameter_ReverbWet:
+		case kAmsynthParameter_ReverbWidth:
+		case kAmsynthParameter_AmpDistortion:
+			return snprintf(buffer, maxlen, "%d %%", (int)roundf(parameter.GetNormalisedValue() * 100.0));
 			break;
 	}
+	return 0;
 }

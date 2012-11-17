@@ -126,15 +126,13 @@ void bitmap_knob_set_parameter_index (GtkWidget *widget, unsigned long parameter
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static void tooltip_update (bitmap_knob *self)
+static int tooltip_update (bitmap_knob *self)
 {
 	gdouble value = gtk_adjustment_get_value (self->adjustment);
-	const char *name = parameter_name_from_index (self->parameter_index);
 	char display[32] = "";
-	parameter_get_display (self->parameter_index, value, display, sizeof(display));
-	char text[64] = "";
-	snprintf (text, sizeof(text), "%s: %s", name, display);
-	gtk_label_set_text (GTK_LABEL (self->tooltip_label), text);
+	if (!parameter_get_display (self->parameter_index, value, display, sizeof(display)))
+		return 0;
+	gtk_label_set_text (GTK_LABEL (self->tooltip_label), display);
 }
 
 static void tooltip_show (bitmap_knob *self)
@@ -214,8 +212,8 @@ bitmap_knob_button_press ( GtkWidget *widget, GdkEventButton *event )
 		self->origin_val = gtk_adjustment_get_value (self->adjustment);
 		self->origin_y = event->y;
 		self->is_dragging = TRUE;
-		tooltip_update (self);
-		tooltip_show (self);
+		if (tooltip_update (self))
+			tooltip_show (self);
 		return TRUE;
 	}
 	return FALSE;

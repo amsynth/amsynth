@@ -90,7 +90,7 @@ extern "C" {
 const char *parameter_name_from_index (int param_index);
 int parameter_index_from_name (const char *param_name);
 
-void parameter_get_display (int parameter_index, float parameter_value, char *buffer, size_t maxlen);
+int parameter_get_display (int parameter_index, float parameter_value, char *buffer, size_t maxlen);
 
 #ifdef __cplusplus
 }
