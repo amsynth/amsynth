@@ -24,10 +24,14 @@ static void session_callback(jack_session_event_t *event, void *arg);
 #endif
 
 JackOutput::JackOutput()
-:	running(false)
+:	_auto_connect(false)
 #ifdef WITH_JACK
+,	l_port(NULL)
+,	r_port(NULL)
+,	m_port(NULL)
 ,	client(NULL)
 #endif
+,	_midiHandler(NULL)
 {
 }
 

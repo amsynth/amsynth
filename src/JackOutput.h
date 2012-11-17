@@ -30,19 +30,12 @@ public:
 	
 	string		get_error_msg	( )		{ return error_msg; };
 	
-	bool		canRecord	( )		{ return false; };
-	void		setOutputFile	( string file )	{ wavoutfile = file; };
-	string		getOutputFile	( )		{ return wavoutfile; };
-
 	void		setMidiHandler(MidiStreamReceiver *midiHandler) { _midiHandler = midiHandler; }
 
 #ifdef WITH_JACK
 	static int process(jack_nframes_t nframes, void *arg);
 #endif
 private:
-	int	running;
-	string	wavoutfile;
-	int	recording;
 	string	error_msg;
 	bool _auto_connect;
 #ifdef WITH_JACK
