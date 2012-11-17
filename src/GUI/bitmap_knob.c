@@ -1,7 +1,10 @@
 
 #include "bitmap_knob.h"
 
+#include "../controls.h"
+
 #include <math.h>
+#include <stdio.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -14,6 +17,8 @@
 typedef struct {
 
 	GtkWidget *drawing_area;
+	GtkWidget *tooltip_window;
+	GtkWidget *tooltip_label;
 
 	GtkAdjustment *adjustment;
 	unsigned long parameter_index;
@@ -26,9 +31,10 @@ typedef struct {
 	guint frame_count;
 	guint sensitivity;
 	
+	gboolean is_dragging;
 	gdouble origin_y;
 	gdouble origin_val;
-
+	
 } bitmap_knob;
 
 static const gchar *bitmap_knob_key = "bitmap_knob";
@@ -37,6 +43,7 @@ static const gchar *bitmap_knob_key = "bitmap_knob";
 
 static gboolean bitmap_knob_expose			( GtkWidget *wigdet, GdkEventExpose *event );
 static gboolean bitmap_knob_button_press	( GtkWidget *wigdet, GdkEventButton *event );
+static gboolean bitmap_knob_button_release	( GtkWidget *wigdet, GdkEventButton *event );
 static gboolean bitmap_knob_motion_notify	( GtkWidget *wigdet, GdkEventMotion *event );
 
 static void		bitmap_knob_set_adjustment				( GtkWidget *widget, GtkAdjustment *adjustment );
@@ -64,9 +71,8 @@ bitmap_knob_new( GtkAdjustment *adjustment,
 	g_assert (g_object_get_data (G_OBJECT (self->drawing_area), bitmap_knob_key));
 	
 	g_signal_connect (G_OBJECT (self->drawing_area), "expose-event", G_CALLBACK (bitmap_knob_expose), NULL);
-
 	g_signal_connect (G_OBJECT (self->drawing_area), "button-press-event", G_CALLBACK (bitmap_knob_button_press), NULL);
-
+	g_signal_connect (G_OBJECT (self->drawing_area), "button-release-event", G_CALLBACK (bitmap_knob_button_release), NULL);
 	g_signal_connect (G_OBJECT (self->drawing_area), "motion-notify-event", G_CALLBACK (bitmap_knob_motion_notify), NULL);
 	
 	gtk_widget_set_usize (self->drawing_area, frame_width, frame_height);
@@ -74,10 +80,17 @@ bitmap_knob_new( GtkAdjustment *adjustment,
 	// set up event mask
 	gint event_mask = gtk_widget_get_events (self->drawing_area);
 	event_mask |= GDK_BUTTON_PRESS_MASK;
+	event_mask |= GDK_BUTTON_RELEASE_MASK;
 	event_mask |= GDK_BUTTON1_MOTION_MASK;
 	gtk_widget_set_events (self->drawing_area, event_mask);
 	
 	bitmap_knob_set_adjustment (self->drawing_area, adjustment);
+
+	self->tooltip_window = gtk_window_new (GTK_WINDOW_POPUP);
+	gtk_window_set_type_hint (GTK_WINDOW (self->tooltip_window), GDK_WINDOW_TYPE_HINT_TOOLTIP);
+	self->tooltip_label = gtk_label_new ("");
+	gtk_container_add (GTK_CONTAINER (self->tooltip_window), self->tooltip_label);
+	gtk_widget_show (self->tooltip_label);
 	
 	return self->drawing_area;
 }
@@ -99,6 +112,34 @@ void bitmap_knob_set_parameter_index (GtkWidget *widget, unsigned long parameter
 {
 	bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 	self->parameter_index = parameter_index;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+static void tooltip_update (bitmap_knob *self)
+{
+	gdouble value = gtk_adjustment_get_value (self->adjustment);
+	const char *name = parameter_name_from_index (self->parameter_index);
+	char display[32] = "";
+	parameter_get_display (self->parameter_index, value, display, sizeof(display));
+	char text[64] = "";
+	snprintf (text, sizeof(text), "%s: %s", name, display);
+	gtk_label_set_text (GTK_LABEL (self->tooltip_label), text);
+}
+
+static void tooltip_show (bitmap_knob *self)
+{
+	gint x = 100, y = 100;
+	GdkScreen *screen = NULL;
+	GdkDisplay *display = gtk_widget_get_display (self->drawing_area);
+	gdk_display_get_pointer (display, &screen, &x, &y, NULL);
+	guint cursor_size = gdk_display_get_default_cursor_size (display);
+	x += cursor_size / 2;
+	y += cursor_size / 2;
+	
+	gtk_window_move (GTK_WINDOW (self->tooltip_window), x, y);
+	gtk_widget_show (self->tooltip_window);
+	return;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -162,6 +203,21 @@ bitmap_knob_button_press ( GtkWidget *widget, GdkEventButton *event )
 		}
 		self->origin_val = gtk_adjustment_get_value (self->adjustment);
 		self->origin_y = event->y;
+		self->is_dragging = TRUE;
+		tooltip_update (self);
+		tooltip_show (self);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+gboolean
+bitmap_knob_button_release ( GtkWidget *widget, GdkEventButton *event )
+{
+	if (event->button == 1) {
+		bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
+		gtk_widget_hide (self->tooltip_window);
+		self->is_dragging = FALSE;
 		return TRUE;
 	}
 	return FALSE;
@@ -180,6 +236,7 @@ bitmap_knob_motion_notify ( GtkWidget *widget, GdkEventMotion *event )
 		gdouble offset = (self->origin_y - event->y) * range / self->sensitivity;
 		gdouble newval = self->origin_val + ((step == 0.0) ? offset : step * floor ((offset / step) + 0.5));
 		gtk_adjustment_set_value (self->adjustment, CLAMP (newval, lower, upper));
+		tooltip_update (self);
 		return TRUE;
 	}
 	return FALSE;
