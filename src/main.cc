@@ -243,16 +243,6 @@ int main( int argc, char *argv[] )
 	
 	gui_kit_init(argc, argv);
 	
-	// will need to change when we reach the year 10000 ;-)
-	std::string build_year(__DATE__, sizeof(__DATE__) - 5, 4);
-	
-	std::cout <<
-		"amSynth " VERSION "\n"
-		"Copyright 2001-" << build_year << " Nick Dowell and others.\n"
-		"amSynth comes with ABSOLUTELY NO WARRANTY\n"
-		"This is free software, and you are welcome to redistribute it\n"
-		"under certain conditions; see the file COPYING for details\n";
-
 	int initial_preset_no = 0;
 
 	// needs to be called before our own command line parsing code
