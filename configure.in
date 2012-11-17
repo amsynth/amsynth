@@ -2,6 +2,9 @@ AC_INIT(src/main.cc)
 AM_INIT_AUTOMAKE([amSynth], 'svn')
 AC_CONFIG_HEADERS([config.h])
 
+# make CXXFLAGS inherit from CFLAGS unless CXXFLAGS were specified
+AS_IF([test "x$CXXFLAGS" = "x"], [CXXFLAGS="$CFLAGS"])
+
 # capture user-supplied compiler flags before AC_PROG_CC clobbers them
 user_CFLAGS="$CFLAGS"
 user_CXXFLAGS="$CXXFLAGS"
@@ -20,14 +23,9 @@ AC_LANG(C++)
 # These can be overriden at compile time with the CFLAGS and CXXFLAGS variables, e.g.
 #   ./configure CFLAGS='-g -O0' CXXFLAGS='-g -O0'
 #
-AC_MSG_CHECKING([whether optimized CFLAGS should be used])
 AS_IF([test "$user_CFLAGS" = "" -a "$user_CXXFLAGS" = ""], [
-	CFLAGS="-Wall -W -O3 -ffast-math -fno-exceptions -fomit-frame-pointer"
-	CXXFLAGS="$CFLAGS"
-	AC_MSG_RESULT([yes])
-], [
-	AC_MSG_RESULT([no])
-])
+	CFLAGS="-O3 -ffast-math -fno-exceptions -fomit-frame-pointer"
+	CXXFLAGS="$CFLAGS"])
 
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
