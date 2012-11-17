@@ -90,6 +90,8 @@ bitmap_knob_new( GtkAdjustment *adjustment,
 
 	self->tooltip_window = gtk_window_new (GTK_WINDOW_POPUP);
 	gtk_window_set_type_hint (GTK_WINDOW (self->tooltip_window), GDK_WINDOW_TYPE_HINT_TOOLTIP);
+	g_object_set_data_full (G_OBJECT(self->drawing_area), "bitmap_knob_tooltip_window",
+		self->tooltip_window, (GtkDestroyNotify) gtk_widget_destroy);
 
 	static const guint tooltip_padding = 5;
 	GtkWidget *alignment = gtk_alignment_new (0.5, 0.5, 1.0, 1.0);
@@ -101,7 +103,7 @@ bitmap_knob_new( GtkAdjustment *adjustment,
 	self->tooltip_label = gtk_label_new ("");
 	gtk_container_add (GTK_CONTAINER (alignment), self->tooltip_label);
 	gtk_widget_show (self->tooltip_label);
-	
+
 	return self->drawing_area;
 }
 
