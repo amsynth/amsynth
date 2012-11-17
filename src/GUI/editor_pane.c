@@ -314,6 +314,7 @@ editor_pane_new (GtkAdjustment **adjustments)
 			{
 				widget = bitmap_knob_new (adj, res->pixbuf, res->fr_width, res->fr_height, res->fr_count);
 				bitmap_knob_set_bg (widget, subpixpuf);
+				bitmap_knob_set_parameter_index (widget, i);
 			}
 			else if (g_strcmp0 (KEY_CONTROL_TYPE_BUTTON, type) == 0)
 			{

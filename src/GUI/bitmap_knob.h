@@ -13,5 +13,7 @@ GtkWidget *bitmap_knob_new( GtkAdjustment *,
 
 void bitmap_knob_set_bg (GtkWidget *, GdkPixbuf *);
 
+void bitmap_knob_set_parameter_index (GtkWidget *, unsigned long);
+
 G_END_DECLS
 

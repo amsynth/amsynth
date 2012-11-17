@@ -16,6 +16,7 @@ typedef struct {
 	GtkWidget *drawing_area;
 
 	GtkAdjustment *adjustment;
+	unsigned long parameter_index;
 	
 	GdkPixbuf *pixbuf;
 	GdkPixbuf *background;
@@ -92,6 +93,12 @@ void bitmap_knob_set_bg (GtkWidget *widget, GdkPixbuf *pixbuf)
 	self->background = pixbuf ? g_object_ref (G_OBJECT (pixbuf)) : NULL;
 
 	gtk_widget_queue_draw (widget);
+}
+
+void bitmap_knob_set_parameter_index (GtkWidget *widget, unsigned long parameter_index)
+{
+	bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
+	self->parameter_index = parameter_index;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
