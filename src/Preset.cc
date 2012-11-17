@@ -220,5 +220,36 @@ void parameter_get_display (int parameter_index, float parameter_value, char *bu
 	Parameter parameter = _preset.getParameter(parameter_index);
 	parameter.setValue(parameter_value);
 	float real_value = parameter.getControlValue();
-	snprintf(buffer, maxlen, "%.3f", real_value);
+	
+	switch (parameter_index) {
+		case kAmsynthParameter_AmpEnvAttack:
+		case kAmsynthParameter_AmpEnvDecay:
+		case kAmsynthParameter_AmpEnvRelease:
+		case kAmsynthParameter_FilterEnvAttack:
+		case kAmsynthParameter_FilterEnvDecay:
+		case kAmsynthParameter_FilterEnvRelease:
+			if (real_value < 1.0) {
+				snprintf(buffer, maxlen, "%.0f ms", real_value * 1000);
+			} else {
+				snprintf(buffer, maxlen, "%.1f s", real_value);
+			}
+			break;
+		case kAmsynthParameter_LFOFreq:
+			snprintf(buffer, maxlen, "%.1f Hz", real_value);
+			break;
+		case kAmsynthParameter_Oscillator2Detune:
+			snprintf(buffer, maxlen, "%+.1f Cents", 1200.0 * log2(real_value));
+			break;
+		case kAmsynthParameter_AmpEnvSustain:
+		case kAmsynthParameter_FilterEnvSustain:
+		case kAmsynthParameter_MasterVolume:
+			snprintf(buffer, maxlen, "%+.1f dB", 20.0 * log10(real_value));
+			break;
+		case kAmsynthParameter_Oscillator2Octave:
+			snprintf(buffer, maxlen, "%+d Octave", (int)log2(real_value));
+			break;
+		default:
+			snprintf(buffer, maxlen, "%.3f", real_value);
+			break;
+	}
 }
