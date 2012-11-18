@@ -241,8 +241,6 @@ int parameter_get_display (int parameter_index, float parameter_value, char *buf
 		case kAmsynthParameter_AmpEnvSustain:
 		case kAmsynthParameter_MasterVolume:
 			return snprintf(buffer, maxlen, "%+.1f dB", 20.0 * log10(real_value));
-		case kAmsynthParameter_Oscillator2Octave:
-			return snprintf(buffer, maxlen, "%+d Octave", (int)log2(real_value));
 		case kAmsynthParameter_FilterEnvAmount:
 			return snprintf(buffer, maxlen, "%+d %%", (int)roundf(real_value / 16.0 * 100.0));
 		case kAmsynthParameter_FilterResonance:
