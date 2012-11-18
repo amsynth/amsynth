@@ -735,6 +735,10 @@ GUI::UpdateParameter(Param paramID, float paramValue)
 void
 GUI::UpdateParameterOnMainThread(Param paramID, float)	// called whenever a parameter value has changed
 {
+	if (0 <= paramID && paramID < kAmsynthParameterCount) {
+		const Parameter &param = preset_controller->getCurrentPreset().getParameter(paramID);
+		gtk_adjustment_set_value (m_adjustments[paramID], param.getValue());
+	}
 	bool isModified = preset_controller->isCurrentPresetModified();
 	if (m_presetIsNotSaved != isModified) {
 		m_presetIsNotSaved = isModified;
