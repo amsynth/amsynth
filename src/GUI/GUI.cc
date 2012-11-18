@@ -150,7 +150,7 @@ GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 	aboutDlg.set_name (PACKAGE);
 	aboutDlg.set_version (VERSION);
 	aboutDlg.set_comments ("Analogue Modelling SYNTHesizer");
-	aboutDlg.set_website ("http://amsynthe.sourceforge.net/amSynth");
+	aboutDlg.set_website ("http://code.google.com/p/amsynth/");
 	std::string build_year(__DATE__, sizeof(__DATE__) - 5, 4);
 	aboutDlg.set_copyright ("(C) 2002 - " + build_year + " Nick Dowell and others");
 	Glib::RefPtr<Gdk::PixbufLoader> ldr = Gdk::PixbufLoader::create();
