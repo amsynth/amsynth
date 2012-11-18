@@ -132,9 +132,9 @@ static int tooltip_update (bitmap_knob *self)
 {
 	gdouble value = gtk_adjustment_get_value (self->adjustment);
 	char display[32] = "";
-	if (!parameter_get_display (self->parameter_index, value, display, sizeof(display)))
-		return 0;
+	int result = parameter_get_display (self->parameter_index, value, display, sizeof(display));
 	gtk_label_set_text (GTK_LABEL (self->tooltip_label), display);
+	return result;
 }
 
 static void tooltip_show (bitmap_knob *self)
