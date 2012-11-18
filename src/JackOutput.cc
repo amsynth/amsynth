@@ -14,6 +14,7 @@
 #include <jack/session.h>
 #endif
 
+#include <assert.h>
 #include <iostream>
 #include <string.h>
 #include <stdio.h>
