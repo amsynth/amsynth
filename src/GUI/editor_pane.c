@@ -29,7 +29,7 @@ resource_info;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static void
+static gboolean
 editor_pane_expose_event_handler (GtkWidget *widget, gpointer data)
 {
 	gdk_draw_pixbuf(
@@ -44,6 +44,7 @@ editor_pane_expose_event_handler (GtkWidget *widget, gpointer data)
 		gdk_pixbuf_get_height (editor_pane_bg),
 		GDK_RGB_DITHER_NONE, 0, 0
 	);
+	return FALSE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
