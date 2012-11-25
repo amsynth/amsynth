@@ -10,6 +10,7 @@ amsynth_core_sources = \
     TuningMap.cc TuningMap.h \
     Config.cc Config.h \
     controls.h \
+    midi.h \
     UpdateListener.h
 
 amsynth_core_libs = \

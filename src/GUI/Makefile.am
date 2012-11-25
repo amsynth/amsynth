@@ -27,7 +27,6 @@ libGUI_a_SOURCES = \
 	gui_main.h \
 	MIDILearnDialog.cpp \
 	MIDILearnDialog.h \
-	PrefixHeader.h \
 	PresetControllerView.cc \
 	PresetControllerView.h \
 	Request.h
