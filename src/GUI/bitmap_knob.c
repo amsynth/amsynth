@@ -262,9 +262,12 @@ bitmap_knob_update ( GtkWidget *widget )
 	gdouble upper = gtk_adjustment_get_upper (self->adjustment);
 	guint	frame = self->frame_count * ((value - lower) / (upper - lower));
 
-	self->current_frame = MIN (frame, (self->frame_count - 1));
-	
-	gtk_widget_queue_draw (widget);
+	frame = MIN (frame, (self->frame_count - 1));
+
+	if (self->current_frame != frame) {
+		self->current_frame = frame;
+		gtk_widget_queue_draw (widget);
+	}
 }
 
 void
