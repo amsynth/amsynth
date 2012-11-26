@@ -31,7 +31,6 @@ typedef struct {
 	guint frame_count;
 	guint sensitivity;
 	
-	gboolean is_dragging;
 	gdouble origin_y;
 	gdouble origin_val;
 	
@@ -213,7 +212,6 @@ bitmap_knob_button_press ( GtkWidget *widget, GdkEventButton *event )
 		}
 		self->origin_val = gtk_adjustment_get_value (self->adjustment);
 		self->origin_y = event->y;
-		self->is_dragging = TRUE;
 		if (tooltip_update (self))
 			tooltip_show (self);
 		return TRUE;
@@ -227,7 +225,6 @@ bitmap_knob_button_release ( GtkWidget *widget, GdkEventButton *event )
 	if (event->button == 1) {
 		bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 		gtk_widget_hide (self->tooltip_window);
-		self->is_dragging = FALSE;
 		return TRUE;
 	}
 	return FALSE;
