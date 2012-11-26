@@ -201,6 +201,8 @@ bitmap_knob_button_press ( GtkWidget *widget, GdkEventButton *event )
 {
 	if (event->type == GDK_BUTTON_PRESS && event->button == 1)
 	{
+		gtk_widget_grab_focus(widget);
+    	gtk_grab_add(widget);
 		bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 		gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 		gdouble upper = gtk_adjustment_get_upper (self->adjustment);
@@ -225,6 +227,8 @@ bitmap_knob_button_release ( GtkWidget *widget, GdkEventButton *event )
 	if (event->button == 1) {
 		bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 		gtk_widget_hide (self->tooltip_window);
+		if (GTK_WIDGET_HAS_GRAB(widget))
+        	gtk_grab_remove(widget);
 		return TRUE;
 	}
 	return FALSE;
@@ -233,7 +237,7 @@ bitmap_knob_button_release ( GtkWidget *widget, GdkEventButton *event )
 gboolean
 bitmap_knob_motion_notify ( GtkWidget *widget, GdkEventMotion *event )
 {
-	if (event->state & GDK_BUTTON1_MASK)
+	if (GTK_WIDGET_HAS_GRAB(widget))
 	{
 		bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 		gdouble lower = gtk_adjustment_get_lower (self->adjustment);
