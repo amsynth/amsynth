@@ -44,6 +44,7 @@ lv2_ui_instantiate(const struct _LV2UI_Descriptor* descriptor,
 		gdouble value = 0, lower = 0, upper = 0, step_increment = 0;
 		get_parameter_properties(i, &lower, &upper, &value, &step_increment);
 		ui->_adjustments[i] = (GtkAdjustment *)gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);
+		g_object_ref_sink(ui->_adjustments[i]); // assumes ownership of the floating reference
 		g_signal_connect(ui->_adjustments[i], "value-changed", (GCallback)&on_adjustment_value_changed, ui);
 	}
 
