@@ -80,7 +80,30 @@ if BUILD_LV2
 amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
 # using noinst to prevent .a and .la files being installed, plugin gets installed via custom install-exec-hook
 noinst_LTLIBRARIES += amsynth_lv2.la
-amsynth_lv2_la_SOURCES = $(amsynth_core_sources) $(amsynth_dsp_sources) amsynth_lv2.cpp MidiController.cc
+amsynth_lv2_la_SOURCES = $(amsynth_core_sources) $(amsynth_dsp_sources) amsynth_lv2.cpp MidiController.cc \
+	lv2/lv2plug.in/ns/lv2core/lv2.h \
+	lv2/lv2plug.in/ns/extensions/units/units.h \
+	lv2/lv2plug.in/ns/extensions/ui/ui.h \
+	lv2/lv2plug.in/ns/ext/worker/worker.h \
+	lv2/lv2plug.in/ns/ext/data-access/data-access.h \
+	lv2/lv2plug.in/ns/ext/event/event-helpers.h \
+	lv2/lv2plug.in/ns/ext/event/event.h \
+	lv2/lv2plug.in/ns/ext/instance-access/instance-access.h \
+	lv2/lv2plug.in/ns/ext/time/time.h \
+	lv2/lv2plug.in/ns/ext/patch/patch.h \
+	lv2/lv2plug.in/ns/ext/uri-map/uri-map.h \
+	lv2/lv2plug.in/ns/ext/port-groups/port-groups.h \
+	lv2/lv2plug.in/ns/ext/port-props/port-props.h \
+	lv2/lv2plug.in/ns/ext/log/log.h \
+	lv2/lv2plug.in/ns/ext/resize-port/resize-port.h \
+	lv2/lv2plug.in/ns/ext/midi/midi.h \
+	lv2/lv2plug.in/ns/ext/presets/presets.h \
+	lv2/lv2plug.in/ns/ext/atom/atom.h \
+	lv2/lv2plug.in/ns/ext/atom/util.h \
+	lv2/lv2plug.in/ns/ext/atom/forge.h \
+	lv2/lv2plug.in/ns/ext/state/state.h \
+	lv2/lv2plug.in/ns/ext/urid/urid.h \
+	lv2/lv2plug.in/ns/ext/dynmanifest/dynmanifest.h
 amsynth_lv2_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@
 amsynth_lv2_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2_descriptor" -disable-static
 noinst_LTLIBRARIES += amsynth_lv2_gtk.la
@@ -116,6 +139,7 @@ if BUILD_DSSI_GUI
 	rm -rf $(DESTDIR)$(dssidir)/amsynth_dssi
 endif
 if BUILD_LV2
-	rm -rf $(DESTDIR)$(amsynth_lv2dir)
+	rm -f $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2.so
+	rm -f $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2_gtk.so
 endif
 
