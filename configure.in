@@ -35,6 +35,9 @@ dnl
 AC_CHECK_LIB(m, sin, , exit)
 AC_CHECK_LIB(pthread, pthread_create, [], exit)
 
+# This project uses GtkComboBoxText which was introduced in gtk 2.24
+PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.24.0])
+
 dnl ## http://www.gtkmm.org/docs/gtkmm-2.4/docs/reference/html/newin2p6s.html
 dnl ## we use the following APIs only available in gtkmm 2.6 and up:
 dnl ## Gtk::MessageDialog::set_secondary_text()
@@ -82,7 +85,6 @@ dnl
 AC_ARG_WITH([dssi], [AS_HELP_STRING([--with-dssi], [build DSSI plugin])])
 AS_IF([test "x$with_dssi" != "xno"], [
     PKG_CHECK_MODULES([DSSI], [dssi], [with_dssi_gui="yes"
-        PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0], [], [with_dssi_gui="no"])
         PKG_CHECK_MODULES([LIBLO], [liblo], [], [with_dssi_gui="no"])
     with_dssi="yes"], [with_dssi="no"])])
 AM_CONDITIONAL([BUILD_DSSI], [test "x$with_dssi" != "xno"])
@@ -127,6 +129,7 @@ dnl
 echo
 echo -------------------------------------------------------- $PACKAGE $VERSION
 echo \|
+echo \| GTK version........................................... : `pkg-config --modversion gtkm+2.0`
 echo \| GTK-- version......................................... : `pkg-config --modversion gtkmm-2.4`
 echo \|
 echo \| Build with OSS support................................ : $with_oss
