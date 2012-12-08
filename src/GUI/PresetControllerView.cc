@@ -18,7 +18,7 @@ PresetControllerView::PresetControllerView(VoiceAllocationUnit & vau )
 ,	combo(NULL)
 ,	inhibit_combo_callback(false)
 {
-	combo = gtk_combo_box_text_new ();
+	combo = gtk_combo_box_new_text ();
 	gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (combo), 4);
 	g_signal_connect (G_OBJECT (combo), "changed", G_CALLBACK (&PresetControllerView::on_combo_changed), this);
 	g_signal_connect (G_OBJECT (combo), "notify::popup-shown", G_CALLBACK (&PresetControllerView::on_combo_popup_shown), this);
@@ -96,13 +96,13 @@ void PresetControllerView::update()
 	inhibit_combo_callback = true;
 	
 	for (gint i = 0; i < PresetController::kNumPresets; i++) {
-		gtk_combo_box_text_remove (GTK_COMBO_BOX_TEXT (combo), 0);
+		gtk_combo_box_remove_text (GTK_COMBO_BOX (combo), 0);
 	}
 	char text [256] = "";
 	for (gint i = 0; i < PresetController::kNumPresets; i++) {
 		memset (text, 0, sizeof(text));
 		sprintf (text, "%d: %s", i, presetController->getPreset(i).getName().c_str());
-		gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (combo), i, text);
+		gtk_combo_box_insert_text (GTK_COMBO_BOX (combo), i, text);
 	}
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), presetController->getCurrPresetNumber());
 	

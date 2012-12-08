@@ -35,8 +35,7 @@ dnl
 AC_CHECK_LIB(m, sin, , exit)
 AC_CHECK_LIB(pthread, pthread_create, [], exit)
 
-# This project uses GtkComboBoxText which was introduced in gtk 2.24
-PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.24.0])
+PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])
 
 dnl ## http://www.gtkmm.org/docs/gtkmm-2.4/docs/reference/html/newin2p6s.html
 dnl ## we use the following APIs only available in gtkmm 2.6 and up:
