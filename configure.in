@@ -129,7 +129,7 @@ dnl
 echo
 echo -------------------------------------------------------- $PACKAGE $VERSION
 echo \|
-echo \| GTK version........................................... : `pkg-config --modversion gtkm+2.0`
+echo \| GTK version........................................... : `pkg-config --modversion gtk+-2.0`
 echo \| GTK-- version......................................... : `pkg-config --modversion gtkmm-2.4`
 echo \|
 echo \| Build with OSS support................................ : $with_oss
