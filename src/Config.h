@@ -10,7 +10,6 @@
 #endif
 
 #include <string>
-using std::string;
 
 /**
  * @brief Encapsulates any configuration parameters which must be shared between
@@ -68,36 +67,36 @@ public:
 	 * Specify the audio output driver to use. currently "oss", "alsa", or 
 	 * "auto" (which picks the best one)
 	 */
-	string audio_driver;
-	string current_audio_driver;
+	std::string audio_driver;
+	std::string current_audio_driver;
 	/**
 	 * Specify the midi input driver to use. currently "oss", "alsa", or 
 	 * "auto" (which picks the best one)
 	 */
-	string midi_driver;
-	string current_midi_driver;
+	std::string midi_driver;
+	std::string current_midi_driver;
 	/**
 	 * The name if the device file for the OSS midi device.
 	 */
-	string oss_midi_device;
+	std::string oss_midi_device;
 	/**
 	 * The name if the device file for the OSS audio device.
 	 */
-	string oss_audio_device;
+	std::string oss_audio_device;
 	/**
 	 * The name of the ALSA PCM device to use
 	 */
-	string alsa_audio_device;
+	std::string alsa_audio_device;
 	
-	string	default_bank_file;
-	string	current_bank_file;
+	std::string	default_bank_file;
+	std::string	current_bank_file;
 
-	string	amsynthrc_fname;
+	std::string	amsynthrc_fname;
 	
 	/* internal */
-	string	jack_client_name;
-	string	jack_session_uuid;
-	string	alsa_seq_client_name;
+	std::string	jack_client_name;
+	std::string	jack_session_uuid;
+	std::string	alsa_seq_client_name;
 	int 	alsa_seq_client_id;
 	int	debug_drivers;
 	// used to count buffer underruns
