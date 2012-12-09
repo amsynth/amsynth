@@ -73,6 +73,8 @@ enum Param
 	kAmsynthParameter_PortamentoTime            = 31,
 	
 	kAmsynthParameter_KeyboardMode             = 32,
+
+	kAmsynthParameter_Oscillator2Pitch         = 33,
 	
 	kAmsynthParameterCount
 };

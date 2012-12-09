@@ -3,7 +3,9 @@
  */
 
 #include "VoiceBoard.h"
+
 #include <assert.h>
+#include <cmath>
 
 // Low-pass filter the VCA control signal to prevent nasty clicking sounds
 const float kVCALowPassFreq = 4000.0f;
@@ -49,6 +51,7 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_Oscillator2Pulsewidth:	mOsc2PulseWidth = value;	break;
 	case kAmsynthParameter_Oscillator2Octave:	mOsc2Octave = value;		break;
 	case kAmsynthParameter_Oscillator2Detune:	mOsc2Detune = value;		break;
+	case kAmsynthParameter_Oscillator2Pitch:	mOsc2Pitch = ::pow(2, value / 12); break;
 	case kAmsynthParameter_Oscillator2Sync:		osc1.SetSync (value>0.5 ? &osc2 : 0);	break;
 
 	case kAmsynthParameter_LFOToFilterCutoff:	mFilterModAmt = (value+1.0f)/2.0f;break;
@@ -96,7 +99,7 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	float osc1freq = mPitchBend * frequency * ( mFreqModAmount*(lfo1buf[0]+1.0f) + 1.0f - mFreqModAmount );
 	float osc1pw = mOsc1PulseWidth;
 
-	float osc2freq = osc1freq * mOsc2Detune * mOsc2Octave;
+	float osc2freq = osc1freq * mOsc2Detune * mOsc2Octave * mOsc2Pitch;
 	float osc2pw = mOsc2PulseWidth;
 
 	float env_f = *filter_env.getNFData (numSamples);

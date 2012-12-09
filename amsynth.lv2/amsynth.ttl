@@ -395,6 +395,17 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 2.000000 ;
+    ] , [
+        a lv2:InputPort ;
+        a lv2:ControlPort ;
+        lv2:index 36 ;
+        lv2:symbol "osc2_pitch" ;
+        lv2:name "osc2_pitch" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        lv2:portProperty lv2:integer ;
+        lv2:default -12.000000 ;
+        lv2:minimum 0.000000 ;
+        lv2:maximum 12.000000 ;
     ].
 
 <http://code.google.com/p/amsynth/amsynth#factory_preset_derren_1>

@@ -65,6 +65,7 @@ private:
 	float			mRingModAmt;
 	float			mOsc2Octave;
 	float			mOsc2Detune;
+	float			mOsc2Pitch;
 	
 	// filter section
 	float			mFilterEnvAmt,

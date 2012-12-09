@@ -9,6 +9,7 @@ dist_skinsdefault_DATA = \
 	knob_boost.png \
 	knob_mix.png \
 	knob_osc_octave.png \
+	knob_osc_pitch.png \
 	knob_spot.png \
 	knob_width.png \
 	waveform_lfo.png \

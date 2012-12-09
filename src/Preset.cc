@@ -70,6 +70,7 @@ Preset::Preset			(const string name)
 	mParameters.push_back (Parameter		("osc2_sync",			kAmsynthParameter_Oscillator2Sync,			0, 0, 1, 1));
 	mParameters.push_back (Parameter		("portamento_time",		kAmsynthParameter_PortamentoTime, 0.0f, 0.0f, 1.0f));
 	mParameters.push_back (Parameter		("keyboard_mode",		kAmsynthParameter_KeyboardMode, KeyboardModePoly, 0, KeyboardModeLegato, 1));
+	mParameters.push_back (Parameter		("osc2_pitch",			kAmsynthParameter_Oscillator2Pitch, 0, -12, +12, 1));
 	
 	getParameter(kAmsynthParameter_Oscillator1Waveform).setParameterValueStrings(osc_waveform_names, ARRAY_SIZE(osc_waveform_names));
 	getParameter(kAmsynthParameter_Oscillator2Waveform).setParameterValueStrings(osc_waveform_names, ARRAY_SIZE(osc_waveform_names));
@@ -238,6 +239,8 @@ int parameter_get_display (int parameter_index, float parameter_value, char *buf
 			return snprintf(buffer, maxlen, "%.1f Hz", real_value);
 		case kAmsynthParameter_Oscillator2Detune:
 			return snprintf(buffer, maxlen, "%+.1f Cents", 1200.0 * log2(real_value));
+		case kAmsynthParameter_Oscillator2Pitch:
+			return snprintf(buffer, maxlen, "%+.0f Semitones", real_value);
 		case kAmsynthParameter_AmpEnvSustain:
 		case kAmsynthParameter_MasterVolume:
 			return snprintf(buffer, maxlen, "%+.1f dB", 20.0 * log10(real_value));
