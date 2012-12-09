@@ -1,6 +1,7 @@
-AC_INIT(src/main.cc)
-AM_INIT_AUTOMAKE([amSynth], 'svn')
+AC_INIT([amsynth], [svn])
+AC_CONFIG_SRCDIR([src/main.cc])
 AC_CONFIG_HEADERS([config.h])
+AM_INIT_AUTOMAKE
 
 # make CXXFLAGS inherit from CFLAGS unless CXXFLAGS were specified
 AS_IF([test "x$CXXFLAGS" = "x"], [CXXFLAGS="$CFLAGS"])
@@ -108,7 +109,7 @@ AM_CONDITIONAL([ENABLE_REALTIME], [test x$enable_realtime != x])
 
 AC_OUTPUT([
     Makefile
-    src/Makefile 
+    src/Makefile
     src/drivers/Makefile
     src/VoiceBoard/Makefile
     src/GUI/Makefile
@@ -146,8 +147,7 @@ echo \| Build DSSI GUI........................................ : $with_dssi_gui
 echo \| Build LV2 plugin...................................... : $with_lv2
 echo \|
 echo \| Use libsndfile for .wav output support................ : $with_sndfile
-echo 
+echo
 echo configure complete. now type \'make\' to build $PACKAGE
 echo and then, as root, \'make install\' to install
 echo
-
