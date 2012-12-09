@@ -9,10 +9,10 @@
 #include <gtkmm.h>
 
 #include "../MidiController.h"
-#include "PresetControllerView.h"
 #include "Request.h"
 
 class PresetController;
+class PresetControllerView;
 class Parameter;
 class Preset;
 class VoiceAllocationUnit;

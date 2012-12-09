@@ -31,6 +31,7 @@ using namespace Gtk;
 #include "amsynth_logo.h"
 #include "ConfigDialog.h"
 #include "MIDILearnDialog.h"
+#include "PresetControllerView.h"
 
 #include "gui_main.h"
 #include "editor_pane.h"
@@ -108,7 +109,7 @@ GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 //	style = Gtk::Style::create ( );
 	
 	
-	presetCV = new PresetControllerView(*this->vau);
+	presetCV = PresetControllerView::create(this->vau);
 
 	//
 	// the preset rename dialog
@@ -761,7 +762,7 @@ GUI::setPresetController(PresetController & p_c)
 {
     preset_controller = &p_c;
     preset_controller->setUpdateListener(*this);
-    presetCV->setPresetController(*preset_controller);
+    presetCV->setPresetController(preset_controller);
 	onUpdate();
 	
 	// register for notification of all parameter changes
