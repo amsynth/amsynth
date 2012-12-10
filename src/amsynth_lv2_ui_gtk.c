@@ -40,8 +40,6 @@ lv2_ui_instantiate(const struct _LV2UI_Descriptor* descriptor,
 	ui->_write_function = write_function;
 	ui->_controller = controller;
 
-	g_setenv("AMSYNTH_DATA_DIR", g_build_filename(INSTALL_PREFIX, "share", "amSynth", NULL), FALSE);
-	
 	size_t i; for (i=0; i<kAmsynthParameterCount; i++) {
 		gdouble value = 0, lower = 0, upper = 0, step_increment = 0;
 		get_parameter_properties(i, &lower, &upper, &value, &step_increment);

@@ -37,9 +37,6 @@ using namespace std;
 #define DEBUGMSG( ... )
 #endif
 
-#ifndef INSTALL_PREFIX
-#define INSTALL_PREFIX "/usr/local"
-#endif
 
 
 string help_text =
@@ -121,9 +118,9 @@ const char *build_path(const char *path, const char *suffix)
 
 void install_default_files_if_reqd()
 {
-	const char * factory_controllers = build_path (getenv ("AMSYNTH_DATA_DIR"), "Controllersrc");
-	const char * factory_config = build_path (getenv ("AMSYNTH_DATA_DIR"), "rc");
-	const char * factory_bank = build_path (getenv ("AMSYNTH_DATA_DIR"), "presets");
+	const char * factory_controllers = build_path (PKGDATADIR, "Controllersrc");
+	const char * factory_config = build_path (PKGDATADIR, "rc");
+	const char * factory_bank = build_path (PKGDATADIR, "presets");
 
 	const char * user_controllers = build_path (getenv ("HOME"), ".amSynthControllersrc");
 	const char * user_config = build_path (getenv ("HOME"), ".amSynthrc");
@@ -269,7 +266,6 @@ int main( int argc, char *argv[] )
 		}
 	}
 
-	setenv ("AMSYNTH_DATA_DIR", INSTALL_PREFIX "/share" "/amSynth", 0); // don't override value passed from command line
 	install_default_files_if_reqd();
 
 	// setup the configuration

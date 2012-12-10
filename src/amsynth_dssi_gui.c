@@ -214,8 +214,6 @@ int main(int argc, char *argv[])
     gtk_window_set_title(_window, tmpstr("%s - %s", plug_name, identifier));
 	gtk_signal_connect(GTK_OBJECT(_window), "delete-event", on_window_deleted, NULL);
 
-    g_setenv("AMSYNTH_DATA_DIR", g_build_filename(INSTALL_PREFIX, "share", "amSynth", NULL), FALSE);
-
     size_t i; for (i=0; i<kAmsynthParameterCount; i++) {
         gdouble value = 0, lower = 0, upper = 0, step_increment = 0;
         get_parameter_properties(i, &lower, &upper, &value, &step_increment);

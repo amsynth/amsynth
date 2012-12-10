@@ -1,7 +1,8 @@
+include $(top_srcdir)/common.am
+
 noinst_LIBRARIES = libGUI.a
 
-# http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
-libGUI_a_CPPFLAGS = $(AM_CPPFLAGS) -DINSTALL_PREFIX='"$(prefix)"' \
+libGUI_a_CPPFLAGS = $(AM_CPPFLAGS) \
     @ALSA_CFLAGS@ \
     @GTKMM_CFLAGS@ \
     @JACK_CFLAGS@ \
@@ -30,4 +31,3 @@ libGUI_a_SOURCES = \
 	PresetControllerView.cc \
 	PresetControllerView.h \
 	Request.h
-
