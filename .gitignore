@@ -22,7 +22,7 @@ missing
 *.la
 *.tar.gz
 .libs
-src/amSynth
+src/amsynth
 src/amsynth_dssi_gtk
 stamp-h1
 *.swp

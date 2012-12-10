@@ -1,6 +1,6 @@
 include $(top_srcdir)/common.am
 
-bin_PROGRAMS = amSynth
+bin_PROGRAMS = amsynth
 
 SUBDIRS = drivers VoiceBoard GUI Effects
 
@@ -30,14 +30,14 @@ amsynth_dsp_sources = \
 	VoiceBoard/Oscillator.cc \
 	VoiceBoard/VoiceBoard.cc
 
-amSynth_CPPFLAGS = $(AM_CPPFLAGS) \
+amsynth_CPPFLAGS = $(AM_CPPFLAGS) \
     @ALSA_CFLAGS@ \
     @GTKMM_CFLAGS@ \
     @JACK_CFLAGS@ \
     @LASH_CFLAGS@ \
     @SNDFILE_CFLAGS@
 
-amSynth_SOURCES = \
+amsynth_SOURCES = \
 	$(amsynth_core_sources) \
 	main.cc main.h \
 	lash.c lash.h \
@@ -46,7 +46,7 @@ amSynth_SOURCES = \
 	MidiController.cc MidiController.h \
 	Thread.h
 
-amSynth_LDADD = \
+amsynth_LDADD = \
 	$(amsynth_core_libs) \
 	drivers/libdrivers.a \
 	GUI/libGUI.a \
@@ -118,8 +118,8 @@ endif
 
 install-exec-hook:
 if ENABLE_REALTIME
-	chown root $(DESTDIR)$(bindir)/amSynth
-	chmod   +s $(DESTDIR)$(bindir)/amSynth
+	chown root $(DESTDIR)$(bindir)/amsynth
+	chmod   +s $(DESTDIR)$(bindir)/amsynth
 endif
 if BUILD_DSSI
 	install -c -D -m 755 $(top_builddir)/src/.libs/amsynth_dssi.so $(DESTDIR)$(dssidir)/amsynth_dssi.so
