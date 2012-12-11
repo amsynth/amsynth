@@ -138,16 +138,19 @@ static int tooltip_update (bitmap_knob *self)
 
 static void tooltip_show (bitmap_knob *self)
 {
-	gint x = 100, y = 100;
-	GdkScreen *screen = NULL;
-	GdkDisplay *display = gtk_widget_get_display (self->drawing_area);
-	gdk_display_get_pointer (display, &screen, &x, &y, NULL);
-	guint cursor_size = gdk_display_get_default_cursor_size (display);
-	x += cursor_size / 2;
-	y += cursor_size / 2;
-	
-	gtk_window_move (GTK_WINDOW (self->tooltip_window), x, y);
 	gtk_widget_show (self->tooltip_window);
+
+	gint widget_x = 0, widget_y = 0;
+	gdk_window_get_origin (gtk_widget_get_window (self->drawing_area), &widget_x, &widget_y);
+
+	gint tooltip_height = 0;
+	gdk_window_get_geometry (gtk_widget_get_window (self->tooltip_window), NULL, NULL, NULL, &tooltip_height, NULL);
+
+	gint tooltip_x = widget_x + self->frame_width + 4;
+	gint tooltop_y = widget_y + (self->frame_height - tooltip_height) / 2;
+
+	gtk_window_move (GTK_WINDOW (self->tooltip_window), tooltip_x, tooltop_y);
+
 	return;
 }
 
