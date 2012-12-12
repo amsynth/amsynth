@@ -47,8 +47,8 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			a0 = k2 / bh;
 			a1 = a0 * 2.0;
 			a2 = a0;
-			b1 = (2.0 * (k2 - 1.0)) / -bh;
-			b2 = (1.0 - (r * k) + k2) / -bh;
+			b1 = (2.0 * (k2 - 1.0))   / bh;
+			b2 = (1.0 - (r * k) + k2) / bh;
 			break;
 		case FilterTypeHighPass:
 			//
@@ -58,15 +58,19 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			a0 =  1.0 / bh;
 			a1 = -2.0 / bh;
 			a2 =  a0;
-			b1 = (2.0 * (k2 - 1.0)) / -bh;
-			b2 = (1.0 - (r * k) + k2) / -bh;
+			b1 = (2.0 * (k2 - 1.0))   / bh;
+			b2 = (1.0 - (r * k) + k2) / bh;
 			break;
 		case FilterTypeBandPass:
+			//
+			// Bilinear transformation of H(s) = (s/Q) / (s^2 + s/Q + 1)
+			// See "Digital Audio Signal Processing" by Udo Zölzer
+			//
 			a0 =  r * k / bh;
 			a1 =  0.0;
 			a2 = -r * k / bh;
-			b1 = (2.0 * (k2 - 1.0)) / -bh;
-			b2 = (1.0 - (r * k) + k2) / -bh;
+			b1 = (2.0 * (k2 - 1.0))   / bh;
+			b2 = (1.0 - (r * k) + k2) / bh;
 			break;
 		default:
 			assert(!"invalid FilterType");
@@ -76,17 +80,17 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 	double x,y;
 	for (int i=0; i<numSamples; i++) {
 		x = buffer[i];
-		
-		// first 2nd-order unit
-		y = ( a0*x ) + d1;
-		d1 = d2 + ( (a1)*x ) + ( (b1)*y );
-		d2 = ( (a2)*x ) + ( (b2)*y );
+
+		// Two direct form 2 biquads
+
+		y =       (a0 * x) + d1;
+		d1 = d2 + (a1 * x) - (b1 * y);
+		d2 =      (a2 * x) - (b2 * y);
 		x=y;
-		// and the second
-		
-		y = ( a0*x ) + d3;
-		d3 = d4 + ( a1*x ) + ( b1*y );
-		d4 = ( a2*x ) + ( b2*y );
+
+		y =       (a0 * x) + d3;
+		d3 = d4 + (a1 * x) - (b1 *y);
+		d4 =      (a2 * x) - (b2 *y);
 		
 		buffer[i] = (float) y;
 	}
