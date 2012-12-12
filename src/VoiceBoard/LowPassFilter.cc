@@ -4,43 +4,68 @@
 
 #include "LowPassFilter.h"
 #include "Synth--.h"		// for PI and TWO_PI
+
+#include <algorithm>
+#include <cassert>
 #include <math.h>
 
-LowPassFilter::LowPassFilter() :
+SynthFilter::SynthFilter() :
 	rate (4100.0)
 ,	nyquist (22050.0)
 {
 }
 
 void
-LowPassFilter::reset()
+SynthFilter::reset()
 {
 	d1 = d2 = d3 = d4 = 0;
 }
 
 void
-LowPassFilter::ProcessSamples	(float *buffer, int numSamples, float fc, float res)
+SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float res, FilterType filterType)
 {
-	// constrain cutoff
 #define SAFE 0.99f // filter is unstable _AT_ PI
-	if (fc>(nyquist*SAFE))
-		fc=nyquist*SAFE;
-	if (fc<10)
-		{fc = 10;/*d1=d2=d3=d4=0;*/}
-	float w = (fc/(float)rate); // cutoff freq [ 0 <= w <= 0.5 ]
+	cutoff = std::min(cutoff, nyquist * SAFE);
+	cutoff = std::max(cutoff, 10.0f);
+
+	float w = (cutoff / rate); // cutoff freq [ 0 <= w <= 0.5 ]
 	
-	// find final coeff values for end of this buffer
-	register double k, k2, bh, a0, a1, a2, b1, b2;
-	double r = 2*(1-res);
-	if(r==0.0) r = 0.001;
-	k=tan(w*PI);
-	k2 = k*k;
-	bh = 1 + (r*k) + k2;
-	a0 = a2 = double(k2/bh);
-	a1 = a0 * 2;
-	b1 = double(2*(k2-1)/-bh);
-	b2 = double((1-(r*k)+k2)/-bh);
-	
+	const double k = tan(w * PI);
+	const double k2 = k * k;
+	const double r = std::max(0.001, 2.0 * (1.0 - res)); // r is 1/Q (sqrt(2) for a butterworth response)
+
+	const double bh = 1.0 + r * k + k2;
+
+	double a0, a1, a2, b1, b2;
+
+	switch (filterType) {
+		case FilterTypeLowPass:
+			//
+			// Bilinear transformation of H(s) = 1 / (s^2 + s/Q + 1)
+			// See "Digital Audio Signal Processing" by Udo Zölzer
+			//
+			a0 = k2 / bh;
+			a1 = a0 * 2.0;
+			a2 = a0;
+			b1 = (2.0 * (k2 - 1.0)) / -bh;
+			b2 = (1.0 - (r * k) + k2) / -bh;
+			break;
+		case FilterTypeHighPass:
+			//
+			// Bilinear transformation of H(s) = s^2 / (s^2 + s/Q + 1)
+			// See "Digital Audio Signal Processing" by Udo Zölzer
+			//
+			a0 =  1.0 / bh;
+			a1 = -2.0 / bh;
+			a2 =  a0;
+			b1 = (2.0 * (k2 - 1.0)) / -bh;
+			b2 = (1.0 - (r * k) + k2) / -bh;
+			break;
+		default:
+			assert(!"invalid FilterType");
+			return;
+	}
+
 	double x,y;
 	for (int i=0; i<numSamples; i++) {
 		x = buffer[i];

@@ -135,7 +135,7 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	//
 	// VCF
 	//
-	filter.ProcessSamples (osc1buf, numSamples, cutoff, mFilterRes);
+	filter.ProcessSamples (osc1buf, numSamples, cutoff, mFilterRes, SynthFilter::FilterTypeLowPass);
 	
 	//
 	// VCA

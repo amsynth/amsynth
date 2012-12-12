@@ -72,7 +72,7 @@ private:
 				mFilterModAmt,
 				mFilterCutoff,
 				mFilterRes;
-	LowPassFilter 		filter;
+	SynthFilter 	filter;
 	ADSR 			filter_env;
 	
 	// amp section

@@ -5,23 +5,25 @@
 #ifndef _LOWPASSFILTER_H
 #define _LOWPASSFILTER_H
 
-/**
- * A 24 dB/ocatave resonant low-pass filter.
- **/
-class LowPassFilter
+class SynthFilter
 {
 public:
-	LowPassFilter();
 
-	void	SetSampleRate	(int rateIn) { rate = (float) rateIn; nyquist = rate/(float)2; }
-	
-	/**
-	 * Reset the filter - clear anything in the delay units of the filter.
-	 */
+	enum FilterType {
+		FilterTypeLowPass,
+		FilterTypeHighPass,
+	};
+
+	SynthFilter();
+
+	void SetSampleRate(int rateIn) { rate = (float)rateIn; nyquist = rate / 2.0f; }
+
 	void reset();
 
-	void	ProcessSamples	(float*, int, float cutoff, float res);
+	void ProcessSamples(float *, int, float cutoff, float res, FilterType filterType);
+
 private:
+
 	float rate;
 	float nyquist;
 	double d1, d2, d3, d4;
