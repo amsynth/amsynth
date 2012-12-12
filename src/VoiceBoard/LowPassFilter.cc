@@ -83,14 +83,15 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 
 		// Two direct form 2 biquads
 
-		y =       (a0 * x) + d1;
+		y  =      (a0 * x) + d1;
 		d1 = d2 + (a1 * x) - (b1 * y);
 		d2 =      (a2 * x) - (b2 * y);
-		x=y;
 
-		y =       (a0 * x) + d3;
-		d3 = d4 + (a1 * x) - (b1 *y);
-		d4 =      (a2 * x) - (b2 *y);
+		x = y;
+
+		y  =      (a0 * x) + d3;
+		d3 = d4 + (a1 * x) - (b1 * y);
+		d4 =      (a2 * x) - (b2 * y);
 		
 		buffer[i] = (float) y;
 	}
