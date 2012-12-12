@@ -5,7 +5,7 @@
 #include "Preset.h"
 
 #include "controls.h"
-#include "LowPassFilter.h"
+#include "VoiceBoard/LowPassFilter.h"
 
 #include <cstdlib>
 #include <cstdio>
