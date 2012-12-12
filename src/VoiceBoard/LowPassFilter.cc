@@ -61,6 +61,13 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			b1 = (2.0 * (k2 - 1.0)) / -bh;
 			b2 = (1.0 - (r * k) + k2) / -bh;
 			break;
+		case FilterTypeBandPass:
+			a0 =  r * k / bh;
+			a1 =  0.0;
+			a2 = -r * k / bh;
+			b1 = (2.0 * (k2 - 1.0)) / -bh;
+			b2 = (1.0 - (r * k) + k2) / -bh;
+			break;
 		default:
 			assert(!"invalid FilterType");
 			return;

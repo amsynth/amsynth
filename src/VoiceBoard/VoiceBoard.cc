@@ -62,6 +62,7 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_FilterEnvDecay:	filter_env.SetDecay (value);	break;
 	case kAmsynthParameter_FilterEnvSustain:	filter_env.SetSustain (value);	break;
 	case kAmsynthParameter_FilterEnvRelease:	filter_env.SetRelease (value);	break;
+	case kAmsynthParameter_FilterType: mFilterType = (SynthFilter::FilterType) value; break;
 
 	case kAmsynthParameter_OscillatorMixRingMod:	mRingModAmt = value;		break;
 	case kAmsynthParameter_OscillatorMix:		mOsc1Vol = (1-value)/2.0f;
@@ -135,7 +136,7 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	//
 	// VCF
 	//
-	filter.ProcessSamples (osc1buf, numSamples, cutoff, mFilterRes, SynthFilter::FilterTypeLowPass);
+	filter.ProcessSamples (osc1buf, numSamples, cutoff, mFilterRes, mFilterType);
 	
 	//
 	// VCA

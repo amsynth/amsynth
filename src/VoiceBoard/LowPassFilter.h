@@ -12,6 +12,8 @@ public:
 	enum FilterType {
 		FilterTypeLowPass,
 		FilterTypeHighPass,
+		FilterTypeBandPass,
+		FilterTypeCount
 	};
 
 	SynthFilter();

@@ -75,6 +75,7 @@ enum Param
 	kAmsynthParameter_KeyboardMode             = 32,
 
 	kAmsynthParameter_Oscillator2Pitch         = 33,
+	kAmsynthParameter_FilterType               = 34,
 	
 	kAmsynthParameterCount
 };

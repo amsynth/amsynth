@@ -73,6 +73,7 @@ private:
 				mFilterCutoff,
 				mFilterRes;
 	SynthFilter 	filter;
+	SynthFilter::FilterType mFilterType;
 	ADSR 			filter_env;
 	
 	// amp section

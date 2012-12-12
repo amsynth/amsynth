@@ -3,7 +3,9 @@
  */
 
 #include "Preset.h"
+
 #include "controls.h"
+#include "LowPassFilter.h"
 
 #include <cstdlib>
 #include <cstdio>
@@ -30,6 +32,10 @@ const char *lfo_waveform_names[] = {
 
 const char *keyboard_mode_names[] = {
 	"poly", "mono", "legato"
+};
+
+const char *filter_type_names[] = {
+	"low pass", "high pass", "band pass"
 };
 
 Preset::Preset			(const string name)
@@ -71,11 +77,13 @@ Preset::Preset			(const string name)
 	mParameters.push_back (Parameter		("portamento_time",		kAmsynthParameter_PortamentoTime, 0.0f, 0.0f, 1.0f));
 	mParameters.push_back (Parameter		("keyboard_mode",		kAmsynthParameter_KeyboardMode, KeyboardModePoly, 0, KeyboardModeLegato, 1));
 	mParameters.push_back (Parameter		("osc2_pitch",			kAmsynthParameter_Oscillator2Pitch, 0, -12, +12, 1));
+	mParameters.push_back (Parameter		("filter_type",         kAmsynthParameter_FilterType, SynthFilter::FilterTypeLowPass, SynthFilter::FilterTypeLowPass, SynthFilter::FilterTypeCount - 1, 1));
 	
 	getParameter(kAmsynthParameter_Oscillator1Waveform).setParameterValueStrings(osc_waveform_names, ARRAY_SIZE(osc_waveform_names));
 	getParameter(kAmsynthParameter_Oscillator2Waveform).setParameterValueStrings(osc_waveform_names, ARRAY_SIZE(osc_waveform_names));
 	getParameter(kAmsynthParameter_LFOWaveform).setParameterValueStrings(lfo_waveform_names, ARRAY_SIZE(lfo_waveform_names));
 	getParameter(kAmsynthParameter_KeyboardMode).setParameterValueStrings(keyboard_mode_names, ARRAY_SIZE(keyboard_mode_names));
+	getParameter(kAmsynthParameter_FilterType).setParameterValueStrings(filter_type_names, ARRAY_SIZE(filter_type_names));
 }
 
 Preset&
@@ -259,6 +267,8 @@ int parameter_get_display (int parameter_index, float parameter_value, char *buf
 		case kAmsynthParameter_AmpDistortion:
 			return snprintf(buffer, maxlen, "%d %%", (int)roundf(parameter.GetNormalisedValue() * 100.0));
 			break;
+		case kAmsynthParameter_FilterType:
+			return snprintf(buffer, maxlen, "%s", filter_type_names[(int)real_value]);
 	}
 	return 0;
 }
