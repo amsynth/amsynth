@@ -79,6 +79,7 @@ GUI::delete_event_impl(GdkEventAny *)
 
 GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 		  GenericOutput *audio, const char *title )
+:	m_windowTitle(title)
 #if ENABLE_MIDIKEYS
 :	m_vkeybdOctave(4)
 ,	m_vkeybdIsActive(false)
@@ -96,8 +97,6 @@ GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 		// messes up the audio thread's timing if not realtime...
 //		Glib::signal_timeout().connect( mem_fun(*this,&GUI::idle_callback), 200 );
 
-        m_baseName = title + string(" : ");
-	set_title(m_baseName);
 	set_resizable(false);
         
 	active_param = 0;
@@ -704,16 +703,24 @@ GUI::onUpdate()	// called whenever the preset selection has changed
 void
 GUI::update_title()
 {
-	std::string title = m_baseName + preset_controller->getCurrentPreset().getName();
+	std::ostringstream ostr;
+	ostr << m_windowTitle;
+	ostr << ": ";
+	ostr << preset_controller->getCurrPresetNumber();
+	ostr << ": ";
+	ostr << preset_controller->getCurrentPreset().getName();
+
 	if (m_presetIsNotSaved) {
-		title += std::string(" *");
+		ostr << " *";
 	}
+
 #if ENABLE_MIDIKEYS
 	if (m_vkeybdIsActive) {
-		title += std::string(" (midikeys active)");
+		ostr << " (midikeys active)";
 	}
 #endif
-	set_title(title);
+
+	set_title(ostr.str());
 }
 
 void

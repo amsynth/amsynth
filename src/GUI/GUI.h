@@ -145,8 +145,8 @@ private:
 	Preset			*clipboard_preset;
 	
 	GtkAdjustment 	*m_adjustments[kAmsynthParameterCount];
-        
-        std::string             m_baseName;
+
+	std::string		m_windowTitle;
 	bool			m_presetIsNotSaved;
 
 #if ENABLE_MIDIKEYS
