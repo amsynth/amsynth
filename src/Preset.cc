@@ -27,7 +27,7 @@ const char *osc_waveform_names[] = {
 };
 
 const char *lfo_waveform_names[] = {
-	"sine", "square", "triangle", "noise", "noise + sample & hold"
+	"sine", "square", "triangle", "noise", "noise + sample & hold", "sawtooth (up)"
 };
 
 const char *keyboard_mode_names[] = {
@@ -59,7 +59,7 @@ Preset::Preset			(const string name)
     mParameters.push_back (Parameter		("osc2_waveform",		kAmsynthParameter_Oscillator2Waveform,		2, 0, 4, 1));
     mParameters.push_back (Parameter		("master_vol",			kAmsynthParameter_MasterVolume,			0.67, 0, 1, 0,		Parameter::PARAM_POWER, 2, 0));
     mParameters.push_back (Parameter		("lfo_freq",			kAmsynthParameter_LFOFreq,			0, 0, 7.5, 0,		Parameter::PARAM_POWER, 2, 0,	"Hz"));
-    mParameters.push_back (Parameter		("lfo_waveform",		kAmsynthParameter_LFOWaveform,		0, 0, 4, 1));
+    mParameters.push_back (Parameter		("lfo_waveform",		kAmsynthParameter_LFOWaveform,		0, 0, 5, 1));
     mParameters.push_back (Parameter		("osc2_range",			kAmsynthParameter_Oscillator2Octave,		0, -1, 2, 1,		Parameter::PARAM_EXP, 2, 0));
 	mParameters.push_back (Parameter		("osc_mix",				kAmsynthParameter_OscillatorMix,			0, -1, 1));
 	mParameters.push_back (Parameter		("freq_mod_amount",		kAmsynthParameter_LFOToOscillators,		0, 0, 1.25992105f,0,Parameter::PARAM_POWER, 3, -1));

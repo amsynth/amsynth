@@ -235,6 +235,7 @@
         lv2:scalePoint [ rdf:value 2 ; rdfs:label "triangle" ] ;
         lv2:scalePoint [ rdf:value 3 ; rdfs:label "white noise" ] ;
         lv2:scalePoint [ rdf:value 4 ; rdfs:label "noise + sample & hold" ] ;
+        lv2:scalePoint [ rdf:value 5 ; rdfs:label "sawtooth (up)" ] ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;

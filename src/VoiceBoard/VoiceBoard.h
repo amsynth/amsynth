@@ -54,6 +54,7 @@ private:
 	// modulation section
 	Oscillator 		lfo1;
 	float			mLFO1Freq;
+	float			mLFOPulseWidth;
 	
 	// oscillator section
 	Oscillator 		osc1, osc2;

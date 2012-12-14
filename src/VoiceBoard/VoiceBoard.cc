@@ -32,6 +32,8 @@ VoiceBoard::VoiceBoard():
 {
 }
 
+enum { sine, square, triangle, noise, randomize, sawtooth_up };
+
 void
 VoiceBoard::UpdateParameter	(Param param, float value)
 {
@@ -39,8 +41,18 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	{
 	case kAmsynthParameter_LFOToAmp:	mAmpModAmount = (value+1.0f)/2.0f;break;
 	case kAmsynthParameter_LFOFreq:		mLFO1Freq = value; 		break;
-	case kAmsynthParameter_LFOWaveform:	lfo1.SetWaveform ((Oscillator::Waveform) (int)value);
-				break;
+	case kAmsynthParameter_LFOWaveform: {
+		switch ((int)value) {
+			case sine:          mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Sine);   break;
+			case square:        mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Pulse);  break;
+			case triangle:      mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Saw);    break;
+			case noise:         mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Noise);  break;
+			case randomize:     mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Random); break;
+			case sawtooth_up:   mLFOPulseWidth = 1.0; lfo1.SetWaveform(Oscillator::Waveform_Saw);    break;
+			default: assert(!"invalid LFO waveform"); break;
+		}
+		break;
+	}
 	case kAmsynthParameter_LFOToOscillators:	mFreqModAmount=(value/2.0f)+0.5f;	break;
 	
 	case kAmsynthParameter_Oscillator1Waveform:	osc1.SetWaveform ((Oscillator::Waveform) (int)value);
@@ -92,7 +104,7 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	// Control Signals
 	//
 	float *lfo1buf = mProcessBuffers.lfo_osc_1;
-	lfo1.ProcessSamples (lfo1buf, numSamples, mLFO1Freq, 0);
+	lfo1.ProcessSamples (lfo1buf, numSamples, mLFO1Freq, mLFOPulseWidth);
 
 	const float frequency = mFrequency.nextValue();
 	for (int i=1; i<numSamples; i++) { mFrequency.nextValue(); }
