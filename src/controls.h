@@ -76,7 +76,8 @@ enum Param
 
 	kAmsynthParameter_Oscillator2Pitch         = 33,
 	kAmsynthParameter_FilterType               = 34,
-	
+	kAmsynthParameter_FilterSlope              = 35,
+
 	kAmsynthParameterCount
 };
 

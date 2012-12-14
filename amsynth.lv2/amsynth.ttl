@@ -421,6 +421,19 @@
         lv2:scalePoint [ rdf:value 0 ; rdfs:label "low pass"] ;
         lv2:scalePoint [ rdf:value 1 ; rdfs:label "high pass" ] ;
         lv2:scalePoint [ rdf:value 2 ; rdfs:label "band pass" ] ;
+    ] , [
+        a lv2:InputPort ;
+        a lv2:ControlPort ;
+        lv2:index 38 ;
+        lv2:symbol "filter_slope" ;
+        lv2:name "filter_slope" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        lv2:portProperty lv2:integer ;
+        lv2:default 0.000000 ;
+        lv2:minimum 1.000000 ;
+        lv2:maximum 1.000000 ;
+        lv2:scalePoint [ rdf:value 0 ; rdfs:label "12 dB / octave"] ;
+        lv2:scalePoint [ rdf:value 1 ; rdfs:label "24 dB / octave"] ;
     ].
 
 <http://code.google.com/p/amsynth/amsynth#factory_preset_derren_1>

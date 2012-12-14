@@ -16,13 +16,18 @@ public:
 		FilterTypeCount
 	};
 
+	enum FilterSlope {
+		FilterSlope12,
+		FilterSlope24,
+	};
+
 	SynthFilter();
 
 	void SetSampleRate(int rateIn) { rate = (float)rateIn; nyquist = rate / 2.0f; }
 
 	void reset();
 
-	void ProcessSamples(float *, int, float cutoff, float res, FilterType filterType);
+	void ProcessSamples(float *, int, float cutoff, float res, FilterType type, FilterSlope slope);
 
 private:
 

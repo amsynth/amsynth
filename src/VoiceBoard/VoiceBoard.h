@@ -75,6 +75,7 @@ private:
 				mFilterRes;
 	SynthFilter 	filter;
 	SynthFilter::FilterType mFilterType;
+	SynthFilter::FilterSlope mFilterSlope;
 	ADSR 			filter_env;
 	
 	// amp section

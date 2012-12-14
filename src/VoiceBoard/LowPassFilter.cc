@@ -22,7 +22,7 @@ SynthFilter::reset()
 }
 
 void
-SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float res, FilterType filterType)
+SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float res, FilterType type, FilterSlope slope)
 {
 	cutoff = std::min(cutoff, nyquist * 0.99f); // filter is unstable at PI
 	cutoff = std::max(cutoff, 10.0f);
@@ -37,7 +37,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 
 	double a0, a1, a2, b1, b2;
 
-	switch (filterType) {
+	switch (type) {
 		case FilterTypeLowPass:
 			//
 			// Bilinear transformation of H(s) = 1 / (s^2 + s/Q + 1)
@@ -76,20 +76,37 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			return;
 	}
 
-	for (int i=0; i<numSamples; i++) { double y, x = buffer[i];
+	switch (slope) {
+		case FilterSlope12:
+			for (int i=0; i<numSamples; i++) { double y, x = buffer[i];
 
-		// Two direct form 2 biquads
+				y  =      (a0 * x) + d1;
+				d1 = d2 + (a1 * x) - (b1 * y);
+				d2 =      (a2 * x) - (b2 * y);
 
-		y  =      (a0 * x) + d1;
-		d1 = d2 + (a1 * x) - (b1 * y);
-		d2 =      (a2 * x) - (b2 * y);
+				buffer[i] = (float) y;
+			}
+			break;
 
-		x = y;
+		case FilterSlope24:
+			for (int i=0; i<numSamples; i++) { double y, x = buffer[i];
 
-		y  =      (a0 * x) + d3;
-		d3 = d4 + (a1 * x) - (b1 * y);
-		d4 =      (a2 * x) - (b2 * y);
-		
-		buffer[i] = (float) y;
+				y  =      (a0 * x) + d1;
+				d1 = d2 + (a1 * x) - (b1 * y);
+				d2 =      (a2 * x) - (b2 * y);
+
+				x = y;
+
+				y  =      (a0 * x) + d3;
+				d3 = d4 + (a1 * x) - (b1 * y);
+				d4 =      (a2 * x) - (b2 * y);
+
+				buffer[i] = (float) y;
+			}
+			break;
+
+		default:
+			assert(!"invalid FilterSlope");
+			break;
 	}
 }

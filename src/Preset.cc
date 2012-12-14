@@ -38,6 +38,10 @@ const char *filter_type_names[] = {
 	"low pass", "high pass", "band pass"
 };
 
+const char *filter_slope_names[] = {
+	"12 dB / octave", "24 dB / octave"
+};
+
 Preset::Preset			(const string name)
 :	mName (name)
 ,	nullparam ("null", kAmsynthParameterCount)
@@ -78,12 +82,14 @@ Preset::Preset			(const string name)
 	mParameters.push_back (Parameter		("keyboard_mode",		kAmsynthParameter_KeyboardMode, KeyboardModePoly, 0, KeyboardModeLegato, 1));
 	mParameters.push_back (Parameter		("osc2_pitch",			kAmsynthParameter_Oscillator2Pitch, 0, -12, +12, 1));
 	mParameters.push_back (Parameter		("filter_type",         kAmsynthParameter_FilterType, SynthFilter::FilterTypeLowPass, SynthFilter::FilterTypeLowPass, SynthFilter::FilterTypeCount - 1, 1));
-	
+	mParameters.push_back (Parameter		("filter_slope",        kAmsynthParameter_FilterSlope, SynthFilter::FilterSlope24, SynthFilter::FilterSlope12, SynthFilter::FilterSlope24, 1));
+
 	getParameter(kAmsynthParameter_Oscillator1Waveform).setParameterValueStrings(osc_waveform_names, ARRAY_SIZE(osc_waveform_names));
 	getParameter(kAmsynthParameter_Oscillator2Waveform).setParameterValueStrings(osc_waveform_names, ARRAY_SIZE(osc_waveform_names));
 	getParameter(kAmsynthParameter_LFOWaveform).setParameterValueStrings(lfo_waveform_names, ARRAY_SIZE(lfo_waveform_names));
 	getParameter(kAmsynthParameter_KeyboardMode).setParameterValueStrings(keyboard_mode_names, ARRAY_SIZE(keyboard_mode_names));
 	getParameter(kAmsynthParameter_FilterType).setParameterValueStrings(filter_type_names, ARRAY_SIZE(filter_type_names));
+	getParameter(kAmsynthParameter_FilterSlope).setParameterValueStrings(filter_slope_names, ARRAY_SIZE(filter_slope_names));
 }
 
 Preset&
