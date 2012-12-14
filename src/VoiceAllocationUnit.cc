@@ -84,8 +84,10 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 		} else {
 			_voices[note]->setFrequency(pitch);
 		}
+
+		if (_voices[note]->isSilent())
+			_voices[note]->reset();
 		
-		_voices[note]->reset();
 		_voices[note]->setVelocity(velocity);
 		_voices[note]->triggerOn();
 		
