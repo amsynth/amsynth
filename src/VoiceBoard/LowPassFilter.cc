@@ -24,17 +24,16 @@ SynthFilter::reset()
 void
 SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float res, FilterType filterType)
 {
-#define SAFE 0.99f // filter is unstable _AT_ PI
-	cutoff = std::min(cutoff, nyquist * SAFE);
+	cutoff = std::min(cutoff, nyquist * 0.99f); // filter is unstable at PI
 	cutoff = std::max(cutoff, 10.0f);
 
-	float w = (cutoff / rate); // cutoff freq [ 0 <= w <= 0.5 ]
-	
-	const double k = tan(w * PI);
-	const double k2 = k * k;
+	const double w = (cutoff / rate); // cutoff freq [ 0 <= w <= 0.5 ]
 	const double r = std::max(0.001, 2.0 * (1.0 - res)); // r is 1/Q (sqrt(2) for a butterworth response)
 
-	const double bh = 1.0 + r * k + k2;
+	const double k = tan(w * PI);
+	const double k2 = k * k;
+	const double rk = r * k;
+	const double bh = 1.0 + rk + k2;
 
 	double a0, a1, a2, b1, b2;
 
@@ -47,8 +46,8 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			a0 = k2 / bh;
 			a1 = a0 * 2.0;
 			a2 = a0;
-			b1 = (2.0 * (k2 - 1.0))   / bh;
-			b2 = (1.0 - (r * k) + k2) / bh;
+			b1 = (2.0 * (k2 - 1.0)) / bh;
+			b2 = (1.0 - rk + k2) / bh;
 			break;
 		case FilterTypeHighPass:
 			//
@@ -58,19 +57,19 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			a0 =  1.0 / bh;
 			a1 = -2.0 / bh;
 			a2 =  a0;
-			b1 = (2.0 * (k2 - 1.0))   / bh;
-			b2 = (1.0 - (r * k) + k2) / bh;
+			b1 = (2.0 * (k2 - 1.0)) / bh;
+			b2 = (1.0 - rk + k2) / bh;
 			break;
 		case FilterTypeBandPass:
 			//
 			// Bilinear transformation of H(s) = (s/Q) / (s^2 + s/Q + 1)
 			// See "Digital Audio Signal Processing" by Udo Zölzer
 			//
-			a0 =  r * k / bh;
+			a0 =  rk / bh;
 			a1 =  0.0;
-			a2 = -r * k / bh;
-			b1 = (2.0 * (k2 - 1.0))   / bh;
-			b2 = (1.0 - (r * k) + k2) / bh;
+			a2 = -rk / bh;
+			b1 = (2.0 * (k2 - 1.0)) / bh;
+			b2 = (1.0 - rk + k2) / bh;
 			break;
 		default:
 			assert(!"invalid FilterType");
