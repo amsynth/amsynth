@@ -76,9 +76,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			return;
 	}
 
-	double x,y;
-	for (int i=0; i<numSamples; i++) {
-		x = buffer[i];
+	for (int i=0; i<numSamples; i++) { double y, x = buffer[i];
 
 		// Two direct form 2 biquads
 
