@@ -115,6 +115,9 @@ static unsigned long mtime(const char *filename)
 int 
 PresetController::savePresets		(const char *filename)
 {
+	if (filename == NULL)
+		filename = bank_file.c_str();
+
 	ofstream file( filename, ios::out );
   
 	file << "amSynth" << endl;
@@ -145,7 +148,7 @@ PresetController::savePresets		(const char *filename)
 #endif
 
 	lastPresetsFileModifiedTime = mtime(filename);
-	lastPresetsFilePath = std::string(filename);
+	bank_file = std::string(filename);
 
 	return 0;
 }
@@ -153,11 +156,14 @@ PresetController::savePresets		(const char *filename)
 int 
 PresetController::loadPresets		(const char *filename)
 {
+	if (filename == NULL)
+		filename = bank_file.c_str();
+
 #ifdef _DEBUG
 	cout << "<PresetController::loadPresets()>" << endl;
 #endif
 
-	if (strcmp(filename, lastPresetsFilePath.c_str()) == 0 && lastPresetsFileModifiedTime == mtime(filename)) {
+	if (strcmp(filename, bank_file.c_str()) == 0 && lastPresetsFileModifiedTime == mtime(filename)) {
 		return 0; // file not modified since last load
 	}
 
@@ -181,7 +187,10 @@ PresetController::loadPresets		(const char *filename)
 #endif
 	return -1;
 	}
-  
+
+	delete[] presets;
+	presets = new Preset [kNumPresets];
+
 	int preset = -1;
 	file >> buffer;
 	while (file.good()) {
@@ -240,9 +249,9 @@ PresetController::loadPresets		(const char *filename)
 		}
 	}
 
+	bank_file = std::string(filename);
 	lastPresetsFileModifiedTime = mtime(filename);
-	lastPresetsFilePath = std::string(filename);
-	
+
 	notify ();
 	
 #ifdef _DEBUG

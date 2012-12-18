@@ -266,6 +266,10 @@ int main( int argc, char *argv[] )
 		}
 	}
 
+	// all config files should eventually be migrated to the ~./amsynth directory
+	mkdir ((std::string(getenv("HOME")) + std::string("/.amsynth")).c_str(), 0000755);
+	mkdir ((std::string(getenv("HOME")) + std::string("/.amsynth") + std::string("/banks")).c_str(), 0000755);
+
 	install_default_files_if_reqd();
 
 	// setup the configuration

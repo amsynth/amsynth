@@ -24,10 +24,73 @@
 #include "../PresetController.h"
 #include "../VoiceAllocationUnit.h"
 
-#include <stdio.h>
+#include <fstream>
 #include <iostream>
+#include <stdio.h>
+#include <string>
+#include <vector>
 
 extern Config config;
+
+
+//////////
+
+struct BankInfo {
+	std::string name;
+	std::string file_path;
+	bool read_only;
+};
+
+static std::vector<BankInfo> s_banks;
+
+static void scan_preset_bank(const std::string dir_path, const std::string file_name, bool read_only)
+{
+	std::string file_path = dir_path + std::string("/") + std::string(file_name);
+
+	std::string bank_name = std::string(file_name);
+	if (bank_name == std::string(".amSynth.presets")) {
+		bank_name = "User bank";
+	} else {
+		std::string::size_type pos = bank_name.find_first_of(".");
+		if (pos != std::string::npos)
+			bank_name.erase(pos, string::npos);
+	}
+
+	PresetController preset_controller;
+	if (preset_controller.loadPresets(file_path.c_str()) != 0)
+		return;
+
+	BankInfo bank_info;
+	bank_info.name = bank_name;
+	bank_info.file_path = file_path;
+	bank_info.read_only = read_only;
+	s_banks.push_back(bank_info);
+}
+
+static void scan_preset_banks(const std::string dir_path, bool read_only)
+{
+	GDir *gdir = g_dir_open(dir_path.c_str(), 0, NULL);
+	if (!gdir)
+		return;
+
+	const gchar *file_name = NULL;
+	while ((file_name = g_dir_read_name(gdir))) {
+		scan_preset_bank(dir_path, file_name, read_only);
+	}
+
+	g_dir_close(gdir);
+}
+
+static void scan_preset_banks()
+{
+	s_banks.clear();
+	scan_preset_bank(std::string(getenv("HOME")), ".amSynth.presets", false);
+	scan_preset_banks(std::string(getenv("HOME")) + std::string("/.amsynth/banks"), false);
+	scan_preset_banks(std::string(PKGDATADIR "/banks"), true);
+}
+
+//////////
+
 
 class PresetControllerViewImpl : public PresetControllerView, public UpdateListener
 {
@@ -48,31 +111,44 @@ private:
 
 	VoiceAllocationUnit *vau;
     PresetController *presetController;
+	GtkWidget *bank_combo;
 	GtkWidget *combo;
+	GtkWidget *save_button;
 	bool inhibit_combo_callback;
 };
 
 PresetControllerViewImpl::PresetControllerViewImpl(VoiceAllocationUnit *voiceAllocationUnit)
 :	vau(voiceAllocationUnit)
 ,	presetController(NULL)
+,	bank_combo(NULL)
 ,	combo(NULL)
 ,	inhibit_combo_callback(false)
 {
+	bank_combo = gtk_combo_box_new_text ();
+	scan_preset_banks ();
+	for (size_t i=0; i<s_banks.size(); i++) {
+		char text [64] = "";
+		snprintf (text, sizeof(text), "[%s] %s", s_banks[i].read_only ? "factory" : "user", s_banks[i].name.c_str());
+		gtk_combo_box_insert_text (GTK_COMBO_BOX (bank_combo), i, text);
+	}
+	g_signal_connect (G_OBJECT (bank_combo), "changed", G_CALLBACK (&PresetControllerViewImpl::on_combo_changed), this);
+	add (* Glib::wrap (bank_combo));
+
 	combo = gtk_combo_box_new_text ();
 	gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (combo), 4);
 	g_signal_connect (G_OBJECT (combo), "changed", G_CALLBACK (&PresetControllerViewImpl::on_combo_changed), this);
 	g_signal_connect (G_OBJECT (combo), "notify::popup-shown", G_CALLBACK (&PresetControllerViewImpl::on_combo_popup_shown), this);
 	add (* Glib::wrap (combo));
 	
-	GtkWidget *widget = NULL;
-	
-	widget = gtk_button_new_with_label ("Save");
-	g_signal_connect (G_OBJECT (widget), "clicked", G_CALLBACK (&PresetControllerViewImpl::on_save_clicked), this);
-	add (* Glib::wrap (widget));
+	save_button = gtk_button_new_with_label ("Save");
+	g_signal_connect (G_OBJECT (save_button), "clicked", G_CALLBACK (&PresetControllerViewImpl::on_save_clicked), this);
+	add (* Glib::wrap (save_button));
 	
 	Gtk::Label *blank = manage (new Gtk::Label ("    "));
 	add (*blank);
 	
+	GtkWidget *widget = NULL;
+
 	widget = gtk_button_new_with_label ("Audition");
 	g_signal_connect (G_OBJECT (widget), "pressed", G_CALLBACK (&PresetControllerViewImpl::on_audition_pressed), this);
 	g_signal_connect (G_OBJECT (widget), "released", G_CALLBACK (&PresetControllerViewImpl::on_audition_released), this);
@@ -93,22 +169,27 @@ void PresetControllerViewImpl::on_combo_changed (GtkWidget *widget, PresetContro
 {
 	if (that->inhibit_combo_callback)
 		return;
-	gint active = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
-	that->presetController->selectPreset(active);
+
+	if (widget == that->bank_combo) {
+		gint bank = gtk_combo_box_get_active (GTK_COMBO_BOX (that->bank_combo));
+		that->presetController->loadPresets(s_banks[bank].file_path.c_str());
+	}
+
+	gint preset = gtk_combo_box_get_active (GTK_COMBO_BOX (that->combo));
+	that->presetController->selectPreset (PresetController::kNumPresets - preset - 1);
+	that->presetController->selectPreset (preset);
 }
 
 void PresetControllerViewImpl::on_combo_popup_shown (GObject *gobject, GParamSpec *pspec, PresetControllerViewImpl *that)
 {
-	const char *filename = config.current_bank_file.c_str();
-	that->presetController->loadPresets(filename);
+	that->presetController->loadPresets();
 }
 
 void PresetControllerViewImpl::on_save_clicked (GtkWidget *widget, PresetControllerViewImpl *that)
 {
-	const char *filename = config.current_bank_file.c_str();
-	that->presetController->loadPresets(filename); // in case another instance has changed any of the other presets
+	that->presetController->loadPresets(); // in case another instance has changed any of the other presets
 	that->presetController->commitPreset();
-	that->presetController->savePresets(filename);
+	that->presetController->savePresets();
 	that->update();
 }
 
@@ -141,6 +222,14 @@ void PresetControllerViewImpl::update()
 		gtk_combo_box_insert_text (GTK_COMBO_BOX (combo), i, text);
 	}
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), presetController->getCurrPresetNumber());
+
+	const std::string current_file_path = presetController->getFilePath();
+	for (size_t i=0; i<s_banks.size(); i++) {
+		if (current_file_path == s_banks[i].file_path) {
+			gtk_combo_box_set_active (GTK_COMBO_BOX (bank_combo), i);
+			gtk_widget_set_sensitive (save_button, !s_banks[i].read_only);
+		}
+	}
 	
 	inhibit_combo_callback = false;
 }

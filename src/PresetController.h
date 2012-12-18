@@ -46,12 +46,14 @@ public:
 	int		importPreset		(const string filename);
 	
 	// Loading & Saving of bank files
-	int		loadPresets			(const char *filename);
-	int		savePresets			(const char *filename);
+	int		loadPresets			(const char *filename = NULL);
+	int		savePresets			(const char *filename = NULL);
 
     void	setUpdateListener	(UpdateListener & ul) { updateListener = &ul; }
 
     int		getCurrPresetNumber	() { return currentPresetNo; }
+
+	const std::string & getFilePath() { return bank_file; }
     
 protected:
 	void	notify				() { if (updateListener) updateListener->update(); }
@@ -64,7 +66,6 @@ private:
 	Preset			blankPreset;
 	Preset 			nullpreset;
 	int 			currentPresetNo;
-	std::string		lastPresetsFilePath;
 	unsigned long 	lastPresetsFileModifiedTime;
 };
 
