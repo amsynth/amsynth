@@ -312,6 +312,27 @@ GUI::create_menus	( )
 		
 		menu_config->items().push_back(MenuElem("Max. Polyphony", *menu));
 	}
+
+	//
+	// Config > Pitch bend range
+	//
+	{
+		Gtk::RadioButtonGroup grp;
+		Gtk::Menu *menu = Gtk::manage( new Gtk::Menu );
+
+		for (int i=1; i<=12; i++) {
+			ostringstream name;
+			name << i;
+			name << " Semitones";
+			Gtk::RadioMenuItem *item = Gtk::manage(new Gtk::RadioMenuItem(grp, name.str()));
+			item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_pitch_bend_range_change), i) );
+			menu->items().push_back(*item);
+		}
+
+		menu->set_active(config->pitch_bend_range - 1);
+
+		menu_config->items().push_back(MenuElem("Pitch Bend Range", *menu));
+	}
 	
 	list_config.push_back (MenuElem("Audio & MIDI...", bind(mem_fun(*this, &GUI::event_handler), (int)evConfig)));
 	
@@ -952,6 +973,12 @@ void
 GUI::on_ployphony_change(int value)
 {
 	vau->SetMaxVoices(value);
+}
+
+void
+GUI::on_pitch_bend_range_change(int value)
+{
+	vau->setPitchBendRangeSemitones(config->pitch_bend_range = value);
 }
 
 #if ENABLE_MIDIKEYS

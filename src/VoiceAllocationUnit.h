@@ -37,6 +37,7 @@ public:
 	int		GetMaxVoices	() { return mMaxVoices; }
 	int		GetActiveVoices	() { return mActiveVoices; }
 	
+	void	setPitchBendRangeSemitones(float range) { mPitchBendRangeSemitones = range; }
 	void	setKeyboardMode(KeyboardMode);
 
 	// processing with stride (interleaved) is not functional yet!!!

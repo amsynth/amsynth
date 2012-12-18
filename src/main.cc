@@ -305,6 +305,7 @@ int main( int argc, char *argv[] )
 	voiceAllocationUnit = new VoiceAllocationUnit;
 	voiceAllocationUnit->SetSampleRate (config.sample_rate);
 	voiceAllocationUnit->SetMaxVoices (config.polyphony);
+	voiceAllocationUnit->setPitchBendRangeSemitones (config.pitch_bend_range);
 	out->setAudioCallback (&amsynth_audio_callback);
 
 	amsynth_load_bank(config.current_bank_file.c_str());

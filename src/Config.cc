@@ -36,6 +36,7 @@ Config::Defaults	()
 	channels = 2;
 	buffer_size = 128;
 	polyphony = 10;
+	pitch_bend_range = 2;
 	alsa_seq_client_name = "amSynth";
 	current_bank_file = string (getenv ("HOME")) +
 		string("/.amSynth.presets");
@@ -122,6 +123,9 @@ Config::load	()
 		} else if (buffer=="polyphony"){
 			file >> buffer;
 			istringstream(buffer) >> polyphony;
+		} else if (buffer=="pitch_bend_range"){
+			file >> buffer;
+			istringstream(buffer) >> pitch_bend_range;
 		} else {
 			file >> buffer;
 		}
@@ -143,6 +147,7 @@ Config::save	()
 	fprintf (fout, "alsa_audio_device\t%s\n", alsa_audio_device.c_str());
 	fprintf (fout, "sample_rate\t%d\n", sample_rate);
 	fprintf (fout, "polyphony\t%d\n", polyphony);
+	fprintf (fout, "pitch_bend_range\t%d\n", pitch_bend_range);
 	fclose (fout);
 	return 0;
 }

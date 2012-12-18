@@ -63,6 +63,9 @@ public:
 	 * unlimited polyphony.
 	 */
 	int polyphony;
+	/*
+	 */
+	int pitch_bend_range;
 	/**
 	 * Specify the audio output driver to use. currently "oss", "alsa", or 
 	 * "auto" (which picks the best one)
