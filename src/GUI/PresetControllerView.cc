@@ -24,6 +24,7 @@
 #include "../PresetController.h"
 #include "../VoiceAllocationUnit.h"
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
@@ -55,6 +56,8 @@ static void scan_preset_bank(const std::string dir_path, const std::string file_
 		if (pos != std::string::npos)
 			bank_name.erase(pos, string::npos);
 	}
+
+	std::replace(bank_name.begin(), bank_name.end(), '_', ' ');
 
 	PresetController preset_controller;
 	if (preset_controller.loadPresets(file_path.c_str()) != 0)

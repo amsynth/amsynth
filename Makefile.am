@@ -9,6 +9,15 @@ desktopdir = $(datadir)/applications
 desktop_in_files = amsynth.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
+banksdir = $(pkgdatadir)/banks
+banks_DATA = \
+	banks/amsynth_factory.bank \
+	banks/briandc_1.bank \
+	banks/briandc_2.bank \
+	banks/briandc_3.bank \
+	banks/briandc_4.bank
+
+
 if BUILD_LV2
 amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
 dist_amsynth_lv2_DATA = \

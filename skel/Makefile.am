@@ -1,1 +1,1 @@
-dist_pkgdata_DATA = presets Controllersrc rc
+dist_pkgdata_DATA = Controllersrc rc
