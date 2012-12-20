@@ -4,6 +4,8 @@ dist_skinsdefault_DATA = \
 	layout.ini \
 	background.png \
 	button_simple.png \
+	filter_slope.png \
+	filter_type.png \
 	keybmode.png \
 	knob_boost_cut.png \
 	knob_boost.png \
