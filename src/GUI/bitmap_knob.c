@@ -214,6 +214,7 @@ bitmap_knob_button_press ( GtkWidget *widget, GdkEventButton *event )
 			self->sensitivity = (event->state & GDK_SHIFT_MASK) ? SENSITIVITY_HIGH : SENSITIVITY_NORMAL;
 		} else {
 			self->sensitivity = SENSITIVITY_STEP * (guint)((upper - lower) / step);
+			self->sensitivity = MIN(self->sensitivity, 480);
 		}
 		self->origin_val = gtk_adjustment_get_value (self->adjustment);
 		self->origin_y = event->y;
