@@ -76,12 +76,18 @@ static void scan_preset_banks(const std::string dir_path, bool read_only)
 	if (!gdir)
 		return;
 
+	std::vector<std::string> dirnames;
+
 	const gchar *file_name = NULL;
-	while ((file_name = g_dir_read_name(gdir))) {
-		scan_preset_bank(dir_path, file_name, read_only);
-	}
+	while ((file_name = g_dir_read_name(gdir)))
+		dirnames.push_back(std::string(file_name));
 
 	g_dir_close(gdir);
+
+	std::sort(dirnames.begin(), dirnames.end());
+
+	for (std::vector<std::string>::iterator it = dirnames.begin(); it != dirnames.end(); ++it)
+		scan_preset_bank(dir_path, *it, read_only);
 }
 
 static void scan_preset_banks()
