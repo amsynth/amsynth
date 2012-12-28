@@ -324,12 +324,10 @@ editor_pane_new (GtkAdjustment **adjustments)
 			}
 			else if (g_strcmp0 (KEY_CONTROL_TYPE_POPUP, type) == 0)
 			{
-				gsize nstrings = 0;
-				gchar **strings = g_key_file_get_string_list (gkey_file, control_name, "popup_strings", &nstrings, &gerror); HANDLE_GERROR (gerror);
+				const char **value_strings = parameter_get_value_strings(i);
 				widget = bitmap_popup_new (adj, res->pixbuf, res->fr_width, res->fr_height, res->fr_count);
-				bitmap_popup_set_strings (widget, (const char **)strings);	
+				bitmap_popup_set_strings (widget, value_strings);
 				bitmap_popup_set_bg (widget, subpixpuf);
-				g_strfreev (strings);
 			}
 			
 			g_signal_connect_after(G_OBJECT(widget), "button-press-event", G_CALLBACK (on_control_press), GINT_TO_POINTER(i));

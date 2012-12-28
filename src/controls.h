@@ -95,6 +95,7 @@ const char *parameter_name_from_index (int param_index);
 int parameter_index_from_name (const char *param_name);
 
 int parameter_get_display (int parameter_index, float parameter_value, char *buffer, size_t maxlen);
+const char **parameter_get_value_strings (int parameter_index);
 
 #ifdef __cplusplus
 }

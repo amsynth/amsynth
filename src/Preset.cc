@@ -15,31 +15,29 @@
 using namespace std;
 #endif
 
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
-
 Parameter TimeParameter (const string name, Param id)
 {
 	return Parameter (name, id, 0, 0, 2.5f, 0, Parameter::PARAM_POWER, 3, 0.0005f, "s");
 }
 
 const char *osc_waveform_names[] = {
-	"sine", "square / pulse", "saw / triangle", "white noise", "noise + sample & hold"
+	"sine", "square / pulse", "saw / triangle", "white noise", "noise + sample & hold", NULL
 };
 
 const char *lfo_waveform_names[] = {
-	"sine", "square", "triangle", "noise", "noise + sample & hold", "sawtooth (up)"
+	"sine", "square", "triangle", "noise", "noise + sample & hold", "sawtooth (up)", NULL
 };
 
 const char *keyboard_mode_names[] = {
-	"poly", "mono", "legato"
+	"poly", "mono", "legato", NULL
 };
 
 const char *filter_type_names[] = {
-	"low pass", "high pass", "band pass"
+	"low pass", "high pass", "band pass", NULL
 };
 
 const char *filter_slope_names[] = {
-	"12 dB / octave", "24 dB / octave"
+	"12 dB / octave", "24 dB / octave", NULL
 };
 
 Preset::Preset			(const string name)
@@ -84,12 +82,12 @@ Preset::Preset			(const string name)
 	mParameters.push_back (Parameter		("filter_type",         kAmsynthParameter_FilterType, SynthFilter::FilterTypeLowPass, SynthFilter::FilterTypeLowPass, SynthFilter::FilterTypeCount - 1, 1));
 	mParameters.push_back (Parameter		("filter_slope",        kAmsynthParameter_FilterSlope, SynthFilter::FilterSlope24, SynthFilter::FilterSlope12, SynthFilter::FilterSlope24, 1));
 
-	getParameter(kAmsynthParameter_Oscillator1Waveform).setParameterValueStrings(osc_waveform_names, ARRAY_SIZE(osc_waveform_names));
-	getParameter(kAmsynthParameter_Oscillator2Waveform).setParameterValueStrings(osc_waveform_names, ARRAY_SIZE(osc_waveform_names));
-	getParameter(kAmsynthParameter_LFOWaveform).setParameterValueStrings(lfo_waveform_names, ARRAY_SIZE(lfo_waveform_names));
-	getParameter(kAmsynthParameter_KeyboardMode).setParameterValueStrings(keyboard_mode_names, ARRAY_SIZE(keyboard_mode_names));
-	getParameter(kAmsynthParameter_FilterType).setParameterValueStrings(filter_type_names, ARRAY_SIZE(filter_type_names));
-	getParameter(kAmsynthParameter_FilterSlope).setParameterValueStrings(filter_slope_names, ARRAY_SIZE(filter_slope_names));
+	getParameter(kAmsynthParameter_Oscillator1Waveform).setValueStrings(osc_waveform_names);
+	getParameter(kAmsynthParameter_Oscillator2Waveform).setValueStrings(osc_waveform_names);
+	getParameter(kAmsynthParameter_LFOWaveform).setValueStrings(lfo_waveform_names);
+	getParameter(kAmsynthParameter_KeyboardMode).setValueStrings(keyboard_mode_names);
+	getParameter(kAmsynthParameter_FilterType).setValueStrings(filter_type_names);
+	getParameter(kAmsynthParameter_FilterSlope).setValueStrings(filter_slope_names);
 }
 
 Preset&
@@ -277,4 +275,11 @@ int parameter_get_display (int parameter_index, float parameter_value, char *buf
 			return snprintf(buffer, maxlen, "%s", filter_type_names[(int)real_value]);
 	}
 	return 0;
+}
+
+const char **parameter_get_value_strings (int parameter_index)
+{
+	Parameter parameter = _preset.getParameter(parameter_index);
+	const char **value_strings = parameter.valueStrings();
+	return value_strings;
 }
