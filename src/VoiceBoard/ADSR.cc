@@ -21,87 +21,107 @@
 
 #include "ADSR.h"
 
-ADSR::ADSR(float * const buf):
-	buffer (buf)
-,	state (off)
-,	c_val (0.0)
-{}
+#include "Synth--.h"
 
-void
-ADSR::SetSampleRate	(int rateIn)
+#include <climits>
+
+static const float kMinimumTime = 0.0005;
+
+ADSR::ADSR(float * buffer)
+:	m_attack(0)
+,	m_decay(0)
+,	m_sustain(1)
+,	m_release(0)
+,	m_buffer(buffer)
+,	m_sample_rate(44100)
+,	m_state(off)
+,	m_value(0)
+,	m_inc(0)
+,	m_frames_left_in_state(UINT_MAX)
 {
-	rate = rateIn;
-	SetAttack (a_time);
-	SetDecay (d_time);
 }
 
 void
 ADSR::triggerOn()
 {
-	if (a_time == 0.0)	a_delta = 1;
-	else				a_delta = 1 / (a_time * (float) rate);
-
-	m_attack_frames=a_time*rate;
-	state = attack;
+	if (m_attack <= kMinimumTime) {
+		if (m_decay <= kMinimumTime) {
+			m_state = sustain;
+			m_value = m_sustain;
+			m_inc = 0;
+			m_frames_left_in_state = UINT_MAX;
+		} else {
+			m_state = decay;
+			m_value = 1.0;
+			m_frames_left_in_state = (m_decay * m_sample_rate);
+			m_inc = (m_sustain - m_value) / (double)m_frames_left_in_state;
+		}
+	} else {
+		m_state = attack;
+		m_frames_left_in_state = (m_attack * m_sample_rate);
+		const float target = m_decay <= kMinimumTime ? m_sustain : 1.0;
+		m_inc = (target - m_value) / (double)m_frames_left_in_state;
+	}
 }
 
 void 
 ADSR::triggerOff()
 {
-	m_release_frames=r_time*rate;
-	r_delta = -c_val/(float)m_release_frames;
-	state = release;
+	m_state = release;
+	m_frames_left_in_state = (m_release * m_sample_rate);
+	m_inc = (0.0 - m_value) / (double)m_frames_left_in_state;
 }
 
-void ADSR::reset		()			{ state = off; c_val = 0; }
-void ADSR::SetAttack	(float val)	{ a_time = val; }
-void ADSR::SetDecay		(float val)	{ d_time = val; }
-void ADSR::SetSustain	(float val)	{ s_val = val; }
-void ADSR::SetRelease	(float val) { r_time = val;	if (r_time == 0.0f) r_time = 0.001f; }
-int  ADSR::getState		()			{ return (state == off) ? 0 : 1; }
-
-float * 
-ADSR::getNFData(int nFrames)
+void
+ADSR::reset()
 {
-	register int i;
-	register float inc;
-	
-	switch(state)
-	{
-		case attack:
-			inc=a_delta; m_attack_frames-=nFrames;
-			if (m_attack_frames<=0)
-			{
-				inc=(1.0f-c_val)/(float)nFrames;
+	m_state = off;
+	m_value = 0;
+	m_inc = 0;
+	m_frames_left_in_state = UINT_MAX;
+}
 
-				state = decay;
-				d_frames = d_time * rate;
-				if (d_time == 0)	d_delta = 1;
-				else				d_delta = 1 / (d_time * (float) rate);
-				m_decay_frames=d_frames;
+float *
+ADSR::getNFData(unsigned int frames)
+{
+	while (frames) {
+
+		const unsigned int count = MIN(frames, m_frames_left_in_state);
+
+		for (int i=0; i<count; i++) {
+			m_buffer[i] = m_value;
+			m_value += m_inc;
+		}
+
+		m_frames_left_in_state -= count;
+
+		if (m_frames_left_in_state == 0) {
+			switch (m_state) {
+				case attack:
+					m_state = decay;
+					m_frames_left_in_state = (m_decay * m_sample_rate);
+					m_inc = (m_sustain - m_value) / (double)m_frames_left_in_state;
+					break;
+				case decay:
+					m_state = sustain;
+					m_value = m_sustain;
+					m_frames_left_in_state = UINT_MAX;
+					m_inc = 0;
+					break;
+				case sustain:
+					m_frames_left_in_state = UINT_MAX;
+					break;
+				default:
+					m_state = off;
+					m_value = 0;
+					m_frames_left_in_state = UINT_MAX;
+					m_inc = 0;
+					break;
 			}
-			break;
-		case decay:
-			inc=(s_val-1.0f)/(float)d_frames; m_decay_frames-=nFrames;
-			if (m_decay_frames<=0)
-			{
-				inc=-(c_val-s_val)/(float)nFrames;
-				state = sustain;
-			}
-			break;
-		case sustain:
-			c_val=s_val; inc=0.0; break;
-		case release:
-			inc=r_delta; m_release_frames-=nFrames;
-			if (m_release_frames<=0)
-			{
-				inc=c_val/(float)nFrames;
-				state = off;
-			}
-			break;
-		default:
-			inc=0.0; c_val=0.0; break;
+		}
+
+		frames -= count;
 	}
-	i=0; while (i<nFrames) { buffer[i++] = c_val; c_val+=inc; }
-	return buffer;
+
+	return m_buffer;
 }

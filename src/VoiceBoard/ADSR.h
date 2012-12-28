@@ -19,56 +19,49 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @file   ADSR.h
- * @author Nick Dowell
- * @date   Sun Sep 16 17:13:57 2001
- * 
- * @brief  implementation of an ADSR contour generator
- */
 #ifndef _ADSR_H
 #define _ADSR_H
 
-/**
- * @class ADSR
- * @brief An implementation of an ADSR contour generator.
- *
- * ADSR is an implementation of the class Attack-Decay-Sustain-Release
- * contour generators found in nearly all analogue synths..
- */
 class ADSR
 {
 public:
 	enum ADSRState { attack, decay, sustain, release, off };
 
-	ADSR	(float * const buf);
+	ADSR	(float *buffer);
 	
-	void	SetSampleRate	(int);
+	void	SetSampleRate	(int value) { m_sample_rate = value; }
 
-	void	SetAttack	(float);
-	void	SetDecay	(float);
-	void	SetSustain	(float);
-	void	SetRelease	(float);
+	void	SetAttack	(float value) { m_attack = value; }
+	void	SetDecay	(float value) { m_decay = value; }
+	void	SetSustain	(float value) { m_sustain = value; if (m_state == sustain) m_value = value; }
+	void	SetRelease	(float value) { m_release = value; }
 	
-	float * getNFData (int nFrames);
+	float * getNFData	(unsigned int frames);
 	
 	void	triggerOn	();
 	void	triggerOff	();
 
-	// returns 1 if envelope is still alive.
-	int	getState	();
+	int		getState	() { return (m_state == off) ? 0 : 1; };
 
 	/**
 	 * puts the envelope directly into the off (ADSR_OFF) state, without
 	 * going through the usual stages (ADSR_R).
 	 */
 	void reset();
+
 private:
-	float * const buffer;
-	ADSRState	state;
-	int		rate;
-	float a_time, a_delta, d_time, d_delta, d_frames, r_time, r_delta, s_val, c_val;
-  	float m_attack_frames, m_release_frames, m_decay_frames;
+	float       m_attack;
+	float       m_decay;
+	float       m_sustain;
+	float       m_release;
+
+	float *     m_buffer;
+	float       m_sample_rate;
+	ADSRState   m_state;
+
+	float       m_value;
+	float       m_inc;
+	unsigned	m_frames_left_in_state;
 };
 
 #endif				//_ADSR_H
