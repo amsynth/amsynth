@@ -1,10 +1,27 @@
-/* amSynth
- * (c) 2001-2005 Nick Dowell
+/*
+ *  VoiceBoard.cc
+ *
+ *  Copyright (c) 2001-2012 Nick Dowell
+ *
+ *  This file is part of amsynth.
+ *
+ *  amsynth is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  amsynth is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "VoiceBoard.h"
 
-#include <assert.h>
+#include <cassert>
 #include <cmath>
 
 // Low-pass filter the VCA control signal to prevent nasty clicking sounds
@@ -32,7 +49,7 @@ VoiceBoard::VoiceBoard():
 {
 }
 
-enum { sine, square, triangle, noise, randomize, sawtooth_up };
+enum { sine, square, triangle, noise, randomize, sawtooth_up, sawtooth_down };
 
 void
 VoiceBoard::UpdateParameter	(Param param, float value)
@@ -48,7 +65,8 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 			case triangle:      mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Saw);    break;
 			case noise:         mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Noise);  break;
 			case randomize:     mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Random); break;
-			case sawtooth_up:   mLFOPulseWidth = 1.0; lfo1.SetWaveform(Oscillator::Waveform_Saw);    break;
+			case sawtooth_up:   mLFOPulseWidth = 1.0; lfo1.SetWaveform(Oscillator::Waveform_Saw);    lfo1.setPolarity(+1.0); break;
+			case sawtooth_down: mLFOPulseWidth = 1.0; lfo1.SetWaveform(Oscillator::Waveform_Saw);    lfo1.setPolarity(-1.0); break;
 			default: assert(!"invalid LFO waveform"); break;
 		}
 		break;

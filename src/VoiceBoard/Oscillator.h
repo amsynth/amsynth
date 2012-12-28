@@ -1,10 +1,26 @@
-/* amSynth
- * (c) 2001-2005 Nick Dowell
+/*
+ *  Oscillator.h
+ *
+ *  Copyright (c) 2001-2012 Nick Dowell
+ *
+ *  This file is part of amsynth.
+ *
+ *  amsynth is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  amsynth is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #ifndef _OSCILLATOR_H
 #define _OSCILLATOR_H
-
-#include "Synth--.h"	// for PI and TWO_PI
 
 /**
  * @brief An Audio Oscillator unit.
@@ -25,7 +41,7 @@ public:
 
 	Oscillator	();
 
-	void	SetSampleRate	(int rateIn) { rate = rateIn; twopi_rate = (float) TWO_PI / rate; }
+	void	SetSampleRate	(int rateIn);
 	
 	void	ProcessSamples		(float*, int, float freq_hz, float pw);
 	void	SetWaveform		(Waveform);
@@ -40,12 +56,15 @@ public:
 
 	void	SetSync		(Oscillator*);
 
+	void	setPolarity (float polarity); // +1 or -1
+
 private:
     float rads, twopi_rate, random, freq;
 	double a0, a1, b1, d; // for the low-pass filter
     int waveform, rate, random_count;
 
 	float	mPulseWidth;
+	float	mPolarity;
 	
 	// oscillator sync stuff
 	int reset_offset, reset_cd, sync_c, sync_offset, sync_period, reset_period;

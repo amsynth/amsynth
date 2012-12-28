@@ -1,12 +1,32 @@
-/* amSynth
- * (c) 2001-2005 Nick Dowell
- **/
+/*
+ *  Oscillator.cc
+ *
+ *  Copyright (c) 2001-2012 Nick Dowell
+ *
+ *  This file is part of amsynth.
+ *
+ *  amsynth is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  amsynth is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include <cmath>
-#include <cstdlib>		// required for rand()
-#include <iostream>
-#include <limits.h>
 #include "Oscillator.h"
+
+#include "Synth--.h"
+
+#include <cassert>
+#include <cmath>
+#include <cstdlib>
+#include <limits.h>
 
 #define ALIAS_REDUCTION
 
@@ -22,10 +42,12 @@ Oscillator::Oscillator()
 ,	waveform (Waveform_Sine)
 ,	rate (44100)
 ,	random_count (0)
+,	mPolarity(1.0f)
 ,	reset_offset (4096)
 ,	reset_period (4096)
 ,	sync (NULL)
-{}
+{
+}
 
 void Oscillator::SetWaveform	(Waveform w)			{ waveform = w; }
 void Oscillator::reset			()						{ rads = 0.0; }
@@ -37,6 +59,20 @@ void Oscillator::SetSync		(Oscillator* o)
 	sync = o;
 	reset_period = 4096;
 	reset_offset = 4096;
+}
+
+void
+Oscillator::SetSampleRate(int rateIn)
+{
+	rate = rateIn;
+	twopi_rate = (float) TWO_PI / rate;
+}
+
+void
+Oscillator::setPolarity(float polarity)
+{
+	assert(polarity == 1.0 || polarity == -1.0);
+	mPolarity = polarity;
 }
 
 void
@@ -113,20 +149,21 @@ Oscillator::doSquare(float *buffer, int nFrames)
     rads = ffmodf((float)rads, (float)TWO_PI);
 }
 
-
-float 
-Oscillator::saw(float foo)
+float
+Oscillator::saw(float rads)
 {
-    foo = ffmodf((float)foo, (float)TWO_PI);
-    register float t = (float) (foo / (2 * PI));
-    register float a = (mPulseWidth + 1) / 2;
+    rads = ffmodf((float)rads, (float)TWO_PI);
+
+    float t = rads / (float)TWO_PI;
+    float a = (mPulseWidth + 1.0f) / 2.0f;
+
     if (t < a / 2)
-	return 2 * t / a;
-    else if (t > (1 - (a / 2)))
-	return (2 * t - 2) / a;
-    else
+		return 2 * t / a;
+
+    if (t > (1 - (a / 2)))
+		return (2 * t - 2) / a;
+
 	return (1 - 2 * t) / (1 - a);
-//    return 1.0 - (ffmodf((float)foo, (float)TWO_PI) / PI);
 }
 
 void 
@@ -143,7 +180,7 @@ Oscillator::doSaw(float *buffer, int nFrames)
 #endif
 
     for (int i = 0; i < nFrames; i++) {
-		buffer[i] = saw(rads += (twopi_rate * freq));
+		buffer[i] = saw(rads += (twopi_rate * freq)) * mPolarity;
 		//-- sync to other oscillator --
 		if (reset_cd-- == 0){
 			rads = 0.0;					// reset the oscillator
