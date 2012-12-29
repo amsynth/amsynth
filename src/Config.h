@@ -108,7 +108,6 @@ public:
 	 */
 	std::string alsa_audio_device;
 	
-	std::string	default_bank_file;
 	std::string	current_bank_file;
 
 	std::string	amsynthrc_fname;
