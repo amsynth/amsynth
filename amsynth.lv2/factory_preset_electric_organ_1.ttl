@@ -32,6 +32,9 @@
         lv2:symbol "filter_mod_amount" ;
         pset:value -0.874988
     ] , [
+        lv2:symbol "portamento_time" ;
+        pset:value 0.000000
+    ] , [
         lv2:symbol "filter_cutoff" ;
         pset:value 0.324272
     ] , [
@@ -53,6 +56,9 @@
         lv2:symbol "osc_mix_mode" ;
         pset:value 0.000000
     ] , [
+        lv2:symbol "filter_slope" ;
+        pset:value 1.000000
+    ] , [
         lv2:symbol "distortion_crunch" ;
         pset:value 0.000000
     ] , [
@@ -61,6 +67,15 @@
     ] , [
         lv2:symbol "amp_sustain" ;
         pset:value 1.000000
+    ] , [
+        lv2:symbol "osc2_pitch" ;
+        pset:value 0.000000
+    ] , [
+        lv2:symbol "keyboard_mode" ;
+        pset:value 0.000000
+    ] , [
+        lv2:symbol "filter_type" ;
+        pset:value 0.000000
     ] , [
         lv2:symbol "freq_mod_amount" ;
         pset:value 0.000000

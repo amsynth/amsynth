@@ -31,6 +31,11 @@ amSynth
 <parameter> reverb_width 0.979909
 <parameter> distortion_crunch 2.50448e-09
 <parameter> osc2_sync 1
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Synth Strings 1
 <parameter> amp_attack 0.960411
 <parameter> amp_decay 0.02
@@ -63,6 +68,11 @@ amSynth
 <parameter> reverb_width 0.477634
 <parameter> distortion_crunch 2.50448e-09
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Violin 1
 <parameter> amp_attack 0.391711
 <parameter> amp_decay 0.11
@@ -95,6 +105,11 @@ amSynth
 <parameter> reverb_width 0
 <parameter> distortion_crunch 1.49012e-08
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Sweet Bass
 <parameter> amp_attack 0.0591818
 <parameter> amp_decay 0.350065
@@ -127,6 +142,11 @@ amSynth
 <parameter> reverb_width 0.994642
 <parameter> distortion_crunch 0.02
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Formant Synth Lead
 <parameter> amp_attack 0.465953
 <parameter> amp_decay 0.282384
@@ -159,6 +179,11 @@ amSynth
 <parameter> reverb_width 1
 <parameter> distortion_crunch 0
 <parameter> osc2_sync 1
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Caves
 <parameter> amp_attack 1.67792
 <parameter> amp_decay 0.25158
@@ -191,6 +216,11 @@ amSynth
 <parameter> reverb_width 0.689255
 <parameter> distortion_crunch 0.619883
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Xylophone
 <parameter> amp_attack 0
 <parameter> amp_decay 0.529803
@@ -223,6 +253,11 @@ amSynth
 <parameter> reverb_width 0.951605
 <parameter> distortion_crunch 0
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Electric Organ 1
 <parameter> amp_attack 0.17
 <parameter> amp_decay 0
@@ -255,6 +290,11 @@ amSynth
 <parameter> reverb_width 0.991763
 <parameter> distortion_crunch 1.49012e-08
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Church Organ
 <parameter> amp_attack 0.17
 <parameter> amp_decay 0
@@ -287,6 +327,11 @@ amSynth
 <parameter> reverb_width 0.972108
 <parameter> distortion_crunch 0
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Reed Organ
 <parameter> amp_attack 0.17
 <parameter> amp_decay 0
@@ -319,6 +364,11 @@ amSynth
 <parameter> reverb_width 0.972108
 <parameter> distortion_crunch 0
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Sexy Boy
 <parameter> amp_attack 0.01
 <parameter> amp_decay 1.92115
@@ -351,6 +401,11 @@ amSynth
 <parameter> reverb_width 1
 <parameter> distortion_crunch 0
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Flangey Bass 1
 <parameter> amp_attack 0.148853
 <parameter> amp_decay 0.918287
@@ -383,6 +438,11 @@ amSynth
 <parameter> reverb_width 0.980541
 <parameter> distortion_crunch 0
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> My Friend
 <parameter> amp_attack 0.17
 <parameter> amp_decay 0
@@ -415,6 +475,11 @@ amSynth
 <parameter> reverb_width 0.991763
 <parameter> distortion_crunch 2.50448e-09
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Lazy Moon Lead
 <parameter> amp_attack 0
 <parameter> amp_decay 0.64
@@ -447,6 +512,11 @@ amSynth
 <parameter> reverb_width 0
 <parameter> distortion_crunch 0
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> BubbleBath
 <parameter> amp_attack 0.594498
 <parameter> amp_decay 0.377137
@@ -479,6 +549,11 @@ amSynth
 <parameter> reverb_width 1
 <parameter> distortion_crunch 0
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Cosmonic
 <parameter> amp_attack 1.18408
 <parameter> amp_decay 0.840999
@@ -511,6 +586,11 @@ amSynth
 <parameter> reverb_width 0.00140755
 <parameter> distortion_crunch 0.387434
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Cosmonic 2
 <parameter> amp_attack 1.18408
 <parameter> amp_decay 0.840999
@@ -543,6 +623,11 @@ amSynth
 <parameter> reverb_width 0.554632
 <parameter> distortion_crunch 0.366566
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Deeck
 <parameter> amp_attack 0.252126
 <parameter> amp_decay 0.934375
@@ -575,6 +660,11 @@ amSynth
 <parameter> reverb_width 0.343841
 <parameter> distortion_crunch 0.153213
 <parameter> osc2_sync 1
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Encounter
 <parameter> amp_attack 0.158258
 <parameter> amp_decay 0.693322
@@ -607,6 +697,11 @@ amSynth
 <parameter> reverb_width 0.492365
 <parameter> distortion_crunch 2.78275e-09
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Glassic
 <parameter> amp_attack 0.161656
 <parameter> amp_decay 0
@@ -639,6 +734,11 @@ amSynth
 <parameter> reverb_width 0
 <parameter> distortion_crunch 0
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Periodic Junk
 <parameter> amp_attack 1.10748
 <parameter> amp_decay 1.3855
@@ -671,6 +771,11 @@ amSynth
 <parameter> reverb_width 0.608731
 <parameter> distortion_crunch 0.108641
 <parameter> osc2_sync 1
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Soft Simple
 <parameter> amp_attack 1.15929
 <parameter> amp_decay 1.38035
@@ -703,6 +808,11 @@ amSynth
 <parameter> reverb_width 0.492365
 <parameter> distortion_crunch 0.129875
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Vibratio
 <parameter> amp_attack 0.158258
 <parameter> amp_decay 0.693322
@@ -735,6 +845,11 @@ amSynth
 <parameter> reverb_width 0.492365
 <parameter> distortion_crunch 2.78275e-09
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Wave
 <parameter> amp_attack 0.752137
 <parameter> amp_decay 0.898853
@@ -767,6 +882,11 @@ amSynth
 <parameter> reverb_width 0.430614
 <parameter> distortion_crunch 0.0534721
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Artic
 <parameter> amp_attack 0.576081
 <parameter> amp_decay 1.19447
@@ -799,6 +919,11 @@ amSynth
 <parameter> reverb_width 0.19668
 <parameter> distortion_crunch 0.0186385
 <parameter> osc2_sync 1
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Dirty Pulsating Bass
 <parameter> amp_attack 0.177835
 <parameter> amp_decay 0
@@ -831,4 +956,9 @@ amSynth
 <parameter> reverb_width 2.78275e-09
 <parameter> distortion_crunch 0.310438
 <parameter> osc2_sync 0
+<parameter> portamento_time 0
+<parameter> keyboard_mode 0
+<parameter> osc2_pitch 0
+<parameter> filter_type 0
+<parameter> filter_slope 1
 EOF
