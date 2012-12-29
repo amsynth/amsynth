@@ -30,6 +30,10 @@
 
 #include <stdio.h>
 
+// works around an issue in qtractor version <= 0.5.6
+// http://sourceforge.net/p/qtractor/tickets/19/
+#define CALL_LV2UI_WRITE_FUNCTION_ON_IDLE 1
+
 ////////////////////////////////////////////////////////////////////////////////
 
 enum {
@@ -39,12 +43,36 @@ enum {
 typedef struct {
 	GtkWidget *_widget;
 	GtkAdjustment *_adjustments[kAmsynthParameterCount];
+#if CALL_LV2UI_WRITE_FUNCTION_ON_IDLE
+	gboolean _adjustment_changed[kAmsynthParameterCount];
+#endif
 	gboolean _dont_send_control_changes;
 	LV2UI_Write_Function _write_function;
 	LV2UI_Controller _controller;
+	guint _timeout_id;
 } lv2_ui;
 
 static void on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data);
+
+#if CALL_LV2UI_WRITE_FUNCTION_ON_IDLE
+static gboolean lv2_ui_on_idle(gpointer data)
+{
+	lv2_ui *ui = data;
+	if (!ui->_write_function)
+		return TRUE;
+
+	size_t i; for (i = 0; i<kAmsynthParameterCount; i++) {
+		if (ui->_adjustment_changed[i] && ui->_adjustments[i]) {
+			float value = gtk_adjustment_get_value(ui->_adjustments[i]);
+			ui->_write_function(ui->_controller,
+				kAmsynthPortIndexForFirstParameter + i,
+				sizeof(float), 0, &value);
+		}
+	}
+
+	return TRUE;
+}
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -73,12 +101,19 @@ lv2_ui_instantiate(const struct _LV2UI_Descriptor* descriptor,
 
 	*widget = ui->_widget;
 
+#if CALL_LV2UI_WRITE_FUNCTION_ON_IDLE
+	ui->_timeout_id = g_timeout_add_full(G_PRIORITY_LOW, 1000/30, (GSourceFunc)&lv2_ui_on_idle, ui, NULL);
+#endif
+
 	return ui;
 }
 
 static void
 lv2_ui_cleanup(LV2UI_Handle ui)
 {
+#if CALL_LV2UI_WRITE_FUNCTION_ON_IDLE
+	g_source_remove(((lv2_ui *)ui)->_timeout_id);
+#endif
 	size_t i; for (i=0; i<kAmsynthParameterCount; i++) {
 		g_object_unref (((lv2_ui *)ui)->_adjustments[i]);
 	}
@@ -89,20 +124,24 @@ static void
 on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
 {
 	lv2_ui *ui = user_data;
-    if (ui->_dont_send_control_changes)
-        return;
+	if (ui->_dont_send_control_changes)
+		return;
 
-    size_t i; for (i = 0; i<kAmsynthParameterCount; i++) {
-    	if (adjustment == ui->_adjustments[i]) {
-    		float value = gtk_adjustment_get_value(adjustment);
-    		if (ui->_write_function != 0) {
-    			ui->_write_function(ui->_controller,
-    				kAmsynthPortIndexForFirstParameter + i,
-    				sizeof(float), 0, &value);
-    		}
-    		break;
-    	}
-    }
+	size_t i; for (i = 0; i<kAmsynthParameterCount; i++) {
+		if (adjustment == ui->_adjustments[i]) {
+#if CALL_LV2UI_WRITE_FUNCTION_ON_IDLE
+			ui->_adjustment_changed[i] = TRUE;
+#else
+			float value = gtk_adjustment_get_value(adjustment);
+			if (ui->_write_function != 0) {
+				ui->_write_function(ui->_controller,
+					kAmsynthPortIndexForFirstParameter + i,
+					sizeof(float), 0, &value);
+			}
+#endif
+			break;
+		}
+	}
 }
 
 static void
@@ -119,6 +158,9 @@ lv2_ui_port_event(LV2UI_Handle ui,
 	GtkAdjustment *adjustment = ((lv2_ui *)ui)->_adjustments[parameter_index];
 	((lv2_ui *)ui)->_dont_send_control_changes = TRUE;
 	gtk_adjustment_set_value(adjustment, value);
+#if CALL_LV2UI_WRITE_FUNCTION_ON_IDLE
+	((lv2_ui *)ui)->_adjustment_changed[parameter_index] = FALSE;
+#endif
 	((lv2_ui *)ui)->_dont_send_control_changes = FALSE;
 }
 
