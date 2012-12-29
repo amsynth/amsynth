@@ -137,7 +137,7 @@ void install_default_files_if_reqd()
 {
 	const char * factory_controllers = build_path (PKGDATADIR, "Controllersrc");
 	const char * factory_config = build_path (PKGDATADIR, "rc");
-	const char * factory_bank = build_path (PKGDATADIR, "presets");
+	const char * factory_bank = build_path (PKGDATADIR, "banks/amsynth_factory.bank");
 
 	const char * user_controllers = build_path (getenv ("HOME"), ".amSynthControllersrc");
 	const char * user_config = build_path (getenv ("HOME"), ".amSynthrc");
