@@ -44,24 +44,10 @@ ADSR::ADSR(float * buffer)
 void
 ADSR::triggerOn()
 {
-	if (m_attack <= kMinimumTime) {
-		if (m_decay <= kMinimumTime) {
-			m_state = sustain;
-			m_value = m_sustain;
-			m_inc = 0;
-			m_frames_left_in_state = UINT_MAX;
-		} else {
-			m_state = decay;
-			m_value = 1.0;
-			m_frames_left_in_state = (m_decay * m_sample_rate);
-			m_inc = (m_sustain - m_value) / (double)m_frames_left_in_state;
-		}
-	} else {
-		m_state = attack;
-		m_frames_left_in_state = (m_attack * m_sample_rate);
-		const float target = m_decay <= kMinimumTime ? m_sustain : 1.0;
-		m_inc = (target - m_value) / (double)m_frames_left_in_state;
-	}
+	m_state = attack;
+	m_frames_left_in_state = (m_attack * m_sample_rate);
+	const float target = m_decay <= kMinimumTime ? m_sustain : 1.0;
+	m_inc = (target - m_value) / (double)m_frames_left_in_state;
 }
 
 void 
