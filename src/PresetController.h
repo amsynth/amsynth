@@ -23,9 +23,16 @@
 #define _PRESETCONTROLLER_H
 
 #include <string>
+#include <vector>
 
 #include "Preset.h"
 #include "UpdateListener.h"
+
+struct BankInfo {
+	std::string name;
+	std::string file_path;
+	bool read_only;
+};
 
 class PresetController {
 public:
@@ -71,6 +78,8 @@ public:
     int		getCurrPresetNumber	() { return currentPresetNo; }
 
 	const std::string & getFilePath() { return bank_file; }
+
+	static const std::vector<BankInfo> & getPresetBanks();
     
 protected:
 	void	notify				() { if (updateListener) updateListener->update(); }

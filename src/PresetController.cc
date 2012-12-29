@@ -21,10 +21,12 @@
 
 #include "PresetController.h"
 
+#include <algorithm>
 #include <iostream>
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
+#include <dirent.h>
 #include <string>
 #include <fstream>
 #include <sys/types.h>
@@ -40,9 +42,6 @@ PresetController::PresetController	()
 ,	currentPresetNo (-1)
 {
 	presets = new Preset [kNumPresets];
-#ifndef _MSC_VER
-	bank_file = string (getenv ("HOME")) + "/.amSynth.presets";
-#endif
 }
 
 PresetController::~PresetController	()
@@ -184,18 +183,17 @@ PresetController::loadPresets		(const char *filename)
 		return 0; // file not modified since last load
 	}
 
-	ifstream file( filename, ios::in );
+	ifstream file;
 	string buffer;
-  
-	if (file.bad()) {
-#ifdef _DEBUG
-		cout << "<PresetController::loadPresets()> file.bad()" << endl;
-#endif
+
+	try {
+		file.open(filename, ios::in);
+		file >> buffer;
+	}
+	catch(...) {
 		return -1;
 	}
-  
-	file >> buffer;
-  
+
 	if (buffer != "amSynth") {
 #ifdef _DEBUG
 		cout <<
@@ -276,4 +274,73 @@ PresetController::loadPresets		(const char *filename)
 #endif
 
 	return 0;
+}
+
+///////////////////////////////////
+
+static std::vector<BankInfo> s_banks;
+
+static void scan_preset_bank(const std::string dir_path, const std::string file_name, bool read_only)
+{
+	std::string file_path = dir_path + std::string("/") + std::string(file_name);
+
+	std::string bank_name = std::string(file_name);
+	if (bank_name == std::string(".amSynth.presets")) {
+		bank_name = "User bank";
+	} else {
+		std::string::size_type pos = bank_name.find_first_of(".");
+		if (pos != std::string::npos)
+			bank_name.erase(pos, string::npos);
+	}
+
+	std::replace(bank_name.begin(), bank_name.end(), '_', ' ');
+
+	PresetController preset_controller;
+	if (preset_controller.loadPresets(file_path.c_str()) != 0)
+		return;
+
+	BankInfo bank_info;
+	bank_info.name = bank_name;
+	bank_info.file_path = file_path;
+	bank_info.read_only = read_only;
+	s_banks.push_back(bank_info);
+}
+
+static void scan_preset_banks(const std::string dir_path, bool read_only)
+{
+	DIR *dir = opendir(dir_path.c_str());
+	if (!dir)
+		return;
+
+	std::vector<std::string> filenames;
+
+	int return_code = 0;
+	struct dirent entry = {0};
+	struct dirent *result = NULL;
+
+	for (return_code = readdir_r(dir, &entry, &result); result != NULL && return_code == 0; return_code = readdir_r(dir, &entry, &result))
+		filenames.push_back(std::string(entry.d_name));
+
+	closedir(dir);
+
+	std::sort(filenames.begin(), filenames.end());
+
+	for (std::vector<std::string>::iterator it = filenames.begin(); it != filenames.end(); ++it)
+		scan_preset_bank(dir_path, *it, read_only);
+}
+
+static void scan_preset_banks()
+{
+	s_banks.clear();
+	scan_preset_bank(std::string(getenv("HOME")), ".amSynth.presets", false);
+	scan_preset_banks(std::string(getenv("HOME")) + std::string("/.amsynth/banks"), false);
+	scan_preset_banks(std::string(PKGDATADIR "/banks"), true);
+}
+
+const std::vector<BankInfo> &
+PresetController::getPresetBanks()
+{
+	if (!s_banks.size())
+		scan_preset_banks();
+	return s_banks;
 }

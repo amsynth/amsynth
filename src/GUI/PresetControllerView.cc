@@ -24,7 +24,6 @@
 #include "../PresetController.h"
 #include "../VoiceAllocationUnit.h"
 
-#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
@@ -32,74 +31,6 @@
 #include <vector>
 
 extern Config config;
-
-
-//////////
-
-struct BankInfo {
-	std::string name;
-	std::string file_path;
-	bool read_only;
-};
-
-static std::vector<BankInfo> s_banks;
-
-static void scan_preset_bank(const std::string dir_path, const std::string file_name, bool read_only)
-{
-	std::string file_path = dir_path + std::string("/") + std::string(file_name);
-
-	std::string bank_name = std::string(file_name);
-	if (bank_name == std::string(".amSynth.presets")) {
-		bank_name = "User bank";
-	} else {
-		std::string::size_type pos = bank_name.find_first_of(".");
-		if (pos != std::string::npos)
-			bank_name.erase(pos, string::npos);
-	}
-
-	std::replace(bank_name.begin(), bank_name.end(), '_', ' ');
-
-	PresetController preset_controller;
-	if (preset_controller.loadPresets(file_path.c_str()) != 0)
-		return;
-
-	BankInfo bank_info;
-	bank_info.name = bank_name;
-	bank_info.file_path = file_path;
-	bank_info.read_only = read_only;
-	s_banks.push_back(bank_info);
-}
-
-static void scan_preset_banks(const std::string dir_path, bool read_only)
-{
-	GDir *gdir = g_dir_open(dir_path.c_str(), 0, NULL);
-	if (!gdir)
-		return;
-
-	std::vector<std::string> dirnames;
-
-	const gchar *file_name = NULL;
-	while ((file_name = g_dir_read_name(gdir)))
-		dirnames.push_back(std::string(file_name));
-
-	g_dir_close(gdir);
-
-	std::sort(dirnames.begin(), dirnames.end());
-
-	for (std::vector<std::string>::iterator it = dirnames.begin(); it != dirnames.end(); ++it)
-		scan_preset_bank(dir_path, *it, read_only);
-}
-
-static void scan_preset_banks()
-{
-	s_banks.clear();
-	scan_preset_bank(std::string(getenv("HOME")), ".amSynth.presets", false);
-	scan_preset_banks(std::string(getenv("HOME")) + std::string("/.amsynth/banks"), false);
-	scan_preset_banks(std::string(PKGDATADIR "/banks"), true);
-}
-
-//////////
-
 
 class PresetControllerViewImpl : public PresetControllerView, public UpdateListener
 {
@@ -134,10 +65,11 @@ PresetControllerViewImpl::PresetControllerViewImpl(VoiceAllocationUnit *voiceAll
 ,	inhibit_combo_callback(false)
 {
 	bank_combo = gtk_combo_box_new_text ();
-	scan_preset_banks ();
-	for (size_t i=0; i<s_banks.size(); i++) {
+
+	const std::vector<BankInfo> banks = PresetController::getPresetBanks();
+	for (size_t i=0; i<banks.size(); i++) {
 		char text [64] = "";
-		snprintf (text, sizeof(text), "[%s] %s", s_banks[i].read_only ? "factory" : "user", s_banks[i].name.c_str());
+		snprintf (text, sizeof(text), "[%s] %s", banks[i].read_only ? "factory" : "user", banks[i].name.c_str());
 		gtk_combo_box_insert_text (GTK_COMBO_BOX (bank_combo), i, text);
 	}
 	g_signal_connect (G_OBJECT (bank_combo), "changed", G_CALLBACK (&PresetControllerViewImpl::on_combo_changed), this);
@@ -181,7 +113,8 @@ void PresetControllerViewImpl::on_combo_changed (GtkWidget *widget, PresetContro
 
 	if (widget == that->bank_combo) {
 		gint bank = gtk_combo_box_get_active (GTK_COMBO_BOX (that->bank_combo));
-		that->presetController->loadPresets(s_banks[bank].file_path.c_str());
+		const std::vector<BankInfo> banks = PresetController::getPresetBanks();
+		that->presetController->loadPresets(banks[bank].file_path.c_str());
 	}
 
 	gint preset = gtk_combo_box_get_active (GTK_COMBO_BOX (that->combo));
@@ -233,10 +166,11 @@ void PresetControllerViewImpl::update()
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), presetController->getCurrPresetNumber());
 
 	const std::string current_file_path = presetController->getFilePath();
-	for (size_t i=0; i<s_banks.size(); i++) {
-		if (current_file_path == s_banks[i].file_path) {
+	const std::vector<BankInfo> banks = PresetController::getPresetBanks();
+	for (size_t i=0; i<banks.size(); i++) {
+		if (current_file_path == banks[i].file_path) {
 			gtk_combo_box_set_active (GTK_COMBO_BOX (bank_combo), i);
-			gtk_widget_set_sensitive (save_button, !s_banks[i].read_only);
+			gtk_widget_set_sensitive (save_button, !banks[i].read_only);
 		}
 	}
 	
