@@ -70,7 +70,9 @@ enum {
 	evMidiSend,
 	evConfig,
 	evNewInstance,
-	
+	evHelpMenuBugReport,
+	evHelpMenuOnlineDocumentation,
+
 	evMax
 };
 
@@ -415,6 +417,15 @@ GUI::create_menus	( )
 	list_utils.push_back (MenuElem("Audio (JACK) connections", *menu_utils_jack));
 	
 	list_utils.push_back (MenuElem("Send Settings to Midi", bind(mem_fun(this,&GUI::event_handler),(int)evMidiSend)));
+
+	//
+	// Help menu
+	//
+	Menu *menu_help = manage (new Menu());
+	menu_help->items().push_back (MenuElem("About", mem_fun(aboutDlg, &Gtk::AboutDialog::show_all)));
+	menu_help->items().push_back (MenuElem("Report a Bug...", bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuBugReport)));
+	menu_help->items().push_back (MenuElem("Online Documentation...", bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuOnlineDocumentation)));
+
 	
 	//
 	// Menubar
@@ -428,13 +439,8 @@ GUI::create_menus	( )
 	list_bar.push_back (MenuElem("_Preset", Gtk::AccelKey("<alt>P"), *menu_preset));
 	list_bar.push_back (MenuElem("_Config", Gtk::AccelKey("<alt>C"), *menu_config));
 	list_bar.push_back (MenuElem("_Utils", Gtk::AccelKey("<alt>U"), *menu_utils));
-	
-	
-	menu_item = manage (new MenuItem("Analogue Modelling SYNTHesizer"));
-	menu_item->set_right_justified (true);
-	menu_item->signal_activate().connect(mem_fun(aboutDlg, &Gtk::AboutDialog::show_all));
-	list_bar.push_back (*menu_item);
-	
+	list_bar.push_back (MenuElem("_Help", *menu_help));
+
 	return menu_bar;
 }
 
@@ -567,7 +573,23 @@ GUI::post_init()
 #endif
 }
 
-void 
+static void
+open_uri(const char *uri)
+{
+	GError *error = NULL;
+	if (!g_app_info_launch_default_for_uri(uri, NULL, &error)) {
+		GtkWidget *dialog = gtk_message_dialog_new(NULL, //GTK_WINDOW(window),
+												   GTK_DIALOG_DESTROY_WITH_PARENT,
+												   GTK_MESSAGE_ERROR,
+												   GTK_BUTTONS_OK,
+												   "Could not show link");
+		gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", error->message);
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+	}
+}
+
+void
 GUI::event_handler(const int e)
 {
 	switch (e)
@@ -695,7 +717,15 @@ GUI::event_handler(const int e)
 	case evNewInstance:
 		spawn_new_instance();
 		break;
-		
+
+	case evHelpMenuBugReport:
+		open_uri("http://code.google.com/p/amsynth/issues/list");
+		break;
+
+	case evHelpMenuOnlineDocumentation:
+		open_uri("http://code.google.com/p/amsynth/w/list");
+		break;
+
 	default:
 		cout << "no handler for event: " << e << endl;
 		break;
