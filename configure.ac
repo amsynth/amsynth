@@ -25,7 +25,7 @@ AC_LANG(C++)
 #   ./configure CFLAGS='-g -O0' CXXFLAGS='-g -O0'
 #
 AS_IF([test "$user_CFLAGS" = "" -a "$user_CXXFLAGS" = ""], [
-	CFLAGS="-O3 -ffast-math -fno-exceptions -fomit-frame-pointer"
+	CFLAGS="-O3 -ffast-math -fomit-frame-pointer"
 	CXXFLAGS="$CFLAGS"])
 
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
