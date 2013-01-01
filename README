@@ -16,8 +16,35 @@ There are currently several different ways to run amsynth:
 * LV2 plug-in
 
 
-Bugs
+
+PRESET BANK MANAGEMENT         (New in version 1.4)
+----------------------
+
+The default user bank is located at ~/.amSynth.presets
+
+amsynth now allows you to quickly access other preset banks that are stored in
+the following directories:
+
+  ~/.amsynth/banks
+  /usr/share/amsynth/banks      (read-only access)
+
+Any valid preset banks that are found in these directories will be show in the
+drop-down bank selector on the GUI (standalone version only.)
+
+
+
+BUGS
 ----
 
 If you encounter any problems with amsynth, please report them!
 http://code.google.com/p/amsynth/issues/list
+
+
+
+NOTE TO PACKAGERS
+-----------------
+
+The standalone and plugin GUIs all depend on common data installed to
+$(pkgdatadir) (e.g. /usr/share/amsynth) so you may want to create an
+amsynth-data package and have several binary packages which depend on
+this (e.g. amsynth-dssi amsynth-lv2 and amsynth-standalone)
