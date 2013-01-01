@@ -70,13 +70,17 @@ ADSR::reset()
 float *
 ADSR::getNFData(unsigned int frames)
 {
+	float *buffer = m_buffer;
+
 	while (frames) {
 
 		const unsigned int count = MIN(frames, m_frames_left_in_state);
 
 		for (int i=0; i<count; i++) {
-			m_buffer[i] = m_value;
+			*buffer = m_value;
+			assert(fabsf(*buffer) < 1.1);
 			m_value += m_inc;
+			buffer++;
 		}
 
 		m_frames_left_in_state -= count;
