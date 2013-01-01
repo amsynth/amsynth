@@ -917,16 +917,27 @@ GUI::bank_open		( )
 void
 GUI::bank_save_as	( )
 {
-	/* we need to get the filename entry widget back in there somehow.... */
-	FileChooserDialog dlg (*this, "Save As...", FILE_CHOOSER_ACTION_SAVE);
-	dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);
-	dlg.add_button(Stock::SAVE_AS, RESPONSE_OK);
-	dlg.set_current_name ("default.amsynth.bank");
-	if (RESPONSE_OK == dlg.run())
-	{
-		config->current_bank_file = dlg.get_filename ();
-		preset_controller->savePresets (config->current_bank_file.c_str ());
+	GtkWidget *chooser = gtk_file_chooser_dialog_new (
+		"Save preset bank",
+		this->gobj(),
+		GTK_FILE_CHOOSER_ACTION_SAVE,
+		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+		GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+		NULL);
+
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (chooser), PresetController::getUserBanksDirectory().c_str());
+	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (chooser), "new.bank");
+	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (chooser), TRUE);
+
+	if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT) {
+		char *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
+		preset_controller->savePresets (filename);
+		PresetController::rescanPresetBanks ();
+		presetCV->update ();
+		g_free (filename);
 	}
+
+	gtk_widget_destroy (chooser);
 }
 
 void

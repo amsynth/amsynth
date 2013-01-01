@@ -80,7 +80,11 @@ public:
 	const std::string & getFilePath() { return bank_file; }
 
 	static const std::vector<BankInfo> & getPresetBanks();
+	static void rescanPresetBanks();
     
+	static std::string getFactoryBanksDirectory();
+	static std::string getUserBanksDirectory();
+
 protected:
 	void	notify				() { if (updateListener) updateListener->update(); }
 

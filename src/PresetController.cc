@@ -333,8 +333,8 @@ static void scan_preset_banks()
 {
 	s_banks.clear();
 	scan_preset_bank(std::string(getenv("HOME")), ".amSynth.presets", false);
-	scan_preset_banks(std::string(getenv("HOME")) + std::string("/.amsynth/banks"), false);
-	scan_preset_banks(std::string(PKGDATADIR "/banks"), true);
+	scan_preset_banks(PresetController::getUserBanksDirectory(), false);
+	scan_preset_banks(PresetController::getFactoryBanksDirectory(), true);
 }
 
 const std::vector<BankInfo> &
@@ -343,4 +343,19 @@ PresetController::getPresetBanks()
 	if (!s_banks.size())
 		scan_preset_banks();
 	return s_banks;
+}
+
+void PresetController::rescanPresetBanks()
+{
+	scan_preset_banks();
+}
+
+std::string PresetController::getFactoryBanksDirectory()
+{
+	return std::string(PKGDATADIR "/banks");
+}
+
+std::string PresetController::getUserBanksDirectory()
+{
+	return std::string(getenv("HOME")) + std::string("/.amsynth/banks");
 }

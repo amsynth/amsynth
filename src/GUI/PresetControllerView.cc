@@ -65,13 +65,6 @@ PresetControllerViewImpl::PresetControllerViewImpl(VoiceAllocationUnit *voiceAll
 ,	inhibit_combo_callback(false)
 {
 	bank_combo = gtk_combo_box_new_text ();
-
-	const std::vector<BankInfo> banks = PresetController::getPresetBanks();
-	for (size_t i=0; i<banks.size(); i++) {
-		char text [64] = "";
-		snprintf (text, sizeof(text), "[%s] %s", banks[i].read_only ? "factory" : "user", banks[i].name.c_str());
-		gtk_combo_box_insert_text (GTK_COMBO_BOX (bank_combo), i, text);
-	}
 	g_signal_connect (G_OBJECT (bank_combo), "changed", G_CALLBACK (&PresetControllerViewImpl::on_combo_changed), this);
 	add (* Glib::wrap (bank_combo));
 
@@ -153,26 +146,36 @@ void PresetControllerViewImpl::on_panic_clicked (GtkWidget *widget, PresetContro
 void PresetControllerViewImpl::update()
 {
 	inhibit_combo_callback = true;
-	
-	for (gint i = 0; i < PresetController::kNumPresets; i++) {
-		gtk_combo_box_remove_text (GTK_COMBO_BOX (combo), 0);
-	}
+
+	const std::vector<BankInfo> banks = PresetController::getPresetBanks();
+
 	char text [256] = "";
-	for (gint i = 0; i < PresetController::kNumPresets; i++) {
-		memset (text, 0, sizeof(text));
-		sprintf (text, "%d: %s", i, presetController->getPreset(i).getName().c_str());
-		gtk_combo_box_insert_text (GTK_COMBO_BOX (combo), i, text);
+
+	// bank combo
+
+	gtk_list_store_clear (GTK_LIST_STORE (gtk_combo_box_get_model (GTK_COMBO_BOX (bank_combo))));
+	for (size_t i=0; i<banks.size(); i++) {
+		snprintf (text, sizeof(text), "[%s] %s", banks[i].read_only ? "factory" : "user", banks[i].name.c_str());
+		gtk_combo_box_insert_text (GTK_COMBO_BOX (bank_combo), i, text);
 	}
-	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), presetController->getCurrPresetNumber());
 
 	const std::string current_file_path = presetController->getFilePath();
-	const std::vector<BankInfo> banks = PresetController::getPresetBanks();
 	for (size_t i=0; i<banks.size(); i++) {
 		if (current_file_path == banks[i].file_path) {
 			gtk_combo_box_set_active (GTK_COMBO_BOX (bank_combo), i);
 			gtk_widget_set_sensitive (save_button, !banks[i].read_only);
 		}
 	}
+
+	// preset combo
+
+	gtk_list_store_clear (GTK_LIST_STORE (gtk_combo_box_get_model (GTK_COMBO_BOX (combo))));
+	
+	for (gint i = 0; i < PresetController::kNumPresets; i++) {
+		sprintf (text, "%d: %s", i, presetController->getPreset(i).getName().c_str());
+		gtk_combo_box_insert_text (GTK_COMBO_BOX (combo), i, text);
+	}
+	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), presetController->getCurrPresetNumber());
 	
 	inhibit_combo_callback = false;
 }
