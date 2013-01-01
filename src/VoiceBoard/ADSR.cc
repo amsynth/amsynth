@@ -78,7 +78,6 @@ ADSR::getNFData(unsigned int frames)
 
 		for (int i=0; i<count; i++) {
 			*buffer = m_value;
-			assert(fabsf(*buffer) < 1.1);
 			m_value += m_inc;
 			buffer++;
 		}
