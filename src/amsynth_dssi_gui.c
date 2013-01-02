@@ -86,7 +86,6 @@ int osc_control_handler(const char *path, const char *types, lo_arg **argv, int 
     float value = argv[1]->f;
     int port_number = argv[0]->i;
     int parameter_index = port_number - 2;
-    printf("OSC: control %2d = %f\n", port_number, value);
     g_assert(parameter_index < kAmsynthParameterCount);
     _dont_send_control_changes = TRUE;
     gtk_adjustment_set_value(_adjustments[parameter_index], value);
@@ -97,7 +96,6 @@ int osc_control_handler(const char *path, const char *types, lo_arg **argv, int 
 int osc_samplerate_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
 {
     assert(types[0] == 'i');
-    printf("OSC: sample rate = %d\n", argv[0]->i);
     return 0;
 }
 
@@ -105,27 +103,23 @@ int osc_program_handler(const char *path, const char *types, lo_arg **argv, int 
 {
     assert(types[0] == 'i');
     assert(types[1] == 'i');
-    printf("OSC: selected bank %d program %2d\n", argv[0]->i, argv[1]->i);
     return 0;
 }
 
 int osc_show_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
 {
-    printf("OSC: show GUI window\n");
     gtk_window_present(_window);
     return 0;
 }
 
 int osc_hide_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
 {
-    printf("OSC: hide GUI window\n");
     gtk_widget_hide(GTK_WIDGET(_window));
     return 0;
 }
 
 int osc_quit_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
 {
-    printf("OSC: quit GUI process\n");
     gtk_main_quit();
     return 0;
 }
@@ -153,7 +147,6 @@ int host_request_update()
 
 int host_set_control(int control, float value)
 {
-    fprintf(stderr, "host_set_control(%d, %f)\n", control, value);
     int err = lo_send(_osc_host_addr, tmpstr("%s/control", _osc_path), "if", control, value);
     return err;
 }
