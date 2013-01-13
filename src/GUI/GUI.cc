@@ -345,7 +345,7 @@ GUI::create_menus	( )
 			name << " Semitones";
 			Gtk::RadioMenuItem *item = Gtk::manage(new Gtk::RadioMenuItem(grp, name.str()));
 			item->set_active(i == config->pitch_bend_range);
-			item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_pitch_bend_range_change), i) );
+			item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_pitch_bend_range_change), i, item) );
 			menu->items().push_back(*item);
 		}
 
@@ -1033,10 +1033,13 @@ GUI::on_ployphony_change(int value)
 }
 
 void
-GUI::on_pitch_bend_range_change(int value)
+GUI::on_pitch_bend_range_change(int value, Gtk::RadioMenuItem *item)
 {
-	vau->setPitchBendRangeSemitones(config->pitch_bend_range = value);
-	config->save();
+	if (item->get_active()) {
+		config->pitch_bend_range = value;
+		config->save();
+		vau->setPitchBendRangeSemitones(config->pitch_bend_range);
+	}
 }
 
 #if ENABLE_MIDIKEYS

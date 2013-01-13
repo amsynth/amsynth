@@ -107,7 +107,7 @@ private:
 	
 	void		on_midi_channel_change	(int value);
 	void		on_ployphony_change		(int value);
-	void		on_pitch_bend_range_change(int value);
+	void		on_pitch_bend_range_change(int value, Gtk::RadioMenuItem *item);
 	
 	void		post_init();
 	void		update_title();
