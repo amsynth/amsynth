@@ -12,10 +12,11 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 banksdir = $(pkgdatadir)/banks
 banks_DATA = \
 	banks/amsynth_factory.bank \
-	banks/briandc_1.bank \
-	banks/briandc_2.bank \
-	banks/briandc_3.bank \
-	banks/briandc_4.bank
+	banks/BriansBank1.amSynth.bank \
+	banks/BriansBank2.amSynth.bank \
+	banks/BriansBank3.amSynth.bank \
+	banks/BriansBank4.amSynth.bank \
+	banks/BriansBank5.amSynth.bank
 
 
 if BUILD_LV2

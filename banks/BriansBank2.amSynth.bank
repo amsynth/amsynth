@@ -35,6 +35,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> DontKnow
 <parameter> amp_attack 0.173389
 <parameter> amp_decay 2.01461
@@ -71,6 +72,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Faucet
 <parameter> amp_attack 0.233317
 <parameter> amp_decay 0.363677
@@ -107,6 +109,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Faucet2
 <parameter> amp_attack 0.26665
 <parameter> amp_decay 0.413677
@@ -143,6 +146,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Flute2
 <parameter> amp_attack 0.233333
 <parameter> amp_decay 0.250003
@@ -179,6 +183,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Foreign
 <parameter> amp_attack 0.574984
 <parameter> amp_decay 0.54701
@@ -215,6 +220,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Foreign2
 <parameter> amp_attack 0.574984
 <parameter> amp_decay 1.43034
@@ -251,6 +257,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Ghosty
 <parameter> amp_attack 0.0952204
 <parameter> amp_decay 1.9233
@@ -287,6 +294,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Growl
 <parameter> amp_attack 0.574984
 <parameter> amp_decay 0.14701
@@ -323,6 +331,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly13
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.54167
@@ -359,6 +368,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly14
 <parameter> amp_attack 0.0907096
 <parameter> amp_decay 0.797733
@@ -395,6 +405,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly15
 <parameter> amp_attack 0
 <parameter> amp_decay 0.81398
@@ -431,6 +442,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly16
 <parameter> amp_attack 0
 <parameter> amp_decay 0.81398
@@ -467,6 +479,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly17
 <parameter> amp_attack 0.349043
 <parameter> amp_decay 0.997733
@@ -503,6 +516,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly18
 <parameter> amp_attack 0.349043
 <parameter> amp_decay 0.997733
@@ -539,6 +553,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly19
 <parameter> amp_attack 0.349043
 <parameter> amp_decay 0.997733
@@ -575,6 +590,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly20
 <parameter> amp_attack 0.349043
 <parameter> amp_decay 1.29773
@@ -611,6 +627,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly21
 <parameter> amp_attack 0.349043
 <parameter> amp_decay 1.44773
@@ -647,6 +664,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly22
 <parameter> amp_attack 0.349043
 <parameter> amp_decay 1.25607
@@ -683,6 +701,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly23
 <parameter> amp_attack 0
 <parameter> amp_decay 0.81398
@@ -719,6 +738,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly24
 <parameter> amp_attack 0
 <parameter> amp_decay 0.81398
@@ -755,6 +775,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly25
 <parameter> amp_attack 0
 <parameter> amp_decay 0.96398
@@ -791,6 +812,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly26
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.54167
@@ -827,6 +849,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly27
 <parameter> amp_attack 0.45
 <parameter> amp_decay 0.458336
@@ -863,6 +886,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly28
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.61667
@@ -899,6 +923,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly29
 <parameter> amp_attack 0.0456619
 <parameter> amp_decay 2.1465
@@ -935,6 +960,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Organx
 <parameter> amp_attack 0.166667
 <parameter> amp_decay 1.19731
@@ -971,6 +997,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> PassingSaucer
 <parameter> amp_attack 1.7
 <parameter> amp_decay 1.75
@@ -1007,6 +1034,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Space2
 <parameter> amp_attack 0.783961
 <parameter> amp_decay 1.14666
@@ -1043,6 +1071,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Square
 <parameter> amp_attack 0.225
 <parameter> amp_decay 1.40001
@@ -1079,6 +1108,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Trumpet
 <parameter> amp_attack 0
 <parameter> amp_decay 0.641673
@@ -1115,6 +1145,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> UpDown
 <parameter> amp_attack 0
 <parameter> amp_decay 1.52501
@@ -1151,6 +1182,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Whistle2
 <parameter> amp_attack 0.54165
 <parameter> amp_decay 0.413677
@@ -1187,6 +1219,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Wicked
 <parameter> amp_attack 0.263547
 <parameter> amp_decay 2.47459
@@ -1223,6 +1256,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> WowPad
 <parameter> amp_attack 0.349043
 <parameter> amp_decay 0.997733
@@ -1259,6 +1293,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> ChinaDream
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.57501
@@ -1295,6 +1330,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> ChinaDream2
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.57501
@@ -1331,6 +1367,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Dreamy
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.57501
@@ -1367,6 +1404,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Elektrik
 <parameter> amp_attack 0
 <parameter> amp_decay 1.71667
@@ -1403,6 +1441,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> FlangedLead
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.20834
@@ -1439,6 +1478,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Fuzzy
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.72501
@@ -1475,6 +1515,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Modern1
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.57501
@@ -1511,6 +1552,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Moog3
 <parameter> amp_attack 0
 <parameter> amp_decay 1.39167
@@ -1547,6 +1589,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Moogish
 <parameter> amp_attack 0
 <parameter> amp_decay 1.41667
@@ -1583,6 +1626,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Moogish2
 <parameter> amp_attack 0
 <parameter> amp_decay 1.41667
@@ -1619,6 +1663,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Oldie
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.20834
@@ -1655,6 +1700,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Oldie2
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.20834
@@ -1691,6 +1737,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Oldie3
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.72501
@@ -1727,6 +1774,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Oldie4
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.72501
@@ -1763,6 +1811,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Oldie5
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 0.266673
@@ -1799,6 +1848,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> prePiano
 <parameter> amp_attack 0
 <parameter> amp_decay 0.875003
@@ -1835,6 +1885,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> prePiano1
 <parameter> amp_attack 0
 <parameter> amp_decay 1.41667
@@ -1871,6 +1922,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> prePiano2
 <parameter> amp_attack 0
 <parameter> amp_decay 1.41667
@@ -1907,6 +1959,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> prePiano3
 <parameter> amp_attack 0
 <parameter> amp_decay 1.41667
@@ -1943,6 +1996,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> RudeBass
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.20834
@@ -1979,6 +2033,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> SoftLead
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.20834
@@ -2015,6 +2070,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> SoftLead2
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.20834
@@ -2051,6 +2107,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Starfall
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 0.750007
@@ -2087,6 +2144,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> BanJoe
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 0.70001
@@ -2123,6 +2181,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> BassBubble
 <parameter> amp_attack 0
 <parameter> amp_decay 0.633336
@@ -2159,6 +2218,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> BassNsteeldrum
 <parameter> amp_attack 0
 <parameter> amp_decay 0.875003
@@ -2195,6 +2255,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Birdz2
 <parameter> amp_attack 0.44165
 <parameter> amp_decay 0.463677
@@ -2231,6 +2292,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> BrokenHarmonics
 <parameter> amp_attack 0
 <parameter> amp_decay 0.875003
@@ -2267,6 +2329,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> BubblePop2
 <parameter> amp_attack 0
 <parameter> amp_decay 0.644654
@@ -2303,6 +2366,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> DirtyEP3
 <parameter> amp_attack 0.166667
 <parameter> amp_decay 1.73065
@@ -2339,6 +2403,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Dx7type2
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.61667
@@ -2375,6 +2440,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Dx7type3
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.74167
@@ -2411,6 +2477,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Fun1
 <parameter> amp_attack 0
 <parameter> amp_decay 1.40299
@@ -2447,6 +2514,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Fun2
 <parameter> amp_attack 0.00278863
 <parameter> amp_decay 0.100938
@@ -2483,6 +2551,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Accordian
 <parameter> amp_attack 0.241667
 <parameter> amp_decay 1.19213
@@ -2519,6 +2588,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> BadBassCutoff
 <parameter> amp_attack 0.241667
 <parameter> amp_decay 1.45046
@@ -2555,6 +2625,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> BadHorns
 <parameter> amp_attack 0.35
 <parameter> amp_decay 0.358333
@@ -2591,6 +2662,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Breathe1
 <parameter> amp_attack 0
 <parameter> amp_decay 0
@@ -2627,6 +2699,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Breathe2
 <parameter> amp_attack 0
 <parameter> amp_decay 0
@@ -2663,6 +2736,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Diamonds
 <parameter> amp_attack 0
 <parameter> amp_decay 0
@@ -2699,6 +2773,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Diamonds2
 <parameter> amp_attack 0.175
 <parameter> amp_decay 0
@@ -2735,6 +2810,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> DreamX
 <parameter> amp_attack 0.8
 <parameter> amp_decay 0.991667
@@ -2771,6 +2847,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Falldown
 <parameter> amp_attack 0.23451
 <parameter> amp_decay 2.20046
@@ -2807,6 +2884,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Falldown2
 <parameter> amp_attack 0.241667
 <parameter> amp_decay 1.41713
@@ -2843,6 +2921,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Falldown3
 <parameter> amp_attack 0.241667
 <parameter> amp_decay 1.41713
@@ -2879,6 +2958,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Falldown4
 <parameter> amp_attack 0.241667
 <parameter> amp_decay 1.41713
@@ -2915,6 +2995,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Falldown5
 <parameter> amp_attack 0.241667
 <parameter> amp_decay 1.41713
@@ -2951,6 +3032,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> FullBass
 <parameter> amp_attack 0.241667
 <parameter> amp_decay 1.34213
@@ -2987,6 +3069,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> GoodDog
 <parameter> amp_attack 0.225
 <parameter> amp_decay 0.283333
@@ -3023,6 +3106,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly31
 <parameter> amp_attack 0.0595099
 <parameter> amp_decay 2.20046
@@ -3059,6 +3143,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly32
 <parameter> amp_attack 0.0595099
 <parameter> amp_decay 2.20046
@@ -3095,6 +3180,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly33
 <parameter> amp_attack 0.0595099
 <parameter> amp_decay 2.20046
@@ -3131,6 +3217,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly34
 <parameter> amp_attack 0.23451
 <parameter> amp_decay 2.20046
@@ -3167,6 +3254,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly35
 <parameter> amp_attack 0.23451
 <parameter> amp_decay 2.20046
@@ -3203,6 +3291,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly36
 <parameter> amp_attack 0
 <parameter> amp_decay 0
@@ -3239,6 +3328,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Pizzicato
 <parameter> amp_attack 0.35
 <parameter> amp_decay 0.358333
@@ -3275,6 +3365,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> PolyWarp
 <parameter> amp_attack 0.48451
 <parameter> amp_decay 2.20046
@@ -3311,6 +3402,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Squared
 <parameter> amp_attack 0.241667
 <parameter> amp_decay 1.19213
@@ -3347,6 +3439,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Squared2
 <parameter> amp_attack 0.241667
 <parameter> amp_decay 1.19213
@@ -3383,6 +3476,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> SuperSweep
 <parameter> amp_attack 0.0595099
 <parameter> amp_decay 2.20046
@@ -3419,6 +3513,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> ToyCar
 <parameter> amp_attack 0.0595099
 <parameter> amp_decay 2.20046
@@ -3455,6 +3550,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> ToyCar2
 <parameter> amp_attack 0.0595099
 <parameter> amp_decay 2.20046
@@ -3491,6 +3587,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Whistler
 <parameter> amp_attack 0.375
 <parameter> amp_decay 0.416667
@@ -3527,6 +3624,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Wind
 <parameter> amp_attack 0.8
 <parameter> amp_decay 0.991667
@@ -3563,6 +3661,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> ModulateOsc2
 <parameter> amp_attack 0.308333
 <parameter> amp_decay 1.29168
@@ -3599,6 +3698,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly29
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.84167
@@ -3635,6 +3735,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly30
 <parameter> amp_attack 0.349043
 <parameter> amp_decay 0.997733
@@ -3671,6 +3772,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Nother1
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.57501
@@ -3707,6 +3809,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Nother2
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.57501
@@ -3743,6 +3846,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Raunchy2
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.57501
@@ -3779,6 +3883,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Raunchy3
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.57501
@@ -3815,6 +3920,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> RudeBass2
 <parameter> amp_attack 0.0907096
 <parameter> amp_decay 0.931066
@@ -3851,6 +3957,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Woodblock
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 0.433343
@@ -3887,6 +3994,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Woodblock2
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 0.383343
@@ -3923,6 +4031,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Synth0
 <parameter> amp_attack 0.15
 <parameter> amp_decay 0.74009
@@ -3959,6 +4068,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Synth1
 <parameter> amp_attack 0.15
 <parameter> amp_decay 0.74009
@@ -3995,6 +4105,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Synth2
 <parameter> amp_attack 0.15
 <parameter> amp_decay 0.74009
@@ -4031,6 +4142,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Synth3
 <parameter> amp_attack 0.15
 <parameter> amp_decay 0.74009
@@ -4067,6 +4179,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Synth4
 <parameter> amp_attack 0.15
 <parameter> amp_decay 0.74009
@@ -4103,6 +4216,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Synth5
 <parameter> amp_attack 0.15
 <parameter> amp_decay 1.54009
@@ -4139,6 +4253,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Playable
 <parameter> amp_attack 0.15
 <parameter> amp_decay 0.431757
@@ -4175,6 +4290,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NiceNoize
 <parameter> amp_attack 0.15
 <parameter> amp_decay 0.74009
@@ -4211,6 +4327,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> AutoPlay
 <parameter> amp_attack 0.15
 <parameter> amp_decay 0.74009
@@ -4247,6 +4364,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Laughing
 <parameter> amp_attack 0.15
 <parameter> amp_decay 0.431757
@@ -4283,6 +4401,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Explosion
 <parameter> amp_attack 0.15
 <parameter> amp_decay 1.60676
@@ -4319,6 +4438,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Mono1
 <parameter> amp_attack 0
 <parameter> amp_decay 1.51397
@@ -4355,6 +4475,7 @@ amSynth
 <parameter> keyboard_mode 2
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> NicePoly44
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 0.683337
@@ -4391,6 +4512,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> ported
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.54167
@@ -4427,6 +4549,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Accordian2
 <parameter> amp_attack 0.15
 <parameter> amp_decay 0.74009
@@ -4463,6 +4586,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Mooglike
 <parameter> amp_attack 0.15
 <parameter> amp_decay 0.74009
@@ -4499,6 +4623,7 @@ amSynth
 <parameter> keyboard_mode 2
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> Mooglike2
 <parameter> amp_attack 0.15
 <parameter> amp_decay 1.54009
@@ -4535,6 +4660,7 @@ amSynth
 <parameter> keyboard_mode 2
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> evening3
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.23334
@@ -4571,6 +4697,7 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 <preset> <name> evening4
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.23334
@@ -4607,4 +4734,5 @@ amSynth
 <parameter> keyboard_mode 0
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
+<parameter> filter_slope 1
 EOF
