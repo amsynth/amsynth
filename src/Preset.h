@@ -36,16 +36,16 @@
 class Preset
 {
 public:
-					Preset			(const string name = "");
+	Preset(const std::string name = "");
 					
 	Preset&			operator =		(Preset& p);
 	
 	bool			isEqual			(Preset &);
 
-	const string	getName			() const { return mName; }
-	void			setName			(const string name) { mName = name; }
+	const std::string getName		() const { return mName; }
+	void			setName			(const std::string name) { mName = name; }
 	
-	Parameter&		getParameter	(const string name);
+	Parameter&		getParameter	(const std::string name);
 	Parameter&		getParameter	(const int no) { return mParameters[no]; };
 	
 	unsigned		ParameterCount	() const { return mParameters.size(); }
@@ -54,8 +54,8 @@ public:
     
     void			AddListenerToAll(UpdateListener*);
     
-    string			toString		();
-    bool			fromString		(string str);
+    std::string		toString		();
+    bool			fromString		(std::string str);
 
 private:
     std::string				mName;

@@ -45,7 +45,7 @@ public:
 	 * If the requested preset does not exist, then the request is ignored, and
 	 * an error value is returned. */
 	int		selectPreset		(const int preset);
-	int		selectPreset		(const string preset);
+	int		selectPreset		(const std::string preset);
 
 	// returns the preset currently being edited
 	Preset&	getCurrentPreset	() { return currentPreset; }
@@ -53,9 +53,9 @@ public:
 	// access presets in the memory bank
 	Preset&	getPreset			(int preset) { return presets[preset]; }
 	const Preset & getPreset	(int preset) const { return presets[preset]; }
-	Preset&	getPreset			(const string name);
+	Preset&	getPreset			(const std::string name);
 
-	bool	containsPresetWithName(const string name);
+	bool	containsPresetWithName(const std::string name);
 	bool	isCurrentPresetModified() { return !currentPreset.isEqual(presets[currentPresetNo]); }
 	
 	// Commit the current preset to memory
@@ -66,8 +66,8 @@ public:
 	void	deletePreset		();
 	
 	// Saves the active preset to the filename filename
-	int		exportPreset		(const string filename);
-	int		importPreset		(const string filename);
+	int		exportPreset		(const std::string filename);
+	int		importPreset		(const std::string filename);
 	
 	// Loading & Saving of bank files
 	int		loadPresets			(const char *filename = NULL);
@@ -89,7 +89,7 @@ protected:
 	void	notify				() { if (updateListener) updateListener->update(); }
 
 private:
-	string			bank_file;
+	std::string		bank_file;
 	UpdateListener*	updateListener;
 	Preset*			presets;
 	Preset 			currentPreset;

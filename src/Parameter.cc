@@ -24,7 +24,7 @@
 #include <algorithm>
 #include <cassert>
 
-Parameter::Parameter	(string name, Param id, float value, float min, float max, float inc, ControlType type, float base, float offset, string label)
+Parameter::Parameter	(std::string name, Param id, float value, float min, float max, float inc, ControlType type, float base, float offset, std::string label)
 :	mParamId	(id)
 ,	_name		(name)
 ,	_label		(label)

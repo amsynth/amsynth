@@ -28,11 +28,6 @@
 #include <cmath>
 #include "UpdateListener.h"
 
-using std::string;
-using std::vector;
-
-#define clip(in,min,max) ((in) < (min) ? (min) : ((in) > (max) ? (max) : (in)))
-
 /**
  * @brief a Parameter holds a particular value for a slider, selector switch 
  * etc..
@@ -54,17 +49,17 @@ public:
 		PARAM_POWER		// controlValue = offset + value ^ base
 	};
 
-					Parameter		(const string name = "unused", Param id = kAmsynthParameterCount, 
+					Parameter		(const std::string name = "unused", Param id = kAmsynthParameterCount,
 									 float value = 0.0, float min = 0.0, float max = 1.0, float inc = 0.0,
 									 ControlType = PARAM_DIRECT, float base = 1.0, float offset = 0.0,
-									 const string label = "");
+									 const std::string label = "");
 
 	// The raw value of this parameter. Objects in the signal generation 
 	// path should not use this method, but getControlValue() instead.
 	float			getValue		() const { return _value; }
 	void			setValue		(float value);
 
-	static float	valueFromString	(const string &str) {
+	static float	valueFromString	(const std::string &str) {
 		float value = 0.0f;
 		// atof() and friends are affected by currently configured locale,
 		// which can change the decimal point character.
@@ -81,9 +76,9 @@ public:
 	// The control value is what the synthesis will use to get its values.
 	inline float	getControlValue	() const { return _controlValue; }
 
-	const string	GetStringValue	() const { std::ostringstream o; o << _controlValue; return o.str(); }
+	const std::string GetStringValue	() const { std::ostringstream o; o << _controlValue; return o.str(); }
 
-	const string	getName			() const { return _name; }
+	const std::string getName			() const { return _name; }
 	Param			GetId			() const { return mParamId; }
 
 	// UpdateListeners (eg one or more ParameterViews - part of the GUI) are 
@@ -95,7 +90,6 @@ public:
 	float			getMin			() const { return _min; }
 	float			getMax			() const { return _max; }
 
-
 	// @return the increment value
 	float			getStep			() const { return _step; }
 	// @returns The number of discrete steps allowable in this Parameter.
@@ -105,17 +99,17 @@ public:
 	void			random_val		();
 
 	// The label assocaited with this Parameter. (e.g. "seconds")
-	const string	getLabel		() const { return _label; }
+	const std::string getLabel		() const { return _label; }
 
 	const char **   valueStrings    () const { return _valueStrings; }
 	void            setValueStrings (const char **valueStrings) { _valueStrings = valueStrings; }
 
 private:
 	Param							mParamId;
-	string							_name, _label;
+	std::string						_name, _label;
 	int								_controlMode;
 	float							_value, _min, _max, _step, _controlValue, _base, _offset;
-	vector<UpdateListener*>			_updateListeners;
+	std::vector<UpdateListener*>	_updateListeners;
 	const char **					_valueStrings;
 };
 

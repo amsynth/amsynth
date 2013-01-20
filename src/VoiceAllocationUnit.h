@@ -62,8 +62,8 @@ public:
 	void	Process			(float *l, float *r, unsigned nframes, int stride=1);
 
 	double	noteToPitch		(int note) const;
-	int		loadScale		(const string & sclFileName);
-	int		loadKeyMap		(const string & kbmFileName);
+	int		loadScale		(const std::string & sclFileName);
+	int		loadKeyMap		(const std::string & kbmFileName);
 	void	defaultTuning	();
 
 private:

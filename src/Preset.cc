@@ -32,7 +32,7 @@
 using namespace std;
 #endif
 
-Parameter TimeParameter (const string name, Param id)
+Parameter TimeParameter (const std::string name, Param id)
 {
 	return Parameter (name, id, 0, 0, 2.5f, 0, Parameter::PARAM_POWER, 3, 0.0005f, "s");
 }
@@ -57,7 +57,7 @@ const char *filter_slope_names[] = {
 	"12 dB / octave", "24 dB / octave", NULL
 };
 
-Preset::Preset			(const string name)
+Preset::Preset			(const std::string name)
 :	mName (name)
 ,	nullparam ("null", kAmsynthParameterCount)
 {
@@ -132,7 +132,7 @@ Preset::isEqual(Preset &otherPreset)
 }
 
 Parameter & 
-Preset::getParameter(const string name)
+Preset::getParameter(const std::string name)
 {
     for (unsigned i = 0; i < mParameters.size(); i++) if (getParameter(i).getName() == name) return mParameters[i];
     return nullparam;
@@ -152,7 +152,7 @@ Preset::AddListenerToAll	(UpdateListener* ul)
 	for (unsigned i=0; i<mParameters.size(); i++) getParameter(i).addUpdateListener (*ul);
 }
 
-string
+std::string
 Preset::toString()
 {
 	std::stringstream stream;
@@ -165,11 +165,11 @@ Preset::toString()
 }
 
 bool
-Preset::fromString(string str)
+Preset::fromString(std::string str)
 {
 	std::stringstream stream (str);
 
-	string buffer;
+	std::string buffer;
   
 	stream >> buffer;
   
@@ -181,7 +181,7 @@ Preset::fromString(string str)
 		
 		//get the preset's name
 		stream >> buffer;
-		string presetName;
+		std::string presetName;
 		presetName += buffer;
 		stream >> buffer;
 		while (buffer != "<parameter>") {
@@ -193,7 +193,7 @@ Preset::fromString(string str)
 		
 		//get the parameters
 		while (buffer == "<parameter>") {
-			string name;
+			std::string name;
 			stream >> buffer;
 			name = buffer;
 			stream >> buffer;
