@@ -339,7 +339,7 @@ GUI::create_menus	( )
 		Gtk::RadioButtonGroup grp;
 		Gtk::Menu *menu = Gtk::manage( new Gtk::Menu );
 
-		for (int i=1; i<=12; i++) {
+		for (int i=1; i<=24; i++) {
 			ostringstream name;
 			name << i;
 			name << " Semitones";
