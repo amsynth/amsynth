@@ -21,12 +21,8 @@
 
 #include "Parameter.h"
 
-#include <cstdlib>
-
-#ifdef _DEBUG
-#include <iostream>
-using namespace std;
-#endif
+#include <algorithm>
+#include <cassert>
 
 Parameter::Parameter	(string name, Param id, float value, float min, float max, float inc, ControlType type, float base, float offset, string label)
 :	mParamId	(id)
@@ -62,25 +58,16 @@ Parameter::removeUpdateListener( UpdateListener & ul )
 void
 Parameter::setValue(float value)
 {
-#ifdef _DEBUG
-	float foo = value;
-#endif
-	float old_value = _value;
-	
-	if (value<_min)
-		value = _min;
-	else if(value>_max)
-		value = _max;
+	const float newValue = std::min(std::max(value, _min), _max);
 
-	if(_step)
-		if(value>0)
-			_value = _step*(int)((value+(_step/2))/_step);
-		else
-			_value = _step*(int)((value-(_step/2))/_step);
-	else
-		_value = value;
-	
-	// set the control value
+	if (_value == newValue)
+		return;
+
+	if (_step)
+		assert(::fmodf(newValue - _min, _step) == 0);
+
+	_value = newValue;
+
 	switch (_controlMode) {
 		case PARAM_DIRECT:
 			_controlValue = _offset + _base * _value;
@@ -91,44 +78,11 @@ Parameter::setValue(float value)
 		case PARAM_POWER:
 			_controlValue = _offset + ::pow( _value, (float)_base );
 			break;
-#ifdef _DEBUG
-		default:
-			cout << "<Parameter> mode is undefined" << endl;
-			break;
-#endif
 	}
-	
-#ifdef _DEBUG
-	cout << "<Parameter::setValue( " << foo 
-	<< " ) min=" << _min << " max=" << _max << " value set to " << _value 
-	<< " _controlValue set to " << _controlValue << endl;
-#endif
-	
-	// TODO: only update() Listeners it there _was_ a change?
-	// messes up the GUI - it needs to be better behaved (respect step value)
-	if (old_value!=_value)
-		for (unsigned i=0; i<_updateListeners.size(); i++)
-		{
-#ifdef _DEBUG
-			cout << "updating UpdateListener " << _updateListeners[i] << endl;
-#endif
-			_updateListeners[i]->UpdateParameter (mParamId, _controlValue);
-		}
-}
 
-int
-Parameter::getSteps() const
-{
-	if(!_step)
-		return 0;
-	
-	int i = 0;
-	float v = getMin();
-	while(v <= getMax()){
-		v += getStep();
-		i++;
+	for (unsigned i=0; i<_updateListeners.size(); i++) {
+		_updateListeners[i]->UpdateParameter (mParamId, _controlValue);
 	}
-	return i;
 }
 
 void

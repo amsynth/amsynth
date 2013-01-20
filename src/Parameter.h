@@ -99,7 +99,7 @@ public:
 	// @return the increment value
 	float			getStep			() const { return _step; }
 	// @returns The number of discrete steps allowable in this Parameter.
-	int				getSteps		() const;
+	int				getSteps		() const { return _step ? (_max - _min) / _step : 0; }
 
 	// Set this parameter to a random value (in it's allowable range)
 	void			random_val		();
