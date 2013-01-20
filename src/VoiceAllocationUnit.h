@@ -46,6 +46,7 @@ public:
 	virtual void HandleMidiNoteOn(int note, float velocity);
 	virtual void HandleMidiNoteOff(int note, float velocity);
 	virtual void HandleMidiPitchWheel(float value);
+	virtual void HandleMidiPitchWheelSensitivity(uchar semitones);
 	virtual void HandleMidiAllSoundOff();
 	virtual void HandleMidiAllNotesOff();
 	virtual void HandleMidiSustainPedal(uchar value);

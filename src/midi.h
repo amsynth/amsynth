@@ -37,7 +37,9 @@ enum {
 enum {
     MIDI_CC_BANK_SELECT_LSB             = 0x00,
     MIDI_CC_MODULATION_WHEEL            = 0x01,
+	MIDI_CC_DATA_ENTRY_MSB              = 0x06,
     MIDI_CC_BANK_SELECT_MSB             = 0x20,
+	MIDI_CC_DATA_ENTRY_LSB              = 0x26,
     MIDI_CC_SUSTAIN_PEDAL               = 0x40,
     MIDI_CC_PORTAMENTO                  = 0x41,
     MIDI_CC_SOSTENUTO                   = 0x42,

@@ -39,6 +39,7 @@ public:
 	virtual void HandleMidiNoteOn(int /*note*/, float /*velocity*/) {}
 	virtual void HandleMidiNoteOff(int /*note*/, float /*velocity*/) {}
 	virtual void HandleMidiPitchWheel(float /*value*/) {}
+	virtual void HandleMidiPitchWheelSensitivity(uchar semitones) {}
 	virtual void HandleMidiAllSoundOff() {}
 	virtual void HandleMidiAllNotesOff() {}
 	virtual void HandleMidiSustainPedal(uchar /*value*/) {}
@@ -82,5 +83,6 @@ private:
 	Parameter last_active_controller;
 	Parameter *midi_controllers[MAX_CC];
 	MidiEventHandler* _handler;
+	unsigned char _rpn_msb, _rpn_lsb;
 };
 #endif

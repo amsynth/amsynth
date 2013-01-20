@@ -202,6 +202,12 @@ VoiceAllocationUnit::HandleMidiPitchWheel(float value)
 }
 
 void
+VoiceAllocationUnit::HandleMidiPitchWheelSensitivity(uchar semitones)
+{
+	mPitchBendRangeSemitones = semitones;
+}
+
+void
 VoiceAllocationUnit::HandleMidiAllSoundOff()
 {
 	for (unsigned i=0; i<_voices.size(); i++) active[i] = false;

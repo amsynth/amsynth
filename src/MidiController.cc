@@ -33,6 +33,8 @@ using namespace std;
 MidiController::MidiController( Config & config )
 :	last_active_controller ("last_active_cc", (Param) -1, 0, 0, MAX_CC, 1)
 ,	_handler(NULL)
+,	_rpn_msb(0xff)
+,	_rpn_lsb(0xff)
 {
 	this->config = &config;
 	presetController = 0;
@@ -196,12 +198,20 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 			if (_handler)
 				_handler->HandleMidiSustainPedal(value);
 			break;
+		case MIDI_CC_DATA_ENTRY_MSB:
+			if (_handler && _rpn_msb == 0x00 && _rpn_lsb == 0x00)
+				_handler->HandleMidiPitchWheelSensitivity(value);
+			break;
 		case MIDI_CC_PORTAMENTO:
 		case MIDI_CC_SOSTENUTO:
 		case MIDI_CC_NRPN_LSB:
 		case MIDI_CC_NRPN_MSB:
+			break;
 		case MIDI_CC_RPN_LSB:
+			_rpn_lsb = value;
+			break;
 		case MIDI_CC_RPM_MSB:
+			_rpn_msb = value;
 			break;
 		case MIDI_CC_ALL_SOUND_OFF:
 			if (_handler && value == 0)
