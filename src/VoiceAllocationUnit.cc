@@ -43,6 +43,8 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 ,	mMasterVol (1.0)
 ,	mPitchBendRangeSemitones(2)
 ,	mLastNoteFrequency (0.0f)
+,	mLastPitchBendValue(1)
+,	mNextPitchBendValue(1)
 {
 	limiter = new SoftLimiter;
 	reverb = new revmodel;
@@ -196,8 +198,7 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 void
 VoiceAllocationUnit::HandleMidiPitchWheel(float value)
 {
-	float newval = pow(2.0f, value * mPitchBendRangeSemitones / 12.0f);
-	for (unsigned i=0; i<_voices.size(); i++) _voices[i]->SetPitchBend (newval);
+	mNextPitchBendValue = pow(2.0f, value * mPitchBendRangeSemitones / 12.0f);
 }
 
 void
@@ -237,7 +238,11 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 		this->Process(l + kBufferSize, r + kBufferSize, nframes - kBufferSize, stride);
 		return;
 	}
-	
+
+	float pitchBendValue = mLastPitchBendValue;
+	float pitchBendValueEnd = mNextPitchBendValue;
+	float pitchBendValueInc = (pitchBendValueEnd - pitchBendValue) / nframes;
+
 	float* vb = mBuffer;
 	memset(vb, 0, nframes * sizeof (float));
 
@@ -250,16 +255,20 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 					active[i] = false;
 					mActiveVoices--;
 				} else {
+					_voices[i]->SetPitchBend (pitchBendValue);
 					_voices[i]->ProcessSamplesMix (vb+j, fr, mMasterVol);
 				}
 			}
 		}
 		j += fr; framesLeft -= fr;
+		pitchBendValue = pitchBendValue + pitchBendValueInc * fr;
 	}
 
 	distortion->Process (vb, nframes);
 	reverb->processreplace (vb, l,r, nframes, 1, stride); // mono -> stereo
 	limiter->Process (l,r, nframes, stride);
+
+	mLastPitchBendValue = pitchBendValueEnd;
 }
 
 void

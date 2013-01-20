@@ -69,6 +69,11 @@ public:
 		_i = MIN(_i + 1, _steps);
 		return y;
 	}
+
+	inline float getFinalValue()
+	{
+		return _final;
+	}
 	
 private:
 

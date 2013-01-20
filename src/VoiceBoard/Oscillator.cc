@@ -78,7 +78,7 @@ Oscillator::setPolarity(float polarity)
 void
 Oscillator::ProcessSamples	(float *buffer, int numSamples, float freq_hz, float pw)
 {
-	freq = freq_hz;
+	mFrequency.configure(mFrequency.getFinalValue(), freq_hz, numSamples);
 	mPulseWidth = pw;
 	
 	sync_c = 0;
@@ -96,14 +96,14 @@ Oscillator::ProcessSamples	(float *buffer, int numSamples, float freq_hz, float 
 	default: break;
 	}
 	
-	if (sync) sync->reset (sync_offset, (int)(rate/freq));
+	if (sync) sync->reset (sync_offset, (int)(rate/freq_hz));
 }
 
 void 
 Oscillator::doSine(float *buffer, int nFrames)
 {
     for (int i = 0; i < nFrames; i++) {
-		buffer[i] = sinf(rads += twopi_rate * freq);
+		buffer[i] = sinf(rads += twopi_rate * mFrequency.nextValue());
 		//-- sync to other oscillator --
 		if (reset_cd-- == 0){
 			rads = 0.0;					// reset the oscillator
@@ -136,7 +136,7 @@ Oscillator::doSquare(float *buffer, int nFrames)
 		mPulseWidth = kMaxPulseWidth;
 
     for (int i = 0; i < nFrames; i++) {
-		buffer[i] = sqr(rads += (twopi_rate * freq));
+		buffer[i] = sqr(rads += (twopi_rate * mFrequency.nextValue()));
 		//-- sync to other oscillator --
 		if (reset_cd-- == 0){
 			rads = 0.0;					// reset the oscillator
@@ -174,13 +174,13 @@ Oscillator::doSaw(float *buffer, int nFrames)
 	// This is not proper anti-aliasing ;-)
 	const float requestedPW = mPulseWidth;
 	const float kAliasReductionAmount = 2.0f;
-	const float f = requestedPW - (kAliasReductionAmount * freq / (float)rate);
+	const float f = requestedPW - (kAliasReductionAmount * mFrequency.getFinalValue() / (float)rate);
 	if (mPulseWidth > f)
 		mPulseWidth = f;
 #endif
 
     for (int i = 0; i < nFrames; i++) {
-		buffer[i] = saw(rads += (twopi_rate * freq)) * mPolarity;
+		buffer[i] = saw(rads += (twopi_rate * mFrequency.nextValue())) * mPolarity;
 		//-- sync to other oscillator --
 		if (reset_cd-- == 0){
 			rads = 0.0;					// reset the oscillator
@@ -211,7 +211,7 @@ static inline float randf()
 void 
 Oscillator::doRandom(float *buffer, int nFrames)
 {
-    register int period = (int) (rate / freq);
+    register int period = (int) (rate / mFrequency.getFinalValue());
     for (int i = 0; i < nFrames; i++) {
 	if (random_count > period) {
 	    random_count = 0;

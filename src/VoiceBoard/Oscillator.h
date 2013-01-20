@@ -22,6 +22,8 @@
 #ifndef _OSCILLATOR_H
 #define _OSCILLATOR_H
 
+#include "Synth--.h"
+
 /**
  * @brief An Audio Oscillator unit.
  * 
@@ -59,10 +61,11 @@ public:
 	void	setPolarity (float polarity); // +1 or -1
 
 private:
-    float rads, twopi_rate, random, freq;
+    float rads, twopi_rate, random;
 	double a0, a1, b1, d; // for the low-pass filter
     int waveform, rate, random_count;
 
+	Lerper	mFrequency;
 	float	mPulseWidth;
 	float	mPolarity;
 	

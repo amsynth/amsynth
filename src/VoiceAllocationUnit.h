@@ -89,6 +89,8 @@ private:
 	float	mMasterVol;
 	float	mPitchBendRangeSemitones;
 	float	mLastNoteFrequency;
+	float   mLastPitchBendValue;
+	float   mNextPitchBendValue;
 
 	TuningMap	tuningMap;
 };
