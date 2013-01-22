@@ -10,7 +10,7 @@ desktop_in_files = amsynth.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 banksdir = $(pkgdatadir)/banks
-banks_DATA = \
+dist_banks_DATA = \
 	banks/amsynth_factory.bank \
 	banks/BriansBank1.amSynth.bank \
 	banks/BriansBank2.amSynth.bank \
