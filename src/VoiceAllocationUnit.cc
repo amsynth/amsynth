@@ -204,7 +204,7 @@ VoiceAllocationUnit::HandleMidiPitchWheel(float value)
 void
 VoiceAllocationUnit::HandleMidiPitchWheelSensitivity(uchar semitones)
 {
-	mPitchBendRangeSemitones = semitones;
+	setPitchBendRangeSemitones(semitones);
 }
 
 void
