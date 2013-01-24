@@ -337,7 +337,7 @@ GUI::create_menus	( )
 	//
 	{
 		Gtk::RadioButtonGroup grp;
-		Gtk::Menu *menu = Gtk::manage( new Gtk::Menu );
+		m_pitchBendRangeMenu = Gtk::manage( new Gtk::Menu );
 
 		for (int i=1; i<=24; i++) {
 			ostringstream name;
@@ -346,10 +346,12 @@ GUI::create_menus	( )
 			Gtk::RadioMenuItem *item = Gtk::manage(new Gtk::RadioMenuItem(grp, name.str()));
 			item->set_active(i == config->pitch_bend_range);
 			item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_pitch_bend_range_change), i, item) );
-			menu->items().push_back(*item);
+			m_pitchBendRangeMenu->items().push_back(*item);
 		}
 
-		menu_config->items().push_back(MenuElem("Pitch Bend Range", *menu));
+		m_pitchBendRangeMenu->signal_show().connect(sigc::mem_fun(*this, &GUI::on_pitch_bend_range_menu_show));
+
+		menu_config->items().push_back(MenuElem("Pitch Bend Range", *m_pitchBendRangeMenu));
 	}
 	
 	list_config.push_back (MenuElem("Audio & MIDI...", bind(mem_fun(*this, &GUI::event_handler), (int)evConfig)));
@@ -1033,12 +1035,23 @@ GUI::on_ployphony_change(int value)
 }
 
 void
+GUI::on_pitch_bend_range_menu_show()
+{
+	Gtk::MenuShell::MenuList &list = m_pitchBendRangeMenu->items();
+	guint index = MIN((vau->getPitchBendRangeSemitones() - 1), (list.size() - 1));
+	Gtk::RadioMenuItem *item = (Gtk::RadioMenuItem *)&(list[index]);
+	item->set_active();
+}
+
+void
 GUI::on_pitch_bend_range_change(int value, Gtk::RadioMenuItem *item)
 {
 	if (item->get_active()) {
-		config->pitch_bend_range = value;
-		config->save();
-		vau->setPitchBendRangeSemitones(config->pitch_bend_range);
+		if (config->pitch_bend_range != value) {
+			config->pitch_bend_range = value;
+			config->save();
+			vau->setPitchBendRangeSemitones(config->pitch_bend_range);
+		}
 	}
 }
 

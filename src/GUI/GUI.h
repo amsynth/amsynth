@@ -107,6 +107,7 @@ private:
 	
 	void		on_midi_channel_change	(int value);
 	void		on_ployphony_change		(int value);
+	void		on_pitch_bend_range_menu_show();
 	void		on_pitch_bend_range_change(int value, Gtk::RadioMenuItem *item);
 	
 	void		post_init();
@@ -166,6 +167,8 @@ private:
 
 	std::string		m_windowTitle;
 	bool			m_presetIsNotSaved;
+
+	Gtk::Menu		*m_pitchBendRangeMenu;
 
 #if ENABLE_MIDIKEYS
 	int					m_vkeybdOctave;
