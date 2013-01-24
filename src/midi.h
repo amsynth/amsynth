@@ -46,7 +46,7 @@ enum {
     MIDI_CC_NRPN_LSB                    = 0x62,
     MIDI_CC_NRPN_MSB                    = 0x63,
     MIDI_CC_RPN_LSB                     = 0x64,
-    MIDI_CC_RPM_MSB                     = 0x65,
+    MIDI_CC_RPN_MSB                     = 0x65,
 
     /* ------- Channel Mode Messages ------- */
     MIDI_CC_ALL_SOUND_OFF               = 0x78,

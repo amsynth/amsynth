@@ -210,7 +210,7 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 		case MIDI_CC_RPN_LSB:
 			_rpn_lsb = value;
 			break;
-		case MIDI_CC_RPM_MSB:
+		case MIDI_CC_RPN_MSB:
 			_rpn_msb = value;
 			break;
 		case MIDI_CC_ALL_SOUND_OFF:
