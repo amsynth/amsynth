@@ -16,7 +16,8 @@ dist_banks_DATA = \
 	banks/BriansBank2.amSynth.bank \
 	banks/BriansBank3.amSynth.bank \
 	banks/BriansBank4.amSynth.bank \
-	banks/BriansBank5.amSynth.bank
+	banks/BriansBank5.amSynth.bank \
+	banks/BriansBank6.amSynth.bank
 
 
 if BUILD_LV2

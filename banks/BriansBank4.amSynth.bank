@@ -998,7 +998,7 @@ amSynth
 <parameter> osc2_pitch -10
 <parameter> filter_type 0
 <parameter> filter_slope 1
-<preset> <name> evening3
+<preset> <name> Feather
 <parameter> amp_attack 0.0333333
 <parameter> amp_decay 1.70001
 <parameter> amp_sustain 0

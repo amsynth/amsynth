@@ -4367,7 +4367,7 @@ amSynth
 <parameter> filter_slope 0
 <preset> <name> Reverse
 <parameter> amp_attack 0.733333
-<parameter> amp_decay 0
+<parameter> amp_decay 0.0416667
 <parameter> amp_sustain 0
 <parameter> amp_release 0
 <parameter> osc1_waveform 1
