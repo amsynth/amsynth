@@ -30,6 +30,8 @@
 
 #define ALIAS_REDUCTION
 
+#define PULSE_OVERSAMPLING_FACTOR 16
+
 // fmod is sloooooooooooow.
 inline float ffmodf (float x, float y) {
 	while (x > y) x -= y;
@@ -136,7 +138,11 @@ Oscillator::doSquare(float *buffer, int nFrames)
 		mPulseWidth = kMaxPulseWidth;
 
     for (int i = 0; i < nFrames; i++) {
-		buffer[i] = sqr(rads += (twopi_rate * mFrequency.nextValue()));
+		float y = 0.0f;
+		float k = twopi_rate * mFrequency.nextValue() / (float)PULSE_OVERSAMPLING_FACTOR;
+		for (size_t j=0; j<PULSE_OVERSAMPLING_FACTOR; j++) { y += sqr(rads += k); }
+		buffer[i] = y / (float)PULSE_OVERSAMPLING_FACTOR;
+
 		//-- sync to other oscillator --
 		if (reset_cd-- == 0){
 			rads = 0.0;					// reset the oscillator
