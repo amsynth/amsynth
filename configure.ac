@@ -1,4 +1,4 @@
-AC_INIT([amsynth], [svn])
+AC_INIT([amsynth], [git])
 AC_CONFIG_SRCDIR([src/main.cc])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE
