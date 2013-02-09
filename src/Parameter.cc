@@ -58,13 +58,15 @@ Parameter::removeUpdateListener( UpdateListener & ul )
 void
 Parameter::setValue(float value)
 {
-	const float newValue = std::min(std::max(value, _min), _max);
+	float newValue = std::min(std::max(value, _min), _max);
+
+	if (_step) {
+		newValue = _min + roundf((newValue - _min) / _step) * _step;
+		assert(::fmodf(newValue - _min, _step) == 0);
+	}
 
 	if (_value == newValue)
 		return;
-
-	if (_step)
-		assert(::fmodf(newValue - _min, _step) == 0);
 
 	_value = newValue;
 
