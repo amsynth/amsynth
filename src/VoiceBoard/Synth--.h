@@ -58,7 +58,7 @@ public:
 		_i = 0;
 	}
 
-	inline float getValue()
+	inline float getValue() const
 	{
 		return _start + _i * (float)_inc;
 	}
@@ -70,7 +70,7 @@ public:
 		return y;
 	}
 
-	inline float getFinalValue()
+	inline float getFinalValue() const
 	{
 		return _final;
 	}
