@@ -108,27 +108,24 @@ Preset::Preset			(const std::string name)
 }
 
 Preset&
-Preset::operator =		(Preset& preset)
+Preset::operator =		(const Preset &rhs)
 {
-    for (unsigned i=0; i<preset.ParameterCount(); i++)
-    {
-		Parameter& p = preset.getParameter (i);
-		getParameter (p.getName()).setValue (p.getValue());
+    for (unsigned i=0; i<rhs.ParameterCount(); i++) {
+		getParameter(i).setValue(rhs.getParameter(i).getValue());
     }
-    setName (preset.getName());
+    setName(rhs.getName());
     return *this;
 }
 
 bool
-Preset::isEqual(Preset &otherPreset)
+Preset::isEqual(const Preset &rhs)
 {
 	for (unsigned i = 0; i < mParameters.size(); i++) {
-		if (            getParameter(i).getValue() !=
-			otherPreset.getParameter(i).getValue()) {
+		if (getParameter(i).getValue() != rhs.getParameter(i).getValue()) {
 			return false;
 		}
 	}
-	return getName() == otherPreset.getName();
+	return getName() == rhs.getName();
 }
 
 Parameter & 

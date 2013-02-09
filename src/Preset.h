@@ -38,15 +38,16 @@ class Preset
 public:
 	Preset(const std::string name = "");
 					
-	Preset&			operator =		(Preset& p);
+	Preset&			operator =		(const Preset& p);
 	
-	bool			isEqual			(Preset &);
+	bool			isEqual			(const Preset &);
 
 	const std::string getName		() const { return mName; }
 	void			setName			(const std::string name) { mName = name; }
 	
 	Parameter&		getParameter	(const std::string name);
 	Parameter&		getParameter	(const int no) { return mParameters[no]; };
+	const Parameter& getParameter	(const int no) const { return mParameters[no]; };
 	
 	unsigned		ParameterCount	() const { return mParameters.size(); }
 	
