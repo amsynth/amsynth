@@ -15,7 +15,7 @@
 <http://code.google.com/p/amsynth/amsynth/ui/gtk>
     a uiext:GtkUI ;
     uiext:binary <amsynth_lv2_gtk.so> ;
-    uiext:requiredFeature uiext:makeResident .
+    lv2:optionalFeature uiext:noUserResize .
 
 <http://code.google.com/p/amsynth/amsynth> a lv2:Plugin ;
     a lv2:InstrumentPlugin;
