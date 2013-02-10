@@ -102,15 +102,15 @@
         lv2:symbol "osc1_waveform" ;
         lv2:name "osc1_waveform" ;
         lv2:portProperty epp:hasStrictBounds ;
-        lv2:portProperty lv2:integer ;
+        lv2:portProperty lv2:integer , lv2:enumeration ;
         lv2:default 2.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 4.000000 ;
-        lv2:scalePoint [ rdf:value 0 ; rdfs:label "sine"] ;
-        lv2:scalePoint [ rdf:value 1 ; rdfs:label "square / pulse" ] ;
-        lv2:scalePoint [ rdf:value 2 ; rdfs:label "saw / triangle" ] ;
-        lv2:scalePoint [ rdf:value 3 ; rdfs:label "white noise" ] ;
-        lv2:scalePoint [ rdf:value 4 ; rdfs:label "noise + sample & hold" ] ;
+        lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "sine"] ;
+        lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "square / pulse" ] ;
+        lv2:scalePoint [ rdf:value 2.0 ; rdfs:label "saw / triangle" ] ;
+        lv2:scalePoint [ rdf:value 3.0 ; rdfs:label "white noise" ] ;
+        lv2:scalePoint [ rdf:value 4.0 ; rdfs:label "noise + sample & hold" ] ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -198,15 +198,15 @@
         lv2:symbol "osc2_waveform" ;
         lv2:name "osc2_waveform" ;
         lv2:portProperty epp:hasStrictBounds ;
-        lv2:portProperty lv2:integer ;
+        lv2:portProperty lv2:integer , lv2:enumeration ;
         lv2:default 2.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 4.000000 ;
-        lv2:scalePoint [ rdf:value 0 ; rdfs:label "sine"] ;
-        lv2:scalePoint [ rdf:value 1 ; rdfs:label "square / pulse" ] ;
-        lv2:scalePoint [ rdf:value 2 ; rdfs:label "saw / triangle" ] ;
-        lv2:scalePoint [ rdf:value 3 ; rdfs:label "white noise" ] ;
-        lv2:scalePoint [ rdf:value 4 ; rdfs:label "noise + sample & hold" ] ;
+        lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "sine"] ;
+        lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "square / pulse" ] ;
+        lv2:scalePoint [ rdf:value 2.0 ; rdfs:label "saw / triangle" ] ;
+        lv2:scalePoint [ rdf:value 3.0 ; rdfs:label "white noise" ] ;
+        lv2:scalePoint [ rdf:value 4.0 ; rdfs:label "noise + sample & hold" ] ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -234,17 +234,17 @@
         lv2:symbol "lfo_waveform" ;
         lv2:name "lfo_waveform" ;
         lv2:portProperty epp:hasStrictBounds ;
-        lv2:portProperty lv2:integer ;
+        lv2:portProperty lv2:integer , lv2:enumeration ;
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 6.000000 ;
-        lv2:scalePoint [ rdf:value 0 ; rdfs:label "sine"] ;
-        lv2:scalePoint [ rdf:value 1 ; rdfs:label "square" ] ;
-        lv2:scalePoint [ rdf:value 2 ; rdfs:label "triangle" ] ;
-        lv2:scalePoint [ rdf:value 3 ; rdfs:label "white noise" ] ;
-        lv2:scalePoint [ rdf:value 4 ; rdfs:label "noise + sample & hold" ] ;
-        lv2:scalePoint [ rdf:value 5 ; rdfs:label "sawtooth (up)" ] ;
-        lv2:scalePoint [ rdf:value 6 ; rdfs:label "sawtooth (down)" ] ;
+        lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "sine"] ;
+        lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "square" ] ;
+        lv2:scalePoint [ rdf:value 2.0 ; rdfs:label "triangle" ] ;
+        lv2:scalePoint [ rdf:value 3.0 ; rdfs:label "white noise" ] ;
+        lv2:scalePoint [ rdf:value 4.0 ; rdfs:label "noise + sample & hold" ] ;
+        lv2:scalePoint [ rdf:value 5.0 ; rdfs:label "sawtooth (up)" ] ;
+        lv2:scalePoint [ rdf:value 6.0 ; rdfs:label "sawtooth (down)" ] ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -402,12 +402,13 @@
         lv2:symbol "keyboard_mode" ;
         lv2:name "keyboard_mode" ;
         lv2:portProperty epp:hasStrictBounds ;
+        lv2:portProperty lv2:integer , lv2:enumeration ;
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 2.000000 ;
-        lv2:scalePoint [ rdf:value 0 ; rdfs:label "poly"] ;
-        lv2:scalePoint [ rdf:value 1 ; rdfs:label "mono"] ;
-        lv2:scalePoint [ rdf:value 1 ; rdfs:label "legato"] ;
+        lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "poly"] ;
+        lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "mono"] ;
+        lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "legato"] ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -426,13 +427,13 @@
         lv2:symbol "filter_type" ;
         lv2:name "filter_type" ;
         lv2:portProperty epp:hasStrictBounds ;
-        lv2:portProperty lv2:integer ;
+        lv2:portProperty lv2:integer , lv2:enumeration ;
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 2.000000 ;
-        lv2:scalePoint [ rdf:value 0 ; rdfs:label "low pass"] ;
-        lv2:scalePoint [ rdf:value 1 ; rdfs:label "high pass" ] ;
-        lv2:scalePoint [ rdf:value 2 ; rdfs:label "band pass" ] ;
+        lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "low pass"] ;
+        lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "high pass" ] ;
+        lv2:scalePoint [ rdf:value 2.0 ; rdfs:label "band pass" ] ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -440,12 +441,12 @@
         lv2:symbol "filter_slope" ;
         lv2:name "filter_slope" ;
         lv2:portProperty epp:hasStrictBounds ;
-        lv2:portProperty lv2:integer ;
+        lv2:portProperty lv2:integer , lv2:enumeration ;
         lv2:default 1.000000 ;
-        lv2:minimum 1.000000 ;
+        lv2:minimum 0.000000 ;
         lv2:maximum 1.000000 ;
-        lv2:scalePoint [ rdf:value 0 ; rdfs:label "12 dB / octave"] ;
-        lv2:scalePoint [ rdf:value 1 ; rdfs:label "24 dB / octave"] ;
+        lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "12 dB / octave"] ;
+        lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "24 dB / octave"] ;
     ].
 
 <http://code.google.com/p/amsynth/amsynth#factory_preset_derren_1>
