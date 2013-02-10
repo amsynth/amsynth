@@ -32,10 +32,8 @@
 
 #define PULSE_OVERSAMPLING_FACTOR 16
 
-// fmod is sloooooooooooow.
-inline float ffmodf (float x, float y) {
-	while (x > y) x -= y;
-	return x;
+static inline float ffmodf(float x, float y) {
+	return (x - y * (int)(x / y));
 }
 
 Oscillator::Oscillator()
