@@ -65,6 +65,9 @@ public:
 private:
 
 	Lerper			mFrequency;
+	float			mFrequencyTarget;
+	float			mFrequencyTime;
+
 	float			mSampleRate;
 	float			mKeyVelocity;
 	float			mPitchBend;

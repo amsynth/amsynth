@@ -27,8 +27,10 @@
 // Low-pass filter the VCA control signal to prevent nasty clicking sounds
 const float kVCALowPassFreq = 4000.0f;
 
-VoiceBoard::VoiceBoard():
-	mKeyVelocity	(1.0)
+VoiceBoard::VoiceBoard()
+:	mFrequencyTarget(0.0)
+,	mFrequencyTime	(0.0)
+,	mKeyVelocity	(1.0)
 ,	mPitchBend		(1.0)
 ,	mLFO1Freq		(0.0)
 ,	mFreqModAmount	(0.0)
@@ -118,6 +120,9 @@ void
 VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 {
 	assert(numSamples <= kMaxProcessBufferSize);
+
+	if (mFrequencyTarget != mFrequency.getFinalValue())
+		mFrequency.configure(mFrequency.getValue(), mFrequencyTarget, mFrequencyTime * mSampleRate);
 
 	//
 	// Control Signals
@@ -232,7 +237,8 @@ VoiceBoard::reset()
 void
 VoiceBoard::setFrequency(float targetFrequency, float time)
 {
-	mFrequency.configure(mFrequency.getValue(), targetFrequency, time * mSampleRate);
+	mFrequencyTarget = targetFrequency;
+	mFrequencyTime = time;
 }
 
 void
