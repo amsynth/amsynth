@@ -4,7 +4,7 @@
 @prefix lv2ev:   <http://lv2plug.in/ns/ext/event#>.
 @prefix epp:     <http://lv2plug.in/ns/dev/extportinfo#> .
 @prefix uiext:   <http://lv2plug.in/ns/extensions/ui#> .
-@prefix pg:      <http://ll-plugins.nongnu.org/lv2/ext/portgroups#> .
+@prefix pg:      <http://lv2plug.in/ns/ext/port-groups#> .
 @prefix foaf:    <http://xmlns.com/foaf/0.1/> .
 @prefix doap:    <http://usefulinc.com/ns/doap#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#>.
@@ -16,6 +16,12 @@
     a uiext:GtkUI ;
     uiext:binary <amsynth_lv2_gtk.so> ;
     lv2:optionalFeature uiext:noUserResize .
+
+<http://code.google.com/p/amsynth/amsynth#stereoOut>
+    a pg:StereoGroup ,
+        pg:OutputGroup ;
+    lv2:name "Output" ;
+    lv2:symbol "out" .
 
 <http://code.google.com/p/amsynth/amsynth> a lv2:Plugin ;
     a lv2:InstrumentPlugin;
@@ -31,14 +37,16 @@
         lv2:index 0 ;
         lv2:symbol "out_l" ;
         lv2:name "out_l" ;
-        pg:membership [ pg:group <#stereoOut>; pg:role pg:leftChannel ] ;
+        lv2:designation pg:left ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#stereoOut> ;
     ] , [
         a lv2:OutputPort ;
         a lv2:AudioPort ;
         lv2:index 1 ;
         lv2:symbol "out_r" ;
         lv2:name "out_r" ;
-        pg:membership [ pg:group <#stereoOut>; pg:role pg:rightChannel ] ;
+        lv2:designation pg:right ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#stereoOut> ;
     ] , [
         a lv2:InputPort ,
             atom:AtomPort ;
