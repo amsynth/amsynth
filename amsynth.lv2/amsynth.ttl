@@ -2,7 +2,7 @@
 @prefix lv2:     <http://lv2plug.in/ns/lv2core#> .
 @prefix lv2midi: <http://lv2plug.in/ns/ext/midi#> .
 @prefix lv2ev:   <http://lv2plug.in/ns/ext/event#>.
-@prefix epp:     <http://lv2plug.in/ns/dev/extportinfo#> .
+@prefix epp:     <http://lv2plug.in/ns/ext/port-props#> .
 @prefix uiext:   <http://lv2plug.in/ns/extensions/ui#> .
 @prefix pg:      <http://lv2plug.in/ns/ext/port-groups#> .
 @prefix foaf:    <http://xmlns.com/foaf/0.1/> .
