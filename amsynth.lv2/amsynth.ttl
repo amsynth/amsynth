@@ -29,7 +29,7 @@
     doap:maintainer [ foaf:name "Nick Dowell" ; ] ;
     doap:license <http://usefulinc.com/doap/licenses/gpl> ;
     lv2:requiredFeature urid:map ;
-    lv2:optionalFeature lv2:hardRtCapable;
+    lv2:optionalFeature lv2:hardRTCapable;
     uiext:ui <http://code.google.com/p/amsynth/amsynth/ui/gtk> ;
     lv2:port [
         a lv2:OutputPort ;
