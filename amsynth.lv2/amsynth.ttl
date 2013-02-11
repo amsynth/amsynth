@@ -12,17 +12,74 @@
 @prefix pset:    <http://lv2plug.in/ns/ext/presets#> .
 @prefix urid:    <http://lv2plug.in/ns/ext/urid#> .
 @prefix units:   <http://lv2plug.in/ns/extensions/units#> .
+@prefix param:   <http://lv2plug.in/ns/ext/parameters#> .
 
 <http://code.google.com/p/amsynth/amsynth/ui/gtk>
     a uiext:GtkUI ;
     uiext:binary <amsynth_lv2_gtk.so> ;
     lv2:optionalFeature uiext:noUserResize .
 
-<http://code.google.com/p/amsynth/amsynth#stereoOut>
+<http://code.google.com/p/amsynth/amsynth#group_out>
     a pg:StereoGroup ,
         pg:OutputGroup ;
     lv2:name "Output" ;
     lv2:symbol "out" .
+
+<http://code.google.com/p/amsynth/amsynth#group_filter>
+    a param:FilterControls ,
+        pg:InputGroup ;
+    lv2:name "Filter" ;
+    lv2:symbol "filter" .
+
+<http://code.google.com/p/amsynth/amsynth#group_amp>
+    a param:ControlGroup ;
+    lv2:name "Amp" ;
+    lv2:symbol "amp" .
+
+<http://code.google.com/p/amsynth/amsynth#group_mix>
+    a param:ControlGroup ;
+    lv2:name "Mix" ;
+    lv2:symbol "mix" .
+
+<http://code.google.com/p/amsynth/amsynth#group_reverb>
+    a param:ControlGroup ;
+    lv2:name "Reverb" ;
+    lv2:symbol "reverb" .
+
+<http://code.google.com/p/amsynth/amsynth#group_keyboard>
+    a param:ControlGroup ;
+    lv2:name "Keyboard" ;
+    lv2:symbol "keyboard" .
+
+<http://code.google.com/p/amsynth/amsynth#group_osc1>
+    a param:OscillatorControls ,
+        pg:InputGroup ;
+    lv2:name "Osc1" ;
+    lv2:symbol "osc1" .
+
+<http://code.google.com/p/amsynth/amsynth#group_osc2>
+    a param:OscillatorControls ,
+        pg:InputGroup ;
+    lv2:name "Osc2" ;
+    lv2:symbol "osc2" .
+
+<http://code.google.com/p/amsynth/amsynth#group_lfo>
+    a param:OscillatorControls ,
+        pg:InputGroup ;
+    lv2:name "LFO" ;
+    lv2:symbol "lfo" .
+
+<http://code.google.com/p/amsynth/amsynth#group_filter_env>
+    a param:EnvelopeControls ,
+        pg:InputGroup ;
+    lv2:name "Filter Env" ;
+    lv2:symbol "filter_env" .
+
+<http://code.google.com/p/amsynth/amsynth#group_amp_env>
+    a param:EnvelopeControls ,
+        pg:InputGroup ;
+    lv2:name "Amp Env" ;
+    lv2:symbol "amp_env" .
 
 <http://code.google.com/p/amsynth/amsynth> a lv2:Plugin ;
     a lv2:InstrumentPlugin;
@@ -39,7 +96,7 @@
         lv2:symbol "out_l" ;
         lv2:name "Left" ;
         lv2:designation pg:left ;
-        pg:group <http://code.google.com/p/amsynth/amsynth#stereoOut> ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_out> ;
     ] , [
         a lv2:OutputPort ;
         a lv2:AudioPort ;
@@ -47,7 +104,7 @@
         lv2:symbol "out_r" ;
         lv2:name "Right" ;
         lv2:designation pg:right ;
-        pg:group <http://code.google.com/p/amsynth/amsynth#stereoOut> ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_out> ;
     ] , [
         a lv2:InputPort ,
             atom:AtomPort ;
@@ -66,6 +123,8 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 2.500000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_amp_env> ;
+        lv2:designation param:attack ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -76,6 +135,8 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 2.500000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_amp_env> ;
+        lv2:designation param:decay ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -86,6 +147,8 @@
         lv2:default 1.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_amp_env> ;
+        lv2:designation param:sustain ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -96,6 +159,8 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 2.500000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_amp_env> ;
+        lv2:designation param:release ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -112,6 +177,8 @@
         lv2:scalePoint [ rdf:value 2.0 ; rdfs:label "saw / triangle" ] ;
         lv2:scalePoint [ rdf:value 3.0 ; rdfs:label "white noise" ] ;
         lv2:scalePoint [ rdf:value 4.0 ; rdfs:label "noise + sample & hold" ] ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_osc1> ;
+        lv2:designation param:waveform ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -122,6 +189,8 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 2.500000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_filter_env> ;
+        lv2:designation param:attack ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -132,6 +201,8 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 2.500000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_filter_env> ;
+        lv2:designation param:decay ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -142,6 +213,8 @@
         lv2:default 1.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_filter_env> ;
+        lv2:designation param:sustain ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -152,6 +225,8 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 2.500000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_filter_env> ;
+        lv2:designation param:release ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -162,6 +237,8 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 0.970000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_filter> ;
+        lv2:designation param:resonance ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -172,6 +249,7 @@
         lv2:default 0.000000 ;
         lv2:minimum -16.000000 ;
         lv2:maximum 16.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_filter> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -182,6 +260,8 @@
         lv2:default 1.500000 ;
         lv2:minimum -0.500000 ;
         lv2:maximum 1.500000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_filter> ;
+        lv2:designation param:cutoffFrequency ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -192,6 +272,7 @@
         lv2:default 0.000000 ;
         lv2:minimum -1.000000 ;
         lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_osc2> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -208,6 +289,8 @@
         lv2:scalePoint [ rdf:value 2.0 ; rdfs:label "saw / triangle" ] ;
         lv2:scalePoint [ rdf:value 3.0 ; rdfs:label "white noise" ] ;
         lv2:scalePoint [ rdf:value 4.0 ; rdfs:label "noise + sample & hold" ] ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_osc2> ;
+        lv2:designation param:waveform ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -218,6 +301,7 @@
         lv2:default 0.670000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_amp> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -228,6 +312,8 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 7.500000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_lfo> ;
+        lv2:designation param:frequency ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -246,6 +332,8 @@
         lv2:scalePoint [ rdf:value 4.0 ; rdfs:label "noise + sample & hold" ] ;
         lv2:scalePoint [ rdf:value 5.0 ; rdfs:label "sawtooth (up)" ] ;
         lv2:scalePoint [ rdf:value 6.0 ; rdfs:label "sawtooth (down)" ] ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_lfo> ;
+        lv2:designation param:waveform ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -256,6 +344,7 @@
         lv2:default 0.000000 ;
         lv2:minimum -1.000000 ;
         lv2:maximum 2.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_osc2> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -266,6 +355,10 @@
         lv2:default 0.000000 ;
         lv2:minimum -1.000000 ;
         lv2:maximum 1.000000 ;
+        lv2:scalePoint [ rdf:value -1.0 ; rdfs:label "osc 1"] ;
+        lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "both"] ;
+        lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "osc 2"] ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_mix> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -276,6 +369,7 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 1.259921 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_keyboard> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -286,6 +380,7 @@
         lv2:default -1.000000 ;
         lv2:minimum -1.000000 ;
         lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_keyboard> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -296,16 +391,19 @@
         lv2:default -1.000000 ;
         lv2:minimum -1.000000 ;
         lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_keyboard> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
         lv2:index 25 ;
         lv2:symbol "osc_mix_mode" ;
-        lv2:name "Osc Mix Mode" ;
+        lv2:name "Ring Mod" ;
         lv2:portProperty epp:hasStrictBounds ;
+        lv2:portProperty lv2:toggled ;
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_mix> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -316,6 +414,8 @@
         lv2:default 1.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_osc1> ;
+        lv2:designation param:pulseWidth ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -326,6 +426,8 @@
         lv2:default 1.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_osc2> ;
+        lv2:designation param:pulseWidth ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -336,6 +438,7 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_reverb> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -346,6 +449,7 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_reverb> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -356,6 +460,7 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_reverb> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -366,6 +471,7 @@
         lv2:default 1.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_reverb> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -376,6 +482,7 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 0.900000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_amp> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -386,6 +493,7 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_osc2> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -396,6 +504,7 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_keyboard> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -410,6 +519,7 @@
         lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "poly"] ;
         lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "mono"] ;
         lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "legato"] ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_keyboard> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -422,6 +532,7 @@
         lv2:default -12.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 12.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_osc2> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -436,6 +547,7 @@
         lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "low pass"] ;
         lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "high pass" ] ;
         lv2:scalePoint [ rdf:value 2.0 ; rdfs:label "band pass" ] ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_filter> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -449,6 +561,7 @@
         lv2:maximum 1.000000 ;
         lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "12 dB / octave"] ;
         lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "24 dB / octave"] ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_filter> ;
     ].
 
 <http://code.google.com/p/amsynth/amsynth#factory_preset_derren_1>
