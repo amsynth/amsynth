@@ -69,6 +69,8 @@ public:
 
 private:
 
+	void	resetAllVoices();
+
 	int		mMaxVoices;
 	int 	mActiveVoices;
 

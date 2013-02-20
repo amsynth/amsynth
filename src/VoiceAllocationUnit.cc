@@ -210,19 +210,14 @@ VoiceAllocationUnit::HandleMidiPitchWheelSensitivity(uchar semitones)
 void
 VoiceAllocationUnit::HandleMidiAllSoundOff()
 {
-	for (unsigned i=0; i<_voices.size(); i++) active[i] = false;
+	resetAllVoices();
 	reverb->mute();
-	mActiveVoices = 0;
-	sustain = 0;
 }
 
 void
 VoiceAllocationUnit::HandleMidiAllNotesOff()
 {
-	for (unsigned i=0; i<_voices.size(); i++) active[i] = false;
-	reverb->mute();
-	mActiveVoices = 0;
-	sustain = 0;
+	resetAllVoices();
 }
 
 void
@@ -235,6 +230,19 @@ VoiceAllocationUnit::HandleMidiSustainPedal(uchar value)
 	}
 }
 
+void
+VoiceAllocationUnit::resetAllVoices()
+{
+	for (unsigned i=0; i<_voices.size(); i++) {
+		active[i] = false;
+		keyPressed[i] = false;
+		_keyPresses[i] = 0;
+		_voices[i]->reset();
+	}
+	mActiveVoices = 0;
+	_keyPressCounter = 0;
+	sustain = false;
+}
 
 void
 VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
@@ -280,16 +288,9 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 void
 VoiceAllocationUnit::setKeyboardMode(KeyboardMode keyboardMode)
 {
-	_keyboardMode = keyboardMode;
-	if (_keyboardMode == KeyboardModePoly) {
-		active[0] = false; // stop the mono voice
-	} else {
-		// stop any voices that were started in poly mode
-		for (int i = 1; i < 128; i++) {
-			if (active[i]) {
-				active[i] = false;
-			}
-		}
+	if (_keyboardMode != keyboardMode) {
+		_keyboardMode = keyboardMode;
+		resetAllVoices();
 	}
 }
 
