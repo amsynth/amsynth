@@ -30,8 +30,6 @@
 
 #define ALIAS_REDUCTION
 
-#define PULSE_OVERSAMPLING_FACTOR 16
-
 static inline float ffmodf(float x, float y) {
 	return (x - y * (int)(x / y));
 }
@@ -50,7 +48,7 @@ Oscillator::Oscillator()
 }
 
 void Oscillator::SetWaveform	(Waveform w)			{ waveform = w; }
-void Oscillator::reset			()						{ rads = 0.0; }
+void Oscillator::reset			()						{ rads = 0.0; mFrequency.configure(mFrequency.getFinalValue(), mFrequency.getFinalValue(), 0); }
 void Oscillator::reset			(int offset, int period){ reset_offset = offset; reset_period = period; }
 
 void Oscillator::SetSync		(Oscillator* o)
@@ -116,32 +114,46 @@ Oscillator::doSine(float *buffer, int nFrames)
 	rads = ffmodf((float)rads, (float)TWO_PI);			// overflows are bad!
 }
 
-float 
-Oscillator::sqr(float foo)
-{
-    if ((ffmodf((float)foo, (float)TWO_PI)) < (mPulseWidth + 1) * PI)
-	return 1.0;
-    else
-	return -1.0;
-}
-
 void 
 Oscillator::doSquare(float *buffer, int nFrames)
 {
-	// pulsewidth 0 =  50% duty cycle
-	// pulsewidth 1 = 100% duty cycle (i.e. pure DC)
-	// therefore clamp maximum value to make sure some sound is produced!
-	const float kMaxPulseWidth = 0.9f;
-	if (mPulseWidth > kMaxPulseWidth)
-		mPulseWidth = kMaxPulseWidth;
+	const float radsper = twopi_rate * mFrequency.getFinalValue();
+	const float pwscale = radsper < 0.4f ? 1.0f : 1.0f - ((radsper - 0.4f) / 2); // reduces aliasing at high freq
+	const float pwrads = PI + pwscale * PI * MIN(mPulseWidth, 0.9f);
 
     for (int i = 0; i < nFrames; i++) {
+		float radinc = twopi_rate * mFrequency.nextValue();
+		float nrads = rads + radinc;
 		float y = 0.0f;
-		float k = twopi_rate * mFrequency.nextValue() / (float)PULSE_OVERSAMPLING_FACTOR;
-		for (size_t j=0; j<PULSE_OVERSAMPLING_FACTOR; j++) { y += sqr(rads += k); }
-		buffer[i] = y / (float)PULSE_OVERSAMPLING_FACTOR;
 
-		//-- sync to other oscillator --
+		//
+		// aliasing is reduced by computing accurate values at crossing points (rather than always forcing -1.0 or 1.0.)
+		// cpu performance is surprisingly good on x86 (better than saw or sine wave), probably due to its sophisticated branch prediction.
+		//
+		if (nrads >= TWO_PI) // transition from -1 --> 1
+		{
+			nrads -= TWO_PI;
+			float amt = nrads / radinc; assert(amt <= 1.0f);
+			y = -1.0f + (2.0f * amt);
+		}
+		else if (nrads < pwrads)
+		{
+			y = 1.0f;
+		}
+		else if (rads <= pwrads) // transition from 1 --> -1
+		{
+			float amt = (nrads - pwrads) / radinc; assert(amt <= 1.0f);
+			y = 1.0f - (2.0f * amt);
+		}
+		else
+		{
+			y = -1.0f;
+		}
+
+		buffer[i] = y;
+		rads = nrads;
+
+		//-- sync to other oscillator -- ##**.. THIS ALIASES TERRIBLY ..**##
 		if (reset_cd-- == 0){
 			rads = 0.0;					// reset the oscillator
 			reset_cd = reset_period-1;	// start counting down again
@@ -150,7 +162,6 @@ Oscillator::doSquare(float *buffer, int nFrames)
 			if( rads > TWO_PI )			// then weve completed a circle
 				sync_offset = i;		// remember the offset
 	}
-    rads = ffmodf((float)rads, (float)TWO_PI);
 }
 
 float

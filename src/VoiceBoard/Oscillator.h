@@ -78,7 +78,6 @@ private:
     inline void doSaw(float*, int nFrames);
     inline void doNoise(float*, int nFrames);
 	inline void doRandom(float*, int nFrames);
-	inline float sqr(float foo);
 	inline float saw(float foo);
 };
 
