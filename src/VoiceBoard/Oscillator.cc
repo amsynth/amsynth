@@ -48,7 +48,7 @@ Oscillator::Oscillator()
 }
 
 void Oscillator::SetWaveform	(Waveform w)			{ waveform = w; }
-void Oscillator::reset			()						{ rads = 0.0; mFrequency.configure(mFrequency.getFinalValue(), mFrequency.getFinalValue(), 0); }
+void Oscillator::reset			()						{ rads = 0.0; }
 void Oscillator::reset			(int offset, int period){ reset_offset = offset; reset_period = period; }
 
 void Oscillator::SetSync		(Oscillator* o)

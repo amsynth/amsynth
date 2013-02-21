@@ -98,10 +98,9 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 			return;
 		
 		if (mLastNoteFrequency > 0.0f) {
-			_voices[note]->setFrequency(mLastNoteFrequency, 0.0);
-			_voices[note]->setFrequency(pitch, mPortamentoTime);
+			_voices[note]->setFrequency(mLastNoteFrequency, pitch, mPortamentoTime);
 		} else {
-			_voices[note]->setFrequency(pitch);
+			_voices[note]->setFrequency(pitch, pitch, 0);
 		}
 
 		if (_voices[note]->isSilent())
@@ -131,7 +130,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 		VoiceBoard *voice = _voices[0];
 		
 		voice->setVelocity(velocity);
-		voice->setFrequency(pitch, mPortamentoTime);
+		voice->setFrequency(mLastNoteFrequency, pitch, mPortamentoTime);
 		
 		if (_keyboardMode == KeyboardModeMono || previousNote == -1)
 			voice->triggerOn();

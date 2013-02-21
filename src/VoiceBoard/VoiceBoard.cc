@@ -28,7 +28,9 @@
 const float kVCALowPassFreq = 4000.0f;
 
 VoiceBoard::VoiceBoard()
-:	mFrequencyTarget(0.0)
+:	mFrequencyDirty (false)
+,	mFrequencyStart (0.0)
+,	mFrequencyTarget(0.0)
 ,	mFrequencyTime	(0.0)
 ,	mKeyVelocity	(1.0)
 ,	mPitchBend		(1.0)
@@ -121,8 +123,10 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 {
 	assert(numSamples <= kMaxProcessBufferSize);
 
-	if (mFrequencyTarget != mFrequency.getFinalValue())
-		mFrequency.configure(mFrequency.getValue(), mFrequencyTarget, mFrequencyTime * mSampleRate);
+	if (mFrequencyDirty) {
+		mFrequencyDirty = false;
+		mFrequency.configure(mFrequencyStart, mFrequencyTarget, mFrequencyTime * mSampleRate);
+	}
 
 	//
 	// Control Signals
@@ -235,10 +239,12 @@ VoiceBoard::reset()
 }
 
 void
-VoiceBoard::setFrequency(float targetFrequency, float time)
+VoiceBoard::setFrequency(float startFrequency, float targetFrequency, float time)
 {
+	mFrequencyStart = startFrequency;
 	mFrequencyTarget = targetFrequency;
 	mFrequencyTime = time;
+	mFrequencyDirty = true;
 }
 
 void

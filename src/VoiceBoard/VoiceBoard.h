@@ -50,7 +50,7 @@ public:
 	void	triggerOff		();
 	void	setVelocity		(float velocity);
 	
-	void	setFrequency	(float targetFrequency, float time = 0.0f);
+	void	setFrequency	(float startFrequency, float targetFrequency, float time = 0.0f);
 	float	getFrequency	() { return mFrequency.getValue(); }
 	
 	void	SetPitchBend	(float);
@@ -65,6 +65,8 @@ public:
 private:
 
 	Lerper			mFrequency;
+	bool			mFrequencyDirty;
+	float			mFrequencyStart;
 	float			mFrequencyTarget;
 	float			mFrequencyTime;
 
