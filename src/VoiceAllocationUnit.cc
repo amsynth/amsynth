@@ -185,7 +185,7 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 		
 		if (0 <= nextNote) {
 			double pitch = noteToPitch(nextNote);
-			voice->setFrequency(pitch, mPortamentoTime);
+			voice->setFrequency(mLastNoteFrequency, pitch, mPortamentoTime);
 			if (_keyboardMode == KeyboardModeMono)
 				voice->triggerOn();
 		} else {
