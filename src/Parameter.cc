@@ -66,7 +66,7 @@ Parameter::setValue(float value)
 		assert(::fmodf(newValue - _min, _step) == 0);
 	}
 
-	if (_value == newValue)
+	if (_value == newValue) // warning: -ffast-math causes this comparison to fail
 		return;
 
 	_value = newValue;

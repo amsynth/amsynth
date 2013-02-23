@@ -18,16 +18,6 @@ AC_PROG_LIBTOOL
 
 AC_LANG(C++)
 
-#
-# Use optimised compiler flags unless CFLAGS have been provided by user.
-#
-# These can be overriden at compile time with the CFLAGS and CXXFLAGS variables, e.g.
-#   ./configure CFLAGS='-g -O0' CXXFLAGS='-g -O0'
-#
-AS_IF([test "$user_CFLAGS" = "" -a "$user_CXXFLAGS" = ""], [
-	CFLAGS="-O3 -ffast-math -fomit-frame-pointer"
-	CXXFLAGS="$CFLAGS"])
-
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
 dnl Required libraries & packages
