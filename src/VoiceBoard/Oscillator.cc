@@ -118,7 +118,7 @@ void
 Oscillator::doSquare(float *buffer, int nFrames)
 {
 	const float radsper = twopi_rate * mFrequency.getFinalValue();
-	const float pwscale = radsper < 0.4f ? 1.0f : 1.0f - ((radsper - 0.4f) / 2); // reduces aliasing at high freq
+	const float pwscale = radsper < 0.3f ? 1.0f : 1.0f - ((radsper - 0.3f) / 2); assert(pwscale <= 1.0f); // reduces aliasing at high freq
 	const float pwrads = PI + pwscale * PI * MIN(mPulseWidth, 0.9f);
 
     for (int i = 0; i < nFrames; i++) {
@@ -134,9 +134,9 @@ Oscillator::doSquare(float *buffer, int nFrames)
 		{
 			nrads -= TWO_PI;
 			float amt = nrads / radinc; assert(amt <= 1.0f);
-			y = -1.0f + (2.0f * amt);
+			y = (2.0f * amt) - 1.0f;
 		}
-		else if (nrads < pwrads)
+		else if (nrads <= pwrads)
 		{
 			y = 1.0f;
 		}
@@ -151,7 +151,7 @@ Oscillator::doSquare(float *buffer, int nFrames)
 		}
 
 		buffer[i] = y;
-		rads = nrads;
+		rads = nrads; assert(rads < TWO_PI);
 
 		//-- sync to other oscillator -- ##**.. THIS ALIASES TERRIBLY ..**##
 		if (reset_cd-- == 0){
