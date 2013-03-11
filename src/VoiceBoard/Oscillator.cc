@@ -121,9 +121,11 @@ Oscillator::doSquare(float *buffer, int nFrames)
 	const float pwscale = radsper < 0.3f ? 1.0f : 1.0f - ((radsper - 0.3f) / 2); assert(pwscale <= 1.0f); // reduces aliasing at high freq
 	const float pwrads = PI + pwscale * PI * MIN(mPulseWidth, 0.9f);
 
+	float lrads = rads;
+
     for (int i = 0; i < nFrames; i++) {
 		float radinc = twopi_rate * mFrequency.nextValue();
-		float nrads = rads + radinc;
+		float nrads = lrads + radinc;
 		float y = 0.0f;
 
 		//
@@ -133,16 +135,16 @@ Oscillator::doSquare(float *buffer, int nFrames)
 		if (nrads >= TWO_PI) // transition from -1 --> 1
 		{
 			nrads -= TWO_PI;
-			float amt = nrads / radinc; assert(amt <= 1.0f);
+			float amt = nrads / radinc; assert(amt <= 1.001f);
 			y = (2.0f * amt) - 1.0f;
 		}
 		else if (nrads <= pwrads)
 		{
 			y = 1.0f;
 		}
-		else if (rads <= pwrads) // transition from 1 --> -1
+		else if (lrads <= pwrads) // transition from 1 --> -1
 		{
-			float amt = (nrads - pwrads) / radinc; assert(amt <= 1.0f);
+			float amt = (nrads - pwrads) / radinc; assert(amt <= 1.001f);
 			y = 1.0f - (2.0f * amt);
 		}
 		else
@@ -151,17 +153,18 @@ Oscillator::doSquare(float *buffer, int nFrames)
 		}
 
 		buffer[i] = y;
-		rads = nrads; assert(rads < TWO_PI);
+		lrads = nrads; assert(lrads < TWO_PI);
 
 		//-- sync to other oscillator -- ##**.. THIS ALIASES TERRIBLY ..**##
 		if (reset_cd-- == 0){
-			rads = 0.0;					// reset the oscillator
+			lrads = 0.0;					// reset the oscillator
 			reset_cd = reset_period-1;	// start counting down again
 		}
 		if ( sync_offset > nFrames)	// then we havent already found the offset
-			if( rads > TWO_PI )			// then weve completed a circle
+			if( lrads > TWO_PI )			// then weve completed a circle
 				sync_offset = i;		// remember the offset
 	}
+	rads = lrads;
 }
 
 float
