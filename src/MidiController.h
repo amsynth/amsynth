@@ -71,6 +71,8 @@ public:
 	
 	int     sendMidi_values		();
 
+	void	timer_callback		();
+
 private:
     void dispatch_note(unsigned char ch,
 		       unsigned char note, unsigned char vel);
@@ -84,5 +86,7 @@ private:
 	Parameter *midi_controllers[MAX_CC];
 	MidiEventHandler* _handler;
 	unsigned char _rpn_msb, _rpn_lsb;
+
+	bool _config_needs_save;
 };
 #endif

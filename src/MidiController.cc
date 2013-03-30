@@ -35,6 +35,7 @@ MidiController::MidiController( Config & config )
 ,	_handler(NULL)
 ,	_rpn_msb(0xff)
 ,	_rpn_lsb(0xff)
+,	_config_needs_save(false)
 {
 	this->config = &config;
 	presetController = 0;
@@ -44,6 +45,8 @@ MidiController::MidiController( Config & config )
 
 MidiController::~MidiController()
 {
+	if (_config_needs_save)
+		saveConfig();
 }
 
 void
@@ -245,6 +248,7 @@ MidiController::setController( unsigned int controller_no, Parameter & param )
 {
 	if(controller_no<MAX_CC)
 		midi_controllers[controller_no] = &param;
+	_config_needs_save = true;
 }
 
 Parameter&
@@ -267,6 +271,13 @@ MidiController::getControllerForParam(unsigned paramIdx)
 }
 
 void
+MidiController::timer_callback()
+{
+	if (_config_needs_save)
+		saveConfig();
+}
+
+void
 MidiController::saveConfig()
 {
 	string fname(getenv("HOME"));
@@ -278,6 +289,8 @@ MidiController::saveConfig()
 		file << midi_controllers[i]->getName() << endl;
 	}
 	file.close();
+
+	_config_needs_save = false;
 }
 
 void

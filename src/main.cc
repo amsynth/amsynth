@@ -384,12 +384,6 @@ int main( int argc, char *argv[] )
 	
 	gui_dealloc();
 	
-	/*
-	 * code to shut down cleanly..
-	 */
-
-	midi_controller->saveConfig();
-	
 	out->Stop ();
 
 	if (config.xruns) std::cerr << config.xruns << " audio buffer underruns occurred\n";
@@ -405,6 +399,7 @@ unsigned
 amsynth_timer_callback()
 {
 	amsynth_lash_poll_events();
+	midi_controller->timer_callback();
 	return 1;
 }
 
