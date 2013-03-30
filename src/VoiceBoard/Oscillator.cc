@@ -74,9 +74,9 @@ Oscillator::setPolarity(float polarity)
 }
 
 void
-Oscillator::ProcessSamples	(float *buffer, int numSamples, float freq_hz, float pw)
+Oscillator::ProcessSamples	(float *buffer, int nFrames, float freq_hz, float pw)
 {
-	mFrequency.configure(mFrequency.getFinalValue(), freq_hz, numSamples);
+	mFrequency.configure(mFrequency.getFinalValue(), freq_hz, nFrames);
 	mPulseWidth = pw;
 	
 	sync_c = 0;
@@ -84,14 +84,13 @@ Oscillator::ProcessSamples	(float *buffer, int numSamples, float freq_hz, float 
 		
 	reset_cd = reset_offset;
 	
-	switch (waveform)
-	{
-	case Waveform_Sine:		doSine		(buffer, numSamples);	break;
-	case Waveform_Pulse:	doSquare	(buffer, numSamples);	break;
-	case Waveform_Saw:		doSaw		(buffer, numSamples);	break;
-	case Waveform_Noise:	doNoise		(buffer, numSamples);	break;
-	case Waveform_Random:	doRandom	(buffer, numSamples);	break;
-	default: break;
+	switch (waveform) {
+	case Waveform_Sine:     doSine      (buffer, nFrames); break;
+	case Waveform_Pulse:    doSquare    (buffer, nFrames); break;
+	case Waveform_Saw:      doSaw       (buffer, nFrames); break;
+	case Waveform_Noise:    doNoise     (buffer, nFrames); break;
+	case Waveform_Random:   doRandom    (buffer, nFrames); break;
+	default: assert(!"invalid Oscillator::Waveform"); break;
 	}
 	
 	if (sync) sync->reset (sync_offset, (int)(rate/freq_hz));
