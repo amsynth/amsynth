@@ -3,15 +3,31 @@
 # Converts an amsynth preset bank file to an LV2 presets ttl manifest.
 #
 
-import re;
-import sys;
+import os, re, sys
 
 pluginURI = 'http://code.google.com/p/amsynth/amsynth'
 
-def main(argv=sys.argv):
+lv2_file_header = '''\
+@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix state: <http://lv2plug.in/ns/ext/state#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+'''
+
+lv2_preset_header = '''\
+<http://code.google.com/p/amsynth/amsynth#{preset_uri}>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "{label}" ;'''
+
+def amsynth_bank_read(filepath):
 	presets = []
 	currentPreset = {}
-	with open(argv[1], 'rb') as file:
+	with open(filepath, 'rb') as file:
 		for line in file:
 			line = line.strip()
 			if line.startswith('<preset> <name> '):
@@ -24,29 +40,18 @@ def main(argv=sys.argv):
 					currentPreset['parameters'][tokens[1]] = tokens[2]
 	presets.append(currentPreset)
 	currentPreset = {}
+	return presets
 
-	for preset in presets:
-		name = 'factory_preset_%s' % re.sub(r'\s', '_', preset['name'].lower())
-		filename = '%s.ttl' % name
-		print '<%s#%s>' % ( pluginURI, name )
-		print '    a pset:Preset ;'
-		print '    lv2:appliesTo <%s> ;' % pluginURI
-		print '    rdfs:seeAlso <%s> .' % filename
-		print ''
-
-		with open(filename, 'w') as file:
-			print >> file, '@prefix atom: <http://lv2plug.in/ns/ext/atom#> .'
-			print >> file, '@prefix lv2: <http://lv2plug.in/ns/lv2core#> .'
-			print >> file, '@prefix pset: <http://lv2plug.in/ns/ext/presets#> .'
-			print >> file, '@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .'
-			print >> file, '@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .'
-			print >> file, '@prefix state: <http://lv2plug.in/ns/ext/state#> .'
-			print >> file, '@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .'
-			print >> file, ''
-			print >> file, '<%s#%s>' % ( pluginURI, name )
-			print >> file, '    a pset:Preset ;'
-			print >> file, '    lv2:appliesTo <%s> ;' % pluginURI
-			print >> file, '    rdfs:label "%s" ;' % preset['name']
+def lv2_bank_write(filepath, bank_name, presets):
+	with open(filepath, 'w') as file:
+		print >> file, lv2_file_header
+		for i, preset in enumerate(presets):
+			preset_uri = bank_name + '_%03d_' % i + re.sub(r'\s', '_', preset['name'])
+			label = '%s: %d: %s' % (bank_name, i, preset['name'])
+			print lv2_preset_header.format(preset_uri=preset_uri, label=label)
+			print '    rdfs:seeAlso <{}> .'.format(os.path.basename(filepath))
+			print ''
+			print >> file, lv2_preset_header.format(preset_uri=preset_uri, label=label)
 			print >> file, '    lv2:port ['
 			for key, value in preset['parameters'].items():
 				print >> file, '        lv2:symbol "%s" ;' % key
@@ -55,6 +60,15 @@ def main(argv=sys.argv):
 					print >> file, '    ] .'
 				else:
 					print >> file, '    ] , ['
+			print >> file, ''
+
+def main(argv=sys.argv):
+	for filename in sorted(os.listdir('banks')):
+		if filename.endswith('.bank'):
+			presets = amsynth_bank_read(os.path.join('banks', filename))
+			bank_name = filename.replace('.bank', '').replace('.amSynth', '')
+			ttlfilename = filename + '.ttl'
+			lv2_bank_write(os.path.join('amsynth.lv2', ttlfilename), bank_name, presets)
 
 if __name__ == '__main__':
 	main()
