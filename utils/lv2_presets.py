@@ -47,7 +47,7 @@ def lv2_bank_write(filepath, bank_name, presets):
 		print >> file, lv2_file_header
 		for i, preset in enumerate(presets):
 			preset_uri = bank_name + '_%03d_' % i + re.sub(r'\s', '_', preset['name'])
-			label = '%s: %d: %s' % (bank_name, i, preset['name'])
+			label = '%s: %03d: %s' % (bank_name, i, preset['name'])
 			print lv2_preset_header.format(preset_uri=preset_uri, label=label)
 			print '    rdfs:seeAlso <{}> .'.format(os.path.basename(filepath))
 			print ''

@@ -10,7 +10,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_000_Derren_1>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 0: Derren 1" ;
+    rdfs:label "amsynth_factory: 000: Derren 1" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.740090
@@ -124,7 +124,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_001_Synth_Strings_1>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 1: Synth Strings 1" ;
+    rdfs:label "amsynth_factory: 001: Synth Strings 1" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.020000
@@ -238,7 +238,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_002_Violin_1>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 2: Violin 1" ;
+    rdfs:label "amsynth_factory: 002: Violin 1" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.110000
@@ -352,7 +352,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_003_Sweet_Bass>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 3: Sweet Bass" ;
+    rdfs:label "amsynth_factory: 003: Sweet Bass" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.350065
@@ -466,7 +466,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_004_Formant_Synth_Lead>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 4: Formant Synth Lead" ;
+    rdfs:label "amsynth_factory: 004: Formant Synth Lead" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.282384
@@ -580,7 +580,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_005_Caves>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 5: Caves" ;
+    rdfs:label "amsynth_factory: 005: Caves" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.251580
@@ -694,7 +694,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_006_Xylophone>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 6: Xylophone" ;
+    rdfs:label "amsynth_factory: 006: Xylophone" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.529803
@@ -808,7 +808,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_007_Electric_Organ_1>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 7: Electric Organ 1" ;
+    rdfs:label "amsynth_factory: 007: Electric Organ 1" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -922,7 +922,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_008_Church_Organ>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 8: Church Organ" ;
+    rdfs:label "amsynth_factory: 008: Church Organ" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -1036,7 +1036,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_009_Reed_Organ>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 9: Reed Organ" ;
+    rdfs:label "amsynth_factory: 009: Reed Organ" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -1150,7 +1150,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_010_Sexy_Boy>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 10: Sexy Boy" ;
+    rdfs:label "amsynth_factory: 010: Sexy Boy" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.921150
@@ -1264,7 +1264,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_011_Flangey_Bass_1>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 11: Flangey Bass 1" ;
+    rdfs:label "amsynth_factory: 011: Flangey Bass 1" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.918287
@@ -1378,7 +1378,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_012_My_Friend>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 12: My Friend" ;
+    rdfs:label "amsynth_factory: 012: My Friend" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -1492,7 +1492,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_013_Lazy_Moon_Lead>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 13: Lazy Moon Lead" ;
+    rdfs:label "amsynth_factory: 013: Lazy Moon Lead" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.640000
@@ -1606,7 +1606,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_014_BubbleBath>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 14: BubbleBath" ;
+    rdfs:label "amsynth_factory: 014: BubbleBath" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.377137
@@ -1720,7 +1720,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_015_Cosmonic>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 15: Cosmonic" ;
+    rdfs:label "amsynth_factory: 015: Cosmonic" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.840999
@@ -1834,7 +1834,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_016_Cosmonic_2>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 16: Cosmonic 2" ;
+    rdfs:label "amsynth_factory: 016: Cosmonic 2" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.840999
@@ -1948,7 +1948,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_017_Deeck>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 17: Deeck" ;
+    rdfs:label "amsynth_factory: 017: Deeck" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.934375
@@ -2062,7 +2062,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_018_Encounter>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 18: Encounter" ;
+    rdfs:label "amsynth_factory: 018: Encounter" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.693322
@@ -2176,7 +2176,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_019_Glassic>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 19: Glassic" ;
+    rdfs:label "amsynth_factory: 019: Glassic" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -2290,7 +2290,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_020_Periodic_Junk>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 20: Periodic Junk" ;
+    rdfs:label "amsynth_factory: 020: Periodic Junk" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.385500
@@ -2404,7 +2404,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_021_Soft_Simple>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 21: Soft Simple" ;
+    rdfs:label "amsynth_factory: 021: Soft Simple" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.380350
@@ -2518,7 +2518,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_022_Vibratio>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 22: Vibratio" ;
+    rdfs:label "amsynth_factory: 022: Vibratio" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.693322
@@ -2632,7 +2632,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_023_Wave>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 23: Wave" ;
+    rdfs:label "amsynth_factory: 023: Wave" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.898853
@@ -2746,7 +2746,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_024_Artic>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 24: Artic" ;
+    rdfs:label "amsynth_factory: 024: Artic" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.194470
@@ -2860,7 +2860,7 @@
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_025_Dirty_Pulsating_Bass>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "amsynth_factory: 25: Dirty Pulsating Bass" ;
+    rdfs:label "amsynth_factory: 025: Dirty Pulsating Bass" ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
