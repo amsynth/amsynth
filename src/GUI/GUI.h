@@ -105,7 +105,7 @@ private:
 	void		command_run		(const char *command);
 	
 	void		on_midi_channel_change	(int value);
-	void		on_ployphony_change		(int value);
+	void		on_ployphony_change		(int value, Gtk::RadioMenuItem *item);
 	void		on_pitch_bend_range_menu_show();
 	void		on_pitch_bend_range_change(int value, Gtk::RadioMenuItem *item);
 	

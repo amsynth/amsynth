@@ -310,14 +310,14 @@ GUI::create_menus	( )
 		const int currentValue = vau->GetMaxVoices();
 		
 		item = Gtk::manage(new Gtk::RadioMenuItem(grp, "Unlimited"));
-		item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_ployphony_change), 0) );
+		item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_ployphony_change), 0, item) );
 		menu->items().push_back(*item);
 		
 		for (int i=1; i<=16; i++) {
 			ostringstream name; name << i;
 			Gtk::RadioMenuItem *item = Gtk::manage(new Gtk::RadioMenuItem(grp, name.str()));
 			item->set_active((i == currentValue));
-			item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_ployphony_change), i) );
+			item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_ployphony_change), i, item) );
 			menu->items().push_back(*item);
 		}
 		
@@ -1003,8 +1003,14 @@ GUI::on_midi_channel_change(int value)
 }
 
 void
-GUI::on_ployphony_change(int value)
+GUI::on_ployphony_change(int value, Gtk::RadioMenuItem *item)
 {
+	if (item->get_active()) {
+		if (config->polyphony != value) {
+			config->polyphony = value;
+			config->save();
+		}
+	}
 	vau->SetMaxVoices(value);
 }
 
