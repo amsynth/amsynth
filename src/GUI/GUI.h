@@ -87,7 +87,6 @@ protected:
 private:		
 	Gtk::MenuBar*	create_menus		( );
 
-	int			lnav;
 	void		event_handler	(const int);
 	
 	void		preset_new		( );
@@ -117,7 +116,6 @@ private:
 	static void preset_paste_callback(GtkClipboard *clipboard, const gchar *text, gpointer data);
 	static void preset_paste_as_new_callback(GtkClipboard *clipboard, const gchar *text, gpointer data);
 
-	gint idle_callback();
 	gint setActiveParam( GdkEventButton *event, Parameter * param );
 	std::string status;
 	Gtk::VBox vbox;

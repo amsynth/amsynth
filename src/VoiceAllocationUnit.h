@@ -53,7 +53,6 @@ public:
 
 	void	SetMaxVoices	(int voices) { mMaxVoices = voices; }
 	int		GetMaxVoices	() { return mMaxVoices; }
-	int		GetActiveVoices	() { return mActiveVoices; }
 
 	float	getPitchBendRangeSemitones() { return mPitchBendRangeSemitones; }
 	void	setPitchBendRangeSemitones(float range) { mPitchBendRangeSemitones = range; }
@@ -72,7 +71,6 @@ private:
 	void	resetAllVoices();
 
 	int		mMaxVoices;
-	int 	mActiveVoices;
 
 	float	mPortamentoTime;
 	bool	keyPressed[128], sustain;

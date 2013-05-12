@@ -36,7 +36,6 @@ const unsigned kBufferSize = 1024;
 
 VoiceAllocationUnit::VoiceAllocationUnit ()
 :	mMaxVoices (0)
-,	mActiveVoices (0)
 ,	mPortamentoTime (0.0f)
 ,	sustain (0)
 ,	_keyboardMode(KeyboardModePoly)
@@ -93,10 +92,15 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 	keyPressed[note] = true;
 	
 	if (_keyboardMode == KeyboardModePoly) {
-		
-		if ((0 < mMaxVoices) && (mMaxVoices <= mActiveVoices))
-			return;
-		
+
+		if (mMaxVoices) {
+			unsigned count = 0;
+			for (int i=0; i<128; i++)
+				count = count + (active[i] ? 1 : 0);
+			if (count >= mMaxVoices)
+				return;
+		}
+
 		if (mLastNoteFrequency > 0.0f) {
 			_voices[note]->setFrequency(mLastNoteFrequency, pitch, mPortamentoTime);
 		} else {
@@ -110,7 +114,6 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 		_voices[note]->triggerOn();
 		
 		active[note] = true;
-		mActiveVoices++;
 		mLastNoteFrequency = pitch;
 	}
 	
@@ -136,7 +139,6 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 			voice->triggerOn();
 		
 		mLastNoteFrequency = pitch;
-		mActiveVoices = 1;
 		active[0] = true;
 	}
 }
@@ -238,7 +240,6 @@ VoiceAllocationUnit::resetAllVoices()
 		_keyPresses[i] = 0;
 		_voices[i]->reset();
 	}
-	mActiveVoices = 0;
 	_keyPressCounter = 0;
 	sustain = false;
 }
@@ -266,7 +267,6 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 			if (active[i]) {
 				if (_voices[i]->isSilent()) {
 					active[i] = false;
-					mActiveVoices--;
 				} else {
 					_voices[i]->SetPitchBend (pitchBendValue);
 					_voices[i]->ProcessSamplesMix (vb+j, fr, mMasterVol);

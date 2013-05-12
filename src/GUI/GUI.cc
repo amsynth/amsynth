@@ -105,22 +105,14 @@ GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 ,	m_vkeybdState(128)
 #endif
 {
-	lnav = -1;
-	
 	this->config = &config_in;
 	this->midi_controller = &mc;
 	this->vau = &vau_in;
 	this->audio_out = audio;
 	
-//	if(this->config->realtime)
-		// messes up the audio thread's timing if not realtime...
-//		Glib::signal_timeout().connect( mem_fun(*this,&GUI::idle_callback), 200 );
-
 	set_resizable(false);
         
 	active_param = 0;
-	
-//	style = Gtk::Style::create ( );
 	
 	
 	presetCV = PresetControllerView::create(this->vau);
@@ -731,24 +723,6 @@ GUI::event_handler(const int e)
 		cout << "no handler for event: " << e << endl;
 		break;
     }
-}
-
-gint
-GUI::idle_callback()
-{
-	if (vau->GetActiveVoices() != lnav)
-	{
-		ostringstream txt;
-		txt << status << "   " << vau->GetActiveVoices();
-		if( config->polyphony != 0 )
-		{
-			txt << "/" << config->polyphony;
-		}
-		txt << " Voices Active";
-		statusBar.pop( 1 );
-		statusBar.push (txt.str(), 1);
-	}
-	return true;
 }
 
 GUI::~GUI()
