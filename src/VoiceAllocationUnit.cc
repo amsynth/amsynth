@@ -114,7 +114,6 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 		_voices[note]->triggerOn();
 		
 		active[note] = true;
-		mLastNoteFrequency = pitch;
 	}
 	
 	if (_keyboardMode == KeyboardModeMono || _keyboardMode == KeyboardModeLegato) {
@@ -133,14 +132,15 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 		VoiceBoard *voice = _voices[0];
 		
 		voice->setVelocity(velocity);
-		voice->setFrequency(mLastNoteFrequency, pitch, mPortamentoTime);
+		voice->setFrequency(voice->getFrequency(), pitch, mPortamentoTime);
 		
 		if (_keyboardMode == KeyboardModeMono || previousNote == -1)
 			voice->triggerOn();
 		
-		mLastNoteFrequency = pitch;
 		active[0] = true;
 	}
+
+	mLastNoteFrequency = pitch;
 }
 
 void
@@ -186,8 +186,7 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 		VoiceBoard *voice = _voices[0];
 		
 		if (0 <= nextNote) {
-			double pitch = noteToPitch(nextNote);
-			voice->setFrequency(mLastNoteFrequency, pitch, mPortamentoTime);
+			voice->setFrequency(voice->getFrequency(), noteToPitch(nextNote), mPortamentoTime);
 			if (_keyboardMode == KeyboardModeMono)
 				voice->triggerOn();
 		} else {
