@@ -36,6 +36,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #ifdef HAVE_JACK_SESSION_H
 static void session_callback(jack_session_event_t *event, void *arg);
