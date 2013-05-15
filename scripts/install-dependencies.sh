@@ -6,3 +6,7 @@ if [ -e /etc/fedora-release ]; then
 	exit $?
 fi
 
+if [ -e /etc/apt/sources.list ]; then
+	echo Detected Debian-based system
+	apt-get install pkg-config libgtk2.0-dev libgtkmm-2.4-dev libjack-jackd2-dev
+fi
