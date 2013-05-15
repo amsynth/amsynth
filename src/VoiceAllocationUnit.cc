@@ -97,9 +97,34 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 			unsigned count = 0;
 			for (int i=0; i<128; i++)
 				count = count + (active[i] ? 1 : 0);
-			if (count >= mMaxVoices)
-				return;
+			if (count >= mMaxVoices) {
+				int idx = -1;
+				// strategy 1) find the oldest voice in release phase
+				unsigned keyPress = _keyPressCounter + 1;
+				for (int i=0; i<128; i++) {
+					if (active[i] && !keyPressed[i]) {
+						if (keyPress > _keyPresses[i]) {
+							keyPress = _keyPresses[i];
+							idx = i;
+						}
+					}
+				}
+				// strategy 1) find the oldest voice
+				keyPress = _keyPressCounter + 1;
+				for (int i=0; i<128; i++) {
+					if (active[i]) {
+						if (keyPress > _keyPresses[i]) {
+							keyPress = _keyPresses[i];
+							idx = i;
+						}
+					}
+				}
+				assert(0 <= idx && idx < 128);
+				active[idx] = false;
+			}
 		}
+
+		_keyPresses[note] = (++_keyPressCounter);
 
 		if (mLastNoteFrequency > 0.0f) {
 			_voices[note]->setFrequency(mLastNoteFrequency, pitch, mPortamentoTime);
@@ -149,9 +174,10 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 	keyPressed[note] = false;
 
 	if (_keyboardMode == KeyboardModePoly) {
-		if (!sustain){
+		if (!sustain) {
 			_voices[note]->triggerOff();
 		}
+		_keyPresses[note] = 0;
 	}
 	
 	if (_keyboardMode == KeyboardModeMono || _keyboardMode == KeyboardModeLegato) {
