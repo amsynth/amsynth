@@ -1010,8 +1010,8 @@ GUI::on_ployphony_change(int value, Gtk::RadioMenuItem *item)
 			config->polyphony = value;
 			config->save();
 		}
+		vau->SetMaxVoices(value);
 	}
-	vau->SetMaxVoices(value);
 }
 
 void
