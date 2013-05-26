@@ -109,13 +109,15 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 						}
 					}
 				}
-				// strategy 1) find the oldest voice
-				keyPress = _keyPressCounter + 1;
-				for (int i=0; i<128; i++) {
-					if (active[i]) {
-						if (keyPress > _keyPresses[i]) {
-							keyPress = _keyPresses[i];
-							idx = i;
+				if (idx < 0) {
+					// strategy 2) find the oldest voice
+					keyPress = _keyPressCounter + 1;
+					for (int i=0; i<128; i++) {
+						if (active[i]) {
+							if (keyPress > _keyPresses[i]) {
+								keyPress = _keyPresses[i];
+								idx = i;
+							}
 						}
 					}
 				}
