@@ -64,7 +64,8 @@ public:
 		// atof() and friends are affected by currently configured locale,
 		// which can change the decimal point character.
 		std::istringstream istr(str);
-		istr.imbue(std::locale("C")); // be absolutely sure of the locale
+		static std::locale c_locale = std::locale("C");
+		istr.imbue(c_locale); // be absolutely sure of the locale
 		istr >> value;
 		return value;
 	}
