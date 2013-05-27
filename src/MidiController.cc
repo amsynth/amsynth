@@ -82,7 +82,7 @@ MidiController::setPresetController(PresetController & pc)
 }
 
 void
-MidiController::HandleMidiData(unsigned char* bytes, unsigned numBytes)
+MidiController::HandleMidiData(const unsigned char* bytes, unsigned numBytes)
 {
     for (unsigned i=0; i<numBytes; i++)
 	{

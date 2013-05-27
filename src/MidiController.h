@@ -43,7 +43,6 @@ public:
 	virtual void HandleMidiAllSoundOff() {}
 	virtual void HandleMidiAllNotesOff() {}
 	virtual void HandleMidiSustainPedal(uchar /*value*/) {}
-	virtual void HandleMidiProgramChange(uchar /*program*/) {}
 };
 
 class MidiController : public MidiStreamReceiver
@@ -57,7 +56,7 @@ public:
 	void	setPresetController	(PresetController & pc);
 	void	SetMidiEventHandler(MidiEventHandler* h) { _handler = h; }
 	
-	virtual void HandleMidiData(unsigned char* bytes, unsigned numBytes);
+	virtual void HandleMidiData(const unsigned char* bytes, unsigned numBytes);
 
 	void	saveConfig ();
 

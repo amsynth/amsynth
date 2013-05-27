@@ -29,7 +29,7 @@ class MidiStreamReceiver
 public:
 	MidiStreamReceiver() : _midiIface(0) {}
 	virtual ~MidiStreamReceiver() {}
-	virtual void HandleMidiData(unsigned char* bytes, unsigned numBytes) = 0;
+	virtual void HandleMidiData(const unsigned char *bytes, unsigned numBytes) = 0;
 	
 	// just a kludge for the time being so that we can still do MIDI out:
 	virtual void SetMidiInterface(class MidiInterface* in) { _midiIface = in; }

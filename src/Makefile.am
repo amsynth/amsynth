@@ -65,7 +65,7 @@ if BUILD_DSSI
 dssidir = $(libdir)/dssi
 # using noinst to prevent .a and .la files being installed, plugin gets installed via custom install-exec-hook
 noinst_LTLIBRARIES += amsynth_dssi.la
-amsynth_dssi_la_SOURCES = $(amsynth_core_sources) $(amsynth_dsp_sources) dssi.cpp
+amsynth_dssi_la_SOURCES = $(amsynth_core_sources) $(amsynth_dsp_sources) dssi.cpp MidiController.cc
 amsynth_dssi_la_CPPFLAGS = $(AM_CPPFLAGS) @DSSI_CFLAGS@
 amsynth_dssi_la_LDFLAGS = -rpath $(dssidir) -avoid-version -module -export-symbols-regex "dssi_descriptor" -disable-static
 endif
