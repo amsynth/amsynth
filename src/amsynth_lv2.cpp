@@ -20,6 +20,7 @@
  */
 
 #include "controls.h"
+#include "midi.h"
 #include "MidiController.h"
 #include "PresetController.h"
 #include "VoiceAllocationUnit.h"
@@ -141,19 +142,29 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 {
 	amsynth_wrapper * a = (amsynth_wrapper *) instance;
 
+	Preset &preset = a->bank->getCurrentPreset();
+
 	LV2_ATOM_SEQUENCE_FOREACH(a->midi_in_port, ev) {
 		if (ev->body.type == a->uris.midiEvent) {
 			uint32_t size = ev->body.size;
 			uint8_t *data = (uint8_t *)(ev + 1);
 			a->mc->HandleMidiData(data, size);
+			if (MIDI_STATUS_CONTROLLER == (data[0] & 0xF0)) {
+				for (unsigned int i=0; i<kAmsynthParameterCount; i++) {
+					float value = preset.getParameter(i).getValue();
+					if (*(a->params[i]) != value) {
+						*(a->params[i]) = value;
+					}
+				}
+			}
 		}
 	}
 
 	for (unsigned i=0; i<kAmsynthParameterCount; i++) {
 		const float *host_value = a->params[i];
 		if (host_value != NULL) {
-			if (a->bank->getCurrentPreset().getParameter(i).getValue() != *host_value) {
-				a->bank->getCurrentPreset().getParameter(i).setValue(*host_value);
+			if (preset.getParameter(i).getValue() != *host_value) {
+				preset.getParameter(i).setValue(*host_value);
 			}
 		}
 	}
