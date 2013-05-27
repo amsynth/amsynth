@@ -86,12 +86,14 @@ const DSSI_Descriptor *dssi_descriptor (unsigned long index)
 static LADSPA_Handle instantiate (const LADSPA_Descriptor * descriptor, unsigned long s_rate)
 {
 	TRACE();
-    Config config;
+    static Config config;
     config.Defaults();
+    config.load();
     Preset amsynth_preset;
     amsynth_wrapper * a = new amsynth_wrapper;
     a->vau = new VoiceAllocationUnit;
     a->vau->SetSampleRate (s_rate);
+    a->vau->setPitchBendRangeSemitones (config.pitch_bend_range);
     a->bank = new PresetController;
     a->bank->loadPresets(config.current_bank_file.c_str());
     a->bank->selectPreset(0);

@@ -78,12 +78,14 @@ lv2_instantiate(const struct _LV2_Descriptor *descriptor, double sample_rate, co
 
 	static Config config;
 	config.Defaults();
+	config.load();
 	Preset amsynth_preset;
 
 	amsynth_wrapper *a = (amsynth_wrapper *)calloc(1, sizeof(amsynth_wrapper));
 	a->bundle_path = strdup(bundle_path);
 	a->vau = new VoiceAllocationUnit;
 	a->vau->SetSampleRate (sample_rate);
+	a->vau->setPitchBendRangeSemitones (config.pitch_bend_range);
 	a->bank = new PresetController;
 	a->bank->loadPresets(config.current_bank_file.c_str());
 	a->bank->selectPreset(0);
