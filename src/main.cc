@@ -240,6 +240,13 @@ void fatal_error(const std::string & msg)
 
 unsigned amsynth_timer_callback();
 
+static int signal_received = 0;
+
+static void signal_handler(int signal)
+{
+	signal_received = signal;
+}
+
 int main( int argc, char *argv[] )
 {
 #ifdef ENABLE_REALTIME
@@ -254,16 +261,21 @@ int main( int argc, char *argv[] )
 	// GTK will not work SUID for security reasons..
 	setreuid( getuid(), getuid() );
 	setregid( getgid(), getgid() );	
-	
-	gui_kit_init(argc, argv);
+
+	bool no_gui = (getenv("AMSYNTH_NO_GUI") != NULL);
+
+	if (!no_gui)
+		gui_kit_init(argc, argv);
 	
 	int initial_preset_no = 0;
 
 	// needs to be called before our own command line parsing code
 	amsynth_lash_process_args(&argc, &argv);
 
+
+
 	int opt;
-	while( (opt=getopt(argc, argv, "vhstdzm:c:a:r:p:b:U:P:"))!= -1 ) {
+	while( (opt=getopt(argc, argv, "vhstdzxm:c:a:r:p:b:U:P:"))!= -1 ) {
 		switch(opt) {
 			case 'v':
 				cout << "amSynth " << VERSION << " -- compiled "
@@ -277,6 +289,9 @@ int main( int argc, char *argv[] )
 				return 0;
 			case 'P':
 				initial_preset_no = atoi(optarg);
+				break;
+			case 'x':
+				no_gui = true;
 				break;
 			default:
 				break;
@@ -375,15 +390,19 @@ int main( int argc, char *argv[] )
 
 	// give audio/midi threads time to start up first..
 	// if (jack) sleep (1);
-	
-	gui_init(config, *midi_controller, *voiceAllocationUnit, *presetController, out);
-	
-	gui_kit_run(&amsynth_timer_callback);
 
-	DEBUGMSG("main() : GUI was terminated, shutting down cleanly..\n");
-	
-	gui_dealloc();
-	
+	if (!no_gui) {
+		gui_init(config, *midi_controller, *voiceAllocationUnit, *presetController, out);
+		gui_kit_run(&amsynth_timer_callback);
+		gui_dealloc();
+	} else {
+		printf("amsynth running in headless mode, press ctrl-c to exit\n");
+		signal(SIGINT, &signal_handler);
+		while (!signal_received)
+			sleep(2); // delivery of a signal will wake us early
+		printf("shutting down...\n");
+	}
+
 	out->Stop ();
 
 	if (config.xruns) std::cerr << config.xruns << " audio buffer underruns occurred\n";
