@@ -8,5 +8,5 @@ fi
 
 if [ -e /etc/apt/sources.list ]; then
 	echo Detected Debian-based system
-	apt-get install pkg-config libgtk2.0-dev libgtkmm-2.4-dev libjack-jackd2-dev
+	apt-get install autoconf automake libtool pkg-config libgtk2.0-dev libgtkmm-2.4-dev libjack-jackd2-dev libasound-dev liblash-compat-dev dssi-dev liblo-dev libsndfile-dev
 fi
