@@ -22,7 +22,8 @@ dist_banks_DATA = \
 	banks/BriansBank08.amSynth.bank \
 	banks/BriansBank09.amSynth.bank \
 	banks/BriansBank10.amSynth.bank \
-	banks/BriansBank11.amSynth.bank
+	banks/BriansBank11.amSynth.bank \
+	banks/BriansBank12.amSynth.bank
 
 if BUILD_LV2
 amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
@@ -40,5 +41,6 @@ dist_amsynth_lv2_DATA = \
 	amsynth.lv2/BriansBank08.amSynth.bank.ttl \
 	amsynth.lv2/BriansBank09.amSynth.bank.ttl \
 	amsynth.lv2/BriansBank10.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank11.amSynth.bank.ttl
+	amsynth.lv2/BriansBank11.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank12.amSynth.bank.ttl
 endif
