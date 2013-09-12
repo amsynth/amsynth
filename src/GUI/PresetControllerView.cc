@@ -54,6 +54,8 @@ private:
 	GtkWidget *bank_combo;
 	GtkWidget *combo;
 	GtkWidget *save_button;
+	GtkWidget *audition_spin;
+	int audition_note;
 	bool inhibit_combo_callback;
 };
 
@@ -62,6 +64,8 @@ PresetControllerViewImpl::PresetControllerViewImpl(VoiceAllocationUnit *voiceAll
 ,	presetController(NULL)
 ,	bank_combo(NULL)
 ,	combo(NULL)
+,	audition_spin(NULL)
+,	audition_note(0)
 ,	inhibit_combo_callback(false)
 {
 	bank_combo = gtk_combo_box_new_text ();
@@ -78,7 +82,7 @@ PresetControllerViewImpl::PresetControllerViewImpl(VoiceAllocationUnit *voiceAll
 	g_signal_connect (G_OBJECT (save_button), "clicked", G_CALLBACK (&PresetControllerViewImpl::on_save_clicked), this);
 	add (* Glib::wrap (save_button));
 	
-	Gtk::Label *blank = manage (new Gtk::Label ("    "));
+	Gtk::Label *blank = manage (new Gtk::Label ("  "));
 	add (*blank);
 	
 	GtkWidget *widget = NULL;
@@ -88,6 +92,10 @@ PresetControllerViewImpl::PresetControllerViewImpl(VoiceAllocationUnit *voiceAll
 	g_signal_connect (G_OBJECT (widget), "released", G_CALLBACK (&PresetControllerViewImpl::on_audition_released), this);
 	add (* Glib::wrap (widget));
 	
+	GtkAdjustment *audition_adj = (GtkAdjustment *) gtk_adjustment_new(60.0, 0.0, 127.0, 1.0, 5.0, 0.0);
+	audition_spin = gtk_spin_button_new(audition_adj, 1.0, 0);
+	add (* Glib::wrap (audition_spin));
+
 	widget = gtk_button_new_with_label ("Panic");
 	g_signal_connect (G_OBJECT (widget), "clicked", G_CALLBACK (&PresetControllerViewImpl::on_panic_clicked), this);
 	add (* Glib::wrap (widget));
@@ -130,12 +138,13 @@ void PresetControllerViewImpl::on_save_clicked (GtkWidget *widget, PresetControl
 
 void PresetControllerViewImpl::on_audition_pressed (GtkWidget *widget, PresetControllerViewImpl *that)
 {
-	that->vau->HandleMidiNoteOn(60, 1.0f);
+	that->audition_note = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(that->audition_spin));
+	that->vau->HandleMidiNoteOn(that->audition_note, 1.0f);
 }
 
 void PresetControllerViewImpl::on_audition_released (GtkWidget *widget, PresetControllerViewImpl *that)
 {
-	that->vau->HandleMidiNoteOff(60, 0.0f);
+	that->vau->HandleMidiNoteOff(that->audition_note, 0.0f);
 }
 
 void PresetControllerViewImpl::on_panic_clicked (GtkWidget *widget, PresetControllerViewImpl *that)
