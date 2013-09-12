@@ -32,6 +32,16 @@
 
 extern Config config;
 
+static void snprintf_truncate(char *str, size_t size, const char *format, ...)
+{
+	va_list va_args;
+	va_start(va_args, format);
+	int count = vsnprintf(str, size, format, va_args);
+	va_end(va_args);
+	if (count >= size - 1)
+		strcpy(str + size - 4, "...");
+}
+
 class PresetControllerViewImpl : public PresetControllerView, public UpdateListener
 {
 public:
@@ -158,13 +168,13 @@ void PresetControllerViewImpl::update()
 
 	const std::vector<BankInfo> banks = PresetController::getPresetBanks();
 
-	char text [256] = "";
+	char text [22] = "";
 
 	// bank combo
 
 	gtk_list_store_clear (GTK_LIST_STORE (gtk_combo_box_get_model (GTK_COMBO_BOX (bank_combo))));
 	for (size_t i=0; i<banks.size(); i++) {
-		snprintf (text, sizeof(text), "[%s] %s", banks[i].read_only ? "factory" : "user", banks[i].name.c_str());
+		snprintf_truncate (text, sizeof(text), "[%s] %s", banks[i].read_only ? "F" : "U", banks[i].name.c_str());
 		gtk_combo_box_insert_text (GTK_COMBO_BOX (bank_combo), i, text);
 	}
 
@@ -181,7 +191,7 @@ void PresetControllerViewImpl::update()
 	gtk_list_store_clear (GTK_LIST_STORE (gtk_combo_box_get_model (GTK_COMBO_BOX (combo))));
 	
 	for (gint i = 0; i < PresetController::kNumPresets; i++) {
-		sprintf (text, "%d: %s", i, presetController->getPreset(i).getName().c_str());
+		snprintf_truncate (text, sizeof(text), "%d: %s", i, presetController->getPreset(i).getName().c_str());
 		gtk_combo_box_insert_text (GTK_COMBO_BOX (combo), i, text);
 	}
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), presetController->getCurrPresetNumber());
