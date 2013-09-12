@@ -84,6 +84,11 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 	assert (note >= 0);
 	assert (note < 128);
 
+	// Checks if the note is within the note ranges activated in the current keyboard map.
+	// The above assertions guarantee the safety of this check.
+	if (!tuningMap.inActiveRange(note))
+		return;
+
 	double pitch = noteToPitch(note);
 	if (pitch < 0) { // unmapped key
 		return;
@@ -173,6 +178,10 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 void
 VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 {
+	// No action is required if the note is outside the active range of notes.
+	if (!tuningMap.inActiveRange(note))
+		return;
+
 	keyPressed[note] = false;
 
 	if (_keyboardMode == KeyboardModePoly) {

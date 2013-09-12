@@ -50,6 +50,8 @@ public:
 	void	defaultKeyMap		();
 
 	double	noteToPitch		(int note) const;
+
+	bool	inActiveRange   (int note) const { return activeRange[note]; }
 private:
 	std::string		scaleDesc;
 
@@ -61,10 +63,12 @@ private:
 	double			refPitch;
 	int			mapRepeatInc;
 
+	bool		activeRange[128];
 	std::vector<int>	mapping; // -1 for unmapped
 
 	double			basePitch;
 	void			updateBasePitch		();
+	void			activateRange(int min, int max); // Activates the given ranges inclusively.
 };
 
 #endif

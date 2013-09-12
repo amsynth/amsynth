@@ -54,6 +54,7 @@ TuningMap::defaultKeyMap	()
 	mapRepeatInc = 1;
 	mapping.clear();
 	mapping.push_back(0);
+	activateRange(0,127);
 	updateBasePitch();
 }
 
@@ -180,6 +181,13 @@ TuningMap::loadScale		(const string & filename)
 	return 0;
 }
 
+void
+TuningMap::activateRange(int min, int max)
+{
+	for (int i = min; i <= max; i++)
+		activeRange[i] = true;
+}
+
 int
 TuningMap::loadKeyMap		(const string & filename)
 {
@@ -195,6 +203,13 @@ TuningMap::loadKeyMap		(const string & filename)
 	int newMapRepeatInc = -1;
 	vector<int> newMapping;
 
+	// It makes more sense to manipulate the ActiveRange array directly instead of creating
+	// a temporary container and pointing the actual array to it at the end because
+	// doing so would require dynamic memory allocation.
+	bool rangeDeclared = false;
+	for (int i = 0; i < 128; i++)
+		activeRange[i] = false;
+
 	while (file.good())
 	{
 		getline(file, line);
@@ -203,7 +218,28 @@ TuningMap::loadKeyMap		(const string & filename)
 		if (i == line.size()) continue;	// skip all-whitespace lines
 		if (line[i] == '!') continue;	// skip comment lines
 		istringstream iss(line);
-		if (mapSize < 0)
+		if (line [i] == '<') //An active range should be defined on this line.
+		{
+			string tag;
+			int min, max;
+			iss >> tag;
+			iss >> min;
+			if (iss.fail())
+				return -1;
+			iss >> max;
+			if (iss.fail())
+				return -1;
+			if ((min >= 0) && (max < 128) && (min <= max)) // No overlap is checked for; it wouldn't hurt anything if ranges overlapped.
+			{
+				rangeDeclared = true;
+				activateRange(min, max);
+			}
+			else
+			{
+				return -1;
+			}
+		}
+		else if (mapSize < 0)
 		{
 			iss >> mapSize;
 			if (iss.fail() || mapSize < 0)
@@ -294,6 +330,9 @@ TuningMap::loadKeyMap		(const string & filename)
 		mapRepeatInc = mapSize;
 	else
 		mapRepeatInc = newMapRepeatInc;
+
+	if (!rangeDeclared) // Will default to a full active range if none are declared.
+		activateRange(0, 127);
 
 	mapping = newMapping;
 	updateBasePitch();
