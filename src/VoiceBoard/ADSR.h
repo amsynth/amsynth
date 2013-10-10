@@ -33,7 +33,7 @@ public:
 
 	void	SetAttack	(float value) { m_attack = value; }
 	void	SetDecay	(float value) { m_decay = value; }
-	void	SetSustain	(float value) { m_sustain = value; if (m_state == sustain) m_value = value; }
+	void	SetSustain	(float value) { m_sustain = value; if (m_state == sustain) m_target = value; }
 	void	SetRelease	(float value) { m_release = value; }
 	
 	float * getNFData	(unsigned int frames);
@@ -60,7 +60,8 @@ private:
 	ADSRState   m_state;
 
 	float       m_value;
-	float       m_inc;
+	float       m_target;
+	double      m_tau;
 	unsigned	m_frames_left_in_state;
 };
 

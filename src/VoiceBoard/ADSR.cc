@@ -26,6 +26,7 @@
 #include <climits>
 
 static const float kMinimumTime = 0.0005;
+static const double kTc = 1.58197670686933; // e/(e-1)
 
 ADSR::ADSR(float * buffer)
 :	m_attack(0)
@@ -36,7 +37,8 @@ ADSR::ADSR(float * buffer)
 ,	m_sample_rate(44100)
 ,	m_state(off)
 ,	m_value(0)
-,	m_inc(0)
+,	m_target(0)
+,	m_tau(0)
 ,	m_frames_left_in_state(UINT_MAX)
 {
 }
@@ -47,7 +49,8 @@ ADSR::triggerOn()
 	m_state = attack;
 	m_frames_left_in_state = (m_attack * m_sample_rate);
 	const float target = m_decay <= kMinimumTime ? m_sustain : 1.0;
-	m_inc = (target - m_value) / (double)m_frames_left_in_state;
+	m_tau = 1 / ((double)m_frames_left_in_state + 1);
+	m_target = target * kTc;
 }
 
 void 
@@ -55,7 +58,8 @@ ADSR::triggerOff()
 {
 	m_state = release;
 	m_frames_left_in_state = (m_release * m_sample_rate);
-	m_inc = (0.0 - m_value) / (double)m_frames_left_in_state;
+	m_tau = 1 / ((double)m_frames_left_in_state + 1);
+	m_target = m_value * (1 - kTc);
 }
 
 void
@@ -63,7 +67,8 @@ ADSR::reset()
 {
 	m_state = off;
 	m_value = 0;
-	m_inc = 0;
+	m_tau = 0;
+	m_target = 0;
 	m_frames_left_in_state = UINT_MAX;
 }
 
@@ -78,7 +83,7 @@ ADSR::getNFData(unsigned int frames)
 
 		for (int i=0; i<count; i++) {
 			*buffer = m_value;
-			m_value += m_inc;
+			m_value += m_tau * (m_target - m_value);
 			buffer++;
 		}
 
@@ -89,13 +94,12 @@ ADSR::getNFData(unsigned int frames)
 				case attack:
 					m_state = decay;
 					m_frames_left_in_state = (m_decay * m_sample_rate);
-					m_inc = (m_sustain - m_value) / (double)m_frames_left_in_state;
+					m_tau = 4 / ((double)m_frames_left_in_state + 1);
+					m_target = m_sustain;
 					break;
 				case decay:
 					m_state = sustain;
-					m_value = m_sustain;
 					m_frames_left_in_state = UINT_MAX;
-					m_inc = 0;
 					break;
 				case sustain:
 					m_frames_left_in_state = UINT_MAX;
@@ -103,8 +107,9 @@ ADSR::getNFData(unsigned int frames)
 				default:
 					m_state = off;
 					m_value = 0;
+					m_tau = 0;
+					m_target = 0;
 					m_frames_left_in_state = UINT_MAX;
-					m_inc = 0;
 					break;
 			}
 		}
