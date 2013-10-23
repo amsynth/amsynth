@@ -350,10 +350,12 @@ void PresetController::rescanPresetBanks()
 	scan_preset_banks();
 }
 
+#ifdef PKGDATADIR
 std::string PresetController::getFactoryBanksDirectory()
 {
 	return std::string(PKGDATADIR "/banks");
 }
+#endif
 
 std::string PresetController::getUserBanksDirectory()
 {
