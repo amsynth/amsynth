@@ -52,17 +52,14 @@ PresetController::~PresetController	()
 }
 
 int
-PresetController::selectPreset		(const int preset)
+PresetController::selectPreset		(const int presetNo)
 {
-    if (preset > (kNumPresets - 1) || preset < 0) { return -1; }
-	if (preset != currentPresetNo)
-	{
-		currentPreset = getPreset (preset);
-		currentPresetNo = preset;
-		notify ();
-		clearChangeBuffers ();
-	}
-    return 0;
+	if (presetNo > (kNumPresets - 1) || presetNo < 0)
+		return -1;
+	currentPreset = getPreset(currentPresetNo = presetNo);
+	notify();
+	clearChangeBuffers ();
+	return 0;
 }
 
 int 
