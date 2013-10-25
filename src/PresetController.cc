@@ -363,8 +363,7 @@ static void scan_preset_bank(const std::string dir_path, const std::string file_
 
 	std::replace(bank_name.begin(), bank_name.end(), '_', ' ');
 
-	PresetController preset_controller;
-	if (preset_controller.loadPresets(file_path.c_str()) != 0)
+	if (!is_amsynth_file(file_path.c_str()))
 		return;
 
 	BankInfo bank_info;
