@@ -33,6 +33,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+
 using namespace std;
 
 
@@ -238,110 +239,111 @@ PresetController::savePresets		(const char *filename)
 	return 0;
 }
 
-int 
+static const char amsynth_file_header[] = { 'a', 'm', 'S', 'y', 'n', 't', 'h', '\n' };
+
+static bool is_amsynth_file(const char *filename)
+{
+	struct stat st = {0};
+	if (stat(filename, &st) < 0)
+		return false;
+
+	if (!S_ISREG(st.st_mode))
+		return false;
+
+	FILE *file = fopen(filename, "r");
+	if (!file)
+		return false;
+
+	char buffer[sizeof(amsynth_file_header)] = {0};
+	fread(buffer, sizeof(buffer), 1, file);
+	fclose(file), file = NULL;
+
+	if (memcmp(buffer, amsynth_file_header, sizeof(amsynth_file_header)) != 0)
+		return false;
+
+	return true;
+}
+
+static void *file_read_contents(const char *filename)
+{
+	FILE *file = fopen(filename, "r");
+	if (!file)
+		return NULL;
+	fseek(file, 0, SEEK_END);
+	off_t length = ftello(file);
+	void *buffer = calloc(length + 1, 1);
+	fseek(file, 0, SEEK_SET);
+	fread(buffer, length, 1, file);
+	fclose(file), file = NULL;
+	return buffer;
+}
+
+static float float_from_string(const char *s)
+{
+	if (strchr(s, 'e'))
+		return Parameter::valueFromString(std::string(s));
+	float rez = 0, fact = 1;
+	if (*s == '-'){
+		s++;
+		fact = -1;
+	};
+	for (int point_seen = 0; *s; s++){
+		if (*s == '.'){
+			point_seen = 1;
+			continue;
+		};
+		int d = *s - '0';
+		if (d >= 0 && d <= 9){
+			if (point_seen) fact /= 10.0f;
+			rez = rez * 10.0f + (float)d;
+		};
+	};
+	return rez * fact;
+}
+
+int
 PresetController::loadPresets		(const char *filename)
 {
 	if (filename == NULL)
 		filename = bank_file.c_str();
 
-#ifdef _DEBUG
-	cout << "<PresetController::loadPresets()>" << endl;
-#endif
-
-	if (strcmp(filename, bank_file.c_str()) == 0 && lastPresetsFileModifiedTime == mtime(filename)) {
-		return 0; // file not modified since last load
-	}
-
-	ifstream file;
-	string buffer;
-
-	try {
-		file.open(filename, ios::in);
-		file >> buffer;
-	}
-	catch(...) {
+	if (!is_amsynth_file(filename))
 		return -1;
-	}
 
-	if (buffer != "amSynth") {
-#ifdef _DEBUG
-		cout <<
-		"<PresetController::loadPresets()> not an amSynth file, bailing out"
-		<< endl;
-#endif
-	return -1;
-	}
+	if (strcmp(filename, bank_file.c_str()) == 0 && lastPresetsFileModifiedTime == mtime(filename))
+		return 0; // file not modified since last load
 
-	delete[] presets;
-	presets = new Preset [kNumPresets];
+	void *buffer = file_read_contents(filename);
+	if (!buffer)
+		return -1;
 
-	int preset = -1;
-	file >> buffer;
-	while (file.good()) {
-		if (buffer == "<preset>") {
-			preset++;
-			file >> buffer;
+	int preset_index = -1;
+	char *line_ptr = (char *)buffer + sizeof(amsynth_file_header);
+	for (char *end_ptr = line_ptr; *end_ptr; end_ptr++) {
+		if (*end_ptr == '\n') {
+			*end_ptr = '\0';
+			end_ptr++;
 
-			string presetName = "";
+			static char preset_prefix[] = "<preset> <name> ";
+			if (strncmp(line_ptr, preset_prefix, sizeof(preset_prefix) - 1) == 0)
+				presets[++preset_index].setName(std::string(line_ptr + sizeof(preset_prefix) - 1));
 			
-			//get the preset's name
-			file >> buffer;
-
-			if (buffer != "<parameter>") {
-				presetName = buffer;
-				file >> buffer;
-			}
-
-			while (buffer != "<parameter>") {
-				presetName += " ";
-				presetName += buffer;
-				file >> buffer;
-			}
-#ifdef _DEBUG
-			cout << "<PresetController::loadPresets()>: Preset name: "
-			<< presetName << endl;
-#endif
-			presets[preset].setName(presetName);
-			//get the parameters
-			while (buffer == "<parameter>") {
-				string name;
-				file >> buffer;
-				name = buffer;
-				file >> buffer;
-#ifdef _DEBUG
-				cout << "<PresetController::loadPresets()>: Parameter:- name="
-				<< name << " value=" << buffer << endl;
-#endif
-
-				Parameter &param = presets[preset].getParameter(name);
-				if (param.getName() == name) // make sure parameter name is supported
-				{
-					float fval = Parameter::valueFromString(buffer);
+			static char parameter_prefix[] = "<parameter> ";
+			if (strncmp(line_ptr, parameter_prefix, sizeof(parameter_prefix) - 1) == 0) {
+				char *ptr = line_ptr + sizeof(parameter_prefix) - 1;
+				char *sep = strchr(ptr, ' ');
+				if (sep) {
+					Preset &preset = presets[preset_index];
+					Parameter &param = preset.getParameter(std::string(ptr, sep - ptr));
+					float fval = float_from_string(sep + 1);
 					param.setValue(fval);
-					if (param.getValue() != fval)
-					{
-						cerr << "warning: parameter '" << name  << 
-							"' could not be set to value: " << fval << 
-							" (min = " << param.getMin() << ", max = " << 
-							param.getMax() << ")" << endl;
-					}
 				}
-				file >> buffer;
 			}
-		} else {
-			file.close();
+
+			line_ptr = end_ptr;
 		}
 	}
-
-	bank_file = std::string(filename);
-	lastPresetsFileModifiedTime = mtime(filename);
-
-	notify ();
-	
-#ifdef _DEBUG
-	cout << "<PresetController::loadPresets()>: success" << endl;
-#endif
-
+	free(buffer);
 	return 0;
 }
 
