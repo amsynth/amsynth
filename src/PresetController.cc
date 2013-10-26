@@ -398,18 +398,25 @@ static void scan_preset_banks(const std::string dir_path, bool read_only)
 		scan_preset_bank(dir_path, *it, read_only);
 }
 
+static std::string sFactoryBanksDirectory;
+
 static void scan_preset_banks()
 {
 	s_banks.clear();
 	scan_preset_bank(std::string(getenv("HOME")), ".amSynth.presets", false);
 	scan_preset_banks(PresetController::getUserBanksDirectory(), false);
-	scan_preset_banks(PresetController::getFactoryBanksDirectory(), true);
+#ifdef PKGDATADIR
+	if (sFactoryBanksDirectory.empty())
+		sFactoryBanksDirectory = std::string(PKGDATADIR "/banks");
+#endif
+	if (!sFactoryBanksDirectory.empty())
+		scan_preset_banks(sFactoryBanksDirectory, true);
 }
 
 const std::vector<BankInfo> &
 PresetController::getPresetBanks()
 {
-	if (!s_banks.size())
+	if (s_banks.empty())
 		scan_preset_banks();
 	return s_banks;
 }
@@ -419,12 +426,12 @@ void PresetController::rescanPresetBanks()
 	scan_preset_banks();
 }
 
-#ifdef PKGDATADIR
-std::string PresetController::getFactoryBanksDirectory()
+void PresetController::setFactoryBanksDirectory(std::string path)
 {
-	return std::string(PKGDATADIR "/banks");
+	sFactoryBanksDirectory = path;
+	if (!s_banks.empty())
+		scan_preset_banks();
 }
-#endif
 
 std::string PresetController::getUserBanksDirectory()
 {
