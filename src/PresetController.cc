@@ -340,6 +340,8 @@ PresetController::loadPresets		(const char *filename)
 			line_ptr = end_ptr;
 		}
 	}
+	for (preset_index++; preset_index < kNumPresets; preset_index++)
+		presets[preset_index] = Preset();
 	free(buffer);
 	return 0;
 }
