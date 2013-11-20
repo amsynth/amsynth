@@ -428,6 +428,9 @@ amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, in
 	if (midiInterface != NULL)
 		midiInterface->poll();
 
+	if (midi_controller)
+		midi_controller->send_changes();
+
 	if (voiceAllocationUnit != NULL)
 		voiceAllocationUnit->Process(buffer_l, buffer_r, num_frames, stride);
 }

@@ -36,6 +36,7 @@ MidiController::MidiController( Config & config )
 ,	_rpn_msb(0xff)
 ,	_rpn_lsb(0xff)
 ,	_config_needs_save(false)
+,	_last_sent_ccs({0})
 {
 	this->config = &config;
 	presetController = 0;
@@ -328,5 +329,18 @@ MidiController::sendMidi_values       ()
       return 0;
 }
 
-
-
+void
+MidiController::send_changes()
+{
+	if (!_midiIface)
+		return;
+	for (size_t i = 0; i < MAX_CC; i++) {
+		if (midi_controllers[i]->getName() != "null") {
+			unsigned char value = midi_controllers[i]->GetNormalisedValue() * 127.0;
+			if (_last_sent_ccs[i] != value) {
+				_last_sent_ccs[i] = value;
+				_midiIface->write_cc(0, i, value);
+			}
+		}
+	}
+}

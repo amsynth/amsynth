@@ -69,6 +69,7 @@ public:
 	void	set_midi_channel	( int ch );
 	
 	int     sendMidi_values		();
+	void	send_changes		();
 
 	void	timer_callback		();
 
@@ -83,6 +84,7 @@ private:
     unsigned char status, data, channel;
 	Parameter last_active_controller;
 	Parameter *midi_controllers[MAX_CC];
+	unsigned char _last_sent_ccs[MAX_CC];
 	MidiEventHandler* _handler;
 	unsigned char _rpn_msb, _rpn_lsb;
 
