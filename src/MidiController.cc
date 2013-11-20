@@ -36,12 +36,14 @@ MidiController::MidiController( Config & config )
 ,	_rpn_msb(0xff)
 ,	_rpn_lsb(0xff)
 ,	_config_needs_save(false)
-,	_last_sent_ccs({0})
 {
 	this->config = &config;
 	presetController = 0;
 	channel = config.midi_channel;
-	for( int i=0; i<MAX_CC; i++ ) midi_controllers[i] = 0;
+	for (size_t i = 0; i < MAX_CC; i++) {
+		midi_controllers[i] = 0;
+		_midi_cc_vals[i] = 0;
+	}
 }
 
 MidiController::~MidiController()
@@ -239,6 +241,7 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 				last_active_controller.setValue(cc);
 			}
 			getController(cc).SetNormalisedValue(value / 127.0f);
+			_midi_cc_vals[cc] = value;
 			break;
 	}
 	return;
@@ -337,8 +340,8 @@ MidiController::send_changes()
 	for (size_t i = 0; i < MAX_CC; i++) {
 		if (midi_controllers[i]->getName() != "null") {
 			unsigned char value = midi_controllers[i]->GetNormalisedValue() * 127.0;
-			if (_last_sent_ccs[i] != value) {
-				_last_sent_ccs[i] = value;
+			if (_midi_cc_vals[i] != value) {
+				_midi_cc_vals[i] = value;
 				_midiIface->write_cc(0, i, value);
 			}
 		}

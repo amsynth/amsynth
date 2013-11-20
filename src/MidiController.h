@@ -84,7 +84,7 @@ private:
     unsigned char status, data, channel;
 	Parameter last_active_controller;
 	Parameter *midi_controllers[MAX_CC];
-	unsigned char _last_sent_ccs[MAX_CC];
+	unsigned char _midi_cc_vals[MAX_CC];
 	MidiEventHandler* _handler;
 	unsigned char _rpn_msb, _rpn_lsb;
 
