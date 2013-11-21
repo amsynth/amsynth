@@ -227,9 +227,14 @@ static Preset _preset;
 
 const char *parameter_name_from_index (int param_index)
 {
-	if (param_index >= (int)_preset.ParameterCount())
+	if (param_index < 0 || param_index >= (int)_preset.ParameterCount())
 		return NULL;
-	return _preset.getParameter(param_index).getName().c_str();
+	static std::vector<std::string> names;
+	if (names.empty())
+		names.resize(_preset.ParameterCount());
+	if (names[param_index].empty())
+		names[param_index] = _preset.getParameter(param_index).getName();
+	return names[param_index].c_str();
 }
 
 int parameter_index_from_name (const char *param_name)
