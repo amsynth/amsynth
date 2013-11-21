@@ -27,6 +27,7 @@
 #include "Parameter.h"
 #include "Thread.h"
 
+
 #define MAX_CC 128
 
 typedef unsigned char uchar;
@@ -51,30 +52,30 @@ public:
 	MidiController( Config & config );
 	virtual ~MidiController();
 
-	int		init();
-
-	void	setPresetController	(PresetController & pc);
+	void	setPresetController	(PresetController & pc) { presetController = &pc; }
 	void	SetMidiEventHandler(MidiEventHandler* h) { _handler = h; }
 	
 	virtual void HandleMidiData(const unsigned char* bytes, unsigned numBytes);
 
-	void	saveConfig ();
+	void	clearControllerMap();
+	void	loadControllerMap();
+	void	saveControllerMap();
 
-	void	setController		( unsigned int controller_no, Parameter &param );
-	int     getControllerForParam(unsigned paramIdx);
+	int		getControllerForParameter(int paramId);
+	void	setControllerForParameter(int paramId, int cc);
+
 	Parameter & getLastControllerParam() { return last_active_controller; };
-	Parameter & getController( unsigned int controller_no );
-	
+
 	int		get_midi_channel	() { return channel; }
 	void	set_midi_channel	( int ch );
 	
 	int     sendMidi_values		();
-	void	send_changes		();
+	void	send_changes		(bool force=false);
 
 	void	timer_callback		();
 
 private:
-    void dispatch_note(unsigned char ch,
+	void dispatch_note(unsigned char ch,
 		       unsigned char note, unsigned char vel);
     void controller_change(unsigned char controller, unsigned char value);
     void pitch_wheel_change(float val);
@@ -83,10 +84,12 @@ private:
 	Config *config;
     unsigned char status, data, channel;
 	Parameter last_active_controller;
-	Parameter *midi_controllers[MAX_CC];
 	unsigned char _midi_cc_vals[MAX_CC];
 	MidiEventHandler* _handler;
 	unsigned char _rpn_msb, _rpn_lsb;
+
+	int _cc_to_param_map[MAX_CC];
+	int _param_to_cc_map[kAmsynthParameterCount];
 
 	bool _config_needs_save;
 };

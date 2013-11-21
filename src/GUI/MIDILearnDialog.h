@@ -21,6 +21,9 @@
 
 #include "../UpdateListener.h"
 
+#include <gtk/gtk.h>
+
+
 class MidiController;
 class PresetController;
 
@@ -31,7 +34,7 @@ public:
 	MIDILearnDialog(MidiController *midiController, PresetController *presetController, GtkWindow *parent);
 	~MIDILearnDialog();
 
-	void run_modal(unsigned param_idx);	
+	void run_modal(unsigned param_idx);
 
 private:
 
@@ -41,9 +44,8 @@ private:
 
 	GtkWidget		*_dialog;
 	GtkWidget		*_paramNameEntry;
-	GtkWidget	*_ccSpinButton;
+	GtkWidget		*_combo;
 
 	MidiController	*_midiController;
 	PresetController *_presetController;
 };
-

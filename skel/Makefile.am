@@ -1,1 +1,1 @@
-dist_pkgdata_DATA = Controllersrc rc
+dist_pkgdata_DATA = rc

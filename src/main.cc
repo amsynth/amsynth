@@ -135,21 +135,14 @@ const char *build_path(const char *path, const char *suffix)
 
 void install_default_files_if_reqd()
 {
-	const char * factory_controllers = build_path (PKGDATADIR, "Controllersrc");
 	const char * factory_config = build_path (PKGDATADIR, "rc");
 	const char * factory_bank = build_path (PKGDATADIR, "banks/amsynth_factory.bank");
 
-	const char * user_controllers = build_path (getenv ("HOME"), ".amSynthControllersrc");
 	const char * user_config = build_path (getenv ("HOME"), ".amSynthrc");
 	const char * user_bank = build_path (getenv ("HOME"), ".amSynth.presets");
 	
 	struct stat st;
 	
-	if (stat (user_controllers, &st) == -1)
-	{
-		printf ("installing default controller map to %s\n", user_controllers);
-		fcopy (user_controllers, factory_controllers);
-	}
 	if (stat (user_config, &st) == -1)
 	{
 		printf ("installing configuration file to %s\n", user_config);
@@ -161,11 +154,9 @@ void install_default_files_if_reqd()
 		fcopy (user_bank, factory_bank);
 	}
 
-	free((void *)factory_controllers);
 	free((void *)factory_config);
 	free((void *)factory_bank);
 	
-	free((void *)user_controllers);
 	free((void *)user_config);
 	free((void *)user_bank);
 }

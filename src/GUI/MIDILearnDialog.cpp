@@ -19,14 +19,15 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtk/gtk.h>
 #include "MIDILearnDialog.h"
+
 #include "../MidiController.h"
 #include "../PresetController.h"
-#include "Request.h"
 #include "controllers.h"
+#include "Request.h"
 
-static gboolean on_output(GtkSpinButton *spin, gpointer data);
+#include <cassert>
+
 
 MIDILearnDialog::MIDILearnDialog(MidiController *midiController, PresetController *presetController, GtkWindow *parent)
 :	_dialog(NULL)
@@ -38,47 +39,45 @@ MIDILearnDialog::MIDILearnDialog(MidiController *midiController, PresetControlle
 		GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
 		NULL);
 
-	_ccSpinButton = gtk_spin_button_new_with_range(-1, 127, 1);
-	gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(_ccSpinButton), FALSE);
-	g_signal_connect(G_OBJECT(_ccSpinButton), "output", (GCallback)on_output, NULL);
-
 	_paramNameEntry = gtk_entry_new();
 	gtk_entry_set_editable(GTK_ENTRY(_paramNameEntry), FALSE);
+
+	_combo = gtk_combo_box_new_text();
+	gtk_combo_box_insert_text (GTK_COMBO_BOX (_combo), 0, "None");
+	for (gint i = 0; i < 128; i++)
+		gtk_combo_box_insert_text (GTK_COMBO_BOX (_combo), i + 1, c_controller_names[i]);
 
 	GtkWidget *table = gtk_table_new(2, 2, FALSE);
 	gtk_table_attach(GTK_TABLE(table), gtk_label_new("Synth Parameter:"), 0, 1, 0, 1, GTK_FILL, GTK_FILL, 5, 5);
 	gtk_table_attach(GTK_TABLE(table), _paramNameEntry,                   1, 2, 0, 1, GTK_FILL, GTK_FILL, 5, 5);
 	gtk_table_attach(GTK_TABLE(table), gtk_label_new("MIDI Controller"),  0, 1, 1, 2, GTK_FILL, GTK_FILL, 5, 5);
-	gtk_table_attach(GTK_TABLE(table), _ccSpinButton,                     1, 2, 1, 2, GTK_FILL, GTK_FILL, 5, 5);
+	gtk_table_attach(GTK_TABLE(table), _combo,                            1, 2, 1, 2, GTK_FILL, GTK_FILL, 5, 5);
 
 	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(_dialog)->vbox), table, TRUE, TRUE, 0);
+
+	_midiController->getLastControllerParam().addUpdateListener(*this);
 }
 
 MIDILearnDialog::~MIDILearnDialog()
 {
+	_midiController->getLastControllerParam().removeUpdateListener(*this);
 }
 
 void
 MIDILearnDialog::run_modal(unsigned param_idx)
 {
-	Parameter &param = _presetController->getCurrentPreset().getParameter(param_idx);
-	gtk_entry_set_text(GTK_ENTRY(_paramNameEntry), param.getName().c_str());
-	gtk_spin_button_set_value(GTK_SPIN_BUTTON(_ccSpinButton),
-		_midiController->getControllerForParam(param.GetId()));
-	
-	_midiController->getLastControllerParam().addUpdateListener(*this);
+	int cc = _midiController->getControllerForParameter(param_idx);
+	gtk_entry_set_text(GTK_ENTRY(_paramNameEntry), parameter_name_from_index (param_idx));
+	gtk_combo_box_set_active (GTK_COMBO_BOX (_combo), cc + 1);
 
 	gtk_widget_show_all(_dialog);
 	const gint response = gtk_dialog_run(GTK_DIALOG(_dialog));
 	gtk_widget_hide(_dialog);
 	
 	if (response == GTK_RESPONSE_ACCEPT) {
-		int midi_cc = gtk_spin_button_get_value(GTK_SPIN_BUTTON(_ccSpinButton));
-		if (-1 <= midi_cc && midi_cc < 127)
-			_midiController->setController(midi_cc, param);
+		cc = gtk_combo_box_get_active(GTK_COMBO_BOX (_combo)) - 1;
+		_midiController->setControllerForParameter(param_idx, cc);
 	}
-
-	_midiController->getLastControllerParam().removeUpdateListener(*this);
 }
 
 void
@@ -90,15 +89,14 @@ MIDILearnDialog::update()
 void
 MIDILearnDialog::last_active_controller_changed()
 {
-	int value = (int)_midiController->getLastControllerParam().getValue();
-	gtk_spin_button_set_value(GTK_SPIN_BUTTON(_ccSpinButton), value);
+	int cc = (int)_midiController->getLastControllerParam().getValue();
+	gtk_combo_box_set_active (GTK_COMBO_BOX (_combo), cc + 1);
 }
 
 static gboolean on_output(GtkSpinButton *spin, gpointer)
 {
-   const int value = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin));
-   const gchar *text = (0 <= value && value < 128) ? c_controller_names[value] : "None";
-   gtk_entry_set_text(GTK_ENTRY(spin), text);
-   return TRUE;
+	int cc = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin)) - 1;
+	const gchar *text = cc < 0 ? "None" : c_controller_names[cc];
+	gtk_entry_set_text(GTK_ENTRY(spin), text);
+	return TRUE;
 }
-

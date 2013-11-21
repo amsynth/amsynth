@@ -28,7 +28,6 @@
 #include <fstream>
 #include <iostream>
 
-using namespace std;
 
 MidiController::MidiController( Config & config )
 :	last_active_controller ("last_active_cc", (Param) -1, 0, 0, MAX_CC, 1)
@@ -40,48 +39,13 @@ MidiController::MidiController( Config & config )
 	this->config = &config;
 	presetController = 0;
 	channel = config.midi_channel;
-	for (size_t i = 0; i < MAX_CC; i++) {
-		midi_controllers[i] = 0;
-		_midi_cc_vals[i] = 0;
-	}
+	loadControllerMap();
 }
 
 MidiController::~MidiController()
 {
 	if (_config_needs_save)
-		saveConfig();
-}
-
-void
-MidiController::setPresetController(PresetController & pc)
-{
-	presetController = &pc;
-	
-	for(int i=0; i<MAX_CC; i++)
-		midi_controllers[i] = &(presetController->getCurrentPreset().
-				getParameter("null"));
-
-	midi_controllers[1] = &(presetController->getCurrentPreset().
-			getParameter("freq_mod_amount"));
-	midi_controllers[7] = &(presetController->getCurrentPreset().
-			getParameter("master_vol"));
-	
-	// load controller mapping config. from file	
-	string fname(getenv("HOME"));
-	fname += "/.amSynthControllersrc";
-	ifstream file(fname.c_str(), ios::out);
-	int i=0;
-	string buffer;
-	if (file.bad())	return;
-  
-	file >> buffer;
-	while( file.good() )
-	{
-		midi_controllers[i++] = &(presetController->getCurrentPreset().
-				getParameter( buffer ));
-		file >> buffer;
-	}
-	file.close();
+		saveControllerMap();
 }
 
 void
@@ -237,10 +201,11 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 			_handler->HandleMidiAllNotesOff();
 		case MIDI_CC_MODULATION_WHEEL:
 		default:
-			if (last_active_controller.getValue() != cc) {
+			if (last_active_controller.getValue() != cc)
 				last_active_controller.setValue(cc);
-			}
-			getController(cc).SetNormalisedValue(value / 127.0f);
+			int paramId = _cc_to_param_map[cc];
+			if (paramId >= 0 && presetController)
+				presetController->getCurrentPreset().getParameter(paramId).SetNormalisedValue(value / 127.0f);
 			_midi_cc_vals[cc] = value;
 			break;
 	}
@@ -248,53 +213,96 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 }
 
 void
-MidiController::setController( unsigned int controller_no, Parameter & param )
-{
-	if(controller_no<MAX_CC)
-		midi_controllers[controller_no] = &param;
-	_config_needs_save = true;
-}
-
-Parameter&
-MidiController::getController( unsigned int idx )
-{
-    assert(idx < MAX_CC);
-    return (idx < MAX_CC) ? *midi_controllers[idx] : presetController->getCurrentPreset().getParameter("null");
-}
-
-int
-MidiController::getControllerForParam(unsigned paramIdx)
-{
-	for (unsigned int i=0; i<MAX_CC; i++) {
-		if (midi_controllers[i] &&
-			midi_controllers[i]->GetId() == i) {
-			return i;
-		}
-	}
-	return -1;
-}
-
-void
 MidiController::timer_callback()
 {
 	if (_config_needs_save)
-		saveConfig();
+		saveControllerMap();
 }
 
 void
-MidiController::saveConfig()
+MidiController::clearControllerMap()
 {
-	string fname(getenv("HOME"));
+	for (size_t i = 0; i < MAX_CC; i++) {
+		_cc_to_param_map[i] = -1;
+		_midi_cc_vals[i] = 0;
+	}
+	for (size_t i = 0; i < kAmsynthParameterCount; i++)
+		_param_to_cc_map[i] = -1;
+
+	// these are the defaults from /usr/share/amsynth/Controllersrc
+	_cc_to_param_map[1] = kAmsynthParameter_LFOToOscillators;
+	_param_to_cc_map[kAmsynthParameter_LFOToOscillators] = 1;
+	_cc_to_param_map[7] = kAmsynthParameter_MasterVolume;
+	_param_to_cc_map[kAmsynthParameter_MasterVolume] = 7;
+
+	_config_needs_save = false;
+}
+
+void
+MidiController::loadControllerMap()
+{
+	clearControllerMap();
+
+	std::string fname(getenv("HOME"));
 	fname += "/.amSynthControllersrc";
-	ofstream file(fname.c_str(), ios::out);
-	if (file.bad())	return;
-  
-	for(int i=0; i<MAX_CC; i++){
-		file << midi_controllers[i]->getName() << endl;
+	std::ifstream file(fname.c_str(), std::ios::out);
+	std::string name;
+	file >> name;
+	for (int cc = 0; cc < MAX_CC && file.good(); cc++, file >> name) {
+		int paramId = parameter_index_from_name(name.c_str());
+		_cc_to_param_map[cc] = paramId;
+		_param_to_cc_map[paramId] = cc;
 	}
 	file.close();
 
 	_config_needs_save = false;
+}
+
+void
+MidiController::saveControllerMap()
+{
+	std::string fname(getenv("HOME"));
+	fname += "/.amSynthControllersrc";
+	std::ofstream file(fname.c_str(), std::ios::out);
+	if (file.bad())
+		return;
+  	for (unsigned char cc = 0; cc < MAX_CC; cc++) {
+		int paramId = _cc_to_param_map[cc];
+		const char *name = parameter_name_from_index(paramId);
+		file << (name ? name : "null") << std::endl;
+	}
+	file.close();
+
+	_config_needs_save = false;
+}
+
+int
+MidiController::getControllerForParameter(int paramId)
+{
+	assert(0 <= paramId && paramId < kAmsynthParameterCount);
+	return _param_to_cc_map[paramId];
+}
+
+void
+MidiController::setControllerForParameter(int paramId, int cc)
+{
+	assert(paramId < kAmsynthParameterCount && cc < MAX_CC);
+
+	if (0 <= paramId) {
+		int old_cc = _param_to_cc_map[paramId];
+		if (0 <= old_cc)
+			_cc_to_param_map[old_cc] = -1;
+		_param_to_cc_map[paramId] = cc;
+	}
+
+	if (0 <= cc) {
+		int old_param = _cc_to_param_map[cc];
+		if (0 <= old_param)
+			_param_to_cc_map[old_param] = -1;
+		_cc_to_param_map[cc] = paramId;
+	}
+
+	_config_needs_save = true;
 }
 
 void
@@ -307,42 +315,23 @@ MidiController::set_midi_channel	( int ch )
 int
 MidiController::sendMidi_values       ()
 {
-	if (!_midiIface)
-	{
-		std::cerr << "error: cannot send midi values, no midi output interface present\n";
-		return -1;
-	}
-
-      for (unsigned i = 0; i < MAX_CC; i++)
-      {
-              if (midi_controllers[i]->getName() != "null")
-              {
-      
-                      float fval=midi_controllers[i]->getValue();
-                      int midiValue=(int)(127*(fval-midi_controllers[i]->getMin())/(midi_controllers[i]->getMax()-midi_controllers[i]->getMin()));
-#ifdef _DEBUG
-                      cout << "PresetController::midiSendPresets :- parameter name="
-                      << midi_controllers[i]->getName() << " value= "
-                      << midi_controllers[i]->getValue() 
-                      << " midiValue = " << midiValue << endl;
-#endif
-                      if (_midiIface) _midiIface->write_cc(0,i,midiValue);
-              }
-      }
-      return 0;
+	send_changes(true);
+	return 0;
 }
 
 void
-MidiController::send_changes()
+MidiController::send_changes(bool force)
 {
 	if (!_midiIface)
 		return;
-	for (size_t i = 0; i < MAX_CC; i++) {
-		if (midi_controllers[i]->getName() != "null") {
-			unsigned char value = midi_controllers[i]->GetNormalisedValue() * 127.0;
-			if (_midi_cc_vals[i] != value) {
-				_midi_cc_vals[i] = value;
-				_midiIface->write_cc(0, i, value);
+	for (size_t paramId = 0; paramId < kAmsynthParameterCount; paramId++) {
+		int cc = _param_to_cc_map[paramId];
+		if (0 <= cc && cc < MAX_CC) {
+			Parameter &parameter = presetController->getCurrentPreset().getParameter(paramId);
+			unsigned char value = parameter.GetNormalisedValue() * 127.0;
+			if (_midi_cc_vals[cc] != value || force) {
+				_midi_cc_vals[cc] = value;
+				_midiIface->write_cc(channel, cc, value);
 			}
 		}
 	}
