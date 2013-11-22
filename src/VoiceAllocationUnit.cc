@@ -43,7 +43,8 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 ,	sustain (0)
 ,	_keyboardMode(KeyboardModePoly)
 ,	mMasterVol (1.0)
-,	mStereoPanning(0.5)
+,	mPanGainLeft(1)
+,	mPanGainRight(1)
 ,	mPitchBendRangeSemitones(2)
 ,	mLastNoteFrequency (0.0f)
 ,	mLastPitchBendValue(1)
@@ -319,11 +320,9 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 
 	distortion->Process (vb, nframes);
 
-	float lv = 1.0 - mStereoPanning;
-	float rv = mStereoPanning;
 	for (unsigned i=0; i<nframes; i++) {
-		l[i * stride] = vb[i] * lv;
-		r[i * stride] = vb[i] * rv;
+		l[i * stride] = vb[i] * mPanGainLeft;
+		r[i * stride] = vb[i] * mPanGainRight;
 	}
 
 	reverb->processmix (l, r, l, r, nframes, stride);

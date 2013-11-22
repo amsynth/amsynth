@@ -24,6 +24,7 @@
 #include "midi.h"
 
 #include <assert.h>
+#include <cmath>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -167,9 +168,12 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 		case MIDI_CC_BANK_SELECT_LSB:
 		case MIDI_CC_BANK_SELECT_MSB:
 			break;
-		case MIDI_CC_PAN_MSB:
-			// dividing by 128 so that 64 becomes 0.5 (center)
-			_handler->HandleMidiPan(value / 128.0);
+		case MIDI_CC_PAN_MSB: {
+			// http://www.midi.org/techspecs/rp36.php
+			// the effective range for CC#10 is modified to be 1 to 127, and values 0 and 1 both pan hard left
+			float scaled = (value < 1 ? 0 : value - 1) / 126.0;
+			_handler->HandleMidiPan(cos(M_PI_2 * scaled), sin(M_PI_2 * scaled));
+		}
 			break;
 		case MIDI_CC_SUSTAIN_PEDAL:
 			_handler->HandleMidiSustainPedal(value);

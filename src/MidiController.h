@@ -44,7 +44,7 @@ public:
 	virtual void HandleMidiAllSoundOff() {}
 	virtual void HandleMidiAllNotesOff() {}
 	virtual void HandleMidiSustainPedal(uchar /*value*/) {}
-	virtual void HandleMidiPan(float value) {}
+	virtual void HandleMidiPan(float left, float right) {}
 };
 
 class MidiController : public MidiStreamReceiver

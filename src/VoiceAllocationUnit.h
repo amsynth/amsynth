@@ -22,16 +22,18 @@
 #ifndef _VOICEALLOCATIONUNIT_H
 #define _VOICEALLOCATIONUNIT_H
 
-#include <vector>
-
 #include "UpdateListener.h"
 #include "MidiController.h"
 #include "TuningMap.h"
+
+#include <vector>
+
 
 class VoiceBoard;
 class SoftLimiter;
 class revmodel;
 class Distortion;
+
 
 class VoiceAllocationUnit : public UpdateListener, public MidiEventHandler
 {
@@ -50,7 +52,7 @@ public:
 	virtual void HandleMidiAllSoundOff();
 	virtual void HandleMidiAllNotesOff();
 	virtual void HandleMidiSustainPedal(uchar value);
-	virtual void HandleMidiPan(float value) { mStereoPanning = value; };
+	virtual void HandleMidiPan(float left, float right) { mPanGainLeft = left; mPanGainRight = right; }
 
 	void	SetMaxVoices	(int voices) { mMaxVoices = voices; }
 	int		GetMaxVoices	() { return mMaxVoices; }
@@ -90,7 +92,8 @@ private:
 	float	*mBuffer;
 
 	float	mMasterVol;
-	float	mStereoPanning;
+	float	mPanGainLeft;
+	float	mPanGainRight;
 	float	mPitchBendRangeSemitones;
 	float	mLastNoteFrequency;
 	float   mLastPitchBendValue;
