@@ -198,6 +198,9 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 				_handler->HandleMidiAllSoundOff();
 			break;
 		case MIDI_CC_RESET_ALL_CONTROLLERS:
+			// http://www.midi.org/techspecs/rp15.php
+			_handler->HandleMidiPitchWheel(0);
+			break;
 		case MIDI_CC_LOCAL_CONTROL:
 			break;
 		case MIDI_CC_ALL_NOTES_OFF:
