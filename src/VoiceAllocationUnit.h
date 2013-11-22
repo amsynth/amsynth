@@ -50,6 +50,7 @@ public:
 	virtual void HandleMidiAllSoundOff();
 	virtual void HandleMidiAllNotesOff();
 	virtual void HandleMidiSustainPedal(uchar value);
+	virtual void HandleMidiPan(float value) { mStereoPanning = value; };
 
 	void	SetMaxVoices	(int voices) { mMaxVoices = voices; }
 	int		GetMaxVoices	() { return mMaxVoices; }
@@ -89,6 +90,7 @@ private:
 	float	*mBuffer;
 
 	float	mMasterVol;
+	float	mStereoPanning;
 	float	mPitchBendRangeSemitones;
 	float	mLastNoteFrequency;
 	float   mLastPitchBendValue;

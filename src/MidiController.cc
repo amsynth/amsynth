@@ -160,16 +160,22 @@ MidiController::dispatch_note(unsigned char, unsigned char note, unsigned char v
 void
 MidiController::controller_change(unsigned char cc, unsigned char value)
 {
+	if (!_handler || !presetController)
+		return;
+
 	switch (cc) {
 		case MIDI_CC_BANK_SELECT_LSB:
 		case MIDI_CC_BANK_SELECT_MSB:
 			break;
+		case MIDI_CC_PAN_MSB:
+			// dividing by 128 so that 64 becomes 0.5 (center)
+			_handler->HandleMidiPan(value / 128.0);
+			break;
 		case MIDI_CC_SUSTAIN_PEDAL:
-			if (_handler)
-				_handler->HandleMidiSustainPedal(value);
+			_handler->HandleMidiSustainPedal(value);
 			break;
 		case MIDI_CC_DATA_ENTRY_MSB:
-			if (_handler && _rpn_msb == 0x00 && _rpn_lsb == 0x00)
+			if (_rpn_msb == 0x00 && _rpn_lsb == 0x00)
 				_handler->HandleMidiPitchWheelSensitivity(value);
 			break;
 		case MIDI_CC_PORTAMENTO:
@@ -184,14 +190,14 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 			_rpn_msb = value;
 			break;
 		case MIDI_CC_ALL_SOUND_OFF:
-			if (_handler && value == 0)
+			if (value == 0)
 				_handler->HandleMidiAllSoundOff();
 			break;
 		case MIDI_CC_RESET_ALL_CONTROLLERS:
 		case MIDI_CC_LOCAL_CONTROL:
 			break;
 		case MIDI_CC_ALL_NOTES_OFF:
-			if (_handler && value == 0)
+			if (value == 0)
 				_handler->HandleMidiAllNotesOff();
 			break;
 		case MIDI_CC_OMNI_MODE_OFF:
@@ -204,7 +210,7 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 			if (last_active_controller.getValue() != cc)
 				last_active_controller.setValue(cc);
 			int paramId = _cc_to_param_map[cc];
-			if (paramId >= 0 && presetController)
+			if (paramId >= 0)
 				presetController->getCurrentPreset().getParameter(paramId).SetNormalisedValue(value / 127.0f);
 			_midi_cc_vals[cc] = value;
 			break;

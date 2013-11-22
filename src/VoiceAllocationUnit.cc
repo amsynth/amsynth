@@ -20,19 +20,22 @@
  */
 
 #include "VoiceAllocationUnit.h"
-#include "VoiceBoard/VoiceBoard.h"
+
 #include "Effects/SoftLimiter.h"
 #include "Effects/revmodel.hpp"
 #include "Effects/Distortion.h"
+#include "VoiceBoard/VoiceBoard.h"
 
 #include <iostream>
 #include <math.h>
 #include <cstring>
 #include <assert.h>
 
+
 using namespace std;
 
 const unsigned kBufferSize = 1024;
+
 
 VoiceAllocationUnit::VoiceAllocationUnit ()
 :	mMaxVoices (0)
@@ -40,6 +43,7 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 ,	sustain (0)
 ,	_keyboardMode(KeyboardModePoly)
 ,	mMasterVol (1.0)
+,	mStereoPanning(0.5)
 ,	mPitchBendRangeSemitones(2)
 ,	mLastNoteFrequency (0.0f)
 ,	mLastPitchBendValue(1)
@@ -314,7 +318,15 @@ VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 	}
 
 	distortion->Process (vb, nframes);
-	reverb->processreplace (vb, l,r, nframes, 1, stride); // mono -> stereo
+
+	float lv = 1.0 - mStereoPanning;
+	float rv = mStereoPanning;
+	for (unsigned i=0; i<nframes; i++) {
+		l[i * stride] = vb[i] * lv;
+		r[i * stride] = vb[i] * rv;
+	}
+
+	reverb->processmix (l, r, l, r, nframes, stride);
 	limiter->Process (l,r, nframes, stride);
 
 	mLastPitchBendValue = pitchBendValueEnd;
@@ -332,8 +344,7 @@ VoiceAllocationUnit::setKeyboardMode(KeyboardMode keyboardMode)
 void
 VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 {
-	switch (param)
-	{
+	switch (param) {
 	case kAmsynthParameter_MasterVolume:		mMasterVol = value;		break;
 	case kAmsynthParameter_ReverbRoomsize:	reverb->setroomsize (value);	break;
 	case kAmsynthParameter_ReverbDamp:		reverb->setdamp (value);	break;
@@ -342,7 +353,6 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_AmpDistortion:	distortion->SetCrunch (value);	break;
 	case kAmsynthParameter_PortamentoTime: 	mPortamentoTime = value; break;
 	case kAmsynthParameter_KeyboardMode:	setKeyboardMode((KeyboardMode)value); break;
-	
 	default: for (unsigned i=0; i<_voices.size(); i++) _voices[i]->UpdateParameter (param, value); break;
 	}
 }
