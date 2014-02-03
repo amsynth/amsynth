@@ -72,6 +72,7 @@ options:\n\
 -v		show version.\n\
 -d		show some debugging output\n\
 -z		run a performance benchmark\n\
+-n		specify the JACK client name to use\n\
 -h		show this usage message\n";
 
 Config config;
@@ -266,7 +267,7 @@ int main( int argc, char *argv[] )
 
 
 	int opt;
-	while( (opt=getopt(argc, argv, "vhstdzxm:c:a:r:p:b:U:P:"))!= -1 ) {
+	while( (opt=getopt(argc, argv, "vhstdzxm:c:a:r:p:b:U:P:n:"))!= -1 ) {
 		switch(opt) {
 			case 'v':
 				cout << "amSynth " << VERSION << " -- compiled "

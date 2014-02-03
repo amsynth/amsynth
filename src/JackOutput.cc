@@ -67,11 +67,11 @@ JackOutput::init	( Config & config )
 
 #if HAVE_JACK_SESSION_H
 	if (!config.jack_session_uuid.empty())
-		client = jack_client_open("amysnth", JackSessionID,
+		client = jack_client_open(config.jack_client_name_preference.c_str(), JackSessionID,
 				&status, config.jack_session_uuid.c_str());
 	else
 #endif
-		client = jack_client_open("amsynth", JackNoStartServer, &status);
+		client = jack_client_open(config.jack_client_name_preference.c_str(), JackNoStartServer, &status);
 	if (!client) {
 		std::ostringstream o;
 		o << "jack_client_open() failed, status = 0x" << std::hex << status;

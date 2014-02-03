@@ -55,6 +55,7 @@ Config::Defaults	()
 	polyphony = 10;
 	pitch_bend_range = 2;
 	alsa_seq_client_name = "amSynth";
+	jack_client_name_preference = "amsynth";
 	current_bank_file = string (getenv ("HOME")) +
 		string("/.amSynth.presets");
 }
@@ -65,7 +66,7 @@ Config::ParseCOpts	(int argc, char* argv[])
 #ifndef _WIN32
 	optind = 1; // reset getopt
 	int opt;
-	while( (opt=getopt(argc, argv, "vhstdzm:c:a:r:p:b:U:P:"))!= -1 ) {
+	while( (opt=getopt(argc, argv, "vhstdzm:c:a:r:p:b:U:P:n:"))!= -1 ) {
 		switch(opt) {
 			case 'm': 
 				midi_driver = optarg;
@@ -90,6 +91,9 @@ Config::ParseCOpts	(int argc, char* argv[])
 				break;	
 			case 'U':
 				jack_session_uuid = optarg;
+				break;
+			case 'n':
+				jack_client_name_preference = optarg;
 				break;
 			default:
 				break;
