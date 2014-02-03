@@ -1,3 +1,13 @@
+amsynth 1.4.1 -- 2014-02-03
+
+  - adds new preset banks: BriansBank12, 13 & 14
+  - MIDI CCs for mapped parameters are now be sent in real-time
+  - audition button note can now be changed
+  - amsynth now responds to MIDI CC #10 panning messages
+  - jack client name can now be set from the command line
+  - fixes for issues with MIDI learn dialog
+
+
 amsynth 1.4.0 -- 2013-06-23
 
   - LV2 support added
