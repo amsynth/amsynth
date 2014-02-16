@@ -77,9 +77,10 @@ public:
 protected:
 	virtual void	on_hide () { Gtk::Main::quit(); }
 	
-#if ENABLE_MIDIKEYS
 	virtual bool on_key_press_event(GdkEventKey *);
 	virtual bool on_key_release_event(GdkEventKey *);
+
+#if ENABLE_MIDIKEYS
 	void vkeybd_kill_all_notes();
 #endif
 

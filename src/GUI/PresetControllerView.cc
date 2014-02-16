@@ -49,6 +49,7 @@ public:
 
 	virtual void setPresetController(PresetController *presetController);
 	virtual void update();
+	virtual int getAuditionNote();
 
 private:
 
@@ -148,7 +149,7 @@ void PresetControllerViewImpl::on_save_clicked (GtkWidget *widget, PresetControl
 
 void PresetControllerViewImpl::on_audition_pressed (GtkWidget *widget, PresetControllerViewImpl *that)
 {
-	that->audition_note = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(that->audition_spin));
+	that->audition_note = that->getAuditionNote();
 	that->vau->HandleMidiNoteOn(that->audition_note, 1.0f);
 }
 
@@ -197,6 +198,12 @@ void PresetControllerViewImpl::update()
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), presetController->getCurrPresetNumber());
 	
 	inhibit_combo_callback = false;
+}
+
+int PresetControllerViewImpl::getAuditionNote()
+{
+	audition_note = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(audition_spin));
+	return audition_note;
 }
 
 PresetControllerView * PresetControllerView::create(VoiceAllocationUnit *voiceAllocationUnit)

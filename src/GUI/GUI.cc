@@ -1200,4 +1200,26 @@ void GUI::vkeybd_kill_all_notes()
 	}
 }
 
+#else
+
+bool GUI::on_key_press_event(GdkEventKey *event)
+{
+	if (event->keyval == GDK_a && event->state == GDK_CONTROL_MASK | GDK_MOD1_MASK) {
+		int note = presetCV->getAuditionNote();
+		vau->HandleMidiNoteOn(note, 1.0f);
+		return true;
+	}
+	return Gtk::Window::on_key_press_event(event);
+}
+
+bool GUI::on_key_release_event(GdkEventKey *event)
+{
+	if (event->keyval == GDK_a && event->state == GDK_CONTROL_MASK | GDK_MOD1_MASK) {
+		int note = presetCV->getAuditionNote();
+		vau->HandleMidiNoteOff(note, 1.0f);
+		return true;
+	}
+	return Gtk::Window::on_key_release_event(event);
+}
+
 #endif

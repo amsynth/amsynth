@@ -31,6 +31,7 @@ class PresetControllerView : public Gtk::HBox { public:
 	static PresetControllerView * create(VoiceAllocationUnit *voiceAllocationUnit);
 	virtual void setPresetController(PresetController *presetController) = 0;
     virtual void update() = 0;
+    virtual int getAuditionNote() = 0;
 };
 
 #endif
