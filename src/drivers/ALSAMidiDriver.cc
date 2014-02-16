@@ -38,10 +38,11 @@ class ALSAMidiDriver : public MidiDriver
 public:
 	ALSAMidiDriver		( );
 	virtual ~ALSAMidiDriver		( );
-	int 	read			(unsigned char *bytes, unsigned maxBytes);
-	int		write_cc		(unsigned int channel, unsigned int param, unsigned int value);
-	int 	open			( Config & config );
-	int 	close			( );
+    virtual int read(unsigned char *bytes, unsigned maxBytes);
+    virtual int write_cc(unsigned int channel, unsigned int param, unsigned int value);
+    virtual int open( Config & config );
+    virtual int close();
+    virtual int get_alsa_client_id()	{ return client_id; };
 private:
 	snd_seq_t		*seq_handle;
 	snd_midi_event_t	*seq_midi_parser;
