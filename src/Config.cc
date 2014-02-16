@@ -54,7 +54,6 @@ Config::Defaults	()
 	buffer_size = 128;
 	polyphony = 10;
 	pitch_bend_range = 2;
-	alsa_seq_client_name = "amSynth";
 	jack_client_name_preference = "amsynth";
 	current_bank_file = string (getenv ("HOME")) +
 		string("/.amSynth.presets");

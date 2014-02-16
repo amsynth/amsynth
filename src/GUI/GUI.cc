@@ -96,9 +96,7 @@ GUI::delete_event_impl(GdkEventAny *)
 	return true;
 }
 
-GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
-		  GenericOutput *audio, const char *title )
-:	m_windowTitle(title)
+GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in, GenericOutput *audio )
 #if ENABLE_MIDIKEYS
 :	m_vkeybdOctave(4)
 ,	m_vkeybdIsActive(false)
@@ -747,9 +745,16 @@ void
 GUI::update_title()
 {
 	std::ostringstream ostr;
-	ostr << m_windowTitle;
+	ostr << "amsynth";
+
+	if (config->jack_client_name.length() && config->jack_client_name != "amsynth") {
+		ostr << ": ";
+		ostr << config->jack_client_name;
+	}
+
 	ostr << ": ";
 	ostr << preset_controller->getCurrPresetNumber();
+
 	ostr << ": ";
 	ostr << preset_controller->getCurrentPreset().getName();
 

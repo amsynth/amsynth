@@ -52,8 +52,7 @@ public:
 	GUI				( Config & config,
 					  MidiController & mc, 
 					  VoiceAllocationUnit & vau,
-					  GenericOutput *audio,
-					  const char *title );
+					  GenericOutput *audio );
 	~GUI				( );
 	/**
 	 * Sets up all the Interface controls etc..
@@ -163,7 +162,6 @@ private:
 	
 	GtkAdjustment 	*m_adjustments[kAmsynthParameterCount];
 
-	std::string		m_windowTitle;
 	bool			m_presetIsNotSaved;
 
 	Gtk::Menu		*m_pitchBendRangeMenu;

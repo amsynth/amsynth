@@ -53,7 +53,7 @@ void gui_init(Config &config,
 	if (pipe(gdk_input_pipe) == -1)
 		perror("pipe()");
 	
-	gui = new GUI(config, midi_controller, vau, out, out->getTitle());
+	gui = new GUI(config, midi_controller, vau, out);
 	gui->setPresetController(presetController);
 	gui->init();
 	

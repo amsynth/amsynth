@@ -51,9 +51,6 @@ public:
 	virtual	void		setOutputFile	( string /*file*/ )	{}
 	virtual	string		getOutputFile	( ) { return ""; }
 
-
-	virtual	const char*	getTitle	( )	{ return "amSynth"; };
-
 protected:
 	AudioCallback mAudioCallback;
 };

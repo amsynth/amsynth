@@ -348,8 +348,6 @@ int main( int argc, char *argv[] )
 #else
 	if (config.debug_drivers) std::cerr << "\n\n*** INITIALISING MIDI ENGINE...\n";
 	
-	config.alsa_seq_client_name = out->getTitle();
-	
 	if (config.current_midi_driver.empty())
 		midiInterface = new MidiInterface();
 #endif

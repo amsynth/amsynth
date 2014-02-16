@@ -117,12 +117,9 @@ int ALSAMidiDriver::open( Config & config )
 		return -1;
 	}
 	
-	snd_seq_set_client_name(seq_handle, config.alsa_seq_client_name.c_str());
+	snd_seq_set_client_name(seq_handle, "amsynth");
 	
-	string port_name = config.alsa_seq_client_name;
-	port_name += " MIDI IN";
-
-	if ((portid = snd_seq_create_simple_port(seq_handle, port_name.c_str(),
+	if ((portid = snd_seq_create_simple_port(seq_handle, "MIDI IN",
             SND_SEQ_PORT_CAP_WRITE|SND_SEQ_PORT_CAP_SUBS_WRITE,
             SND_SEQ_PORT_TYPE_APPLICATION)) < 0) {
 		cerr << "Error creating sequencer port.\n";
@@ -134,10 +131,7 @@ int ALSAMidiDriver::open( Config & config )
 //	if (config.debug_drivers)
 //		cerr << "opened alsa sequencer client. id=" << client_id << endl;
 
-	port_name = config.alsa_seq_client_name;
-	port_name += " MIDI OUT";
-	
-	if ((portid_out = snd_seq_create_simple_port(seq_handle, port_name.c_str(),
+	if ((portid_out = snd_seq_create_simple_port(seq_handle, "MIDI OUT",
 		SND_SEQ_PORT_CAP_READ|SND_SEQ_PORT_CAP_SUBS_READ,
 		SND_SEQ_PORT_TYPE_APPLICATION)) < 0) {
 		cerr << "Error creating sequencer port.\n";
