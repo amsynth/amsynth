@@ -102,8 +102,9 @@ GUI::delete_event_impl(GdkEventAny *)
 }
 
 GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in, GenericOutput *audio )
+:	m_auditionKeyDown(false)
 #if ENABLE_MIDIKEYS
-:	m_vkeybdOctave(4)
+,	m_vkeybdOctave(4)
 ,	m_vkeybdIsActive(false)
 ,	m_vkeybdState(128)
 #endif
@@ -1204,9 +1205,12 @@ void GUI::vkeybd_kill_all_notes()
 
 bool GUI::on_key_press_event(GdkEventKey *event)
 {
-	if (event->keyval == GDK_a && event->state == GDK_CONTROL_MASK | GDK_MOD1_MASK) {
-		int note = presetCV->getAuditionNote();
-		vau->HandleMidiNoteOn(note, 1.0f);
+	if (event->keyval == GDK_a && event->state & GDK_CONTROL_MASK) {
+		if (!m_auditionKeyDown) {
+			m_auditionKeyDown = true;
+			int note = presetCV->getAuditionNote();
+			vau->HandleMidiNoteOn(note, 1.0f);
+		}
 		return true;
 	}
 	return Gtk::Window::on_key_press_event(event);
@@ -1214,9 +1218,12 @@ bool GUI::on_key_press_event(GdkEventKey *event)
 
 bool GUI::on_key_release_event(GdkEventKey *event)
 {
-	if (event->keyval == GDK_a && event->state == GDK_CONTROL_MASK | GDK_MOD1_MASK) {
-		int note = presetCV->getAuditionNote();
-		vau->HandleMidiNoteOff(note, 1.0f);
+	if (event->keyval == GDK_a && event->state & GDK_CONTROL_MASK) {
+		if (m_auditionKeyDown) {
+			m_auditionKeyDown = false;
+			int note = presetCV->getAuditionNote();
+			vau->HandleMidiNoteOff(note, 1.0f);
+		}
 		return true;
 	}
 	return Gtk::Window::on_key_release_event(event);

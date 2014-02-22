@@ -164,6 +164,7 @@ private:
 	GtkAdjustment 	*m_adjustments[kAmsynthParameterCount];
 
 	bool			m_presetIsNotSaved;
+	bool			m_auditionKeyDown;
 
 	Gtk::Menu		*m_pitchBendRangeMenu;
 
