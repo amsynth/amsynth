@@ -42,8 +42,10 @@
 static void session_callback(jack_session_event_t *event, void *arg);
 #endif
 
+bool JackOutput::autoconnect = true;
+
 JackOutput::JackOutput()
-:	_auto_connect(false)
+:	error_msg("")
 #ifdef WITH_JACK
 ,	l_port(NULL)
 ,	r_port(NULL)
@@ -101,7 +103,9 @@ JackOutput::init	( Config & config )
 
 	// don't auto connect ports if under jack session control...
 	// the jack session manager is responsible for restoring port connections
-	_auto_connect = config.jack_session_uuid.empty();
+    if (!config.jack_session_uuid.empty()) {
+        autoconnect = false;
+    }
 	
 	return 0;
 #endif
@@ -150,7 +154,7 @@ JackOutput::Start	()
 		std::cerr << "cannot activate JACK client\n";
 		return false;
 	}
-	if (_auto_connect) {
+	if (autoconnect) {
 		const char **port_names = jack_get_ports(client, NULL, NULL, JackPortIsPhysical | JackPortIsInput);
 		if (port_names) {
 			jack_connect(client, jack_port_name(l_port), port_names[0]);

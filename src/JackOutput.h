@@ -48,13 +48,14 @@ public:
 	string		get_error_msg	( )		{ return error_msg; };
 	
 	void		setMidiHandler(MidiStreamReceiver *midiHandler) { _midiHandler = midiHandler; }
+    
+    static bool autoconnect;
 
 #ifdef WITH_JACK
 	static int process(jack_nframes_t nframes, void *arg);
 #endif
 private:
 	string	error_msg;
-	bool _auto_connect;
 #ifdef WITH_JACK
 	jack_port_t 	*l_port, *r_port, *m_port;
 	jack_client_t 	*client;

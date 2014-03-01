@@ -42,8 +42,6 @@ public:
 	int	load	();
 	int	save	();
 	
-	bool	ParseCOpts	(int argc, char* argv[]);
-	
 	/**
 	 * The sampling rate at which the output is to be produced
 	 */

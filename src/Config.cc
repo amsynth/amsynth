@@ -59,51 +59,6 @@ Config::Defaults	()
 		string("/.amSynth.presets");
 }
 
-bool
-Config::ParseCOpts	(int argc, char* argv[])
-{
-#ifndef _WIN32
-	optind = 1; // reset getopt
-	int opt;
-	while( (opt=getopt(argc, argv, "vhstdzm:c:a:r:p:b:U:P:n:"))!= -1 ) {
-		switch(opt) {
-			case 'm': 
-				midi_driver = optarg;
-				break;
-			case 'b': 
-				current_bank_file = optarg;
-				break;
-			case 'c':
-				midi_channel = atoi( optarg ); 
-				break;
-			case 'a':
-				audio_driver = optarg; 
-				break;
-			case 'd':
-				debug_drivers = 1;
-				break;
-			case 'r':
-				sample_rate = atoi( optarg );
-				break;
-			case 'p':
-				polyphony = atoi( optarg );
-				break;	
-			case 'U':
-				jack_session_uuid = optarg;
-				break;
-			case 'n':
-				jack_client_name_preference = optarg;
-				break;
-			default:
-				break;
-		}
-	}
-	return true;
-#else
-	return false;
-#endif
-}
-
 int
 Config::load	()
 {
