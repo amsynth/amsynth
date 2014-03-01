@@ -2,4 +2,4 @@ language: cpp
 compiler:
   - gcc
   - clang
-script: ./configure && make distcheck
+script: ./autogen.sh && ./configure && make distcheck
