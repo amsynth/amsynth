@@ -64,20 +64,20 @@ Any options given here override those in the config file ($HOME/.amSynthrc)\n\
 \n\
 OPTIONS:\n\
 \n\
-    -h          show this usage message\n\
-    -v          show version information\n\
-    -d          show some debugging output\n\
+	-h          show this usage message\n\
+	-v          show version information\n\
+	-d          show some debugging output\n\
 \n\
-    -b <filename>   use <filename> as the bank to store presets\n\
+	-b <filename>   use <filename> as the bank to store presets\n\
 \n\
-    -a <string> set the sound output driver to use [alsa/oss/auto(default)]\n\
-    -r <int>    set the sampling rate to use\n\
-    -m <string>	set the midi driver to use [alsa/oss/auto(default)]\n\
-    -c <int>    set the midi channel to respond to (default=all)\n\
-    -p <int>    set the polyphony (maximum active voices)\n\
+	-a <string> set the sound output driver to use [alsa/oss/auto(default)]\n\
+	-r <int>    set the sampling rate to use\n\
+	-m <string>	set the midi driver to use [alsa/oss/auto(default)]\n\
+	-c <int>    set the midi channel to respond to (default=all)\n\
+	-p <int>    set the polyphony (maximum active voices)\n\
 \n\
-    -n <name>   specify the JACK client name to use\n\
-    --jack_autoconnect=<true|false>\n\
+	-n <name>   specify the JACK client name to use\n\
+	--jack_autoconnect=<true|false>\n\
 \n";
 
 Config config;
@@ -268,66 +268,66 @@ int main( int argc, char *argv[] )
 
 	// needs to be called before our own command line parsing code
 	amsynth_lash_process_args(&argc, &argv);
-    
-    static struct option longopts[] = {
-        { "jack_autoconnect", optional_argument, NULL, 0 },
-        { 0 }
-    };
-    
-    int opt = -1, longindex = -1;
-    while ((opt = getopt_long(argc, argv, "vhstdzxm:c:a:r:p:b:U:P:n:", longopts, &longindex)) != -1) {
-        switch (opt) {
-            case 'v':
-                cout << PACKAGE_STRING << " -- compiled " << __DATE__ << " " << __TIME__ << endl;
-                return 0;
-            case 'h':
-                cout << help_text;
-                return 0;
-            case 'z':
-                ptest();
-                return 0;
-            case 'P':
-                initial_preset_no = atoi(optarg);
-                break;
-            case 'x':
-                no_gui = true;
-                break;
-            case 'm':
-                config.midi_driver = optarg;
-                break;
-            case 'b':
-                config.current_bank_file = optarg;
-                break;
-            case 'c':
-                config.midi_channel = atoi( optarg );
-                break;
-            case 'a':
-                config.audio_driver = optarg;
-                break;
-            case 'd':
-                config.debug_drivers = 1;
-                break;
-            case 'r':
-                config.sample_rate = atoi( optarg );
-                break;
-            case 'p':
-                config.polyphony = atoi( optarg );
-                break;
-            case 'U':
-                config.jack_session_uuid = optarg;
-                break;
-            case 'n':
-                config.jack_client_name_preference = optarg;
-                break;
-            case 0:
-                if (strcmp(longopts[longindex].name, "jack_autoconnect") == 0) {
-                    JackOutput::autoconnect = !optarg || (strcmp(optarg, "true") == 0);
-                }
-                break;
-            default:
-                break;
-        }
-    }
+	
+	static struct option longopts[] = {
+		{ "jack_autoconnect", optional_argument, NULL, 0 },
+		{ 0 }
+	};
+	
+	int opt = -1, longindex = -1;
+	while ((opt = getopt_long(argc, argv, "vhstdzxm:c:a:r:p:b:U:P:n:", longopts, &longindex)) != -1) {
+		switch (opt) {
+			case 'v':
+				cout << PACKAGE_STRING << " -- compiled " << __DATE__ << " " << __TIME__ << endl;
+				return 0;
+			case 'h':
+				cout << help_text;
+				return 0;
+			case 'z':
+				ptest();
+				return 0;
+			case 'P':
+				initial_preset_no = atoi(optarg);
+				break;
+			case 'x':
+				no_gui = true;
+				break;
+			case 'm':
+				config.midi_driver = optarg;
+				break;
+			case 'b':
+				config.current_bank_file = optarg;
+				break;
+			case 'c':
+				config.midi_channel = atoi( optarg );
+				break;
+			case 'a':
+				config.audio_driver = optarg;
+				break;
+			case 'd':
+				config.debug_drivers = 1;
+				break;
+			case 'r':
+				config.sample_rate = atoi( optarg );
+				break;
+			case 'p':
+				config.polyphony = atoi( optarg );
+				break;
+			case 'U':
+				config.jack_session_uuid = optarg;
+				break;
+			case 'n':
+				config.jack_client_name_preference = optarg;
+				break;
+			case 0:
+				if (strcmp(longopts[longindex].name, "jack_autoconnect") == 0) {
+					JackOutput::autoconnect = !optarg || (strcmp(optarg, "true") == 0);
+				}
+				break;
+			default:
+				break;
+		}
+	}
 
 	// all config files should eventually be migrated to the ~./amsynth directory
 	mkdir ((std::string(getenv("HOME")) + std::string("/.amsynth")).c_str(), 0000755);
@@ -359,7 +359,7 @@ int main( int argc, char *argv[] )
 	GenericOutput *out = open_audio();
 	if (!out)
 		fatal_error("Fatal Error: open_audio() returned NULL.\n"
-		            "config.audio_driver = " + config.audio_driver);
+					"config.audio_driver = " + config.audio_driver);
 
 	// errors now detected & reported in the GUI
 	out->init(config);
