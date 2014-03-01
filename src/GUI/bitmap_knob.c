@@ -227,6 +227,7 @@ bitmap_knob_button_press ( GtkWidget *widget, GdkEventButton *event )
 		gtk_widget_grab_focus(widget);
     	gtk_grab_add(widget);
 		bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
+		g_signal_emit_by_name(self->adjustment, "start_atomic_value_change");
 		gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 		gdouble upper = gtk_adjustment_get_upper (self->adjustment);
 		gdouble step  = gtk_adjustment_get_step_increment (self->adjustment);

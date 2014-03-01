@@ -140,6 +140,7 @@ bitmap_button_button_press ( GtkWidget *widget, GdkEventButton *event )
 	if (event->type == GDK_BUTTON_PRESS && event->button == 1)
 	{
 		bitmap_button *self = g_object_get_data (G_OBJECT (widget), bitmap_button_key); g_assert (self);
+		g_signal_emit_by_name(self->adjustment, "start_atomic_value_change");
 		gdouble value = gtk_adjustment_get_value (self->adjustment);
 		gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 		gdouble upper = gtk_adjustment_get_upper (self->adjustment);

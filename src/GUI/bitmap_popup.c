@@ -173,6 +173,7 @@ bitmap_popup_button_press ( GtkWidget *widget, GdkEventButton *event )
 	if (event->type == GDK_BUTTON_PRESS && event->button == 1)
 	{
 		bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
+		g_signal_emit_by_name(self->adjustment, "start_atomic_value_change");
 		gtk_menu_popup (GTK_MENU (self->menu), NULL, NULL, NULL, NULL, event->button, event->time);
 		return TRUE;
 	}

@@ -24,6 +24,7 @@
 
 #include <string>
 #include <vector>
+#include <stack>
 
 #include "Preset.h"
 #include "UpdateListener.h"
@@ -64,6 +65,14 @@ public:
 	// Selects a new, unused preset ready for editing.
 	int		newPreset			();
 	void	deletePreset		();
+
+	// Manages undo/redo for changes to current preset.
+	void	pushParamChange		( const Param param, const float value );
+	void	undoChange			();
+	void	redoChange			();
+
+	// Randomises the current preset.
+	void	randomiseCurrentPreset	();
 	
 	// Saves the active preset to the filename filename
 	int		exportPreset		(const std::string filename);
@@ -97,6 +106,59 @@ private:
 	Preset 			nullpreset;
 	int 			currentPresetNo;
 	unsigned long 	lastPresetsFileModifiedTime;
+
+	class ChangeData {
+		public:
+			virtual void initiateUndo( PresetController * ) = 0;
+			virtual void initiateRedo( PresetController * ) = 0;
+	};
+
+	class ParamChange: public ChangeData {
+		public:
+			Param param;
+			float value;
+
+			ParamChange(Param nParam, float nValue)
+					:param(nParam),
+					value(nValue) {}
+
+			void initiateUndo( PresetController *presetController ) {
+				presetController->undoChange(this);
+			}
+
+			void initiateRedo( PresetController *presetController ) {
+				presetController->redoChange(this);
+			}
+	};
+
+	class RandomiseChange: public ChangeData {
+		public:
+			Preset preset;
+
+			RandomiseChange(Preset &nPreset) {
+				preset = nPreset; // Uses operator override.
+			}
+
+			void initiateUndo( PresetController *presetController ) {
+				presetController->undoChange(this);
+			}
+
+			void initiateRedo( PresetController *presetController ) {
+				presetController->redoChange(this);
+			}
+	};
+
+	void undoChange	( ParamChange * );
+	void undoChange	( RandomiseChange * );
+	void redoChange	( ParamChange * );
+	void redoChange	( RandomiseChange * );
+
+	std::stack<ChangeData *>	undoBuffer;
+	std::stack<ChangeData *>	redoBuffer;
+	void clearUndoBuffer	() { while( !undoBuffer.empty() ) { delete undoBuffer.top(); undoBuffer.pop(); } }
+	void clearRedoBuffer	() { while( !redoBuffer.empty() ) { delete redoBuffer.top(); redoBuffer.pop(); } }
+	void clearChangeBuffers	() { clearUndoBuffer(); clearRedoBuffer(); }
+
 };
 
 #endif

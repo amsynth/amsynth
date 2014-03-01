@@ -47,6 +47,7 @@ PresetController::PresetController	()
 PresetController::~PresetController	()
 {
 	delete[] presets;
+	clearChangeBuffers();
 }
 
 int
@@ -58,6 +59,7 @@ PresetController::selectPreset		(const int preset)
 		currentPreset = getPreset (preset);
 		currentPresetNo = preset;
 		notify ();
+		clearChangeBuffers ();
 	}
     return 0;
 }
@@ -97,6 +99,72 @@ PresetController::deletePreset		()
 {
 	currentPreset = blankPreset;
 	notify ();
+	clearChangeBuffers();
+}
+
+void
+PresetController::pushParamChange	(const Param param, const float value)
+{
+	undoBuffer.push(new ParamChange(param, value));
+	clearRedoBuffer();
+}
+
+void
+PresetController::undoChange	()
+{
+	if(!undoBuffer.empty())
+	{
+		undoBuffer.top()->initiateUndo(this);
+		delete undoBuffer.top();
+		undoBuffer.pop();
+	}
+}
+
+void
+PresetController::redoChange	()
+{
+	if(!redoBuffer.empty())
+	{
+		redoBuffer.top()->initiateRedo(this);
+		delete redoBuffer.top();
+		redoBuffer.pop();
+	}
+}
+
+void
+PresetController::undoChange	( ParamChange *change )
+{
+	redoBuffer.push(new ParamChange(change->param, currentPreset.getParameter(change->param).getValue()));
+	currentPreset.getParameter(change->param).setValue(change->value);
+}
+
+void
+PresetController::redoChange	( ParamChange *change )
+{
+	undoBuffer.push(new ParamChange(change->param, currentPreset.getParameter(change->param).getValue()));
+	currentPreset.getParameter(change->param).setValue(change->value);
+}
+
+void
+PresetController::undoChange	( RandomiseChange *change )
+{
+	redoBuffer.push(new RandomiseChange(currentPreset));
+	currentPreset = change->preset;
+}
+
+void
+PresetController::redoChange	( RandomiseChange *change )
+{
+	undoBuffer.push(new RandomiseChange(currentPreset));
+	currentPreset = change->preset;
+}
+
+void
+PresetController::randomiseCurrentPreset	()
+{
+	undoBuffer.push(new RandomiseChange(currentPreset));
+	clearRedoBuffer();
+	currentPreset.randomise();
 }
 
 int
@@ -116,6 +184,7 @@ PresetController::importPreset		(const string filename)
 	if (!currentPreset.fromString( str )) return -1;
 	currentPreset.setName("Imported: " + currentPreset.getName());
 	notify ();
+	clearChangeBuffers ();
 	return 1;
 }
 

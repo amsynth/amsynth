@@ -40,6 +40,15 @@ namespace Gtk {
 	class Adjustment;
 };
 
+struct UndoArgs {
+	PresetController *presetController;
+	Parameter *parameter;
+
+	UndoArgs(PresetController *nPresetController, Parameter *nParameter)
+	:presetController(nPresetController),
+	parameter(nParameter) {}
+};
+
 
 /**
  * @brief The top-level Graphical User Interface
@@ -162,6 +171,7 @@ private:
 	Preset			*clipboard_preset;
 	
 	GtkAdjustment 	*m_adjustments[kAmsynthParameterCount];
+	UndoArgs		*m_undoArgs[kAmsynthParameterCount];
 
 	bool			m_presetIsNotSaved;
 	bool			m_auditionKeyDown;

@@ -268,7 +268,9 @@ GUI::create_menus	( )
 	list_preset.push_back (MenuElem("Rename", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetRename)));
 	list_preset.push_back (MenuElem("Clear", bind(mem_fun(this,&GUI::event_handler),(int)evPresetDelete)));
 	list_preset.push_back (SeparatorElem());
-	list_preset.push_back (MenuElem("_Randomise", Gtk::AccelKey("<control>R"), sigc::mem_fun(preset_controller->getCurrentPreset(), &Preset::randomise)));
+	list_preset.push_back (MenuElem("_Randomise", Gtk::AccelKey("<control>R"), sigc::mem_fun(preset_controller, &PresetController::randomiseCurrentPreset)));
+	list_preset.push_back (MenuElem("Undo", Gtk::AccelKey("<control>Z"), sigc::mem_fun(preset_controller, &PresetController::undoChange)));
+	list_preset.push_back (MenuElem("Redo", Gtk::AccelKey("<control>Y"), sigc::mem_fun(preset_controller, &PresetController::redoChange)));
 	list_preset.push_back (SeparatorElem());
 	list_preset.push_back (MenuElem("Import...", bind(mem_fun(*this, &GUI::event_handler), (int)evPresetImport)));
 	list_preset.push_back (MenuElem("Export...", bind(mem_fun(*this, &GUI::event_handler), (int)evPresetExport)));
@@ -449,11 +451,30 @@ adjustment_value_changed (GtkAdjustment *adjustment, gpointer data)
 	param->setValue (gtk_adjustment_get_value (adjustment));
 }
 
+void
+start_atomic_adjustment_value_change (GtkAdjustment *adjustment, gpointer data)
+{
+	UndoArgs *args = (UndoArgs *) data;
+	args->presetController->pushParamChange(args->parameter->GetId(), gtk_adjustment_get_value(adjustment));
+}
+
 void 
 GUI::init()
 {
 	Preset *preset = &(preset_controller->getCurrentPreset());
 	
+	// Add custom signal for atomic change operations to parameters.
+	g_signal_new(
+		"start_atomic_value_change",
+		g_type_from_name("GtkAdjustment"),
+		G_SIGNAL_ACTION,
+		0,
+		NULL,
+		NULL,
+		NULL,
+		G_TYPE_NONE,
+		0
+	);
 	
 	for (int i=0; i<kAmsynthParameterCount; i++) {
 		Parameter &param = preset->getParameter(i);
@@ -466,6 +487,11 @@ GUI::init()
 		gtk_signal_connect (GTK_OBJECT (m_adjustments[i]), "value_changed",
 			(GtkSignalFunc) adjustment_value_changed,
 			(gpointer) &param );
+
+		m_undoArgs[i] = new UndoArgs(preset_controller, &param);
+		g_signal_connect_after (G_OBJECT (m_adjustments[i]), "start_atomic_value_change",
+			G_CALLBACK(start_atomic_adjustment_value_change),
+			(gpointer) m_undoArgs[i] );
 	}
 	
 	Gtk::Widget *editor = Glib::wrap (editor_pane_new (m_adjustments));
@@ -731,6 +757,7 @@ GUI::event_handler(const int e)
 
 GUI::~GUI()
 {
+	for(int i = 0; i < kAmsynthParameterCount; i++) delete m_undoArgs[i];
 }
 
 void
