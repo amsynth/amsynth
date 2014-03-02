@@ -8,4 +8,4 @@ install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq libgtk2.0-dev libgtkmm-2.4-dev libjack-jackd2-dev libasound-dev liblash-compat-dev dssi-dev liblo-dev libsndfile-dev
 
-script: ./autogen.sh && ./configure && make distcheck
+script: ./autogen.sh && tests/build_configurations.sh
