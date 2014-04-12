@@ -59,6 +59,9 @@ private:
 	static void on_audition_pressed (GtkWidget *widget, PresetControllerViewImpl *);
 	static void on_audition_released (GtkWidget *widget, PresetControllerViewImpl *);
 	static void on_panic_clicked (GtkWidget *widget, PresetControllerViewImpl *);
+    
+    static gboolean on_audition_key_press_event (GtkWidget *widget, GdkEventKey *event, PresetControllerViewImpl *);
+    static gboolean on_audition_key_release_event (GtkWidget *widget, GdkEventKey *event, PresetControllerViewImpl *);
 
 	VoiceAllocationUnit *vau;
     PresetController *presetController;
@@ -68,6 +71,7 @@ private:
 	GtkWidget *audition_spin;
 	int audition_note;
 	bool inhibit_combo_callback;
+    bool audition_button_pressed;
 };
 
 PresetControllerViewImpl::PresetControllerViewImpl(VoiceAllocationUnit *voiceAllocationUnit)
@@ -101,6 +105,8 @@ PresetControllerViewImpl::PresetControllerViewImpl(VoiceAllocationUnit *voiceAll
 	widget = gtk_button_new_with_label ("Audition");
 	g_signal_connect (G_OBJECT (widget), "pressed", G_CALLBACK (&PresetControllerViewImpl::on_audition_pressed), this);
 	g_signal_connect (G_OBJECT (widget), "released", G_CALLBACK (&PresetControllerViewImpl::on_audition_released), this);
+    g_signal_connect (G_OBJECT (widget), "key-press-event", G_CALLBACK (&PresetControllerViewImpl::on_audition_key_press_event), this);
+    g_signal_connect (G_OBJECT (widget), "key-release-event", G_CALLBACK (&PresetControllerViewImpl::on_audition_key_release_event), this);
 	add (* Glib::wrap (widget));
 	
 	GtkAdjustment *audition_adj = (GtkAdjustment *) gtk_adjustment_new(60.0, 0.0, 127.0, 1.0, 5.0, 0.0);
@@ -156,6 +162,30 @@ void PresetControllerViewImpl::on_audition_pressed (GtkWidget *widget, PresetCon
 void PresetControllerViewImpl::on_audition_released (GtkWidget *widget, PresetControllerViewImpl *that)
 {
 	that->vau->HandleMidiNoteOff(that->audition_note, 0.0f);
+}
+
+gboolean PresetControllerViewImpl::on_audition_key_press_event(GtkWidget *widget, GdkEventKey *event, PresetControllerViewImpl *that)
+{
+    if (event->keyval == GDK_space || event->keyval == GDK_Return) {
+        if (!that->audition_button_pressed) {
+            that->audition_button_pressed = TRUE;
+            gtk_button_pressed(GTK_BUTTON(widget));
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+
+gboolean PresetControllerViewImpl::on_audition_key_release_event(GtkWidget *widget, GdkEventKey *event, PresetControllerViewImpl *that)
+{
+    if (event->keyval == GDK_space || event->keyval == GDK_Return) {
+        if (that->audition_button_pressed) {
+            that->audition_button_pressed = FALSE;
+            gtk_button_released(GTK_BUTTON(widget));
+        }
+        return TRUE;
+    }
+    return FALSE;
 }
 
 void PresetControllerViewImpl::on_panic_clicked (GtkWidget *widget, PresetControllerViewImpl *that)
