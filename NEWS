@@ -1,3 +1,14 @@
+amsynth 1.4.2 -- 2014-04-16
+
+  - fixes use of alsa utilities from the 'Utils' menu
+  - user specified jack client name now shown in window title
+  - sounds can now be auditioned from the keyboard with ctrl-a
+  - undo & redo now implemented
+  - jack port auto connection can be stopped using a new option:
+      amsynth --jack_autoconnect=false
+  - more sound banks thanks to brian :)
+
+
 amsynth 1.4.1 -- 2014-02-03
 
   - adds new preset banks: BriansBank12, 13 & 14
