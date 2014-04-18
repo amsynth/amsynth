@@ -26,6 +26,7 @@
 #include "MidiController.h"
 #include "TuningMap.h"
 
+#include <stdint.h>
 #include <vector>
 
 
@@ -33,6 +34,18 @@ class VoiceBoard;
 class SoftLimiter;
 class revmodel;
 class Distortion;
+
+
+struct NoteEvent
+{
+	unsigned frames;
+	bool note_on;
+	uint8_t note;
+	float velocity;
+
+	NoteEvent(unsigned frames, bool on, uint8_t note, float velocity)
+	: frames(frames), note_on(on), note(note), velocity(velocity) {}
+};
 
 
 class VoiceAllocationUnit : public UpdateListener, public MidiEventHandler
@@ -61,7 +74,7 @@ public:
 	void	setPitchBendRangeSemitones(float range) { mPitchBendRangeSemitones = range; }
 	void	setKeyboardMode(KeyboardMode);
 
-	// processing with stride (interleaved) is not functional yet!!!
+	void	Process			(unsigned nframes, std::vector<NoteEvent> events, float *l, float *r, int stride=1);
 	void	Process			(float *l, float *r, unsigned nframes, int stride=1);
 
 	double	noteToPitch		(int note) const;

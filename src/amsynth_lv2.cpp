@@ -146,11 +146,24 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 
 	Preset &preset = a->bank->getCurrentPreset();
 
+	std::vector<NoteEvent> note_events;
+
 	LV2_ATOM_SEQUENCE_FOREACH(a->midi_in_port, ev) {
 		if (ev->body.type == a->uris.midiEvent) {
 			uint32_t size = ev->body.size;
 			uint8_t *data = (uint8_t *)(ev + 1);
-			a->mc->HandleMidiData(data, size);
+			LV2_Midi_Message_Type type = lv2_midi_message_type(data);
+			switch (type) {
+			case LV2_MIDI_MSG_NOTE_OFF:
+				note_events.push_back(NoteEvent(ev->time.frames, false, data[1], data[2] / 127.0));
+				break;
+			case LV2_MIDI_MSG_NOTE_ON:
+				note_events.push_back(NoteEvent(ev->time.frames, true, data[1], data[2] / 127.0));
+				break;
+			default:
+				a->mc->HandleMidiData(data, size);
+				break;
+			}
 			if (MIDI_STATUS_CONTROLLER == (data[0] & 0xF0)) {
 				for (unsigned int i=0; i<kAmsynthParameterCount; i++) {
 					float value = preset.getParameter(i).getValue();
@@ -171,7 +184,7 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 		}
 	}
 
-	a->vau->Process (a->out_l, a->out_r, sample_count);
+	a->vau->Process(sample_count, note_events, a->out_l, a->out_r);
 }
 
 static LV2_State_Status
