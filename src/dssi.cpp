@@ -181,20 +181,16 @@ static void run_synth (LADSPA_Handle instance, unsigned long sample_count, snd_s
 
     Preset &preset = a->bank->getCurrentPreset();
 
+    std::vector<NoteEvent> note_events;
+
 	for (snd_seq_event_t *e = events; e < events + event_count; e++) {
 		unsigned char data[3] = {0};
 		switch (e->type) {
 		case SND_SEQ_EVENT_NOTEON:
-			data[0] = MIDI_STATUS_NOTE_ON;
-			data[1] = e->data.note.note;
-			data[2] = e->data.note.velocity;
-			a->mc->HandleMidiData(data, 3);
+			note_events.push_back(NoteEvent(e->time.tick, true, e->data.note.note, e->data.note.velocity / 127.0));
 			break;
 		case SND_SEQ_EVENT_NOTEOFF:
-			data[0] = MIDI_STATUS_NOTE_OFF;
-			data[1] = e->data.note.note;
-			data[2] = e->data.note.off_velocity;
-			a->mc->HandleMidiData(data, 3);
+			note_events.push_back(NoteEvent(e->time.tick, false, e->data.note.note, e->data.note.off_velocity / 127.0));
 			break;
 		case SND_SEQ_EVENT_KEYPRESS:
 			data[0] = MIDI_STATUS_NOTE_PRESSURE;
@@ -249,7 +245,7 @@ static void run_synth (LADSPA_Handle instance, unsigned long sample_count, snd_s
 	    }
     }
 
-    a->vau->Process ((float *) a->out_l, (float *) a->out_r, sample_count);
+    a->vau->Process(sample_count, note_events, (float *)a->out_l, (float *)a->out_r);
 }
 
 // renoise ignores DSSI plugins that don't implement run
