@@ -21,7 +21,6 @@
 
 #include "JackOutput.h"
 #include "VoiceAllocationUnit.h"
-#include "drivers/MidiInterface.h" // for class MidiStreamReceiver
 
 #if HAVE_JACK_MIDIPORT_H
 #include <jack/midiport.h>
@@ -37,6 +36,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <vector>
 
 #ifdef HAVE_JACK_SESSION_H
 static void session_callback(jack_session_event_t *event, void *arg);
@@ -52,7 +52,6 @@ JackOutput::JackOutput()
 ,	m_port(NULL)
 ,	client(NULL)
 #endif
-,	_midiHandler(NULL)
 {
 }
 
@@ -114,11 +113,21 @@ JackOutput::init	( Config & config )
 }
 
 #ifdef WITH_JACK
+
+static inline amsynth_midi_event_t amsynth_midi_event_make(jack_midi_event_t je)
+{
+	amsynth_midi_event_t me;
+	me.offset_frames = je.time;
+	me.length = je.size;
+	me.buffer = je.buffer;
+	return me;
+}
+
 int
 JackOutput::process (jack_nframes_t nframes, void *arg)
 {
 	JackOutput *self = (JackOutput *)arg;
-	assert(self->_midiHandler);
+	std::vector<amsynth_midi_event_t> midi_events;
 	float *lout = (jack_default_audio_sample_t *) jack_port_get_buffer(self->l_port, nframes);
 	float *rout = (jack_default_audio_sample_t *) jack_port_get_buffer(self->r_port, nframes);
 #if HAVE_JACK_MIDIPORT_H
@@ -129,15 +138,13 @@ JackOutput::process (jack_nframes_t nframes, void *arg)
 			jack_midi_event_t midi_event;
 			memset(&midi_event, 0, sizeof(midi_event));
 			jack_midi_event_get(&midi_event, port_buf, i);
-			if (midi_event.size && midi_event.buffer) {
-				// TODO: use midi_event.time to reduce midi event jitter
-				self->_midiHandler->HandleMidiData(midi_event.buffer, midi_event.size);
-			}
+			midi_events.push_back(amsynth_midi_event_make(midi_event));
 		}
 	}
 #endif
 	if (self->mAudioCallback != NULL) {
-		(*self->mAudioCallback)(lout, rout, nframes, 1);
+		(*self->mAudioCallback)(lout, rout, nframes, 1,
+			midi_events.empty() ? NULL : &midi_events[0], midi_events.size());
 	}
 	return 0;
 }
@@ -147,7 +154,6 @@ bool
 JackOutput::Start	()
 {
 #ifdef WITH_JACK
-	assert(_midiHandler);
 	if (!client) return false;
 	if (jack_activate(client)) 
 	{

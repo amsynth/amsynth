@@ -116,7 +116,7 @@ AudioOutput::ThreadAction	()
 	while (!ShouldStop ())
 	{
 		if (mAudioCallback != NULL)
-			(*mAudioCallback)(buffer+bufsize*2, buffer+bufsize*3, bufsize, 1);
+			(*mAudioCallback)(buffer+bufsize*2, buffer+bufsize*3, bufsize, 1, NULL, 0);
 
 		for (int i=0; i<bufsize; i++) {
 			buffer[2*i]   = buffer[bufsize*2+i];

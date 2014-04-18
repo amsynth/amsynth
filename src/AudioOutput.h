@@ -31,7 +31,15 @@
 #include "Thread.h"
 #include "main.h"
 
-typedef void (* AudioCallback)(float *buffer_l, float *buffer_r, unsigned num_frames, int stride);
+struct amsynth_midi_event_t {
+	unsigned int offset_frames;
+	unsigned int length;
+	unsigned char *buffer;
+};
+
+typedef void (* AudioCallback)(
+	float *buffer_l, float *buffer_r, unsigned num_frames, int stride,
+	amsynth_midi_event_t *events, unsigned event_count);
 
 class GenericOutput
 {

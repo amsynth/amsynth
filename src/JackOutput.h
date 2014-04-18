@@ -33,8 +33,6 @@
 #include "AudioOutput.h"
 #include "Config.h"
 
-class MidiStreamReceiver;
-
 class JackOutput : public GenericOutput {
 
 public:
@@ -47,8 +45,6 @@ public:
 	
 	string		get_error_msg	( )		{ return error_msg; };
 	
-	void		setMidiHandler(MidiStreamReceiver *midiHandler) { _midiHandler = midiHandler; }
-    
     static bool autoconnect;
 
 #ifdef WITH_JACK
@@ -60,7 +56,6 @@ private:
 	jack_port_t 	*l_port, *r_port, *m_port;
 	jack_client_t 	*client;
 #endif
-	MidiStreamReceiver *_midiHandler;
 };
 
 #endif				// _JACK_OUTPUT_H

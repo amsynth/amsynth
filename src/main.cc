@@ -28,6 +28,7 @@
 #include "Config.h"
 #include "../config.h"
 #include "lash.h"
+#include "midi.h"
 
 #if __APPLE__
 #include "drivers/CoreAudio.h"
@@ -175,6 +176,7 @@ static MidiController *midi_controller = NULL;
 static MidiInterface *midiInterface = NULL;
 static PresetController *presetController = NULL;
 static VoiceAllocationUnit *voiceAllocationUnit = NULL;
+static void amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride, amsynth_midi_event_t *events, unsigned event_count);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -207,7 +209,6 @@ GenericOutput * open_audio()
 		JackOutput *jack = new JackOutput();
 		if (jack->init(config) == 0)
 		{
-			jack->setMidiHandler(midi_controller);
 			return jack;
 		}
 		else
@@ -451,7 +452,7 @@ amsynth_timer_callback()
 }
 
 void
-amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride)
+amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride, amsynth_midi_event_t *events, unsigned event_count)
 {
 	if (midiInterface != NULL)
 		midiInterface->poll();
@@ -459,15 +460,29 @@ amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, in
 	if (midi_controller)
 		midi_controller->send_changes();
 
-	if (voiceAllocationUnit != NULL)
-		voiceAllocationUnit->Process(buffer_l, buffer_r, num_frames, stride);
-}
-
-void
-amsynth_midi_callback(unsigned /* timestamp */, unsigned num_bytes, unsigned char *midi_data)
-{
-	if (midi_controller)
-		midi_controller->HandleMidiData(midi_data, num_bytes);
+	if (voiceAllocationUnit != NULL) {
+		std::vector<NoteEvent> note_events;
+		for (unsigned i=0; i<event_count; i++) {
+			if (events[i].length == 3) {
+				switch (events[i].buffer[0] & 0xF0) {
+				case MIDI_STATUS_NOTE_OFF:
+					note_events.push_back(NoteEvent(events[i].offset_frames, false, events[i].buffer[1], events[i].buffer[2] / 127.0));
+					break;
+				case MIDI_STATUS_NOTE_ON:
+					note_events.push_back(NoteEvent(events[i].offset_frames, true, events[i].buffer[1], events[i].buffer[2] / 127.0));
+					break;
+				default:
+					if (midi_controller)
+						midi_controller->HandleMidiData(events[i].buffer, events[i].length);
+					break;
+				}
+			} else {
+				if (midi_controller)
+					midi_controller->HandleMidiData(events[i].buffer, events[i].length);
+			}
+		}
+		voiceAllocationUnit->Process(num_frames, note_events, buffer_l, buffer_r, stride);
+	}
 }
 
 void
