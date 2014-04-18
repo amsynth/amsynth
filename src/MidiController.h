@@ -22,8 +22,8 @@
 #ifndef _MIDICONTROLLER_H
 #define _MIDICONTROLLER_H
 
+#include "Config.h"
 #include "PresetController.h"
-#include "drivers/MidiInterface.h"
 #include "Parameter.h"
 #include "Thread.h"
 
@@ -31,6 +31,8 @@
 #define MAX_CC 128
 
 typedef unsigned char uchar;
+
+class MidiDriver;
 
 class MidiEventHandler
 {
@@ -47,7 +49,7 @@ public:
 	virtual void HandleMidiPan(float left, float right) {}
 };
 
-class MidiController : public MidiStreamReceiver
+class MidiController
 {
 public:
 	MidiController( Config & config );
@@ -56,7 +58,7 @@ public:
 	void	setPresetController	(PresetController & pc) { presetController = &pc; }
 	void	SetMidiEventHandler(MidiEventHandler* h) { _handler = h; }
 	
-	virtual void HandleMidiData(const unsigned char* bytes, unsigned numBytes);
+	void	HandleMidiData(const unsigned char *bytes, unsigned numBytes);
 
 	void	clearControllerMap();
 	void	loadControllerMap();
@@ -70,6 +72,7 @@ public:
 	int		get_midi_channel	() { return channel; }
 	void	set_midi_channel	( int ch );
 	
+	void	setMidiDriver		(MidiDriver *driver) { _midiDriver = driver; }
 	int     sendMidi_values		();
 	void	send_changes		(bool force=false);
 
@@ -87,6 +90,7 @@ private:
 	Parameter last_active_controller;
 	unsigned char _midi_cc_vals[MAX_CC];
 	MidiEventHandler* _handler;
+	MidiDriver *_midiDriver;
 	unsigned char _rpn_msb, _rpn_lsb;
 
 	int _cc_to_param_map[MAX_CC];

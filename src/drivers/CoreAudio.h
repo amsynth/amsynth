@@ -23,9 +23,7 @@
 #define _CoreAudio_h
 
 #include "../AudioOutput.h"
-#include "MidiInterface.h"
 
 GenericOutput* CreateCoreAudioOutput();
-MidiInterface* CreateCoreMidiInterface();
 
 #endif

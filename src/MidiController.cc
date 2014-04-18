@@ -21,6 +21,7 @@
 
 #include "MidiController.h"
 
+#include "drivers/MidiDriver.h"
 #include "midi.h"
 
 #include <assert.h>
@@ -36,6 +37,7 @@ MidiController::MidiController( Config & config )
 ,	_rpn_msb(0xff)
 ,	_rpn_lsb(0xff)
 ,	_config_needs_save(false)
+,	_midiDriver(NULL)
 {
 	this->config = &config;
 	presetController = 0;
@@ -335,7 +337,7 @@ MidiController::sendMidi_values       ()
 void
 MidiController::send_changes(bool force)
 {
-	if (!_midiIface)
+	if (!_midiDriver)
 		return;
 	for (size_t paramId = 0; paramId < kAmsynthParameterCount; paramId++) {
 		int cc = _param_to_cc_map[paramId];
@@ -344,7 +346,7 @@ MidiController::send_changes(bool force)
 			unsigned char value = parameter.GetNormalisedValue() * 127.0;
 			if (_midi_cc_vals[cc] != value || force) {
 				_midi_cc_vals[cc] = value;
-				_midiIface->write_cc(channel, cc, value);
+				_midiDriver->write_cc(channel, cc, value);
 			}
 		}
 	}

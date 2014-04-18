@@ -144,6 +144,8 @@ GenericOutput* CreateCoreAudioOutput() { return new CoreAudioOutput; }
 
 #pragma mark - CoreMIDI
 
+#if 0 // needs reimplementing
+
 #include <CoreMIDI/MIDIServices.h>
 
 class CoreMidiInterface : public MidiInterface
@@ -241,11 +243,10 @@ CoreMidiInterface::midiReadProc (const MIDIPacketList *pktlist, void *readProcRe
 	self->HandleMidiPacketList(pktlist);
 }
 
-#pragma mark - CoreAudio
+#endif
 
-
+#pragma mark -
 
 #else
 GenericOutput* CreateCoreAudioOutput() { return NULL; }
-MidiInterface* CreateCoreMidiInterface() { return NULL; }
 #endif

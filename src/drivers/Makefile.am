@@ -19,8 +19,6 @@ libdrivers_a_SOURCES = \
 	CoreAudio.cc \
 	CoreAudio.h \
 	MidiDriver.h \
-	MidiInterface.cc \
-	MidiInterface.h \
 	OSSAudioDriver.cc \
 	OSSAudioDriver.h \
 	OSSMidiDriver.cc \

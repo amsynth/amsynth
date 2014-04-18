@@ -20,15 +20,19 @@
  */
 
 #include "main.h"
-#include "GUI/gui_main.h"
-#include "MidiController.h"
-#include "VoiceAllocationUnit.h"
-#include "AudioOutput.h"
-#include "JackOutput.h"
-#include "Config.h"
+
 #include "../config.h"
+#include "AudioOutput.h"
+#include "Config.h"
+#include "drivers/ALSAMidiDriver.h"
+#include "drivers/OSSMidiDriver.h"
+#include "Effects/denormals.h"
+#include "GUI/gui_main.h"
+#include "JackOutput.h"
 #include "lash.h"
 #include "midi.h"
+#include "MidiController.h"
+#include "VoiceAllocationUnit.h"
 
 #if __APPLE__
 #include "drivers/CoreAudio.h"
@@ -45,8 +49,6 @@
 #include <sys/resource.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
-#include "Effects/denormals.h"
 
 using namespace std;
 
@@ -172,11 +174,13 @@ void install_default_files_if_reqd()
 
 void ptest ();
 
-static MidiController *midi_controller = NULL;
-static MidiInterface *midiInterface = NULL;
-static PresetController *presetController = NULL;
-static VoiceAllocationUnit *voiceAllocationUnit = NULL;
+static MidiDriver *midiDriver;
+static MidiController *midi_controller;
+static PresetController *presetController;
+static VoiceAllocationUnit *voiceAllocationUnit;
 static void amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride, amsynth_midi_event_t *events, unsigned event_count);
+static unsigned char *midiBuffer;
+static const size_t midiBufferSize = 4096;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -227,6 +231,41 @@ GenericOutput * open_audio()
 	return new AudioOutput();
 	
 #endif
+}
+
+static MidiDriver *opened_midi_driver(MidiDriver *driver)
+{
+	if (driver->open(config) != 0) {
+		delete driver;
+		return NULL;
+	}
+	return driver;
+}
+
+static void open_midi()
+{
+	if (config.midi_driver == "alsa" || config.midi_driver == "ALSA") {
+		if (!(midiDriver = opened_midi_driver(CreateAlsaMidiDriver()))) {
+			std::cerr << "error: could not open ALSA MIDI interface";
+		}
+		return;
+	}
+
+	if (config.midi_driver == "oss" || config.midi_driver == "OSS") {
+		if (!(midiDriver = opened_midi_driver(CreateOSSMidiDriver()))) {
+			std::cerr << "error: could not open OSS MIDI interface";
+		}
+		return;
+	}
+
+	if (config.midi_driver == "auto") {
+		if (!(midiDriver = opened_midi_driver(CreateAlsaMidiDriver()))) {
+			if (!(midiDriver = opened_midi_driver(CreateOSSMidiDriver()))) {
+				std::cerr << "error: could not open any MIDI interface";
+			}
+		}
+		return;
+	}
 }
 
 void fatal_error(const std::string & msg)
@@ -377,31 +416,13 @@ int main( int argc, char *argv[] )
 	// errors now detected & reported in the GUI
 	out->Start();
 	
-	if (config.debug_drivers) std::cerr << "*** DONE :)\n";
+	open_midi();
+	midiBuffer = (unsigned char *)malloc(midiBufferSize);
 
-	//
-	// init midi
-	//
-#if __APPLE__
-	midiInterface = CreateCoreMidiInterface();
-#else
-	if (config.debug_drivers) std::cerr << "\n\n*** INITIALISING MIDI ENGINE...\n";
-	
-	if (config.current_midi_driver.empty())
-		midiInterface = new MidiInterface();
-#endif
-	
-	// errors now detected & reported in the GUI
-	if (midiInterface) {
-		midiInterface->open(config);
-		midiInterface->SetMidiStreamReceiver(midi_controller);
-	}
-
-	if (config.debug_drivers) std::cerr << "*** DONE :)\n\n";
-  
+	midi_controller->setMidiDriver(midiDriver);
 	midi_controller->SetMidiEventHandler(voiceAllocationUnit);
 	midi_controller->setPresetController( *presetController );
-  
+
 	presetController->getCurrentPreset().AddListenerToAll (voiceAllocationUnit);
 
 	// prevent lash from spawning a new jack server
@@ -454,13 +475,20 @@ amsynth_timer_callback()
 void
 amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride, amsynth_midi_event_t *events, unsigned event_count)
 {
-	if (midiInterface != NULL)
-		midiInterface->poll();
+	while (midiDriver) {
+		memset(midiBuffer, 0, midiBufferSize);
+		int bytes_read = midiDriver->read(midiBuffer, midiBufferSize);
+		if (midi_controller && bytes_read > 0) {
+			midi_controller->HandleMidiData(midiBuffer, bytes_read);
+		} else {
+			break;
+		}
+	}
 
 	if (midi_controller)
 		midi_controller->send_changes();
 
-	if (voiceAllocationUnit != NULL) {
+	if (voiceAllocationUnit) {
 		std::vector<NoteEvent> note_events;
 		for (unsigned i=0; i<event_count; i++) {
 			if (events[i].length == 3) {

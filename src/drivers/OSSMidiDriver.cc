@@ -65,7 +65,11 @@ int OSSMidiDriver::open( Config & config )
 		const char *dev = config.oss_midi_device.c_str();
 		_fd = ::open(dev, O_RDONLY | O_NONBLOCK, 0);
 	}
-	return (_fd > -1) ? 0 : -1;
+	if (_fd < 0) {
+		return -1;
+	}
+	config.current_midi_driver = "OSS";
+	return 0;
 }
 
 int OSSMidiDriver::close()

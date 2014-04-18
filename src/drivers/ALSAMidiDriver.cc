@@ -42,13 +42,11 @@ public:
     virtual int write_cc(unsigned int channel, unsigned int param, unsigned int value);
     virtual int open( Config & config );
     virtual int close();
-    virtual int get_alsa_client_id()	{ return client_id; };
 private:
 	snd_seq_t		*seq_handle;
 	snd_midi_event_t	*seq_midi_parser;
 	int 			portid;
 	int				portid_out;
-	int			client_id;
 	struct pollfd pollfd_in;
 };
 
@@ -71,8 +69,10 @@ ALSAMidiDriver::read(unsigned char *bytes, unsigned maxBytes)
 int
 ALSAMidiDriver::write_cc(unsigned int channel, unsigned int param, unsigned int value)
 {
+	if (seq_handle == NULL) {
+		return 0;
+	}
       int ret=0;
-      client_id = 0;
       snd_seq_event_t ev;
 
 
@@ -126,11 +126,6 @@ int ALSAMidiDriver::open( Config & config )
 		return -1;
 	}
 
-	client_id = snd_seq_client_id( seq_handle );
-	
-//	if (config.debug_drivers)
-//		cerr << "opened alsa sequencer client. id=" << client_id << endl;
-
 	if ((portid_out = snd_seq_create_simple_port(seq_handle, "MIDI OUT",
 		SND_SEQ_PORT_CAP_READ|SND_SEQ_PORT_CAP_SUBS_READ,
 		SND_SEQ_PORT_TYPE_APPLICATION)) < 0) {
@@ -139,6 +134,9 @@ int ALSAMidiDriver::open( Config & config )
 	}
 	
 	snd_seq_poll_descriptors( seq_handle, &pollfd_in, 1, POLLIN );
+
+	config.current_midi_driver = "ALSA";
+	config.alsa_seq_client_id = snd_seq_client_id(seq_handle);
 
 	return 0;
 }

@@ -35,7 +35,6 @@ public:
     virtual int write_cc(unsigned int channel, unsigned int param, unsigned int value) = 0;
     virtual int open( Config & config ) = 0;
     virtual int close() = 0;
-    virtual int get_alsa_client_id()	{ return 0; };
 };
 
 #endif
