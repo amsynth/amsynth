@@ -285,6 +285,8 @@ VoiceAllocationUnit::resetAllVoices()
 	sustain = false;
 }
 
+#include "stdio.h"
+
 void
 VoiceAllocationUnit::Process(unsigned nframes, std::vector<NoteEvent> events, float *l, float *r, int stride)
 {
@@ -299,8 +301,10 @@ VoiceAllocationUnit::Process(unsigned nframes, std::vector<NoteEvent> events, fl
 	while (frames_left) {
 		while (event != events.end() && event->frames <= frame_index) {
 			if (event->note_on) {
+				fprintf(stderr, "note %3d on   @ %4d\n", event->note, event->frames);
 				this->HandleMidiNoteOn(event->note, event->velocity);
 			} else {
+				fprintf(stderr, "note %3d off  @ %4d\n", event->note, event->frames);
 				this->HandleMidiNoteOff(event->note, event->velocity);
 			}
 			++event;
