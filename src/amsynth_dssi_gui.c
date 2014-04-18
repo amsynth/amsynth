@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
         g_signal_connect(_adjustments[i], "value-changed", (GCallback)&on_adjustment_value_changed, (gpointer)i);
     }
 
-    GtkWidget *editor = editor_pane_new(_adjustments);
+    GtkWidget *editor = editor_pane_new(_adjustments, TRUE);
     gtk_container_add(GTK_CONTAINER(_window), editor);
     gtk_widget_show_all(GTK_WIDGET(editor));
     

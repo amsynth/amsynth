@@ -1,5 +1,5 @@
 /*
- *  editor_pane.h
+ *  presets_menu.h
  *
  *  Copyright (c) 2001-2012 Nick Dowell
  *
@@ -19,18 +19,12 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _editor_pane_h
-#define _editor_pane_h
+#pragma once
 
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
-GtkWidget * editor_pane_new (GtkAdjustment **adjustments, gboolean enable_popup_menu);
-
-void modal_midi_learn(int param_index);
+GtkWidget *presets_menu_new(GtkAdjustment **adjustments);
 
 G_END_DECLS
-
-#endif
-

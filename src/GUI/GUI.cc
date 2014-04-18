@@ -494,7 +494,7 @@ GUI::init()
 			(gpointer) m_undoArgs[i] );
 	}
 	
-	Gtk::Widget *editor = Glib::wrap (editor_pane_new (m_adjustments));
+	Gtk::Widget *editor = Glib::wrap (editor_pane_new (m_adjustments, FALSE));
 	
 	vbox.pack_start (*(create_menus ()),0,0);
 	Gtk::HBox *tmphbox = manage (new Gtk::HBox());

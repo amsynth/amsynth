@@ -26,6 +26,7 @@
 #include "bitmap_button.h"
 #include "bitmap_knob.h"
 #include "bitmap_popup.h"
+#include "presets_menu.h"
 
 //#define ENABLE_LAYOUT_EDIT 1
 
@@ -184,6 +185,16 @@ on_control_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
 	}
 }
 
+static gboolean
+button_press_event (GtkWidget *widget, GdkEventButton *event, GtkWidget *presets_menu)
+{
+	if (!(event->type == GDK_BUTTON_PRESS && event->button == 3)) {
+		return FALSE;
+	}
+	gtk_menu_popup (GTK_MENU (presets_menu), NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time ());
+	return TRUE;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 #define HANDLE_GERROR( gerror ) \
@@ -204,7 +215,7 @@ on_control_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
 #define KEY_CONTROL_PARAM_NUM	"param_num"
 
 GtkWidget *
-editor_pane_new (GtkAdjustment **adjustments)
+editor_pane_new (GtkAdjustment **adjustments, gboolean enable_popup_menu)
 {
 	GtkWidget *fixed = gtk_fixed_new ();
 	gtk_widget_set_usize (fixed, 400, 300);
@@ -372,8 +383,15 @@ editor_pane_new (GtkAdjustment **adjustments)
 	//deldir (skin_dir);
 	g_free (skin_dir);
 
-	return fixed;
+	GtkWidget *eventbox = gtk_event_box_new ();
+	gtk_container_add (GTK_CONTAINER (eventbox), fixed);
+	if (enable_popup_menu) {
+		GtkWidget *presets_menu = presets_menu_new (adjustments);
+		gtk_menu_attach_to_widget (GTK_MENU (presets_menu), eventbox, NULL);
+		g_signal_connect (eventbox, "button-press-event", G_CALLBACK (button_press_event), presets_menu);
+	}
+
+	return eventbox;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-

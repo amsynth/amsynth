@@ -30,4 +30,6 @@ libGUI_a_SOURCES = \
 	MIDILearnDialog.h \
 	PresetControllerView.cc \
 	PresetControllerView.h \
+	presets_menu.cpp \
+	presets_menu.h \
 	Request.h

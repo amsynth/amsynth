@@ -72,7 +72,7 @@ endif
 
 if BUILD_DSSI_GUI
 noinst_PROGRAMS = amsynth_dssi_gtk
-amsynth_dssi_gtk_SOURCES = amsynth_dssi_gui.c Parameter.cc Preset.cc GUI/bitmap_button.c GUI/bitmap_knob.c GUI/bitmap_popup.c GUI/editor_pane.c
+amsynth_dssi_gtk_SOURCES = amsynth_dssi_gui.c Parameter.cc Preset.cc PresetController.cc GUI/bitmap_button.c GUI/bitmap_knob.c GUI/bitmap_popup.c GUI/editor_pane.c GUI/presets_menu.cpp
 amsynth_dssi_gtk_CPPFLAGS = $(AM_CPPFLAGS) @DSSI_CFLAGS@ @GTK_CFLAGS@ @LIBLO_CFLAGS@
 amsynth_dssi_gtk_LDADD = @DSSI_LIBS@ @GTK_LIBS@ @LIBLO_LIBS@
 endif
@@ -108,7 +108,7 @@ amsynth_lv2_la_SOURCES = $(amsynth_core_sources) $(amsynth_dsp_sources) amsynth_
 amsynth_lv2_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@
 amsynth_lv2_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2_descriptor" -disable-static
 noinst_LTLIBRARIES += amsynth_lv2_gtk.la
-amsynth_lv2_gtk_la_SOURCES = amsynth_lv2_ui_gtk.c Parameter.cc Preset.cc GUI/bitmap_button.c GUI/bitmap_knob.c GUI/bitmap_popup.c GUI/editor_pane.c
+amsynth_lv2_gtk_la_SOURCES = amsynth_lv2_ui_gtk.c Parameter.cc Preset.cc PresetController.cc GUI/bitmap_button.c GUI/bitmap_knob.c GUI/bitmap_popup.c GUI/editor_pane.c GUI/presets_menu.cpp
 amsynth_lv2_gtk_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@
 amsynth_lv2_gtk_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2ui_descriptor" -disable-static
 amsynth_lv2_gtk_la_LIBADD = @LV2_LIBS@
