@@ -43,6 +43,8 @@ class Lerper
 {
 
 public:
+
+	Lerper(): _start(0), _final(0), _inc(0), _steps(0), _i(0) {}
 	
 	void configure(float startValue, float finalValue, unsigned int numSteps)
 	{
