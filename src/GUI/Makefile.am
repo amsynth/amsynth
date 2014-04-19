@@ -18,7 +18,6 @@ libGUI_a_SOURCES = \
 	bitmap_popup.h \
 	editor_pane.c \
 	editor_pane.h \
-	amsynth_logo.h \
 	ConfigDialog.cpp \
 	ConfigDialog.h \
 	controllers.h \

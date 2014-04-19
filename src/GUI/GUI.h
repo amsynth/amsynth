@@ -131,8 +131,6 @@ private:
 
 	Gtk::Style 		*style;
     	
-	Gtk::AboutDialog	aboutDlg;
-	
 	// rename preset dialog
 	Gtk::Dialog preset_rename;
 	Gtk::Label preset_rename_label;

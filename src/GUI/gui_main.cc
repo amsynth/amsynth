@@ -52,6 +52,8 @@ void gui_init(Config &config,
 {
 	if (pipe(gdk_input_pipe) == -1)
 		perror("pipe()");
+    
+    gtk_window_set_default_icon_from_file(DATADIR "/pixmaps/amsynth.png", NULL);
 	
 	gui = new GUI(config, midi_controller, vau, out);
 	gui->setPresetController(presetController);

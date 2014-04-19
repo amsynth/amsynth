@@ -45,7 +45,6 @@ using namespace Gtk;
 #include "../VoiceAllocationUnit.h"
 
 #include "../../config.h"
-#include "amsynth_logo.h"
 #include "ConfigDialog.h"
 #include "MIDILearnDialog.h"
 #include "PresetControllerView.h"
@@ -70,6 +69,7 @@ enum {
 	evMidiSend,
 	evConfig,
 	evNewInstance,
+    evHelpMenuAbout,
 	evHelpMenuBugReport,
 	evHelpMenuOnlineDocumentation,
 
@@ -158,34 +158,6 @@ GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 	d_preset_new.set_transient_for( *this );
 	
 	
-	aboutDlg.set_name (PACKAGE);
-	aboutDlg.set_version (VERSION);
-	aboutDlg.set_comments ("Analogue Modelling SYNTHesizer");
-	aboutDlg.set_website ("http://code.google.com/p/amsynth/");
-	std::string build_year(__DATE__, sizeof(__DATE__) - 5, 4);
-	aboutDlg.set_copyright ("(C) 2002 - " + build_year + " Nick Dowell and others");
-	Glib::RefPtr<Gdk::PixbufLoader> ldr = Gdk::PixbufLoader::create();
-	ldr->write (amsynth_logo, sizeof(amsynth_logo)); ldr->close ();
-	aboutDlg.set_logo (ldr->get_pixbuf());
-	aboutDlg.signal_response().connect(sigc::hide(mem_fun(aboutDlg, &Gtk::Dialog::hide)));
-	std::list<std::string> about_authors;
-	about_authors.push_back("Nick Dowell");
-	about_authors.push_back("Karsten Wiese");
-	about_authors.push_back("Jezar at dreampoint");
-	about_authors.push_back("Sebastien Cevey");
-	about_authors.push_back("Taybin Rutkin");
-	about_authors.push_back("Bob Ham"); 
-	about_authors.push_back("Darrick Servis");
-	about_authors.push_back("Johan Martinsson");
-	about_authors.push_back("Andy Ryan");
-	about_authors.push_back("Chris Cannam");
-	about_authors.push_back("Paul Winkler");
-	about_authors.push_back("Adam Sampson");
-	about_authors.push_back("Martin Tarenskeen");
-	about_authors.push_back("Adrian Knoth");
-	about_authors.push_back("Samuli Suominen");
-	aboutDlg.set_authors(about_authors);	
-	
 	//
 	// the record dialog
 	//
@@ -220,8 +192,6 @@ GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 	
 	record_recording = false;
 	record_statusbar.push ("capture status: STOPPED", 1);
-
-	gtk_window_set_icon_from_file(this->gobj(), DATADIR "/pixmaps/amsynth.png", NULL);
 }
 
 Gtk::MenuBar*
@@ -421,7 +391,7 @@ GUI::create_menus	( )
 	// Help menu
 	//
 	Menu *menu_help = manage (new Menu());
-	menu_help->items().push_back (MenuElem("About", mem_fun(aboutDlg, &Gtk::AboutDialog::show_all)));
+	menu_help->items().push_back (MenuElem("About", bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuAbout)));
 	menu_help->items().push_back (MenuElem("Report a Bug...", bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuBugReport)));
 	menu_help->items().push_back (MenuElem("Online Documentation...", bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuOnlineDocumentation)));
 
@@ -708,6 +678,37 @@ GUI::event_handler(const int e)
 	case evNewInstance:
 		spawn_new_instance();
 		break;
+            
+    case evHelpMenuAbout: {
+        const char *authors[] = {
+            "Nick Dowell",
+            "Brian",
+            "Karsten Wiese",
+            "Jezar at dreampoint",
+            "Sebastien Cevey",
+            "Taybin Rutkin",
+            "Bob Ham",
+            "Darrick Servis",
+            "Johan Martinsson",
+            "Andy Ryan",
+            "Chris Cannam",
+            "Paul Winkler",
+            "Adam Sampson",
+            "Martin Tarenskeen",
+            "Adrian Knoth",
+            "Samuli Suominen",
+            NULL
+        };
+        gtk_show_about_dialog(this->gobj(),
+                              "program-name", PACKAGE,
+                              "version", VERSION,
+                              "authors", authors,
+                              "comments", "Analogue Modelling SYNTHesizer",
+                              "website", "http://code.google.com/p/amsynth/",
+                              "copyright", "© 2002 - 2014 Nick Dowell and contributors",
+                              NULL);
+        break;
+    }
 
 	case evHelpMenuBugReport:
 		open_uri("http://code.google.com/p/amsynth/issues/list");
