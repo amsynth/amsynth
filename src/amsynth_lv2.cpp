@@ -153,6 +153,11 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 			uint32_t size = ev->body.size;
 			uint8_t *data = (uint8_t *)(ev + 1);
 			LV2_Midi_Message_Type type = lv2_midi_message_type(data);
+			if (size == 3) {
+				fprintf(stderr,
+					"                          LV2 MIDI: %02x %02x %02x  @ %4d\n",
+					data[0], data[1], data[2], ev->time.frames);
+			}
 			switch (type) {
 			case LV2_MIDI_MSG_NOTE_OFF:
 				note_events.push_back(NoteEvent(ev->time.frames, false, data[1], data[2] / 127.0));
