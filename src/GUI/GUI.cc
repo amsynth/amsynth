@@ -88,14 +88,32 @@ int
 GUI::delete_event_impl(GdkEventAny *)
 {
 	if (m_presetIsNotSaved) {
-		MessageDialog dlg (*this,
-			"Really quit amsynth?\n"
-			"\n"
-			"You will lose any changes\n"
-			"which you haven't explicitly committed",
-			false, MESSAGE_QUESTION, BUTTONS_YES_NO, true);
-		if (RESPONSE_YES != dlg.run())
-			return false;
+        GtkWidget *dialog;
+        dialog = gtk_message_dialog_new_with_markup(this->gobj(),
+                                                    GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                    GTK_MESSAGE_WARNING,
+                                                    GTK_BUTTONS_NONE,
+                                                    "<b>Save changes before closing?</b>");
+
+        gtk_dialog_add_button (GTK_DIALOG (dialog), "Close _Without Saving", GTK_RESPONSE_NO);
+        gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+        gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_SAVE, GTK_RESPONSE_YES);
+        
+        gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
+                                                  "If you don't save, changes to the current preset will be permanently lost.");
+        
+        gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+        gtk_widget_destroy (dialog);
+        
+        if (result == GTK_RESPONSE_CANCEL) {
+            return false;
+        }
+        
+        if (result == GTK_RESPONSE_YES) {
+            preset_controller->loadPresets(); // in case another instance has changed any of the other presets
+            preset_controller->commitPreset();
+            preset_controller->savePresets();
+        }
 	}
 	hide_all();
 	return true;
