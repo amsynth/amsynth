@@ -57,6 +57,10 @@ const char *filter_slope_names[] = {
 	"12 dB / octave", "24 dB / octave", NULL
 };
 
+const char *freq_mod_osc_names[] = {
+	"osc 1+2", "osc 1", "osc 2", NULL
+};
+
 Preset::Preset			(const std::string name)
 :	mName (name)
 ,	nullparam ("null", kAmsynthParameterCount)
@@ -98,6 +102,7 @@ Preset::Preset			(const std::string name)
 	mParameters.push_back (Parameter		("osc2_pitch",			kAmsynthParameter_Oscillator2Pitch, 0, -12, +12, 1));
 	mParameters.push_back (Parameter		("filter_type",         kAmsynthParameter_FilterType, SynthFilter::FilterTypeLowPass, SynthFilter::FilterTypeLowPass, SynthFilter::FilterTypeCount - 1, 1));
 	mParameters.push_back (Parameter		("filter_slope",        kAmsynthParameter_FilterSlope, SynthFilter::FilterSlope24, SynthFilter::FilterSlope12, SynthFilter::FilterSlope24, 1));
+	mParameters.push_back (Parameter		("freq_mod_osc",		kAmsynthParameter_LFOOscillatorSelect, 0, 0, 2, 1));
 
 	getParameter(kAmsynthParameter_Oscillator1Waveform).setValueStrings(osc_waveform_names);
 	getParameter(kAmsynthParameter_Oscillator2Waveform).setValueStrings(osc_waveform_names);
@@ -105,6 +110,7 @@ Preset::Preset			(const std::string name)
 	getParameter(kAmsynthParameter_KeyboardMode).setValueStrings(keyboard_mode_names);
 	getParameter(kAmsynthParameter_FilterType).setValueStrings(filter_type_names);
 	getParameter(kAmsynthParameter_FilterSlope).setValueStrings(filter_slope_names);
+	getParameter(kAmsynthParameter_LFOOscillatorSelect).setValueStrings(freq_mod_osc_names);
 }
 
 Preset&

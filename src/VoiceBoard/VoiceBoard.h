@@ -82,6 +82,7 @@ private:
 	// oscillator section
 	Oscillator 		osc1, osc2;
 	float			mFreqModAmount;
+	int			mFreqModDestination;
 	float			mOsc1PulseWidth;
 	float			mOsc2PulseWidth;
 	float			mOsc1Vol;

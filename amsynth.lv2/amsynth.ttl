@@ -369,7 +369,7 @@
         lv2:default 0.000000 ;
         lv2:minimum 0.000000 ;
         lv2:maximum 1.259921 ;
-        pg:group <http://code.google.com/p/amsynth/amsynth#group_keyboard> ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_lfo> ;
     ] , [
         a lv2:InputPort ;
         a lv2:ControlPort ;
@@ -562,6 +562,21 @@
         lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "12 dB / octave"] ;
         lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "24 dB / octave"] ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_filter> ;
+    ] , [
+        a lv2:InputPort ;
+        a lv2:ControlPort ;
+        lv2:index 39 ;
+        lv2:symbol "freq_mod_osc" ;
+        lv2:name "Freq Mod to Oscillator" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        lv2:portProperty lv2:integer , lv2:enumeration ;
+        lv2:default 0.000000 ;
+        lv2:minimum 0.000000 ;
+        lv2:maximum 2.000000 ;
+        lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "osc 1+2"] ;
+        lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "osc 1"] ;
+        lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "osc 2"] ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_lfo> ;
     ] .
 
 # Auto-generated content below (python utils/lv2_presets.py >> amsynth.lv2/amsynth.ttl)

@@ -36,6 +36,7 @@ VoiceBoard::VoiceBoard()
 ,	mPitchBend		(1.0)
 ,	mLFO1Freq		(0.0)
 ,	mFreqModAmount	(0.0)
+,	mFreqModDestination(0)
 ,	mOsc1PulseWidth	(0.0)
 ,	mOsc2PulseWidth	(0.0)
 ,	mOsc1Vol		(1.0)
@@ -76,6 +77,7 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 		break;
 	}
 	case kAmsynthParameter_LFOToOscillators:	mFreqModAmount=(value/2.0f)+0.5f;	break;
+    case kAmsynthParameter_LFOOscillatorSelect: mFreqModDestination = (int)roundf(value); break;
 	
 	case kAmsynthParameter_Oscillator1Waveform:	osc1.SetWaveform ((Oscillator::Waveform) (int)value);
 				break;
@@ -137,10 +139,18 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	const float frequency = mFrequency.nextValue();
 	for (int i=1; i<numSamples; i++) { mFrequency.nextValue(); }
 
-	float osc1freq = mPitchBend * frequency * ( mFreqModAmount*(lfo1buf[0]+1.0f) + 1.0f - mFreqModAmount );
+	float baseFreq = mPitchBend * frequency;
+
+	float osc1freq = baseFreq;
+	if (mFreqModDestination == 0 || mFreqModDestination == 1) {
+		osc1freq = osc1freq * ( mFreqModAmount * (lfo1buf[0] + 1.0f) + 1.0f - mFreqModAmount );
+	}
 	float osc1pw = mOsc1PulseWidth;
 
-	float osc2freq = osc1freq * mOsc2Detune * mOsc2Octave * mOsc2Pitch;
+	float osc2freq = baseFreq * mOsc2Detune * mOsc2Octave * mOsc2Pitch;
+	if (mFreqModDestination == 0 || mFreqModDestination == 2) {
+		osc2freq = osc2freq * ( mFreqModAmount * (lfo1buf[0] + 1.0f) + 1.0f - mFreqModAmount );
+	}
 	float osc2pw = mOsc2PulseWidth;
 
 	float env_f = *filter_env.getNFData (numSamples);

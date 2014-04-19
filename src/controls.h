@@ -78,6 +78,8 @@ enum Param
 	kAmsynthParameter_FilterType               = 34,
 	kAmsynthParameter_FilterSlope              = 35,
 
+	kAmsynthParameter_LFOOscillatorSelect      = 36,
+
 	kAmsynthParameterCount
 };
 
