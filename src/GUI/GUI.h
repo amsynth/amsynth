@@ -131,9 +131,6 @@ private:
 
 	Gtk::Style 		*style;
     	
-	// top level window & main panel
-	Gtk::Statusbar statusBar;
-	
 	Gtk::AboutDialog	aboutDlg;
 	
 	// rename preset dialog

@@ -431,14 +431,18 @@ GUI::create_menus	( )
 	//
 	MenuBar *menu_bar = manage (new MenuBar ());
 	
-//	menu_bar->set_shadow_type( GTK_SHADOW_NONE );
-	
 	MenuList& list_bar = menu_bar->items();
 	list_bar.push_back (MenuElem("_File", Gtk::AccelKey("<alt>F"), *menu_file));
 	list_bar.push_back (MenuElem("_Preset", Gtk::AccelKey("<alt>P"), *menu_preset));
 	list_bar.push_back (MenuElem("_Config", Gtk::AccelKey("<alt>C"), *menu_config));
 	list_bar.push_back (MenuElem("_Utils", Gtk::AccelKey("<alt>U"), *menu_utils));
 	list_bar.push_back (MenuElem("_Help", *menu_help));
+    
+    gchar *text = g_strdup_printf ("Audio: %s @ %d  MIDI: %s", config->current_audio_driver.c_str(), config->sample_rate, config->current_midi_driver.c_str());
+    list_bar.push_back (MenuElem (text));
+    list_bar.back().set_right_justified();
+    list_bar.back().set_sensitive(false);
+    g_free (text);
 
 	return menu_bar;
 }
@@ -502,43 +506,7 @@ GUI::init()
 
 	vbox.pack_start (*tmphbox,0,0);
 	vbox.pack_start (*editor, Gtk::PACK_EXPAND_WIDGET,0);
-	vbox.pack_start (statusBar,PACK_SHRINK);
 	add(vbox);
-	
-	
-	// set up a fancy status bar.... why? i dont know.
-	
-	guint padding = 3;
-	
-	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
-	
-	status = "MIDI : " + config->current_midi_driver;
-	if (config->current_midi_driver == "OSS") status += " : " + config->oss_midi_device;
-	statusBar.pack_start (*manage(new Gtk::Label (status)), PACK_SHRINK, padding);
-
-	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
-	
-	status = "Audio: " + config->current_audio_driver + " : ";
-	if( config->current_audio_driver == "OSS" ) status += config->oss_audio_device;
-	else if( config->current_audio_driver == "ALSA" ) status += config->alsa_audio_device;
-	statusBar.pack_start (*manage(new Gtk::Label (status)), PACK_SHRINK, padding);
-	
-	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
-	
-	ostringstream oss;
-	oss << "Sample Rate: " << config->sample_rate;
-	statusBar.pack_start (*manage(new Gtk::Label (oss.str())), PACK_SHRINK, padding);
-
-	statusBar.pack_start (*manage(new Gtk::VSeparator), PACK_SHRINK);
-	
-#ifdef ENABLE_REALTIME
-	if (config->current_audio_driver_wants_realtime)
-	{
-		status = "Realtime : ";
-		status += config->realtime ? "YES" : "NO";
-		statusBar.pack_start(*manage(new Gtk::Label (status)), PACK_SHRINK, padding);
-	}
-#endif
 
 	show_all();
 	
