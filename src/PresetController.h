@@ -109,6 +109,7 @@ private:
 
 	class ChangeData {
 		public:
+            virtual ~ChangeData() {};
 			virtual void initiateUndo( PresetController * ) = 0;
 			virtual void initiateRedo( PresetController * ) = 0;
 	};

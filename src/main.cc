@@ -195,7 +195,6 @@ GenericOutput * open_audio()
 			delete jack;
 			return NULL;
 		}
-		jack->setMidiHandler(midi_controller);
 		return jack;
 	}
 
@@ -235,7 +234,7 @@ GenericOutput * open_audio()
 
 static MidiDriver *opened_midi_driver(MidiDriver *driver)
 {
-	if (driver->open(config) != 0) {
+	if (driver && driver->open(config) != 0) {
 		delete driver;
 		return NULL;
 	}

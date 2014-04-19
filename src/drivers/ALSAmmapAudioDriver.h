@@ -20,7 +20,7 @@
  */
 
 #ifndef _ALSA_MMAP_AUDIO_DRIVER_H
-#define _ALSA_alsa_MMAP_AUDIO_DRIVER_H
+#define _ALSA_MMAP_AUDIO_DRIVER_H
 
 #include "AudioDriver.h"
 
@@ -63,4 +63,4 @@ private:
 };
 
 
-#endif				// with_alsa_MMAP_AUDIO_DRIVER_H
+#endif				// _ALSA_MMAP_AUDIO_DRIVER_H
