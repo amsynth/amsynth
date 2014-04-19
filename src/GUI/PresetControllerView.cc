@@ -89,6 +89,7 @@ PresetControllerViewImpl::PresetControllerViewImpl(VoiceAllocationUnit *voiceAll
 
 	combo = gtk_combo_box_new_text ();
 	gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (combo), 4);
+    gtk_widget_set_size_request (combo, 220, 0);
 	g_signal_connect (G_OBJECT (combo), "changed", G_CALLBACK (&PresetControllerViewImpl::on_combo_changed), this);
 	g_signal_connect (G_OBJECT (combo), "notify::popup-shown", G_CALLBACK (&PresetControllerViewImpl::on_combo_popup_shown), this);
 	add (* Glib::wrap (combo));
