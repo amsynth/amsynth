@@ -154,7 +154,6 @@ private:
 	Gtk::Statusbar		record_statusbar;
 	gboolean		record_recording;
 		
-	Parameter *active_param;
 	PresetController *preset_controller;
 	PresetControllerView *presetCV;
     

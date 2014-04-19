@@ -116,9 +116,6 @@ GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 	
 	set_resizable(false);
         
-	active_param = 0;
-	
-	
 	presetCV = PresetControllerView::create(this->vau);
 
 	//
