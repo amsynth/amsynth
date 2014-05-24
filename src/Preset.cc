@@ -22,6 +22,7 @@
 #include "Preset.h"
 
 #include "controls.h"
+#include "VoiceBoard/Oscillator.h"
 #include "VoiceBoard/LowPassFilter.h"
 
 #include <cstdlib>
@@ -37,7 +38,11 @@ Parameter TimeParameter (const std::string name, Param id)
 	return Parameter (name, id, 0, 0, 2.5f, 0, Parameter::PARAM_POWER, 3, 0.0005f, "s");
 }
 
-const char *osc_waveform_names[] = {
+const char *osc_1_waveform_names[] = {
+	"sine", "square / pulse", "saw / triangle", "white noise", "noise + sample & hold", "FM", NULL
+};
+
+const char *osc_2_waveform_names[] = {
 	"sine", "square / pulse", "saw / triangle", "white noise", "noise + sample & hold", NULL
 };
 
@@ -70,7 +75,7 @@ Preset::Preset			(const std::string name)
 	mParameters.push_back (TimeParameter	("amp_decay",			kAmsynthParameter_AmpEnvDecay));
     mParameters.push_back (Parameter		("amp_sustain",			kAmsynthParameter_AmpEnvSustain,		1));
     mParameters.push_back (TimeParameter	("amp_release",			kAmsynthParameter_AmpEnvRelease));
-    mParameters.push_back (Parameter		("osc1_waveform",		kAmsynthParameter_Oscillator1Waveform,		2, 0, 4, 1));
+    mParameters.push_back (Parameter		("osc1_waveform",		kAmsynthParameter_Oscillator1Waveform, Oscillator::Waveform_Saw, 0, Oscillator::Waveform_FM, 1));
     mParameters.push_back (TimeParameter	("filter_attack",		kAmsynthParameter_FilterEnvAttack));
     mParameters.push_back (TimeParameter	("filter_decay",		kAmsynthParameter_FilterEnvDecay));
     mParameters.push_back (Parameter		("filter_sustain",		kAmsynthParameter_FilterEnvSustain,		1));
@@ -104,8 +109,8 @@ Preset::Preset			(const std::string name)
 	mParameters.push_back (Parameter		("filter_slope",        kAmsynthParameter_FilterSlope, SynthFilter::FilterSlope24, SynthFilter::FilterSlope12, SynthFilter::FilterSlope24, 1));
 	mParameters.push_back (Parameter		("freq_mod_osc",		kAmsynthParameter_LFOOscillatorSelect, 0, 0, 2, 1));
 
-	getParameter(kAmsynthParameter_Oscillator1Waveform).setValueStrings(osc_waveform_names);
-	getParameter(kAmsynthParameter_Oscillator2Waveform).setValueStrings(osc_waveform_names);
+	getParameter(kAmsynthParameter_Oscillator1Waveform).setValueStrings(osc_1_waveform_names);
+	getParameter(kAmsynthParameter_Oscillator2Waveform).setValueStrings(osc_2_waveform_names);
 	getParameter(kAmsynthParameter_LFOWaveform).setValueStrings(lfo_waveform_names);
 	getParameter(kAmsynthParameter_KeyboardMode).setValueStrings(keyboard_mode_names);
 	getParameter(kAmsynthParameter_FilterType).setValueStrings(filter_type_names);

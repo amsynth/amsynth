@@ -38,14 +38,15 @@ public:
 		Waveform_Pulse,
 		Waveform_Saw,
 		Waveform_Noise,
-		Waveform_Random
+		Waveform_Random,
+		Waveform_FM,
 	};
 
 	Oscillator	();
 
 	void	SetSampleRate	(int rateIn);
 	
-	void	ProcessSamples		(float*, int, float freq_hz, float pw, float sync_freq = 0);
+	void	ProcessSamples		(float*, int, float freq_hz, float pw, float sync_freq = 0, float *fm_modulator_buffer = NULL);
 	void	SetWaveform		(Waveform);
 
 	void reset();
@@ -56,9 +57,11 @@ public:
 private:
     float rads, twopi_rate, random;
 	double a0, a1, b1, d; // for the low-pass filter
-    int waveform, rate, random_count;
+    int rate, random_count;
 
+	Waveform waveform;
 	Lerper	mFrequency;
+	Lerper	mFmModAmount;
 	float	mPulseWidth;
 	float	mPolarity;
 	
@@ -71,7 +74,7 @@ private:
     void doSaw(float*, int nFrames);
     void doNoise(float*, int nFrames);
 	void doRandom(float*, int nFrames);
+    void doSineFM(float*, int nFrames, float *);
 };
-
 
 #endif				/// _OSCILLATOR_H
