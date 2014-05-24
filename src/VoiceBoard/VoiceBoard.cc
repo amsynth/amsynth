@@ -88,7 +88,7 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_Oscillator2Octave:	mOsc2Octave = value;		break;
 	case kAmsynthParameter_Oscillator2Detune:	mOsc2Detune = value;		break;
 	case kAmsynthParameter_Oscillator2Pitch:	mOsc2Pitch = ::pow(2, value / 12); break;
-	case kAmsynthParameter_Oscillator2Sync:		osc1.SetSync (value>0.5 ? &osc2 : 0);	break;
+	case kAmsynthParameter_Oscillator2Sync:		osc2.setSyncEnabled(round(value) == 1); break;
 
 	case kAmsynthParameter_LFOToFilterCutoff:	mFilterModAmt = (value+1.0f)/2.0f;break;
 	case kAmsynthParameter_FilterEnvAmount:	mFilterEnvAmt = value;		break;
@@ -169,7 +169,7 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	float *osc1buf = mProcessBuffers.osc_1;
 	float *osc2buf = mProcessBuffers.osc_2;
 	osc1.ProcessSamples (osc1buf, numSamples, osc1freq, osc1pw);
-	osc2.ProcessSamples (osc2buf, numSamples, osc2freq, osc2pw);
+	osc2.ProcessSamples (osc2buf, numSamples, osc2freq, osc2pw, osc1freq);
 
 	//
 	// Osc Mix

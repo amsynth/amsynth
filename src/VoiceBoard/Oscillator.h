@@ -45,19 +45,12 @@ public:
 
 	void	SetSampleRate	(int rateIn);
 	
-	void	ProcessSamples		(float*, int, float freq_hz, float pw);
+	void	ProcessSamples		(float*, int, float freq_hz, float pw, float sync_freq = 0);
 	void	SetWaveform		(Waveform);
 
 	void reset();
-	/*
-	 * reset the oscillator, initially at sample indicated by offset, and then 
-	 * every period samples. used for oscillator sync. 
-	 * NB. period >= delta
-	 */
-    void reset( int offset, int period );
-
-	void	SetSync		(Oscillator*);
-
+	
+	void	setSyncEnabled(bool sync) { mSyncEnabled = sync; }
 	void	setPolarity (float polarity); // +1 or -1
 
 private:
@@ -69,9 +62,9 @@ private:
 	float	mPulseWidth;
 	float	mPolarity;
 	
-	// oscillator sync stuff
-	int reset_offset, reset_cd, sync_c, sync_offset, sync_period, reset_period;
-	Oscillator*	sync;
+	float	mSyncFrequency;
+	bool	mSyncEnabled;
+	double	mSyncRads;
 	
     void doSine(float*, int nFrames);
     void doSquare(float*, int nFrames);
