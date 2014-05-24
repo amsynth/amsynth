@@ -73,12 +73,11 @@ private:
 	int reset_offset, reset_cd, sync_c, sync_offset, sync_period, reset_period;
 	Oscillator*	sync;
 	
-    inline void doSine(float*, int nFrames);
-    inline void doSquare(float*, int nFrames);
-    inline void doSaw(float*, int nFrames);
-    inline void doNoise(float*, int nFrames);
-	inline void doRandom(float*, int nFrames);
-	inline float saw(float foo);
+    void doSine(float*, int nFrames);
+    void doSquare(float*, int nFrames);
+    void doSaw(float*, int nFrames);
+    void doNoise(float*, int nFrames);
+	void doRandom(float*, int nFrames);
 };
 
 

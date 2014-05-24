@@ -166,13 +166,12 @@ Oscillator::doSquare(float *buffer, int nFrames)
 	rads = lrads;
 }
 
-float
-Oscillator::saw(float rads)
+static inline float saw(float rads, float shape)
 {
     rads = ffmodf((float)rads, (float)TWO_PI);
 
     float t = rads / (float)TWO_PI;
-    float a = (mPulseWidth + 1.0f) / 2.0f;
+    float a = (shape + 1.0f) / 2.0f;
 
     if (t < a / 2)
 		return 2 * t / a;
@@ -197,7 +196,7 @@ Oscillator::doSaw(float *buffer, int nFrames)
 #endif
 
     for (int i = 0; i < nFrames; i++) {
-		buffer[i] = saw(rads += (twopi_rate * mFrequency.nextValue())) * mPolarity;
+		buffer[i] = saw(rads += (twopi_rate * mFrequency.nextValue()), mPulseWidth) * mPolarity;
 		//-- sync to other oscillator --
 		if (reset_cd-- == 0){
 			rads = 0.0;					// reset the oscillator
