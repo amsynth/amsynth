@@ -282,9 +282,13 @@ int parameter_get_display (int parameter_index, float parameter_value, char *buf
 		case kAmsynthParameter_Oscillator2Detune:
 			return snprintf(buffer, maxlen, "%+.1f Cents", 1200.0 * log2(real_value));
 		case kAmsynthParameter_Oscillator2Pitch:
-			return snprintf(buffer, maxlen, "%+.0f Semitones", real_value);
+			return snprintf(buffer, maxlen, "%+.0f Semitone%s", real_value, abs(real_value) < 2 ? "" : "s");
+		case kAmsynthParameter_Oscillator2Octave:
+			return snprintf(buffer, maxlen, "%+.0f Octave%s", parameter_value, abs(parameter_value) < 2 ? "" : "s");
 		case kAmsynthParameter_MasterVolume:
 			return snprintf(buffer, maxlen, "%+.1f dB", 20.0 * log10(real_value));
+		case kAmsynthParameter_OscillatorMixRingMod:
+			return snprintf(buffer, maxlen, "%d %%", (int)roundf(real_value * 100.0));
 		case kAmsynthParameter_FilterEnvAmount:
 			return snprintf(buffer, maxlen, "%+d %%", (int)roundf(real_value / 16.0 * 100.0));
 		case kAmsynthParameter_AmpEnvSustain:
