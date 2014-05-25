@@ -1,7 +1,7 @@
 /*
  *  Preset.cc
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2014 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -55,7 +55,7 @@ const char *keyboard_mode_names[] = {
 };
 
 const char *filter_type_names[] = {
-	"low pass", "high pass", "band pass", NULL
+	"low pass", "high pass", "band pass", "notch", "bypass", NULL
 };
 
 const char *filter_slope_names[] = {

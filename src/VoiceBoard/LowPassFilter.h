@@ -1,7 +1,7 @@
 /*
  *  LowPassFilter.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2014 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -30,6 +30,8 @@ public:
 		FilterTypeLowPass,
 		FilterTypeHighPass,
 		FilterTypeBandPass,
+		FilterTypeBandStop,
+		FilterTypeBypass,
 		FilterTypeCount
 	};
 
