@@ -97,6 +97,8 @@ private:
 				mFilterModAmt,
 				mFilterCutoff,
 				mFilterRes;
+	float			mFilterKbdTrack;
+	float			mFilterVelSens;
 	SynthFilter 	filter;
 	SynthFilter::FilterType mFilterType;
 	SynthFilter::FilterSlope mFilterSlope;
@@ -105,6 +107,7 @@ private:
 	// amp section
 	IIRFilterFirstOrder _vcaFilter;
 	float			mAmpModAmount;
+	float			mAmpVelSens;
 	ADSR 			amp_env;
 
 	struct {

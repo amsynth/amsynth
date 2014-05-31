@@ -108,6 +108,9 @@ Preset::Preset			(const std::string name)
 	mParameters.push_back (Parameter		("filter_type",         kAmsynthParameter_FilterType, SynthFilter::FilterTypeLowPass, SynthFilter::FilterTypeLowPass, SynthFilter::FilterTypeCount - 1, 1));
 	mParameters.push_back (Parameter		("filter_slope",        kAmsynthParameter_FilterSlope, SynthFilter::FilterSlope24, SynthFilter::FilterSlope12, SynthFilter::FilterSlope24, 1));
 	mParameters.push_back (Parameter		("freq_mod_osc",		kAmsynthParameter_LFOOscillatorSelect, 0, 0, 2, 1));
+	mParameters.push_back (Parameter		("filter_kbd_track",    kAmsynthParameter_FilterKeyTrackAmount));
+	mParameters.push_back (Parameter		("filter_vel_sens",		kAmsynthParameter_FilterKeyVelocityAmount));
+	mParameters.push_back (Parameter		("amp_vel_sens",		kAmsynthParameter_AmpVelocityAmount, 1));
 
 	getParameter(kAmsynthParameter_Oscillator1Waveform).setValueStrings(osc_1_waveform_names);
 	getParameter(kAmsynthParameter_Oscillator2Waveform).setValueStrings(osc_2_waveform_names);
@@ -198,6 +201,8 @@ Preset::fromString(std::string str)
 			stream >> buffer;
 		}
 		setName(presetName); 
+		getParameter(kAmsynthParameter_FilterKeyTrackAmount).setValue(1);
+		getParameter(kAmsynthParameter_FilterKeyVelocityAmount).setValue(1);
 		
 		//get the parameters
 		while (buffer == "<parameter>") {

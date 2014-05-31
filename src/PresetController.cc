@@ -302,6 +302,9 @@ PresetController::loadPresets		(const char *filename)
 			<< presetName << endl;
 #endif
 			presets[preset].setName(presetName);
+			presets[preset].getParameter(kAmsynthParameter_FilterKeyTrackAmount).setValue(1);
+			presets[preset].getParameter(kAmsynthParameter_FilterKeyVelocityAmount).setValue(1);
+
 			//get the parameters
 			while (buffer == "<parameter>") {
 				string name;
