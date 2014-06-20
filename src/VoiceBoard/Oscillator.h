@@ -48,6 +48,7 @@ public:
 	
 	void	ProcessSamples		(float*, int, float freq_hz, float pw, float sync_freq = 0, float *fm_modulator_buffer = 0);
 	void	SetWaveform		(Waveform);
+	Waveform GetWaveform() { return waveform; }
 
 	void reset();
 	

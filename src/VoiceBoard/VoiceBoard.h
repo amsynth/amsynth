@@ -91,6 +91,7 @@ private:
 	float			mOsc2Octave;
 	float			mOsc2Detune;
 	float			mOsc2Pitch;
+	bool			mOsc2Sync;
 	
 	// filter section
 	float			mFilterEnvAmt,

@@ -48,6 +48,7 @@ VoiceBoard::VoiceBoard()
 ,	mRingModAmt		(0.0)
 ,	mOsc2Octave		(1.0)
 ,	mOsc2Detune		(1.0)
+,	mOsc2Sync		(false)
 ,	mFilterEnvAmt	(0.0)
 ,	mFilterModAmt	(0.0)
 ,	mFilterCutoff	(16.0)
@@ -95,7 +96,7 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_Oscillator2Octave:	mOsc2Octave = value;		break;
 	case kAmsynthParameter_Oscillator2Detune:	mOsc2Detune = value;		break;
 	case kAmsynthParameter_Oscillator2Pitch:	mOsc2Pitch = ::pow(2, value / 12); break;
-	case kAmsynthParameter_Oscillator2Sync:		osc2.setSyncEnabled(round(value) == 1); break;
+	case kAmsynthParameter_Oscillator2Sync:		mOsc2Sync  = !!round(value); break;
 
 	case kAmsynthParameter_LFOToFilterCutoff:	mFilterModAmt = (value+1.0f)/2.0f;break;
 	case kAmsynthParameter_FilterEnvAmount:	mFilterEnvAmt = value;		break;
@@ -181,6 +182,13 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	//
 	float *osc1buf = mProcessBuffers.osc_1;
 	float *osc2buf = mProcessBuffers.osc_2;
+
+	bool osc2sync = mOsc2Sync;
+	// previous implementation of sync had a bug causing it to only work when osc1 was set to sine or saw
+	// we need to recreate that behaviour here to ensure old presets still sound the same.
+	osc2sync &= (osc1.GetWaveform() == Oscillator::Waveform_Sine || osc1.GetWaveform() == Oscillator::Waveform_Saw);
+	osc2.setSyncEnabled(osc2sync);
+
 	osc2.ProcessSamples (osc2buf, numSamples, osc2freq, osc2pw, osc1freq);
 	osc1.ProcessSamples (osc1buf, numSamples, osc1freq, osc1pw, 0, osc2buf);
 
@@ -313,4 +321,3 @@ int main ()
 	printf ("per sample: %u\n", proc/kSamples);
 }
 #endif
-
