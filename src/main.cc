@@ -469,12 +469,13 @@ amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, in
 	if (midiDriver) {
 		memset(midiBuffer, 0, midiBufferSize);
 		int bytes_read = midiDriver->read(midiBuffer, midiBufferSize);
-        amsynth_midi_event_t event = {
-            .offset_frames = num_frames - 1,
-            .length = bytes_read,
-            .buffer = midiBuffer
-        };
-        midi_in.push_back(event);
+		if (bytes_read > 0) {
+			amsynth_midi_event_t event = {0};
+			event.offset_frames = num_frames - 1;
+			event.length = bytes_read;
+			event.buffer = midiBuffer;
+			midi_in.push_back(event);
+		}
 	}
     
     s_synthesizer->process(num_frames, midi_in, buffer_l, buffer_r, stride);
