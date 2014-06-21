@@ -343,6 +343,9 @@ PresetController::loadPresets		(const char *filename)
 	for (preset_index++; preset_index < kNumPresets; preset_index++)
 		presets[preset_index] = Preset();
 	free(buffer);
+
+	bank_file = std::string(filename);
+
 	return 0;
 }
 
