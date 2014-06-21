@@ -24,14 +24,11 @@
 
 #ifdef __cplusplus
 
-#include <string>
-#include <vector>
 #include "Parameter.h"
 
-/**
- * @class Preset
- * the Preset holds all the parameters for a paticular timbre (preset).
- */
+#include <string>
+#include <vector>
+
 
 class Preset
 {

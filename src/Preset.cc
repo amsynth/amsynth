@@ -27,11 +27,13 @@
 
 #include <cstdlib>
 #include <cstdio>
+#include <map>
 
 #ifdef _DEBUG
 #include <iostream>
 using namespace std;
 #endif
+
 
 Parameter TimeParameter (const std::string name, Param id)
 {
@@ -145,8 +147,17 @@ Preset::isEqual(const Preset &rhs)
 Parameter & 
 Preset::getParameter(const std::string name)
 {
-    for (unsigned i = 0; i < mParameters.size(); i++) if (getParameter(i).getName() == name) return mParameters[i];
-    return nullparam;
+	typedef std::map<std::string, size_t> name_map_t;
+	static name_map_t name_map;
+	if (name_map.empty()) {
+		for (size_t i = 0; i < mParameters.size(); i++) {
+			name_map[mParameters[i].getName()] = i;
+		}
+	}
+	name_map_t::iterator it = name_map.find(name);
+	if (it == name_map.end())
+		return nullparam;
+	return getParameter(it->second);
 }
 
 void
