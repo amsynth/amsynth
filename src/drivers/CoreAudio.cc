@@ -1,7 +1,7 @@
 /*
  *  CoreAudio.cc
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2014 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -23,89 +23,53 @@
 
 #if (__APPLE__)
 
-#pragma mark - CoreAudio
-
-#include <vector>
 #include <CoreAudio/CoreAudio.h>
+#include <CoreMIDI/MIDIServices.h>
+#include <vector>
 
-#include "../VoiceAllocationUnit.h"
-
-OSStatus audioDeviceIOProc (   AudioDeviceID           inDevice,
-							   const AudioTimeStamp*   inNow,
-							   const AudioBufferList*  inInputData,
-							   const AudioTimeStamp*   inInputTime,
-							   AudioBufferList*        outOutputData,
-							   const AudioTimeStamp*   inOutputTime,
-							   void*                   inClientData)
-{
-	float* outL;
-	float* outR;
-	unsigned numSampleFrames = 0;
-	unsigned stride = 1;
-	
-	if (1 < outOutputData->mBuffers[0].mNumberChannels)
-	{
-		numSampleFrames = outOutputData->mBuffers[0].mDataByteSize / (outOutputData->mBuffers[0].mNumberChannels * sizeof(float));
-		stride = outOutputData->mBuffers[0].mNumberChannels;
-		outL = (float*)outOutputData->mBuffers[0].mData;
-		outR = outL + 1;
-	}
-	else if (1 < outOutputData->mNumberBuffers)
-	{
-		numSampleFrames = outOutputData->mBuffers[0].mDataByteSize / (outOutputData->mBuffers[0].mNumberChannels * sizeof(float));
-		outL = (float*)outOutputData->mBuffers[0].mData;
-		outR = (float*)outOutputData->mBuffers[1].mData;
-	}
-	else
-	{
-		return kAudioDeviceUnsupportedFormatError;
-	}
-	
-	if (inClientData != NULL) {
-		(*(AudioCallback)inClientData)(outL, outR, numSampleFrames, stride);
-	}
-	
-	return noErr;
-}
+#define MIDI_BUFFER_SIZE 4096
 
 
 class CoreAudioOutput : public GenericOutput
 {
 public:
-	CoreAudioOutput() : m_DeviceID(0)
+
+	CoreAudioOutput() : m_DeviceID(0), m_clientRef(NULL), m_MIDIBuffer(NULL), m_MIDIBufferWriteIndex(0), m_MIDIBufferReadIndex(0)
 	{
 		UInt32 size; Boolean writable; OSStatus err;
 		
 		err = AudioHardwareGetPropertyInfo (kAudioHardwarePropertyDevices, &size, &writable);
 		if (kAudioHardwareNoError != err) return;
 		
-		int m_DeviceListSize = size / sizeof (AudioDeviceID);
-		m_DeviceList = new AudioDeviceID[m_DeviceListSize];
+		m_DeviceList = new AudioDeviceID[size / sizeof (AudioDeviceID)];
 		
 		err = AudioHardwareGetProperty (kAudioHardwarePropertyDevices, &size, m_DeviceList);
 		if (kAudioHardwareNoError != err)
 		{
 			delete[] m_DeviceList;
 			m_DeviceList = 0;
-			m_DeviceListSize = 0;
 		}
 	}
 	
 	~CoreAudioOutput()
 	{
 		Stop();
+        MIDIClientDispose(m_clientRef);
 		delete[] m_DeviceList;
-		m_DeviceListSize = 0;
 	}
 	
 	virtual int init(Config & config)
 	{
-		if (m_DeviceList && 0 < m_DeviceListSize)
-		{
-			config.current_audio_driver = "CoreAudio";
-			return 0;
-		}
-		return -1;
+		if (!m_DeviceList) {
+            return -1;
+        }
+        config.current_audio_driver = "CoreAudio";
+        config.current_midi_driver = "CoreMIDI";
+
+        m_currInput = MIDIGetSource(0);
+        if (m_currInput) {
+            MIDIPortConnectSource(m_inPort, m_currInput, NULL);
+        }
 	}
 	
 	virtual bool Start()
@@ -119,9 +83,18 @@ public:
 			if (status != kAudioHardwareNoError) return false;
 			m_DeviceID = defaultDeviceID;
 
-			AudioDeviceAddIOProc(m_DeviceID, audioDeviceIOProc, (void *)mAudioCallback);
+			AudioDeviceAddIOProc(m_DeviceID, audioDeviceIOProc, (void *)this);
 			AudioDeviceStart(m_DeviceID, audioDeviceIOProc);
 		}
+
+        m_MIDIBuffer = (uint32_t *)calloc(MIDI_BUFFER_SIZE, 1);
+        MIDIClientCreate(CFSTR("amsynth"), NULL, this, &m_clientRef);
+        MIDIInputPortCreate(m_clientRef, CFSTR("Input port"), midiReadProc, this, &m_inPort);
+        
+        for (unsigned long i = 0; i < MIDIGetNumberOfSources(); i++) {
+            MIDIPortConnectSource(m_inPort, MIDIGetSource(i), this);
+        }
+
 		return 0;
 	}
 	
@@ -131,122 +104,102 @@ public:
 			AudioDeviceStop(m_DeviceID, audioDeviceIOProc);
 			m_DeviceID = 0;
 		}
+        
+        if (m_currInput) {
+            MIDIPortDisconnectSource(m_inPort, m_currInput);
+            m_currInput = NULL;
+        }
 	}
+    
+    static OSStatus audioDeviceIOProc(AudioDeviceID           inDevice,
+                                      const AudioTimeStamp*   inNow,
+                                      const AudioBufferList*  inInputData,
+                                      const AudioTimeStamp*   inInputTime,
+                                      AudioBufferList*        outOutputData,
+                                      const AudioTimeStamp*   inOutputTime,
+                                      void*                   inClientData)
+    {
+        CoreAudioOutput *self = (CoreAudioOutput *)inClientData;
+
+        float *outL = NULL;
+        float *outR = NULL;
+        unsigned numSampleFrames = 0;
+        unsigned stride = 1;
+        
+        if (1 < outOutputData->mBuffers[0].mNumberChannels)
+        {
+            numSampleFrames = outOutputData->mBuffers[0].mDataByteSize / (outOutputData->mBuffers[0].mNumberChannels * sizeof(float));
+            stride = outOutputData->mBuffers[0].mNumberChannels;
+            outL = (float*)outOutputData->mBuffers[0].mData;
+            outR = outL + 1;
+        }
+        else if (1 < outOutputData->mNumberBuffers)
+        {
+            numSampleFrames = outOutputData->mBuffers[0].mDataByteSize / (outOutputData->mBuffers[0].mNumberChannels * sizeof(float));
+            outL = (float*)outOutputData->mBuffers[0].mData;
+            outR = (float*)outOutputData->mBuffers[1].mData;
+        }
+        else
+        {
+            return kAudioDeviceUnsupportedFormatError;
+        }
+        
+        std::vector<amsynth_midi_event_t> midi_events;
+        
+        unsigned idx = self->m_MIDIBufferReadIndex;
+        while (idx != self->m_MIDIBufferWriteIndex) {
+            unsigned length = self->m_MIDIBuffer[idx];
+            assert(length <= 3);
+            amsynth_midi_event_t event = {
+                .offset_frames = 0,
+                .length = length,
+                .buffer = (unsigned char *)(self->m_MIDIBuffer + idx + 1)
+            };
+            midi_events.push_back(event);
+            self->m_MIDIBuffer[idx] = 0;
+            idx = (idx + length + 1) % MIDI_BUFFER_SIZE;
+        }
+        self->m_MIDIBufferReadIndex = idx;
+
+        self->mAudioCallback(outL, outR, numSampleFrames, stride, midi_events.size() ? &midi_events[0] : NULL, midi_events.size());
+    }
+
+    static void midiReadProc(const MIDIPacketList *pktlist, void *readProcRefCon, void *srcConnRefCon)
+    {
+        CoreAudioOutput *self = (CoreAudioOutput *)srcConnRefCon;
+        
+        for (int i=0; i<pktlist->numPackets; i++) {
+            uint8_t *data = (unsigned char *)(pktlist->packet + i)->data;
+            const UInt16 length = (pktlist->packet + i)->length;
+            if (length > 3) {
+                continue;
+            }
+            unsigned idx = self->m_MIDIBufferWriteIndex;
+            self->m_MIDIBuffer[idx] = length;
+            memcpy(self->m_MIDIBuffer + idx + 1, data, length);
+            self->m_MIDIBufferWriteIndex = (idx + length + 1) % MIDI_BUFFER_SIZE;
+        }
+    }
 	
-private: ;
+private:
+
 	AudioDeviceID* m_DeviceList;
 	unsigned long  m_DeviceListSize;
 	AudioDeviceID  m_DeviceID;
-};
-
-GenericOutput* CreateCoreAudioOutput() { return new CoreAudioOutput; }
-
-
-#pragma mark - CoreMIDI
-
-#if 0 // needs reimplementing
-
-#include <CoreMIDI/MIDIServices.h>
-
-class CoreMidiInterface : public MidiInterface
-{
-public:
-	
-	CoreMidiInterface();
-	~CoreMidiInterface();
-	
-	virtual int open(Config&);
-	virtual void close();
-	
-protected:
-
-	virtual void ThreadAction() {};
-	
-	static void midiNotifyProc (const MIDINotification*, void*);
-	static void midiReadProc (const MIDIPacketList*, void*, void*);
-	
-	void HandleMidiPacketList(const MIDIPacketList*);
-	
-private:
-	
-	MIDIClientRef   m_clientRef;
+    
+    MIDIClientRef   m_clientRef;
 	MIDIPortRef     m_inPort;
 	MIDIEndpointRef m_currInput;
+    
+    uint32_t *m_MIDIBuffer;
+    unsigned m_MIDIBufferWriteIndex;
+    unsigned m_MIDIBufferReadIndex;
 };
 
-MidiInterface* CreateCoreMidiInterface() { return new CoreMidiInterface; }
-
-
-CoreMidiInterface::CoreMidiInterface()
-{
-	MIDIClientCreate(CFSTR("amSynth"), midiNotifyProc, this, &m_clientRef);
-	MIDIInputPortCreate(m_clientRef, CFSTR("Input port"), midiReadProc, this, &m_inPort);
-}
-
-CoreMidiInterface::~CoreMidiInterface()
-{
-	MIDIClientDispose(m_clientRef);
-}
-
-int
-CoreMidiInterface::open(Config & config)
-{
-	m_currInput = MIDIGetSource(0);
-	if (m_currInput)
-	{
-		MIDIPortConnectSource(m_inPort, m_currInput, NULL);
-		
-		CFStringRef name = NULL;
-		MIDIObjectGetStringProperty(m_currInput, kMIDIPropertyName, &name);
-		if (name)
-		{
-			char cstring[64] = "";
-			CFStringGetCString(name, cstring, sizeof(cstring), kCFStringEncodingUTF8);
-			config.current_midi_driver = std::string(cstring);
-		}
-	}
-	return (m_currInput) ? 0 : -1;
-}
-
-void
-CoreMidiInterface::close()
-{
-	if (m_currInput) 
-	{
-		MIDIPortDisconnectSource(m_inPort, m_currInput);
-		m_currInput = NULL;
-	}
-}
-
-void
-CoreMidiInterface::HandleMidiPacketList(const MIDIPacketList* pktlist)
-{
-	if (!_handler) return;
-	
-	for (int i=0; i<pktlist->numPackets; i++)
-	{
-		unsigned char* data = (unsigned char *)(pktlist->packet+i)->data;
-		const UInt16 length = (pktlist->packet+i)->length;
-		_handler->HandleMidiData(data, length);
-	}
-}
-
-void
-CoreMidiInterface::midiNotifyProc (const MIDINotification *message, void *refCon)
-{
-}
-
-void
-CoreMidiInterface::midiReadProc (const MIDIPacketList *pktlist, void *readProcRefCon, void *srcConnRefCon)
-{
-	CoreMidiInterface* self = (CoreMidiInterface *)readProcRefCon;
-	self->HandleMidiPacketList(pktlist);
-}
-
-#endif
-
-#pragma mark -
+GenericOutput * CreateCoreAudioOutput() { return new CoreAudioOutput; }
 
 #else
+
 GenericOutput* CreateCoreAudioOutput() { return NULL; }
+
 #endif
