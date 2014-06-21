@@ -33,6 +33,8 @@
 #include "midi.h"
 #include "MidiController.h"
 #include "VoiceAllocationUnit.h"
+#include "Synthesizer.h"
+#include "VoiceBoard/LowPassFilter.h"
 
 #if __APPLE__
 #include "drivers/CoreAudio.h"
@@ -175,9 +177,7 @@ void install_default_files_if_reqd()
 void ptest ();
 
 static MidiDriver *midiDriver;
-static MidiController *midi_controller;
-static PresetController *presetController;
-static VoiceAllocationUnit *voiceAllocationUnit;
+Synthesizer *s_synthesizer;
 static void amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride, amsynth_midi_event_t *events, unsigned event_count);
 static unsigned char *midiBuffer;
 static const size_t midiBufferSize = 4096;
@@ -390,11 +390,9 @@ int main( int argc, char *argv[] )
 	//
 	// subsystem initialisation
 	//
+    
+    s_synthesizer = new Synthesizer(&config);
 	
-	presetController = new PresetController();
-	
-	midi_controller = new MidiController( config );
-
 	GenericOutput *out = open_audio();
 	if (!out)
 		fatal_error("Fatal Error: open_audio() returned NULL.\n"
@@ -403,11 +401,7 @@ int main( int argc, char *argv[] )
 	// errors now detected & reported in the GUI
 	out->init(config);
 
-	voiceAllocationUnit = new VoiceAllocationUnit;
-	voiceAllocationUnit->SetSampleRate (config.sample_rate);
-	voiceAllocationUnit->SetMaxVoices (config.polyphony);
-	voiceAllocationUnit->setPitchBendRangeSemitones (config.pitch_bend_range);
-	out->setAudioCallback (&amsynth_audio_callback);
+	out->setAudioCallback(&amsynth_audio_callback);
 
 	amsynth_load_bank(config.current_bank_file.c_str());
 	amsynth_set_preset_number(initial_preset_no);
@@ -417,12 +411,7 @@ int main( int argc, char *argv[] )
 	
 	open_midi();
 	midiBuffer = (unsigned char *)malloc(midiBufferSize);
-
-	midi_controller->setMidiDriver(midiDriver);
-	midi_controller->SetMidiEventHandler(voiceAllocationUnit);
-	midi_controller->setPresetController( *presetController );
-
-	presetController->getCurrentPreset().AddListenerToAll (voiceAllocationUnit);
+    s_synthesizer->getMidiController()->setMidiDriver(midiDriver);
 
 	// prevent lash from spawning a new jack server
 	setenv("JACK_NO_START_SERVER", "1", 0);
@@ -441,7 +430,11 @@ int main( int argc, char *argv[] )
 	// if (jack) sleep (1);
 
 	if (!no_gui) {
-		gui_init(config, *midi_controller, *voiceAllocationUnit, *presetController, out);
+		gui_init(config,
+                 *s_synthesizer->getMidiController(),
+                 *s_synthesizer->getVoiceAllocationUnit(),
+                 *s_synthesizer->getPresetController(),
+                 out);
 		gui_kit_run(&amsynth_timer_callback);
 		gui_dealloc();
 	} else {
@@ -456,9 +449,6 @@ int main( int argc, char *argv[] )
 
 	if (config.xruns) std::cerr << config.xruns << " audio buffer underruns occurred\n";
 
-	delete presetController;
-	delete midi_controller;
-	delete voiceAllocationUnit;
 	delete out;
 	return 0;
 }
@@ -467,75 +457,51 @@ unsigned
 amsynth_timer_callback()
 {
 	amsynth_lash_poll_events();
-	midi_controller->timer_callback();
+    s_synthesizer->getMidiController()->timer_callback();
 	return 1;
 }
 
 void
 amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride, amsynth_midi_event_t *events, unsigned event_count)
 {
-	while (midiDriver) {
+    std::vector<amsynth_midi_event_t> midi_in(events, events + event_count);
+    
+	if (midiDriver) {
 		memset(midiBuffer, 0, midiBufferSize);
 		int bytes_read = midiDriver->read(midiBuffer, midiBufferSize);
-		if (midi_controller && bytes_read > 0) {
-			midi_controller->HandleMidiData(midiBuffer, bytes_read);
-		} else {
-			break;
-		}
+        amsynth_midi_event_t event = {
+            .offset_frames = num_frames - 1,
+            .length = bytes_read,
+            .buffer = midiBuffer
+        };
+        midi_in.push_back(event);
 	}
-
-	if (midi_controller)
-		midi_controller->send_changes();
-
-	if (voiceAllocationUnit) {
-		std::vector<NoteEvent> note_events;
-		for (unsigned i=0; i<event_count; i++) {
-			if (events[i].length == 3) {
-				switch (events[i].buffer[0] & 0xF0) {
-				case MIDI_STATUS_NOTE_OFF:
-					note_events.push_back(NoteEvent(events[i].offset_frames, false, events[i].buffer[1], events[i].buffer[2] / 127.0));
-					break;
-				case MIDI_STATUS_NOTE_ON:
-					note_events.push_back(NoteEvent(events[i].offset_frames, true, events[i].buffer[1], events[i].buffer[2] / 127.0));
-					break;
-				default:
-					if (midi_controller)
-						midi_controller->HandleMidiData(events[i].buffer, events[i].length);
-					break;
-				}
-			} else {
-				if (midi_controller)
-					midi_controller->HandleMidiData(events[i].buffer, events[i].length);
-			}
-		}
-		voiceAllocationUnit->Process(num_frames, note_events, buffer_l, buffer_r, stride);
-	}
+    
+    s_synthesizer->process(num_frames, midi_in, buffer_l, buffer_r, stride);
 }
 
 void
 amsynth_save_bank(const char *filename)
 {
-	presetController->commitPreset();
-	presetController->savePresets(filename);
+    s_synthesizer->saveBank(filename);
 }
 
 void
 amsynth_load_bank(const char *filename)
 {
-	presetController->loadPresets(filename);
-	presetController->selectPreset(presetController->getCurrPresetNumber());
+	s_synthesizer->loadBank(filename);
 }
 
 int
 amsynth_get_preset_number()
 {
-	return presetController->getCurrPresetNumber();
+	return s_synthesizer->getPresetNumber();
 }
 
 void
 amsynth_set_preset_number(int preset_no)
 {
-	presetController->selectPreset(preset_no);
+	s_synthesizer->setPresetNumber(preset_no);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

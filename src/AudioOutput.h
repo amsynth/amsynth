@@ -30,12 +30,7 @@
 #include "Config.h"
 #include "Thread.h"
 #include "main.h"
-
-struct amsynth_midi_event_t {
-	unsigned int offset_frames;
-	unsigned int length;
-	unsigned char *buffer;
-};
+#include "types.h"
 
 typedef void (* AudioCallback)(
 	float *buffer_l, float *buffer_r, unsigned num_frames, int stride,
