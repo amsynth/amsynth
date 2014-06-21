@@ -25,6 +25,9 @@
 #include "GUI.h"
 
 #include <assert.h>
+#include <unistd.h>
+#include <fcntl.h>
+
 
 static GUI *gui = NULL;
 static Gtk::Main *kit = NULL;
@@ -52,7 +55,14 @@ void gui_init(Config &config,
 {
 	if (pipe(gdk_input_pipe) == -1)
 		perror("pipe()");
-    
+
+#ifdef F_SETPIPE_SZ
+	int pipesize = 8192;
+	if (fcntl(gdk_input_pipe[1], F_SETPIPE_SZ, &pipesize)) {
+		perror("fcntl(F_SETPIPE_SZ)");
+	}
+#endif
+
     gtk_window_set_default_icon_from_file(DATADIR "/pixmaps/amsynth.png", NULL);
 	
 	gui = new GUI(config, midi_controller, vau, out);
