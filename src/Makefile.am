@@ -14,6 +14,7 @@ amsynth_core_sources = \
     Config.cc Config.h \
     controls.h \
     midi.h \
+    types.h \
     UpdateListener.h
 
 amsynth_core_libs = \
