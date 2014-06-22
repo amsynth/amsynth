@@ -101,6 +101,12 @@ void Synthesizer::setParameterValue(Param parameter, float value)
 	_presetController->getCurrentPreset().getParameter(parameter).setValue(value);
 }
 
+void Synthesizer::setSampleRate(int sampleRate)
+{
+	_sampleRate = sampleRate;
+	_voiceAllocationUnit->SetSampleRate(sampleRate);
+}
+
 void Synthesizer::process(unsigned int nframes, const std::vector<amsynth_midi_event_t> &midi_in, float *audio_l, float *audio_r, unsigned audio_stride)
 {
 	std::vector<amsynth_midi_event_t>::const_iterator event = midi_in.begin();

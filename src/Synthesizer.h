@@ -49,6 +49,8 @@ public:
 
     float getParameterValue(Param parameter);
     void setParameterValue(Param parameter, float value);
+	
+	void setSampleRate(int sampleRate);
 
     void process(unsigned nframes,
                  const std::vector<amsynth_midi_event_t> &midi_in,
