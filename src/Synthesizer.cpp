@@ -31,11 +31,17 @@
 
 
 Synthesizer::Synthesizer(Config *config)
-: _sampleRate(config->sample_rate)
+: _sampleRate(config ? config->sample_rate : 44100)
 , _midiController(0)
 , _presetController(0)
 , _voiceAllocationUnit(0)
 {
+	if (!config) {
+		config = new Config;
+		config->Defaults();
+		config->load();
+	}
+
 	_voiceAllocationUnit = new VoiceAllocationUnit;
 	_voiceAllocationUnit->SetSampleRate(_sampleRate);
 	_voiceAllocationUnit->SetMaxVoices(config->polyphony);
@@ -70,6 +76,11 @@ void Synthesizer::saveBank(const char *filename)
 	_presetController->savePresets(filename);
 }
 
+const char *Synthesizer::getPresetName(int presetNumber)
+{
+	return _presetController->getPreset(presetNumber).getName().c_str();
+}
+
 int Synthesizer::getPresetNumber()
 {
 	return _presetController->getCurrPresetNumber();
@@ -78,6 +89,16 @@ int Synthesizer::getPresetNumber()
 void Synthesizer::setPresetNumber(int number)
 {
 	_presetController->selectPreset(number);
+}
+
+float Synthesizer::getParameterValue(Param parameter)
+{
+	return _presetController->getCurrentPreset().getParameter(parameter).getValue();
+}
+
+void Synthesizer::setParameterValue(Param parameter, float value)
+{
+	_presetController->getCurrentPreset().getParameter(parameter).setValue(value);
 }
 
 void Synthesizer::process(unsigned int nframes, const std::vector<amsynth_midi_event_t> &midi_in, float *audio_l, float *audio_r, unsigned audio_stride)

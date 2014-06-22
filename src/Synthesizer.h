@@ -23,6 +23,7 @@
 #define __amsynth__Synthesizer__
 
 #include "types.h"
+#include "controls.h"
 
 #include <vector>
 
@@ -35,15 +36,20 @@ class Synthesizer
 {
 public:
     
-    Synthesizer(Config *config);
+    Synthesizer(Config *config = 0);
     ~Synthesizer();
     
     void loadBank(const char *filename);
     void saveBank(const char *filename);
     
+    const char *getPresetName(int presetNumber);
+
     int getPresetNumber();
     void setPresetNumber(int number);
-    
+
+    float getParameterValue(Param parameter);
+    void setParameterValue(Param parameter, float value);
+
     void process(unsigned nframes,
                  const std::vector<amsynth_midi_event_t> &midi_in,
                  float *audio_l, float *audio_r,

@@ -46,9 +46,8 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 ,	mPanGainLeft(1)
 ,	mPanGainRight(1)
 ,	mPitchBendRangeSemitones(2)
+,	mPitchBendValue(1)
 ,	mLastNoteFrequency (0.0f)
-,	mLastPitchBendValue(1)
-,	mNextPitchBendValue(1)
 {
 	limiter = new SoftLimiter;
 	reverb = new revmodel;
@@ -240,7 +239,7 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 void
 VoiceAllocationUnit::HandleMidiPitchWheel(float value)
 {
-	mNextPitchBendValue = pow(2.0f, value * mPitchBendRangeSemitones / 12.0f);
+	mPitchBendValue = pow(2.0f, value * mPitchBendRangeSemitones / 12.0f);
 }
 
 void
@@ -285,56 +284,22 @@ VoiceAllocationUnit::resetAllVoices()
 	sustain = false;
 }
 
-#include "stdio.h"
-
 void
-VoiceAllocationUnit::Process(unsigned nframes, std::vector<NoteEvent> events, float *l, float *r, int stride)
+VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
 {
-	float pitchBendValue = mLastPitchBendValue;
-	float pitchBendValueEnd = mNextPitchBendValue;
-	float pitchBendValueInc = (pitchBendValueEnd - pitchBendValue) / nframes;
+	assert(nframes <= VoiceBoard::kMaxProcessBufferSize);
 
 	memset(mBuffer, 0, nframes * sizeof (float));
 
-	std::vector<NoteEvent>::iterator event = events.begin();
-	unsigned frames_left = nframes, frame_index = 0;
-	while (frames_left) {
-		while (event != events.end() && event->frames <= frame_index) {
-			if (event->note_on) {
-				fprintf(stderr, "note %3d on   @ %4d\n", event->note, event->frames);
-				this->HandleMidiNoteOn(event->note, event->velocity);
+	for (unsigned i=0; i<_voices.size(); i++) {
+		if (active[i]) {
+			if (_voices[i]->isSilent()) {
+				active[i] = false;
 			} else {
-				fprintf(stderr, "note %3d off  @ %4d\n", event->note, event->frames);
-				this->HandleMidiNoteOff(event->note, event->velocity);
-			}
-			++event;
-		}
-
-		if (event != events.end()) {
-			assert(event->frames >= frame_index);
-		}
-
-		unsigned chunk = std::min(frames_left, (unsigned)VoiceBoard::kMaxProcessBufferSize);
-		if (event != events.end() && event->frames > frame_index) {
-			unsigned offset = event->frames - frame_index;
-			assert(offset < frames_left);
-			chunk = std::min(chunk, offset);
-		}
-
-		for (unsigned i=0; i<_voices.size(); i++) {
-			if (active[i]) {
-				if (_voices[i]->isSilent()) {
-					active[i] = false;
-				} else {
-					_voices[i]->SetPitchBend(pitchBendValue);
-					_voices[i]->ProcessSamplesMix(mBuffer + frame_index, chunk, mMasterVol);
-				}
+				_voices[i]->SetPitchBend(mPitchBendValue);
+				_voices[i]->ProcessSamplesMix (mBuffer, nframes, mMasterVol);
 			}
 		}
-
-		frame_index += chunk;
-		frames_left -= chunk;
-		pitchBendValue = pitchBendValue + pitchBendValueInc * chunk;
 	}
 
 	distortion->Process (mBuffer, nframes);
@@ -346,54 +311,6 @@ VoiceAllocationUnit::Process(unsigned nframes, std::vector<NoteEvent> events, fl
 
 	reverb->processmix (l, r, l, r, nframes, stride);
 	limiter->Process (l,r, nframes, stride);
-
-	mLastPitchBendValue = pitchBendValueEnd;
-}
-
-void
-VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
-{
-	if (nframes > kBufferSize) {
-		this->Process(l,               r,                         kBufferSize, stride);
-		this->Process(l + kBufferSize, r + kBufferSize, nframes - kBufferSize, stride);
-		return;
-	}
-
-	float pitchBendValue = mLastPitchBendValue;
-	float pitchBendValueEnd = mNextPitchBendValue;
-	float pitchBendValueInc = (pitchBendValueEnd - pitchBendValue) / nframes;
-
-	float* vb = mBuffer;
-	memset(vb, 0, nframes * sizeof (float));
-
-	unsigned framesLeft = nframes, j = 0;
-	while (0 < framesLeft) {
-		int fr = std::min(framesLeft, (unsigned)VoiceBoard::kMaxProcessBufferSize);
-		for (unsigned i=0; i<_voices.size(); i++) {
-			if (active[i]) {
-				if (_voices[i]->isSilent()) {
-					active[i] = false;
-				} else {
-					_voices[i]->SetPitchBend (pitchBendValue);
-					_voices[i]->ProcessSamplesMix (vb+j, fr, mMasterVol);
-				}
-			}
-		}
-		j += fr; framesLeft -= fr;
-		pitchBendValue = pitchBendValue + pitchBendValueInc * fr;
-	}
-
-	distortion->Process (vb, nframes);
-
-	for (unsigned i=0; i<nframes; i++) {
-		l[i * stride] = vb[i] * mPanGainLeft;
-		r[i * stride] = vb[i] * mPanGainRight;
-	}
-
-	reverb->processmix (l, r, l, r, nframes, stride);
-	limiter->Process (l,r, nframes, stride);
-
-	mLastPitchBendValue = pitchBendValueEnd;
 }
 
 void
