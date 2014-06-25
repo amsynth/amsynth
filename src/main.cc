@@ -305,6 +305,9 @@ int main( int argc, char *argv[] )
 	
 	int initial_preset_no = 0;
 
+	config.Defaults ();
+	config.load ();
+	
 	// needs to be called before our own command line parsing code
 	amsynth_lash_process_args(&argc, &argv);
 	
@@ -374,9 +377,6 @@ int main( int argc, char *argv[] )
 
 	install_default_files_if_reqd();
 
-	// setup the configuration
-	config.Defaults ();
-	config.load ();
 	
 	if (config.debug_drivers)
 		cout << "\n*** CONFIGURATION:\n"
