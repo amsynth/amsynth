@@ -189,8 +189,8 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	osc2sync &= (osc1.GetWaveform() == Oscillator::Waveform_Sine || osc1.GetWaveform() == Oscillator::Waveform_Saw);
 	osc2.setSyncEnabled(osc2sync);
 
+	osc1.ProcessSamples (osc1buf, numSamples, osc1freq, osc1pw);
 	osc2.ProcessSamples (osc2buf, numSamples, osc2freq, osc2pw, osc1freq);
-	osc1.ProcessSamples (osc1buf, numSamples, osc1freq, osc1pw, 0, osc2buf);
 
 	//
 	// Osc Mix

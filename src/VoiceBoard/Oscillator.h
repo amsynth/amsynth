@@ -38,15 +38,15 @@ public:
 		Waveform_Pulse,
 		Waveform_Saw,
 		Waveform_Noise,
-		Waveform_Random,
-		Waveform_FM,
+		Waveform_Random
 	};
 
 	Oscillator	();
 
 	void	SetSampleRate	(int rateIn);
 	
-	void	ProcessSamples		(float*, int, float freq_hz, float pw, float sync_freq = 0, float *fm_modulator_buffer = 0);
+	void	ProcessSamples		(float*, int, float freq_hz, float pw, float sync_freq = 0);
+
 	void	SetWaveform		(Waveform);
 	Waveform GetWaveform() { return waveform; }
 
@@ -62,7 +62,6 @@ private:
 
 	Waveform waveform;
 	Lerper	mFrequency;
-	Lerper	mFmModAmount;
 	float	mPulseWidth;
 	float	mPolarity;
 	
@@ -75,7 +74,6 @@ private:
     void doSaw(float*, int nFrames);
     void doNoise(float*, int nFrames);
 	void doRandom(float*, int nFrames);
-    void doSineFM(float*, int nFrames, float *);
 };
 
 #endif				/// _OSCILLATOR_H

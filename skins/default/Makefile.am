@@ -16,8 +16,7 @@ dist_skinsdefault_DATA = \
 	layout.ini \
 	osc_select.png \
 	waveform_lfo.png \
-	waveform_pics.png \
-	waveform_pics_osc1.png
+	waveform_pics.png
 
 uninstall-hook:
 	rm -rf $(DESTDIR)$(skinsdefaultdir)

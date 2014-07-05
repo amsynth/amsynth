@@ -73,10 +73,9 @@ Oscillator::setPolarity(float polarity)
 }
 
 void
-Oscillator::ProcessSamples	(float *buffer, int nFrames, float freq_hz, float pw, float sync_freq, float *fm_modulator_buffer)
+Oscillator::ProcessSamples	(float *buffer, int nFrames, float freq_hz, float pw, float sync_freq)
 {
 	mFrequency.configure(mFrequency.getFinalValue(), freq_hz, nFrames);
-	mFmModAmount.configure(mFmModAmount.getFinalValue(), pw, nFrames);
 	mPulseWidth = pw;
 	mSyncFrequency = sync_freq;
 	
@@ -86,7 +85,6 @@ Oscillator::ProcessSamples	(float *buffer, int nFrames, float freq_hz, float pw,
 	case Waveform_Saw:      doSaw       (buffer, nFrames); break;
 	case Waveform_Noise:    doNoise     (buffer, nFrames); break;
 	case Waveform_Random:   doRandom    (buffer, nFrames); break;
-	case Waveform_FM:       doSineFM    (buffer, nFrames, fm_modulator_buffer); break;
 	}
 }
 
@@ -216,16 +214,4 @@ Oscillator::doNoise(float *buffer, int nFrames)
 {
     for (int i = 0; i < nFrames; i++)
 		buffer[i] = randf();
-}
-
-void
-Oscillator::doSineFM(float *buffer, int nFrames, float *modbuf)
-{
-	for (int i = 0; i < nFrames; i++) {
-		float mod = 1.0 + modbuf[i] * 24 * mFmModAmount.nextValue();
-		float wc = twopi_rate * mFrequency.nextValue();
-		rads = rads + wc * mod;
-		buffer[i] = sinf(rads);
-	}
-	rads = ffmodf(rads, TWO_PI);
 }
