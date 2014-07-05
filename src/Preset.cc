@@ -312,6 +312,9 @@ int parameter_get_display (int parameter_index, float parameter_value, char *buf
 		case kAmsynthParameter_ReverbWet:
 		case kAmsynthParameter_ReverbWidth:
 		case kAmsynthParameter_AmpDistortion:
+		case kAmsynthParameter_FilterKeyTrackAmount:
+		case kAmsynthParameter_FilterKeyVelocityAmount:
+		case kAmsynthParameter_AmpVelocityAmount:
 			return snprintf(buffer, maxlen, "%d %%", (int)roundf(parameter.GetNormalisedValue() * 100.0));
 		case kAmsynthParameter_FilterType:
 			return snprintf(buffer, maxlen, "%s", filter_type_names[(int)real_value]);
