@@ -991,7 +991,7 @@ GUI::tuning_reset	( )
 int
 GUI::command_exists	(const char *command)
 {
-	std::string cmdline = "which " + std::string(command);
+	std::string cmdline = "which " + std::string(command) + " > /dev/null";
 	int result = system(cmdline.c_str());
 	return result;
 }
