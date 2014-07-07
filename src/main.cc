@@ -41,6 +41,7 @@
 #endif
 
 #include <iostream>
+#include <fcntl.h>
 #include <fstream>
 #include <getopt.h>
 #include <unistd.h>
@@ -181,6 +182,7 @@ Synthesizer *s_synthesizer;
 static void amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride, amsynth_midi_event_t *events, unsigned event_count);
 static unsigned char *midiBuffer;
 static const size_t midiBufferSize = 4096;
+static int gui_midi_pipe[2];
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -429,6 +431,10 @@ int main( int argc, char *argv[] )
 	// give audio/midi threads time to start up first..
 	// if (jack) sleep (1);
 
+	if (pipe(gui_midi_pipe) != -1) {
+		fcntl(gui_midi_pipe[0], F_SETFL, O_NONBLOCK);
+	}
+
 	if (!no_gui) {
 		gui_init(config,
                  *s_synthesizer->getMidiController(),
@@ -461,24 +467,48 @@ amsynth_timer_callback()
 	return 1;
 }
 
+void amsynth_midi_input(unsigned char status, unsigned char data1, unsigned char data2)
+{
+	unsigned char buffer[3] = { status, data1, data2 };
+	write(gui_midi_pipe[1], buffer, sizeof(buffer));
+}
+
 void
 amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride, amsynth_midi_event_t *events, unsigned event_count)
 {
-    std::vector<amsynth_midi_event_t> midi_in(events, events + event_count);
-    
-	if (midiDriver) {
-		memset(midiBuffer, 0, midiBufferSize);
-		int bytes_read = midiDriver->read(midiBuffer, midiBufferSize);
-		if (bytes_read > 0) {
-			amsynth_midi_event_t event = {0};
-			event.offset_frames = num_frames - 1;
-			event.length = bytes_read;
-			event.buffer = midiBuffer;
-			midi_in.push_back(event);
+	std::vector<amsynth_midi_event_t> midi_in(events, events + event_count);
+
+	if (midiBuffer) {
+		unsigned char *buffer = midiBuffer;
+		ssize_t bufferSize = midiBufferSize;
+		memset(buffer, 0, bufferSize);
+
+		if (gui_midi_pipe[0]) {
+			ssize_t bytes_read = read(gui_midi_pipe[0], buffer, bufferSize);
+			if (bytes_read > 0) {
+				amsynth_midi_event_t event = {0};
+				event.offset_frames = num_frames - 1;
+				event.length = bytes_read;
+				event.buffer = buffer;
+				midi_in.push_back(event);
+				buffer += bytes_read;
+				bufferSize -= bytes_read;
+			}
+		}
+
+		if (midiDriver) {
+			int bytes_read = midiDriver->read(buffer, bufferSize);
+			if (bytes_read > 0) {
+				amsynth_midi_event_t event = {0};
+				event.offset_frames = num_frames - 1;
+				event.length = bytes_read;
+				event.buffer = buffer;
+				midi_in.push_back(event);
+			}
 		}
 	}
-    
-    s_synthesizer->process(num_frames, midi_in, buffer_l, buffer_r, stride);
+
+	s_synthesizer->process(num_frames, midi_in, buffer_l, buffer_r, stride);
 }
 
 void

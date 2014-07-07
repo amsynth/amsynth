@@ -134,7 +134,7 @@ GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in,
 	
 	set_resizable(false);
         
-	presetCV = PresetControllerView::create(this->vau);
+	presetCV = PresetControllerView::create();
 
 	//
 	// the preset rename dialog
