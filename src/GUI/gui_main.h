@@ -23,9 +23,7 @@
 
 class Config;
 class GenericOutput;
-class MidiController;
-class PresetController;
-class VoiceAllocationUnit;
+class Synthesizer;
 
 // Gtk::Main()
 void gui_kit_init(int & argc, char ** & argv);
@@ -34,9 +32,7 @@ void gui_kit_init(int & argc, char ** & argv);
 void gui_kit_run(unsigned (*timer_callback)());
 
 void gui_init(Config &,
-              MidiController &,
-              VoiceAllocationUnit &,
-              PresetController &,
+			  Synthesizer *synth,
               GenericOutput *);
 
 void gui_dealloc();

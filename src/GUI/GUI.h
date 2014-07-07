@@ -32,7 +32,7 @@ class PresetController;
 class PresetControllerView;
 class Parameter;
 class Preset;
-class VoiceAllocationUnit;
+class Synthesizer;
 class GenericOutput;
 class Config;
 
@@ -60,7 +60,7 @@ class GUI:public Gtk::Window, public UpdateListener {
 public:
 	GUI				( Config & config,
 					  MidiController & mc, 
-					  VoiceAllocationUnit & vau,
+					  Synthesizer *synth,
 					  GenericOutput *audio );
 	~GUI				( );
 	/**
@@ -86,14 +86,7 @@ public:
 protected:
 	virtual void	on_hide () { Gtk::Main::quit(); }
 	
-	virtual bool on_key_press_event(GdkEventKey *);
-	virtual bool on_key_release_event(GdkEventKey *);
-
-#if ENABLE_MIDIKEYS
-	void vkeybd_kill_all_notes();
-#endif
-
-private:		
+private:
 	Gtk::MenuBar*	create_menus		( );
 
 	void		event_handler	(const int);
@@ -159,7 +152,7 @@ private:
     
 	Config *config;
 	MidiController *midi_controller;
-	VoiceAllocationUnit *vau;
+	Synthesizer *m_synth;
 	GenericOutput *audio_out;
 	
 	Preset			*clipboard_preset;
@@ -171,13 +164,6 @@ private:
 	bool			m_auditionKeyDown;
 
 	Gtk::Menu		*m_pitchBendRangeMenu;
-
-#if ENABLE_MIDIKEYS
-	int					m_vkeybdOctave;
-	bool				m_vkeybdIsActive;
-	std::vector<bool>	m_vkeybdState;
-#endif
 };
 
 #endif
-

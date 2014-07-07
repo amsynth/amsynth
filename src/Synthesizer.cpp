@@ -101,6 +101,41 @@ void Synthesizer::setParameterValue(Param parameter, float value)
 	_presetController->getCurrentPreset().getParameter(parameter).setValue(value);
 }
 
+int Synthesizer::getPitchBendRangeSemitones()
+{
+	return _voiceAllocationUnit->getPitchBendRangeSemitones();
+}
+
+void Synthesizer::setPitchBendRangeSemitones(int value)
+{
+	_voiceAllocationUnit->setPitchBendRangeSemitones(value);
+}
+
+int Synthesizer::getMaxNumVoices()
+{
+	return _voiceAllocationUnit->GetMaxVoices();
+}
+
+void Synthesizer::setMaxNumVoices(int value)
+{
+	_voiceAllocationUnit->SetMaxVoices(value);
+}
+
+int Synthesizer::loadTuningKeymap(const char *filename)
+{
+	return _voiceAllocationUnit->loadKeyMap(filename);
+}
+
+int Synthesizer::loadTuningScale(const char *filename)
+{
+	return _voiceAllocationUnit->loadScale(filename);
+}
+
+void Synthesizer::defaultTuning()
+{
+	_voiceAllocationUnit->defaultTuning();
+}
+
 void Synthesizer::setSampleRate(int sampleRate)
 {
 	_sampleRate = sampleRate;

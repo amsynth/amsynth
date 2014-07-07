@@ -436,11 +436,7 @@ int main( int argc, char *argv[] )
 	}
 
 	if (!no_gui) {
-		gui_init(config,
-                 *s_synthesizer->getMidiController(),
-                 *s_synthesizer->getVoiceAllocationUnit(),
-                 *s_synthesizer->getPresetController(),
-                 out);
+		gui_init(config, s_synthesizer, out);
 		gui_kit_run(&amsynth_timer_callback);
 		gui_dealloc();
 	} else {

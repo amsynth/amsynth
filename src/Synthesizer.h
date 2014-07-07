@@ -49,7 +49,17 @@ public:
 
     float getParameterValue(Param parameter);
     void setParameterValue(Param parameter, float value);
-	
+
+	int getPitchBendRangeSemitones();
+	void setPitchBendRangeSemitones(int value);
+
+	int getMaxNumVoices();
+	void setMaxNumVoices(int value);
+
+	int loadTuningKeymap(const char *filename);
+	int loadTuningScale(const char *filename);
+	void defaultTuning();
+
 	void setSampleRate(int sampleRate);
 
     void process(unsigned nframes,
@@ -59,7 +69,6 @@ public:
     
     MidiController *getMidiController() DEPRECATED { return _midiController; };
     PresetController *getPresetController() DEPRECATED { return _presetController; }
-    VoiceAllocationUnit *getVoiceAllocationUnit() DEPRECATED { return _voiceAllocationUnit; }
     
 private:
 
