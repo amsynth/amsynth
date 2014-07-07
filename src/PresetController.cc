@@ -322,8 +322,9 @@ PresetController::loadPresets		(const char *filename)
 			end_ptr++;
 
 			static char preset_prefix[] = "<preset> <name> ";
-			if (strncmp(line_ptr, preset_prefix, sizeof(preset_prefix) - 1) == 0)
-				presets[++preset_index].setName(std::string(line_ptr + sizeof(preset_prefix) - 1));
+			if (strncmp(line_ptr, preset_prefix, sizeof(preset_prefix) - 1) == 0) {
+				presets[++preset_index] = Preset(std::string(line_ptr + sizeof(preset_prefix) - 1));
+			}
 			
 			static char parameter_prefix[] = "<parameter> ";
 			if (strncmp(line_ptr, parameter_prefix, sizeof(parameter_prefix) - 1) == 0) {
