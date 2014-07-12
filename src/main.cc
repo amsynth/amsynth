@@ -245,8 +245,10 @@ static MidiDriver *opened_midi_driver(MidiDriver *driver)
 
 static void open_midi()
 {
+	const char *alsa_client_name = config.jack_client_name.empty() ? PACKAGE_NAME : config.jack_client_name.c_str();
+	
 	if (config.midi_driver == "alsa" || config.midi_driver == "ALSA") {
-		if (!(midiDriver = opened_midi_driver(CreateAlsaMidiDriver()))) {
+		if (!(midiDriver = opened_midi_driver(CreateAlsaMidiDriver(alsa_client_name)))) {
 			std::cerr << "error: could not open ALSA MIDI interface";
 		}
 		return;
@@ -260,7 +262,7 @@ static void open_midi()
 	}
 
 	if (config.midi_driver == "auto") {
-		if (!(midiDriver = opened_midi_driver(CreateAlsaMidiDriver()))) {
+		if (!(midiDriver = opened_midi_driver(CreateAlsaMidiDriver(alsa_client_name)))) {
 			if (!(midiDriver = opened_midi_driver(CreateOSSMidiDriver()))) {
 				std::cerr << "error: could not open any MIDI interface";
 			}

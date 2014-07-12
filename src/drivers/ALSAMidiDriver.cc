@@ -36,13 +36,14 @@ using namespace std;
 class ALSAMidiDriver : public MidiDriver
 {
 public:
-	ALSAMidiDriver		( );
+	ALSAMidiDriver(const char *client_name);
 	virtual ~ALSAMidiDriver		( );
     virtual int read(unsigned char *bytes, unsigned maxBytes);
     virtual int write_cc(unsigned int channel, unsigned int param, unsigned int value);
     virtual int open( Config & config );
     virtual int close();
 private:
+	const char		*client_name;
 	snd_seq_t		*seq_handle;
 	snd_midi_event_t	*seq_midi_parser;
 	int 			portid;
@@ -117,7 +118,9 @@ int ALSAMidiDriver::open( Config & config )
 		return -1;
 	}
 	
-	snd_seq_set_client_name(seq_handle, "amsynth");
+	if (client_name) {
+		snd_seq_set_client_name(seq_handle, client_name);
+	}
 	
 	if ((portid = snd_seq_create_simple_port(seq_handle, "MIDI IN",
             SND_SEQ_PORT_CAP_WRITE|SND_SEQ_PORT_CAP_SUBS_WRITE,
@@ -141,7 +144,8 @@ int ALSAMidiDriver::open( Config & config )
 	return 0;
 }
 
-ALSAMidiDriver::ALSAMidiDriver()
+ALSAMidiDriver::ALSAMidiDriver(const char *client_name)
+:	client_name(client_name)
 {
 	seq_handle = NULL;
 	memset( &pollfd_in, 0, sizeof(pollfd_in) );
@@ -154,7 +158,7 @@ ALSAMidiDriver::~ALSAMidiDriver()
 	close();
 }
 
-MidiDriver* CreateAlsaMidiDriver() { return new ALSAMidiDriver; }
+MidiDriver* CreateAlsaMidiDriver(const char *client_name) { return new ALSAMidiDriver(client_name); }
 #else
-MidiDriver* CreateAlsaMidiDriver() { return NULL; }
+MidiDriver* CreateAlsaMidiDriver(const char *client_name) { return NULL; }
 #endif

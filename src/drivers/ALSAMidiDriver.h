@@ -24,6 +24,6 @@
 
 #include "MidiDriver.h"
 
-MidiDriver* CreateAlsaMidiDriver();
+MidiDriver* CreateAlsaMidiDriver(const char *client_name);
 
 #endif
