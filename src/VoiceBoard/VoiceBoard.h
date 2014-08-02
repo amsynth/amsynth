@@ -91,12 +91,15 @@ private:
 	float			mOsc2Octave;
 	float			mOsc2Detune;
 	float			mOsc2Pitch;
+	bool			mOsc2Sync;
 	
 	// filter section
 	float			mFilterEnvAmt,
 				mFilterModAmt,
 				mFilterCutoff,
 				mFilterRes;
+	float			mFilterKbdTrack;
+	float			mFilterVelSens;
 	SynthFilter 	filter;
 	SynthFilter::FilterType mFilterType;
 	SynthFilter::FilterSlope mFilterSlope;
@@ -105,6 +108,7 @@ private:
 	// amp section
 	IIRFilterFirstOrder _vcaFilter;
 	float			mAmpModAmount;
+	float			mAmpVelSens;
 	ADSR 			amp_env;
 
 	struct {

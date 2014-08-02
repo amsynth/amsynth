@@ -42,7 +42,7 @@ using namespace Gtk;
 #include "../AudioOutput.h"
 #include "../MidiController.h"
 #include "../Preset.h"
-#include "../VoiceAllocationUnit.h"
+#include "../Synthesizer.h"
 
 #include "../../config.h"
 #include "ConfigDialog.h"
@@ -119,22 +119,17 @@ GUI::delete_event_impl(GdkEventAny *)
 	return true;
 }
 
-GUI::GUI( Config & config_in, MidiController & mc, VoiceAllocationUnit & vau_in, GenericOutput *audio )
+GUI::GUI( Config & config_in, MidiController & mc, Synthesizer *synth, GenericOutput *audio )
 :	m_auditionKeyDown(false)
-#if ENABLE_MIDIKEYS
-,	m_vkeybdOctave(4)
-,	m_vkeybdIsActive(false)
-,	m_vkeybdState(128)
-#endif
+,	m_synth(synth)
 {
 	this->config = &config_in;
 	this->midi_controller = &mc;
-	this->vau = &vau_in;
 	this->audio_out = audio;
 	
 	set_resizable(false);
         
-	presetCV = PresetControllerView::create(this->vau);
+	presetCV = PresetControllerView::create();
 
 	//
 	// the preset rename dialog
@@ -298,7 +293,7 @@ GUI::create_menus	( )
 		Gtk::RadioButtonGroup grp;
 		Gtk::RadioMenuItem *item = NULL;
 		Gtk::Menu *menu = Gtk::manage( new Gtk::Menu );
-		const int currentValue = vau->GetMaxVoices();
+		const int currentValue = m_synth->getMaxNumVoices();
 		
 		item = Gtk::manage(new Gtk::RadioMenuItem(grp, "Unlimited"));
 		item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_ployphony_change), 0, item) );
@@ -779,12 +774,6 @@ GUI::update_title()
 		ostr << " *";
 	}
 
-#if ENABLE_MIDIKEYS
-	if (m_vkeybdIsActive) {
-		ostr << " (midikeys active)";
-	}
-#endif
-
 	set_title(ostr.str());
 }
 
@@ -951,7 +940,7 @@ GUI::scale_open		( )
 	if (dlg.run() == RESPONSE_OK)
 	{
 		dlg.hide();
-		int error = vau->loadScale(dlg.get_filename());
+		int error = m_synth->loadTuningScale(dlg.get_filename().c_str());
 		if (error)
 		{
 			MessageDialog msg(*this, "Failed to load new tuning.");
@@ -976,7 +965,7 @@ GUI::key_map_open	( )
 	if (dlg.run() == RESPONSE_OK)
 	{
 		dlg.hide();
-		int error = vau->loadKeyMap(dlg.get_filename());
+		int error = m_synth->loadTuningKeymap(dlg.get_filename().c_str());
 		if (error)
 		{
 			MessageDialog msg(*this, "Failed to load new keyboard map.");
@@ -994,7 +983,7 @@ GUI::tuning_reset	( )
 
 	if (dlg.run() == RESPONSE_OK)
 	{
-		vau->defaultTuning();
+		m_synth->defaultTuning();
 	}
 }
 
@@ -1002,7 +991,7 @@ GUI::tuning_reset	( )
 int
 GUI::command_exists	(const char *command)
 {
-	std::string cmdline = "which " + std::string(command);
+	std::string cmdline = "which " + std::string(command) + " > /dev/null";
 	int result = system(cmdline.c_str());
 	return result;
 }
@@ -1032,7 +1021,7 @@ GUI::on_ployphony_change(int value, Gtk::RadioMenuItem *item)
 			config->polyphony = value;
 			config->save();
 		}
-		vau->SetMaxVoices(value);
+		m_synth->setMaxNumVoices(value);
 	}
 }
 
@@ -1040,7 +1029,7 @@ void
 GUI::on_pitch_bend_range_menu_show()
 {
 	Gtk::MenuShell::MenuList &list = m_pitchBendRangeMenu->items();
-	guint index = MIN((vau->getPitchBendRangeSemitones() - 1), (list.size() - 1));
+	guint index = MIN((m_synth->getPitchBendRangeSemitones() - 1), (list.size() - 1));
 	Gtk::RadioMenuItem *item = (Gtk::RadioMenuItem *)&(list[index]);
 	item->set_active();
 }
@@ -1052,192 +1041,7 @@ GUI::on_pitch_bend_range_change(int value, Gtk::RadioMenuItem *item)
 		if (config->pitch_bend_range != value) {
 			config->pitch_bend_range = value;
 			config->save();
-			vau->setPitchBendRangeSemitones(config->pitch_bend_range);
+			m_synth->setPitchBendRangeSemitones(config->pitch_bend_range);
 		}
 	}
 }
-
-#if ENABLE_MIDIKEYS
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Virtual Keyboard functionality
-//
-// Uses the computer's typing keyboard to play the synth.
-// Handy for testing and general playing with amSynth :)
-//
-//     W E   T Y U   O P
-//    A S D F G H J K L ; '
-//
-
-#define SIZEOF_ARRAY( a ) ( sizeof(a) / sizeof((a)[0]) )
-
-//
-// List of hardware keycodes for midi notes
-//
-// Raw hardware keycodes are used because we want the physical layout
-// to remain the same no matter what type of keyboard layout is used.
-//
-// Hardware keycodes seem to vary between platforms, although it's
-// difficult to find any decent documentation that covers this :-/
-//
-// This particular layout is based on that used by Logic Studio.
-//                                               
-static guint16 s_vkeybd_hardware_keycodes[] = {
-//	   A     W     S     E     D     F     T     G     Y     H     U     J     K     O     L     P     ;     '
-#if defined(__linux)
-	0x26, 0x19, 0x27, 0x1a, 0x28, 0x29, 0x1c, 0x2a, 0x1d, 0x2b, 0x1e, 0x2c, 0x2d, 0x20, 0x2e, 0x21, 0x2f, 0x30
-#elif defined(__APPLE__)
-	   8,   21,    9,   22,   10,   11,   25,   13,   24,   12,   40,   46,   48,   39,   45,   43,   49,   47
-#endif
-};
-
-//
-// returns -1 if hardware_keycode is not mapped to a midi note
-//
-static inline char midi_note_for_hardware_keycode( guint16 hardware_keycode )
-{
-	const guint16 kGreatestValidKeycode = 64;
-	static char value_for_code[kGreatestValidKeycode+1] = {0};
-	static bool initialised = false;
-	
-	// first-time initialisation (build the lookup table)
-	if (initialised == false) { initialised = true;
-		for (unsigned note=0; note<SIZEOF_ARRAY(s_vkeybd_hardware_keycodes); note++) {
-			guint16 code = s_vkeybd_hardware_keycodes[note];
-			value_for_code[code] = note + 1;
-		}
-	}
-	
-	if (hardware_keycode < kGreatestValidKeycode)
-		return value_for_code[hardware_keycode] - 1;
-
-	return -1;
-}
-
-bool GUI::on_key_press_event(GdkEventKey *inEvent)
-{
-	char midiNote = -1;
-
-//	fprintf(stderr, "string '%s' keyval 0x%02x keycode 0x%02x\n",
-//			inEvent->string,
-//			inEvent->keyval,
-//			inEvent->hardware_keycode);
-	
-	if (inEvent->keyval == GDK_Caps_Lock) {
-		if ((inEvent->state & GDK_LOCK_MASK) == GDK_LOCK_MASK) {
-			// will be disabled by this key press
-			m_vkeybdIsActive = false;
-			vkeybd_kill_all_notes();
-		} else {
-			m_vkeybdIsActive = true;
-		}
-		update_title();
-	}
-	
-	if ((inEvent->state & GDK_LOCK_MASK) == 0)
-		goto delegate;
-	
-	//
-	// switch between octaves using the number keys
-	//
-	switch (inEvent->keyval) {
-		case GDK_1: m_vkeybdOctave = 0; vkeybd_kill_all_notes(); return true;
-		case GDK_2: m_vkeybdOctave = 1; vkeybd_kill_all_notes(); return true;
-		case GDK_3: m_vkeybdOctave = 2; vkeybd_kill_all_notes(); return true;
-		case GDK_4: m_vkeybdOctave = 3; vkeybd_kill_all_notes(); return true;
-		case GDK_5: m_vkeybdOctave = 4; vkeybd_kill_all_notes(); return true;
-		case GDK_6: m_vkeybdOctave = 5; vkeybd_kill_all_notes(); return true;
-		case GDK_7: m_vkeybdOctave = 6; vkeybd_kill_all_notes(); return true;
-		case GDK_8: m_vkeybdOctave = 7; vkeybd_kill_all_notes(); return true;
-		case GDK_9: m_vkeybdOctave = 8; vkeybd_kill_all_notes(); return true;
-		case GDK_0: m_vkeybdOctave = 9; vkeybd_kill_all_notes(); return true;
-	}
-	
-	if ((midiNote = midi_note_for_hardware_keycode( inEvent->hardware_keycode )) == -1)
-		goto delegate;
-	
-	midiNote += (m_vkeybdOctave * 12);
-	if (m_vkeybdState[midiNote] == false) {
-		m_vkeybdState[midiNote]  = true;
-		vau->HandleMidiNoteOn(midiNote, 0.7f);
-	}
-	return true;
-	
-delegate:
-	return Gtk::Window::on_key_press_event(inEvent);
-}
-
-bool GUI::on_key_release_event(GdkEventKey *inEvent)
-{
-	char midiNote = -1;
-	
-	if ((inEvent->state & GDK_LOCK_MASK) != GDK_LOCK_MASK)
-		goto delegate;
-	
-	if ((midiNote = midi_note_for_hardware_keycode( inEvent->hardware_keycode )) == -1)
-		goto delegate;
-	
-#if defined(__linux)
-	// XkbSetDetectableAutoRepeat() seems to be broken on some Linux configurations,
-	// which means we can receive key release events for autorepeat. Therefore, we
-	// need to filter out these 'fake' key release events.
-	// http://bugs.freedesktop.org/show_bug.cgi?id=22515
-	{
-		char pressed_keys[32];
-		XQueryKeymap(gdk_x11_get_default_xdisplay(), pressed_keys);
-		bool isPressed = (pressed_keys[inEvent->hardware_keycode >> 3] >> (inEvent->hardware_keycode & 0x07)) & 0x01;
-		if (isPressed) {
-			goto delegate;
-		}
-	}
-#endif
-
-	midiNote += (m_vkeybdOctave * 12);
-	if (m_vkeybdState[midiNote] == true) {
-		m_vkeybdState[midiNote]  = false;
-		vau->HandleMidiNoteOff(midiNote, 0.7f);
-	}
-	return true;
-	
-delegate:
-	return Gtk::Window::on_key_release_event(inEvent);
-}
-
-void GUI::vkeybd_kill_all_notes()
-{
-	for (unsigned i=0; i<m_vkeybdState.size(); i++) {
-		vau->HandleMidiNoteOff(i, 0.0f);
-		m_vkeybdState[i] = false;
-	}
-}
-
-#else
-
-bool GUI::on_key_press_event(GdkEventKey *event)
-{
-	if (event->keyval == GDK_a && event->state & GDK_CONTROL_MASK) {
-		if (!m_auditionKeyDown) {
-			m_auditionKeyDown = true;
-			int note = presetCV->getAuditionNote();
-			vau->HandleMidiNoteOn(note, 1.0f);
-		}
-		return true;
-	}
-	return Gtk::Window::on_key_press_event(event);
-}
-
-bool GUI::on_key_release_event(GdkEventKey *event)
-{
-	if (event->keyval == GDK_a && event->state & GDK_CONTROL_MASK) {
-		if (m_auditionKeyDown) {
-			m_auditionKeyDown = false;
-			int note = presetCV->getAuditionNote();
-			vau->HandleMidiNoteOff(note, 1.0f);
-		}
-		return true;
-	}
-	return Gtk::Window::on_key_release_event(event);
-}
-
-#endif

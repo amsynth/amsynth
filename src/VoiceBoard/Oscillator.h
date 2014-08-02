@@ -45,41 +45,35 @@ public:
 
 	void	SetSampleRate	(int rateIn);
 	
-	void	ProcessSamples		(float*, int, float freq_hz, float pw);
+	void	ProcessSamples		(float*, int, float freq_hz, float pw, float sync_freq = 0);
+
 	void	SetWaveform		(Waveform);
+	Waveform GetWaveform() { return waveform; }
 
 	void reset();
-	/*
-	 * reset the oscillator, initially at sample indicated by offset, and then 
-	 * every period samples. used for oscillator sync. 
-	 * NB. period >= delta
-	 */
-    void reset( int offset, int period );
-
-	void	SetSync		(Oscillator*);
-
+	
+	void	setSyncEnabled(bool sync) { mSyncEnabled = sync; }
 	void	setPolarity (float polarity); // +1 or -1
 
 private:
     float rads, twopi_rate, random;
 	double a0, a1, b1, d; // for the low-pass filter
-    int waveform, rate, random_count;
+    int rate, random_count;
 
+	Waveform waveform;
 	Lerper	mFrequency;
 	float	mPulseWidth;
 	float	mPolarity;
 	
-	// oscillator sync stuff
-	int reset_offset, reset_cd, sync_c, sync_offset, sync_period, reset_period;
-	Oscillator*	sync;
+	float	mSyncFrequency;
+	bool	mSyncEnabled;
+	double	mSyncRads;
 	
-    inline void doSine(float*, int nFrames);
-    inline void doSquare(float*, int nFrames);
-    inline void doSaw(float*, int nFrames);
-    inline void doNoise(float*, int nFrames);
-	inline void doRandom(float*, int nFrames);
-	inline float saw(float foo);
+    void doSine(float*, int nFrames);
+    void doSquare(float*, int nFrames);
+    void doSaw(float*, int nFrames);
+    void doNoise(float*, int nFrames);
+	void doRandom(float*, int nFrames);
 };
-
 
 #endif				/// _OSCILLATOR_H

@@ -33,12 +33,15 @@
 #include "midi.h"
 #include "MidiController.h"
 #include "VoiceAllocationUnit.h"
+#include "Synthesizer.h"
+#include "VoiceBoard/LowPassFilter.h"
 
 #if __APPLE__
 #include "drivers/CoreAudio.h"
 #endif
 
 #include <iostream>
+#include <fcntl.h>
 #include <fstream>
 #include <getopt.h>
 #include <unistd.h>
@@ -175,12 +178,11 @@ void install_default_files_if_reqd()
 void ptest ();
 
 static MidiDriver *midiDriver;
-static MidiController *midi_controller;
-static PresetController *presetController;
-static VoiceAllocationUnit *voiceAllocationUnit;
+Synthesizer *s_synthesizer;
 static void amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride, amsynth_midi_event_t *events, unsigned event_count);
 static unsigned char *midiBuffer;
 static const size_t midiBufferSize = 4096;
+static int gui_midi_pipe[2];
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -243,8 +245,10 @@ static MidiDriver *opened_midi_driver(MidiDriver *driver)
 
 static void open_midi()
 {
+	const char *alsa_client_name = config.jack_client_name.empty() ? PACKAGE_NAME : config.jack_client_name.c_str();
+	
 	if (config.midi_driver == "alsa" || config.midi_driver == "ALSA") {
-		if (!(midiDriver = opened_midi_driver(CreateAlsaMidiDriver()))) {
+		if (!(midiDriver = opened_midi_driver(CreateAlsaMidiDriver(alsa_client_name)))) {
 			std::cerr << "error: could not open ALSA MIDI interface";
 		}
 		return;
@@ -258,7 +262,7 @@ static void open_midi()
 	}
 
 	if (config.midi_driver == "auto") {
-		if (!(midiDriver = opened_midi_driver(CreateAlsaMidiDriver()))) {
+		if (!(midiDriver = opened_midi_driver(CreateAlsaMidiDriver(alsa_client_name)))) {
 			if (!(midiDriver = opened_midi_driver(CreateOSSMidiDriver()))) {
 				std::cerr << "error: could not open any MIDI interface";
 			}
@@ -305,6 +309,9 @@ int main( int argc, char *argv[] )
 	
 	int initial_preset_no = 0;
 
+	config.Defaults ();
+	config.load ();
+	
 	// needs to be called before our own command line parsing code
 	amsynth_lash_process_args(&argc, &argv);
 	
@@ -374,9 +381,6 @@ int main( int argc, char *argv[] )
 
 	install_default_files_if_reqd();
 
-	// setup the configuration
-	config.Defaults ();
-	config.load ();
 	
 	if (config.debug_drivers)
 		cout << "\n*** CONFIGURATION:\n"
@@ -390,11 +394,9 @@ int main( int argc, char *argv[] )
 	//
 	// subsystem initialisation
 	//
+    
+    s_synthesizer = new Synthesizer(&config);
 	
-	presetController = new PresetController();
-	
-	midi_controller = new MidiController( config );
-
 	GenericOutput *out = open_audio();
 	if (!out)
 		fatal_error("Fatal Error: open_audio() returned NULL.\n"
@@ -403,11 +405,7 @@ int main( int argc, char *argv[] )
 	// errors now detected & reported in the GUI
 	out->init(config);
 
-	voiceAllocationUnit = new VoiceAllocationUnit;
-	voiceAllocationUnit->SetSampleRate (config.sample_rate);
-	voiceAllocationUnit->SetMaxVoices (config.polyphony);
-	voiceAllocationUnit->setPitchBendRangeSemitones (config.pitch_bend_range);
-	out->setAudioCallback (&amsynth_audio_callback);
+	out->setAudioCallback(&amsynth_audio_callback);
 
 	amsynth_load_bank(config.current_bank_file.c_str());
 	amsynth_set_preset_number(initial_preset_no);
@@ -417,12 +415,7 @@ int main( int argc, char *argv[] )
 	
 	open_midi();
 	midiBuffer = (unsigned char *)malloc(midiBufferSize);
-
-	midi_controller->setMidiDriver(midiDriver);
-	midi_controller->SetMidiEventHandler(voiceAllocationUnit);
-	midi_controller->setPresetController( *presetController );
-
-	presetController->getCurrentPreset().AddListenerToAll (voiceAllocationUnit);
+    s_synthesizer->getMidiController()->setMidiDriver(midiDriver);
 
 	// prevent lash from spawning a new jack server
 	setenv("JACK_NO_START_SERVER", "1", 0);
@@ -440,8 +433,12 @@ int main( int argc, char *argv[] )
 	// give audio/midi threads time to start up first..
 	// if (jack) sleep (1);
 
+	if (pipe(gui_midi_pipe) != -1) {
+		fcntl(gui_midi_pipe[0], F_SETFL, O_NONBLOCK);
+	}
+
 	if (!no_gui) {
-		gui_init(config, *midi_controller, *voiceAllocationUnit, *presetController, out);
+		gui_init(config, s_synthesizer, out);
 		gui_kit_run(&amsynth_timer_callback);
 		gui_dealloc();
 	} else {
@@ -456,9 +453,6 @@ int main( int argc, char *argv[] )
 
 	if (config.xruns) std::cerr << config.xruns << " audio buffer underruns occurred\n";
 
-	delete presetController;
-	delete midi_controller;
-	delete voiceAllocationUnit;
 	delete out;
 	return 0;
 }
@@ -467,75 +461,76 @@ unsigned
 amsynth_timer_callback()
 {
 	amsynth_lash_poll_events();
-	midi_controller->timer_callback();
+    s_synthesizer->getMidiController()->timer_callback();
 	return 1;
+}
+
+void amsynth_midi_input(unsigned char status, unsigned char data1, unsigned char data2)
+{
+	unsigned char buffer[3] = { status, data1, data2 };
+	write(gui_midi_pipe[1], buffer, sizeof(buffer));
 }
 
 void
 amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride, amsynth_midi_event_t *events, unsigned event_count)
 {
-	while (midiDriver) {
-		memset(midiBuffer, 0, midiBufferSize);
-		int bytes_read = midiDriver->read(midiBuffer, midiBufferSize);
-		if (midi_controller && bytes_read > 0) {
-			midi_controller->HandleMidiData(midiBuffer, bytes_read);
-		} else {
-			break;
-		}
-	}
+	std::vector<amsynth_midi_event_t> midi_in(events, events + event_count);
 
-	if (midi_controller)
-		midi_controller->send_changes();
+	if (midiBuffer) {
+		unsigned char *buffer = midiBuffer;
+		ssize_t bufferSize = midiBufferSize;
+		memset(buffer, 0, bufferSize);
 
-	if (voiceAllocationUnit) {
-		std::vector<NoteEvent> note_events;
-		for (unsigned i=0; i<event_count; i++) {
-			if (events[i].length == 3) {
-				switch (events[i].buffer[0] & 0xF0) {
-				case MIDI_STATUS_NOTE_OFF:
-					note_events.push_back(NoteEvent(events[i].offset_frames, false, events[i].buffer[1], events[i].buffer[2] / 127.0));
-					break;
-				case MIDI_STATUS_NOTE_ON:
-					note_events.push_back(NoteEvent(events[i].offset_frames, true, events[i].buffer[1], events[i].buffer[2] / 127.0));
-					break;
-				default:
-					if (midi_controller)
-						midi_controller->HandleMidiData(events[i].buffer, events[i].length);
-					break;
-				}
-			} else {
-				if (midi_controller)
-					midi_controller->HandleMidiData(events[i].buffer, events[i].length);
+		if (gui_midi_pipe[0]) {
+			ssize_t bytes_read = read(gui_midi_pipe[0], buffer, bufferSize);
+			if (bytes_read > 0) {
+				amsynth_midi_event_t event = {0};
+				event.offset_frames = num_frames - 1;
+				event.length = bytes_read;
+				event.buffer = buffer;
+				midi_in.push_back(event);
+				buffer += bytes_read;
+				bufferSize -= bytes_read;
 			}
 		}
-		voiceAllocationUnit->Process(num_frames, note_events, buffer_l, buffer_r, stride);
+
+		if (midiDriver) {
+			int bytes_read = midiDriver->read(buffer, bufferSize);
+			if (bytes_read > 0) {
+				amsynth_midi_event_t event = {0};
+				event.offset_frames = num_frames - 1;
+				event.length = bytes_read;
+				event.buffer = buffer;
+				midi_in.push_back(event);
+			}
+		}
 	}
+
+	s_synthesizer->process(num_frames, midi_in, buffer_l, buffer_r, stride);
 }
 
 void
 amsynth_save_bank(const char *filename)
 {
-	presetController->commitPreset();
-	presetController->savePresets(filename);
+    s_synthesizer->saveBank(filename);
 }
 
 void
 amsynth_load_bank(const char *filename)
 {
-	presetController->loadPresets(filename);
-	presetController->selectPreset(presetController->getCurrPresetNumber());
+	s_synthesizer->loadBank(filename);
 }
 
 int
 amsynth_get_preset_number()
 {
-	return presetController->getCurrPresetNumber();
+	return s_synthesizer->getPresetNumber();
 }
 
 void
 amsynth_set_preset_number(int preset_no)
 {
-	presetController->selectPreset(preset_no);
+	s_synthesizer->setPresetNumber(preset_no);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

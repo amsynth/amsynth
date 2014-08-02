@@ -23,6 +23,8 @@
 
 #include "../PresetController.h"
 #include "../VoiceAllocationUnit.h"
+#include "../main.h"
+#include "../midi.h"
 
 #include <fstream>
 #include <iostream>
@@ -45,7 +47,7 @@ static void snprintf_truncate(char *str, size_t size, const char *format, ...)
 class PresetControllerViewImpl : public PresetControllerView, public UpdateListener
 {
 public:
-	PresetControllerViewImpl(VoiceAllocationUnit *voiceAllocationUnit);
+	PresetControllerViewImpl();
 
 	virtual void setPresetController(PresetController *presetController);
 	virtual void update();
@@ -63,7 +65,6 @@ private:
     static gboolean on_audition_key_press_event (GtkWidget *widget, GdkEventKey *event, PresetControllerViewImpl *);
     static gboolean on_audition_key_release_event (GtkWidget *widget, GdkEventKey *event, PresetControllerViewImpl *);
 
-	VoiceAllocationUnit *vau;
     PresetController *presetController;
 	GtkWidget *bank_combo;
 	GtkWidget *combo;
@@ -74,9 +75,8 @@ private:
     bool audition_button_pressed;
 };
 
-PresetControllerViewImpl::PresetControllerViewImpl(VoiceAllocationUnit *voiceAllocationUnit)
-:	vau(voiceAllocationUnit)
-,	presetController(NULL)
+PresetControllerViewImpl::PresetControllerViewImpl()
+:	presetController(NULL)
 ,	bank_combo(NULL)
 ,	combo(NULL)
 ,	audition_spin(NULL)
@@ -157,12 +157,13 @@ void PresetControllerViewImpl::on_save_clicked (GtkWidget *widget, PresetControl
 void PresetControllerViewImpl::on_audition_pressed (GtkWidget *widget, PresetControllerViewImpl *that)
 {
 	that->audition_note = that->getAuditionNote();
-	that->vau->HandleMidiNoteOn(that->audition_note, 1.0f);
+	amsynth_midi_input(MIDI_STATUS_NOTE_ON, that->audition_note, 127);
 }
 
 void PresetControllerViewImpl::on_audition_released (GtkWidget *widget, PresetControllerViewImpl *that)
 {
-	that->vau->HandleMidiNoteOff(that->audition_note, 0.0f);
+	amsynth_midi_input(MIDI_STATUS_NOTE_OFF, that->audition_note, 0);
+	that->audition_note = 0;
 }
 
 gboolean PresetControllerViewImpl::on_audition_key_press_event(GtkWidget *widget, GdkEventKey *event, PresetControllerViewImpl *that)
@@ -191,7 +192,7 @@ gboolean PresetControllerViewImpl::on_audition_key_release_event(GtkWidget *widg
 
 void PresetControllerViewImpl::on_panic_clicked (GtkWidget *widget, PresetControllerViewImpl *that)
 {
-	that->vau->HandleMidiAllSoundOff();
+	amsynth_midi_input(MIDI_STATUS_CONTROLLER, MIDI_CC_ALL_SOUND_OFF, 0);
 }
 
 void PresetControllerViewImpl::update()
@@ -237,7 +238,7 @@ int PresetControllerViewImpl::getAuditionNote()
 	return audition_note;
 }
 
-PresetControllerView * PresetControllerView::create(VoiceAllocationUnit *voiceAllocationUnit)
+PresetControllerView * PresetControllerView::create()
 {
-	return new PresetControllerViewImpl(voiceAllocationUnit);
+	return new PresetControllerViewImpl();
 }

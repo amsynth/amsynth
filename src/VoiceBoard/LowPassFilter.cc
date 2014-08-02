@@ -1,7 +1,7 @@
 /*
  *  LowPassFilter.cc
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2014 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -41,6 +41,10 @@ SynthFilter::reset()
 void
 SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float res, FilterType type, FilterSlope slope)
 {
+	if (type == FilterTypeBypass) {
+		return;
+	}
+	
 	cutoff = std::min(cutoff, nyquist * 0.99f); // filter is unstable at PI
 	cutoff = std::max(cutoff, 10.0f);
 
@@ -66,6 +70,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			b1 = (2.0 * (k2 - 1.0)) / bh;
 			b2 = (1.0 - rk + k2) / bh;
 			break;
+
 		case FilterTypeHighPass:
 			//
 			// Bilinear transformation of H(s) = s^2 / (s^2 + s/Q + 1)
@@ -77,6 +82,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			b1 = (2.0 * (k2 - 1.0)) / bh;
 			b2 = (1.0 - rk + k2) / bh;
 			break;
+		
 		case FilterTypeBandPass:
 			//
 			// Bilinear transformation of H(s) = (s/Q) / (s^2 + s/Q + 1)
@@ -88,6 +94,20 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			b1 = (2.0 * (k2 - 1.0)) / bh;
 			b2 = (1.0 - rk + k2) / bh;
 			break;
+			
+		case FilterTypeBandStop:
+			//
+			// "Digital Audio Signal Processing" by Udo Zölzer does not provide z-transform
+			// coefficients for the bandstop filter, so these were derived by studying
+			// http://www.earlevel.com/main/2012/11/26/biquad-c-source-code/
+			//
+			a0 = (1.0 + k2) / bh;
+			a1 = (2.0 * (k2 - 1.0)) / bh;
+			a2 =  a0;
+			b1 =  a1;
+			b2 = (1.0 - rk + k2) / bh;
+			break;
+			
 		default:
 			assert(!"invalid FilterType");
 			return;

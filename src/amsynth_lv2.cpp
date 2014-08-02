@@ -19,11 +19,9 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "controls.h"
 #include "midi.h"
-#include "MidiController.h"
-#include "PresetController.h"
-#include "VoiceAllocationUnit.h"
+#include "Preset.h"
+#include "Synthesizer.h"
 
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
@@ -48,9 +46,7 @@
 
 struct amsynth_wrapper {
 	const char *bundle_path;
-	VoiceAllocationUnit *vau;
-	PresetController *bank;
-	MidiController *mc;
+	Synthesizer *synth;
 	float * out_l;
 	float * out_r;
 	const LV2_Atom_Sequence *midi_in_port;
@@ -76,24 +72,9 @@ lv2_instantiate(const struct _LV2_Descriptor *descriptor, double sample_rate, co
 		return NULL;
 	}
 
-	static Config config;
-	config.Defaults();
-	config.load();
-	Preset amsynth_preset;
-
 	amsynth_wrapper *a = (amsynth_wrapper *)calloc(1, sizeof(amsynth_wrapper));
 	a->bundle_path = strdup(bundle_path);
-	a->vau = new VoiceAllocationUnit;
-	a->vau->SetSampleRate (sample_rate);
-	a->vau->setPitchBendRangeSemitones (config.pitch_bend_range);
-	a->bank = new PresetController;
-	a->bank->loadPresets(config.current_bank_file.c_str());
-	a->bank->selectPreset(0);
-	a->bank->getCurrentPreset().AddListenerToAll (a->vau);
-	a->mc = new MidiController(config);
-	a->mc->SetMidiEventHandler(a->vau);
-	a->mc->setPresetController(*a->bank);
-	a->mc->set_midi_channel(0);
+	a->synth = new Synthesizer;
 	a->params = (float **) calloc (kAmsynthParameterCount, sizeof (float *));
 	a->uris.midiEvent       = urid_map->map(urid_map->handle, LV2_MIDI__MidiEvent);
 
@@ -107,8 +88,7 @@ lv2_cleanup(LV2_Handle instance)
 
 	amsynth_wrapper * a = (amsynth_wrapper *) instance;
 	free ((void *)a->bundle_path);
-	delete a->vau;
-	delete a->bank;
+	delete a->synth;
 	free (a->params);
 	free ((void *)a);
 }
@@ -144,36 +124,19 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 {
 	amsynth_wrapper * a = (amsynth_wrapper *) instance;
 
-	Preset &preset = a->bank->getCurrentPreset();
-
-	std::vector<NoteEvent> note_events;
-
+	std::vector<amsynth_midi_event_t> midi_events;
 	LV2_ATOM_SEQUENCE_FOREACH(a->midi_in_port, ev) {
 		if (ev->body.type == a->uris.midiEvent) {
-			uint32_t size = ev->body.size;
-			uint8_t *data = (uint8_t *)(ev + 1);
-			LV2_Midi_Message_Type type = lv2_midi_message_type(data);
-			if (size == 3) {
-				fprintf(stderr,
-					"                          LV2 MIDI: %02x %02x %02x  @ %4d\n",
-					data[0], data[1], data[2], ev->time.frames);
-			}
-			switch (type) {
-			case LV2_MIDI_MSG_NOTE_OFF:
-				note_events.push_back(NoteEvent(ev->time.frames, false, data[1], data[2] / 127.0));
-				break;
-			case LV2_MIDI_MSG_NOTE_ON:
-				note_events.push_back(NoteEvent(ev->time.frames, true, data[1], data[2] / 127.0));
-				break;
-			default:
-				a->mc->HandleMidiData(data, size);
-				break;
-			}
-			if (MIDI_STATUS_CONTROLLER == (data[0] & 0xF0)) {
-				for (unsigned int i=0; i<kAmsynthParameterCount; i++) {
-					float value = preset.getParameter(i).getValue();
-					if (*(a->params[i]) != value) {
-						*(a->params[i]) = value;
+			amsynth_midi_event_t midi_event = {0};
+			midi_event.offset_frames = ev->time.frames;
+			midi_event.buffer = (uint8_t *)(ev + 1);
+			midi_event.length = ev->body.size;
+			midi_events.push_back(midi_event);
+			if (MIDI_STATUS_CONTROLLER == (midi_event.buffer[0] & 0xF0)) {
+				for (unsigned i=0; i<kAmsynthParameterCount; i++) {
+					float *host_value = a->params[i];
+					if (host_value != NULL) {
+						*host_value = a->synth->getParameterValue((Param)i);
 					}
 				}
 			}
@@ -183,13 +146,13 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 	for (unsigned i=0; i<kAmsynthParameterCount; i++) {
 		const float *host_value = a->params[i];
 		if (host_value != NULL) {
-			if (preset.getParameter(i).getValue() != *host_value) {
-				preset.getParameter(i).setValue(*host_value);
+			if (a->synth->getParameterValue((Param)i) != *host_value) {
+				a->synth->setParameterValue((Param)i, *host_value);
 			}
 		}
 	}
 
-	a->vau->Process(sample_count, note_events, a->out_l, a->out_r);
+	a->synth->process(sample_count, midi_events, a->out_l, a->out_r);
 }
 
 static LV2_State_Status

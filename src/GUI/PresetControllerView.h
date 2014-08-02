@@ -25,10 +25,9 @@
 #include <gtkmm.h>
 
 class PresetController;
-class VoiceAllocationUnit;
 
 class PresetControllerView : public Gtk::HBox { public:
-	static PresetControllerView * create(VoiceAllocationUnit *voiceAllocationUnit);
+	static PresetControllerView * create();
 	virtual void setPresetController(PresetController *presetController) = 0;
     virtual void update() = 0;
     virtual int getAuditionNote() = 0;

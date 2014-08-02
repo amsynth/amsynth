@@ -1,7 +1,7 @@
 /*
  *  Preset.cc
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2014 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -26,11 +26,13 @@
 
 #include <cstdlib>
 #include <cstdio>
+#include <map>
 
 #ifdef _DEBUG
 #include <iostream>
 using namespace std;
 #endif
+
 
 Parameter TimeParameter (const std::string name, Param id)
 {
@@ -50,7 +52,7 @@ const char *keyboard_mode_names[] = {
 };
 
 const char *filter_type_names[] = {
-	"low pass", "high pass", "band pass", NULL
+	"low pass", "high pass", "band pass", "notch", "bypass", NULL
 };
 
 const char *filter_slope_names[] = {
@@ -83,7 +85,7 @@ Preset::Preset			(const std::string name)
     mParameters.push_back (Parameter		("master_vol",			kAmsynthParameter_MasterVolume,			0.67, 0, 1, 0,		Parameter::PARAM_POWER, 2, 0));
     mParameters.push_back (Parameter		("lfo_freq",			kAmsynthParameter_LFOFreq,			0, 0, 7.5, 0,		Parameter::PARAM_POWER, 2, 0,	"Hz"));
     mParameters.push_back (Parameter		("lfo_waveform",		kAmsynthParameter_LFOWaveform,		0, 0, 6, 1));
-    mParameters.push_back (Parameter		("osc2_range",			kAmsynthParameter_Oscillator2Octave,		0, -1, 2, 1,		Parameter::PARAM_EXP, 2, 0));
+    mParameters.push_back (Parameter		("osc2_range",			kAmsynthParameter_Oscillator2Octave,		0, -3, 4, 1,		Parameter::PARAM_EXP, 2, 0));
 	mParameters.push_back (Parameter		("osc_mix",				kAmsynthParameter_OscillatorMix,			0, -1, 1));
 	mParameters.push_back (Parameter		("freq_mod_amount",		kAmsynthParameter_LFOToOscillators,		0, 0, 1.25992105f,0,Parameter::PARAM_POWER, 3, -1));
 	mParameters.push_back (Parameter		("filter_mod_amount",	kAmsynthParameter_LFOToFilterCutoff,	-1, -1, 1));
@@ -103,6 +105,9 @@ Preset::Preset			(const std::string name)
 	mParameters.push_back (Parameter		("filter_type",         kAmsynthParameter_FilterType, SynthFilter::FilterTypeLowPass, SynthFilter::FilterTypeLowPass, SynthFilter::FilterTypeCount - 1, 1));
 	mParameters.push_back (Parameter		("filter_slope",        kAmsynthParameter_FilterSlope, SynthFilter::FilterSlope24, SynthFilter::FilterSlope12, SynthFilter::FilterSlope24, 1));
 	mParameters.push_back (Parameter		("freq_mod_osc",		kAmsynthParameter_LFOOscillatorSelect, 0, 0, 2, 1));
+	mParameters.push_back (Parameter		("filter_kbd_track",    kAmsynthParameter_FilterKeyTrackAmount, 1));
+	mParameters.push_back (Parameter		("filter_vel_sens",		kAmsynthParameter_FilterKeyVelocityAmount, 1));
+	mParameters.push_back (Parameter		("amp_vel_sens",		kAmsynthParameter_AmpVelocityAmount, 1));
 
 	getParameter(kAmsynthParameter_Oscillator1Waveform).setValueStrings(osc_waveform_names);
 	getParameter(kAmsynthParameter_Oscillator2Waveform).setValueStrings(osc_waveform_names);
@@ -137,8 +142,17 @@ Preset::isEqual(const Preset &rhs)
 Parameter & 
 Preset::getParameter(const std::string name)
 {
-    for (unsigned i = 0; i < mParameters.size(); i++) if (getParameter(i).getName() == name) return mParameters[i];
-    return nullparam;
+	typedef std::map<std::string, size_t> name_map_t;
+	static name_map_t name_map;
+	if (name_map.empty()) {
+		for (size_t i = 0; i < mParameters.size(); i++) {
+			name_map[mParameters[i].getName()] = i;
+		}
+	}
+	name_map_t::iterator it = name_map.find(name);
+	if (it == name_map.end())
+		return nullparam;
+	return getParameter(it->second);
 }
 
 void
@@ -277,9 +291,13 @@ int parameter_get_display (int parameter_index, float parameter_value, char *buf
 		case kAmsynthParameter_Oscillator2Detune:
 			return snprintf(buffer, maxlen, "%+.1f Cents", 1200.0 * log2(real_value));
 		case kAmsynthParameter_Oscillator2Pitch:
-			return snprintf(buffer, maxlen, "%+.0f Semitones", real_value);
+			return snprintf(buffer, maxlen, "%+.0f Semitone%s", real_value, abs(real_value) < 2 ? "" : "s");
+		case kAmsynthParameter_Oscillator2Octave:
+			return snprintf(buffer, maxlen, "%+.0f Octave%s", parameter_value, abs(parameter_value) < 2 ? "" : "s");
 		case kAmsynthParameter_MasterVolume:
 			return snprintf(buffer, maxlen, "%+.1f dB", 20.0 * log10(real_value));
+		case kAmsynthParameter_OscillatorMixRingMod:
+			return snprintf(buffer, maxlen, "%d %%", (int)roundf(real_value * 100.0));
 		case kAmsynthParameter_FilterEnvAmount:
 			return snprintf(buffer, maxlen, "%+d %%", (int)roundf(real_value / 16.0 * 100.0));
 		case kAmsynthParameter_AmpEnvSustain:
@@ -294,6 +312,9 @@ int parameter_get_display (int parameter_index, float parameter_value, char *buf
 		case kAmsynthParameter_ReverbWet:
 		case kAmsynthParameter_ReverbWidth:
 		case kAmsynthParameter_AmpDistortion:
+		case kAmsynthParameter_FilterKeyTrackAmount:
+		case kAmsynthParameter_FilterKeyVelocityAmount:
+		case kAmsynthParameter_AmpVelocityAmount:
 			return snprintf(buffer, maxlen, "%d %%", (int)roundf(parameter.GetNormalisedValue() * 100.0));
 		case kAmsynthParameter_FilterType:
 			return snprintf(buffer, maxlen, "%s", filter_type_names[(int)real_value]);

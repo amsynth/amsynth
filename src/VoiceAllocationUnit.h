@@ -36,18 +36,6 @@ class revmodel;
 class Distortion;
 
 
-struct NoteEvent
-{
-	unsigned frames;
-	bool note_on;
-	uint8_t note;
-	float velocity;
-
-	NoteEvent(unsigned frames, bool on, uint8_t note, float velocity)
-	: frames(frames), note_on(on), note(note), velocity(velocity) {}
-};
-
-
 class VoiceAllocationUnit : public UpdateListener, public MidiEventHandler
 {
 public:
@@ -74,7 +62,6 @@ public:
 	void	setPitchBendRangeSemitones(float range) { mPitchBendRangeSemitones = range; }
 	void	setKeyboardMode(KeyboardMode);
 
-	void	Process			(unsigned nframes, std::vector<NoteEvent> events, float *l, float *r, int stride=1);
 	void	Process			(float *l, float *r, unsigned nframes, int stride=1);
 
 	double	noteToPitch		(int note) const;
@@ -108,9 +95,8 @@ private:
 	float	mPanGainLeft;
 	float	mPanGainRight;
 	float	mPitchBendRangeSemitones;
+	float	mPitchBendValue;
 	float	mLastNoteFrequency;
-	float   mLastPitchBendValue;
-	float   mNextPitchBendValue;
 
 	TuningMap	tuningMap;
 };

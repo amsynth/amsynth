@@ -24,8 +24,12 @@
 #include <cassert>
 #include <cmath>
 
+#define BLEND(x0, x1, m) (((x0) * (1.0 - (m))) + ((x1) * (m)))
+
 // Low-pass filter the VCA control signal to prevent nasty clicking sounds
 const float kVCALowPassFreq = 4000.0f;
+
+const float kKeyTrackBaseFreq = 261.626; // Middle C
 
 VoiceBoard::VoiceBoard()
 :	mFrequencyDirty (false)
@@ -44,12 +48,16 @@ VoiceBoard::VoiceBoard()
 ,	mRingModAmt		(0.0)
 ,	mOsc2Octave		(1.0)
 ,	mOsc2Detune		(1.0)
+,	mOsc2Sync		(false)
 ,	mFilterEnvAmt	(0.0)
 ,	mFilterModAmt	(0.0)
 ,	mFilterCutoff	(16.0)
 ,	mFilterRes		(0.0)
+,	mFilterKbdTrack (0.0)
+,	mFilterVelSens	(0.0)
 ,	filter_env		(mProcessBuffers.filter_env)
 ,	mAmpModAmount	(0.0)
+,	mAmpVelSens		(1.0)
 ,	amp_env			(mProcessBuffers.amp_env)
 {
 }
@@ -88,7 +96,7 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_Oscillator2Octave:	mOsc2Octave = value;		break;
 	case kAmsynthParameter_Oscillator2Detune:	mOsc2Detune = value;		break;
 	case kAmsynthParameter_Oscillator2Pitch:	mOsc2Pitch = ::pow(2, value / 12); break;
-	case kAmsynthParameter_Oscillator2Sync:		osc1.SetSync (value>0.5 ? &osc2 : 0);	break;
+	case kAmsynthParameter_Oscillator2Sync:		mOsc2Sync  = !!round(value); break;
 
 	case kAmsynthParameter_LFOToFilterCutoff:	mFilterModAmt = (value+1.0f)/2.0f;break;
 	case kAmsynthParameter_FilterEnvAmount:	mFilterEnvAmt = value;		break;
@@ -100,6 +108,8 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_FilterEnvRelease:	filter_env.SetRelease (value);	break;
 	case kAmsynthParameter_FilterType: mFilterType = (SynthFilter::FilterType) value; break;
 	case kAmsynthParameter_FilterSlope: mFilterSlope = (SynthFilter::FilterSlope) value; break;
+	case kAmsynthParameter_FilterKeyTrackAmount: mFilterKbdTrack = value; break;
+	case kAmsynthParameter_FilterKeyVelocityAmount: mFilterVelSens = value; break;
 
 	case kAmsynthParameter_OscillatorMixRingMod:	mRingModAmt = value;		break;
 	case kAmsynthParameter_OscillatorMix:		mOsc1Vol = (1-value)/2.0f;
@@ -109,6 +119,7 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_AmpEnvDecay:		amp_env.SetDecay (value);	break;
 	case kAmsynthParameter_AmpEnvSustain:	amp_env.SetSustain (value);	break;
 	case kAmsynthParameter_AmpEnvRelease:	amp_env.SetRelease (value);	break;
+	case kAmsynthParameter_AmpVelocityAmount: mAmpVelSens = value; break;
 		
 	default: break;
 	}
@@ -153,8 +164,11 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	}
 	float osc2pw = mOsc2PulseWidth;
 
-	float env_f = *filter_env.getNFData (numSamples);
-	float cutoff = ( frequency * mKeyVelocity * mFilterCutoff ) * ( (lfo1buf[0]*0.5f + 0.5f) * mFilterModAmt + 1-mFilterModAmt );
+	float env_f = filter_env.getNFData(numSamples)[numSamples - 1];
+	float cutoff_base = BLEND(kKeyTrackBaseFreq, frequency, mFilterKbdTrack);
+	float cutoff_vel_mult = BLEND(1.0, mKeyVelocity, mFilterVelSens);
+	float cutoff_lfo_mult = (lfo1buf[0] * 0.5f + 0.5f) * mFilterModAmt + 1 - mFilterModAmt;
+	float cutoff = mFilterCutoff * cutoff_base * cutoff_vel_mult * cutoff_lfo_mult;
 	if (mFilterEnvAmt > 0.f) cutoff += (frequency * env_f * mFilterEnvAmt);
 	else
 	{
@@ -168,8 +182,15 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	//
 	float *osc1buf = mProcessBuffers.osc_1;
 	float *osc2buf = mProcessBuffers.osc_2;
+
+	bool osc2sync = mOsc2Sync;
+	// previous implementation of sync had a bug causing it to only work when osc1 was set to sine or saw
+	// we need to recreate that behaviour here to ensure old presets still sound the same.
+	osc2sync &= (osc1.GetWaveform() == Oscillator::Waveform_Sine || osc1.GetWaveform() == Oscillator::Waveform_Saw);
+	osc2.setSyncEnabled(osc2sync);
+
 	osc1.ProcessSamples (osc1buf, numSamples, osc1freq, osc1pw);
-	osc2.ProcessSamples (osc2buf, numSamples, osc2freq, osc2pw);
+	osc2.ProcessSamples (osc2buf, numSamples, osc2freq, osc2pw, osc1freq);
 
 	//
 	// Osc Mix
@@ -192,7 +213,7 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	// 
 	float *ampenvbuf = amp_env.getNFData (numSamples);
 	for (int i=0; i<numSamples; i++) {
-		const float amplitude = ampenvbuf[i] * mKeyVelocity * 
+		const float amplitude = ampenvbuf[i] * BLEND(1.0, mKeyVelocity, mAmpVelSens) *
 			( ((lfo1buf[i] * 0.5f) + 0.5f) * mAmpModAmount + 1 - mAmpModAmount);
 		osc1buf[i] = osc1buf[i] * _vcaFilter.processSample(amplitude);
 	}
@@ -300,4 +321,3 @@ int main ()
 	printf ("per sample: %u\n", proc/kSamples);
 }
 #endif
-

@@ -1,7 +1,7 @@
 /*
  *  dssi.cpp
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2014 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -19,11 +19,9 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "controls.h"
 #include "midi.h"
-#include "MidiController.h"
-#include "PresetController.h"
-#include "VoiceAllocationUnit.h"
+#include "Preset.h"
+#include "Synthesizer.h"
 
 #include <assert.h>
 #include <dssi.h>
@@ -45,14 +43,14 @@
 static LADSPA_Descriptor *	s_ladspaDescriptor = NULL;
 static DSSI_Descriptor *	s_dssiDescriptor   = NULL;
 
+#define MIDI_BUFFER_SIZE 4096
 
 typedef struct _amsynth_wrapper {
-	VoiceAllocationUnit * vau;
-	PresetController *    bank;
-	MidiController *      mc;
-	LADSPA_Data *         out_l;
-	LADSPA_Data *         out_r;
-	LADSPA_Data **        params;
+	Synthesizer *synth;
+	unsigned char *midi_buffer;
+	LADSPA_Data *out_l;
+	LADSPA_Data *out_r;
+	LADSPA_Data **params;
 } amsynth_wrapper;
 
 
@@ -86,22 +84,9 @@ const DSSI_Descriptor *dssi_descriptor (unsigned long index)
 static LADSPA_Handle instantiate (const LADSPA_Descriptor * descriptor, unsigned long s_rate)
 {
 	TRACE();
-    static Config config;
-    config.Defaults();
-    config.load();
-    Preset amsynth_preset;
     amsynth_wrapper * a = new amsynth_wrapper;
-    a->vau = new VoiceAllocationUnit;
-    a->vau->SetSampleRate (s_rate);
-    a->vau->setPitchBendRangeSemitones (config.pitch_bend_range);
-    a->bank = new PresetController;
-    a->bank->loadPresets(config.current_bank_file.c_str());
-    a->bank->selectPreset(0);
-    a->bank->getCurrentPreset().AddListenerToAll (a->vau);
-    a->mc = new MidiController(config);
-    a->mc->SetMidiEventHandler(a->vau);
-    a->mc->setPresetController(*a->bank);
-	a->mc->set_midi_channel(0);
+    a->synth = new Synthesizer;
+    a->midi_buffer = (unsigned char *)calloc(MIDI_BUFFER_SIZE, 1);
     a->params = (LADSPA_Data **) calloc (kAmsynthParameterCount, sizeof (LADSPA_Data *));
     return (LADSPA_Handle) a;
 }
@@ -110,9 +95,8 @@ static void cleanup (LADSPA_Handle instance)
 {
 	TRACE();
     amsynth_wrapper * a = (amsynth_wrapper *) instance;
-    delete a->vau;
-    delete a->bank;
-    delete a->mc;
+    delete a->synth;
+    free (a->midi_buffer);
     free (a->params);
     delete a;
 }
@@ -126,11 +110,10 @@ static const DSSI_Program_Descriptor *get_program(LADSPA_Handle Instance, unsign
 	static DSSI_Program_Descriptor descriptor;
 	memset(&descriptor, 0, sizeof(descriptor));
 
-	if (Index < PresetController::kNumPresets) {
-		Preset &preset = a->bank->getPreset(Index);
+	if (Index < 128) {
 		descriptor.Bank = 0;
 		descriptor.Program = Index;
-		descriptor.Name = preset.getName().c_str();
+		descriptor.Name = a->synth->getPresetName(Index);
 		TRACE_ARGS("%d %d %s", descriptor.Bank, descriptor.Program, descriptor.Name);
 		return &descriptor;
 	}
@@ -144,11 +127,11 @@ static void select_program(LADSPA_Handle Instance, unsigned long Bank, unsigned 
 
 	TRACE_ARGS("Bank = %d Index = %d", Bank, Index);
 
-	if (Bank == 0 && Index < PresetController::kNumPresets) {
-		a->bank->selectPreset(Index);
+	if (Bank == 0 && Index < 128) {
+		a->synth->setPresetNumber(Index);
 		// now update DSSI host's view of the parameters
-		for (unsigned int i=0; i<kAmsynthParameterCount; i++) {
-			float value = a->bank->getCurrentPreset().getParameter(i).getValue();
+		for (unsigned i = 0; i < kAmsynthParameterCount; i++) {
+			float value = a->synth->getParameterValue((Param)i);
 			if (*(a->params[i]) != value) {
 				*(a->params[i]) = value;
 			}
@@ -173,79 +156,54 @@ static void connect_port (LADSPA_Handle instance, unsigned long port, LADSPA_Dat
 
 //////////////////// Audio callback ////////////////////////////////////////////
 
-const float kMidiScaler = (1. / 127.);
-
 static void run_synth (LADSPA_Handle instance, unsigned long sample_count, snd_seq_event_t *events, unsigned long event_count)
 {
-    amsynth_wrapper * a = (amsynth_wrapper *) instance;
+	amsynth_wrapper * a = (amsynth_wrapper *) instance;
 
-    Preset &preset = a->bank->getCurrentPreset();
+	memset(a->midi_buffer, 0, MIDI_BUFFER_SIZE);
+	unsigned char *midi_buffer_ptr = a->midi_buffer;
 
-    std::vector<NoteEvent> note_events;
+#define push_midi_ev3(__status__, __byte1__, __byte2__) do { \
+	midi_buffer_ptr[0] = __status__; \
+	midi_buffer_ptr[1] = __byte1__; \
+	midi_buffer_ptr[2] = __byte2__; \
+	midi_events.push_back((amsynth_midi_event_t){ e->time.tick, 3, midi_buffer_ptr }); \
+	midi_buffer_ptr += 3; } while (0)
 
+	std::vector<amsynth_midi_event_t> midi_events;
 	for (snd_seq_event_t *e = events; e < events + event_count; e++) {
-		unsigned char data[3] = {0};
 		switch (e->type) {
 		case SND_SEQ_EVENT_NOTEON:
-			note_events.push_back(NoteEvent(e->time.tick, true, e->data.note.note, e->data.note.velocity / 127.0));
-			break;
+			push_midi_ev3(MIDI_STATUS_NOTE_ON, e->data.note.note, e->data.note.velocity);
 		case SND_SEQ_EVENT_NOTEOFF:
-			note_events.push_back(NoteEvent(e->time.tick, false, e->data.note.note, e->data.note.off_velocity / 127.0));
-			break;
-		case SND_SEQ_EVENT_KEYPRESS:
-			data[0] = MIDI_STATUS_NOTE_PRESSURE;
-			data[1] = e->data.note.note;
-			data[2] = e->data.note.velocity;
-			a->mc->HandleMidiData(data, 3);
-			break;
+			push_midi_ev3(MIDI_STATUS_NOTE_OFF, e->data.note.note, e->data.note.velocity);
 		case SND_SEQ_EVENT_CONTROLLER:
-			data[0] = MIDI_STATUS_CONTROLLER;
-			data[1] = e->data.control.param;
-			data[2] = e->data.control.value;
-			a->mc->HandleMidiData(data, 3);
-			for (unsigned int i=0; i<kAmsynthParameterCount; i++) {
-				float value = preset.getParameter(i).getValue();
-				if (*(a->params[i]) != value) {
-					*(a->params[i]) = value;
-				}
+			if (e->data.control.param < 128 && e->data.control.value < 128) {
+				push_midi_ev3(MIDI_STATUS_CONTROLLER, e->data.control.param, e->data.control.value);
 			}
+		case SND_SEQ_EVENT_PITCHBEND: {
+			unsigned int data = e->data.control.value + 8192;
+			unsigned char data1 = (data & 0x7f);
+			unsigned char data2 = (data >> 7 & 0x7f);
+			push_midi_ev3(MIDI_STATUS_PITCH_WHEEL, data1, data2);
 			break;
+		}
 		case SND_SEQ_EVENT_PGMCHANGE:
-			data[0] = MIDI_STATUS_PROGRAM_CHANGE;
-			data[1] = e->data.control.value;
-			a->mc->HandleMidiData(data, 2);
-			for (unsigned int i=0; i<kAmsynthParameterCount; i++) {
-				float value = preset.getParameter(i).getValue();
-				if (*(a->params[i]) != value) {
-					*(a->params[i]) = value;
-				}
-			}
-			break;
-		case SND_SEQ_EVENT_CHANPRESS:
-			break;
-		case SND_SEQ_EVENT_PITCHBEND:
-			data[0] = MIDI_STATUS_PITCH_WHEEL;
-			data[1] = (((unsigned int)(e->data.control.value + 0x2000)) >> 0) & 0x7F;
-			data[2] = (((unsigned int)(e->data.control.value + 0x2000)) >> 7) & 0x7F;
-			a->mc->HandleMidiData(data, 3);
+			select_program(instance, 0, e->data.control.value);
 			break;
 		default:
 			break;
 		}
 	}
 
-    // push through changes to parameters
-    for (unsigned i=0; i<kAmsynthParameterCount; i++)
-    {
+	for (unsigned i = (Param)0; i < kAmsynthParameterCount; i++) {
 		const LADSPA_Data host_value = *(a->params[i]);
-	    if (preset.getParameter(i).getValue() != host_value)
-	    {
-			TRACE_ARGS("parameter %32s = %f", preset.getParameter(i).getName().c_str(), host_value);
-		    preset.getParameter(i).setValue(host_value);
-	    }
-    }
-
-    a->vau->Process(sample_count, note_events, (float *)a->out_l, (float *)a->out_r);
+		if (a->synth->getParameterValue((Param)i) != host_value) {
+			a->synth->setParameterValue((Param)i, host_value);
+		}
+	}
+	
+	a->synth->process(sample_count, midi_events, a->out_l, a->out_r);
 }
 
 // renoise ignores DSSI plugins that don't implement run

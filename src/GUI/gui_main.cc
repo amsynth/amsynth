@@ -22,6 +22,7 @@
 #include "gui_main.h"
 
 #include "../AudioOutput.h"
+#include "../Synthesizer.h"
 #include "GUI.h"
 
 #include <assert.h>
@@ -44,19 +45,15 @@ void gui_kit_run(unsigned (*timer_callback)())
 	kit->run();
 }
 
-void gui_init(Config &config,
-              MidiController &midi_controller,
-              VoiceAllocationUnit &vau,
-              PresetController &presetController,
-              GenericOutput *out)
+void gui_init(Config &config, Synthesizer *synth, GenericOutput *out)
 {
 	if (pipe(gdk_input_pipe) == -1)
 		perror("pipe()");
     
     gtk_window_set_default_icon_from_file(DATADIR "/pixmaps/amsynth.png", NULL);
 	
-	gui = new GUI(config, midi_controller, vau, out);
-	gui->setPresetController(presetController);
+	gui = new GUI(config, *synth->getMidiController(), synth, out);
+	gui->setPresetController(*synth->getPresetController());
 	gui->init();
 	
 	// make GDK loop read events from the pipe

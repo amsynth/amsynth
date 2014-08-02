@@ -30,7 +30,6 @@
 
 #define SENSITIVITY_STEP     40 // Pixels required to step up to next value
 #define SENSITIVITY_NORMAL  300 // Pixels required to travel full range
-#define SENSITIVITY_HIGH   1200 // Pixels required to travel full range
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -49,7 +48,6 @@ typedef struct {
 	guint frame_width;
 	guint frame_height;
 	guint frame_count;
-	guint sensitivity;
 	
 	gdouble origin_y;
 	gdouble origin_val;
@@ -228,15 +226,6 @@ bitmap_knob_button_press ( GtkWidget *widget, GdkEventButton *event )
     	gtk_grab_add(widget);
 		bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 		g_signal_emit_by_name(self->adjustment, "start_atomic_value_change");
-		gdouble lower = gtk_adjustment_get_lower (self->adjustment);
-		gdouble upper = gtk_adjustment_get_upper (self->adjustment);
-		gdouble step  = gtk_adjustment_get_step_increment (self->adjustment);
-		if (step == 0.0) {
-			self->sensitivity = (event->state & GDK_SHIFT_MASK) ? SENSITIVITY_HIGH : SENSITIVITY_NORMAL;
-		} else {
-			self->sensitivity = SENSITIVITY_STEP * (guint)((upper - lower) / step);
-			self->sensitivity = MIN(self->sensitivity, 480);
-		}
 		self->origin_val = gtk_adjustment_get_value (self->adjustment);
 		self->origin_y = event->y;
 		if (tooltip_update (self))
@@ -269,10 +258,26 @@ bitmap_knob_motion_notify ( GtkWidget *widget, GdkEventMotion *event )
 		gdouble upper = gtk_adjustment_get_upper (self->adjustment);
 		gdouble step  = gtk_adjustment_get_step_increment (self->adjustment);
 		gdouble range = upper - lower;
-		gdouble offset = (self->origin_y - event->y) * range / self->sensitivity;
+		guint sensitivity = SENSITIVITY_NORMAL;
+		if (!step) {
+			if (event->state & GDK_SHIFT_MASK) {
+				sensitivity *= 4;
+			}
+			if (event->state & GDK_CONTROL_MASK) {
+				sensitivity *= 4;
+			}
+		} else {
+			sensitivity = SENSITIVITY_STEP * (guint)((range) / step);
+			sensitivity = MIN(sensitivity, 480);
+		}
+		gdouble offset = (self->origin_y - event->y) * range / sensitivity;
 		gdouble newval = self->origin_val + ((step == 0.0) ? offset : step * floor ((offset / step) + 0.5));
-		gtk_adjustment_set_value (self->adjustment, CLAMP (newval, lower, upper));
-		tooltip_update (self);
+		if (newval != self->origin_val) {
+			gtk_adjustment_set_value (self->adjustment, CLAMP (newval, lower, upper));
+			self->origin_val = gtk_adjustment_get_value (self->adjustment);
+			self->origin_y = event->y;
+			tooltip_update (self);
+		}
 		return TRUE;
 	}
 	return FALSE;

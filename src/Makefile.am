@@ -9,10 +9,12 @@ amsynth_core_sources = \
     Preset.cc Preset.h \
     PresetController.cc PresetController.h \
     VoiceAllocationUnit.cc VoiceAllocationUnit.h \
+    Synthesizer.cpp Synthesizer.h \
     TuningMap.cc TuningMap.h \
     Config.cc Config.h \
     controls.h \
     midi.h \
+    types.h \
     UpdateListener.h
 
 amsynth_core_libs = \

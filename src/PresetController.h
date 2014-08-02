@@ -90,8 +90,8 @@ public:
 
 	static const std::vector<BankInfo> & getPresetBanks();
 	static void rescanPresetBanks();
-    
-	static std::string getFactoryBanksDirectory();
+
+	static void setFactoryBanksDirectory(std::string path);
 	static std::string getUserBanksDirectory();
 
 protected:

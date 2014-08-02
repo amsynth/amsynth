@@ -80,6 +80,11 @@ enum Param
 
 	kAmsynthParameter_LFOOscillatorSelect      = 36,
 
+	kAmsynthParameter_FilterKeyTrackAmount     = 37,
+	kAmsynthParameter_FilterKeyVelocityAmount  = 38,
+	
+	kAmsynthParameter_AmpVelocityAmount        = 39,
+
 	kAmsynthParameterCount
 };
 

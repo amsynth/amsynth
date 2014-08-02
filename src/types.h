@@ -1,7 +1,7 @@
 /*
- *  gui_main.h
+ *  types.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2014 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -19,24 +19,15 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <string>
+#ifndef __amsynth__types__
+#define __amsynth__types__
 
-class Config;
-class GenericOutput;
-class Synthesizer;
+#define DEPRECATED __attribute__((deprecated))
 
-// Gtk::Main()
-void gui_kit_init(int & argc, char ** & argv);
+struct amsynth_midi_event_t {
+	unsigned int offset_frames;
+	unsigned int length;
+	unsigned char *buffer;
+};
 
-// Gtk::Main::run()
-void gui_kit_run(unsigned (*timer_callback)());
-
-void gui_init(Config &,
-			  Synthesizer *synth,
-              GenericOutput *);
-
-void gui_dealloc();
-
-void ShowModalErrorMessage(const std::string & msg);
-
-void spawn_new_instance();
+#endif
