@@ -259,7 +259,7 @@ bitmap_knob_motion_notify ( GtkWidget *widget, GdkEventMotion *event )
 		gdouble step  = gtk_adjustment_get_step_increment (self->adjustment);
 		gdouble range = upper - lower;
 		guint sensitivity = SENSITIVITY_NORMAL;
-		if (step == 0.0) {
+		if (!step) {
 			if (event->state & GDK_SHIFT_MASK) {
 				sensitivity *= 4;
 			}
@@ -272,10 +272,12 @@ bitmap_knob_motion_notify ( GtkWidget *widget, GdkEventMotion *event )
 		}
 		gdouble offset = (self->origin_y - event->y) * range / sensitivity;
 		gdouble newval = self->origin_val + ((step == 0.0) ? offset : step * floor ((offset / step) + 0.5));
-		gtk_adjustment_set_value (self->adjustment, CLAMP (newval, lower, upper));
-		self->origin_val = gtk_adjustment_get_value (self->adjustment);
-		self->origin_y = event->y;
-		tooltip_update (self);
+		if (newval != self->origin_val) {
+			gtk_adjustment_set_value (self->adjustment, CLAMP (newval, lower, upper));
+			self->origin_val = gtk_adjustment_get_value (self->adjustment);
+			self->origin_y = event->y;
+			tooltip_update (self);
+		}
 		return TRUE;
 	}
 	return FALSE;
