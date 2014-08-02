@@ -1,3 +1,18 @@
+amsynth 1.5.0 -- 2014-08-02
+
+  - new filter modes: notch and bypass
+  - new filter controls for key-tracking and velocity sensitivity
+  - OSC2 octave range increased
+  - ring modulation can now be dialled in (instead of on/off)
+  - LFO can now be routed to OSC1, OSC2, or both
+  - fixes an audible click when using fast filter attack times
+  - note and controller events are now rendered sample-accurate when
+    run as a plugin, fixing MIDI timing jitter
+  - DSSI & LV2 plug-in builds can now load any preset by
+    right-clicking the UI background
+  - bank & preset loading is now faster
+
+
 amsynth 1.4.2 -- 2014-04-16
 
   - fixes use of alsa utilities from the 'Utils' menu
