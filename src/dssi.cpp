@@ -175,12 +175,15 @@ static void run_synth (LADSPA_Handle instance, unsigned long sample_count, snd_s
 		switch (e->type) {
 		case SND_SEQ_EVENT_NOTEON:
 			push_midi_ev3(MIDI_STATUS_NOTE_ON, e->data.note.note, e->data.note.velocity);
+			break;
 		case SND_SEQ_EVENT_NOTEOFF:
 			push_midi_ev3(MIDI_STATUS_NOTE_OFF, e->data.note.note, e->data.note.velocity);
+			break;
 		case SND_SEQ_EVENT_CONTROLLER:
 			if (e->data.control.param < 128 && e->data.control.value < 128) {
 				push_midi_ev3(MIDI_STATUS_CONTROLLER, e->data.control.param, e->data.control.value);
 			}
+			break;
 		case SND_SEQ_EVENT_PITCHBEND: {
 			unsigned int data = e->data.control.value + 8192;
 			unsigned char data1 = (data & 0x7f);
