@@ -252,8 +252,8 @@ GUI::create_menus	( )
 	list_preset.push_back (MenuElem("Undo", Gtk::AccelKey("<control>Z"), sigc::mem_fun(preset_controller, &PresetController::undoChange)));
 	list_preset.push_back (MenuElem("Redo", Gtk::AccelKey("<control>Y"), sigc::mem_fun(preset_controller, &PresetController::redoChange)));
 	list_preset.push_back (SeparatorElem());
-	list_preset.push_back (MenuElem("Import...", bind(mem_fun(*this, &GUI::event_handler), (int)evPresetImport)));
-	list_preset.push_back (MenuElem("Export...", bind(mem_fun(*this, &GUI::event_handler), (int)evPresetExport)));
+	list_preset.push_back (MenuElem("Import Preset", bind(mem_fun(*this, &GUI::event_handler), (int)evPresetImport)));
+	list_preset.push_back (MenuElem("Export Preset", bind(mem_fun(*this, &GUI::event_handler), (int)evPresetExport)));
 
 			
 	//
@@ -560,6 +560,46 @@ open_uri(const char *uri)
 	}
 }
 
+static std::string
+file_dialog(GtkWindow *window, const char *name, bool save, const char *filter_name, const char *filter_pattern, const char *initial_filename)
+{
+	GtkWidget *dialog = gtk_file_chooser_dialog_new(
+		name,
+		window,
+		save ? GTK_FILE_CHOOSER_ACTION_SAVE : GTK_FILE_CHOOSER_ACTION_OPEN,
+		GTK_STOCK_CANCEL,
+		GTK_RESPONSE_CANCEL,
+		save ? GTK_STOCK_SAVE : GTK_STOCK_OPEN,
+		GTK_RESPONSE_ACCEPT,
+		NULL);
+	
+	if (filter_name && filter_pattern) {
+		GtkFileFilter *filter = gtk_file_filter_new();
+		gtk_file_filter_set_name(filter, filter_name);
+		gtk_file_filter_add_pattern(filter, filter_pattern);
+		gtk_file_chooser_set_filter(GTK_FILE_CHOOSER(dialog), filter);
+	}
+	
+	if (initial_filename) {
+		gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), initial_filename);
+	}
+	
+	std::string result;
+	
+	gint response = gtk_dialog_run(GTK_DIALOG(dialog));
+	if (response == GTK_RESPONSE_ACCEPT) {
+		char *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+		if (filename) {
+			result = std::string(filename);
+		}
+		g_free(filename);
+	}
+	
+	gtk_widget_destroy(dialog);
+	
+	return result;
+}
+
 void
 GUI::event_handler(const int e)
 {
@@ -599,26 +639,18 @@ GUI::event_handler(const int e)
 	
 	case evPresetExport:
 		{
-			FileChooserDialog dlg (*this, "Export preset as...", FILE_CHOOSER_ACTION_SAVE);
-			dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);
-			dlg.add_button(Stock::SAVE_AS, RESPONSE_OK);
-			dlg.set_current_name (preset_controller->getCurrentPreset().getName()+".amSynthPreset");
-			if (RESPONSE_OK == dlg.run()) preset_controller->exportPreset (dlg.get_filename());
+			std::string filename = file_dialog(this->gobj(), "Export Preset", true, NULL, NULL, (preset_controller->getCurrentPreset().getName() + ".amSynthPreset").c_str());
+			if (!filename.empty()) {
+				preset_controller->exportPreset(filename);
+			}
 		}
 		break;
 	
 	case evPresetImport:
 		{
-			FileChooserDialog dlg (*this, "Import over current preset...", FILE_CHOOSER_ACTION_OPEN);
-			dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);
-			dlg.add_button("Select", RESPONSE_OK);
-			FileFilter filter;
-			filter.set_name("amSynth 1.x files");
-			filter.add_pattern("*.amSynthPreset");
-			dlg.add_filter(filter);
-			if (RESPONSE_OK == dlg.run())
-			{
-				preset_controller->importPreset (dlg.get_filename());
+			std::string filename = file_dialog(this->gobj(), "Import Preset", false, "amsynth 1.x files", "*.amSynthPreset", NULL);
+			if (!filename.empty()) {
+				preset_controller->importPreset(filename);
 			}
 		}
 		break;
@@ -629,11 +661,10 @@ GUI::event_handler(const int e)
 	
 	case evRecDlgFileChooser:
 		{
-			FileChooserDialog dlg (record_dialog, "Select output WAV file...", FILE_CHOOSER_ACTION_SAVE);
-			dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);
-			dlg.add_button(Stock::OK, RESPONSE_OK);
-			dlg.set_current_name (record_entry.get_text());
-			if (RESPONSE_OK == dlg.run()) record_entry.set_text (dlg.get_filename());
+			std::string filename = file_dialog(this->gobj(), "Select output WAV file...", true, NULL, NULL, NULL);
+			if (!filename.empty()) {
+				record_entry.set_text(filename);
+			}
 		}
 		break;
 	
@@ -890,13 +921,11 @@ GUI::preset_paste_as_new_callback(GtkClipboard *clipboard, const gchar *text, gp
 void
 GUI::bank_open		( )
 {
-	FileChooserDialog dlg (*this, "Open amSynth Bank File...", FILE_CHOOSER_ACTION_OPEN);
-	dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);	dlg.add_button("Select", RESPONSE_OK);
-	if (RESPONSE_OK == dlg.run())
-	{
-		preset_controller->savePresets (config->current_bank_file.c_str ());
-		config->current_bank_file = dlg.get_filename ();
-		preset_controller->loadPresets (config->current_bank_file.c_str ());
+	std::string filename = file_dialog(this->gobj(), "Open Bank", false, NULL, NULL, NULL);
+	if (!filename.empty()) {
+		preset_controller->savePresets(config->current_bank_file.c_str());
+		config->current_bank_file = filename;
+		preset_controller->loadPresets(config->current_bank_file.c_str());
 	}
 }
 
@@ -904,7 +933,7 @@ void
 GUI::bank_save_as	( )
 {
 	GtkWidget *chooser = gtk_file_chooser_dialog_new (
-		"Save preset bank",
+		"Save Bank",
 		this->gobj(),
 		GTK_FILE_CHOOSER_ACTION_SAVE,
 		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
@@ -929,20 +958,10 @@ GUI::bank_save_as	( )
 void
 GUI::scale_open		( )
 {
-	FileChooserDialog dlg (*this, "Open Scala (.scl) alternate tuning file...", FILE_CHOOSER_ACTION_OPEN);
-	dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);	dlg.add_button("Select", RESPONSE_OK);
-
-	FileFilter filter;
-	filter.set_name("Scala scale files");
-	filter.add_pattern("*.[Ss][Cc][Ll]");
-	dlg.add_filter(filter);
-
-	if (dlg.run() == RESPONSE_OK)
-	{
-		dlg.hide();
-		int error = m_synth->loadTuningScale(dlg.get_filename().c_str());
-		if (error)
-		{
+	std::string filename = file_dialog(this->gobj(), "Open Scala (.scl) alternate tuning file...", false, "Scala scale files", "*.[Ss][Cc][Ll]", NULL);
+	if (!filename.empty()) {
+		int error = m_synth->loadTuningScale(filename.c_str());
+		if (error) {
 			MessageDialog msg(*this, "Failed to load new tuning.");
 			msg.set_secondary_text("Reading the tuning file failed for some reason. \
 Make sure your file has the correct format and try again.");
@@ -954,20 +973,10 @@ Make sure your file has the correct format and try again.");
 void
 GUI::key_map_open	( )
 {
-	FileChooserDialog dlg (*this, "Open alternate keybord map (Scala .kbm format)...", FILE_CHOOSER_ACTION_OPEN);
-	dlg.add_button(Stock::CANCEL, RESPONSE_CANCEL);	dlg.add_button("Select", RESPONSE_OK);
-
-	FileFilter filter;
-	filter.set_name("Scala keyboard map files");
-	filter.add_pattern("*.[Kk][Bb][Mm]");
-	dlg.add_filter(filter);
-
-	if (dlg.run() == RESPONSE_OK)
-	{
-		dlg.hide();
-		int error = m_synth->loadTuningKeymap(dlg.get_filename().c_str());
-		if (error)
-		{
+	std::string filename = file_dialog(this->gobj(), "Open alternate keybord map (Scala .kbm format)...", false, "Scala keyboard map files", "*.[Kk][Bb][Mm]", NULL);
+	if (!filename.empty()) {
+		int error = m_synth->loadTuningKeymap(filename.c_str());
+		if (error) {
 			MessageDialog msg(*this, "Failed to load new keyboard map.");
 			msg.set_secondary_text("Reading the keyboard map file failed for some reason. \
 Make sure your file has the correct format and try again.");
