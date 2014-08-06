@@ -1,3 +1,9 @@
+amsynth 1.5.1 -- 2014-08-06
+
+  - fixes broken MIDI handling in the DSSI plugin
+  - fixes a crash when a folder is selected from 'import preset'
+
+
 amsynth 1.5.0 -- 2014-08-02
 
   - new filter modes: notch and bypass
