@@ -168,22 +168,36 @@ PresetController::randomiseCurrentPreset	()
 int
 PresetController::exportPreset		(const string filename)
 {
-	ofstream file( filename.c_str(), ios::out );
-	file << currentPreset.toString();
-	file.close();
-	return 0;
+	try
+	{
+		ofstream file( filename.c_str(), ios::out );
+		file << currentPreset.toString();
+		file.close();
+		return 0;
+	}
+	catch (std::exception &e)
+	{
+		return -1;
+	}
 }
 
 int
 PresetController::importPreset		(const string filename)
-{	
-	ifstream ifs( filename.c_str(), ios::in );
-	std::string str( (std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>() );
-	if (!currentPreset.fromString( str )) return -1;
-	currentPreset.setName("Imported: " + currentPreset.getName());
-	notify ();
-	clearChangeBuffers ();
-	return 1;
+{
+	try
+	{
+		ifstream ifs( filename.c_str(), ios::in );
+		std::string str( (std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>() );
+		if (!currentPreset.fromString( str )) return -1;
+		currentPreset.setName("Imported: " + currentPreset.getName());
+		notify ();
+		clearChangeBuffers ();
+		return 0;
+	}
+	catch (std::exception &e)
+	{
+		return -1;
+	}
 }
 
 static unsigned long mtime(const char *filename)
