@@ -1,0 +1,33 @@
+
+TARGET = amsynth.vst.so
+
+OBJECTS = \
+	vstsdk2.4/public.sdk/source/vst2.x/audioeffect.o \
+	vstsdk2.4/public.sdk/source/vst2.x/audioeffectx.o \
+	Effects/allpass.o \
+	Effects/comb.o \
+	Effects/Distortion.o \
+	Effects/revmodel.o \
+	Effects/SoftLimiter.o \
+	VoiceBoard/ADSR.o \
+	VoiceBoard/Oscillator.o \
+	VoiceBoard/VoiceBoard.o \
+	VoiceBoard/LowPassFilter.o \
+	Parameter.o \
+	Preset.o \
+	PresetController.o \
+	TuningMap.o \
+	VoiceAllocationUnit.o \
+	Config.o \
+	amsynth_vst.o
+
+all: $(TARGET)
+
+CFLAGS = -Wall -O2 -Ivstsdk2.4 -fPIC
+CXXFLAGS = $(CFLAGS)
+
+$(TARGET): $(OBJECTS)
+	g++ -shared -lc -lm -Wl,-retain-symbols-file -Wl,amsynth_vst.exp -o $(TARGET) $(OBJECTS)
+
+clean:
+	rm $(OBJECTS) $(TARGET)
