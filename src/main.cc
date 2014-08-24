@@ -391,12 +391,6 @@ int main( int argc, char *argv[] )
 
 	string amsynth_bank_file = config.current_bank_file;
 
-	//
-	// subsystem initialisation
-	//
-    
-    s_synthesizer = new Synthesizer(&config);
-	
 	GenericOutput *out = open_audio();
 	if (!out)
 		fatal_error("Fatal Error: open_audio() returned NULL.\n"
@@ -404,9 +398,9 @@ int main( int argc, char *argv[] )
 
 	// errors now detected & reported in the GUI
 	out->init(config);
-
 	out->setAudioCallback(&amsynth_audio_callback);
-
+	
+	s_synthesizer = new Synthesizer(&config);
 	amsynth_load_bank(config.current_bank_file.c_str());
 	amsynth_set_preset_number(initial_preset_no);
 	
@@ -506,7 +500,9 @@ amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, in
 		}
 	}
 
-	s_synthesizer->process(num_frames, midi_in, buffer_l, buffer_r, stride);
+	if (s_synthesizer) {
+		s_synthesizer->process(num_frames, midi_in, buffer_l, buffer_r, stride);
+	}
 }
 
 void
