@@ -63,6 +63,10 @@ const char *freq_mod_osc_names[] = {
 	"osc 1+2", "osc 1", "osc 2", NULL
 };
 
+const char *portamento_mode_names[] = {
+	"always", "legato", NULL
+};
+
 Preset::Preset			(const std::string name)
 :	mName (name)
 ,	nullparam ("null", kAmsynthParameterCount)
@@ -108,6 +112,7 @@ Preset::Preset			(const std::string name)
 	mParameters.push_back (Parameter		("filter_kbd_track",    kAmsynthParameter_FilterKeyTrackAmount, 1));
 	mParameters.push_back (Parameter		("filter_vel_sens",		kAmsynthParameter_FilterKeyVelocityAmount, 1));
 	mParameters.push_back (Parameter		("amp_vel_sens",		kAmsynthParameter_AmpVelocityAmount, 1));
+	mParameters.push_back (Parameter		("portamento_mode",		kAmsynthParameter_PortamentoMode, PortamentoModeAlways));
 
 	getParameter(kAmsynthParameter_Oscillator1Waveform).setValueStrings(osc_waveform_names);
 	getParameter(kAmsynthParameter_Oscillator2Waveform).setValueStrings(osc_waveform_names);
@@ -116,6 +121,7 @@ Preset::Preset			(const std::string name)
 	getParameter(kAmsynthParameter_FilterType).setValueStrings(filter_type_names);
 	getParameter(kAmsynthParameter_FilterSlope).setValueStrings(filter_slope_names);
 	getParameter(kAmsynthParameter_LFOOscillatorSelect).setValueStrings(freq_mod_osc_names);
+	getParameter(kAmsynthParameter_PortamentoMode).setValueStrings(portamento_mode_names);
 }
 
 Preset&

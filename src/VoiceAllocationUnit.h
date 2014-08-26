@@ -76,6 +76,7 @@ private:
 	int		mMaxVoices;
 
 	float	mPortamentoTime;
+	int		mPortamentoMode;
 	bool	keyPressed[128], sustain;
 	bool	active[128];
 	

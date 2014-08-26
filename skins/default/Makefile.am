@@ -15,6 +15,7 @@ dist_skinsdefault_DATA = \
 	knob_width.png \
 	layout.ini \
 	osc_select.png \
+	portamento_modes.png \
 	waveform_lfo.png \
 	waveform_pics.png
 

@@ -84,6 +84,8 @@ enum Param
 	kAmsynthParameter_FilterKeyVelocityAmount  = 38,
 	
 	kAmsynthParameter_AmpVelocityAmount        = 39,
+	
+	kAmsynthParameter_PortamentoMode           = 40,
 
 	kAmsynthParameterCount
 };
@@ -93,6 +95,11 @@ typedef enum {
 	KeyboardModeMono,
 	KeyboardModeLegato,
 } KeyboardMode;
+
+typedef enum {
+	PortamentoModeAlways,
+	PortamentoModeLegato
+} PortamentoMode;
 
 #ifdef __cplusplus
 extern "C" {

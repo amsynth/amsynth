@@ -40,6 +40,7 @@ const unsigned kBufferSize = 1024;
 VoiceAllocationUnit::VoiceAllocationUnit ()
 :	mMaxVoices (0)
 ,	mPortamentoTime (0.0f)
+,	mPortamentoMode(PortamentoModeAlways)
 ,	sustain (0)
 ,	_keyboardMode(KeyboardModePoly)
 ,	mMasterVol (1.0)
@@ -98,6 +99,19 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 		return;
 	}
 	
+	float portamentoTime = mPortamentoTime;
+	if (mPortamentoMode == PortamentoModeLegato) {
+		int count = 0;
+		for (int i=0; i<128; i++) {
+			if (keyPressed[i]) {
+				count++;
+			}
+		}
+		if (count == 0) {
+			portamentoTime = 0;
+		}
+	}
+	
 	keyPressed[note] = true;
 	
 	if (_keyboardMode == KeyboardModePoly) {
@@ -138,7 +152,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 		_keyPresses[note] = (++_keyPressCounter);
 
 		if (mLastNoteFrequency > 0.0f) {
-			_voices[note]->setFrequency(mLastNoteFrequency, pitch, mPortamentoTime);
+			_voices[note]->setFrequency(mLastNoteFrequency, pitch, portamentoTime);
 		} else {
 			_voices[note]->setFrequency(pitch, pitch, 0);
 		}
@@ -168,7 +182,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 		VoiceBoard *voice = _voices[0];
 		
 		voice->setVelocity(velocity);
-		voice->setFrequency(voice->getFrequency(), pitch, mPortamentoTime);
+		voice->setFrequency(voice->getFrequency(), pitch, portamentoTime);
 		
 		if (_keyboardMode == KeyboardModeMono || previousNote == -1)
 			voice->triggerOn();
@@ -334,6 +348,7 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_AmpDistortion:	distortion->SetCrunch (value);	break;
 	case kAmsynthParameter_PortamentoTime: 	mPortamentoTime = value; break;
 	case kAmsynthParameter_KeyboardMode:	setKeyboardMode((KeyboardMode)value); break;
+	case kAmsynthParameter_PortamentoMode:	mPortamentoMode = value; break;
 	default: for (unsigned i=0; i<_voices.size(); i++) _voices[i]->UpdateParameter (param, value); break;
 	}
 }
