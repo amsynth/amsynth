@@ -481,10 +481,7 @@ GUI::init()
 	Gtk::Widget *editor = Glib::wrap (editor_pane_new (m_adjustments, FALSE));
 	
 	vbox.pack_start (*(create_menus ()),0,0);
-	Gtk::HBox *tmphbox = manage (new Gtk::HBox());
-	tmphbox->pack_start(*presetCV,0,0);
-
-	vbox.pack_start (*tmphbox,0,0);
+	vbox.pack_start (*presetCV, false, false);
 	vbox.pack_start (*editor, Gtk::PACK_EXPAND_WIDGET,0);
 	add(vbox);
 

@@ -85,21 +85,20 @@ PresetControllerViewImpl::PresetControllerViewImpl()
 {
 	bank_combo = gtk_combo_box_new_text ();
 	g_signal_connect (G_OBJECT (bank_combo), "changed", G_CALLBACK (&PresetControllerViewImpl::on_combo_changed), this);
-	add (* Glib::wrap (bank_combo));
+	pack_start (* Glib::wrap (bank_combo), false, false);
 
 	combo = gtk_combo_box_new_text ();
 	gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (combo), 4);
-    gtk_widget_set_size_request (combo, 220, 0);
 	g_signal_connect (G_OBJECT (combo), "changed", G_CALLBACK (&PresetControllerViewImpl::on_combo_changed), this);
 	g_signal_connect (G_OBJECT (combo), "notify::popup-shown", G_CALLBACK (&PresetControllerViewImpl::on_combo_popup_shown), this);
-	add (* Glib::wrap (combo));
+	pack_start (* Glib::wrap (combo), true, true);
 	
 	save_button = gtk_button_new_with_label ("Save");
 	g_signal_connect (G_OBJECT (save_button), "clicked", G_CALLBACK (&PresetControllerViewImpl::on_save_clicked), this);
-	add (* Glib::wrap (save_button));
+	pack_start (* Glib::wrap (save_button), false, false);
 	
 	Gtk::Label *blank = manage (new Gtk::Label ("  "));
-	add (*blank);
+	pack_start (*blank, false, false);
 	
 	GtkWidget *widget = NULL;
 
@@ -108,15 +107,15 @@ PresetControllerViewImpl::PresetControllerViewImpl()
 	g_signal_connect (G_OBJECT (widget), "released", G_CALLBACK (&PresetControllerViewImpl::on_audition_released), this);
     g_signal_connect (G_OBJECT (widget), "key-press-event", G_CALLBACK (&PresetControllerViewImpl::on_audition_key_press_event), this);
     g_signal_connect (G_OBJECT (widget), "key-release-event", G_CALLBACK (&PresetControllerViewImpl::on_audition_key_release_event), this);
-	add (* Glib::wrap (widget));
+	pack_start (* Glib::wrap (widget), false, false);
 	
 	GtkAdjustment *audition_adj = (GtkAdjustment *) gtk_adjustment_new(60.0, 0.0, 127.0, 1.0, 5.0, 0.0);
 	audition_spin = gtk_spin_button_new(audition_adj, 1.0, 0);
-	add (* Glib::wrap (audition_spin));
+	pack_start (* Glib::wrap (audition_spin), false, false);
 
 	widget = gtk_button_new_with_label ("Panic");
 	g_signal_connect (G_OBJECT (widget), "clicked", G_CALLBACK (&PresetControllerViewImpl::on_panic_clicked), this);
-	add (* Glib::wrap (widget));
+	pack_start (* Glib::wrap (widget), false, false);
 }
 
 void PresetControllerViewImpl::setPresetController(PresetController *presetController)
