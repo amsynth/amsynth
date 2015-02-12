@@ -23,6 +23,8 @@
 #include "GUI.h"
 
 #include <assert.h>
+#include <iostream>
+#include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <list>
@@ -38,6 +40,10 @@
 #endif
 
 using namespace Gtk;
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::ostringstream;
 
 #include "../AudioOutput.h"
 #include "../MidiController.h"
@@ -997,20 +1003,20 @@ GUI::tuning_reset	( )
 int
 GUI::command_exists	(const char *command)
 {
-	std::string cmdline = "which " + std::string(command) + " > /dev/null";
-	int result = system(cmdline.c_str());
-	return result;
+	gchar *argv[] = { (gchar *)"/usr/bin/which", (gchar *)command, NULL };
+	gint exit_status = 0;
+	if (g_spawn_sync(NULL, argv, NULL,
+		(GSpawnFlags)(G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL),
+		NULL, NULL, NULL, NULL, &exit_status, NULL))
+		return exit_status;
+	return -1;
 }
 
 void
 GUI::command_run	(const char *command)
 {
-	// TODO: would be better to fork() and exec()
-	
 	string full_command = std::string(command) + std::string(" &");
-	// returns 0 even if command could not be run
-	int result = system(full_command.c_str());
-	result = 0;
+	system(full_command.c_str());
 }
 
 void
