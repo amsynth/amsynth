@@ -31,7 +31,7 @@ AudioOutput::AudioOutput()
 
 AudioOutput::~AudioOutput()
 {
-	out.close();
+	Stop();
 	delete[] buffer;
 }
 
@@ -104,8 +104,8 @@ AudioOutput::Start ()
 void
 AudioOutput::Stop ()
 {
-	Thread::Kill ();
-	Thread::Join ();
+	Thread::Stop();
+	Thread::Join();
 	out.close ();
 }
 

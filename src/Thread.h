@@ -1,7 +1,7 @@
 /*
  *  Thread.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2015 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -40,7 +40,6 @@ public:
 	
 	int		Run		() { return pthread_create (&mThread, NULL, Thread::start_routine, this); }
 	void	Stop	() { mShouldStop = true; }
-	int		Kill	() { return mThread ? pthread_cancel(mThread) : 0; }
 	int		Join	() { return mThread ? pthread_join(mThread, NULL) : 0; }
 
 protected:
