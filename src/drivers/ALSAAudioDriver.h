@@ -1,7 +1,7 @@
 /*
  *  ALSAAudioDriver.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2015 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -24,41 +24,22 @@
 
 #include "AudioDriver.h"
 
-#ifdef WITH_ALSA
-#define ALSA_PCM_OLD_HW_PARAMS_API
-#define ALSA_PCM_OLD_SW_PARAMS_API
-#include <alsa/asoundlib.h>
-#endif
 
-#define BUFSIZE 64
+class ALSAAudioDriver : public AudioDriver
+{
+public:
 
-class ALSAAudioDriver:public AudioDriver {
+    ALSAAudioDriver() : _handle(0), _buffer(0), _channels(0) {}
 
-  public:
-    ALSAAudioDriver();
-    virtual ~ ALSAAudioDriver();
-    int open(){ return -1; };
-	int open( Config & config );
-    void close();
-    int write(float *buffer, int frames);
-    int setChannels(int channels);
-    int setRate(int rate);
-    int setRealtime();
+    virtual int open(class Config &);
+    virtual void close();
+    virtual int write(float *buffer, int frames);
 
-  private:
-    int _dsp_handle;
-    int _rate;
-    int _channels;
-    int _format;
-	unsigned char *audiobuf;
-	
-	Config		*config;
-#ifdef WITH_ALSA
-	snd_pcm_t *playback_handle;
-    snd_pcm_hw_params_t *hw_params;
-    snd_pcm_sw_params_t *sw_params;
-#endif
+private:
+
+    void *_handle;
+    short *_buffer;
+    unsigned _channels;
 };
 
-
-#endif				// with_alsa_AUDIO_DRIVER_H
+#endif

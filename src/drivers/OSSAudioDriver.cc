@@ -1,7 +1,7 @@
 /*
  *  OSSAudioDriver.cc
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2015 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -23,6 +23,10 @@
 #include "../../config.h"
 #endif
 
+#include "OSSAudioDriver.h"
+
+#include "../Config.h"
+
 #ifdef WITH_OSS
 #include <sys/soundcard.h>
 #endif
@@ -34,8 +38,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "OSSAudioDriver.h"
-#include "../Config.h"
+using namespace std;
+
 
 int
 OSSAudioDriver::write(float *buffer, int frames)
@@ -208,9 +212,4 @@ OSSAudioDriver::OSSAudioDriver()
     _outputBuffer = NULL;
     _outputBufferFrames = 0;
 #endif
-}
-
-OSSAudioDriver::~OSSAudioDriver()
-{
-    close();
 }

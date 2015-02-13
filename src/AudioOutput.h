@@ -1,7 +1,7 @@
 /*
  *  AudioOutput.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2015 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -22,19 +22,25 @@
 #ifndef _AUDIO_OUTPUT_H
 #define _AUDIO_OUTPUT_H
 
-#ifdef with_sndfile
-#include <sndfile.h>
-#endif
-
 #include "drivers/AudioInterface.h"
 #include "Config.h"
 #include "Thread.h"
 #include "main.h"
 #include "types.h"
 
+#ifdef with_sndfile
+#include <sndfile.h>
+#endif
+
+#include <string>
+
+using std::string;
+
+
 typedef void (* AudioCallback)(
 	float *buffer_l, float *buffer_r, unsigned num_frames, int stride,
 	amsynth_midi_event_t *events, unsigned event_count);
+
 
 class GenericOutput
 {

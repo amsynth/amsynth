@@ -1,7 +1,7 @@
 /*
  *  JackOutput.cc
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2015 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -20,6 +20,7 @@
  */
 
 #include "JackOutput.h"
+
 #include "VoiceAllocationUnit.h"
 
 #if HAVE_JACK_MIDIPORT_H
@@ -38,9 +39,13 @@
 #include <unistd.h>
 #include <vector>
 
+
+#define UNUSED_PARAM( x ) (void)x
+
 #ifdef HAVE_JACK_SESSION_H
 static void session_callback(jack_session_event_t *event, void *arg);
 #endif
+
 
 bool JackOutput::autoconnect = true;
 

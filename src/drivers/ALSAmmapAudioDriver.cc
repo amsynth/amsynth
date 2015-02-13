@@ -1,7 +1,7 @@
 /*
  *  ALSAmmapAudioDriver.cc
  *
- *  Copyright (c) 2001-2012 Nick Dowell, Karsten Wiese
+ *  Copyright (c) 2001-2015 Nick Dowell, Karsten Wiese
  *
  *  This file is part of amsynth.
  *
@@ -23,9 +23,14 @@
 #include "../../config.h"
 #endif
 
+#include "ALSAmmapAudioDriver.h"
+
+#include "../Config.h"
+
 #include <iostream>
 
-#include "ALSAmmapAudioDriver.h"
+using namespace std;
+
 
 int
 ALSAmmapAudioDriver::xrun_recovery()

@@ -1,7 +1,7 @@
 /*
  *  ALSAAudioDriver.cc
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2015 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -24,115 +24,113 @@
 #endif
 
 #include "ALSAAudioDriver.h"
+
+#include "../Config.h"
+
 #include <iostream>
 
-using namespace std;
+#ifdef WITH_ALSA
+#include <alsa/asoundlib.h>
+#endif
+
 
 int
-ALSAAudioDriver::write(float *buffer, int frames)
+ALSAAudioDriver::write(float *buffer, int nsamples)
 {
+	if (!_handle) {
+		return -1;
+	}
+
 #ifdef WITH_ALSA
-	int i,p,tmp;
-//	if (!audiobuf)
-	audiobuf = (unsigned char*)malloc((frames*_channels*2));
-	
-	p=0;
-	for( i=0; i<(frames); i++ ){
-		tmp = (int)((float)32767*buffer[i]);
-		audiobuf[p++] = (unsigned char) (tmp & 0xff);
-		audiobuf[p++] = (unsigned char) ((tmp >> 8) & 0xff);
+
+	assert(nsamples <= kMaxWriteFrames);
+	for (int i = 0; i < nsamples; i++) {
+		short s16 = buffer[i] * 32767;
+		((unsigned char *)_buffer)[i * 2 + 0] = ( s16       & 0xff);
+		((unsigned char *)_buffer)[i * 2 + 1] = ((s16 >> 8) & 0xff);
 	}
-	
-	while( snd_pcm_writei( playback_handle, audiobuf, frames/2 ) < 0){
-		snd_pcm_prepare( playback_handle );
-		config->xruns++;
-//		cerr << "buffer underrun - please set realtime priority\n";
+
+	snd_pcm_t *pcm = (snd_pcm_t *)_handle;
+	snd_pcm_sframes_t err = snd_pcm_writei(pcm, _buffer, nsamples / _channels);
+	if (err < 0) {
+		err = snd_pcm_recover(pcm, err, 1);
 	}
-	free( audiobuf );
+	if (err < 0) {
+		return -1;
+	}
 	return 0;
+
 #else
+
 	UNUSED_PARAM(buffer);
-	UNUSED_PARAM(frames);
+	UNUSED_PARAM(nsamples);
 	return -1;
+
 #endif
 }
 
 int 
 ALSAAudioDriver::open( Config & config )
 {
-#ifdef WITH_ALSA
-	if (playback_handle != NULL) return 0;
-
-	_channels = config.channels;
-	_rate = config.sample_rate;
-
-	if(snd_pcm_open(&playback_handle, config.alsa_audio_device.c_str(), SND_PCM_STREAM_PLAYBACK, 0)<0){
-		cerr << "ALSA: cannot open audio device " << config.alsa_audio_device << endl;
-		return -1;
+	if (_handle != NULL) {
+		return 0;
 	}
-    snd_pcm_hw_params_alloca( &hw_params );
-    snd_pcm_hw_params_any( playback_handle, hw_params );
-    snd_pcm_hw_params_set_access( playback_handle, hw_params, SND_PCM_ACCESS_RW_INTERLEAVED );
-    snd_pcm_hw_params_set_format( playback_handle, hw_params, SND_PCM_FORMAT_S16_LE );
-    snd_pcm_hw_params_set_rate_near( playback_handle, hw_params, _rate, 0 );
-    snd_pcm_hw_params_set_channels( playback_handle, hw_params, _channels );
-	snd_pcm_hw_params_set_periods( playback_handle, hw_params, 32, 0 );
-	snd_pcm_hw_params_set_period_size( playback_handle, hw_params, BUFSIZE, 0 );
-    snd_pcm_hw_params( playback_handle, hw_params );
-	
-	config.sample_rate = snd_pcm_hw_params_get_rate( hw_params, 0 );
+
+#ifdef WITH_ALSA
+
+
+#define ALSA_CALL(expr) \
+	if ((err = (expr)) < 0) { \
+		std::cerr << #expr << " failed with error: " << snd_strerror(err) << std::endl; \
+		if (pcm) { snd_pcm_close(pcm); } \
+		return -1; \
+	}
+
+	int err = 0;
+
+	snd_pcm_t *pcm = NULL;
+	ALSA_CALL(snd_pcm_open(&pcm, config.alsa_audio_device.c_str(), SND_PCM_STREAM_PLAYBACK, 0));
+
+	unsigned int latency = 10 * 1000;
+	ALSA_CALL(snd_pcm_set_params(pcm, SND_PCM_FORMAT_S16_LE, SND_PCM_ACCESS_RW_INTERLEAVED, config.channels, config.sample_rate, 0, latency));
+
+#if DEBUG
+	snd_pcm_uframes_t period_size = 0;
+	snd_pcm_uframes_t buffer_size = 0;
+	ALSA_CALL(snd_pcm_get_params(pcm, &buffer_size, &period_size));
+	std::cout << "Opened ALSA device \"" << config.alsa_audio_device<< "\" @ " << config.sample_rate << "Hz, period_size = " << period_size << " buffer_size = " << buffer_size << std::endl;
+#endif
+
+	_handle = pcm;
+	_channels = config.channels;
+	_buffer = (short *)malloc(kMaxWriteFrames * sizeof(short));
+
 	config.current_audio_driver = "ALSA";
 #ifdef ENABLE_REALTIME
 	config.current_audio_driver_wants_realtime = 1;
 #endif
-	
-	this->config = &config;
 
 	return 0;
+
 #else
+
 	UNUSED_PARAM(config);
 	return -1;
+
 #endif
 }
 
 void ALSAAudioDriver::close()
 {
 #ifdef WITH_ALSA
-	if (playback_handle != NULL) snd_pcm_close (playback_handle);
-	playback_handle = NULL;
+
+	if (_handle != NULL) {
+		snd_pcm_close((snd_pcm_t *)_handle);
+		_handle = NULL;
+	}
+
+	free(_buffer);
+	_buffer = NULL;
+
 #endif
 }
-
-int ALSAAudioDriver::setChannels(int channels)
-{
-  // WRITE ME!
-  _channels = channels;
-  return 0;
-}
-
-
-int ALSAAudioDriver::setRate(int rate)
-{
-  // WRITE ME!
-  _rate = rate;
-  return 0;
-}
-
-int ALSAAudioDriver::setRealtime()
-{
-  // WRITE ME!
-  return 0;
-}
-
-ALSAAudioDriver::ALSAAudioDriver()
-{
-#ifdef WITH_ALSA
-	playback_handle = NULL;
-#endif
-}
-
-ALSAAudioDriver::~ALSAAudioDriver()
-{
-  close();
-}
-

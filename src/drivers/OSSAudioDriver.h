@@ -1,7 +1,7 @@
 /*
  *  OSSAudioDriver.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2015 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -28,7 +28,6 @@ class OSSAudioDriver:public AudioDriver {
 
   public:
     OSSAudioDriver();
-    virtual ~ OSSAudioDriver();
 	int open(){
 		return -1;
 	};
