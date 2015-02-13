@@ -14,8 +14,6 @@ libdrivers_a_SOURCES = \
 	ALSAmmapAudioDriver.cc \
 	ALSAmmapAudioDriver.h \
 	AudioDriver.h \
-	AudioInterface.cc \
-	AudioInterface.h \
 	CoreAudio.cc \
 	CoreAudio.h \
 	MidiDriver.h \
@@ -23,4 +21,3 @@ libdrivers_a_SOURCES = \
 	OSSAudioDriver.h \
 	OSSMidiDriver.cc \
 	OSSMidiDriver.h
-

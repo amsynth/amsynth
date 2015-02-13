@@ -22,7 +22,6 @@
 #ifndef _AUDIO_OUTPUT_H
 #define _AUDIO_OUTPUT_H
 
-#include "drivers/AudioInterface.h"
 #include "Config.h"
 #include "Thread.h"
 #include "main.h"
@@ -90,7 +89,7 @@ private:
   int running;
   int channels;
   Config *config;
-  AudioInterface out;
+  class AudioDriver *driver;
   string wavoutfile;
   int recording;
   float	*buffer;

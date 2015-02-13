@@ -21,8 +21,17 @@
 
 #include "AudioOutput.h"
 
+#include "drivers/ALSAAudioDriver.h"
+#include "drivers/ALSAmmapAudioDriver.h"
+#include "drivers/OSSAudioDriver.h"
+
+
+static AudioDriver * open_driver(Config &config);
+
+
 AudioOutput::AudioOutput()
 :	buffer (NULL)
+,	driver(NULL)
 {
 	running = 0;
 	recording = 0;
@@ -91,11 +100,13 @@ AudioOutput::stopRecording()
 bool
 AudioOutput::Start ()
 {
-	if (out.open (*config) == -1) return false;
-	out.setRealtime();
-	if (0 != Thread::Run ())
-	{
-		out.close ();
+	if (!(driver = open_driver(*config))) {
+		return false;
+	}
+	driver->setRealtime();
+	if (Thread::Run() != 0) {
+		driver->close();
+		driver = NULL;
 		return false;
 	}
 	return true;
@@ -106,7 +117,11 @@ AudioOutput::Stop ()
 {
 	Thread::Stop();
 	Thread::Join();
-	out.close ();
+
+	if (driver) {
+		driver->close();
+		driver = NULL;
+	}
 }
 
 void 
@@ -126,6 +141,53 @@ AudioOutput::ThreadAction	()
 #ifdef with_sndfile
 		if (recording) sf_writef_float (sndfile, buffer, bufsize);
 #endif
-		if (out.write (buffer, bufsize*channels) == -1) Stop ();
+
+		if (driver->write(buffer, bufsize * channels) < 0) {
+			Stop();
+		}
 	}
+}
+
+static AudioDriver * open_driver(AudioDriver *driver, Config &config)
+{
+	if (!driver) {
+		return NULL;
+	}
+	if (driver->open(config) != 0) {
+		delete driver;
+		return NULL;
+	}
+	void *buffer = calloc(AudioDriver::kMaxWriteFrames, config.channels * sizeof(float));
+	int written = driver->write((float *)buffer, AudioDriver::kMaxWriteFrames);
+	free(buffer);
+	if (written != 0) {
+		delete driver;
+		return NULL;
+	}
+	return driver;
+}
+
+static AudioDriver * open_driver(Config &config)
+{
+	AudioDriver *driver = NULL;
+
+	if (config.audio_driver == "alsa-mmap" || config.audio_driver == "auto") {
+		if ((driver = open_driver(new ALSAmmapAudioDriver(), config))) {
+			return driver;
+		}
+	}
+
+	if (config.audio_driver == "alsa" || config.audio_driver == "auto") {
+		if ((driver = open_driver(new ALSAAudioDriver(), config))) {
+			return driver;
+		}
+	}
+
+	if (config.audio_driver == "oss" || config.audio_driver == "auto") {
+		if ((driver = open_driver(new OSSAudioDriver(), config))) {
+			return driver;
+		}
+	}
+
+	return NULL;
 }
