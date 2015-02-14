@@ -25,26 +25,46 @@
 
 #include "OSSAudioDriver.h"
 
-#include "../Config.h"
-
 #ifdef WITH_OSS
-#include <sys/soundcard.h>
-#endif
+#include "../Config.h"
+#include "AudioDriver.h"
 
-#include <sys/ioctl.h>
 #include <fcntl.h>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/ioctl.h>
+#include <sys/soundcard.h>
 #include <unistd.h>
 
 using namespace std;
 
 
+class OSSAudioDriver : public AudioDriver
+{
+  public:
+    OSSAudioDriver();
+    int open(){
+        return -1;
+    };
+    int open( Config & config );
+    void close();
+    int write( float *buffer, int frames );
+    int setChannels( int channels );
+    int setRate( int rate );
+    int getRate(){ return rate_; };
+    int setRealtime();
+
+  private:
+    int dsp_handle_, rate_, stereo_, format_, channels_;
+    unsigned char *_outputBuffer;
+    unsigned int _outputBufferFrames;
+    Config *config;
+};
+
 int
 OSSAudioDriver::write(float *buffer, int frames)
 {
-#ifdef WITH_OSS
     int p = 0;
 	int i;
 	signed short _tmp;
@@ -67,27 +87,15 @@ OSSAudioDriver::write(float *buffer, int frames)
 	}
 	
 	return 0;
-#else
-    UNUSED_PARAM(buffer);
-    UNUSED_PARAM(frames);
-    return -1;
-#endif
 }
 
 int OSSAudioDriver::open( Config & config )
 {
-#ifdef WITH_OSS
-#ifdef _DEBUG
-	cout << "<OSSAudioDriver::open()>" << endl;
-#endif
     if ((dsp_handle_ =::open(config.oss_audio_device.c_str(), O_WRONLY)) == -1){
 		cout << "<OSSAudioDriver> error: could not open dsp device " 
 			<< config.oss_audio_device << endl;
 	return -1;
    }
-#ifdef _DEBUG
-    cout << "<OSSAudioDriver> opened OSS dsp output :-)" << endl;
-#endif
 
     //  setRealtime();
 
@@ -106,15 +114,10 @@ int OSSAudioDriver::open( Config & config )
 	this->config = &config;
 	
     return 0;
-#else
-    UNUSED_PARAM(config);
-    return -1;
-#endif
 }
 
 int OSSAudioDriver::setChannels(int channels)
 {
-#ifdef WITH_OSS
     channels_ = channels;
     switch (channels_) {
     case 1:
@@ -132,29 +135,17 @@ int OSSAudioDriver::setChannels(int channels)
 	return -1;
     }
     return 0;
-#else
-    UNUSED_PARAM(channels);
-    return -1;
-#endif
 }
 
 int OSSAudioDriver::setRate(int rate)
 {
-#ifdef WITH_OSS
     rate_ = rate;
     // set sampling rate
     if (ioctl(dsp_handle_, SNDCTL_DSP_SPEED, &rate_) == -1) {
 		perror("ioctl sample rate");
 		return -1;
     }
-#ifdef _DEBUG
-	cout << "<OSSAudioDriver::setRate()> rate set to " << rate << endl;
-#endif //_DEBUG
     return 0;
-#else // not with_oss
-    UNUSED_PARAM(rate);
-    return -1;
-#endif //with_oss
 }
 
 int OSSAudioDriver::setRealtime()
@@ -175,41 +166,42 @@ int OSSAudioDriver::setRealtime()
      * 0004 (16) frags @128bytes = good (both)         [2048 bytes total buffer]
      * unlimited              = disastrous for latency..
      */
-#ifdef WITH_OSS
     int frag = 0x00060008;
     if (ioctl(dsp_handle_, SNDCTL_DSP_SETFRAGMENT, &frag) == -1) {
 	perror("err: ioctl fragment");
 	return -1;
     }
     return 0;
-#else
-    return -1;
-#endif
 }
 
 void OSSAudioDriver::close()
 {
-#ifdef WITH_OSS
     if (dsp_handle_ != -1) {
 	::close(dsp_handle_);
 	free(_outputBuffer);
 	_outputBuffer = NULL;
 	_outputBufferFrames = 0;
-#ifdef _DEBUG
-	cout << "<OSSAudioDriver> closed OSS dsp device." << endl;
-#endif
     }
-#endif
 }
 
 OSSAudioDriver::OSSAudioDriver()
 {
-#ifdef WITH_OSS
     rate_ = 0;
     stereo_ = 1;
     format_ = AFMT_S16_LE;
     dsp_handle_ = -1;
     _outputBuffer = NULL;
     _outputBufferFrames = 0;
+}
+
+#endif
+
+
+class AudioDriver * CreateOSSAudioDriver()
+{
+#ifdef WITH_OSS
+    return new OSSAudioDriver();
+#else
+    return NULL;
 #endif
 }

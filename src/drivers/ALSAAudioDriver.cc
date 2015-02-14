@@ -25,13 +25,31 @@
 
 #include "ALSAAudioDriver.h"
 
+#ifdef WITH_ALSA
+
 #include "../Config.h"
+#include "AudioDriver.h"
 
 #include <iostream>
-
-#ifdef WITH_ALSA
 #include <alsa/asoundlib.h>
-#endif
+
+
+class ALSAAudioDriver : public AudioDriver
+{
+public:
+
+    ALSAAudioDriver() : _handle(0), _buffer(0), _channels(0) {}
+
+    virtual int open(class Config &);
+    virtual void close();
+    virtual int write(float *buffer, int frames);
+
+private:
+
+    void *_handle;
+    short *_buffer;
+    unsigned _channels;
+};
 
 
 int
@@ -40,8 +58,6 @@ ALSAAudioDriver::write(float *buffer, int nsamples)
 	if (!_handle) {
 		return -1;
 	}
-
-#ifdef WITH_ALSA
 
 	assert(nsamples <= kMaxWriteFrames);
 	for (int i = 0; i < nsamples; i++) {
@@ -59,14 +75,6 @@ ALSAAudioDriver::write(float *buffer, int nsamples)
 		return -1;
 	}
 	return 0;
-
-#else
-
-	UNUSED_PARAM(buffer);
-	UNUSED_PARAM(nsamples);
-	return -1;
-
-#endif
 }
 
 int 
@@ -75,9 +83,6 @@ ALSAAudioDriver::open( Config & config )
 	if (_handle != NULL) {
 		return 0;
 	}
-
-#ifdef WITH_ALSA
-
 
 #define ALSA_CALL(expr) \
 	if ((err = (expr)) < 0) { \
@@ -111,19 +116,10 @@ ALSAAudioDriver::open( Config & config )
 #endif
 
 	return 0;
-
-#else
-
-	UNUSED_PARAM(config);
-	return -1;
-
-#endif
 }
 
 void ALSAAudioDriver::close()
 {
-#ifdef WITH_ALSA
-
 	if (_handle != NULL) {
 		snd_pcm_close((snd_pcm_t *)_handle);
 		_handle = NULL;
@@ -131,6 +127,16 @@ void ALSAAudioDriver::close()
 
 	free(_buffer);
 	_buffer = NULL;
+}
 
+#endif
+
+
+AudioDriver * CreateALSAAudioDriver()
+{
+#ifdef WITH_ALSA
+    return new ALSAAudioDriver();
+#else
+    return NULL;
 #endif
 }

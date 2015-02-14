@@ -22,24 +22,7 @@
 #ifndef _ALSA_AUDIO_DRIVER_H
 #define _ALSA_AUDIO_DRIVER_H
 
-#include "AudioDriver.h"
 
-
-class ALSAAudioDriver : public AudioDriver
-{
-public:
-
-    ALSAAudioDriver() : _handle(0), _buffer(0), _channels(0) {}
-
-    virtual int open(class Config &);
-    virtual void close();
-    virtual int write(float *buffer, int frames);
-
-private:
-
-    void *_handle;
-    short *_buffer;
-    unsigned _channels;
-};
+class AudioDriver * CreateALSAAudioDriver();
 
 #endif

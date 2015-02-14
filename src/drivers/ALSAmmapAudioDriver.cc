@@ -25,17 +25,48 @@
 
 #include "ALSAmmapAudioDriver.h"
 
+#ifdef WITH_ALSA
+
 #include "../Config.h"
+#include "AudioDriver.h"
+
+#define ALSA_PCM_OLD_HW_PARAMS_API
+#define ALSA_PCM_OLD_SW_PARAMS_API
+#include <alsa/asoundlib.h>
 
 #include <iostream>
 
 using namespace std;
 
 
+class ALSAmmapAudioDriver : public AudioDriver {
+public:
+    ALSAmmapAudioDriver();
+    virtual	~ALSAmmapAudioDriver();
+    int	open( Config & config );
+    void	close();
+    int	write(float *buffer, int frames);
+
+private:
+    int 	xrun_recovery();
+
+    int		_dsp_handle;
+    int		_rate;
+    int		_channels;
+    int		_format;
+    unsigned char	*audiobuf;
+    Config		*config;
+    snd_pcm_t		*playback_handle;
+    snd_pcm_hw_params_t	*hw_params;
+    snd_pcm_sw_params_t	*sw_params;
+    int			err;
+    unsigned		periods;
+};
+
+
 int
 ALSAmmapAudioDriver::xrun_recovery()
 {
-#ifdef WITH_ALSA
         if (err == -EPIPE) {    /* under-run */
 				periods = 0;
                 err = snd_pcm_prepare(playback_handle);
@@ -58,16 +89,11 @@ return -1;
                 return 0;
         }
 	return 0;
-#else
-	return -1;
-#endif //with_alsa
 }
-
 
 int
 ALSAmmapAudioDriver::write(float *buffer, int frames)
 {
-#ifdef WITH_ALSA
 	int i,p;
 	snd_pcm_sframes_t avail;
 	snd_pcm_uframes_t offset, lframes = frames / 2;
@@ -130,17 +156,11 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 				cerr << "( periods % 0x100)\n";
 	}*/
 	return 0;
-#else //with_alsa
-	UNUSED_PARAM(buffer);
-	UNUSED_PARAM(frames);
-	return -1;
-#endif
 }
 
 int
 ALSAmmapAudioDriver::open( Config & config )
 {
-#ifdef WITH_ALSA
 	if (playback_handle != NULL) return 0;
 	
 	_channels = config.channels;
@@ -170,48 +190,32 @@ ALSAmmapAudioDriver::open( Config & config )
 
 	periods = 0;
 	return 0;
-#else
-	UNUSED_PARAM(config);
-	return -1;
-#endif
 }
 
 void ALSAmmapAudioDriver::close()
 {
-#ifdef WITH_ALSA
 	if (playback_handle != NULL) snd_pcm_close (playback_handle);
 	playback_handle = NULL;
-#endif
-}
-
-int ALSAmmapAudioDriver::setChannels(int channels)
-{
-  // WRITE ME!
-  _channels = channels;
-  return 0;
-}
-
-int ALSAmmapAudioDriver::setRate(int rate)
-{
-  // WRITE ME!
-  _rate = rate;
-  return 0;
-}
-
-int ALSAmmapAudioDriver::setRealtime()
-{
-  // WRITE ME!
-  return 0;
 }
 
 ALSAmmapAudioDriver::ALSAmmapAudioDriver()
 {
-#ifdef WITH_ALSA
 	playback_handle = NULL;
-#endif
 }
 
 ALSAmmapAudioDriver::~ALSAmmapAudioDriver()
 {
   close();
+}
+
+#endif
+
+
+AudioDriver * CreateALSAmmapAudioDriver()
+{
+#ifdef WITH_ALSA
+    return new ALSAmmapAudioDriver();
+#else
+    return NULL;
+#endif
 }

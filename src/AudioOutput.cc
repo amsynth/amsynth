@@ -21,9 +21,12 @@
 
 #include "AudioOutput.h"
 
+#include "drivers/AudioDriver.h"
 #include "drivers/ALSAAudioDriver.h"
 #include "drivers/ALSAmmapAudioDriver.h"
 #include "drivers/OSSAudioDriver.h"
+
+#include <stdlib.h>
 
 
 static AudioDriver * open_driver(Config &config);
@@ -172,19 +175,19 @@ static AudioDriver * open_driver(Config &config)
 	AudioDriver *driver = NULL;
 
 	if (config.audio_driver == "alsa-mmap" || config.audio_driver == "auto") {
-		if ((driver = open_driver(new ALSAmmapAudioDriver(), config))) {
+        if ((driver = open_driver(CreateALSAmmapAudioDriver(), config))) {
 			return driver;
 		}
 	}
 
 	if (config.audio_driver == "alsa" || config.audio_driver == "auto") {
-		if ((driver = open_driver(new ALSAAudioDriver(), config))) {
+        if ((driver = open_driver(CreateALSAAudioDriver(), config))) {
 			return driver;
 		}
 	}
 
 	if (config.audio_driver == "oss" || config.audio_driver == "auto") {
-		if ((driver = open_driver(new OSSAudioDriver(), config))) {
+        if ((driver = open_driver(CreateOSSAudioDriver(), config))) {
 			return driver;
 		}
 	}
