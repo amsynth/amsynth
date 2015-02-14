@@ -26,6 +26,7 @@
 #include "VoiceAllocationUnit.h"
 #include "VoiceBoard/VoiceBoard.h"
 
+#include <algorithm>
 #include <cassert>
 #include <cstdio>
 
@@ -142,8 +143,11 @@ void Synthesizer::setSampleRate(int sampleRate)
 	_voiceAllocationUnit->SetSampleRate(sampleRate);
 }
 
-void Synthesizer::process(unsigned int nframes, const std::vector<amsynth_midi_event_t> &midi_in, float *audio_l, float *audio_r, unsigned audio_stride)
+static bool comapare(const amsynth_midi_event_t &first, const amsynth_midi_event_t &second) { return (first.offset_frames < second.offset_frames); }
+
+void Synthesizer::process(unsigned int nframes, std::vector<amsynth_midi_event_t> &midi_in, float *audio_l, float *audio_r, unsigned audio_stride)
 {
+	std::sort(midi_in.begin(), midi_in.end(), comapare);
 	std::vector<amsynth_midi_event_t>::const_iterator event = midi_in.begin();
 	unsigned frames_left_in_buffer = nframes, frame_index = 0;
 	while (frames_left_in_buffer) {

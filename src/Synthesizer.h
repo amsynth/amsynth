@@ -63,7 +63,7 @@ public:
 	void setSampleRate(int sampleRate);
 
     void process(unsigned nframes,
-                 const std::vector<amsynth_midi_event_t> &midi_in,
+                 std::vector<amsynth_midi_event_t> &midi_in,
                  float *audio_l, float *audio_r,
                  unsigned audio_stride = 1);
     
