@@ -23,6 +23,8 @@
 #include "../../config.h"
 #endif
 
+#include <cstddef>
+
 #include "ALSAAudioDriver.h"
 
 #ifdef WITH_ALSA

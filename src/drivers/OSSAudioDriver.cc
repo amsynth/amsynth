@@ -23,6 +23,8 @@
 #include "../../config.h"
 #endif
 
+#include <cstddef>
+
 #include "OSSAudioDriver.h"
 
 #ifdef WITH_OSS
