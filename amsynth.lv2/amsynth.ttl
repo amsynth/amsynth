@@ -576,6 +576,53 @@
         lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "osc 1"] ;
         lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "osc 2"] ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_lfo> ;
+    ] , [
+        a lv2:InputPort ;
+        a lv2:ControlPort ;
+        lv2:index 40 ;
+        lv2:symbol "filter_kbd_track" ;
+        lv2:name "Filter Key Track" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        lv2:default 1.000000 ;
+        lv2:minimum 0.000000 ;
+        lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_lfo> ;
+    ] , [
+        a lv2:InputPort ;
+        a lv2:ControlPort ;
+        lv2:index 41 ;
+        lv2:symbol "filter_vel_sens" ;
+        lv2:name "Filter Velocity Track" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        lv2:default 1.000000 ;
+        lv2:minimum 0.000000 ;
+        lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_filter> ;
+    ] , [
+        a lv2:InputPort ;
+        a lv2:ControlPort ;
+        lv2:index 42 ;
+        lv2:symbol "amp_vel_sens" ;
+        lv2:name "Amp Velocity Amount" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        lv2:default 1.000000 ;
+        lv2:minimum 0.000000 ;
+        lv2:maximum 1.000000 ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_amp> ;
+    ] , [
+        a lv2:InputPort ;
+        a lv2:ControlPort ;
+        lv2:index 43 ;
+        lv2:symbol "portamento_mode" ;
+        lv2:name "Portamento Mode" ;
+        lv2:portProperty epp:hasStrictBounds ;
+        lv2:portProperty lv2:integer , lv2:enumeration ;
+        lv2:default 0.000000 ;
+        lv2:minimum 0.000000 ;
+        lv2:maximum 1.000000 ;
+        lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "always"] ;
+        lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "legato"] ;
+        pg:group <http://code.google.com/p/amsynth/amsynth#group_keyboard> ;
     ] .
 
 #presets
