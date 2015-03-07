@@ -627,6 +627,10 @@
 
 #presets
 
+<http://code.google.com/p/amsynth/amsynth#BriansBank01>
+    a pset:Bank ;
+    rdfs:label "BriansBank01" .
+
 <http://code.google.com/p/amsynth/amsynth#BriansBank01_000_basic11>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
@@ -1394,6 +1398,10 @@
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank01: 127: Pickins2" ;
     rdfs:seeAlso <BriansBank01.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank02>
+    a pset:Bank ;
+    rdfs:label "BriansBank02" .
 
 <http://code.google.com/p/amsynth/amsynth#BriansBank02_000_DirtyEP2>
     a pset:Preset ;
@@ -2163,6 +2171,10 @@
     rdfs:label "BriansBank02: 127: evening4" ;
     rdfs:seeAlso <BriansBank02.amSynth.bank.ttl> .
 
+<http://code.google.com/p/amsynth/amsynth#BriansBank03>
+    a pset:Bank ;
+    rdfs:label "BriansBank03" .
+
 <http://code.google.com/p/amsynth/amsynth#BriansBank03_000_Casio1>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
@@ -2930,6 +2942,10 @@
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank03: 127: Percussion1-3" ;
     rdfs:seeAlso <BriansBank03.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank04>
+    a pset:Bank ;
+    rdfs:label "BriansBank04" .
 
 <http://code.google.com/p/amsynth/amsynth#BriansBank04_000_ToyPiano3>
     a pset:Preset ;
@@ -3699,6 +3715,10 @@
     rdfs:label "BriansBank04: 127: FamilyRoad3" ;
     rdfs:seeAlso <BriansBank04.amSynth.bank.ttl> .
 
+<http://code.google.com/p/amsynth/amsynth#BriansBank05>
+    a pset:Bank ;
+    rdfs:label "BriansBank05" .
+
 <http://code.google.com/p/amsynth/amsynth#BriansBank05_000_Corg1>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
@@ -4466,6 +4486,10 @@
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank05: 127: Oriental4" ;
     rdfs:seeAlso <BriansBank05.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank06>
+    a pset:Bank ;
+    rdfs:label "BriansBank06" .
 
 <http://code.google.com/p/amsynth/amsynth#BriansBank06_000_Partenza1>
     a pset:Preset ;
@@ -5235,6 +5259,10 @@
     rdfs:label "BriansBank06: 127: Slalom" ;
     rdfs:seeAlso <BriansBank06.amSynth.bank.ttl> .
 
+<http://code.google.com/p/amsynth/amsynth#BriansBank07>
+    a pset:Bank ;
+    rdfs:label "BriansBank07" .
+
 <http://code.google.com/p/amsynth/amsynth#BriansBank07_000_Binary>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
@@ -6002,6 +6030,10 @@
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank07: 127: Fatsy" ;
     rdfs:seeAlso <BriansBank07.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank08>
+    a pset:Bank ;
+    rdfs:label "BriansBank08" .
 
 <http://code.google.com/p/amsynth/amsynth#BriansBank08_000_MakeAWish>
     a pset:Preset ;
@@ -6771,6 +6803,10 @@
     rdfs:label "BriansBank08: 127: Somewhere" ;
     rdfs:seeAlso <BriansBank08.amSynth.bank.ttl> .
 
+<http://code.google.com/p/amsynth/amsynth#BriansBank09>
+    a pset:Bank ;
+    rdfs:label "BriansBank09" .
+
 <http://code.google.com/p/amsynth/amsynth#BriansBank09_000_FractionFM>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
@@ -7538,6 +7574,10 @@
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 127: InfraRed" ;
     rdfs:seeAlso <BriansBank09.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank10>
+    a pset:Bank ;
+    rdfs:label "BriansBank10" .
 
 <http://code.google.com/p/amsynth/amsynth#BriansBank10_000_YouGoInFirst>
     a pset:Preset ;
@@ -8307,6 +8347,10 @@
     rdfs:label "BriansBank10: 127: Wastoids" ;
     rdfs:seeAlso <BriansBank10.amSynth.bank.ttl> .
 
+<http://code.google.com/p/amsynth/amsynth#BriansBank11>
+    a pset:Bank ;
+    rdfs:label "BriansBank11" .
+
 <http://code.google.com/p/amsynth/amsynth#BriansBank11_000_FireEater>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
@@ -9074,6 +9118,10 @@
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank11: 127: RedSpot" ;
     rdfs:seeAlso <BriansBank11.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank12>
+    a pset:Bank ;
+    rdfs:label "BriansBank12" .
 
 <http://code.google.com/p/amsynth/amsynth#BriansBank12_000_Artisan>
     a pset:Preset ;
@@ -9843,6 +9891,10 @@
     rdfs:label "BriansBank12: 127: HiddenBrass2" ;
     rdfs:seeAlso <BriansBank12.amSynth.bank.ttl> .
 
+<http://code.google.com/p/amsynth/amsynth#BriansBank13>
+    a pset:Bank ;
+    rdfs:label "BriansBank13" .
+
 <http://code.google.com/p/amsynth/amsynth#BriansBank13_000_Equals6>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
@@ -10610,6 +10662,10 @@
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank13: 127: SandKeys2" ;
     rdfs:seeAlso <BriansBank13.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank14>
+    a pset:Bank ;
+    rdfs:label "BriansBank14" .
 
 <http://code.google.com/p/amsynth/amsynth#BriansBank14_000_NinnaNanna2>
     a pset:Preset ;
@@ -11379,6 +11435,10 @@
     rdfs:label "BriansBank14: 127: SoftnLow5" ;
     rdfs:seeAlso <BriansBank14.amSynth.bank.ttl> .
 
+<http://code.google.com/p/amsynth/amsynth#BriansBank15>
+    a pset:Bank ;
+    rdfs:label "BriansBank15" .
+
 <http://code.google.com/p/amsynth/amsynth#BriansBank15_000_SoapSuds>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
@@ -12146,6 +12206,10 @@
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank15: 127: SpaceyBeat5" ;
     rdfs:seeAlso <BriansBank15.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank16>
+    a pset:Bank ;
+    rdfs:label "BriansBank16" .
 
 <http://code.google.com/p/amsynth/amsynth#BriansBank16_000_Monophonical>
     a pset:Preset ;
@@ -12915,6 +12979,10 @@
     rdfs:label "BriansBank16: 127: Glassblock" ;
     rdfs:seeAlso <BriansBank16.amSynth.bank.ttl> .
 
+<http://code.google.com/p/amsynth/amsynth#BriansBank17>
+    a pset:Bank ;
+    rdfs:label "BriansBank17" .
+
 <http://code.google.com/p/amsynth/amsynth#BriansBank17_000_Drift2>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
@@ -13682,6 +13750,10 @@
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank17: 127: FirstThings2" ;
     rdfs:seeAlso <BriansBank17.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#amsynth_factory>
+    a pset:Bank ;
+    rdfs:label "amsynth_factory" .
 
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory_000_Derren_1>
     a pset:Preset ;

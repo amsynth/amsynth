@@ -15,7 +15,6 @@ lv2_file_header = '''\
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix state: <http://lv2plug.in/ns/ext/state#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
 '''
 
 lv2_preset_header = '''\
@@ -45,13 +44,23 @@ def amsynth_bank_read(filepath):
 def lv2_bank_write(filepath, bank_name, presets):
 	with open(filepath, 'w') as file:
 		print >> file, lv2_file_header
+
+		bank_uri = 'http://code.google.com/p/amsynth/amsynth#' + bank_name
+		print '''<%s>
+    a pset:Bank ;
+    rdfs:label "%s" .
+''' % (bank_uri, bank_name)
+
 		for i, preset in enumerate(presets):
 			preset_uri = bank_name + '_%03d_' % i + re.sub(r'\s', '_', preset['name'])
 			label = '%s: %03d: %s' % (bank_name, i, preset['name'])
+			# When banks are more widely supported, we should switch to this:
+			#label = '%03d: %s' % (i, preset['name'])
 			print lv2_preset_header.format(preset_uri=preset_uri, label=label)
 			print '    rdfs:seeAlso <{}> .'.format(os.path.basename(filepath))
 			print ''
 			print >> file, lv2_preset_header.format(preset_uri=preset_uri, label=label)
+			print >> file, '    pset:bank <%s> ;' % bank_uri
 			print >> file, '    lv2:port ['
 			for key, value in preset['parameters'].items():
 				print >> file, '        lv2:symbol "%s" ;' % key

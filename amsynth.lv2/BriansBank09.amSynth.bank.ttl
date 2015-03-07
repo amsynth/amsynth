@@ -6,11 +6,11 @@
 @prefix state: <http://lv2plug.in/ns/ext/state#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-
 <http://code.google.com/p/amsynth/amsynth#BriansBank09_000_FractionFM>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 000: FractionFM" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.425010
@@ -125,6 +125,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 001: FMClearBells" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.566677
@@ -239,6 +240,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 002: FMforMe1" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.566677
@@ -353,6 +355,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 003: FMforMe2" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.566677
@@ -467,6 +470,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 004: FMforMe3" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.566677
@@ -581,6 +585,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 005: FMforMe4" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.075010
@@ -695,6 +700,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 006: FMforMe5" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.075010
@@ -809,6 +815,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 007: FMforMe6" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.075010
@@ -923,6 +930,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 008: FMforMe7" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.075010
@@ -1037,6 +1045,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 009: FMforMe8" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.075010
@@ -1151,6 +1160,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 010: FMforMe9" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.075010
@@ -1265,6 +1275,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 011: FMforMe10" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.075010
@@ -1379,6 +1390,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 012: FmforMe11" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.075010
@@ -1493,6 +1505,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 013: FMforMe12" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.250010
@@ -1607,6 +1620,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 014: FMforMe13" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.250010
@@ -1721,6 +1735,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 015: FMforMe14" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -1835,6 +1850,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 016: FMforMe15" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -1949,6 +1965,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 017: FMforMe16" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -2063,6 +2080,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 018: FMforMe17" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -2177,6 +2195,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 019: FMforMe18" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.566677
@@ -2291,6 +2310,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 020: FMforMe19" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.666667
@@ -2405,6 +2425,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 021: SonicWhistle" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.658333
@@ -2519,6 +2540,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 022: SonicWhistle2" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.658333
@@ -2633,6 +2655,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 023: Spumante" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.875000
@@ -2747,6 +2770,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 024: RiseNFall" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.658333
@@ -2861,6 +2885,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 025: Playground" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.658333
@@ -2975,6 +3000,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 026: Lucky" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.658333
@@ -3089,6 +3115,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 027: InnerChamber" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -3203,6 +3230,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 028: Gopher" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -3317,6 +3345,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 029: GarbageCan" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.666667
@@ -3431,6 +3460,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 030: FriendlyFifth" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -3545,6 +3575,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 031: Fanfare2" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.658333
@@ -3659,6 +3690,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 032: ElectricBlues" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -3773,6 +3805,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 033: ElectricBlues2" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -3887,6 +3920,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 034: ElectricBlues3" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -4001,6 +4035,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 035: ElectricBlues4" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -4115,6 +4150,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 036: ElectricBlues5" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -4229,6 +4265,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 037: Daydream" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -4343,6 +4380,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 038: Contact" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.875000
@@ -4457,6 +4495,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 039: ByGone" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.633343
@@ -4571,6 +4610,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 040: Buzzword" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.658333
@@ -4685,6 +4725,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 041: Blaster" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.658333
@@ -4799,6 +4840,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 042: BadLady" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -4913,6 +4955,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 043: SineOn" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -5027,6 +5070,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 044: Parquet" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.516677
@@ -5141,6 +5185,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 045: Ghostess" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -5255,6 +5300,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 046: Transport" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -5369,6 +5415,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 047: Turbines" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -5483,6 +5530,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 048: Boosters" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -5597,6 +5645,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 049: SalesPitch" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.558343
@@ -5711,6 +5760,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 050: BadMedicine2" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -5825,6 +5875,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 051: BadMedicine3" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -5939,6 +5990,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 052: ElderOne" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -6053,6 +6105,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 053: ElderTwo" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -6167,6 +6220,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 054: PlanetStorm" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -6281,6 +6335,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 055: PlanetStorm2" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -6395,6 +6450,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 056: Beautiful" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.058330
@@ -6509,6 +6565,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 057: FarOffLands" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.633333
@@ -6623,6 +6680,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 058: Ghostly" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.075010
@@ -6737,6 +6795,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 059: InPort" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.316673
@@ -6851,6 +6910,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 060: InTheRain" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -6965,6 +7025,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 061: Nostalgia" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -7079,6 +7140,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 062: Oldie9again" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.175010
@@ -7193,6 +7255,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 063: Particularly" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.283330
@@ -7307,6 +7370,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 064: Particularly2" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.283330
@@ -7421,6 +7485,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 065: Particularly3" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.283330
@@ -7535,6 +7600,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 066: PunchBass" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.933343
@@ -7649,6 +7715,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 067: PunchBass2" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.102987
@@ -7763,6 +7830,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 068: Snapper" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.358340
@@ -7877,6 +7945,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 069: Spike3" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.675460
@@ -7991,6 +8060,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 070: DownUnder" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.133350
@@ -8105,6 +8175,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 071: DownUnder2" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.133350
@@ -8219,6 +8290,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 072: DownUnder3" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.133350
@@ -8333,6 +8405,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 073: LowSign" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.133350
@@ -8447,6 +8520,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 074: 009" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.375020
@@ -8561,6 +8635,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 075: New2Me" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.375020
@@ -8675,6 +8750,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 076: NiceDepression" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.133350
@@ -8789,6 +8865,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 077: SteelRubber" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -8903,6 +8980,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 078: Aardvark" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.783343
@@ -9017,6 +9095,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 079: Underworld" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.441670
@@ -9131,6 +9210,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 080: Rocker" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.683340
@@ -9245,6 +9325,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 081: BetterFM1" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -9359,6 +9440,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 082: BetterFM2" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -9473,6 +9555,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 083: BetterFM3" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -9587,6 +9670,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 084: Piercing" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.425010
@@ -9701,6 +9785,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 085: 1984" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.425010
@@ -9815,6 +9900,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 086: ASound" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.975010
@@ -9929,6 +10015,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 087: NewMoon1" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.550010
@@ -10043,6 +10130,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 088: NewMoon2" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.550010
@@ -10157,6 +10245,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 089: PluckRock" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.491666
@@ -10271,6 +10360,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 090: NewHope" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.208330
@@ -10385,6 +10475,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 091: TapeDeck" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.225000
@@ -10499,6 +10590,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 092: Telepathy2" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.500000
@@ -10613,6 +10705,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 093: BlankCheck" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.500000
@@ -10727,6 +10820,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 094: DontBeAfraid" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.608343
@@ -10841,6 +10935,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 095: SuperSink" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.708343
@@ -10955,6 +11050,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 096: HardShot" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -11069,6 +11165,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 097: HoldingOn" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.700010
@@ -11183,6 +11280,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 098: Roundhead" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.708343
@@ -11297,6 +11395,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 099: ShieldsDown" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.166667
@@ -11411,6 +11510,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 100: ColdGhost" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.607900
@@ -11525,6 +11625,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 101: Squirrely" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.578340
@@ -11639,6 +11740,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 102: CatInBag" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.230200
@@ -11753,6 +11855,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 103: AlienDrone" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.230200
@@ -11867,6 +11970,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 104: Sopranos" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.941667
@@ -11981,6 +12085,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 105: Rainbow" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.750000
@@ -12095,6 +12200,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 106: 1and2and" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.432508
@@ -12209,6 +12315,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 107: Afterburners" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.708343
@@ -12323,6 +12430,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 108: AtomicRebel" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.272570
@@ -12437,6 +12545,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 109: BabyRobot" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.578340
@@ -12551,6 +12660,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 110: BeSmart" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.390093
@@ -12665,6 +12775,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 111: EternalWhip" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.726070
@@ -12779,6 +12890,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 112: Harem" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.979403
@@ -12893,6 +13005,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 113: Helpful" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.333330
@@ -13007,6 +13120,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 114: Housewife" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.286580
@@ -13121,6 +13235,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 115: MetalVowel" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.450000
@@ -13235,6 +13350,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 116: OnStage" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.700010
@@ -13349,6 +13465,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 117: OnStage2" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.700010
@@ -13463,6 +13580,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 118: PlayIt" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.997337
@@ -13577,6 +13695,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 119: SundayPipes" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.432508
@@ -13691,6 +13810,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 120: Translate" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.700010
@@ -13805,6 +13925,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 121: TwoHands" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.566677
@@ -13919,6 +14040,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 122: ElderThree" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -14033,6 +14155,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 123: QuickBass" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -14147,6 +14270,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 124: SoftHeart" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 1.491680
@@ -14261,6 +14385,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 125: House1" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
@@ -14375,6 +14500,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 126: House2" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.525000
@@ -14489,6 +14615,7 @@
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank09: 127: InfraRed" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#BriansBank09> ;
     lv2:port [
         lv2:symbol "amp_decay" ;
         pset:value 0.000000
