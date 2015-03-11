@@ -574,7 +574,7 @@
         lv2:maximum 2.000000 ;
         lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "osc 1+2"] ;
         lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "osc 1"] ;
-        lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "osc 2"] ;
+        lv2:scalePoint [ rdf:value 2.0 ; rdfs:label "osc 2"] ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_lfo> ;
     ] , [
         a lv2:InputPort ;
