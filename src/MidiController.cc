@@ -136,9 +136,9 @@ MidiController::HandleMidiData(const unsigned char* bytes, unsigned numBytes)
 	
 		default:
 #ifdef _DEBUG
-			cout << "<MidiController> unknown status :" << hex <<
-			(int) status << "for data byte: " << hex << (int) byte <<
-			endl;
+			std::cout << "<MidiController> unknown status :" << std::hex <<
+			(int) status << "for data byte: " << std::hex << (int) byte <<
+			std::endl;
 #endif
 			break;
 		}
