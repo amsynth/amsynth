@@ -893,7 +893,7 @@ GUI::preset_paste_callback(GtkClipboard *, const gchar *text, gpointer userdata)
 	GUI *_this = reinterpret_cast<GUI *>(userdata);
 	
 	Preset pastedPreset;
-	if (!pastedPreset.fromString(std::string(text)))
+	if (!text || !pastedPreset.fromString(std::string(text)))
 		return;
 	
 	// enure preset has a unique name
