@@ -536,7 +536,7 @@ void ptest ()
 	//
 	// test parameters
 	// 
-	const int kTestBufSize = 256;
+	const int kTestBufSize = 64;
 	const int kTestSampleRate = 44100;
 	const int kTimeSeconds = 60;
 	const int kNumVoices = 10;
@@ -547,7 +547,9 @@ void ptest ()
 	voiceAllocationUnit->SetSampleRate (kTestSampleRate);
 	
 	// trigger off some notes for amSynth to render.
-	for (int v=0; v<kNumVoices; v++) voiceAllocationUnit->HandleMidiNoteOn (60+v, 127);
+	for (int v=0; v<kNumVoices; v++) {
+		voiceAllocationUnit->HandleMidiNoteOn(60 + v, 1.0f);
+	}
 	
 	struct rusage usage_before; 
 	getrusage (RUSAGE_SELF, &usage_before);
@@ -555,7 +557,9 @@ void ptest ()
 	long total_samples = kTestSampleRate * kTimeSeconds;
 	long total_calls = total_samples / kTestBufSize;
 	long remain_samples = total_samples % kTestBufSize;
-	for (int i=0; i<total_calls; i++) voiceAllocationUnit->Process (buffer, buffer, kTestBufSize);
+	for (int i=0; i<total_calls; i++) {
+		voiceAllocationUnit->Process (buffer, buffer, kTestBufSize);
+	}
 	voiceAllocationUnit->Process (buffer, buffer, remain_samples);
 
 	struct rusage usage_after; 
