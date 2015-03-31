@@ -1,5 +1,12 @@
 include $(top_srcdir)/common.am
 
+git_revision=`cd $(top_srcdir) && git describe --always`
+BUILT_SOURCES = git_revision.h
+CLEANFILES = git_revision.h
+.PHONY: git_revision.h
+git_revision.h: Makefile
+	printf "#define git_revision \"$(git_revision)\"\n" >$@
+
 bin_PROGRAMS = amsynth
 
 SUBDIRS = drivers VoiceBoard GUI Effects
@@ -15,7 +22,8 @@ amsynth_core_sources = \
     controls.h \
     midi.h \
     types.h \
-    UpdateListener.h
+    UpdateListener.h \
+    git_revision.h
 
 amsynth_core_libs = \
     VoiceBoard/libVoiceBoard.a \

@@ -45,18 +45,17 @@ using std::cerr;
 using std::endl;
 using std::ostringstream;
 
+#include "../../config.h"
 #include "../AudioOutput.h"
+#include "../git_revision.h"
 #include "../MidiController.h"
 #include "../Preset.h"
 #include "../Synthesizer.h"
-
-#include "../../config.h"
 #include "ConfigDialog.h"
+#include "editor_pane.h"
+#include "gui_main.h"
 #include "MIDILearnDialog.h"
 #include "PresetControllerView.h"
-
-#include "gui_main.h"
-#include "editor_pane.h"
 
 enum {
 	evLoad,
@@ -743,13 +742,17 @@ GUI::event_handler(const int e)
             "Samuli Suominen",
             NULL
         };
+        std::string version = VERSION;
+        if (version == std::string("git")) {
+            version = version + " (" + git_revision ")";
+        }
         gtk_show_about_dialog(this->gobj(),
                               "program-name", PACKAGE,
-                              "version", VERSION,
+                              "version", version.c_str(),
                               "authors", authors,
                               "comments", "Analogue Modelling SYNTHesizer",
                               "website", "http://code.google.com/p/amsynth/",
-                              "copyright", "© 2002 - 2014 Nick Dowell and contributors",
+                              "copyright", "© 2002 - 2015 Nick Dowell and contributors",
                               NULL);
         break;
     }

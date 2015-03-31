@@ -27,13 +27,14 @@
 #include "drivers/ALSAMidiDriver.h"
 #include "drivers/OSSMidiDriver.h"
 #include "Effects/denormals.h"
+#include "git_revision.h"
 #include "GUI/gui_main.h"
 #include "JackOutput.h"
 #include "lash.h"
 #include "midi.h"
 #include "MidiController.h"
-#include "VoiceAllocationUnit.h"
 #include "Synthesizer.h"
+#include "VoiceAllocationUnit.h"
 #include "VoiceBoard/LowPassFilter.h"
 
 #if __APPLE__
@@ -324,7 +325,7 @@ int main( int argc, char *argv[] )
 	while ((opt = getopt_long(argc, argv, "vhstdzxm:c:a:r:p:b:U:P:n:", longopts, &longindex)) != -1) {
 		switch (opt) {
 			case 'v':
-				cout << PACKAGE_STRING << " -- compiled " << __DATE__ << " " << __TIME__ << endl;
+				cout << PACKAGE_STRING << " (" << git_revision << ") -- compiled " << __DATE__ << " " << __TIME__ << endl;
 				return 0;
 			case 'h':
 				cout << help_text;
