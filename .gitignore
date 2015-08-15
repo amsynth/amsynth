@@ -32,3 +32,4 @@ compile
 build
 /INSTALL
 /src/vstsdk2.4
+/src/git_revision.h
