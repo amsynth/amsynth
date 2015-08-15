@@ -296,8 +296,6 @@ int main( int argc, char *argv[] )
 
 	srand(time(NULL));
 	
-	disable_denormals();
-
 	// need to drop our suid-root permissions :-
 	// GTK will not work SUID for security reasons..
 	setreuid( getuid(), getuid() );
