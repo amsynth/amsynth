@@ -132,14 +132,6 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 			midi_event.buffer = (uint8_t *)(ev + 1);
 			midi_event.length = ev->body.size;
 			midi_events.push_back(midi_event);
-			if (MIDI_STATUS_CONTROLLER == (midi_event.buffer[0] & 0xF0)) {
-				for (unsigned i=0; i<kAmsynthParameterCount; i++) {
-					float *host_value = a->params[i];
-					if (host_value != NULL) {
-						*host_value = a->synth->getParameterValue((Param)i);
-					}
-				}
-			}
 		}
 	}
 

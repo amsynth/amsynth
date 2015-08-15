@@ -102,7 +102,7 @@ lv2_ui_instantiate(const struct _LV2UI_Descriptor* descriptor,
 	*widget = ui->_widget;
 
 #if CALL_LV2UI_WRITE_FUNCTION_ON_IDLE
-	ui->_timeout_id = g_timeout_add_full(G_PRIORITY_LOW, 1000/30, (GSourceFunc)&lv2_ui_on_idle, ui, NULL);
+    ui->_timeout_id = g_timeout_add_full(G_PRIORITY_LOW, 1000/60, (GSourceFunc)&lv2_ui_on_idle, ui, NULL);
 #endif
 
 	return ui;
