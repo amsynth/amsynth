@@ -324,8 +324,14 @@ int main( int argc, char *argv[] )
 	int opt = -1, longindex = -1;
 	while ((opt = getopt_long(argc, argv, "vhstdzxm:c:a:r:p:b:U:P:n:", longopts, &longindex)) != -1) {
 		switch (opt) {
-			case 'v':
-				cout << PACKAGE_STRING << " (" << git_revision << ") -- compiled " << __DATE__ << " " << __TIME__ << endl;
+            case 'v':
+                do {
+                    std::string info = PACKAGE_STRING;
+                    if (VERSION == std::string("git")) {
+                        info = info + " (" + git_revision ")";
+                    }
+                    cout << info << endl;
+                } while (0);
 				return 0;
 			case 'h':
 				cout << help_text;
