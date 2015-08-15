@@ -15,10 +15,11 @@
 */
 
 /**
-   @file presets.h
+   @defgroup presets Presets
 
-   C definitions for the LV2 Presets extension
-   <http://lv2plug.in/ns/ext/presets>.
+   Presets for plugins, see <http://lv2plug.in/ns/ext/presets> for details.
+
+   @{
 */
 
 #ifndef LV2_PRESETS_H
@@ -27,8 +28,14 @@
 #define LV2_PRESETS_URI    "http://lv2plug.in/ns/ext/presets"
 #define LV2_PRESETS_PREFIX LV2_PRESETS_URI "#"
 
+#define LV2_PRESETS__Bank   LV2_PRESETS_PREFIX "Bank"
 #define LV2_PRESETS__Preset LV2_PRESETS_PREFIX "Preset"
+#define LV2_PRESETS__bank   LV2_PRESETS_PREFIX "bank"
 #define LV2_PRESETS__preset LV2_PRESETS_PREFIX "preset"
 #define LV2_PRESETS__value  LV2_PRESETS_PREFIX "value"
 
 #endif  /* LV2_PRESETS_H */
+
+/**
+   @}
+*/

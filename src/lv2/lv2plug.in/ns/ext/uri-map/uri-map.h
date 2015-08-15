@@ -15,8 +15,9 @@
 */
 
 /**
-   @file
-   C header for the LV2 URI Map extension <http://lv2plug.in/ns/ext/uri-map>.
+   @defgroup uri-map URI Map
+
+   C API for the LV2 URI Map extension <http://lv2plug.in/ns/ext/uri-map>.
 
    This extension defines a simple mechanism for plugins to map URIs to
    integers, usually for performance reasons (e.g. processing events typed by
@@ -25,6 +26,8 @@
    values for use in the audio thread without doing any string comparison.
    This allows the extensibility of RDF with the performance of integers (or
    centrally defined enumerations).
+
+   @{
 */
 
 #ifndef LV2_URI_MAP_H
@@ -33,6 +36,10 @@
 #define LV2_URI_MAP_URI "http://lv2plug.in/ns/ext/uri-map"
 
 #include <stdint.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
    Opaque pointer to host data.
@@ -87,4 +94,12 @@ typedef struct {
 	                      const char*               uri);
 } LV2_URI_Map_Feature;
 
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
+
 #endif /* LV2_URI_MAP_H */
+
+/**
+   @}
+*/
