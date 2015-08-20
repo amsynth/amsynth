@@ -1,4 +1,0 @@
-39c39
-<     #define VSTCALLBACK __cdecl
----
->     #define VSTCALLBACK

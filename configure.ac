@@ -85,6 +85,9 @@ AS_IF([test "x$with_lv2" != "xno"], [
     PKG_CHECK_MODULES([LV2], [[gtk+-2.0 >= 2.20.0]], [with_lv2="yes"], [with_lv2="no"])])
 AM_CONDITIONAL([BUILD_LV2], [test "x$with_lv2" != "xno"])
 
+AC_ARG_VAR(VST_SDK, [Path to VST SDK 2.4])
+AM_CONDITIONAL([BUILD_VST], [test "x$VST_SDK" != "x"])
+
 dnl
 dnl
 dnl

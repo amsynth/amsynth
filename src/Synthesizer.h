@@ -50,6 +50,13 @@ public:
     float getParameterValue(Param parameter);
     void setParameterValue(Param parameter, float value);
 
+    float getNormalizedParameterValue(Param parameter);
+    void setNormalizedParameterValue(Param parameter, float value);
+
+    void getParameterName(Param parameter, char *buffer, size_t maxLen);
+    void getParameterLabel(Param parameter, char *buffer, size_t maxLen);
+    void getParameterDisplay(Param parameter, char *buffer, size_t maxLen);
+
 	int getPitchBendRangeSemitones();
 	void setPitchBendRangeSemitones(int value);
 

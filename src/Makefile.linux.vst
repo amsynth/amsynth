@@ -2,32 +2,39 @@
 TARGET = amsynth.vst.so
 
 OBJECTS = \
+	amsynth_vst.o \
 	vstsdk2.4/public.sdk/source/vst2.x/audioeffect.o \
 	vstsdk2.4/public.sdk/source/vst2.x/audioeffectx.o \
+	Config.o \
 	Effects/allpass.o \
 	Effects/comb.o \
 	Effects/Distortion.o \
 	Effects/revmodel.o \
 	Effects/SoftLimiter.o \
-	VoiceBoard/ADSR.o \
-	VoiceBoard/Oscillator.o \
-	VoiceBoard/VoiceBoard.o \
-	VoiceBoard/LowPassFilter.o \
+	GUI/bitmap_button.o \
+	GUI/bitmap_knob.o \
+	GUI/bitmap_popup.o \
+	GUI/editor_pane.o \
+	GUI/presets_menu.o \
+	MidiController.o \
 	Parameter.o \
 	Preset.o \
 	PresetController.o \
+	Synthesizer.o \
 	TuningMap.o \
 	VoiceAllocationUnit.o \
-	Config.o \
-	amsynth_vst.o
+	VoiceBoard/ADSR.o \
+	VoiceBoard/LowPassFilter.o \
+	VoiceBoard/Oscillator.o \
+	VoiceBoard/VoiceBoard.o
 
 all: $(TARGET)
 
-CFLAGS = -Wall -O2 -Ivstsdk2.4 -fPIC
+CFLAGS = -Wall -O0 -g -Ivstsdk2.4 -fPIC `pkg-config --cflags gtk+-2.0` -DPKGDATADIR=\"/home/nick/.local/share/amsynth\" -D__cdecl=""
 CXXFLAGS = $(CFLAGS)
 
 $(TARGET): $(OBJECTS)
-	g++ -shared -lc -lm -Wl,-retain-symbols-file -Wl,amsynth_vst.exp -o $(TARGET) $(OBJECTS)
+	$(CC) -shared -Wl,-soname,$(TARGET) -Wl,-retain-symbols-file,amsynth_vst.exp -o $(TARGET) $(OBJECTS) `pkg-config --libs gtk+-2.0` -lstdc++
 
 clean:
 	rm $(OBJECTS) $(TARGET)

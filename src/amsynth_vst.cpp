@@ -1,7 +1,7 @@
 /*
  *  amsynth_vst.cpp
  *
- *  Copyright (c) 2008-2014 Nick Dowell
+ *  Copyright (c) 2008-2015 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -21,120 +21,261 @@
 
 /* To build the amsynth VST plugin;
  * 1) download the VST 2.4 SDK and unzip into the src/ directory
- * 2) run: patch vstsdk2.4/pluginterfaces/vst2.x/aeffect.h aeffect.h.patch
- * 3) run: make -f Makefile.linux.vst
- * this should output amsynth.vst.so
+ *    you should have a "vstsdk2.4" directory in src now
+ * 2) run: make -f Makefile.linux.vst
+ *    this will produce amsynth.vst.so
  */
 
+ /* Note:
+  * Ardour's default search path is
+  *   $HOME/.vst
+  *   $PREFX/lib/vst
+  */
 
-#include "PresetController.h"
-#include "VoiceAllocationUnit.h"
+#include "midi.h"
+#include "Preset.h"
+#include "Synthesizer.h"
+#include "GUI/editor_pane.h"
 
-#include "public.sdk/source/vst2.x/audioeffectx.h"
+#include <public.sdk/source/vst2.x/aeffeditor.h>
+#include <public.sdk/source/vst2.x/audioeffectx.h>
+
+#include <cassert>
+#include <gdk/gdkx.h>
+#include <gtk/gtk.h>
+#include <stdio.h>
+#include <X11/Xlib.h>
+
+class Editor : public AEffEditor
+{
+public:
+	Editor(AudioEffect *effect) : AEffEditor(effect)
+	, mGdkParentWindow(0)
+	, mGtkWindow(0)
+	, mEditorWidget(0)
+	{
+	}
+
+	~Editor()
+	{
+	}
+
+	virtual bool getRect(ERect **rect)
+	{
+		mRect.top = 0;
+		mRect.left = 0;
+		mRect.right = 600;
+		mRect.bottom = 400;
+		*rect = &mRect;
+		return true;
+	}
+
+	virtual bool open(void *ptr)
+	{
+		AEffEditor::open(ptr);
+
+		static bool initialized = false;
+		if (!initialized) {
+			gtk_init(NULL, NULL);
+			initialized = true;
+		}
+
+		if (!mEditorWidget) {
+			for (int i = 0; i < kAmsynthParameterCount; i++) {
+				gdouble value = 0, lower = 0, upper = 0, step_increment = 0;
+				get_parameter_properties(i, &lower, &upper, &value, &step_increment);
+				mAdjustments[i] = (GtkAdjustment *)gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);
+				g_object_ref_sink(mAdjustments[i]); // assumes ownership of the floating reference
+				g_signal_connect(mAdjustments[i], "value-changed", (GCallback)&Editor::on_adjustment_value_changed, this);
+			}
+			mEditorWidget = editor_pane_new(mAdjustments, TRUE);
+			g_object_ref_sink(mEditorWidget);
+		}
+
+		mGtkWindow = gtk_window_new(GTK_WINDOW_POPUP);
+
+		// don't show the widget yet, to avoid visible moving of the window
+		gtk_widget_realize(mGtkWindow); g_assert(gtk_widget_get_realized(mGtkWindow));
+
+		// on some hosts (e.g. energyXT) creating the gdk window can fail unless we call gdk_display_sync
+		gdk_display_sync(gdk_display_get_default());
+
+		mGdkParentWindow = gdk_window_foreign_new((Window) systemWindow);
+		g_assert(mGdkParentWindow);
+
+		// use gdk_window_reparent instead of XReparentWindow to avoid "GdkWindow unexpectedly destroyed" warnings
+		gdk_window_reparent(gtk_widget_get_window(mGtkWindow), mGdkParentWindow, 0, 0);
+
+		gtk_container_add(GTK_CONTAINER(mGtkWindow), mEditorWidget);
+		gtk_widget_show_all(mGtkWindow);
+
+		gdk_display_sync(gdk_display_get_default());
+
+		return 0;
+	}
+
+	virtual void close()
+	{
+		if (mGtkWindow) {
+			if (gtk_widget_get_window(mGtkWindow)) {
+				gdk_window_hide(gtk_widget_get_window(mGtkWindow));
+			}
+			gtk_widget_destroy(mGtkWindow);
+		}
+
+		mGdkParentWindow = NULL;
+		mGtkWindow = NULL;
+		mEditorWidget = NULL;
+
+		for (int i = 0; i < kAmsynthParameterCount; i++) {
+			mAdjustments[i] = NULL;
+		}
+
+		gdk_display_sync(gdk_display_get_default());
+
+		AEffEditor::close();
+	}
+
+	virtual void idle()
+	{
+		while (gtk_events_pending())
+			gtk_main_iteration();
+	}
+
+	static void on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
+	{
+		Editor *editor = (Editor *)user_data;
+
+		static Preset dummyPreset;
+
+		for (int i = 0; i < kAmsynthParameterCount; i++) {
+			if (adjustment == editor->mAdjustments[i]) {
+				float value = gtk_adjustment_get_value(adjustment);
+				Parameter &param = dummyPreset.getParameter(i);
+				param.setValue(value);
+				editor->getEffect()->setParameterAutomated(i, param.GetNormalisedValue());
+			}
+		}
+	}
+
+private:
+	ERect mRect;
+	GdkWindow *mGdkParentWindow;
+	GtkWidget *mGtkWindow;
+	GtkWidget *mEditorWidget;
+	GtkAdjustment *mAdjustments[kAmsynthParameterCount];
+};
 
 
 class AmsynthVST : public AudioEffectX
 {
 public:
 	
-	AmsynthVST(audioMasterCallback callback) : AudioEffectX(callback, PresetController::kNumPresets, kAmsynthParameterCount)
+	AmsynthVST(audioMasterCallback callback) : AudioEffectX(callback, 0, kAmsynthParameterCount)
 	{
-		setUniqueID('amsy');
+		setUniqueID(CCONST('a', 'm', 's', 'y'));
 		setNumInputs(0);
 		setNumOutputs(2);
 		canProcessReplacing(true);
 		isSynth(true);
+
+		mMidiBuffer = (unsigned char *)malloc(4096);
+		mSynthesizer = new Synthesizer;
 		
-		Preset & preset = mPresetController.getCurrentPreset();
-		for (unsigned i=0; i<preset.ParameterCount(); i++) {
-			Parameter & param = preset.getParameter(i);
-			mVoiceAllocationUnit.UpdateParameter( param.GetId(), param.getControlValue() );
-		}
+		setEditor(mEditor = new Editor(this));
 	}
-	
+
+	~AmsynthVST()
+	{
+		free(mMidiBuffer);
+		delete mSynthesizer;
+	}
+
+	virtual bool getEffectName(char *name)
+	{
+		strcpy(name, "amsynth"); return true;
+	}
+
+	virtual bool getVendorString(char *text)
+	{
+		strcpy(text, "Nick Dowell"); return true;
+	}
+
+	virtual bool getProductString(char *text)
+	{
+		strcpy(text, "amsynth"); return true;
+	}
+
 	virtual void setParameter(VstInt32 index, float value)
 	{
-		Parameter & param = mPresetController.getCurrentPreset().getParameter(index);
-		param.SetNormalisedValue(value);
-		mVoiceAllocationUnit.UpdateParameter( param.GetId(), param.getControlValue() );
+		mSynthesizer->setNormalizedParameterValue((Param) index, value);
 	}
 	
 	virtual float getParameter(VstInt32 index)
 	{
-		Parameter & param = mPresetController.getCurrentPreset().getParameter(index);
-		return param.GetNormalisedValue();
+		return mSynthesizer->getNormalizedParameterValue((Param) index);
 	}
 	
-	virtual void getParameterLabel(VstInt32 index, char * text)
+	virtual void getParameterLabel(VstInt32 index, char *text)
 	{
-		strncpy( text, mPresetController.getCurrentPreset().getParameter(index).getLabel().c_str(), 32 );
+		mSynthesizer->getParameterLabel((Param) index, text, 32);
 	}
 	
-	virtual void getParameterDisplay(VstInt32 index, char * text)
+	virtual void getParameterDisplay(VstInt32 index, char *text)
 	{
-		strncpy( text, mPresetController.getCurrentPreset().getParameter(index).GetStringValue().c_str(), 32 );
+		mSynthesizer->getParameterDisplay((Param) index, text, 32);
 	}
 	
-	virtual void getParameterName(VstInt32 index, char * text)
+	virtual void getParameterName(VstInt32 index, char *text)
 	{
-		strncpy( text, mPresetController.getCurrentPreset().getParameter(index).getName().c_str(), 32 );
-	}
-	
-	virtual void setProgram(VstInt32 program)
-	{
-		mPresetController.selectPreset(program);
-	}
-	
-	virtual void setProgramName(char* name)
-	{
-		mPresetController.getCurrentPreset().setName( std::string(name) );
-	}
-	
-	virtual void getProgramName(char* name)
-	{
-		strncpy( name, mPresetController.getCurrentPreset().getName().c_str(), kVstMaxProgNameLen );
-	}
-	
-	virtual VstInt32 processEvents(VstEvents * events)
-	{
-		for (VstInt32 i=0; i<events->numEvents; i++)
-			if (events->events[i]->type == kVstMidiType)
-				processEvent( *reinterpret_cast<VstMidiEvent*>(events->events[i]) );
-		return 1;
+		mSynthesizer->getParameterName((Param) index, text, 32);
 	}
 
-	void processEvent(const VstMidiEvent & event)
+	virtual VstInt32 processEvents(VstEvents *events)
 	{
-		const char * midiData = event.midiData;
-		const VstInt32 status = midiData[0] & 0xf0;
+		assert(mMidiEvents.empty());
+
+		memset(mMidiBuffer, 0, 4096);
+		unsigned char *buffer = mMidiBuffer;
 		
-		switch (status)
-		{
-		case 0x80:
-		case 0x90:
-			static const float scale = 1.f / 127.f;
-			const VstInt32 note = midiData[1] & 0x7f;
-			const VstInt32 velocity = (status == 0x90) ? midiData[2] & 0x7f : 0;
-			
-			if (velocity)
-				mVoiceAllocationUnit.HandleMidiNoteOn( note, velocity * scale );
-			else
-				mVoiceAllocationUnit.HandleMidiNoteOff( note, velocity * scale );
-			
-			break;
+		for (VstInt32 i=0; i<events->numEvents; i++) {
+			if (events->events[i]->type == kVstMidiType) {
+				VstMidiEvent *event = (VstMidiEvent *)events->events[i];
+
+				memcpy(buffer, event->midiData, 4);
+
+				amsynth_midi_event_t midi_event;
+				memset(&midi_event, 0, sizeof(midi_event));
+				midi_event.offset_frames = event->deltaFrames;
+				midi_event.buffer = buffer;
+				midi_event.length = 4;
+				mMidiEvents.push_back(midi_event);
+
+				buffer += event->byteSize;
+
+				assert(buffer < mMidiBuffer + 4096);
+			}
 		}
+
+		return 1;
 	}
 	
-	virtual void processReplacing( float ** inputs, float ** outputs, VstInt32 numSampleFrames )
+	virtual void processReplacing(float **inputs, float **outputs, VstInt32 numSampleFrames)
 	{
-		mVoiceAllocationUnit.Process(outputs[0], outputs[1], numSampleFrames, 1);
+		mSynthesizer->process(numSampleFrames, mMidiEvents, outputs[0], outputs[1]);
+		mMidiEvents.clear();
 	}
 	
-protected:
+private:
 	
-	VoiceAllocationUnit	mVoiceAllocationUnit;
-	PresetController	mPresetController;
+	std::vector<amsynth_midi_event_t> mMidiEvents;
+	unsigned char *mMidiBuffer;
+	Synthesizer *mSynthesizer;
+	Editor *mEditor;
 };
+
+
+void modal_midi_learn(int param_index) {}
 
 
 extern "C" AEffect * VSTPluginMain(audioMasterCallback audioMaster)
@@ -153,3 +294,6 @@ extern "C" __attribute__ ((visibility("default"))) AEffect * main_plugin(audioMa
 {
 	return VSTPluginMain (audioMaster);
 }
+
+#include <public.sdk/source/vst2.x/audioeffect.cpp>
+#include <public.sdk/source/vst2.x/audioeffectx.cpp>

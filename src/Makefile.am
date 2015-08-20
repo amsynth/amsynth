@@ -124,6 +124,15 @@ amsynth_lv2_gtk_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -ex
 amsynth_lv2_gtk_la_LIBADD = @LV2_LIBS@
 endif
 
+if BUILD_VST
+vstdir=$(libdir)/vst
+noinst_LTLIBRARIES += amsynth_vst.la
+amsynth_vst_la_SOURCES = $(amsynth_core_sources) $(amsynth_dsp_sources) amsynth_vst.cpp MidiController.cc
+amsynth_vst_la_CPPFLAGS = $(AM_CPPFLAGS) @GTK_CFLAGS@ -I$(VST_SDK) -D__cdecl=""
+amsynth_vst_la_LDFLAGS = -rpath $(vstdir) -avoid-version -module -disable-static -retain-symbols-file amsynth_vst.exp
+amsynth_vst_la_LIBADD = @GTK_LIBS@
+endif
+
 ####
 
 install-exec-hook:
@@ -141,6 +150,9 @@ if BUILD_LV2
 	install -c -D -m 755 $(top_builddir)/src/.libs/amsynth_lv2.so $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2.so
 	install -c -D -m 755 $(top_builddir)/src/.libs/amsynth_lv2_gtk.so $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2_gtk.so
 endif
+if BUILD_VST
+	install -c -D -m 755 $(top_builddir)/src/.libs/amsynth_vst.so $(DESTDIR)$(vstdir)/amsynth_vst.so
+endif
 
 uninstall-hook:
 if BUILD_DSSI
@@ -152,4 +164,7 @@ endif
 if BUILD_LV2
 	rm -f $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2.so
 	rm -f $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2_gtk.so
+endif
+if BUILD_VST
+	rm -f $(DESTDIR)$(vstdir)/amsynth_vst.so
 endif
