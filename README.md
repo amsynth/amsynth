@@ -1,6 +1,6 @@
 # amsynth [![Build Status](https://travis-ci.org/nixxcode/amsynth.svg?branch=master)](https://travis-ci.org/nixxcode/amsynth)
 
-**A**nalog **M**odelling **SYNTH** for Linux - LV2 | DSSI | JACK | ALSA | OSS
+**A**nalog **M**odelling **SYNTH** for Linux - LV2 | VST | DSSI | JACK | ALSA | OSS
 
 ![Screen Shot](http://wiki.amsynth.googlecode.com/git/amsynth_151_fedora.png)
 
