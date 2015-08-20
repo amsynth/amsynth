@@ -3,9 +3,9 @@ include $(top_srcdir)/common.am
 git_revision=`cd $(top_srcdir) && git describe --always`
 BUILT_SOURCES = git_revision.h
 CLEANFILES = git_revision.h
-.PHONY: git_revision.h
+# .PHONY: git_revision.h
 git_revision.h: Makefile
-	printf "#define git_revision \"$(git_revision)\"\n" >$@
+	printf "#define git_revision \"$(git_revision)\"\n" >$@_; if cmp -s $@ $@_; then rm $@_; else mv $@_ $@; fi
 
 bin_PROGRAMS = amsynth
 
