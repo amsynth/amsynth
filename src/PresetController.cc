@@ -38,9 +38,11 @@ using namespace std;
 
 
 PresetController::PresetController	()
-:	updateListener (0)
+:	bank_file ("")
+,	updateListener (0)
 ,	nullpreset ("null preset")
 ,	currentPresetNo (-1)
+,	lastPresetsFileModifiedTime (0)
 {
 	presets = new Preset [kNumPresets];
 }
@@ -275,18 +277,20 @@ static bool is_amsynth_file(const char *filename)
 	return true;
 }
 
-static void *file_read_contents(const char *filename)
+static off_t file_read_contents(const char *filename, void **result)
 {
+	*result = NULL;
 	FILE *file = fopen(filename, "r");
 	if (!file)
-		return NULL;
+		return 0;
 	fseek(file, 0, SEEK_END);
 	off_t length = ftello(file);
 	void *buffer = calloc(length + 1, 1);
 	fseek(file, 0, SEEK_SET);
 	fread(buffer, length, 1, file);
 	fclose(file), file = NULL;
-	return buffer;
+	*result = buffer;
+	return length;
 }
 
 static float float_from_string(const char *s)
@@ -324,13 +328,16 @@ PresetController::loadPresets		(const char *filename)
 	if (strcmp(filename, bank_file.c_str()) == 0 && lastPresetsFileModifiedTime == mtime(filename))
 		return 0; // file not modified since last load
 
-	void *buffer = file_read_contents(filename);
+	void *buffer = NULL;
+	off_t buffer_length = file_read_contents(filename, &buffer);
 	if (!buffer)
 		return -1;
 
+	char *buffer_end = ((char *)buffer) + buffer_length;
+
 	int preset_index = -1;
 	char *line_ptr = (char *)buffer + sizeof(amsynth_file_header);
-	for (char *end_ptr = line_ptr; *end_ptr; end_ptr++) {
+	for (char *end_ptr = line_ptr; end_ptr < buffer_end && *end_ptr; end_ptr++) {
 		if (*end_ptr == '\n') {
 			*end_ptr = '\0';
 			end_ptr++;

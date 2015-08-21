@@ -127,6 +127,7 @@ GUI::delete_event_impl(GdkEventAny *)
 GUI::GUI( Config & config_in, MidiController & mc, Synthesizer *synth, GenericOutput *audio )
 :	m_auditionKeyDown(false)
 ,	m_synth(synth)
+,	m_presetIsNotSaved(false)
 {
 	this->config = &config_in;
 	this->midi_controller = &mc;

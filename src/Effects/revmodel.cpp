@@ -8,6 +8,7 @@
 #include "revmodel.hpp"
 
 revmodel::revmodel()
+:	mode(initialmode)
 {
 	// Tie the components to their buffers
 	combL[0].setbuffer(bufcombL1,combtuningL1);
