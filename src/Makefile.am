@@ -127,7 +127,7 @@ endif
 if BUILD_VST
 vstdir=$(libdir)/vst
 noinst_LTLIBRARIES += amsynth_vst.la
-amsynth_vst_la_SOURCES = $(amsynth_core_sources) $(amsynth_dsp_sources) amsynth_vst.cpp MidiController.cc
+amsynth_vst_la_SOURCES = $(amsynth_core_sources) $(amsynth_dsp_sources) amsynth_vst.cpp MidiController.cc GUI/bitmap_button.c GUI/bitmap_knob.c GUI/bitmap_popup.c GUI/editor_pane.c GUI/presets_menu.cpp
 amsynth_vst_la_CPPFLAGS = $(AM_CPPFLAGS) @GTK_CFLAGS@ -I$(VST_SDK) -D__cdecl=""
 amsynth_vst_la_LDFLAGS = -rpath $(vstdir) -avoid-version -module -disable-static -retain-symbols-file amsynth_vst.exp
 amsynth_vst_la_LIBADD = @GTK_LIBS@
