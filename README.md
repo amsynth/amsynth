@@ -1,4 +1,4 @@
-# amsynth [![Build Status](https://travis-ci.org/nixxcode/amsynth.svg?branch=master)](https://travis-ci.org/nixxcode/amsynth)
+# amsynth [![Build Status](https://travis-ci.org/amsynth/amsynth.svg?branch=master)](https://travis-ci.org/amsynth/amsynth)
 
 **A**nalog **M**odelling **SYNTH** for Linux - LV2 | VST | DSSI | JACK | ALSA | OSS
 
@@ -12,6 +12,6 @@
 - Distortion and reverb
 - Hundreds of presets
 
-[Downloads](https://github.com/nixxcode/amsynth/releases)
+[Downloads](https://github.com/amsynth/amsynth/releases)
 
-[Bug reports / feature requests](https://code.google.com/p/amsynth/issues/list)
+[Bug reports / feature requests](https://github.com/amsynth/amsynth/issues)
