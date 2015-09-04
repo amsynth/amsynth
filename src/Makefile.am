@@ -9,7 +9,10 @@ git_revision.h: Makefile
 
 bin_PROGRAMS = amsynth
 
-SUBDIRS = drivers VoiceBoard GUI Effects
+SUBDIRS = drivers VoiceBoard Effects
+if BUILD_GUI
+SUBDIRS += GUI
+endif
 
 amsynth_core_sources = \
     Parameter.cc Parameter.h \
@@ -42,10 +45,14 @@ amsynth_dsp_sources = \
 
 amsynth_CPPFLAGS = $(AM_CPPFLAGS) \
     @ALSA_CFLAGS@ \
-    @GTKMM_CFLAGS@ \
     @JACK_CFLAGS@ \
     @LASH_CFLAGS@ \
     @SNDFILE_CFLAGS@
+if BUILD_GUI
+amsynth_CPPFLAGS += \
+    @GTKMM_CFLAGS@
+endif
+
 
 amsynth_SOURCES = \
 	$(amsynth_core_sources) \
@@ -59,13 +66,16 @@ amsynth_SOURCES = \
 amsynth_LDADD = \
 	$(amsynth_core_libs) \
 	drivers/libdrivers.a \
-	GUI/libGUI.a \
     @ALSA_LIBS@ \
-    @GTKMM_LIBS@ \
     @JACK_LIBS@ \
     @LASH_LIBS@ \
     @SNDFILE_LIBS@ \
 	-lpthread @LIBS@
+if BUILD_GUI
+amsynth_LDADD = \
+	GUI/libGUI.a \
+    @GTKMM_LIBS@
+endif
 
 ####
 

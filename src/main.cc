@@ -28,7 +28,9 @@
 #include "drivers/OSSMidiDriver.h"
 #include "Effects/denormals.h"
 #include "git_revision.h"
+#ifdef BUILD_GUI
 #include "GUI/gui_main.h"
+#endif
 #include "JackOutput.h"
 #include "lash.h"
 #include "midi.h"
@@ -275,7 +277,9 @@ static void open_midi()
 void fatal_error(const std::string & msg)
 {
 	std::cerr << msg << "\n";
+#ifdef BUILD_GUI
 	ShowModalErrorMessage(msg);
+#endif
 	exit(1);
 }
 
@@ -301,10 +305,14 @@ int main( int argc, char *argv[] )
 	setreuid( getuid(), getuid() );
 	setregid( getgid(), getgid() );	
 
+#ifdef BUILD_GUI
 	bool no_gui = (getenv("AMSYNTH_NO_GUI") != NULL);
 
 	if (!no_gui)
 		gui_kit_init(argc, argv);
+#else
+  bool no_gui = true;
+#endif
 	
 	int initial_preset_no = 0;
 
@@ -436,17 +444,21 @@ int main( int argc, char *argv[] )
 		fcntl(gui_midi_pipe[0], F_SETFL, O_NONBLOCK);
 	}
 
+#ifdef BUILD_GUI
 	if (!no_gui) {
 		gui_init(config, s_synthesizer, out);
 		gui_kit_run(&amsynth_timer_callback);
 		gui_dealloc();
 	} else {
+#endif
 		printf("amsynth running in headless mode, press ctrl-c to exit\n");
 		signal(SIGINT, &signal_handler);
 		while (!signal_received)
 			sleep(2); // delivery of a signal will wake us early
 		printf("shutting down...\n");
+#ifdef BUILD_GUI
 	}
+#endif
 
 	out->Stop ();
 
