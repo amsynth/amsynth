@@ -1,7 +1,7 @@
 AC_INIT([amsynth], [git])
 AC_CONFIG_SRCDIR([src/main.cc])
 AC_CONFIG_HEADERS([config.h])
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([foreign])
 
 # make CXXFLAGS inherit from CFLAGS unless CXXFLAGS were specified
 AS_IF([test "x$CXXFLAGS" = "x"], [CXXFLAGS="$CFLAGS"])
