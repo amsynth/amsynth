@@ -22,8 +22,8 @@ testOptions "--with-jack=no  --with-alsa=no  --with-sndfile=yes --with-oss=no"
 testOptions "--with-jack=no  --with-alsa=no  --with-sndfile=no  --with-oss=yes"
 testOptions "--with-jack=yes --with-alsa=yes --with-sndfile=yes --with-oss=yes --with-lash=no"
 testOptions "--enable-realtime"
+testOptions "--without-gui"
 
 echo "****"
 echo "**** Looks good!"
 echo "****"
-
