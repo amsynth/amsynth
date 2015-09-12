@@ -26,18 +26,27 @@ dnl
 AC_CHECK_LIB(m, sin, , exit)
 AC_CHECK_LIB(pthread, pthread_create, [], exit)
 
-PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])
+AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])])
 
 dnl ## http://www.gtkmm.org/docs/gtkmm-2.4/docs/reference/html/newin2p6s.html
 dnl ## we use the following APIs only available in gtkmm 2.6 and up:
 dnl ## Gtk::MessageDialog::set_secondary_text()
 dnl ## Gtk::AboutDialog
-PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.6.0])
+AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.6.0])])
 
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
 dnl Optional packages
 dnl
+
+AC_ARG_WITH([gui], [AS_HELP_STRING([--with-gui], [build gui - enabled by default])])
+AS_IF([test "x$with_gui" != "xno"],
+      [
+       with_gui="yes"], [
+       with_gui="no"
+       with_lv2="no"
+       with_dssi_gui="no"])
+AM_CONDITIONAL([BUILD_GUI], [test "x$with_gui" != "xno"])
 
 AC_ARG_WITH([oss], [AS_HELP_STRING([--with-oss], [build support for Open Sound System])])
 AS_IF([test "x$with_oss" != "xno"], [
@@ -74,7 +83,8 @@ dnl
 
 AC_ARG_WITH([dssi], [AS_HELP_STRING([--with-dssi], [build DSSI plugin])])
 AS_IF([test "x$with_dssi" != "xno"], [
-    PKG_CHECK_MODULES([DSSI], [dssi], [with_dssi_gui="yes"
+    PKG_CHECK_MODULES([DSSI], [dssi], [
+        AS_IF([test "x$with_gui" != "xno"], [with_dssi_gui="yes"])
         PKG_CHECK_MODULES([LIBLO], [liblo], [], [with_dssi_gui="no"])
     with_dssi="yes"], [with_dssi="no"])])
 AM_CONDITIONAL([BUILD_DSSI], [test "x$with_dssi" != "xno"])
@@ -122,8 +132,11 @@ dnl
 echo
 echo -------------------------------------------------------- $PACKAGE $VERSION
 echo \|
+AS_IF([test "x$with_gui" != "xno"], [
 echo \| GTK version........................................... : `pkg-config --modversion gtk+-2.0`
 echo \| GTK-- version......................................... : `pkg-config --modversion gtkmm-2.4`
+])
+echo \| Build with GUI support................................ : $with_gui
 echo \|
 echo \| Build with OSS support................................ : $with_oss
 echo \| Build with ALSA support............................... : $with_alsa
