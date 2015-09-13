@@ -189,27 +189,27 @@ amsynth_lv2_gtk_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -ex
 amsynth_lv2_gtk_la_LIBADD = @LV2_LIBS@
 
 dist_amsynth_lv2_DATA = \
-	amsynth.lv2/manifest.ttl \
-	amsynth.lv2/amsynth.ttl \
-	amsynth.lv2/amsynth_factory.bank.ttl \
-	amsynth.lv2/BriansBank01.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank02.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank03.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank04.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank05.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank06.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank07.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank08.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank09.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank10.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank11.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank12.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank13.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank14.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank15.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank16.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank17.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank18.amSynth.bank.ttl
+	data/amsynth.lv2/manifest.ttl \
+	data/amsynth.lv2/amsynth.ttl \
+	data/amsynth.lv2/amsynth_factory.bank.ttl \
+	data/amsynth.lv2/BriansBank01.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank02.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank03.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank04.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank05.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank06.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank07.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank08.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank09.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank10.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank11.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank12.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank13.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank14.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank15.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank16.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank17.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank18.amSynth.bank.ttl
 
 endif
 
@@ -234,61 +234,61 @@ endif
 #
 #
 
-dist_pkgdata_DATA = rc
+dist_pkgdata_DATA = data/rc
 
-EXTRA_DIST = amsynth.png
+EXTRA_DIST = data/amsynth.png
 
 icondir = $(datadir)/pixmaps
-icon_DATA = amsynth.png
+icon_DATA = data/amsynth.png
 
 desktopdir = $(datadir)/applications
-desktop_in_files = amsynth.desktop.in
+desktop_in_files = data/amsynth.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 skinsdefaultdir="${pkgdatadir}/skins/default"
 dist_skinsdefault_DATA = \
-	default-skin/background.png \
-	default-skin/button_simple.png \
-	default-skin/filter_slope.png \
-	default-skin/filter_type.png \
-	default-skin/keybmode.png \
-	default-skin/knob.png \
-	default-skin/knob_boost.png \
-	default-skin/knob_boost_cut.png \
-	default-skin/knob_mix.png \
-	default-skin/knob_osc_octave.png \
-	default-skin/knob_osc_pitch.png \
-	default-skin/knob_spot.png \
-	default-skin/knob_width.png \
-	default-skin/layout.ini \
-	default-skin/osc_select.png \
-	default-skin/portamento_modes.png \
-	default-skin/slider_boost_1.png \
-	default-skin/slider_boost_2.png \
-	default-skin/waveform_lfo.png \
-	default-skin/waveform_pics.png
+	data/default-skin/background.png \
+	data/default-skin/button_simple.png \
+	data/default-skin/filter_slope.png \
+	data/default-skin/filter_type.png \
+	data/default-skin/keybmode.png \
+	data/default-skin/knob.png \
+	data/default-skin/knob_boost.png \
+	data/default-skin/knob_boost_cut.png \
+	data/default-skin/knob_mix.png \
+	data/default-skin/knob_osc_octave.png \
+	data/default-skin/knob_osc_pitch.png \
+	data/default-skin/knob_spot.png \
+	data/default-skin/knob_width.png \
+	data/default-skin/layout.ini \
+	data/default-skin/osc_select.png \
+	data/default-skin/portamento_modes.png \
+	data/default-skin/slider_boost_1.png \
+	data/default-skin/slider_boost_2.png \
+	data/default-skin/waveform_lfo.png \
+	data/default-skin/waveform_pics.png
 
 banksdir = $(pkgdatadir)/banks
 dist_banks_DATA = \
-	banks/amsynth_factory.bank \
-	banks/BriansBank01.amSynth.bank \
-	banks/BriansBank02.amSynth.bank \
-	banks/BriansBank03.amSynth.bank \
-	banks/BriansBank04.amSynth.bank \
-	banks/BriansBank05.amSynth.bank \
-	banks/BriansBank06.amSynth.bank \
-	banks/BriansBank07.amSynth.bank \
-	banks/BriansBank08.amSynth.bank \
-	banks/BriansBank09.amSynth.bank \
-	banks/BriansBank10.amSynth.bank \
-	banks/BriansBank11.amSynth.bank \
-	banks/BriansBank12.amSynth.bank \
-	banks/BriansBank13.amSynth.bank \
-	banks/BriansBank14.amSynth.bank \
-	banks/BriansBank15.amSynth.bank \
-	banks/BriansBank16.amSynth.bank \
-	banks/BriansBank17.amSynth.bank \
-	banks/BriansBank18.amSynth.bank
+	data/banks/amsynth_factory.bank \
+	data/banks/BriansBank01.amSynth.bank \
+	data/banks/BriansBank02.amSynth.bank \
+	data/banks/BriansBank03.amSynth.bank \
+	data/banks/BriansBank04.amSynth.bank \
+	data/banks/BriansBank05.amSynth.bank \
+	data/banks/BriansBank06.amSynth.bank \
+	data/banks/BriansBank07.amSynth.bank \
+	data/banks/BriansBank08.amSynth.bank \
+	data/banks/BriansBank09.amSynth.bank \
+	data/banks/BriansBank10.amSynth.bank \
+	data/banks/BriansBank11.amSynth.bank \
+	data/banks/BriansBank12.amSynth.bank \
+	data/banks/BriansBank13.amSynth.bank \
+	data/banks/BriansBank14.amSynth.bank \
+	data/banks/BriansBank15.amSynth.bank \
+	data/banks/BriansBank16.amSynth.bank \
+	data/banks/BriansBank17.amSynth.bank \
+	data/banks/BriansBank18.amSynth.bank
 
 
 #

@@ -5,7 +5,16 @@ compiler:
   - clang
 
 install:
- - sudo apt-get update -qq
- - sudo apt-get install -qq libgtk2.0-dev libgtkmm-2.4-dev libjack-jackd2-dev libasound-dev liblash-compat-dev dssi-dev liblo-dev libsndfile-dev
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq libgtk2.0-dev libgtkmm-2.4-dev libjack-jackd2-dev libasound-dev liblash-compat-dev dssi-dev liblo-dev libsndfile-dev
 
-script: ./autogen.sh && tests/build_configurations.sh && make clean distcheck
+script:
+  - autoreconf --install
+  - ./configure
+  - make distcheck clean
+  - ./configure --without-alsa
+  - make all clean
+  - ./configure --without-jack
+  - make all clean
+  - ./configure --without-gui
+  - make all clean

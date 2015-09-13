@@ -113,7 +113,7 @@ AM_CONDITIONAL([ENABLE_REALTIME], [test x$enable_realtime != x])
 
 AC_OUTPUT([
     Makefile
-    amsynth.desktop
+    data/amsynth.desktop
 ])
 
 dnl

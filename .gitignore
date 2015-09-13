@@ -12,6 +12,7 @@
 aclocal.m4
 amsynth
 amsynth.desktop
+amsynth_dssi_gtk
 autom4te.cache
 build
 compile
