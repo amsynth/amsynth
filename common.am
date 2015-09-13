@@ -1,2 +1,0 @@
-# http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
-AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' @CPPFLAGS@

@@ -23,7 +23,7 @@
 #define _JACK_OUTPUT_H
 
 #if HAVE_CONFIG_H
-#include "../config.h"
+#include "config.h"
 #endif
 
 #ifdef WITH_JACK

@@ -1,7 +1,8 @@
-AC_INIT([amsynth], [git])
+AC_INIT([amsynth], [git], [https://github.com/amsynth/amsynth/issues], [amsynth], [https://amsynth.github.io])
 AC_CONFIG_SRCDIR([src/main.cc])
 AC_CONFIG_HEADERS([config.h])
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
+AM_SILENT_RULES([yes])
 
 # make CXXFLAGS inherit from CFLAGS unless CXXFLAGS were specified
 AS_IF([test "x$CXXFLAGS" = "x"], [CXXFLAGS="$CFLAGS"])
@@ -40,8 +41,8 @@ dnl Optional packages
 dnl
 
 AC_ARG_WITH([gui], [AS_HELP_STRING([--with-gui], [build gui - enabled by default])])
-AS_IF([test "x$with_gui" != "xno"],
-      [
+AS_IF([test "x$with_gui" != "xno"], [
+       AC_DEFINE([WITH_GUI],, [Build GUI])
        with_gui="yes"], [
        with_gui="no"
        with_lv2="no"
@@ -112,14 +113,6 @@ AM_CONDITIONAL([ENABLE_REALTIME], [test x$enable_realtime != x])
 
 AC_OUTPUT([
     Makefile
-    src/Makefile
-    src/drivers/Makefile
-    src/VoiceBoard/Makefile
-    src/GUI/Makefile
-    src/Effects/Makefile
-    skel/Makefile
-    skins/Makefile
-    skins/default/Makefile
     amsynth.desktop
 ])
 

@@ -19,6 +19,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
  
 #include "GUI.h"
 
@@ -45,9 +49,7 @@ using std::cerr;
 using std::endl;
 using std::ostringstream;
 
-#include "../../config.h"
 #include "../AudioOutput.h"
-#include "../git_revision.h"
 #include "../MidiController.h"
 #include "../Preset.h"
 #include "../Synthesizer.h"
@@ -744,26 +746,23 @@ GUI::event_handler(const int e)
             NULL
         };
         std::string version = VERSION;
-        if (version == std::string("git")) {
-            version = version + " (" + git_revision ")";
-        }
         gtk_show_about_dialog(this->gobj(),
                               "program-name", PACKAGE,
                               "version", version.c_str(),
                               "authors", authors,
                               "comments", "Analogue Modelling SYNTHesizer",
-                              "website", "http://code.google.com/p/amsynth/",
+                              "website", PACKAGE_URL,
                               "copyright", "© 2002 - 2015 Nick Dowell and contributors",
                               NULL);
         break;
     }
 
 	case evHelpMenuBugReport:
-		open_uri("http://code.google.com/p/amsynth/issues/list");
+		open_uri(PACKAGE_BUGREPORT);
 		break;
 
 	case evHelpMenuOnlineDocumentation:
-		open_uri("http://code.google.com/p/amsynth/w/list");
+		open_uri("https://github.com/amsynth/amsynth/wiki");
 		break;
 
 	default:

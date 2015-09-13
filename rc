@@ -7,12 +7,12 @@
 #
 
 # select midi driver to use [ auto / alsa / oss ]
-# the ALSA driver uses the sequencer client interface. you will have to 
+# the ALSA driver uses the sequencer client interface. you will have to
 # 'aconnect' it to something to get input.
 
 midi_driver 		auto
 
-# set the OSS compatible midi device file to read input data from. 
+# set the OSS compatible midi device file to read input data from.
 # eg /dev/midi or /dev/midi00 for some systems.
 
 oss_midi_device		/dev/midi
@@ -29,7 +29,7 @@ midi_channel		0
 
 # select audio driver to use. (auto/alsa-mmap/alsa/oss/jack)
 #
-# auto selects the best available driver (in the order jack alsa-mmap alsa oss) 
+# auto selects the best available driver (in the order jack alsa-mmap alsa oss)
 # for most people 'auto' will always be the best choice
 #
 # 'jack' is the best choice for interoperating with other music programs,
@@ -71,5 +71,3 @@ sample_rate		44100
 # set this to 0 for unlimited polyphony
 
 polyphony		16
-
-

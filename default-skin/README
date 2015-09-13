@@ -14,7 +14,7 @@ The names of the controls are hard-coded into amsynth.
 To run amsynth with a different skin, use the AMSYNTH_SKIN environment
 variable to specify the path of the skin. The path can either be a skin zip
 file, or a directory containing the contents of a skin zip. By using a skin
-directory you can quickly test changes without having to re-zip all the 
+directory you can quickly test changes without having to re-zip all the
 resources :-)
 
 e.g.
@@ -26,4 +26,3 @@ Will instruct amsynth to use the skin in the directory ~/skin-2
 
 Have a look at the default skin to get a feel for the layout.ini format and
 see how frames are stitched together. Have fun ;-)
-

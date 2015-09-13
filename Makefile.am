@@ -1,4 +1,240 @@
-SUBDIRS = src skel skins
+
+# http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
+AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' @CPPFLAGS@ -fPIC
+
+libcore_sources = \
+	src/Config.cc \
+	src/Config.h \
+	src/controls.h \
+	src/midi.h \
+	src/MidiController.cc \
+	src/MidiController.h \
+	src/Parameter.cc \
+	src/Parameter.h \
+	src/Preset.cc \
+	src/Preset.h \
+	src/PresetController.cc \
+	src/PresetController.h \
+	src/Thread.h \
+	src/types.h \
+	src/UpdateListener.h
+
+libdsp_sources = \
+	src/Effects/allpass.cpp \
+	src/Effects/allpass.hpp \
+	src/Effects/comb.cpp \
+	src/Effects/comb.hpp \
+	src/Effects/denormals.h \
+	src/Effects/Distortion.cc \
+	src/Effects/Distortion.h \
+	src/Effects/revmodel.cpp \
+	src/Effects/revmodel.hpp \
+	src/Effects/SoftLimiter.cc \
+	src/Effects/SoftLimiter.h \
+	src/Effects/tuning.h \
+	src/Synthesizer.cpp \
+	src/Synthesizer.h \
+	src/TuningMap.cc \
+	src/TuningMap.h \
+	src/VoiceAllocationUnit.cc \
+	src/VoiceAllocationUnit.h \
+	src/VoiceBoard/ADSR.cc \
+	src/VoiceBoard/ADSR.h \
+	src/VoiceBoard/LowPassFilter.cc \
+	src/VoiceBoard/LowPassFilter.h \
+	src/VoiceBoard/Oscillator.cc \
+	src/VoiceBoard/Oscillator.h \
+	src/VoiceBoard/Synth--.h \
+	src/VoiceBoard/VoiceBoard.cc \
+	src/VoiceBoard/VoiceBoard.h
+
+libgui_sources = \
+	src/GUI/bitmap_button.c \
+	src/GUI/bitmap_button.h \
+	src/GUI/bitmap_knob.c \
+	src/GUI/bitmap_knob.h \
+	src/GUI/bitmap_popup.c \
+	src/GUI/bitmap_popup.h \
+	src/GUI/controllers.h \
+	src/GUI/editor_pane.c \
+	src/GUI/editor_pane.h \
+	src/GUI/presets_menu.cpp \
+	src/GUI/presets_menu.h
+
+
+#
+# amsynth standalone
+#
+
+bin_PROGRAMS = amsynth
+
+amsynth_SOURCES = \
+	$(libcore_sources) \
+	$(libdsp_sources) \
+	src/AudioOutput.cc \
+	src/AudioOutput.h \
+	src/drivers/ALSAAudioDriver.cc \
+	src/drivers/ALSAAudioDriver.h \
+	src/drivers/ALSAMidiDriver.cc \
+	src/drivers/ALSAMidiDriver.h \
+	src/drivers/ALSAmmapAudioDriver.cc \
+	src/drivers/ALSAmmapAudioDriver.h \
+	src/drivers/AudioDriver.h \
+	src/drivers/MidiDriver.h \
+	src/drivers/OSSAudioDriver.cc \
+	src/drivers/OSSAudioDriver.h \
+	src/drivers/OSSMidiDriver.cc \
+	src/drivers/OSSMidiDriver.h \
+	src/JackOutput.cc \
+	src/JackOutput.h \
+	src/lash.c \
+	src/lash.h \
+	src/main.h \
+	src/main.cc
+
+amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @SNDFILE_CFLAGS@ @GTKMM_CFLAGS@
+
+amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @SNDFILE_LIBS@ @LIBS@
+
+if BUILD_GUI
+amsynth_SOURCES += $(libgui_sources) \
+	src/GUI/ConfigDialog.cpp \
+	src/GUI/ConfigDialog.h \
+	src/GUI/GUI.cc \
+	src/GUI/GUI.h \
+	src/GUI/gui_main.cc \
+	src/GUI/gui_main.h \
+	src/GUI/MIDILearnDialog.cpp \
+	src/GUI/MIDILearnDialog.h \
+	src/GUI/PresetControllerView.cc \
+	src/GUI/PresetControllerView.h \
+	src/GUI/Request.h
+amsynth_LDADD += @GTKMM_LIBS@
+endif
+
+
+#
+# plugins
+#
+# using noinst prevents the .a and .la files being installed
+# plugin gets installed via custom install-exec-hook
+#
+
+noinst_LTLIBRARIES =
+
+
+#
+# DSSI
+#
+
+if BUILD_DSSI
+
+dssidir = $(libdir)/dssi
+noinst_LTLIBRARIES += amsynth_dssi.la
+amsynth_dssi_la_SOURCES = src/dssi.cpp $(libcore_sources) $(libdsp_sources)
+amsynth_dssi_la_CPPFLAGS = $(AM_CPPFLAGS) @DSSI_CFLAGS@
+amsynth_dssi_la_LDFLAGS = -rpath $(dssidir) -avoid-version -module -export-symbols-regex "dssi_descriptor" -disable-static
+
+endif
+
+if BUILD_DSSI_GUI
+
+noinst_PROGRAMS = amsynth_dssi_gtk
+amsynth_dssi_gtk_SOURCES = src/amsynth_dssi_gui.c $(libcore_sources) $(libgui_sources)
+amsynth_dssi_gtk_CPPFLAGS = $(AM_CPPFLAGS) @DSSI_CFLAGS@ @GTK_CFLAGS@ @LIBLO_CFLAGS@
+amsynth_dssi_gtk_LDADD = @DSSI_LIBS@ @GTK_LIBS@ @LIBLO_LIBS@ -lstdc++
+
+endif
+
+
+#
+# LV2
+#
+
+if BUILD_LV2
+
+amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
+noinst_LTLIBRARIES += amsynth_lv2.la
+amsynth_lv2_la_SOURCES = src/amsynth_lv2.cpp $(libcore_sources) $(libdsp_sources) \
+	include/lv2/lv2plug.in/ns/lv2core/lv2.h \
+	include/lv2/lv2plug.in/ns/extensions/units/units.h \
+	include/lv2/lv2plug.in/ns/extensions/ui/ui.h \
+	include/lv2/lv2plug.in/ns/ext/worker/worker.h \
+	include/lv2/lv2plug.in/ns/ext/data-access/data-access.h \
+	include/lv2/lv2plug.in/ns/ext/event/event-helpers.h \
+	include/lv2/lv2plug.in/ns/ext/event/event.h \
+	include/lv2/lv2plug.in/ns/ext/instance-access/instance-access.h \
+	include/lv2/lv2plug.in/ns/ext/time/time.h \
+	include/lv2/lv2plug.in/ns/ext/patch/patch.h \
+	include/lv2/lv2plug.in/ns/ext/uri-map/uri-map.h \
+	include/lv2/lv2plug.in/ns/ext/port-groups/port-groups.h \
+	include/lv2/lv2plug.in/ns/ext/port-props/port-props.h \
+	include/lv2/lv2plug.in/ns/ext/log/log.h \
+	include/lv2/lv2plug.in/ns/ext/resize-port/resize-port.h \
+	include/lv2/lv2plug.in/ns/ext/midi/midi.h \
+	include/lv2/lv2plug.in/ns/ext/presets/presets.h \
+	include/lv2/lv2plug.in/ns/ext/atom/atom.h \
+	include/lv2/lv2plug.in/ns/ext/atom/util.h \
+	include/lv2/lv2plug.in/ns/ext/atom/forge.h \
+	include/lv2/lv2plug.in/ns/ext/state/state.h \
+	include/lv2/lv2plug.in/ns/ext/urid/urid.h \
+	include/lv2/lv2plug.in/ns/ext/dynmanifest/dynmanifest.h
+amsynth_lv2_la_CPPFLAGS = $(AM_CPPFLAGS) -I"$(top_srcdir)/include" @LV2_CFLAGS@
+amsynth_lv2_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2_descriptor" -disable-static
+
+noinst_LTLIBRARIES += amsynth_lv2_gtk.la
+amsynth_lv2_gtk_la_SOURCES = src/amsynth_lv2_ui_gtk.c $(libcore_sources) $(libgui_sources)
+amsynth_lv2_gtk_la_CPPFLAGS = $(AM_CPPFLAGS) -I"$(top_srcdir)/include" @LV2_CFLAGS@
+amsynth_lv2_gtk_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2ui_descriptor" -disable-static
+amsynth_lv2_gtk_la_LIBADD = @LV2_LIBS@
+
+dist_amsynth_lv2_DATA = \
+	amsynth.lv2/manifest.ttl \
+	amsynth.lv2/amsynth.ttl \
+	amsynth.lv2/amsynth_factory.bank.ttl \
+	amsynth.lv2/BriansBank01.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank02.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank03.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank04.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank05.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank06.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank07.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank08.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank09.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank10.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank11.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank12.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank13.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank14.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank15.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank16.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank17.amSynth.bank.ttl \
+	amsynth.lv2/BriansBank18.amSynth.bank.ttl
+
+endif
+
+
+#
+# VST
+#
+
+if BUILD_VST
+
+vstdir=$(libdir)/vst
+noinst_LTLIBRARIES += amsynth_vst.la
+amsynth_vst_la_SOURCES = src/amsynth_vst.cpp $(libcore_sources) $(libdsp_sources) $(libgui_sources)
+amsynth_vst_la_CPPFLAGS = $(AM_CPPFLAGS) @GTK_CFLAGS@ -I"$(VST_SDK)" -D__cdecl=""
+amsynth_vst_la_LDFLAGS = -rpath $(vstdir) -avoid-version -module -disable-static -retain-symbols-file amsynth_vst.exp
+amsynth_vst_la_LIBADD = @GTK_LIBS@
+
+endif
+
+
+#
+#
+#
+
+dist_pkgdata_DATA = rc
 
 EXTRA_DIST = amsynth.png
 
@@ -8,6 +244,29 @@ icon_DATA = amsynth.png
 desktopdir = $(datadir)/applications
 desktop_in_files = amsynth.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
+
+skinsdefaultdir="${pkgdatadir}/skins/default"
+dist_skinsdefault_DATA = \
+	default-skin/background.png \
+	default-skin/button_simple.png \
+	default-skin/filter_slope.png \
+	default-skin/filter_type.png \
+	default-skin/keybmode.png \
+	default-skin/knob.png \
+	default-skin/knob_boost.png \
+	default-skin/knob_boost_cut.png \
+	default-skin/knob_mix.png \
+	default-skin/knob_osc_octave.png \
+	default-skin/knob_osc_pitch.png \
+	default-skin/knob_spot.png \
+	default-skin/knob_width.png \
+	default-skin/layout.ini \
+	default-skin/osc_select.png \
+	default-skin/portamento_modes.png \
+	default-skin/slider_boost_1.png \
+	default-skin/slider_boost_2.png \
+	default-skin/waveform_lfo.png \
+	default-skin/waveform_pics.png
 
 banksdir = $(pkgdatadir)/banks
 dist_banks_DATA = \
@@ -31,28 +290,46 @@ dist_banks_DATA = \
 	banks/BriansBank17.amSynth.bank \
 	banks/BriansBank18.amSynth.bank
 
+
+#
+#
+#
+
+install-exec-hook:
+if ENABLE_REALTIME
+	chown root $(DESTDIR)$(bindir)/amsynth
+	chmod   +s $(DESTDIR)$(bindir)/amsynth
+endif
+if BUILD_DSSI
+	install -c -D -m 755 $(top_builddir)/.libs/amsynth_dssi.so $(DESTDIR)$(dssidir)/amsynth_dssi.so
+endif
+if BUILD_DSSI_GUI
+	install -c -D -m 755 $(top_builddir)/amsynth_dssi_gtk $(DESTDIR)$(dssidir)/amsynth_dssi/amsynth_dssi_gtk
+endif
 if BUILD_LV2
-amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
-dist_amsynth_lv2_DATA = \
-	amsynth.lv2/manifest.ttl \
-	amsynth.lv2/amsynth.ttl \
-	amsynth.lv2/amsynth_factory.bank.ttl \
-	amsynth.lv2/BriansBank01.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank02.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank03.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank04.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank05.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank06.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank07.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank08.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank09.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank10.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank11.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank12.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank13.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank14.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank15.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank16.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank17.amSynth.bank.ttl \
-	amsynth.lv2/BriansBank18.amSynth.bank.ttl
+	install -c -D -m 755 $(top_builddir)/.libs/amsynth_lv2.so $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2.so
+	install -c -D -m 755 $(top_builddir)/.libs/amsynth_lv2_gtk.so $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2_gtk.so
+endif
+if BUILD_VST
+	install -c -D -m 755 $(top_builddir)/.libs/amsynth_vst.so $(DESTDIR)$(vstdir)/amsynth_vst.so
+endif
+
+
+#
+#
+#
+
+uninstall-hook:
+	rm -rf $(DESTDIR)$(pkgdatadir)
+if BUILD_DSSI
+	rm  -f $(DESTDIR)$(dssidir)/amsynth_dssi.so
+endif
+if BUILD_DSSI_GUI
+	rm -rf $(DESTDIR)$(dssidir)/amsynth_dssi
+endif
+if BUILD_LV2
+	rm -rf $(DESTDIR)$(amsynth_lv2dir)
+endif
+if BUILD_VST
+	rm  -f $(DESTDIR)$(vstdir)/amsynth_vst.so
 endif

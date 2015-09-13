@@ -21,14 +21,16 @@
 
 #include "main.h"
 
-#include "../config.h"
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "AudioOutput.h"
 #include "Config.h"
 #include "drivers/ALSAMidiDriver.h"
 #include "drivers/OSSMidiDriver.h"
 #include "Effects/denormals.h"
-#include "git_revision.h"
-#ifdef BUILD_GUI
+#ifdef WITH_GUI
 #include "GUI/gui_main.h"
 #endif
 #include "JackOutput.h"
@@ -277,7 +279,7 @@ static void open_midi()
 void fatal_error(const std::string & msg)
 {
 	std::cerr << msg << "\n";
-#ifdef BUILD_GUI
+#ifdef WITH_GUI
 	ShowModalErrorMessage(msg);
 #endif
 	exit(1);
@@ -305,7 +307,7 @@ int main( int argc, char *argv[] )
 	setreuid( getuid(), getuid() );
 	setregid( getgid(), getgid() );	
 
-#ifdef BUILD_GUI
+#ifdef WITH_GUI
 	bool no_gui = (getenv("AMSYNTH_NO_GUI") != NULL);
 
 	if (!no_gui)
@@ -331,13 +333,7 @@ int main( int argc, char *argv[] )
 	while ((opt = getopt_long(argc, argv, "vhstdzxm:c:a:r:p:b:U:P:n:", longopts, &longindex)) != -1) {
 		switch (opt) {
             case 'v':
-                do {
-                    std::string info = PACKAGE_STRING;
-                    if (VERSION == std::string("git")) {
-                        info = info + " (" + git_revision ")";
-                    }
-                    cout << info << endl;
-                } while (0);
+                cout << PACKAGE_STRING << endl;
 				return 0;
 			case 'h':
 				cout << help_text;
@@ -444,7 +440,7 @@ int main( int argc, char *argv[] )
 		fcntl(gui_midi_pipe[0], F_SETFL, O_NONBLOCK);
 	}
 
-#ifdef BUILD_GUI
+#ifdef WITH_GUI
 	if (!no_gui) {
 		gui_init(config, s_synthesizer, out);
 		gui_kit_run(&amsynth_timer_callback);
@@ -456,7 +452,7 @@ int main( int argc, char *argv[] )
 		while (!signal_received)
 			sleep(2); // delivery of a signal will wake us early
 		printf("shutting down...\n");
-#ifdef BUILD_GUI
+#ifdef WITH_GUI
 	}
 #endif
 
