@@ -1,5 +1,5 @@
 /*
- *  Config.h
+ *  Configuration.h
  *
  *  Copyright (c) 2001-2012 Nick Dowell
  *
@@ -32,10 +32,10 @@
  * @brief Encapsulates any configuration parameters which must be shared between
  * components in the system.
  */
-class Config
+class Configuration
 {
 public:
-		Config	( );
+		Configuration	( );
 		
 	void	Defaults();
 

@@ -29,7 +29,7 @@
 #include <stdlib.h>
 
 
-static AudioDriver * open_driver(Config &config);
+static AudioDriver * open_driver(Configuration &config);
 
 
 AudioOutput::AudioOutput()
@@ -48,7 +48,7 @@ AudioOutput::~AudioOutput()
 }
 
 int
-AudioOutput::init	(Config & config)
+AudioOutput::init(Configuration &config)
 {
 	this->config = &config;
 	channels = config.channels;
@@ -151,7 +151,7 @@ AudioOutput::ThreadAction	()
 	}
 }
 
-static AudioDriver * open_driver(AudioDriver *driver, Config &config)
+static AudioDriver * open_driver(AudioDriver *driver, Configuration &config)
 {
 	if (!driver) {
 		return NULL;
@@ -170,7 +170,7 @@ static AudioDriver * open_driver(AudioDriver *driver, Config &config)
 	return driver;
 }
 
-static AudioDriver * open_driver(Config &config)
+static AudioDriver * open_driver(Configuration &config)
 {
 	AudioDriver *driver = NULL;
 

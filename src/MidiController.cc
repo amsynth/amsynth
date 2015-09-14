@@ -31,7 +31,7 @@
 #include <iostream>
 
 
-MidiController::MidiController( Config & config )
+MidiController::MidiController(Configuration &config)
 :	last_active_controller ("last_active_cc", (Param) -1, 0, 0, MAX_CC, 1)
 ,	_handler(NULL)
 ,	_rpn_msb(0xff)

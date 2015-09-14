@@ -29,7 +29,7 @@
 
 #ifdef WITH_ALSA
 
-#include "../Config.h"
+#include "../Configuration.h"
 #include "AudioDriver.h"
 
 #define ALSA_PCM_OLD_HW_PARAMS_API

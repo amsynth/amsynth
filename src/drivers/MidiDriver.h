@@ -22,7 +22,7 @@
 #ifndef _MIDI_DRIVER_H
 #define _MIDI_DRIVER_H
 
-#include "../Config.h"
+#include "../Configuration.h"
 
 class MidiDriver
 {
@@ -33,7 +33,7 @@ public:
     // generally indicate failure...
     virtual int read(unsigned char *bytes, unsigned maxBytes) = 0;
     virtual int write_cc(unsigned int channel, unsigned int param, unsigned int value) = 0;
-    virtual int open( Config & config ) = 0;
+    virtual int open(Configuration &config) = 0;
     virtual int close() = 0;
 };
 

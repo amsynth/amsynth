@@ -22,7 +22,7 @@
 #ifndef _AUDIO_OUTPUT_H
 #define _AUDIO_OUTPUT_H
 
-#include "Config.h"
+#include "Configuration.h"
 #include "Thread.h"
 #include "main.h"
 #include "types.h"
@@ -48,7 +48,7 @@ public:
 
 	virtual void		setAudioCallback(AudioCallback callback) { mAudioCallback = callback; }
 
-	virtual	int		init		( Config & config )	= 0;
+	virtual	int			init			(Configuration &config)	= 0;
 	
 	virtual	bool		Start 			() = 0;
 	virtual	void		Stop			() = 0;
@@ -81,14 +81,14 @@ public:
 	void 	stopRecording	( );
 	void 	setOutputFile	( string file )	{ wavoutfile = file; };
   	string 	getOutputFile	( )	{ return wavoutfile; };
-	int 	init		( Config & config );
+	int 	init			( Configuration &config );
 
 	void	ThreadAction	();
 
 private:
   int running;
   int channels;
-  Config *config;
+  Configuration *config;
   class AudioDriver *driver;
   string wavoutfile;
   int recording;
@@ -100,7 +100,7 @@ private:
 };
 
 class NullAudioOutput : public GenericOutput { public:
-	virtual	int  init  ( Config & ) { return -1; }
+	virtual	int  init  ( Configuration& ) { return -1; }
 	virtual	bool Start () { return -1; }
 	virtual	void Stop  () {}
 };

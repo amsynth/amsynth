@@ -20,8 +20,8 @@
 AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' @CPPFLAGS@ -fPIC
 
 libcore_sources = \
-	src/Config.cc \
-	src/Config.h \
+	src/Configuration.cpp \
+	src/Configuration.h \
 	src/controls.h \
 	src/midi.h \
 	src/MidiController.cc \

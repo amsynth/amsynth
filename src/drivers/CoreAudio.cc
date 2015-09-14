@@ -58,7 +58,7 @@ public:
 		delete[] m_DeviceList;
 	}
 	
-	virtual int init(Config & config)
+	virtual int init(Configuration &config)
 	{
 		if (!m_DeviceList) {
             return -1;

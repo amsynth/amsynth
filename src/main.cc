@@ -26,7 +26,7 @@
 #endif
 
 #include "AudioOutput.h"
-#include "Config.h"
+#include "Configuration.h"
 #include "drivers/ALSAMidiDriver.h"
 #include "drivers/OSSMidiDriver.h"
 #ifdef WITH_GUI
@@ -90,7 +90,7 @@ OPTIONS:\n\
 	--jack_autoconnect=<true|false>\n\
 \n";
 
-Config config;
+Configuration config;
 
 #ifdef ENABLE_REALTIME
 void sched_realtime()

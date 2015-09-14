@@ -32,14 +32,14 @@
 #include <cstring>
 
 
-Synthesizer::Synthesizer(Config *config)
+Synthesizer::Synthesizer(Configuration *config)
 : _sampleRate(config ? config->sample_rate : 44100)
 , _midiController(0)
 , _presetController(0)
 , _voiceAllocationUnit(0)
 {
 	if (!config) {
-		config = new Config;
+		config = new Configuration;
 		config->Defaults();
 		config->load();
 	}

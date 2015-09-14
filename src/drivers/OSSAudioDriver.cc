@@ -28,7 +28,7 @@
 #include "OSSAudioDriver.h"
 
 #ifdef WITH_OSS
-#include "../Config.h"
+#include "../Configuration.h"
 #include "AudioDriver.h"
 
 #include <fcntl.h>

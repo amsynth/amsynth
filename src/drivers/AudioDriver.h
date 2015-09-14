@@ -33,7 +33,7 @@ public:
 
     virtual ~AudioDriver () { close(); }
 
-    virtual int  open(class Config &) { return -1; }
+    virtual int  open(class Configuration&) { return -1; }
     virtual void close() {}
     virtual int  write(float *buffer, int frames) { return -1; }
     virtual int  setRealtime() { return -1; }

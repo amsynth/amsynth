@@ -1,5 +1,5 @@
 /*
- *  Config.cc
+ *  Configuration.cpp
  *
  *  Copyright (c) 2001-2012 Nick Dowell
  *
@@ -19,7 +19,7 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-#include "Config.h"
+#include "Configuration.h"
 
 #include <fstream>
 #include <iostream>
@@ -29,7 +29,7 @@
 
 using namespace std;
 
-Config::Config()
+Configuration::Configuration()
 {
 #ifndef _WIN32
 	amsynthrc_fname = string(getenv("HOME")) + string("/.amSynthrc");
@@ -41,7 +41,7 @@ Config::Config()
 }
 
 void
-Config::Defaults	()
+Configuration::Defaults	()
 {
 	audio_driver = "auto";
 	midi_driver = "auto";
@@ -60,7 +60,7 @@ Config::Defaults	()
 }
 
 int
-Config::load	()
+Configuration::load	()
 {
 	string buffer;
 
@@ -111,7 +111,7 @@ Config::load	()
 }
 
 int
-Config::save	()
+Configuration::save	()
 {
 	FILE *fout = fopen (amsynthrc_fname.c_str(), "w"); if (NULL == fout) return -1;
 	fprintf (fout, "midi_driver\t%s\n", midi_driver.c_str());

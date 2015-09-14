@@ -23,7 +23,7 @@
 #define _ConfigDialog_h
 
 #include <gtkmm.h>
-#include "../Config.h"
+#include "../Configuration.h"
 
 class ConfigDialog : public Gtk::Dialog
 {

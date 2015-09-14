@@ -37,7 +37,7 @@ public:
 	OSSMidiDriver();
   	virtual ~OSSMidiDriver();
 	
-	int open( Config & config );
+	int open(Configuration &config);
 	int close();
 	
 	int read(unsigned char *bytes, unsigned maxBytes);
@@ -58,7 +58,7 @@ OSSMidiDriver::~OSSMidiDriver()
     close();
 }
 
-int OSSMidiDriver::open( Config & config )
+int OSSMidiDriver::open(Configuration &config)
 {
 	if (_fd == -1) 
 	{

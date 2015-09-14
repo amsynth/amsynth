@@ -61,7 +61,7 @@ JackOutput::JackOutput()
 }
 
 int
-JackOutput::init	( Config & config )
+JackOutput::init(Configuration &config)
 {
 #ifdef WITH_JACK
 	if (client) // already initialised

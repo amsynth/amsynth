@@ -31,7 +31,7 @@
 #endif
 
 #include "AudioOutput.h"
-#include "Config.h"
+#include "Configuration.h"
 
 class JackOutput : public GenericOutput {
 
@@ -39,7 +39,7 @@ public:
 
 	JackOutput();
 	
-	int			init		( Config & config );// returns 0 on success
+	int			init		(Configuration &config); // returns 0 on success
 	bool		Start		();
 	void		Stop		();
 	
