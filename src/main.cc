@@ -29,7 +29,6 @@
 #include "Config.h"
 #include "drivers/ALSAMidiDriver.h"
 #include "drivers/OSSMidiDriver.h"
-#include "Effects/denormals.h"
 #ifdef WITH_GUI
 #include "GUI/gui_main.h"
 #endif
