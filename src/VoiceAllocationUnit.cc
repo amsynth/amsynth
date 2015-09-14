@@ -22,8 +22,8 @@
 #include "VoiceAllocationUnit.h"
 
 #include "Effects/SoftLimiter.h"
-#include "Effects/revmodel.hpp"
 #include "Effects/Distortion.h"
+#include "freeverb/revmodel.hpp"
 #include "VoiceBoard/VoiceBoard.h"
 
 #include <iostream>

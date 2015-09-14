@@ -1,3 +1,20 @@
+#  amsynth Makefile.am
+#
+#  Copyright (C) 2001-2015 Nick Dowell
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
 AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' @CPPFLAGS@ -fPIC
@@ -20,18 +37,18 @@ libcore_sources = \
 	src/UpdateListener.h
 
 libdsp_sources = \
-	src/Effects/allpass.cpp \
-	src/Effects/allpass.hpp \
-	src/Effects/comb.cpp \
-	src/Effects/comb.hpp \
-	src/Effects/denormals.h \
 	src/Effects/Distortion.cc \
 	src/Effects/Distortion.h \
-	src/Effects/revmodel.cpp \
-	src/Effects/revmodel.hpp \
 	src/Effects/SoftLimiter.cc \
 	src/Effects/SoftLimiter.h \
-	src/Effects/tuning.h \
+	src/freeverb/allpass.cpp \
+	src/freeverb/allpass.hpp \
+	src/freeverb/comb.cpp \
+	src/freeverb/comb.hpp \
+	src/freeverb/denormals.h \
+	src/freeverb/revmodel.cpp \
+	src/freeverb/revmodel.hpp \
+	src/freeverb/tuning.h \
 	src/Synthesizer.cpp \
 	src/Synthesizer.h \
 	src/TuningMap.cc \
