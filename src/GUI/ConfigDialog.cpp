@@ -23,7 +23,7 @@
 
 using namespace Gtk;
 
-ConfigDialog::ConfigDialog (Window& parent, Config & config)
+ConfigDialog::ConfigDialog (Window& parent, Configuration &config)
 :	Dialog ("amSynth configuration", parent)
 ,	mConfig (config)
 {

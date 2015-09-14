@@ -28,7 +28,7 @@
 class ConfigDialog : public Gtk::Dialog
 {
 public:
-	ConfigDialog (Gtk::Window& parent, Config &);
+	ConfigDialog (Gtk::Window& parent, Configuration &);
 	
 protected:
 	void ReadValues ();
@@ -36,7 +36,7 @@ protected:
 	virtual void on_response (int);
 
 private:
-	Config &		mConfig;
+	Configuration &		mConfig;
 	Gtk::ComboBoxText	mMidiDriver;
 	Gtk::ComboBoxText	mAudioDriver;
 	Gtk::ComboBoxText	mSampleRate;

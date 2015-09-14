@@ -45,7 +45,7 @@ void gui_kit_run(unsigned (*timer_callback)())
 	kit->run();
 }
 
-void gui_init(Config &config, Synthesizer *synth, GenericOutput *out)
+void gui_init(Configuration &config, Synthesizer *synth, GenericOutput *out)
 {
 	if (pipe(gdk_input_pipe) == -1)
 		perror("pipe()");

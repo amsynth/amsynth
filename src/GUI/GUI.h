@@ -58,7 +58,7 @@ struct UndoArgs {
  */
 class GUI:public Gtk::Window, public UpdateListener {
 public:
-	GUI				( Config & config,
+	GUI				( Configuration & config,
 					  MidiController & mc, 
 					  Synthesizer *synth,
 					  GenericOutput *audio );
@@ -150,7 +150,7 @@ private:
 	PresetController *preset_controller;
 	PresetControllerView *presetCV;
     
-	Config *config;
+	Configuration *config;
 	MidiController *midi_controller;
 	Synthesizer *m_synth;
 	GenericOutput *audio_out;

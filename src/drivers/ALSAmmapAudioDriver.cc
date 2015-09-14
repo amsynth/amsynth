@@ -45,8 +45,8 @@ class ALSAmmapAudioDriver : public AudioDriver {
 public:
     ALSAmmapAudioDriver();
     virtual	~ALSAmmapAudioDriver();
-    int	open( Config & config );
-    void	close();
+    int	open(Configuration &config);
+    void close();
     int	write(float *buffer, int frames);
 
 private:
@@ -57,7 +57,7 @@ private:
     int		_channels;
     int		_format;
     unsigned char	*audiobuf;
-    Config		*config;
+    Configuration	*config;
     snd_pcm_t		*playback_handle;
     snd_pcm_hw_params_t	*hw_params;
     snd_pcm_sw_params_t	*sw_params;
@@ -161,7 +161,7 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 }
 
 int
-ALSAmmapAudioDriver::open( Config & config )
+ALSAmmapAudioDriver::open(Configuration &config)
 {
 	if (playback_handle != NULL) return 0;
 	

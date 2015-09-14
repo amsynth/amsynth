@@ -32,7 +32,7 @@
 #include <string>
 #include <vector>
 
-extern Config config;
+extern Configuration config;
 
 static void snprintf_truncate(char *str, size_t size, const char *format, ...)
 {
