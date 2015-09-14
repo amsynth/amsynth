@@ -132,6 +132,8 @@ AC_ARG_ENABLE([realtime], [AS_HELP_STRING([--enable-realtime],
               )
 AM_CONDITIONAL([ENABLE_REALTIME], [test x$enable_realtime != x])
 
+AM_CONDITIONAL([DARWIN], [test "$(uname -s)" = "Darwin"])
+
 AC_OUTPUT([
     Makefile
     data/amsynth.desktop

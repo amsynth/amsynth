@@ -129,6 +129,13 @@ amsynth_SOURCES += $(libgui_sources) \
 amsynth_LDADD += @GTKMM_LIBS@
 endif
 
+if DARWIN
+amsynth_SOURCES += \
+	src/drivers/CoreAudio.cc \
+	src/drivers/CoreAudio.h
+amsynth_LDFLAGS = $(AM_LDFLAGS) -framework CoreFoundation -framework CoreAudio -framework CoreMIDI
+endif
+
 
 #
 # plugins
