@@ -19,228 +19,190 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* To build the amsynth VST plugin;
- * 1) download the VST 2.4 SDK and unzip into the src/ directory
- *    you should have a "vstsdk2.4" directory in src now
- * 2) run: make -f Makefile.linux.vst
- *    this will produce amsynth.vst.so
- */
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 
- /* Note:
-  * Ardour's default search path is
-  *   $HOME/.vst
-  *   $PREFX/lib/vst
-  */
-
-#include "midi.h"
 #include "Preset.h"
 #include "Synthesizer.h"
-#include "GUI/editor_pane.h"
-
-#include <public.sdk/source/vst2.x/aeffeditor.h>
-#include <public.sdk/source/vst2.x/audioeffectx.h>
 
 #include <cassert>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+
+#include <vestige/aeffectx.h>
+
+#ifdef WITH_GUI
+#include "GUI/editor_pane.h"
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
-#include <stdio.h>
-#include <X11/Xlib.h>
+#endif
 
-class Editor : public AEffEditor
+struct ERect
 {
-public:
-	Editor(AudioEffect *effect) : AEffEditor(effect)
-	, mGdkParentWindow(0)
-	, mGtkWindow(0)
-	, mEditorWidget(0)
-	{
-	}
-
-	~Editor()
-	{
-	}
-
-	virtual bool getRect(ERect **rect)
-	{
-		mRect.top = 0;
-		mRect.left = 0;
-		mRect.right = 600;
-		mRect.bottom = 400;
-		*rect = &mRect;
-		return true;
-	}
-
-	virtual bool open(void *ptr)
-	{
-		AEffEditor::open(ptr);
-
-		static bool initialized = false;
-		if (!initialized) {
-			gtk_init(NULL, NULL);
-			initialized = true;
-		}
-
-		if (!mEditorWidget) {
-			for (int i = 0; i < kAmsynthParameterCount; i++) {
-				gdouble value = 0, lower = 0, upper = 0, step_increment = 0;
-				get_parameter_properties(i, &lower, &upper, &value, &step_increment);
-				mAdjustments[i] = (GtkAdjustment *)gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);
-				g_object_ref_sink(mAdjustments[i]); // assumes ownership of the floating reference
-				g_signal_connect(mAdjustments[i], "value-changed", (GCallback)&Editor::on_adjustment_value_changed, this);
-			}
-			mEditorWidget = editor_pane_new(mAdjustments, TRUE);
-			g_object_ref_sink(mEditorWidget);
-		}
-
-		mGtkWindow = gtk_window_new(GTK_WINDOW_POPUP);
-
-		// don't show the widget yet, to avoid visible moving of the window
-		gtk_widget_realize(mGtkWindow); g_assert(gtk_widget_get_realized(mGtkWindow));
-
-		// on some hosts (e.g. energyXT) creating the gdk window can fail unless we call gdk_display_sync
-		gdk_display_sync(gdk_display_get_default());
-
-		mGdkParentWindow = gdk_window_foreign_new((Window) systemWindow);
-		g_assert(mGdkParentWindow);
-
-		// use gdk_window_reparent instead of XReparentWindow to avoid "GdkWindow unexpectedly destroyed" warnings
-		gdk_window_reparent(gtk_widget_get_window(mGtkWindow), mGdkParentWindow, 0, 0);
-
-		gtk_container_add(GTK_CONTAINER(mGtkWindow), mEditorWidget);
-		gtk_widget_show_all(mGtkWindow);
-
-		gdk_display_sync(gdk_display_get_default());
-
-		return 0;
-	}
-
-	virtual void close()
-	{
-		if (mGtkWindow) {
-			if (gtk_widget_get_window(mGtkWindow)) {
-				gdk_window_hide(gtk_widget_get_window(mGtkWindow));
-			}
-			gtk_widget_destroy(mGtkWindow);
-		}
-
-		mGdkParentWindow = NULL;
-		mGtkWindow = NULL;
-		mEditorWidget = NULL;
-
-		for (int i = 0; i < kAmsynthParameterCount; i++) {
-			mAdjustments[i] = NULL;
-		}
-
-		gdk_display_sync(gdk_display_get_default());
-
-		AEffEditor::close();
-	}
-
-	virtual void idle()
-	{
-		while (gtk_events_pending())
-			gtk_main_iteration();
-	}
-
-	static void on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
-	{
-		Editor *editor = (Editor *)user_data;
-
-		static Preset dummyPreset;
-
-		for (int i = 0; i < kAmsynthParameterCount; i++) {
-			if (adjustment == editor->mAdjustments[i]) {
-				float value = gtk_adjustment_get_value(adjustment);
-				Parameter &param = dummyPreset.getParameter(i);
-				param.setValue(value);
-				editor->getEffect()->setParameterAutomated(i, param.GetNormalisedValue());
-			}
-		}
-	}
-
-private:
-	ERect mRect;
-	GdkWindow *mGdkParentWindow;
-	GtkWidget *mGtkWindow;
-	GtkWidget *mEditorWidget;
-	GtkAdjustment *mAdjustments[kAmsynthParameterCount];
+	short top;
+	short left;
+	short bottom;
+	short right;
 };
 
-
-class AmsynthVST : public AudioEffectX
+struct Plugin
 {
-public:
-	
-	AmsynthVST(audioMasterCallback callback) : AudioEffectX(callback, 0, kAmsynthParameterCount)
+	Plugin(audioMasterCallback master)
 	{
-		setUniqueID(CCONST('a', 'm', 's', 'y'));
-		setNumInputs(0);
-		setNumOutputs(2);
-		canProcessReplacing(true);
-		isSynth(true);
-
-		mMidiBuffer = (unsigned char *)malloc(4096);
-		mSynthesizer = new Synthesizer;
-		
-		setEditor(mEditor = new Editor(this));
+		audioMaster = master;
+		synthesizer = new Synthesizer;
+		midiBuffer = (unsigned char *)malloc(4096);
+#ifdef WITH_GUI
+		gdkParentWindow = 0;
+		gtkWindow = 0;
+		editorWidget = 0;
+#endif
 	}
 
-	~AmsynthVST()
-	{
-		free(mMidiBuffer);
-		delete mSynthesizer;
+	~Plugin()
+	{ 
+		delete synthesizer;
+		free(midiBuffer);
 	}
 
-	virtual bool getEffectName(char *name)
-	{
-		strcpy(name, "amsynth"); return true;
-	}
+	audioMasterCallback audioMaster;
+	Synthesizer *synthesizer;
+	unsigned char *midiBuffer;
+	std::vector<amsynth_midi_event_t> midiEvents;
+#ifdef WITH_GUI
+	GdkWindow *gdkParentWindow;
+	GtkWidget *gtkWindow;
+	GtkWidget *editorWidget;
+	GtkAdjustment *adjustments[kAmsynthParameterCount];
+#endif
+};
 
-	virtual bool getVendorString(char *text)
-	{
-		strcpy(text, "Nick Dowell"); return true;
-	}
+#ifdef WITH_GUI
+static void on_adjustment_value_changed(GtkAdjustment *adjustment, AEffect *effect)
+{
+	Plugin *plugin = (Plugin *)effect->user;
 
-	virtual bool getProductString(char *text)
-	{
-		strcpy(text, "amsynth"); return true;
-	}
+	static Preset dummyPreset;
 
-	virtual void setParameter(VstInt32 index, float value)
-	{
-		mSynthesizer->setNormalizedParameterValue((Param) index, value);
+	for (int i = 0; i < kAmsynthParameterCount; i++) {
+		if (adjustment == plugin->adjustments[i]) {
+			float value = gtk_adjustment_get_value(adjustment);
+			Parameter &param = dummyPreset.getParameter(i);
+			param.setValue(value);
+			plugin->synthesizer->setParameterValue((Param)i, value);
+			if (plugin->audioMaster) {
+				plugin->audioMaster(effect, audioMasterAutomate, i, 0, 0, param.GetNormalisedValue());
+			}
+		}
 	}
-	
-	virtual float getParameter(VstInt32 index)
-	{
-		return mSynthesizer->getNormalizedParameterValue((Param) index);
-	}
-	
-	virtual void getParameterLabel(VstInt32 index, char *text)
-	{
-		mSynthesizer->getParameterLabel((Param) index, text, 32);
-	}
-	
-	virtual void getParameterDisplay(VstInt32 index, char *text)
-	{
-		mSynthesizer->getParameterDisplay((Param) index, text, 32);
-	}
-	
-	virtual void getParameterName(VstInt32 index, char *text)
-	{
-		mSynthesizer->getParameterName((Param) index, text, 32);
-	}
+}
+#endif
 
-	virtual VstInt32 processEvents(VstEvents *events)
-	{
-		assert(mMidiEvents.empty());
+void modal_midi_learn(int param_index) {}
 
-		memset(mMidiBuffer, 0, 4096);
-		unsigned char *buffer = mMidiBuffer;
-		
-		for (VstInt32 i=0; i<events->numEvents; i++) {
-			if (events->events[i]->type == kVstMidiType) {
+static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val, void *ptr, float f)
+{
+	Plugin *plugin = (Plugin *)effect->user;
+
+	switch (opcode) {
+		case effSetSampleRate:
+			plugin->synthesizer->setSampleRate(f);
+			return 0;
+		case effSetBlockSize:
+			return 0;
+		case effMainsChanged:
+			return 0;
+
+#ifdef WITH_GUI
+		case effEditGetRect: {
+			static ERect rect = {0, 0, 400, 600};
+			ERect **er = (ERect **)ptr;
+			*er = &rect;
+			return 1;
+		}
+		case effEditOpen: {
+			static bool initialized = false;
+			if (!initialized) {
+				gtk_init(NULL, NULL);
+				initialized = true;
+			}
+
+			if (!plugin->editorWidget) {
+				for (int i = 0; i < kAmsynthParameterCount; i++) {
+					gdouble value = 0, lower = 0, upper = 0, step_increment = 0;
+					get_parameter_properties(i, &lower, &upper, &value, &step_increment);
+					plugin->adjustments[i] = (GtkAdjustment *)gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);
+					g_object_ref_sink(plugin->adjustments[i]); // assumes ownership of the floating reference
+					g_signal_connect(plugin->adjustments[i], "value-changed", G_CALLBACK(on_adjustment_value_changed), effect);
+				}
+				plugin->editorWidget = editor_pane_new(plugin->adjustments, TRUE);
+				g_object_ref_sink(plugin->editorWidget);
+			}
+
+			plugin->gtkWindow = gtk_window_new(GTK_WINDOW_POPUP);
+
+			// don't show the widget yet, to avoid visible moving of the window
+			gtk_widget_realize(plugin->gtkWindow); g_assert(gtk_widget_get_realized(plugin->gtkWindow));
+
+			// on some hosts (e.g. energyXT) creating the gdk window can fail unless we call gdk_display_sync
+			gdk_display_sync(gdk_display_get_default());
+
+			plugin->gdkParentWindow = gdk_window_foreign_new((GdkNativeWindow)ptr);
+			g_assert(plugin->gdkParentWindow);
+
+			// use gdk_window_reparent instead of XReparentWindow to avoid "GdkWindow unexpectedly destroyed" warnings
+			gdk_window_reparent(gtk_widget_get_window(plugin->gtkWindow), plugin->gdkParentWindow, 0, 0);
+
+			gtk_container_add(GTK_CONTAINER(plugin->gtkWindow), plugin->editorWidget);
+			gtk_widget_show_all(plugin->gtkWindow);
+
+			gdk_display_sync(gdk_display_get_default());
+
+			return 1;
+		}
+		case effEditClose: {
+			if (plugin->gtkWindow) {
+				if (gtk_widget_get_window(plugin->gtkWindow)) {
+					gdk_window_hide(gtk_widget_get_window(plugin->gtkWindow));
+				}
+				gtk_widget_destroy(plugin->gtkWindow);
+				plugin->gtkWindow = 0;
+			}
+
+			for (int i = 0; i < kAmsynthParameterCount; i++) {
+				plugin->adjustments[i] = 0;
+			}
+
+			plugin->gdkParentWindow = 0;
+			plugin->editorWidget = 0;
+
+			gdk_display_sync(gdk_display_get_default());
+
+			return 0;
+		}
+		case effEditIdle: {
+			while (gtk_events_pending()) {
+				gtk_main_iteration();
+			}
+			return 0;
+		}
+#endif
+
+		case effProcessEvents: {
+			VstEvents *events = (VstEvents *)ptr;
+
+			assert(plugin->midiEvents.empty());
+
+			memset(plugin->midiBuffer, 0, 4096);
+			unsigned char *buffer = plugin->midiBuffer;
+			
+			for (int32_t i=0; i<events->numEvents; i++) {
 				VstMidiEvent *event = (VstMidiEvent *)events->events[i];
+				if (event->type != kVstMidiType) {
+					continue;
+				}
 
 				memcpy(buffer, event->midiData, 4);
 
@@ -249,42 +211,85 @@ public:
 				midi_event.offset_frames = event->deltaFrames;
 				midi_event.buffer = buffer;
 				midi_event.length = 4;
-				mMidiEvents.push_back(midi_event);
+				plugin->midiEvents.push_back(midi_event);
 
 				buffer += event->byteSize;
 
-				assert(buffer < mMidiBuffer + 4096);
+				assert(buffer < plugin->midiBuffer + 4096);
 			}
+			
+			return 1;
 		}
-
-		return 1;
+		case effGetEffectName:
+			strcpy((char *)ptr, "amsynth");
+			return 1;
+		case effGetVendorString:
+			strcpy((char *)ptr, "Nick Dowell");
+			return 1;
+		case effGetProductString:
+			strcpy((char *)ptr, "amsynth");
+			return 1;
+		case effGetVendorVersion:
+			return 0;
+		case effCanDo:
+			if (strcmp("receiveVstMidiEvent", (char *)ptr) == 0)
+				return 1;
+			return 0;
+		case effGetParameterProperties:
+			return 0;
+		case effGetVstVersion:
+			return 2400;
+		default:
+			return 0;
 	}
-	
-	virtual void processReplacing(float **inputs, float **outputs, VstInt32 numSampleFrames)
-	{
-		mSynthesizer->process(numSampleFrames, mMidiEvents, outputs[0], outputs[1]);
-		mMidiEvents.clear();
-	}
-	
-private:
-	
-	std::vector<amsynth_midi_event_t> mMidiEvents;
-	unsigned char *mMidiBuffer;
-	Synthesizer *mSynthesizer;
-	Editor *mEditor;
-};
+}
 
+static void process(AEffect *effect, float **inputs, float **outputs, int numSampleFrames)
+{
+	Plugin *plugin = (Plugin *)effect->user;
+	plugin->synthesizer->process(numSampleFrames, plugin->midiEvents, outputs[0], outputs[1]);
+	plugin->midiEvents.clear();
+}
 
-void modal_midi_learn(int param_index) {}
+static void processReplacing(AEffect *effect, float **inputs, float **outputs, int numSampleFrames)
+{
+	Plugin *plugin = (Plugin *)effect->user;
+	plugin->synthesizer->process(numSampleFrames, plugin->midiEvents, outputs[0], outputs[1]);
+	plugin->midiEvents.clear();
+}
 
+static void setParameter(AEffect *effect, int i, float f)
+{
+	Plugin *plugin = (Plugin *)effect->user;
+	plugin->synthesizer->setNormalizedParameterValue((Param) i, f);
+}
+
+static float getParameter(AEffect *effect, int i)
+{
+	Plugin *plugin = (Plugin *)effect->user;
+	return plugin->synthesizer->getNormalizedParameterValue((Param) i);
+}
 
 extern "C" AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 {
-	AudioEffectX *plugin = new AmsynthVST(audioMaster);
-	if (!plugin) {
-		return NULL;
-	}
-	return plugin->getAeffect();
+	AEffect *effect = (AEffect *)calloc(1, sizeof(AEffect));
+	effect->magic = kEffectMagic;
+	effect->dispatcher = dispatcher;
+	effect->process = process;
+	effect->setParameter = setParameter;
+	effect->getParameter = getParameter;
+	effect->numPrograms = 0;
+	effect->numParams = kAmsynthParameterCount;
+	effect->numInputs = 0;
+	effect->numOutputs = 2;
+	effect->flags = effFlagsCanReplacing | effFlagsIsSynth;
+#ifdef WITH_GUI
+	effect->flags |= effFlagsHasEditor;
+#endif
+	effect->user = new Plugin(audioMaster);
+	effect->uniqueID = CCONST('a', 'm', 's', 'y');
+	effect->processReplacing = processReplacing;
+	return effect;
 }
 
 // this is required because GCC throws an error if we declare a non-standard function named 'main'
@@ -294,6 +299,3 @@ extern "C" __attribute__ ((visibility("default"))) AEffect * main_plugin(audioMa
 {
 	return VSTPluginMain (audioMaster);
 }
-
-#include <public.sdk/source/vst2.x/audioeffect.cpp>
-#include <public.sdk/source/vst2.x/audioeffectx.cpp>
