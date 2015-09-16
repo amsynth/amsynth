@@ -1,20 +1,30 @@
+sudo: false
+
 language: cpp
 
 compiler:
   - gcc
   - clang
 
-install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libgtk2.0-dev libgtkmm-2.4-dev libjack-jackd2-dev libasound-dev liblash-compat-dev dssi-dev liblo-dev libsndfile-dev
+addons:
+  apt:
+    packages:
+    - dssi-dev
+    - libasound-dev
+    - libgtk2.0-dev
+    - libgtkmm-2.4-dev
+    - libjack-jackd2-dev
+    - liblash-compat-dev
+    - liblo-dev
+    - libsndfile-dev
 
 script:
   - autoreconf --install
   - ./configure
-  - make distcheck clean
+  - make V=1 distcheck clean
   - ./configure --without-alsa
-  - make all clean
+  - make V=1 all clean
   - ./configure --without-jack
-  - make all clean
+  - make V=1 all clean
   - ./configure --without-gui
-  - make all clean
+  - make V=1 all clean
