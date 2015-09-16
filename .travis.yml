@@ -1,4 +1,4 @@
-sudo: false
+sudo: required
 
 language: cpp
 
@@ -6,17 +6,9 @@ compiler:
   - gcc
   - clang
 
-addons:
-  apt:
-    packages:
-    - dssi-dev
-    - libasound-dev
-    - libgtk2.0-dev
-    - libgtkmm-2.4-dev
-    - libjack-jackd2-dev
-    - liblash-compat-dev
-    - liblo-dev
-    - libsndfile-dev
+install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq libgtk2.0-dev libgtkmm-2.4-dev libjack-jackd2-dev libasound-dev liblash-compat-dev dssi-dev liblo-dev libsndfile-dev
 
 script:
   - autoreconf --install
