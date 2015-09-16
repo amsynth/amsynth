@@ -251,7 +251,7 @@ amsynth_vst_la_CPPFLAGS = $(AM_CPPFLAGS) -I"$(top_srcdir)/include"
 amsynth_vst_la_LDFLAGS = -rpath $(vstdir) -avoid-version -module -export-symbols-regex "VSTPluginMain|main"
 
 if BUILD_GUI
-amsynth_vst_la_SOURCES = $(libgui_sources)
+amsynth_vst_la_SOURCES += $(libgui_sources)
 amsynth_vst_la_CPPFLAGS += @GTK_CFLAGS@
 amsynth_vst_la_LIBADD = @GTK_LIBS@
 endif
