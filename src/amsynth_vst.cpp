@@ -149,7 +149,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			// on some hosts (e.g. energyXT) creating the gdk window can fail unless we call gdk_display_sync
 			gdk_display_sync(gdk_display_get_default());
 
-			plugin->gdkParentWindow = gdk_window_foreign_new((GdkNativeWindow)ptr);
+			plugin->gdkParentWindow = gdk_window_foreign_new((GdkNativeWindow)(uintptr_t)ptr);
 			g_assert(plugin->gdkParentWindow);
 
 			// use gdk_window_reparent instead of XReparentWindow to avoid "GdkWindow unexpectedly destroyed" warnings
