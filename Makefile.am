@@ -247,7 +247,7 @@ if BUILD_VST
 vstdir=$(libdir)/vst
 noinst_LTLIBRARIES += amsynth_vst.la
 amsynth_vst_la_SOURCES = src/amsynth_vst.cpp $(libcore_sources) $(libdsp_sources) $(libgui_sources)
-amsynth_vst_la_CPPFLAGS = $(AM_CPPFLAGS) @GTK_CFLAGS@ -I"$(VST_SDK)" -D__cdecl=""
+amsynth_vst_la_CPPFLAGS = $(AM_CPPFLAGS) -I"$(top_srcdir)/include" @GTK_CFLAGS@
 amsynth_vst_la_LDFLAGS = -rpath $(vstdir) -avoid-version -module -export-symbols-regex "VSTPluginMain|main"
 amsynth_vst_la_LIBADD = @GTK_LIBS@
 
