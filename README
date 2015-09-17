@@ -26,15 +26,6 @@ There are currently several different ways to run amsynth:
  * VST plug-in
 
 
-Building VST plug-in
---------------------
-
- * Download Steinberg's VST SDK and extract files from archive
- * run ./configure VST_SDK=/path/to/vstsdk2.4
- * run make and make install
- * amsynth_vst.so will be installed to $(prefix)/lib/vst
-
-
 Preset bank management
 ----------------------
 
