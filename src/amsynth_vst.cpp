@@ -107,6 +107,16 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 	Plugin *plugin = (Plugin *)effect->user;
 
 	switch (opcode) {
+		case 6:
+			plugin->synthesizer->getParameterLabel((Param)index, (char *)ptr, 32);
+			return 0;
+		case 7:
+			plugin->synthesizer->getParameterDisplay((Param)index, (char *)ptr, 32);
+			return 0;
+		case effGetParamName:
+			plugin->synthesizer->getParameterName((Param)index, (char *)ptr, 32);
+			return 0;
+
 		case effSetSampleRate:
 			plugin->synthesizer->setSampleRate(f);
 			return 0;
