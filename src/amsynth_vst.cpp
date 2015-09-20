@@ -47,6 +47,8 @@ struct ERect
 	short right;
 };
 
+static char hostProductString[64] = "";
+
 struct Plugin
 {
 	Plugin(audioMasterCallback master)
@@ -92,7 +94,7 @@ static void on_adjustment_value_changed(GtkAdjustment *adjustment, AEffect *effe
 			Parameter &param = dummyPreset.getParameter(i);
 			param.setValue(value);
 			plugin->synthesizer->setParameterValue((Param)i, value);
-			if (plugin->audioMaster) {
+			if (plugin->audioMaster && !strstr(hostProductString, "Qtractor")) {
 				plugin->audioMaster(effect, audioMasterAutomate, i, 0, 0, param.GetNormalisedValue());
 			}
 		}
@@ -282,6 +284,9 @@ static float getParameter(AEffect *effect, int i)
 
 extern "C" AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 {
+	if (audioMaster) {
+		audioMaster(NULL, audioMasterGetProductString, 0, 0, hostProductString, 0.0f);
+	}
 	AEffect *effect = (AEffect *)calloc(1, sizeof(AEffect));
 	effect->magic = kEffectMagic;
 	effect->dispatcher = dispatcher;
