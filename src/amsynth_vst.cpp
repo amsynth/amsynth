@@ -109,6 +109,11 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 	Plugin *plugin = (Plugin *)effect->ptr3;
 
 	switch (opcode) {
+		case effClose:
+			delete plugin;
+			memset(effect, 0, sizeof(AEffect));
+			free(effect);
+			return 0;
 		case 6:
 			plugin->synthesizer->getParameterLabel((Param)index, (char *)ptr, 32);
 			return 0;
