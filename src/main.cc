@@ -558,7 +558,7 @@ void ptest ()
 	VoiceAllocationUnit *voiceAllocationUnit = new VoiceAllocationUnit;
 	voiceAllocationUnit->SetSampleRate (kTestSampleRate);
 	
-	// trigger off some notes for amSynth to render.
+	// trigger off some notes for amsynth to render.
 	for (int v=0; v<kNumVoices; v++) {
 		voiceAllocationUnit->HandleMidiNoteOn(60 + v, 1.0f);
 	}

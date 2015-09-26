@@ -70,7 +70,7 @@ void gui_dealloc()
 
 void ShowModalErrorMessage(const string & msg)
 {
-	Gtk::MessageDialog dlg ("amSynth", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
+	Gtk::MessageDialog dlg ("amsynth", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
 	dlg.set_secondary_text(msg);
 	dlg.run();
 }

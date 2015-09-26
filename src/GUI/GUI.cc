@@ -511,9 +511,9 @@ GUI::post_init()
 	if (config->current_audio_driver.empty())
 	{
 		bad_config = true;
-		MessageDialog dlg (*this, "amSynth configuration error", false, MESSAGE_ERROR, BUTTONS_OK, true);
+		MessageDialog dlg (*this, "amsynth configuration error", false, MESSAGE_ERROR, BUTTONS_OK, true);
 		dlg.set_secondary_text(
-			"amSynth could not initialise the selected audio device.\n\n"
+			"amsynth could not initialise the selected audio device.\n\n"
 			"Please review the configuration and restart"
 		    );
 		dlg.run();
@@ -522,9 +522,9 @@ GUI::post_init()
 	if (config->current_midi_driver.empty())
 	{
 		bad_config = true;
-		MessageDialog dlg (*this, "amSynth configuration error", false, MESSAGE_ERROR, BUTTONS_OK, true);
+		MessageDialog dlg (*this, "amsynth configuration error", false, MESSAGE_ERROR, BUTTONS_OK, true);
 		dlg.set_secondary_text(
-			"amSynth could not initialise the selected midi device.\n\n"
+			"amsynth could not initialise the selected midi device.\n\n"
 			"Please review the configuration and restart"
 		    );
 		dlg.run();
@@ -542,7 +542,7 @@ GUI::post_init()
 	if (config->current_audio_driver_wants_realtime == 1 &&
 		config->realtime == 0)
 	{
-		MessageDialog dlg (*this, "amSynth could not set realtime priority");
+		MessageDialog dlg (*this, "amsynth could not set realtime priority");
 		dlg.set_secondary_text ("You may experience audio buffer underruns resulting in 'clicks' in the audio.\n\nThis is most likely because the program is not SUID root.\n\nUsing the JACK audio subsystem can also help");
 		dlg.run();
 	}

@@ -24,7 +24,7 @@
 using namespace Gtk;
 
 ConfigDialog::ConfigDialog (Window& parent, Configuration &config)
-:	Dialog ("amSynth configuration", parent)
+:	Dialog ("amsynth configuration", parent)
 ,	mConfig (config)
 {
 	mMidiDriver.append_text ("auto");
@@ -58,7 +58,7 @@ ConfigDialog::ConfigDialog (Window& parent, Configuration &config)
 	get_vbox()->add (*manage (new Label ("Sample Rate")));
 	get_vbox()->add (mSampleRate);
 	get_vbox()->add (*manage (new Label ("")));
-	get_vbox()->add (*manage (new Label ("Changes take effect after restarting amSynth")));
+	get_vbox()->add (*manage (new Label ("Changes take effect after restarting amsynth")));
 	
 	ReadValues();
 	
