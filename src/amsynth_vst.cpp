@@ -84,7 +84,7 @@ struct Plugin
 #ifdef WITH_GUI
 static void on_adjustment_value_changed(GtkAdjustment *adjustment, AEffect *effect)
 {
-	Plugin *plugin = (Plugin *)effect->user;
+	Plugin *plugin = (Plugin *)effect->ptr3;
 
 	static Preset dummyPreset;
 
@@ -106,7 +106,7 @@ void modal_midi_learn(int param_index) {}
 
 static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val, void *ptr, float f)
 {
-	Plugin *plugin = (Plugin *)effect->user;
+	Plugin *plugin = (Plugin *)effect->ptr3;
 
 	switch (opcode) {
 		case 6:
@@ -258,27 +258,27 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 
 static void process(AEffect *effect, float **inputs, float **outputs, int numSampleFrames)
 {
-	Plugin *plugin = (Plugin *)effect->user;
+	Plugin *plugin = (Plugin *)effect->ptr3;
 	plugin->synthesizer->process(numSampleFrames, plugin->midiEvents, outputs[0], outputs[1]);
 	plugin->midiEvents.clear();
 }
 
 static void processReplacing(AEffect *effect, float **inputs, float **outputs, int numSampleFrames)
 {
-	Plugin *plugin = (Plugin *)effect->user;
+	Plugin *plugin = (Plugin *)effect->ptr3;
 	plugin->synthesizer->process(numSampleFrames, plugin->midiEvents, outputs[0], outputs[1]);
 	plugin->midiEvents.clear();
 }
 
 static void setParameter(AEffect *effect, int i, float f)
 {
-	Plugin *plugin = (Plugin *)effect->user;
+	Plugin *plugin = (Plugin *)effect->ptr3;
 	plugin->synthesizer->setNormalizedParameterValue((Param) i, f);
 }
 
 static float getParameter(AEffect *effect, int i)
 {
-	Plugin *plugin = (Plugin *)effect->user;
+	Plugin *plugin = (Plugin *)effect->ptr3;
 	return plugin->synthesizer->getNormalizedParameterValue((Param) i);
 }
 
@@ -301,7 +301,8 @@ extern "C" AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 #ifdef WITH_GUI
 	effect->flags |= effFlagsHasEditor;
 #endif
-	effect->user = new Plugin(audioMaster);
+	// Do no use the ->user pointer because ardour clobbers it
+	effect->ptr3 = new Plugin(audioMaster);
 	effect->uniqueID = CCONST('a', 'm', 's', 'y');
 	effect->processReplacing = processReplacing;
 	return effect;
