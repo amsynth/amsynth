@@ -232,6 +232,8 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			
 			return 1;
 		}
+		case effGetPlugCategory:
+			return kPlugCategSynth;
 		case effGetEffectName:
 			strcpy((char *)ptr, "amsynth");
 			return 1;
