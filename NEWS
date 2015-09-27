@@ -1,3 +1,12 @@
+amsynth 1.6.0 -- 2015-09-27
+
+  - VST plug-in build now available
+  - adds a portamento mode control with legato option
+  - can now be built without GUI (./configure --without-gui)
+  - fixes an issue with incorrect tuning depending on sample rate
+  - other minor bug fixes and improvements
+
+
 amsynth 1.5.1 -- 2014-08-06
 
   - fixes broken MIDI handling in the DSSI plugin
