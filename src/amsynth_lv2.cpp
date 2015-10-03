@@ -75,8 +75,9 @@ lv2_instantiate(const struct _LV2_Descriptor *descriptor, double sample_rate, co
 	amsynth_wrapper *a = (amsynth_wrapper *)calloc(1, sizeof(amsynth_wrapper));
 	a->bundle_path = strdup(bundle_path);
 	a->synth = new Synthesizer;
+	a->synth->setSampleRate((int)sample_rate);
 	a->params = (float **) calloc (kAmsynthParameterCount, sizeof (float *));
-	a->uris.midiEvent       = urid_map->map(urid_map->handle, LV2_MIDI__MidiEvent);
+	a->uris.midiEvent = urid_map->map(urid_map->handle, LV2_MIDI__MidiEvent);
 
 	return (LV2_Handle) a;
 }

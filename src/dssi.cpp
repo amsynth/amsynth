@@ -86,6 +86,7 @@ static LADSPA_Handle instantiate (const LADSPA_Descriptor * descriptor, unsigned
 	TRACE();
     amsynth_wrapper * a = new amsynth_wrapper;
     a->synth = new Synthesizer;
+    a->synth->setSampleRate(s_rate);
     a->midi_buffer = (unsigned char *)calloc(MIDI_BUFFER_SIZE, 1);
     a->params = (LADSPA_Data **) calloc (kAmsynthParameterCount, sizeof (LADSPA_Data *));
     return (LADSPA_Handle) a;
