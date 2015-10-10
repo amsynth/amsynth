@@ -1,3 +1,8 @@
+amsynth 1.6.1 -- 2015-10-10
+
+  - fixes support for non-44100 sample rates in DSSI and LV2 builds
+
+
 amsynth 1.6.0 -- 2015-09-27
 
   - VST plug-in build now available
