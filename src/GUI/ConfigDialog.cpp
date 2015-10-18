@@ -21,11 +21,12 @@
 
 #include "ConfigDialog.h"
 
+#include "../Configuration.h"
+
 using namespace Gtk;
 
-ConfigDialog::ConfigDialog (Window& parent, Configuration &config)
+ConfigDialog::ConfigDialog (Window& parent)
 :	Dialog ("amsynth configuration", parent)
-,	mConfig (config)
 {
 	mMidiDriver.append_text ("auto");
 	mMidiDriver.append_text ("alsa");
@@ -78,25 +79,27 @@ std::string stringToLower(std::string myString)
 void
 ConfigDialog::ReadValues ()
 {
-	mMidiDriver.set_active_text (stringToLower (mConfig.midi_driver));
-	mOSSMidiDevice.set_text (mConfig.oss_midi_device);
-	mAudioDriver.set_active_text (stringToLower (mConfig.audio_driver));
-	mOSSAudioDevice.set_text (mConfig.oss_audio_device);
-	mALSAAudioDevice.set_text (mConfig.alsa_audio_device);
-	std::ostringstream rateStr; rateStr << mConfig.sample_rate;
+	Configuration & config = Configuration::get();
+	mMidiDriver.set_active_text (stringToLower (config.midi_driver));
+	mOSSMidiDevice.set_text (config.oss_midi_device);
+	mAudioDriver.set_active_text (stringToLower (config.audio_driver));
+	mOSSAudioDevice.set_text (config.oss_audio_device);
+	mALSAAudioDevice.set_text (config.alsa_audio_device);
+	std::ostringstream rateStr; rateStr << config.sample_rate;
 	mSampleRate.set_active_text (rateStr.str());
 }
 
 void
 ConfigDialog::WriteValues ()
 {
-	mConfig.midi_driver = mMidiDriver.get_active_text ();
-	mConfig.oss_midi_device = mOSSMidiDevice.get_text ();
-	mConfig.audio_driver = mAudioDriver.get_active_text ();
-	mConfig.oss_audio_device = mOSSAudioDevice.get_text ();
-	mConfig.alsa_audio_device = mALSAAudioDevice.get_text ();
-	mConfig.sample_rate = strtol (mSampleRate.get_active_text().c_str(), NULL, 0);
-	mConfig.save();
+	Configuration & config = Configuration::get();
+	config.midi_driver = mMidiDriver.get_active_text ();
+	config.oss_midi_device = mOSSMidiDevice.get_text ();
+	config.audio_driver = mAudioDriver.get_active_text ();
+	config.oss_audio_device = mOSSAudioDevice.get_text ();
+	config.alsa_audio_device = mALSAAudioDevice.get_text ();
+	config.sample_rate = strtol (mSampleRate.get_active_text().c_str(), NULL, 0);
+	config.save();
 }
 
 void

@@ -21,6 +21,7 @@
 
 #include "JackOutput.h"
 
+#include "Configuration.h"
 #include "VoiceAllocationUnit.h"
 
 #if HAVE_JACK_MIDIPORT_H
@@ -61,8 +62,10 @@ JackOutput::JackOutput()
 }
 
 int
-JackOutput::init(Configuration &config)
+JackOutput::init()
 {
+	Configuration & config = Configuration::get();
+	
 #ifdef WITH_JACK
 	if (client) // already initialised
 		return 0;

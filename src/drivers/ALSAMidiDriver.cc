@@ -40,7 +40,7 @@ public:
 	virtual ~ALSAMidiDriver		( );
     virtual int read(unsigned char *bytes, unsigned maxBytes);
     virtual int write_cc(unsigned int channel, unsigned int param, unsigned int value);
-    virtual int open(Configuration &config);
+    virtual int open();
     virtual int close();
 private:
 	const char		*client_name;
@@ -104,8 +104,10 @@ int ALSAMidiDriver::close()
 	return 0;
 }
 
-int ALSAMidiDriver::open(Configuration &config)
+int ALSAMidiDriver::open()
 {
+	Configuration & config = Configuration::get();
+
 	if (seq_handle) return 0;
 	
 	if (snd_seq_open(&seq_handle, "default", SND_SEQ_OPEN_DUPLEX, SND_SEQ_NONBLOCK) != 0) {

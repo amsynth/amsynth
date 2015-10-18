@@ -21,6 +21,7 @@
 
 #include "MidiController.h"
 
+#include "Configuration.h"
 #include "drivers/MidiDriver.h"
 #include "midi.h"
 
@@ -31,7 +32,7 @@
 #include <iostream>
 
 
-MidiController::MidiController(Configuration &config)
+MidiController::MidiController()
 :	last_active_controller ("last_active_cc", (Param) -1, 0, 0, MAX_CC, 1)
 ,	_handler(NULL)
 ,	_rpn_msb(0xff)
@@ -39,8 +40,8 @@ MidiController::MidiController(Configuration &config)
 ,	_config_needs_save(false)
 ,	_midiDriver(NULL)
 {
-	this->config = &config;
 	presetController = 0;
+	Configuration & config = Configuration::get();
 	channel = config.midi_channel;
 	loadControllerMap();
 }
@@ -54,6 +55,8 @@ MidiController::~MidiController()
 void
 MidiController::HandleMidiData(const unsigned char* bytes, unsigned numBytes)
 {
+	Configuration & config = Configuration::get();
+
     for (unsigned i=0; i<numBytes; i++)
 	{
 		const unsigned char byte = bytes[i];
@@ -68,7 +71,7 @@ MidiController::HandleMidiData(const unsigned char* bytes, unsigned numBytes)
 		}
 		// now we have at least one data byte
 
-		if (config->midi_channel && ((int) channel != config->midi_channel-1)) break;
+		if (config.midi_channel && ((int) channel != config.midi_channel-1)) break;
 
 		switch (status & 0xf0)
 		{
@@ -323,8 +326,9 @@ MidiController::setControllerForParameter(int paramId, int cc)
 void
 MidiController::set_midi_channel	( int ch )
 {
+	Configuration & config = Configuration::get();
 	if (ch)	_handler->HandleMidiAllSoundOff();
-	config->midi_channel = ch;
+	config.midi_channel = ch;
 }
 
 int

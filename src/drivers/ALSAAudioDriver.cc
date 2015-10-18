@@ -42,7 +42,7 @@ public:
 
     ALSAAudioDriver() : _handle(0), _buffer(0), _channels(0) {}
 
-    virtual int open(class Configuration&);
+    virtual int open();
     virtual void close();
     virtual int write(float *buffer, int frames);
 
@@ -80,8 +80,10 @@ ALSAAudioDriver::write(float *buffer, int nsamples)
 }
 
 int 
-ALSAAudioDriver::open(Configuration &config)
+ALSAAudioDriver::open()
 {
+	Configuration & config = Configuration::get();
+	
 	if (_handle != NULL) {
 		return 0;
 	}

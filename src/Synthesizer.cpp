@@ -21,6 +21,7 @@
 
 #include "Synthesizer.h"
 
+#include "Configuration.h"
 #include "MidiController.h"
 #include "PresetController.h"
 #include "VoiceAllocationUnit.h"
@@ -32,29 +33,25 @@
 #include <cstring>
 
 
-Synthesizer::Synthesizer(Configuration *config)
-: _sampleRate(config ? config->sample_rate : 44100)
+Synthesizer::Synthesizer()
+: _sampleRate(-1)
 , _midiController(0)
 , _presetController(0)
 , _voiceAllocationUnit(0)
 {
-	if (!config) {
-		config = new Configuration;
-		config->Defaults();
-		config->load();
-	}
+	Configuration &config = Configuration::get();
 
 	_voiceAllocationUnit = new VoiceAllocationUnit;
 	_voiceAllocationUnit->SetSampleRate(_sampleRate);
-	_voiceAllocationUnit->SetMaxVoices(config->polyphony);
-	_voiceAllocationUnit->setPitchBendRangeSemitones(config->pitch_bend_range);
+	_voiceAllocationUnit->SetMaxVoices(config.polyphony);
+	_voiceAllocationUnit->setPitchBendRangeSemitones(config.pitch_bend_range);
 	
 	_presetController = new PresetController;
-	_presetController->loadPresets(config->current_bank_file.c_str());
+	_presetController->loadPresets(config.current_bank_file.c_str());
 	_presetController->selectPreset(0);
 	_presetController->getCurrentPreset().AddListenerToAll(_voiceAllocationUnit);
 	
-	_midiController = new MidiController(*config);
+	_midiController = new MidiController();
 	_midiController->SetMidiEventHandler(_voiceAllocationUnit);
 	_midiController->setPresetController(*_presetController);
 }
@@ -173,6 +170,10 @@ static bool comapare(const amsynth_midi_event_t &first, const amsynth_midi_event
 
 void Synthesizer::process(unsigned int nframes, std::vector<amsynth_midi_event_t> &midi_in, float *audio_l, float *audio_r, unsigned audio_stride)
 {
+	if (_sampleRate < 0) {
+		assert(!"sample rate has not been set");
+		return;
+	}
 	std::sort(midi_in.begin(), midi_in.end(), comapare);
 	std::vector<amsynth_midi_event_t>::const_iterator event = midi_in.begin();
 	unsigned frames_left_in_buffer = nframes, frame_index = 0;

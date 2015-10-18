@@ -32,8 +32,6 @@
 #include <string>
 #include <vector>
 
-extern Configuration config;
-
 static void snprintf_truncate(char *str, size_t size, const char *format, ...)
 {
 	va_list va_args;

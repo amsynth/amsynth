@@ -21,7 +21,6 @@
 
 #include <string>
 
-class Configuration;
 class GenericOutput;
 class Synthesizer;
 
@@ -31,9 +30,7 @@ void gui_kit_init(int & argc, char ** & argv);
 // Gtk::Main::run()
 void gui_kit_run(unsigned (*timer_callback)());
 
-void gui_init(Configuration &,
-			  Synthesizer *synth,
-              GenericOutput *);
+void gui_init(Synthesizer *, GenericOutput *);
 
 void gui_dealloc();
 

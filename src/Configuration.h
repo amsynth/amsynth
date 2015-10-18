@@ -34,13 +34,19 @@
  */
 class Configuration
 {
-public:
-		Configuration	( );
-		
-	void	Defaults();
+private:
+	Configuration();
+	void Defaults();
 
-	int	load	();
-	int	save	();
+public:
+
+	static Configuration & get() {
+		static Configuration instance;
+		return instance;
+	}
+
+	int	load();
+	int	save();
 	
 	/**
 	 * The sampling rate at which the output is to be produced

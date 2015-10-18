@@ -45,7 +45,7 @@ class ALSAmmapAudioDriver : public AudioDriver {
 public:
     ALSAmmapAudioDriver();
     virtual	~ALSAmmapAudioDriver();
-    int	open(Configuration &config);
+    int	open();
     void close();
     int	write(float *buffer, int frames);
 
@@ -57,7 +57,6 @@ private:
     int		_channels;
     int		_format;
     unsigned char	*audiobuf;
-    Configuration	*config;
     snd_pcm_t		*playback_handle;
     snd_pcm_hw_params_t	*hw_params;
     snd_pcm_sw_params_t	*sw_params;
@@ -96,6 +95,8 @@ return -1;
 int
 ALSAmmapAudioDriver::write(float *buffer, int frames)
 {
+	Configuration & config = Configuration::get();
+
 	int i,p;
 	snd_pcm_sframes_t avail;
 	snd_pcm_uframes_t offset, lframes = frames / 2;
@@ -118,7 +119,7 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 		if( 0 > ( err = snd_pcm_wait( playback_handle, -1)))
 		{
 //			cerr << "snd_pcm_wait error\n";
-			config->xruns++;
+			config.xruns++;
 			return xrun_recovery();
 		}
 	}
@@ -161,8 +162,10 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 }
 
 int
-ALSAmmapAudioDriver::open(Configuration &config)
+ALSAmmapAudioDriver::open()
 {
+	Configuration & config = Configuration::get();
+
 	if (playback_handle != NULL) return 0;
 	
 	_channels = config.channels;
@@ -188,8 +191,6 @@ ALSAmmapAudioDriver::open(Configuration &config)
 	config.current_audio_driver_wants_realtime = 1;
 #endif
 	
-	this->config = &config;
-
 	periods = 0;
 	return 0;
 }

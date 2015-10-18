@@ -50,6 +50,7 @@ using std::endl;
 using std::ostringstream;
 
 #include "../AudioOutput.h"
+#include "../Configuration.h"
 #include "../MidiController.h"
 #include "../Preset.h"
 #include "../Synthesizer.h"
@@ -126,12 +127,11 @@ GUI::delete_event_impl(GdkEventAny *)
 	return true;
 }
 
-GUI::GUI( Configuration & config_in, MidiController & mc, Synthesizer *synth, GenericOutput *audio )
+GUI::GUI(MidiController & mc, Synthesizer *synth, GenericOutput *audio)
 :	m_auditionKeyDown(false)
 ,	m_synth(synth)
 ,	m_presetIsNotSaved(false)
 {
-	this->config = &config_in;
 	this->midi_controller = &mc;
 	this->audio_out = audio;
 	
@@ -218,6 +218,8 @@ GUI::create_menus	( )
 	using namespace Gtk::Menu_Helpers;
 	using namespace Gtk;
 	using sigc::bind;
+
+	Configuration & config = Configuration::get();
 	
 	//
 	// File menu
@@ -330,7 +332,7 @@ GUI::create_menus	( )
 			name << i;
 			name << " Semitones";
 			Gtk::RadioMenuItem *item = Gtk::manage(new Gtk::RadioMenuItem(grp, name.str()));
-			item->set_active(i == config->pitch_bend_range);
+			item->set_active(i == config.pitch_bend_range);
 			item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_pitch_bend_range_change), i, item) );
 			m_pitchBendRangeMenu->items().push_back(*item);
 		}
@@ -352,7 +354,7 @@ GUI::create_menus	( )
 	MenuItem *menu_item = manage (new MenuItem("Virtual Keyboard"));
 	menu_item->signal_activate().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evVkeybd));
 	// vkeybd must exist, and we must be using ALSA MIDI
-	if (config->alsa_seq_client_id == 0 || command_exists("vkeybd") != 0)
+	if (config.alsa_seq_client_id == 0 || command_exists("vkeybd") != 0)
 		menu_item->set_sensitive( false );
 	list_utils.push_back (*menu_item);
 
@@ -372,13 +374,13 @@ GUI::create_menus	( )
 	menu_item = manage (new MenuItem("kaconnect"));
 	menu_item->signal_activate().connect(sigc::bind(mem_fun(*this, &GUI::command_run),"kaconnect"));
 	if (command_exists ("kaconnect") != 0) menu_item->set_sensitive( false );
-	if (config->alsa_seq_client_id==0) menu_item->set_sensitive( false );
+	if (config.alsa_seq_client_id==0) menu_item->set_sensitive( false );
 	list_utils_midi.push_back (*menu_item);
 	
 	menu_item = manage (new MenuItem("alsa-patch-bay"));
 	menu_item->signal_activate().connect (sigc::bind(mem_fun(*this, &GUI::command_run),"alsa-patch-bay --driver alsa"));
 	if (command_exists ("alsa-patch-bay") != 0) menu_item->set_sensitive( false );
-	if (config->alsa_seq_client_id==0) menu_item->set_sensitive( false );
+	if (config.alsa_seq_client_id==0) menu_item->set_sensitive( false );
 	list_utils_midi.push_back (*menu_item);
 	
 	list_utils.push_back (MenuElem("MIDI (ALSA) connections", *menu_utils_midi));
@@ -392,13 +394,13 @@ GUI::create_menus	( )
 	menu_item = manage (new MenuItem("qjackconnect"));
 	menu_item->signal_activate().connect (sigc::bind(mem_fun(*this, &GUI::command_run),"qjackconnect"));
 	if (command_exists ("qjackconnect") != 0) menu_item->set_sensitive( false );
-	if (config->current_audio_driver != "jack" && config->current_audio_driver != "JACK") menu_item->set_sensitive( false );
+	if (config.current_audio_driver != "jack" && config.current_audio_driver != "JACK") menu_item->set_sensitive( false );
 	list_utils_jack.push_back (*menu_item);
 	
 	menu_item = manage (new MenuItem("alsa-patch-bay"));
 	menu_item->signal_activate().connect (sigc::bind(mem_fun(*this, &GUI::command_run),"alsa-patch-bay --driver jack"));
 	if (command_exists ("alsa-patch-bay") != 0) menu_item->set_sensitive( false );
-	if (config->current_audio_driver != "jack" && config->current_audio_driver != "JACK") menu_item->set_sensitive( false );
+	if (config.current_audio_driver != "jack" && config.current_audio_driver != "JACK") menu_item->set_sensitive( false );
 	list_utils_jack.push_back (*menu_item);
 	
 	list_utils.push_back (MenuElem("Audio (JACK) connections", *menu_utils_jack));
@@ -426,7 +428,7 @@ GUI::create_menus	( )
 	list_bar.push_back (MenuElem("_Utils", Gtk::AccelKey("<alt>U"), *menu_utils));
 	list_bar.push_back (MenuElem("_Help", *menu_help));
     
-    gchar *text = g_strdup_printf ("Audio: %s @ %d  MIDI: %s", config->current_audio_driver.c_str(), config->sample_rate, config->current_midi_driver.c_str());
+    gchar *text = g_strdup_printf ("Audio: %s @ %d  MIDI: %s", config.current_audio_driver.c_str(), config.sample_rate, config.current_midi_driver.c_str());
     list_bar.push_back (MenuElem (text));
     list_bar.back().set_right_justified();
     list_bar.back().set_sensitive(false);
@@ -506,9 +508,10 @@ GUI::init()
 void
 GUI::post_init()
 {
+	Configuration & config = Configuration::get();
 	bool bad_config = false;
 	
-	if (config->current_audio_driver.empty())
+	if (config.current_audio_driver.empty())
 	{
 		bad_config = true;
 		MessageDialog dlg (*this, "amsynth configuration error", false, MESSAGE_ERROR, BUTTONS_OK, true);
@@ -519,7 +522,7 @@ GUI::post_init()
 		dlg.run();
 	}
 	
-	if (config->current_midi_driver.empty())
+	if (config.current_midi_driver.empty())
 	{
 		bad_config = true;
 		MessageDialog dlg (*this, "amsynth configuration error", false, MESSAGE_ERROR, BUTTONS_OK, true);
@@ -539,8 +542,8 @@ GUI::post_init()
 	
 #ifdef ENABLE_REALTIME
 	// show realtime warning message if necessary
-	if (config->current_audio_driver_wants_realtime == 1 &&
-		config->realtime == 0)
+	if (config.current_audio_driver_wants_realtime == 1 &&
+		config.realtime == 0)
 	{
 		MessageDialog dlg (*this, "amsynth could not set realtime priority");
 		dlg.set_secondary_text ("You may experience audio buffer underruns resulting in 'clicks' in the audio.\n\nThis is most likely because the program is not SUID root.\n\nUsing the JACK audio subsystem can also help");
@@ -702,7 +705,8 @@ GUI::event_handler(const int e)
 	case evVkeybd:
 	    {
 			char tmp[255] = "";
-			snprintf(tmp, sizeof(tmp), "vkeybd --addr %d:0", config->alsa_seq_client_id);
+			Configuration & config = Configuration::get();
+			snprintf(tmp, sizeof(tmp), "vkeybd --addr %d:0", config.alsa_seq_client_id);
 			command_run(tmp);
 	    }
 		break;
@@ -716,7 +720,7 @@ GUI::event_handler(const int e)
 		
 	case evConfig:
 	{
-		ConfigDialog dlg (*this, *config);
+		ConfigDialog dlg (*this);
 		dlg.run ();
 		break;
 	}
@@ -793,12 +797,13 @@ GUI::onUpdate()	// called whenever the preset selection has changed
 void
 GUI::update_title()
 {
+	Configuration & config = Configuration::get();
 	std::ostringstream ostr;
 	ostr << "amsynth";
 
-	if (config->jack_client_name.length() && config->jack_client_name != "amsynth") {
+	if (config.jack_client_name.length() && config.jack_client_name != "amsynth") {
 		ostr << ": ";
-		ostr << config->jack_client_name;
+		ostr << config.jack_client_name;
 	}
 
 	ostr << ": ";
@@ -927,11 +932,12 @@ GUI::preset_paste_as_new_callback(GtkClipboard *clipboard, const gchar *text, gp
 void
 GUI::bank_open		( )
 {
+	Configuration & config = Configuration::get();
 	std::string filename = file_dialog(this->gobj(), "Open Bank", false, NULL, NULL, NULL);
 	if (!filename.empty()) {
-		preset_controller->savePresets(config->current_bank_file.c_str());
-		config->current_bank_file = filename;
-		preset_controller->loadPresets(config->current_bank_file.c_str());
+		preset_controller->savePresets(config.current_bank_file.c_str());
+		config.current_bank_file = filename;
+		preset_controller->loadPresets(config.current_bank_file.c_str());
 	}
 }
 
@@ -1031,10 +1037,11 @@ GUI::on_midi_channel_change(int value)
 void
 GUI::on_ployphony_change(int value, Gtk::RadioMenuItem *item)
 {
+	Configuration & config = Configuration::get();
 	if (item->get_active()) {
-		if (config->polyphony != value) {
-			config->polyphony = value;
-			config->save();
+		if (config.polyphony != value) {
+			config.polyphony = value;
+			config.save();
 		}
 		m_synth->setMaxNumVoices(value);
 	}
@@ -1052,11 +1059,12 @@ GUI::on_pitch_bend_range_menu_show()
 void
 GUI::on_pitch_bend_range_change(int value, Gtk::RadioMenuItem *item)
 {
+	Configuration & config = Configuration::get();
 	if (item->get_active()) {
-		if (config->pitch_bend_range != value) {
-			config->pitch_bend_range = value;
-			config->save();
-			m_synth->setPitchBendRangeSemitones(config->pitch_bend_range);
+		if (config.pitch_bend_range != value) {
+			config.pitch_bend_range = value;
+			config.save();
+			m_synth->setPitchBendRangeSemitones(config.pitch_bend_range);
 		}
 	}
 }

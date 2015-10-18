@@ -58,11 +58,13 @@ public:
 		delete[] m_DeviceList;
 	}
 	
-	virtual int init(Configuration &config)
+	virtual int init()
 	{
 		if (!m_DeviceList) {
             return -1;
         }
+
+        Configuration & config = Configuration::get();
         config.current_audio_driver = "CoreAudio";
         config.current_midi_driver = "CoreMIDI";
 

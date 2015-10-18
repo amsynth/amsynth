@@ -90,7 +90,7 @@ OPTIONS:\n\
 	--jack_autoconnect=<true|false>\n\
 \n";
 
-Configuration config;
+Configuration & config = Configuration::get();
 
 #ifdef ENABLE_REALTIME
 void sched_realtime()
@@ -216,7 +216,7 @@ GenericOutput * open_audio()
 		config.audio_driver == "auto")
 	{
 		JackOutput *jack = new JackOutput();
-		if (jack->init(config) == 0)
+		if (jack->init() == 0)
 		{
 			return jack;
 		}
@@ -240,7 +240,7 @@ GenericOutput * open_audio()
 
 static MidiDriver *opened_midi_driver(MidiDriver *driver)
 {
-	if (driver && driver->open(config) != 0) {
+	if (driver && driver->open() != 0) {
 		delete driver;
 		return NULL;
 	}
@@ -317,9 +317,6 @@ int main( int argc, char *argv[] )
 	
 	int initial_preset_no = 0;
 
-	config.Defaults ();
-	config.load ();
-	
 	// needs to be called before our own command line parsing code
 	amsynth_lash_process_args(&argc, &argv);
 	
@@ -405,10 +402,12 @@ int main( int argc, char *argv[] )
 					"config.audio_driver = " + config.audio_driver);
 
 	// errors now detected & reported in the GUI
-	out->init(config);
+	out->init();
 	out->setAudioCallback(&amsynth_audio_callback);
 	
-	s_synthesizer = new Synthesizer(&config);
+	s_synthesizer = new Synthesizer();
+	s_synthesizer->setSampleRate(config.sample_rate);
+	
 	amsynth_load_bank(config.current_bank_file.c_str());
 	amsynth_set_preset_number(initial_preset_no);
 	
@@ -441,7 +440,7 @@ int main( int argc, char *argv[] )
 
 #ifdef WITH_GUI
 	if (!no_gui) {
-		gui_init(config, s_synthesizer, out);
+		gui_init(s_synthesizer, out);
 		gui_kit_run(&amsynth_timer_callback);
 		gui_dealloc();
 	} else {

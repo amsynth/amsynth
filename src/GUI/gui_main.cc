@@ -45,14 +45,14 @@ void gui_kit_run(unsigned (*timer_callback)())
 	kit->run();
 }
 
-void gui_init(Configuration &config, Synthesizer *synth, GenericOutput *out)
+void gui_init(Synthesizer *synth, GenericOutput *out)
 {
 	if (pipe(gdk_input_pipe) == -1)
 		perror("pipe()");
     
     gtk_window_set_default_icon_from_file(DATADIR "/pixmaps/amsynth.png", NULL);
 	
-	gui = new GUI(config, *synth->getMidiController(), synth, out);
+	gui = new GUI(*synth->getMidiController(), synth, out);
 	gui->setPresetController(*synth->getPresetController());
 	gui->init();
 	

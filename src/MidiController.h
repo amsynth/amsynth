@@ -22,7 +22,6 @@
 #ifndef _MIDICONTROLLER_H
 #define _MIDICONTROLLER_H
 
-#include "Configuration.h"
 #include "PresetController.h"
 #include "Parameter.h"
 #include "Thread.h"
@@ -52,7 +51,7 @@ public:
 class MidiController
 {
 public:
-	MidiController(Configuration &config);
+	MidiController();
 	virtual ~MidiController();
 
 	void	setPresetController	(PresetController & pc) { presetController = &pc; }
@@ -85,7 +84,6 @@ private:
     void pitch_wheel_change(float val);
 
     PresetController *presetController;
-	Configuration *config;
     unsigned char status, data, channel;
 	Parameter last_active_controller;
 	unsigned char _midi_cc_vals[MAX_CC];

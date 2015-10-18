@@ -37,7 +37,7 @@ public:
 	OSSMidiDriver();
   	virtual ~OSSMidiDriver();
 	
-	int open(Configuration &config);
+	int open();
 	int close();
 	
 	int read(unsigned char *bytes, unsigned maxBytes);
@@ -58,8 +58,10 @@ OSSMidiDriver::~OSSMidiDriver()
     close();
 }
 
-int OSSMidiDriver::open(Configuration &config)
+int OSSMidiDriver::open()
 {
+	Configuration & config = Configuration::get();
+	
 	if (_fd == -1) 
 	{
 		const char *dev = config.oss_midi_device.c_str();

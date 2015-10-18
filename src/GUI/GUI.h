@@ -34,7 +34,6 @@ class Parameter;
 class Preset;
 class Synthesizer;
 class GenericOutput;
-class Config;
 
 namespace Gtk {
 	class Adjustment;
@@ -58,8 +57,7 @@ struct UndoArgs {
  */
 class GUI:public Gtk::Window, public UpdateListener {
 public:
-	GUI				( Configuration & config,
-					  MidiController & mc, 
+	GUI				( MidiController & mc, 
 					  Synthesizer *synth,
 					  GenericOutput *audio );
 	~GUI				( );
@@ -150,7 +148,6 @@ private:
 	PresetController *preset_controller;
 	PresetControllerView *presetCV;
     
-	Configuration *config;
 	MidiController *midi_controller;
 	Synthesizer *m_synth;
 	GenericOutput *audio_out;

@@ -27,7 +27,6 @@
 
 #include <vector>
 
-class Configuration;
 class MidiController;
 class PresetController;
 class VoiceAllocationUnit;
@@ -36,7 +35,7 @@ class Synthesizer
 {
 public:
     
-    Synthesizer(Configuration *config = 0);
+    Synthesizer();
     ~Synthesizer();
     
     void loadBank(const char *filename);

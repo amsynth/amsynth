@@ -21,6 +21,7 @@
 
 #include "AudioOutput.h"
 
+#include "Configuration.h"
 #include "drivers/AudioDriver.h"
 #include "drivers/ALSAAudioDriver.h"
 #include "drivers/ALSAmmapAudioDriver.h"
@@ -29,7 +30,7 @@
 #include <stdlib.h>
 
 
-static AudioDriver * open_driver(Configuration &config);
+static AudioDriver * open_driver();
 
 
 AudioOutput::AudioOutput()
@@ -48,9 +49,9 @@ AudioOutput::~AudioOutput()
 }
 
 int
-AudioOutput::init(Configuration &config)
+AudioOutput::init()
 {
-	this->config = &config;
+	Configuration & config = Configuration::get();
 	channels = config.channels;
 	
 #ifdef with_sndfile
@@ -103,7 +104,7 @@ AudioOutput::stopRecording()
 bool
 AudioOutput::Start ()
 {
-	if (!(driver = open_driver(*config))) {
+	if (!(driver = open_driver())) {
 		return false;
 	}
 	driver->setRealtime();
@@ -130,7 +131,8 @@ AudioOutput::Stop ()
 void 
 AudioOutput::ThreadAction	()
 {
-	int bufsize = config->buffer_size;
+	Configuration & config = Configuration::get();
+	int bufsize = config.buffer_size;
 	while (!ShouldStop ())
 	{
 		if (mAudioCallback != NULL)
@@ -151,12 +153,13 @@ AudioOutput::ThreadAction	()
 	}
 }
 
-static AudioDriver * open_driver(AudioDriver *driver, Configuration &config)
+static AudioDriver * open_driver(AudioDriver *driver)
 {
+	Configuration & config = Configuration::get();
 	if (!driver) {
 		return NULL;
 	}
-	if (driver->open(config) != 0) {
+	if (driver->open() != 0) {
 		delete driver;
 		return NULL;
 	}
@@ -170,24 +173,25 @@ static AudioDriver * open_driver(AudioDriver *driver, Configuration &config)
 	return driver;
 }
 
-static AudioDriver * open_driver(Configuration &config)
+static AudioDriver * open_driver()
 {
 	AudioDriver *driver = NULL;
+	Configuration & config = Configuration::get();
 
 	if (config.audio_driver == "alsa-mmap" || config.audio_driver == "auto") {
-        if ((driver = open_driver(CreateALSAmmapAudioDriver(), config))) {
+        if ((driver = open_driver(CreateALSAmmapAudioDriver()))) {
 			return driver;
 		}
 	}
 
 	if (config.audio_driver == "alsa" || config.audio_driver == "auto") {
-        if ((driver = open_driver(CreateALSAAudioDriver(), config))) {
+        if ((driver = open_driver(CreateALSAAudioDriver()))) {
 			return driver;
 		}
 	}
 
 	if (config.audio_driver == "oss" || config.audio_driver == "auto") {
-        if ((driver = open_driver(CreateOSSAudioDriver(), config))) {
+        if ((driver = open_driver(CreateOSSAudioDriver()))) {
 			return driver;
 		}
 	}

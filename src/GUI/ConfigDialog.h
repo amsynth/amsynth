@@ -23,12 +23,11 @@
 #define _ConfigDialog_h
 
 #include <gtkmm.h>
-#include "../Configuration.h"
 
 class ConfigDialog : public Gtk::Dialog
 {
 public:
-	ConfigDialog (Gtk::Window& parent, Configuration &);
+	ConfigDialog (Gtk::Window& parent);
 	
 protected:
 	void ReadValues ();
@@ -36,7 +35,6 @@ protected:
 	virtual void on_response (int);
 
 private:
-	Configuration &		mConfig;
 	Gtk::ComboBoxText	mMidiDriver;
 	Gtk::ComboBoxText	mAudioDriver;
 	Gtk::ComboBoxText	mSampleRate;

@@ -46,10 +46,7 @@ class OSSAudioDriver : public AudioDriver
 {
   public:
     OSSAudioDriver();
-    int open(){
-        return -1;
-    };
-    int open( Configuration &config );
+    int open();
     void close();
     int write( float *buffer, int frames );
     int setChannels( int channels );
@@ -61,7 +58,6 @@ class OSSAudioDriver : public AudioDriver
     int dsp_handle_, rate_, stereo_, format_, channels_;
     unsigned char *_outputBuffer;
     unsigned int _outputBufferFrames;
-    Configuration *config;
 };
 
 int
@@ -91,8 +87,10 @@ OSSAudioDriver::write(float *buffer, int frames)
 	return 0;
 }
 
-int OSSAudioDriver::open( Configuration &config )
+int OSSAudioDriver::open()
 {
+    Configuration & config = Configuration::get();
+
     if ((dsp_handle_ =::open(config.oss_audio_device.c_str(), O_WRONLY)) == -1){
 		cout << "<OSSAudioDriver> error: could not open dsp device " 
 			<< config.oss_audio_device << endl;
@@ -112,8 +110,6 @@ int OSSAudioDriver::open( Configuration &config )
 #ifdef ENABLE_REALTIME
 	config.current_audio_driver_wants_realtime = 1;
 #endif
-	
-	this->config = &config;
 	
     return 0;
 }

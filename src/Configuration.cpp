@@ -38,6 +38,8 @@ Configuration::Configuration()
 #ifdef ENABLE_REALTIME
 	realtime = 0;
 #endif
+	Defaults();
+	load();
 }
 
 void
