@@ -185,7 +185,6 @@ void Synthesizer::process(unsigned int nframes, std::vector<amsynth_midi_event_t
 		unsigned block_size_frames = std::min(frames_left_in_buffer, (unsigned)VoiceBoard::kMaxProcessBufferSize);
 		if (event != midi_in.end() && event->offset_frames > frame_index) {
 			unsigned frames_until_next_event = event->offset_frames - frame_index;
-			assert(frames_until_next_event < frames_left_in_buffer);
 			block_size_frames = std::min(block_size_frames, frames_until_next_event);
 		}
 		
@@ -195,5 +194,9 @@ void Synthesizer::process(unsigned int nframes, std::vector<amsynth_midi_event_t
 		
 		frame_index += block_size_frames;
 		frames_left_in_buffer -= block_size_frames;
+	}
+	while (event != midi_in.end()) {
+		_midiController->HandleMidiData(event->buffer, event->length);
+		++event;
 	}
 }
