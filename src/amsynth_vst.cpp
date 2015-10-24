@@ -61,7 +61,9 @@ struct ERect
 
 static char hostProductString[64] = "";
 
+#if DEBUG
 static FILE *logFile;
+#endif
 
 struct Plugin
 {
@@ -296,8 +298,10 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 				strcmp("receiveVstSysexEvent", (char *)ptr) == 0 ||
 				strcmp("sendVstMidiEvent", (char *)ptr) == 0 ||
 				false) return 0;
+#if DEBUG
 			fprintf(logFile, "[amsynth_vst] unhandled canDo: %s\n", (char *)ptr);
 			fflush(logFile);
+#endif
 			return 0;
 
 		case effGetTailSize:
@@ -353,9 +357,11 @@ static float getParameter(AEffect *effect, int i)
 
 extern "C" AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 {
+#if DEBUG
 	if (!logFile) {
 		logFile = fopen("/tmp/amsynth.log", "a");
 	}
+#endif
 	if (audioMaster) {
 		audioMaster(NULL, audioMasterGetProductString, 0, 0, hostProductString, 0.0f);
 	}
