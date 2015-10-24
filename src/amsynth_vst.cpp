@@ -32,14 +32,18 @@
 #include <cstring>
 
 #include <vestige/aeffectx.h>
-// additional opcodes from http://www.asseca.org/vst-24-specs/index.html
+
+// from http://www.asseca.org/vst-24-specs/index.html
 #define effGetParamLabel        6
 #define effGetParamDisplay      7
+#define effGetChunk             23
+#define effSetChunk             24
 #define effCanBeAutomated       26
 #define effGetOutputProperties  34
 #define effGetTailSize          52
 #define effGetMidiKeyName       66
 #define effBeginLoadBank        75
+#define effFlagsProgramChunks   (1 << 5)
 
 #ifdef WITH_GUI
 #include "GUI/editor_pane.h"
@@ -228,6 +232,13 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 		}
 #endif
 
+		case effGetChunk:
+			return plugin->synthesizer->saveState((char **)ptr);
+
+		case effSetChunk:
+			plugin->synthesizer->loadState((char *)ptr);
+			return 0;
+
 		case effProcessEvents: {
 			VstEvents *events = (VstEvents *)ptr;
 
@@ -358,7 +369,7 @@ extern "C" AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 	effect->numParams = kAmsynthParameterCount;
 	effect->numInputs = 0;
 	effect->numOutputs = 2;
-	effect->flags = effFlagsCanReplacing | effFlagsIsSynth;
+	effect->flags = effFlagsCanReplacing | effFlagsIsSynth | effFlagsProgramChunks;
 #ifdef WITH_GUI
 	effect->flags |= effFlagsHasEditor;
 #endif

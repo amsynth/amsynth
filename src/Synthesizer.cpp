@@ -75,6 +75,17 @@ void Synthesizer::saveBank(const char *filename)
 	_presetController->savePresets(filename);
 }
 
+void Synthesizer::loadState(char *buffer)
+{
+	_presetController->getCurrentPreset().fromString(buffer);
+}
+
+int Synthesizer::saveState(char **buffer)
+{
+	std::string string = _presetController->getCurrentPreset().toString();
+	return asprintf(buffer, "%s", string.c_str());
+}
+
 const char *Synthesizer::getPresetName(int presetNumber)
 {
 	return _presetController->getPreset(presetNumber).getName().c_str();
