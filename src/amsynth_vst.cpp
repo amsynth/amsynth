@@ -32,6 +32,14 @@
 #include <cstring>
 
 #include <vestige/aeffectx.h>
+// additional opcodes from http://www.asseca.org/vst-24-specs/index.html
+#define effGetParamLabel        6
+#define effGetParamDisplay      7
+#define effCanBeAutomated       26
+#define effGetOutputProperties  34
+#define effGetTailSize          52
+#define effGetMidiKeyName       66
+#define effBeginLoadBank        75
 
 #ifdef WITH_GUI
 #include "GUI/editor_pane.h"
@@ -48,6 +56,8 @@ struct ERect
 };
 
 static char hostProductString[64] = "";
+
+static FILE *logFile;
 
 struct Plugin
 {
@@ -109,17 +119,28 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 	Plugin *plugin = (Plugin *)effect->ptr3;
 
 	switch (opcode) {
+		case effOpen:
+			return 0;
+
 		case effClose:
 			delete plugin;
 			memset(effect, 0, sizeof(AEffect));
 			free(effect);
 			return 0;
-		case 6:
+
+		case effSetProgram:
+		case effGetProgram:
+		case effGetProgramName:
+			return 0;
+
+		case effGetParamLabel:
 			plugin->synthesizer->getParameterLabel((Param)index, (char *)ptr, 32);
 			return 0;
-		case 7:
+
+		case effGetParamDisplay:
 			plugin->synthesizer->getParameterDisplay((Param)index, (char *)ptr, 32);
 			return 0;
+
 		case effGetParamName:
 			plugin->synthesizer->getParameterName((Param)index, (char *)ptr, 32);
 			return 0;
@@ -127,8 +148,8 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 		case effSetSampleRate:
 			plugin->synthesizer->setSampleRate(f);
 			return 0;
+
 		case effSetBlockSize:
-			return 0;
 		case effMainsChanged:
 			return 0;
 
@@ -237,6 +258,11 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			
 			return 1;
 		}
+
+		case effCanBeAutomated:
+		case effGetOutputProperties:
+			return 0;
+
 		case effGetPlugCategory:
 			return kPlugCategSynth;
 		case effGetEffectName:
@@ -250,15 +276,40 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			return 1;
 		case effGetVendorVersion:
 			return 0;
+
 		case effCanDo:
-			if (strcmp("receiveVstMidiEvent", (char *)ptr) == 0)
-				return 1;
+			if (strcmp("receiveVstMidiEvent", (char *)ptr) == 0 ||
+				false) return 1;
+			if (strcmp("midiKeyBasedInstrumentControl", (char *)ptr) == 0 ||
+				strcmp("midiSingleNoteTuningChange", (char *)ptr) == 0 ||
+				strcmp("receiveVstSysexEvent", (char *)ptr) == 0 ||
+				strcmp("sendVstMidiEvent", (char *)ptr) == 0 ||
+				false) return 0;
+			fprintf(logFile, "[amsynth_vst] unhandled canDo: %s\n", (char *)ptr);
+			fflush(logFile);
 			return 0;
+
+		case effGetTailSize:
+		case effIdle:
 		case effGetParameterProperties:
 			return 0;
+
 		case effGetVstVersion:
 			return 2400;
+
+		case effGetMidiKeyName:
+		case effStartProcess:
+		case effStopProcess:
+		case effBeginSetProgram:
+		case effEndSetProgram:
+		case effBeginLoadBank:
+			return 0;
+
 		default:
+#if DEBUG
+			fprintf(logFile, "[amsynth_vst] unhandled VST opcode: %d\n", opcode);
+			fflush(logFile);
+#endif
 			return 0;
 	}
 }
@@ -291,6 +342,9 @@ static float getParameter(AEffect *effect, int i)
 
 extern "C" AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 {
+	if (!logFile) {
+		logFile = fopen("/tmp/amsynth.log", "a");
+	}
 	if (audioMaster) {
 		audioMaster(NULL, audioMasterGetProductString, 0, 0, hostProductString, 0.0f);
 	}
