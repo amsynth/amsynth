@@ -197,7 +197,7 @@ GenericOutput * open_audio()
 	if (config.audio_driver == "jack" ||
 		config.audio_driver == "JACK" ){
 		JackOutput *jack = new JackOutput();
-		if (jack->init(config) != 0) {
+		if (jack->init() != 0) {
 			delete jack;
 			return NULL;
 		}

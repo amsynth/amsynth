@@ -21,6 +21,8 @@
 
 #include "CoreAudio.h"
 
+#include "../Configuration.h"
+
 #if (__APPLE__)
 
 #include <CoreAudio/CoreAudio.h>
