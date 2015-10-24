@@ -1,3 +1,8 @@
+amsynth 1.6.2 -- 2015-10-24
+
+  - fixes an issue with MIDI event handling observed with Ardour/LV2
+
+
 amsynth 1.6.1 -- 2015-10-10
 
   - fixes support for non-44100 sample rates in DSSI and LV2 builds
