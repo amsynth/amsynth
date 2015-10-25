@@ -465,17 +465,21 @@ GUI::init()
 			param.getMax(),
 			param.getStep(),
 			0, 0);
-		gtk_signal_connect (GTK_OBJECT (m_adjustments[i]), "value_changed",
-			(GtkSignalFunc) adjustment_value_changed,
-			(gpointer) &param );
-
+	}
+	
+	Gtk::Widget *editor = Glib::wrap (editor_pane_new (m_adjustments, FALSE));
+	
+	// start_atomic_value_change is not registered until editor_pane_new is called
+	for (int i=0; i<kAmsynthParameterCount; i++) {
+		Parameter &param = preset->getParameter(i);
 		m_undoArgs[i] = new UndoArgs(preset_controller, &param);
 		g_signal_connect_after (G_OBJECT (m_adjustments[i]), "start_atomic_value_change",
 			G_CALLBACK(start_atomic_adjustment_value_change),
 			(gpointer) m_undoArgs[i] );
+		gtk_signal_connect (GTK_OBJECT (m_adjustments[i]), "value_changed",
+			(GtkSignalFunc) adjustment_value_changed,
+			(gpointer) &param );
 	}
-	
-	Gtk::Widget *editor = Glib::wrap (editor_pane_new (m_adjustments, FALSE));
 	
 	vbox.pack_start (*(create_menus ()),0,0);
 	vbox.pack_start (*presetCV, false, false);
