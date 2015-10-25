@@ -217,6 +217,23 @@ button_press_event (GtkWidget *widget, GdkEventButton *event, GtkWidget *presets
 GtkWidget *
 editor_pane_new (GtkAdjustment **adjustments, gboolean enable_popup_menu)
 {
+	static int initialised;
+	if (!initialised) {
+		initialised = TRUE;
+		// Add custom signal for atomic change operations to parameters.
+		g_signal_new(
+			"start_atomic_value_change",
+			g_type_from_name("GtkAdjustment"),
+			G_SIGNAL_ACTION,
+			0,
+			NULL,
+			NULL,
+			NULL,
+			G_TYPE_NONE,
+			0
+		);
+	}
+
 	GtkWidget *fixed = gtk_fixed_new ();
 	gtk_widget_set_usize (fixed, 400, 300);
 	

@@ -457,19 +457,6 @@ GUI::init()
 {
 	Preset *preset = &(preset_controller->getCurrentPreset());
 	
-	// Add custom signal for atomic change operations to parameters.
-	g_signal_new(
-		"start_atomic_value_change",
-		g_type_from_name("GtkAdjustment"),
-		G_SIGNAL_ACTION,
-		0,
-		NULL,
-		NULL,
-		NULL,
-		G_TYPE_NONE,
-		0
-	);
-	
 	for (int i=0; i<kAmsynthParameterCount; i++) {
 		Parameter &param = preset->getParameter(i);
 		m_adjustments[i] = (GtkAdjustment *) gtk_adjustment_new (
