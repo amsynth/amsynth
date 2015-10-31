@@ -1,3 +1,9 @@
+amsynth 1.6.3 -- 2015-10-31
+
+  - fixed vst load & save compatibility with Bitwig Studio
+  - fixes a warning about start_atomic_value_change in plugin versions
+
+
 amsynth 1.6.2 -- 2015-10-24
 
   - fixes an issue with MIDI event handling observed with Ardour/LV2
