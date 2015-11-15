@@ -175,8 +175,9 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 
 			if (!plugin->editorWidget) {
 				for (int i = 0; i < kAmsynthParameterCount; i++) {
-					gdouble value = 0, lower = 0, upper = 0, step_increment = 0;
-					get_parameter_properties(i, &lower, &upper, &value, &step_increment);
+					gdouble lower = 0, upper = 0, step_increment = 0;
+					get_parameter_properties(i, &lower, &upper, NULL, &step_increment);
+					gdouble value = plugin->synthesizer->getParameterValue((Param)i);
 					plugin->adjustments[i] = (GtkAdjustment *)gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);
 					g_object_ref_sink(plugin->adjustments[i]); // assumes ownership of the floating reference
 					g_signal_connect(plugin->adjustments[i], "value-changed", G_CALLBACK(on_adjustment_value_changed), effect);
