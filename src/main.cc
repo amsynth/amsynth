@@ -79,6 +79,7 @@ OPTIONS:\n\
 	-d          show some debugging output\n\
 \n\
 	-b <filename>   use <filename> as the bank to store presets\n\
+	-t <filename>   use <filename> as a tuning file\n\
 \n\
 	-a <string> set the sound output driver to use [alsa/oss/auto(default)]\n\
 	-r <int>    set the sampling rate to use\n\
@@ -395,6 +396,7 @@ int main( int argc, char *argv[] )
 				<< " sample rate:" << config.sample_rate << endl;
 
 	string amsynth_bank_file = config.current_bank_file;
+	// string amsynth_tuning_file = config.current_tuning_file;
 
 	GenericOutput *out = open_audio();
 	if (!out)
@@ -409,6 +411,9 @@ int main( int argc, char *argv[] )
 	s_synthesizer->setSampleRate(config.sample_rate);
 	
 	amsynth_load_bank(config.current_bank_file.c_str());
+	if (config.current_tuning_file != "default")
+		if (amsynth_load_tuning_file(config.current_tuning_file.c_str()) == 0)
+			cout << "Tuning file loaded \n";
 	amsynth_set_preset_number(initial_preset_no);
 	
 	// errors now detected & reported in the GUI
@@ -526,6 +531,12 @@ void
 amsynth_load_bank(const char *filename)
 {
 	s_synthesizer->loadBank(filename);
+}
+
+int
+amsynth_load_tuning_file(const char *filename)
+{
+	return s_synthesizer->loadTuningScale(filename);
 }
 
 int

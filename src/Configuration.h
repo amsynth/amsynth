@@ -114,6 +114,8 @@ public:
 	
 	std::string	current_bank_file;
 
+	std::string	current_tuning_file;
+
 	std::string	amsynthrc_fname;
 	
 	/* internal */

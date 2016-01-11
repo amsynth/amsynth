@@ -59,6 +59,7 @@ Configuration::Defaults	()
 	jack_client_name_preference = "amsynth";
 	current_bank_file = string (getenv ("HOME")) +
 		string("/.amSynth.presets");
+	current_tuning_file = "default";
 }
 
 int
@@ -103,6 +104,9 @@ Configuration::load	()
 		} else if (buffer=="pitch_bend_range"){
 			file >> buffer;
 			istringstream(buffer) >> pitch_bend_range;
+		} else if (buffer=="tuning_file"){
+			file >> buffer;
+			istringstream(buffer) >> current_tuning_file;
 		} else {
 			file >> buffer;
 		}
@@ -125,6 +129,7 @@ Configuration::save	()
 	fprintf (fout, "sample_rate\t%d\n", sample_rate);
 	fprintf (fout, "polyphony\t%d\n", polyphony);
 	fprintf (fout, "pitch_bend_range\t%d\n", pitch_bend_range);
+	fprintf (fout, "tuning_file\t%d\n", current_tuning_file);
 	fclose (fout);
 	return 0;
 }
