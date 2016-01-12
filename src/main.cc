@@ -79,7 +79,7 @@ OPTIONS:\n\
 	-d          show some debugging output\n\
 \n\
 	-b <filename>   use <filename> as the bank to store presets\n\
-	-t <filename>   use <filename> as a tuning file\n\
+//	-t <filename>   use <filename> as a tuning file\n\
 \n\
 	-a <string> set the sound output driver to use [alsa/oss/auto(default)]\n\
 	-r <int>    set the sampling rate to use\n\
