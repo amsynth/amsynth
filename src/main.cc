@@ -79,7 +79,7 @@ OPTIONS:\n\
 	-d          show some debugging output\n\
 \n\
 	-b <filename>   use <filename> as the bank to store presets\n\
-//	-t <filename>   use <filename> as a tuning file\n\
+	-t <filename>   use <filename> as a tuning file\n\
 \n\
 	-a <string> set the sound output driver to use [alsa/oss/auto(default)]\n\
 	-r <int>    set the sampling rate to use\n\
@@ -327,7 +327,7 @@ int main( int argc, char *argv[] )
 	};
 	
 	int opt = -1, longindex = -1;
-	while ((opt = getopt_long(argc, argv, "vhstdzxm:c:a:r:p:b:U:P:n:", longopts, &longindex)) != -1) {
+	while ((opt = getopt_long(argc, argv, "vhsdzxm:c:a:r:p:b:U:P:n:t:", longopts, &longindex)) != -1) {
 		switch (opt) {
             case 'v':
                 cout << PACKAGE_STRING << endl;
@@ -364,6 +364,9 @@ int main( int argc, char *argv[] )
 				break;
 			case 'p':
 				config.polyphony = atoi( optarg );
+				break;
+			case 't':
+				config.current_tuning_file = optarg;
 				break;
 			case 'U':
 				config.jack_session_uuid = optarg;
@@ -411,10 +414,10 @@ int main( int argc, char *argv[] )
 	s_synthesizer->setSampleRate(config.sample_rate);
 	
 	amsynth_load_bank(config.current_bank_file.c_str());
-	if (config.current_tuning_file != "default")
-		if (amsynth_load_tuning_file(config.current_tuning_file.c_str()) == 0)
-			cout << "Tuning file loaded \n";
 	amsynth_set_preset_number(initial_preset_no);
+
+	if (config.current_tuning_file != "default")
+		amsynth_load_tuning_file(config.current_tuning_file.c_str());
 	
 	// errors now detected & reported in the GUI
 	out->Start();
@@ -536,7 +539,11 @@ amsynth_load_bank(const char *filename)
 int
 amsynth_load_tuning_file(const char *filename)
 {
-	return s_synthesizer->loadTuningScale(filename);
+	int result = s_synthesizer->loadTuningScale(filename);
+	if (result != 0) {
+		cerr << "error: could not load tuning file " << filename << endl;
+	}
+	return result;
 }
 
 int

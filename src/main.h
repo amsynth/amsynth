@@ -28,7 +28,7 @@ extern "C" {
 
 extern void amsynth_save_bank(const char *filename);
 extern void amsynth_load_bank(const char *filename);
-extern int amsynth_load_tuning_file(const char *filename);
+extern int  amsynth_load_tuning_file(const char *filename);
 extern int  amsynth_get_preset_number();
 extern void amsynth_set_preset_number(int preset_no);
 extern void amsynth_midi_input(unsigned char status, unsigned char data1, unsigned char data2);
