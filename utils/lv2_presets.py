@@ -72,12 +72,12 @@ def lv2_bank_write(filepath, bank_name, presets):
 			print >> file, ''
 
 def main(argv=sys.argv):
-	for filename in sorted(os.listdir('banks')):
+	for filename in sorted(os.listdir('data/banks')):
 		if filename.endswith('.bank'):
-			presets = amsynth_bank_read(os.path.join('banks', filename))
+			presets = amsynth_bank_read(os.path.join('data/banks', filename))
 			bank_name = filename.replace('.bank', '').replace('.amSynth', '')
 			ttlfilename = filename + '.ttl'
-			lv2_bank_write(os.path.join('amsynth.lv2', ttlfilename), bank_name, presets)
+			lv2_bank_write(os.path.join('data/amsynth.lv2', ttlfilename), bank_name, presets)
 
 if __name__ == '__main__':
 	main()
