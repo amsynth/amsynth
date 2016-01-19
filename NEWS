@@ -1,3 +1,10 @@
+amsynth 1.6.3 -- 2016-01-19
+
+  - fix incorrect parameter display when vst gui is created
+  - support selection of a non-default tuning via command line or config file
+  - another sound bank thanks to brian :)
+
+
 amsynth 1.6.3 -- 2015-10-31
 
   - fixed vst load & save compatibility with Bitwig Studio
