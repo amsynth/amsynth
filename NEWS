@@ -1,4 +1,4 @@
-amsynth 1.6.3 -- 2016-01-19
+amsynth 1.6.4 -- 2016-01-19
 
   - fix incorrect parameter display when vst gui is created
   - support selection of a non-default tuning via command line or config file
