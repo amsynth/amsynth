@@ -1,7 +1,7 @@
 /*
  *  gui_main.cc
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2016 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -50,7 +50,7 @@ void gui_init(Synthesizer *synth, GenericOutput *out)
 	if (pipe(gdk_input_pipe) == -1)
 		perror("pipe()");
     
-    gtk_window_set_default_icon_from_file(DATADIR "/pixmaps/amsynth.png", NULL);
+    gtk_window_set_default_icon_name("amsynth");
 	
 	gui = new GUI(*synth->getMidiController(), synth, out);
 	gui->setPresetController(*synth->getPresetController());

@@ -1,7 +1,7 @@
 /*
  *  GUI.cc
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2016 Nick Dowell
  *  Portions of this file (c) 2003 Darrick Servis
  *
  *  This file is part of amsynth.
@@ -743,11 +743,12 @@ GUI::event_handler(const int e)
         std::string version = VERSION;
         gtk_show_about_dialog(this->gobj(),
                               "program-name", PACKAGE,
+                              "logo-icon-name", PACKAGE,
                               "version", version.c_str(),
                               "authors", authors,
                               "comments", "Analogue Modelling SYNTHesizer",
                               "website", PACKAGE_URL,
-                              "copyright", "© 2002 - 2015 Nick Dowell and contributors",
+                              "copyright", "© 2002 - 2016 Nick Dowell and contributors",
                               NULL);
         break;
     }

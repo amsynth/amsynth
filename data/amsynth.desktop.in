@@ -5,5 +5,5 @@ Comment=Two oscillator subtractive software synthesizer
 Type=Application
 Categories=AudioVideo;Audio;X-Synthesis;
 Exec=@prefix@/bin/amsynth
-Icon=@prefix@/share/pixmaps/amsynth.png
+Icon=amsynth
 Terminal=false

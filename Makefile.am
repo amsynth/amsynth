@@ -266,10 +266,13 @@ endif
 
 dist_pkgdata_DATA = data/rc
 
-EXTRA_DIST = data/amsynth.png
+EXTRA_DIST = data/icons/48x48/amsynth.png data/icons/scalable/amsynth.svg
 
-icondir = $(datadir)/pixmaps
-icon_DATA = data/amsynth.png
+appicon48dir=$(datadir)/icons/hicolor/48x48/apps
+appicon48_DATA=data/icons/48x48/amsynth.png
+
+appiconsvgdir=$(datadir)/icons/hicolor/scalable/apps
+appiconsvg_DATA=data/icons/scalable/amsynth.svg
 
 desktopdir = $(datadir)/applications
 desktop_in_files = data/amsynth.desktop.in
