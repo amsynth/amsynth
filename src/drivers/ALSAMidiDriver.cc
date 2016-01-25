@@ -63,7 +63,6 @@ ALSAMidiDriver::read(unsigned char *bytes, unsigned maxBytes)
 		return 0;
 	}
 	int num_bytes = snd_midi_event_decode( seq_midi_parser, bytes, maxBytes, ev );
-	snd_seq_free_event( ev );
 	return num_bytes;
 }
 
@@ -90,8 +89,6 @@ ALSAMidiDriver::write_cc(unsigned int channel, unsigned int param, unsigned int 
       cout << "param = " << param << " value = " << value << " ret = " << ret << endl;
 #endif
       if (ret < 0 ) cout << snd_strerror(ret) << endl;        
-      snd_seq_free_event( &ev );
-
       return ret;
 }
 
