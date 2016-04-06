@@ -347,7 +347,7 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_ReverbWidth:		reverb->setwidth (value);	break;
 	case kAmsynthParameter_AmpDistortion:	distortion->SetCrunch (value);	break;
 	case kAmsynthParameter_PortamentoTime: 	mPortamentoTime = value; break;
-	case kAmsynthParameter_KeyboardMode:	setKeyboardMode((KeyboardMode)value); break;
+	case kAmsynthParameter_KeyboardMode:	setKeyboardMode((KeyboardMode)(int)value); break;
 	case kAmsynthParameter_PortamentoMode:	mPortamentoMode = value; break;
 	default: for (unsigned i=0; i<_voices.size(); i++) _voices[i]->UpdateParameter (param, value); break;
 	}

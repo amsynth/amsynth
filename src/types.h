@@ -22,7 +22,11 @@
 #ifndef __amsynth__types__
 #define __amsynth__types__
 
+#if _WIN32
+#define DEPRECATED
+#else
 #define DEPRECATED __attribute__((deprecated))
+#endif
 
 struct amsynth_midi_event_t {
 	unsigned int offset_frames;

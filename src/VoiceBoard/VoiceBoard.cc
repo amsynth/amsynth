@@ -106,8 +106,8 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_FilterEnvDecay:	filter_env.SetDecay (value);	break;
 	case kAmsynthParameter_FilterEnvSustain:	filter_env.SetSustain (value);	break;
 	case kAmsynthParameter_FilterEnvRelease:	filter_env.SetRelease (value);	break;
-	case kAmsynthParameter_FilterType: mFilterType = (SynthFilter::FilterType) value; break;
-	case kAmsynthParameter_FilterSlope: mFilterSlope = (SynthFilter::FilterSlope) value; break;
+	case kAmsynthParameter_FilterType: mFilterType = (SynthFilter::FilterType) (int)value; break;
+	case kAmsynthParameter_FilterSlope: mFilterSlope = (SynthFilter::FilterSlope) (int)value; break;
 	case kAmsynthParameter_FilterKeyTrackAmount: mFilterKbdTrack = value; break;
 	case kAmsynthParameter_FilterKeyVelocityAmount: mFilterVelSens = value; break;
 

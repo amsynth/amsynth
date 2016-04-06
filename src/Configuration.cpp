@@ -25,7 +25,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <sstream>
-#include <unistd.h>
 
 using namespace std;
 
@@ -57,8 +56,10 @@ Configuration::Defaults	()
 	polyphony = 10;
 	pitch_bend_range = 2;
 	jack_client_name_preference = "amsynth";
+#ifndef _WIN32
 	current_bank_file = string (getenv ("HOME")) +
 		string("/.amSynth.presets");
+#endif
 	current_tuning_file = "default";
 }
 

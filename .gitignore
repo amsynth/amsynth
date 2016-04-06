@@ -9,9 +9,11 @@
 .deps
 .dirstamp
 .libs
+/amsynth.vcxproj.user
 aclocal.m4
 amsynth
 amsynth.desktop
+amsynth.VC.*
 amsynth_dssi_gtk
 autom4te.cache
 build
@@ -22,6 +24,7 @@ config.log
 config.status
 config.sub
 configure
+Debug/
 depcomp
 INSTALL
 install-sh
@@ -29,4 +32,5 @@ libtool
 ltmain.sh
 Makefile
 missing
+Release/
 stamp-h1

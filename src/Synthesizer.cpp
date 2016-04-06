@@ -83,7 +83,8 @@ void Synthesizer::loadState(char *buffer)
 int Synthesizer::saveState(char **buffer)
 {
 	std::string string = _presetController->getCurrentPreset().toString();
-	return asprintf(buffer, "%s", string.c_str());
+	*buffer = (char *)malloc(4096);
+	return sprintf(*buffer, "%s", string.c_str());
 }
 
 const char *Synthesizer::getPresetName(int presetNumber)

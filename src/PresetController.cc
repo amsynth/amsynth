@@ -26,12 +26,15 @@
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
-#include <dirent.h>
 #include <string>
 #include <fstream>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#if !_WIN32
+#include <dirent.h>
 #include <unistd.h>
+#endif
 
 
 using namespace std;
@@ -260,8 +263,10 @@ static bool is_amsynth_file(const char *filename)
 	if (stat(filename, &st) < 0)
 		return false;
 
+#if !_WIN32
 	if (!S_ISREG(st.st_mode))
 		return false;
+#endif
 
 	FILE *file = fopen(filename, "r");
 	if (!file)
@@ -284,7 +289,11 @@ static off_t file_read_contents(const char *filename, void **result)
 	if (!file)
 		return 0;
 	fseek(file, 0, SEEK_END);
+#if _WIN32
+	long length = ftell(file);
+#else
 	off_t length = ftello(file);
+#endif
 	void *buffer = calloc(length + 1, 1);
 	fseek(file, 0, SEEK_SET);
 	fread(buffer, length, 1, file);
@@ -402,6 +411,7 @@ static void scan_preset_bank(const std::string dir_path, const std::string file_
 
 static void scan_preset_banks(const std::string dir_path, bool read_only)
 {
+#if !_WIN32
 	DIR *dir = opendir(dir_path.c_str());
 	if (!dir)
 		return;
@@ -421,6 +431,7 @@ static void scan_preset_banks(const std::string dir_path, bool read_only)
 
 	for (std::vector<std::string>::iterator it = filenames.begin(); it != filenames.end(); ++it)
 		scan_preset_bank(dir_path, *it, read_only);
+#endif
 }
 
 static std::string sFactoryBanksDirectory;
