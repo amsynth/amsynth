@@ -46,6 +46,9 @@ Synthesizer::Synthesizer()
 	_voiceAllocationUnit->SetMaxVoices(config.polyphony);
 	_voiceAllocationUnit->setPitchBendRangeSemitones(config.pitch_bend_range);
 	
+	if (config.current_tuning_file != "default")
+		_voiceAllocationUnit->loadScale(config.current_tuning_file.c_str());
+	
 	_presetController = new PresetController;
 	_presetController->loadPresets(config.current_bank_file.c_str());
 	_presetController->selectPreset(0);
