@@ -22,6 +22,8 @@
 #ifndef _amsynth_main_h
 #define _amsynth_main_h
 
+#include "types.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -31,6 +33,7 @@ extern void amsynth_load_bank(const char *filename);
 extern int  amsynth_load_tuning_file(const char *filename);
 extern int  amsynth_get_preset_number();
 extern void amsynth_set_preset_number(int preset_no);
+extern void amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride, amsynth_midi_event_t *events, unsigned event_count);
 extern void amsynth_midi_input(unsigned char status, unsigned char data1, unsigned char data2);
 
 #ifdef __cplusplus

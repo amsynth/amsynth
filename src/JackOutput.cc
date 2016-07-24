@@ -148,10 +148,7 @@ JackOutput::process (jack_nframes_t nframes, void *arg)
 		}
 	}
 #endif
-	if (self->mAudioCallback != NULL) {
-		(*self->mAudioCallback)(lout, rout, nframes, 1,
-			midi_events.empty() ? NULL : &midi_events[0], midi_events.size());
-	}
+	amsynth_audio_callback(lout, rout, nframes, 1, midi_events.empty() ? NULL : &midi_events[0], midi_events.size());
 	return 0;
 }
 #endif

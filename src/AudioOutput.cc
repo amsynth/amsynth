@@ -133,10 +133,8 @@ AudioOutput::ThreadAction	()
 {
 	Configuration & config = Configuration::get();
 	int bufsize = config.buffer_size;
-	while (!ShouldStop ())
-	{
-		if (mAudioCallback != NULL)
-			(*mAudioCallback)(buffer+bufsize*2, buffer+bufsize*3, bufsize, 1, NULL, 0);
+	while (!ShouldStop ()) {
+		amsynth_audio_callback(buffer+bufsize*2, buffer+bufsize*3, bufsize, 1, NULL, 0);
 
 		for (int i=0; i<bufsize; i++) {
 			buffer[2*i]   = buffer[bufsize*2+i];

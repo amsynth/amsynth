@@ -184,7 +184,6 @@ void ptest ();
 
 static MidiDriver *midiDriver;
 Synthesizer *s_synthesizer;
-static void amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride, amsynth_midi_event_t *events, unsigned event_count);
 static unsigned char *midiBuffer;
 static const size_t midiBufferSize = 4096;
 static int gui_midi_pipe[2];
@@ -408,8 +407,7 @@ int main( int argc, char *argv[] )
 
 	// errors now detected & reported in the GUI
 	out->init();
-	out->setAudioCallback(&amsynth_audio_callback);
-	
+
 	s_synthesizer = new Synthesizer();
 	s_synthesizer->setSampleRate(config.sample_rate);
 	

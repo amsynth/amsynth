@@ -35,17 +35,10 @@
 using std::string;
 
 
-typedef void (* AudioCallback)(
-	float *buffer_l, float *buffer_r, unsigned num_frames, int stride,
-	amsynth_midi_event_t *events, unsigned event_count);
-
-
 class GenericOutput
 {
 public:
 	virtual ~GenericOutput () {}
-
-	virtual void		setAudioCallback(AudioCallback callback) { mAudioCallback = callback; }
 
 	virtual	int			init			() = 0;
 	
@@ -57,9 +50,6 @@ public:
 	virtual	void		stopRecording	( )			{;};
 	virtual	void		setOutputFile	( string /*file*/ )	{}
 	virtual	string		getOutputFile	( ) { return ""; }
-
-protected:
-	AudioCallback mAudioCallback;
 };
 
 class AudioOutput : public GenericOutput, public Thread
