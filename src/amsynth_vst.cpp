@@ -333,14 +333,16 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 static void process(AEffect *effect, float **inputs, float **outputs, int numSampleFrames)
 {
 	Plugin *plugin = (Plugin *)effect->ptr3;
-	plugin->synthesizer->process(numSampleFrames, plugin->midiEvents, outputs[0], outputs[1]);
+	std::vector<amsynth_midi_cc_t> midi_out;
+	plugin->synthesizer->process(numSampleFrames, plugin->midiEvents, midi_out, outputs[0], outputs[1]);
 	plugin->midiEvents.clear();
 }
 
 static void processReplacing(AEffect *effect, float **inputs, float **outputs, int numSampleFrames)
 {
 	Plugin *plugin = (Plugin *)effect->ptr3;
-	plugin->synthesizer->process(numSampleFrames, plugin->midiEvents, outputs[0], outputs[1]);
+	std::vector<amsynth_midi_cc_t> midi_out;
+	plugin->synthesizer->process(numSampleFrames, plugin->midiEvents, midi_out, outputs[0], outputs[1]);
 	plugin->midiEvents.clear();
 }
 

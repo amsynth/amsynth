@@ -206,8 +206,9 @@ static void run_synth (LADSPA_Handle instance, unsigned long sample_count, snd_s
 			a->synth->setParameterValue((Param)i, host_value);
 		}
 	}
-	
-	a->synth->process(sample_count, midi_events, a->out_l, a->out_r);
+
+	std::vector<amsynth_midi_cc_t> midi_out;
+	a->synth->process(sample_count, midi_events, midi_out, a->out_l, a->out_r);
 }
 
 // renoise ignores DSSI plugins that don't implement run

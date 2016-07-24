@@ -145,7 +145,8 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 		}
 	}
 
-	a->synth->process(sample_count, midi_events, a->out_l, a->out_r);
+	std::vector<amsynth_midi_cc_t> midi_out;
+	a->synth->process(sample_count, midi_events, midi_out, a->out_l, a->out_r);
 }
 
 static LV2_State_Status
