@@ -52,7 +52,6 @@ class MidiController
 {
 public:
 	MidiController();
-	virtual ~MidiController();
 
 	void	setPresetController	(PresetController & pc) { presetController = &pc; }
 	void	SetMidiEventHandler(MidiEventHandler* h) { _handler = h; }
@@ -61,7 +60,6 @@ public:
 
 	void	clearControllerMap();
 	void	loadControllerMap();
-	void	saveControllerMap();
 
 	int		getControllerForParameter(int paramId);
 	void	setControllerForParameter(int paramId, int cc);
@@ -75,13 +73,13 @@ public:
 	int     sendMidi_values		();
 	void	send_changes		(bool force=false);
 
-	void	timer_callback		();
-
 private:
 	void dispatch_note(unsigned char ch,
 		       unsigned char note, unsigned char vel);
     void controller_change(unsigned char controller, unsigned char value);
     void pitch_wheel_change(float val);
+
+    void saveControllerMap();
 
     PresetController *presetController;
     unsigned char status, data, channel;
@@ -93,7 +91,5 @@ private:
 
 	int _cc_to_param_map[MAX_CC];
 	int _param_to_cc_map[kAmsynthParameterCount];
-
-	bool _config_needs_save;
 };
 #endif

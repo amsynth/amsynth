@@ -37,19 +37,12 @@ MidiController::MidiController()
 ,	_handler(NULL)
 ,	_rpn_msb(0xff)
 ,	_rpn_lsb(0xff)
-,	_config_needs_save(false)
 ,	_midiDriver(NULL)
 {
 	presetController = 0;
 	Configuration & config = Configuration::get();
 	channel = config.midi_channel;
 	loadControllerMap();
-}
-
-MidiController::~MidiController()
-{
-	if (_config_needs_save)
-		saveControllerMap();
 }
 
 void
@@ -231,13 +224,6 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 }
 
 void
-MidiController::timer_callback()
-{
-	if (_config_needs_save)
-		saveControllerMap();
-}
-
-void
 MidiController::clearControllerMap()
 {
 	for (size_t i = 0; i < MAX_CC; i++) {
@@ -252,8 +238,6 @@ MidiController::clearControllerMap()
 	_param_to_cc_map[kAmsynthParameter_LFOToOscillators] = 1;
 	_cc_to_param_map[7] = kAmsynthParameter_MasterVolume;
 	_param_to_cc_map[kAmsynthParameter_MasterVolume] = 7;
-
-	_config_needs_save = false;
 }
 
 void
@@ -272,8 +256,6 @@ MidiController::loadControllerMap()
 		_param_to_cc_map[paramId] = cc;
 	}
 	file.close();
-
-	_config_needs_save = false;
 }
 
 void
@@ -290,8 +272,6 @@ MidiController::saveControllerMap()
 		file << (name ? name : "null") << std::endl;
 	}
 	file.close();
-
-	_config_needs_save = false;
 }
 
 int
@@ -320,7 +300,7 @@ MidiController::setControllerForParameter(int paramId, int cc)
 		_cc_to_param_map[cc] = paramId;
 	}
 
-	_config_needs_save = true;
+	saveControllerMap();
 }
 
 void

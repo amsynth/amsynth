@@ -474,7 +474,6 @@ unsigned
 amsynth_timer_callback()
 {
 	amsynth_lash_poll_events();
-    s_synthesizer->getMidiController()->timer_callback();
 	return 1;
 }
 
