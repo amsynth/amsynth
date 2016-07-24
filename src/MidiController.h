@@ -1,7 +1,7 @@
 /*
  *  MidiController.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2016 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -25,13 +25,12 @@
 #include "PresetController.h"
 #include "Parameter.h"
 #include "Thread.h"
+#include "types.h"
 
 
 #define MAX_CC 128
 
 typedef unsigned char uchar;
-
-class MidiDriver;
 
 class MidiEventHandler
 {
@@ -68,10 +67,8 @@ public:
 
 	int		get_midi_channel	() { return channel; }
 	void	set_midi_channel	( int ch );
-	
-	void	setMidiDriver		(MidiDriver *driver) { _midiDriver = driver; }
-	int     sendMidi_values		();
-	void	send_changes		(bool force=false);
+
+	void 	generateMidiOutput	(std::vector<amsynth_midi_cc_t> &);
 
 private:
 	void dispatch_note(unsigned char ch,
@@ -86,7 +83,6 @@ private:
 	Parameter last_active_controller;
 	unsigned char _midi_cc_vals[MAX_CC];
 	MidiEventHandler* _handler;
-	MidiDriver *_midiDriver;
 	unsigned char _rpn_msb, _rpn_lsb;
 
 	int _cc_to_param_map[MAX_CC];

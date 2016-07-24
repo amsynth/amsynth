@@ -1,7 +1,7 @@
 /*
  *  Synthesizer.cpp
  *
- *  Copyright (c) 2014 Nick Dowell
+ *  Copyright (c) 2014-2016 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -71,11 +71,11 @@ public:
 
 	void setSampleRate(int sampleRate);
 
-    void process(unsigned nframes,
-                 std::vector<amsynth_midi_event_t> &midi_in,
-                 float *audio_l, float *audio_r,
-                 unsigned audio_stride = 1);
-    
+	void process(unsigned nframes,
+				 const std::vector<amsynth_midi_event_t> &midi_in,
+				 std::vector<amsynth_midi_cc_t> &midi_out,
+				 float *audio_l, float *audio_r, unsigned audio_stride = 1);
+
     MidiController *getMidiController() DEPRECATED { return _midiController; };
     PresetController *getPresetController() DEPRECATED { return _presetController; }
     

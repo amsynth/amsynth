@@ -1,7 +1,7 @@
 /*
  *  main.cc
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2016 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -56,6 +56,7 @@
 #include <sys/resource.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -422,7 +423,6 @@ int main( int argc, char *argv[] )
 	
 	open_midi();
 	midiBuffer = (unsigned char *)malloc(midiBufferSize);
-    s_synthesizer->getMidiController()->setMidiDriver(midiDriver);
 
 	// prevent lash from spawning a new jack server
 	setenv("JACK_NO_START_SERVER", "1", 0);
@@ -481,10 +481,16 @@ void amsynth_midi_input(unsigned char status, unsigned char data1, unsigned char
 	write(gui_midi_pipe[1], buffer, sizeof(buffer));
 }
 
-void
-amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, int stride, amsynth_midi_event_t *events, unsigned event_count)
+static bool compare(const amsynth_midi_event_t &first, const amsynth_midi_event_t &second) {
+	return (first.offset_frames < second.offset_frames);
+}
+
+void amsynth_audio_callback(
+		float *buffer_l, float *buffer_r, unsigned num_frames, int stride,
+		const std::vector<amsynth_midi_event_t> &midi_in,
+		std::vector<amsynth_midi_cc_t> &midi_out)
 {
-	std::vector<amsynth_midi_event_t> midi_in(events, events + event_count);
+	std::vector<amsynth_midi_event_t> midi_in_merged = midi_in;
 
 	if (midiBuffer) {
 		unsigned char *buffer = midiBuffer;
@@ -498,7 +504,7 @@ amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, in
 				event.offset_frames = num_frames - 1;
 				event.length = bytes_read;
 				event.buffer = buffer;
-				midi_in.push_back(event);
+				midi_in_merged.push_back(event);
 				buffer += bytes_read;
 				bufferSize -= bytes_read;
 			}
@@ -511,13 +517,22 @@ amsynth_audio_callback(float *buffer_l, float *buffer_r, unsigned num_frames, in
 				event.offset_frames = num_frames - 1;
 				event.length = bytes_read;
 				event.buffer = buffer;
-				midi_in.push_back(event);
+				midi_in_merged.push_back(event);
 			}
 		}
 	}
 
+	std::sort(midi_in_merged.begin(), midi_in_merged.end(), compare);
+
 	if (s_synthesizer) {
-		s_synthesizer->process(num_frames, midi_in, buffer_l, buffer_r, stride);
+		s_synthesizer->process(num_frames, midi_in_merged, midi_out, buffer_l, buffer_r, stride);
+	}
+
+	if (midiDriver && !midi_out.empty()) {
+		std::vector<amsynth_midi_cc_t>::const_iterator out_it;
+		for (out_it = midi_out.begin(); out_it != midi_out.end(); ++out_it) {
+			midiDriver->write_cc(out_it->channel, out_it->cc, out_it->value);
+		}
 	}
 }
 

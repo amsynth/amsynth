@@ -74,7 +74,6 @@ enum {
 	evRecDlgRecord,
 	evRecDlgPause,
 	evVkeybd,
-	evMidiSend,
 	evConfig,
 	evNewInstance,
     evHelpMenuAbout,
@@ -404,8 +403,6 @@ GUI::create_menus	( )
 	list_utils_jack.push_back (*menu_item);
 	
 	list_utils.push_back (MenuElem("Audio (JACK) connections", *menu_utils_jack));
-	
-	list_utils.push_back (MenuElem("Send Settings to Midi", bind(mem_fun(this,&GUI::event_handler),(int)evMidiSend)));
 
 	//
 	// Help menu
@@ -702,13 +699,6 @@ GUI::event_handler(const int e)
 	    }
 		break;
 	
-	case evMidiSend:
-		{
-			MessageDialog dlg (*this, "Send Setting to Midi Out?", false, MESSAGE_QUESTION, BUTTONS_YES_NO, true);
-			if (RESPONSE_YES == dlg.run()) midi_controller->sendMidi_values();
-		}
-		break;
-		
 	case evConfig:
 	{
 		ConfigDialog dlg (*this);

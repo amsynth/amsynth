@@ -1,7 +1,7 @@
 /*
  *  types.h
  *
- *  Copyright (c) 2014 Nick Dowell
+ *  Copyright (c) 2014-2016 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -28,6 +28,12 @@ struct amsynth_midi_event_t {
 	unsigned int offset_frames;
 	unsigned int length;
 	unsigned char *buffer;
+};
+
+struct amsynth_midi_cc_t {
+	unsigned char channel;
+	unsigned char cc;
+	unsigned char value;
 };
 
 #endif

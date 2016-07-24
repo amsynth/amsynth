@@ -22,6 +22,7 @@
 #include "JackOutput.h"
 
 #include "Configuration.h"
+#include "midi.h"
 
 #if HAVE_JACK_MIDIPORT_H
 #include <jack/midiport.h>
@@ -54,6 +55,7 @@ JackOutput::JackOutput()
 ,	l_port(NULL)
 ,	r_port(NULL)
 ,	m_port(NULL)
+,	m_port_out(NULL)
 ,	client(NULL)
 #endif
 {
@@ -95,6 +97,7 @@ JackOutput::init()
 #if HAVE_JACK_MIDIPORT_H
 	/* create midi input port(s) */
 	m_port = jack_port_register(client, "midi_in", JACK_DEFAULT_MIDI_TYPE, JackPortIsInput, 0);
+	m_port_out = jack_port_register(client, "midi_out", JACK_DEFAULT_MIDI_TYPE, JackPortIsOutput, 0);
 #endif
 	
 #if HAVE_JACK_SESSION_H
@@ -148,7 +151,19 @@ JackOutput::process (jack_nframes_t nframes, void *arg)
 		}
 	}
 #endif
-	amsynth_audio_callback(lout, rout, nframes, 1, midi_events.empty() ? NULL : &midi_events[0], midi_events.size());
+	std::vector<amsynth_midi_cc_t> midi_out;
+	amsynth_audio_callback(lout, rout, nframes, 1, midi_events, midi_out);
+#if HAVE_JACK_MIDIPORT_H
+	if (self->m_port_out) {
+		void *port_buffer = jack_port_get_buffer(self->m_port_out, nframes);
+		jack_midi_clear_buffer(port_buffer);
+		std::vector<amsynth_midi_cc_t>::const_iterator out_it;
+		for (out_it = midi_out.begin(); out_it != midi_out.end(); ++out_it) {
+			jack_midi_data_t data[] = { MIDI_STATUS_CONTROLLER, out_it->cc, out_it->value};
+			jack_midi_event_write(port_buffer, 0, data, 3);
+		}
+	}
+#endif
 	return 0;
 }
 #endif

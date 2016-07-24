@@ -1,7 +1,7 @@
 /*
  *  MidiController.cc
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2016 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -22,7 +22,6 @@
 #include "MidiController.h"
 
 #include "Configuration.h"
-#include "drivers/MidiDriver.h"
 #include "midi.h"
 
 #include <assert.h>
@@ -37,7 +36,6 @@ MidiController::MidiController()
 ,	_handler(NULL)
 ,	_rpn_msb(0xff)
 ,	_rpn_lsb(0xff)
-,	_midiDriver(NULL)
 {
 	presetController = 0;
 	Configuration & config = Configuration::get();
@@ -311,26 +309,17 @@ MidiController::set_midi_channel	( int ch )
 	config.midi_channel = ch;
 }
 
-int
-MidiController::sendMidi_values       ()
-{
-	send_changes(true);
-	return 0;
-}
-
 void
-MidiController::send_changes(bool force)
+MidiController::generateMidiOutput(std::vector<amsynth_midi_cc_t> &output)
 {
-	if (!_midiDriver)
-		return;
-	for (size_t paramId = 0; paramId < kAmsynthParameterCount; paramId++) {
+	for (int paramId = 0; paramId < kAmsynthParameterCount; paramId++) {
 		int cc = _param_to_cc_map[paramId];
 		if (0 <= cc && cc < MAX_CC) {
 			Parameter &parameter = presetController->getCurrentPreset().getParameter(paramId);
-			unsigned char value = parameter.GetNormalisedValue() * 127.0;
-			if (_midi_cc_vals[cc] != value || force) {
+			unsigned char value = (unsigned char) (parameter.GetNormalisedValue() * 127.0);
+			if (_midi_cc_vals[cc] != value) {
 				_midi_cc_vals[cc] = value;
-				_midiDriver->write_cc(channel, cc, value);
+				output.push_back((amsynth_midi_cc_t){channel, (unsigned char) cc, value });
 			}
 		}
 	}

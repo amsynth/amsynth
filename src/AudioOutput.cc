@@ -1,7 +1,7 @@
 /*
  *  AudioOutput.cc
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2016 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -134,7 +134,9 @@ AudioOutput::ThreadAction	()
 	Configuration & config = Configuration::get();
 	int bufsize = config.buffer_size;
 	while (!ShouldStop ()) {
-		amsynth_audio_callback(buffer+bufsize*2, buffer+bufsize*3, bufsize, 1, NULL, 0);
+		std::vector<amsynth_midi_event_t> midi_in;
+		std::vector<amsynth_midi_cc_t> midi_out;
+		amsynth_audio_callback(buffer+bufsize*2, buffer+bufsize*3, bufsize, 1, midi_in, midi_out);
 
 		for (int i=0; i<bufsize; i++) {
 			buffer[2*i]   = buffer[bufsize*2+i];

@@ -1,7 +1,7 @@
 /*
  *  JackOutput.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2016 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -52,7 +52,7 @@ public:
 private:
 	string	error_msg;
 #ifdef WITH_JACK
-	jack_port_t 	*l_port, *r_port, *m_port;
+	jack_port_t 	*l_port, *r_port, *m_port, *m_port_out;
 	jack_client_t 	*client;
 #endif
 };
