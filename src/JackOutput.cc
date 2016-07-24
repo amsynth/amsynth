@@ -1,7 +1,7 @@
 /*
  *  JackOutput.cc
  *
- *  Copyright (c) 2001-2015 Nick Dowell
+ *  Copyright (c) 2001-2016 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -22,7 +22,6 @@
 #include "JackOutput.h"
 
 #include "Configuration.h"
-#include "VoiceAllocationUnit.h"
 
 #if HAVE_JACK_MIDIPORT_H
 #include <jack/midiport.h>
@@ -32,11 +31,9 @@
 #include <jack/session.h>
 #endif
 
-#include <assert.h>
 #include <iostream>
+#include <sstream>
 #include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <vector>
 
