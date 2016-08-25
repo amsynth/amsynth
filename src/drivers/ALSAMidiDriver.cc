@@ -38,7 +38,7 @@ class ALSAMidiDriver : public MidiDriver
 public:
 	ALSAMidiDriver(const char *client_name);
 	virtual ~ALSAMidiDriver		( );
-    virtual int read(unsigned char *bytes, unsigned maxBytes);
+    virtual int read(unsigned char *buffer, unsigned maxBytes);
     virtual int write_cc(unsigned int channel, unsigned int param, unsigned int value);
     virtual int open();
     virtual int close();
@@ -52,18 +52,22 @@ private:
 };
 
 int
-ALSAMidiDriver::read(unsigned char *bytes, unsigned maxBytes)
+ALSAMidiDriver::read(unsigned char *buffer, unsigned maxBytes)
 {
 	if (seq_handle == NULL) {
 		return 0;
 	}
-	snd_seq_event_t *ev = NULL;
-	int res = snd_seq_event_input( seq_handle, &ev );
-	if (res == -EAGAIN) {
-		return 0;
+	unsigned char *ptr = buffer;
+	while (1) {
+		snd_seq_event_t *ev = NULL;
+		int res = snd_seq_event_input(seq_handle, &ev);
+		if (res < 0)
+			break;
+		ptr += snd_midi_event_decode(seq_midi_parser, ptr, maxBytes - (ptr - buffer), ev);
+		if (res < 1)
+			break;
 	}
-	int num_bytes = snd_midi_event_decode( seq_midi_parser, bytes, maxBytes, ev );
-	return num_bytes;
+	return (int)(ptr - buffer);
 }
 
 int
