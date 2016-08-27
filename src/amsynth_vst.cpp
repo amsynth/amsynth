@@ -125,7 +125,8 @@ void modal_midi_learn(int param_index) {}
 
 static void XEventProc(XEvent *xevent)
 {
-	XPutBackEvent(GDK_DISPLAY_XDISPLAY(gdk_display_get_default()), xevent);
+	xevent->xany.display = GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
+	XPutBackEvent(xevent->xany.display, xevent);
 	gtk_main_iteration();
 }
 
