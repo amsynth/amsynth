@@ -48,6 +48,7 @@
 #ifdef WITH_GUI
 #include "GUI/editor_pane.h"
 #include <gdk/gdkx.h>
+#include <X11/Xlib.h>
 #if defined(__x86_64__)
 #include <sys/mman.h>
 #include <sys/user.h>
