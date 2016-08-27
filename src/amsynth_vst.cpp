@@ -48,7 +48,10 @@
 #ifdef WITH_GUI
 #include "GUI/editor_pane.h"
 #include <gdk/gdkx.h>
-#include <gtk/gtk.h>
+#if defined(__x86_64__)
+#include <sys/mman.h>
+#include <sys/user.h>
+#endif
 #endif
 
 struct ERect
@@ -119,6 +122,56 @@ static void on_adjustment_value_changed(GtkAdjustment *adjustment, AEffect *effe
 #endif
 
 void modal_midi_learn(int param_index) {}
+
+static void XEventProc(XEvent *xevent)
+{
+    XPutBackEvent(GDK_DISPLAY_XDISPLAY(gdk_display_get_default()), xevent);
+    gtk_main_iteration();
+}
+
+static void setEventProc(Display *display, Window window)
+{
+#if defined(__x86_64__)
+    //
+    // JUCE calls XGetWindowProperty with long_length = 1 which means it only fetches the lower 32 bits of the address.
+    // Therefore we need to ensure we return an address in the lower 32-bits of address space.
+    //
+
+    // based on mach_override
+    static const unsigned char kJumpInstructions[] = {
+            0xFF, 0x25, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00
+    };
+    static const int kJumpAddress = 6;
+
+    static char *ptr;
+    if (!ptr) {
+        ptr = (char *)mmap(0,
+                           PAGE_SIZE,
+                           PROT_READ | PROT_WRITE | PROT_EXEC,
+                           MAP_ANONYMOUS | MAP_PRIVATE | MAP_32BIT,
+                           0, 0);
+        if (ptr == MAP_FAILED) {
+            perror("mmap");
+            ptr = 0;
+            return;
+        } else {
+            memcpy(ptr, kJumpInstructions, sizeof(kJumpInstructions));
+            *((uint64_t *)(ptr + kJumpAddress)) = (uint64_t)(&XEventProc);
+            msync(ptr, sizeof(kJumpInstructions), MS_INVALIDATE);
+        }
+    }
+
+    long temp[2] = {(long)ptr, 0};
+    Atom atom = XInternAtom(display, "_XEventProc", false);
+    XChangeProperty(display, window, atom, atom, 32, PropModeReplace, (unsigned char *)temp, 2);
+#else
+    long temp[1] = {(long)(void *)(&XEventProc)};
+    Atom atom = XInternAtom(display, "_XEventProc", false);
+    XChangeProperty(display, window, atom, atom, 32, PropModeReplace, (unsigned char *)temp, 1);
+#endif
+}
 
 static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val, void *ptr, float f)
 {
@@ -199,6 +252,10 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 
 			// use gdk_window_reparent instead of XReparentWindow to avoid "GdkWindow unexpectedly destroyed" warnings
 			gdk_window_reparent(gtk_widget_get_window(plugin->gtkWindow), plugin->gdkParentWindow, 0, 0);
+
+			Display *xdisplay = GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
+			Window xwindow = GDK_WINDOW_XWINDOW(gtk_widget_get_window(plugin->gtkWindow));
+            setEventProc(xdisplay, xwindow);
 
 			gtk_container_add(GTK_CONTAINER(plugin->gtkWindow), plugin->editorWidget);
 			gtk_widget_show_all(plugin->gtkWindow);
