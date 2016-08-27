@@ -1,7 +1,7 @@
 /*
  *  amsynth_vst.cpp
  *
- *  Copyright (c) 2008-2015 Nick Dowell
+ *  Copyright (c) 2008-2016 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -48,8 +48,7 @@
 #ifdef WITH_GUI
 #include "GUI/editor_pane.h"
 #include <gdk/gdkx.h>
-#include <X11/Xlib.h>
-#if defined(__x86_64__)
+#if __x86_64__
 #include <sys/mman.h>
 #include <sys/user.h>
 #endif
@@ -102,6 +101,7 @@ struct Plugin
 };
 
 #ifdef WITH_GUI
+
 static void on_adjustment_value_changed(GtkAdjustment *adjustment, AEffect *effect)
 {
 	Plugin *plugin = (Plugin *)effect->ptr3;
@@ -120,7 +120,6 @@ static void on_adjustment_value_changed(GtkAdjustment *adjustment, AEffect *effe
 		}
 	}
 }
-#endif
 
 void modal_midi_learn(int param_index) {}
 
@@ -132,7 +131,7 @@ static void XEventProc(XEvent *xevent)
 
 static void setEventProc(Display *display, Window window)
 {
-#if defined(__x86_64__)
+#if __x86_64__
     //
     // JUCE calls XGetWindowProperty with long_length = 1 which means it only fetches the lower 32 bits of the address.
     // Therefore we need to ensure we return an address in the lower 32-bits of address space.
@@ -173,6 +172,8 @@ static void setEventProc(Display *display, Window window)
     XChangeProperty(display, window, atom, atom, 32, PropModeReplace, (unsigned char *)temp, 1);
 #endif
 }
+
+#endif // WITH_GUI
 
 static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val, void *ptr, float f)
 {
