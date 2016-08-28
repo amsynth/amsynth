@@ -174,6 +174,52 @@ static void setEventProc(Display *display, Window window)
 #endif
 }
 
+static void gdk_event_handler(GdkEvent *event, gpointer	data)
+{
+	static const char *names[] = {
+			"GDK_DELETE",
+			"GDK_DESTROY",
+			"GDK_EXPOSE",
+			"GDK_MOTION_NOTIFY",
+			"GDK_BUTTON_PRESS",
+			"GDK_2BUTTON_PRESS",
+			"GDK_3BUTTON_PRESS",
+			"GDK_BUTTON_RELEASE",
+			"GDK_KEY_PRESS",
+			"GDK_KEY_RELEASE",
+			"GDK_ENTER_NOTIFY",
+			"GDK_LEAVE_NOTIFY",
+			"GDK_FOCUS_CHANGE",
+			"GDK_CONFIGURE",
+			"GDK_MAP",
+			"GDK_UNMAP",
+			"GDK_PROPERTY_NOTIFY",
+			"GDK_SELECTION_CLEAR",
+			"GDK_SELECTION_REQUEST",
+			"GDK_SELECTION_NOTIFY",
+			"GDK_PROXIMITY_IN",
+			"GDK_PROXIMITY_OUT",
+			"GDK_DRAG_ENTER",
+			"GDK_DRAG_LEAVE",
+			"GDK_DRAG_MOTION",
+			"GDK_DRAG_STATUS",
+			"GDK_DROP_START",
+			"GDK_DROP_FINISHED",
+			"GDK_CLIENT_EVENT",
+			"GDK_VISIBILITY_NOTIFY",
+			"GDK_NO_EXPOSE",
+			"GDK_SCROLL",
+			"GDK_WINDOW_STATE",
+			"GDK_SETTING",
+			"GDK_OWNER_CHANGE",
+			"GDK_GRAB_BROKEN",
+			"GDK_DAMAGE"
+	};
+	fprintf(stderr, "%22s window = %p send_event = %d\n",
+			names[event->any.type], event->any.window, event->any.send_event);
+	gtk_main_do_event(event);
+}
+
 #endif // WITH_GUI
 
 static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val, void *ptr, float f)
@@ -225,7 +271,17 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 		case effEditOpen: {
 			static bool initialized = false;
 			if (!initialized) {
+#if DEBUG
+				int argc = 2;
+				char arg1[32] = "/dev/null";
+				char arg2[32] = "--g-fatal-warnings";
+				char *args[] = { arg1, arg2 };
+				char **argv = args;
+				gtk_init(&argc, &argv);
+				gdk_event_handler_set(&gdk_event_handler, NULL, NULL);
+#else
 				gtk_init(NULL, NULL);
+#endif
 				initialized = true;
 			}
 
