@@ -45,7 +45,7 @@ static const gchar *bitmap_popup_key = "bitmap_popup";
 ////////////////////////////////////////////////////////////////////////////////
 
 static gboolean bitmap_popup_expose			( GtkWidget *wigdet, GdkEventExpose *event );
-static gboolean bitmap_popup_button_press	( GtkWidget *wigdet, GdkEventButton *event );
+static gboolean bitmap_popup_button_release ( GtkWidget *wigdet, GdkEventButton *event );
 
 static void		bitmap_popup_set_adjustment				( GtkWidget *widget, GtkAdjustment *adjustment );
 static void		bitmap_popup_adjustment_changed			( GtkAdjustment *adjustment, gpointer data );
@@ -56,10 +56,10 @@ static void		bitmap_popup_menuitem_activated			( GtkWidget *menu_item, gpointer 
 
 GtkWidget *
 bitmap_popup_new( GtkAdjustment *adjustment,
-                 GdkPixbuf *pixbuf,
-                 guint frame_width,
-                 guint frame_height,
-                 guint frame_count )
+				 GdkPixbuf *pixbuf,
+				 guint frame_width,
+				 guint frame_height,
+				 guint frame_count )
 {
 	bitmap_popup *self = g_malloc0 (sizeof(bitmap_popup));
 
@@ -74,13 +74,14 @@ bitmap_popup_new( GtkAdjustment *adjustment,
 	
 	g_signal_connect (G_OBJECT (self->drawing_area), "expose-event", G_CALLBACK (bitmap_popup_expose), NULL);
 
-	g_signal_connect (G_OBJECT (self->drawing_area), "button-press-event", G_CALLBACK (bitmap_popup_button_press), NULL);
+	g_signal_connect (G_OBJECT (self->drawing_area), "button-release-event", G_CALLBACK (bitmap_popup_button_release), NULL);
 	
 	gtk_widget_set_usize (self->drawing_area, frame_width, frame_height);
 	
 	// set up event mask
 	gint event_mask = gtk_widget_get_events (self->drawing_area);
 	event_mask |= GDK_BUTTON_PRESS_MASK;
+	event_mask |= GDK_BUTTON_RELEASE_MASK;
 	gtk_widget_set_events (self->drawing_area, event_mask);
 	
 	bitmap_popup_set_adjustment (self->drawing_area, adjustment);
@@ -168,16 +169,12 @@ bitmap_popup_expose( GtkWidget *widget, GdkEventExpose *event )
 }
 
 gboolean
-bitmap_popup_button_press ( GtkWidget *widget, GdkEventButton *event )
+bitmap_popup_button_release ( GtkWidget *widget, GdkEventButton *event )
 {
-	if (event->type == GDK_BUTTON_PRESS && event->button == 1)
-	{
-		bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
-		g_signal_emit_by_name(self->adjustment, "start_atomic_value_change");
-		gtk_menu_popup (GTK_MENU (self->menu), NULL, NULL, NULL, NULL, event->button, event->time);
-		return TRUE;
-	}
-	return FALSE;
+	bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
+	g_signal_emit_by_name(self->adjustment, "start_atomic_value_change");
+	gtk_menu_popup (GTK_MENU (self->menu), NULL, NULL, NULL, NULL, event->button, event->time);
+	return TRUE;
 }
 
 void

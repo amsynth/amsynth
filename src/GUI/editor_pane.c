@@ -186,9 +186,9 @@ on_control_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
 }
 
 static gboolean
-button_press_event (GtkWidget *widget, GdkEventButton *event, GtkWidget *presets_menu)
+button_release_event (GtkWidget *widget, GdkEventButton *event, GtkWidget *presets_menu)
 {
-	if (!(event->type == GDK_BUTTON_PRESS && event->button == 3)) {
+	if (event->button != 3) {
 		return FALSE;
 	}
 	gtk_menu_popup (GTK_MENU (presets_menu), NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time ());
@@ -405,7 +405,7 @@ editor_pane_new (GtkAdjustment **adjustments, gboolean enable_popup_menu)
 	if (enable_popup_menu) {
 		GtkWidget *presets_menu = presets_menu_new (adjustments);
 		gtk_menu_attach_to_widget (GTK_MENU (presets_menu), eventbox, NULL);
-		g_signal_connect (eventbox, "button-press-event", G_CALLBACK (button_press_event), presets_menu);
+		g_signal_connect (eventbox, "button-release-event", G_CALLBACK (button_release_event), presets_menu);
 	}
 
 	return eventbox;
