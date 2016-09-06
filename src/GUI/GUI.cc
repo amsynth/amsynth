@@ -967,7 +967,7 @@ Make sure your file has the correct format and try again.");
 void
 GUI::key_map_open	( )
 {
-	std::string filename = file_dialog(this->gobj(), "Open alternate keybord map (Scala .kbm format)...", false, "Scala keyboard map files", "*.[Kk][Bb][Mm]", NULL);
+	std::string filename = file_dialog(this->gobj(), "Open alternate keyboard map (Scala .kbm format)...", false, "Scala keyboard map files", "*.[Kk][Bb][Mm]", NULL);
 	if (!filename.empty()) {
 		int error = m_synth->loadTuningKeymap(filename.c_str());
 		if (error) {
