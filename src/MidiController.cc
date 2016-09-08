@@ -316,7 +316,7 @@ MidiController::generateMidiOutput(std::vector<amsynth_midi_cc_t> &output)
 		int cc = _param_to_cc_map[paramId];
 		if (0 <= cc && cc < MAX_CC) {
 			Parameter &parameter = presetController->getCurrentPreset().getParameter(paramId);
-			unsigned char value = (unsigned char) (parameter.GetNormalisedValue() * 127.0);
+			unsigned char value = (unsigned char) roundf(parameter.GetNormalisedValue() * 127.0f);
 			if (_midi_cc_vals[cc] != value) {
 				_midi_cc_vals[cc] = value;
 				output.push_back((amsynth_midi_cc_t){channel, (unsigned char) cc, value });
