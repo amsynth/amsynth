@@ -11,6 +11,9 @@
 .libs
 aclocal.m4
 amsynth
+amsynth-tests
+amsynth-tests.log
+amsynth-tests.trs
 amsynth.desktop
 amsynth_dssi_gtk
 autom4te.cache
@@ -30,3 +33,5 @@ ltmain.sh
 Makefile
 missing
 stamp-h1
+test-driver
+test-suite.log

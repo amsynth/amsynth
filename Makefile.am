@@ -376,3 +376,16 @@ endif
 if BUILD_VST
 	rm  -f $(DESTDIR)$(vstdir)/amsynth_vst.so
 endif
+
+#
+#
+#
+
+check_PROGRAMS = amsynth-tests
+
+amsynth_tests_SOURCES = \
+	$(libcore_sources) \
+	$(libdsp_sources) \
+	src/tests.cpp
+
+TESTS = $(check_PROGRAMS)
