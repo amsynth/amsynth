@@ -1,0 +1,68 @@
+.TH AMSYNTH "1" "September 2016" "amsynth 1.6.4" "User Commands"
+.SH NAME
+amsynth \- a two oscillators software synthesizer.
+.SH SYNOPSIS
+.PP
+.B amsynth
+[options]
+.SH DESCRIPTION
+.PP
+amsynth 1.6.4 [Jan 19 2016]  [http://amsynth.github.io/].
+Copyright 2001\-2016 Nick Dowell <nixx@nixx.org.uk>.
+.PP
+amsynth is an easy-to-use software synth with a classic subtractive synthesizer topology.
+.PP
+amsynth comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions. See the file COPYING for details.
+.SH OPTIONS
+.PP
+Any options given here override those in the config file ($HOME/.amSynthrc).
+.HP
+\fB\-h\fR \- show a help message
+.HP
+\fB\-v\fR \- show version information
+.HP
+\fB\-d\fR \- show some debugging output
+.HP
+\fB\-b\fR <filename> \- use <filename> as the bank to store presets
+.HP
+\fB\-t\fR <filename> \- use <filename> as a tuning file
+.HP
+\fB\-a\fR <string> \- set the sound output driver to use [alsa/oss/auto(default)]
+.HP
+\fB\-r\fR <int> \- set the sampling rate to use
+.HP
+\fB\-m\fR <string> \- set the midi driver to use [alsa/oss/auto(default)]
+.HP
+\fB\-c\fR <int> \- set the midi channel to respond to (default=all)
+.HP
+\fB\-p\fR <int> \- set the polyphony (maximum active voices)
+.HP
+\fB\-n\fR <name> \- specify the JACK client name to use
+.HP
+\fB\-\-jack_autoconnect=<true|false>
+.SH FILES
+.TP
+.B $HOME/.amSynthrc
+.PP
+Configuration for amsynth.
+.TP
+.B $HOME/.amsynth/*
+.PP
+Banks and others.
+.TP
+.B $HOME/.amSynth.presets
+.PP
+Presets.
+.SH ENVIRONMENT
+.PP
+nothing
+.SH BUGS & FEATURES REQUEST
+.PP
+If you find any bug or if you would like to propose a new feature, please report it to https://github.com/amsynth/amsynth/issues .
+.SH AUTHORS
+.PP
+Nick Dowell and contributors. See complete list at amsynth's "Help" -> "About" Dialog.
+.SH MISC
+This manual page was written by Olivier Humbert <trebmuh@tuxfamily.org> on September the 06 2016 as a part of the LibraZiK project (and can be used by others).
