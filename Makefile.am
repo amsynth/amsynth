@@ -19,6 +19,10 @@
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
 AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' @CPPFLAGS@ -fPIC
 
+ACLOCAL_AMFLAGS = -I m4
+
+SUBDIRS = po
+
 libcore_sources = \
 	src/Configuration.cpp \
 	src/Configuration.h \
@@ -102,6 +106,7 @@ amsynth_SOURCES = \
 	src/drivers/OSSAudioDriver.h \
 	src/drivers/OSSMidiDriver.cc \
 	src/drivers/OSSMidiDriver.h \
+	src/gettext.h \
 	src/JackOutput.cc \
 	src/JackOutput.h \
 	src/lash.c \

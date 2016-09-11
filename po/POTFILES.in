@@ -1,0 +1,3 @@
+src/main.cc
+src/GUI/GUI.cc
+data/amsynth.desktop.in

@@ -60,6 +60,9 @@ using std::ostringstream;
 #include "MIDILearnDialog.h"
 #include "PresetControllerView.h"
 
+#include "../gettext.h"
+#define _(string) gettext (string)
+
 enum {
 	evLoad,
 	evCommit,
@@ -100,14 +103,14 @@ GUI::delete_event_impl(GdkEventAny *)
                                                     GTK_DIALOG_DESTROY_WITH_PARENT,
                                                     GTK_MESSAGE_WARNING,
                                                     GTK_BUTTONS_NONE,
-                                                    "<b>Save changes before closing?</b>");
+                                                    _("<b>Save changes before closing?</b>"));
 
-        gtk_dialog_add_button (GTK_DIALOG (dialog), "Close _Without Saving", GTK_RESPONSE_NO);
+        gtk_dialog_add_button (GTK_DIALOG (dialog), _("Close _Without Saving"), GTK_RESPONSE_NO);
         gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
         gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_SAVE, GTK_RESPONSE_YES);
         
         gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG(dialog),
-                                                  "If you don't save, changes to the current preset will be permanently lost.");
+                                                  _("If you don't save, changes to the current preset will be permanently lost."));
         
         gint result = gtk_dialog_run (GTK_DIALOG (dialog));
         gtk_widget_destroy (dialog);
@@ -141,36 +144,36 @@ GUI::GUI(MidiController & mc, Synthesizer *synth, GenericOutput *audio)
 	//
 	// the preset rename dialog
 	//
-	preset_rename.set_title( "Rename Preset" );
+	preset_rename.set_title(_("Rename Preset"));
 	preset_rename.set_size_request( 300, 200 );
 	preset_rename.set_resizable (false);
 	preset_rename.get_vbox()->add( preset_rename_label );
-	preset_rename_label.set_text( "Enter new Preset Name:" );
+	preset_rename_label.set_text(_("Enter new Preset Name:"));
 	preset_rename.get_vbox()->add( preset_rename_entry );
 	preset_rename.get_action_area()->add( preset_rename_ok );
-	preset_rename_ok.add_label( "Confirm", 0.5, 0.5 );
+	preset_rename_ok.add_label(_("Confirm"), 0.5, 0.5 );
 	preset_rename_ok.signal_clicked().connect(sigc::bind( sigc::mem_fun(*this, &GUI::event_handler), (int) evPresetRenameOk));
 	preset_rename.get_action_area()->add( preset_rename_cancel );
 	preset_rename_cancel.signal_clicked().connect(mem_fun(preset_rename, &Gtk::Dialog::hide));
-	preset_rename_cancel.add_label( "Cancel", 0.5, 0.5 );
+	preset_rename_cancel.add_label(_("Cancel"), 0.5, 0.5 );
 	preset_rename.set_modal( true );
 	preset_rename.set_transient_for( *this );
 	
 	//
 	// the new preset dialog
 	//
-	d_preset_new.set_title( "Create a New Preset" );
+	d_preset_new.set_title(_("Create a New Preset"));
 	d_preset_new.set_size_request( 300, 200 );
 	d_preset_new.set_resizable (false);
 	d_preset_new.get_vbox()->add( d_preset_new_label );
-	d_preset_new_label.set_text( "Enter new Preset Name:" );
+	d_preset_new_label.set_text(_("Enter new Preset Name:"));
 	d_preset_new.get_vbox()->add( d_preset_new_entry );
 	d_preset_new.get_action_area()->add( d_preset_new_ok );
-	d_preset_new_ok.add_label( "Confirm", 0.5, 0.5 );
+	d_preset_new_ok.add_label(_("Confirm"), 0.5, 0.5 );
 	d_preset_new_ok.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler), 0));
 	d_preset_new.get_action_area()->add( d_preset_new_cancel );
 	d_preset_new_cancel.signal_clicked().connect(mem_fun(d_preset_new, &Gtk::Dialog::hide));
-	d_preset_new_cancel.add_label( "Cancel", 0.5, 0.5 );
+	d_preset_new_cancel.add_label(_("Cancel"), 0.5, 0.5 );
 	d_preset_new.set_modal( true );
 	d_preset_new.set_transient_for( *this );
 	
@@ -178,7 +181,7 @@ GUI::GUI(MidiController & mc, Synthesizer *synth, GenericOutput *audio)
 	//
 	// the record dialog
 	//
-	record_dialog.set_title( "Capture Output" );
+	record_dialog.set_title(_("Capture Output"));
 	record_dialog.add( record_vbox );
 	record_dialog.set_resizable (false);
 	
@@ -188,7 +191,7 @@ GUI::GUI(MidiController & mc, Synthesizer *synth, GenericOutput *audio)
 	record_vbox.pack_start( record_statusbar, FALSE, FALSE, 0 );
 	
 	record_file_frame.set_border_width( 5 );
-	record_file_frame.set_label( "output file:" );
+	record_file_frame.set_label(_("output file:"));
 	record_file_frame.add( record_file_hbox );
 	record_file_hbox.set_border_width( 5 );
 	record_file_hbox.set_spacing( 10 );
@@ -208,7 +211,7 @@ GUI::GUI(MidiController & mc, Synthesizer *synth, GenericOutput *audio)
 	record_pause.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evRecDlgPause) );
 	
 	record_recording = false;
-	record_statusbar.push ("capture status: STOPPED", 1);
+	record_statusbar.push (_("capture status: STOPPED"), 1);
 }
 
 Gtk::MenuBar*
@@ -228,19 +231,19 @@ GUI::create_menus	( )
 	
 #if defined(__linux)
 	// create-new-instance currently only supported on Linux
-	list_file.push_back (MenuElem("New Instance", sigc::bind(mem_fun(this, &GUI::event_handler),(int)evNewInstance)));
+	list_file.push_back (MenuElem(_("New Instance"), sigc::bind(mem_fun(this, &GUI::event_handler),(int)evNewInstance)));
 	list_file.push_back (SeparatorElem());
 #endif
 	
-	list_file.push_back (MenuElem("_Open Bank",Gtk::AccelKey("<control>O"), mem_fun(*this, &GUI::bank_open)));
+	list_file.push_back (MenuElem(_("_Open Bank"), Gtk::AccelKey("<control>O"), mem_fun(*this, &GUI::bank_open)));
 //	list_file.push_back (MenuElem("_Save Bank","<control>S", mem_fun(*this, &GUI::bank_save)));
-	list_file.push_back (MenuElem("_Save Bank As...",Gtk::AccelKey("<control>S"), mem_fun(*this, &GUI::bank_save_as)));
+	list_file.push_back (MenuElem(_("_Save Bank As..."), Gtk::AccelKey("<control>S"), mem_fun(*this, &GUI::bank_save_as)));
 	list_file.push_back (SeparatorElem());
-	list_file.push_back (MenuElem("Open Alternate Tuning File", mem_fun(*this, &GUI::scale_open)));
-	list_file.push_back (MenuElem("Open Alternate Keyboard Map", mem_fun(*this, &GUI::key_map_open)));
-	list_file.push_back (MenuElem("Reset All Tuning Settings to Default", mem_fun(*this, &GUI::tuning_reset)));
+	list_file.push_back (MenuElem(_("Open Alternate Tuning File"), mem_fun(*this, &GUI::scale_open)));
+	list_file.push_back (MenuElem(_("Open Alternate Keyboard Map"), mem_fun(*this, &GUI::key_map_open)));
+	list_file.push_back (MenuElem(_("Reset All Tuning Settings to Default"), mem_fun(*this, &GUI::tuning_reset)));
 	list_file.push_back (SeparatorElem());
-	list_file.push_back (MenuElem("_Quit",Gtk::AccelKey("<control>Q"), bind(mem_fun(this, &GUI::event_handler),(int)evQuit)));
+	list_file.push_back (MenuElem(_("_Quit"), Gtk::AccelKey("<control>Q"), bind(mem_fun(this, &GUI::event_handler),(int)evQuit)));
 	
 	
 	//
@@ -249,20 +252,20 @@ GUI::create_menus	( )
 	Menu *menu_preset = manage (new Menu());
 	MenuList& list_preset = menu_preset->items ();
 //	list_preset.push_back (manage (new TearoffMenuItem ()));
-	list_preset.push_back (MenuElem("_New", Gtk::AccelKey("<control>N"), mem_fun(*this, &GUI::preset_new)));
-	list_preset.push_back (MenuElem("_Copy", Gtk::AccelKey("<control>C"), mem_fun(*this, &GUI::preset_copy)));
-	list_preset.push_back (MenuElem("_Paste", Gtk::AccelKey("<control>V"), mem_fun(*this, &GUI::preset_paste)));
-	list_preset.push_back (MenuElem("Paste as New", mem_fun(*this, &GUI::preset_paste_as_new)));
+	list_preset.push_back (MenuElem(_("_New"), Gtk::AccelKey("<control>N"), mem_fun(*this, &GUI::preset_new)));
+	list_preset.push_back (MenuElem(_("_Copy"), Gtk::AccelKey("<control>C"), mem_fun(*this, &GUI::preset_copy)));
+	list_preset.push_back (MenuElem(_("_Paste"), Gtk::AccelKey("<control>V"), mem_fun(*this, &GUI::preset_paste)));
+	list_preset.push_back (MenuElem(_("Paste as New"), mem_fun(*this, &GUI::preset_paste_as_new)));
 	list_preset.push_back (SeparatorElem());
-	list_preset.push_back (MenuElem("Rename", sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetRename)));
-	list_preset.push_back (MenuElem("Clear", bind(mem_fun(this,&GUI::event_handler),(int)evPresetDelete)));
+	list_preset.push_back (MenuElem(_("Rename"), sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetRename)));
+	list_preset.push_back (MenuElem(_("Clear"), bind(mem_fun(this,&GUI::event_handler),(int)evPresetDelete)));
 	list_preset.push_back (SeparatorElem());
-	list_preset.push_back (MenuElem("_Randomise", Gtk::AccelKey("<control>R"), sigc::mem_fun(preset_controller, &PresetController::randomiseCurrentPreset)));
-	list_preset.push_back (MenuElem("Undo", Gtk::AccelKey("<control>Z"), sigc::mem_fun(preset_controller, &PresetController::undoChange)));
-	list_preset.push_back (MenuElem("Redo", Gtk::AccelKey("<control>Y"), sigc::mem_fun(preset_controller, &PresetController::redoChange)));
+	list_preset.push_back (MenuElem(_("_Randomise"), Gtk::AccelKey("<control>R"), sigc::mem_fun(preset_controller, &PresetController::randomiseCurrentPreset)));
+	list_preset.push_back (MenuElem(_("Undo"), Gtk::AccelKey("<control>Z"), sigc::mem_fun(preset_controller, &PresetController::undoChange)));
+	list_preset.push_back (MenuElem(_("Redo"), Gtk::AccelKey("<control>Y"), sigc::mem_fun(preset_controller, &PresetController::redoChange)));
 	list_preset.push_back (SeparatorElem());
-	list_preset.push_back (MenuElem("Import Preset", bind(mem_fun(*this, &GUI::event_handler), (int)evPresetImport)));
-	list_preset.push_back (MenuElem("Export Preset", bind(mem_fun(*this, &GUI::event_handler), (int)evPresetExport)));
+	list_preset.push_back (MenuElem(_("Import Preset"), bind(mem_fun(*this, &GUI::event_handler), (int)evPresetImport)));
+	list_preset.push_back (MenuElem(_("Export Preset"), bind(mem_fun(*this, &GUI::event_handler), (int)evPresetExport)));
 
 			
 	//
@@ -281,7 +284,7 @@ GUI::create_menus	( )
 		const int currentValue = midi_controller->get_midi_channel();
 		
 		for (int i=0; i<=16; i++) {
-			ostringstream name; i ? name << i : name << "All";
+			ostringstream name; i ? name << i : name << _("All");
 			item = Gtk::manage(new Gtk::RadioMenuItem(grp, name.str()));
 			item->set_active((i == currentValue));
 			menu->items().push_back(*item);
@@ -292,7 +295,7 @@ GUI::create_menus	( )
 			menu->items()[i].signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_midi_channel_change), i) );
 		}
 
-		menu_config->items().push_back(MenuElem("MIDI Channel", *menu));
+		menu_config->items().push_back(MenuElem(_("MIDI Channel"), *menu));
 	}
 	
 	//
@@ -304,7 +307,7 @@ GUI::create_menus	( )
 		Gtk::Menu *menu = Gtk::manage( new Gtk::Menu );
 		const int currentValue = m_synth->getMaxNumVoices();
 		
-		item = Gtk::manage(new Gtk::RadioMenuItem(grp, "Unlimited"));
+		item = Gtk::manage(new Gtk::RadioMenuItem(grp, _("Unlimited")));
 		item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_ployphony_change), 0, item) );
 		menu->items().push_back(*item);
 		
@@ -316,7 +319,7 @@ GUI::create_menus	( )
 			menu->items().push_back(*item);
 		}
 		
-		menu_config->items().push_back(MenuElem("Max. Polyphony", *menu));
+		menu_config->items().push_back(MenuElem(_("Max. Polyphony"), *menu));
 	}
 
 	//
@@ -329,7 +332,7 @@ GUI::create_menus	( )
 		for (int i=1; i<=24; i++) {
 			ostringstream name;
 			name << i;
-			name << " Semitones";
+			name << _(" Semitones");
 			Gtk::RadioMenuItem *item = Gtk::manage(new Gtk::RadioMenuItem(grp, name.str()));
 			item->set_active(i == config.pitch_bend_range);
 			item->signal_activate().connect( sigc::bind(mem_fun(*this, &GUI::on_pitch_bend_range_change), i, item) );
@@ -338,10 +341,10 @@ GUI::create_menus	( )
 
 		m_pitchBendRangeMenu->signal_show().connect(sigc::mem_fun(*this, &GUI::on_pitch_bend_range_menu_show));
 
-		menu_config->items().push_back(MenuElem("Pitch Bend Range", *m_pitchBendRangeMenu));
+		menu_config->items().push_back(MenuElem(_("Pitch Bend Range"), *m_pitchBendRangeMenu));
 	}
 	
-	list_config.push_back (MenuElem("Audio & MIDI...", bind(mem_fun(*this, &GUI::event_handler), (int)evConfig)));
+	list_config.push_back (MenuElem(_("Audio & MIDI..."), bind(mem_fun(*this, &GUI::event_handler), (int)evConfig)));
 	
 	
 	//
@@ -350,14 +353,14 @@ GUI::create_menus	( )
 	Menu *menu_utils = manage (new Menu());
 	MenuList& list_utils = menu_utils->items ();
 
-	MenuItem *menu_item = manage (new MenuItem("Virtual Keyboard"));
+	MenuItem *menu_item = manage (new MenuItem(_("Virtual Keyboard")));
 	menu_item->signal_activate().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evVkeybd));
 	// vkeybd must exist, and we must be using ALSA MIDI
 	if (config.alsa_seq_client_id == 0 || command_exists("vkeybd") != 0)
 		menu_item->set_sensitive( false );
 	list_utils.push_back (*menu_item);
 
-	menu_item = manage (new MenuItem("Record to .wav file..."));
+	menu_item = manage (new MenuItem(_("Record to .wav file...")));
 	menu_item->signal_activate().connect(mem_fun(record_dialog, &Gtk::Dialog::show_all));
 	if (audio_out) if (!audio_out->canRecord ()) menu_item->set_sensitive (false);
 	list_utils.push_back (*menu_item);
@@ -382,7 +385,7 @@ GUI::create_menus	( )
 	if (config.alsa_seq_client_id==0) menu_item->set_sensitive( false );
 	list_utils_midi.push_back (*menu_item);
 	
-	list_utils.push_back (MenuElem("MIDI (ALSA) connections", *menu_utils_midi));
+	list_utils.push_back (MenuElem(_("MIDI (ALSA) connections"), *menu_utils_midi));
 	
 	//
 	// JACK sub-menu
@@ -402,15 +405,15 @@ GUI::create_menus	( )
 	if (config.current_audio_driver != "jack" && config.current_audio_driver != "JACK") menu_item->set_sensitive( false );
 	list_utils_jack.push_back (*menu_item);
 	
-	list_utils.push_back (MenuElem("Audio (JACK) connections", *menu_utils_jack));
+	list_utils.push_back (MenuElem(_("Audio (JACK) connections"), *menu_utils_jack));
 
 	//
 	// Help menu
 	//
 	Menu *menu_help = manage (new Menu());
-	menu_help->items().push_back (MenuElem("About", bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuAbout)));
-	menu_help->items().push_back (MenuElem("Report a Bug...", bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuBugReport)));
-	menu_help->items().push_back (MenuElem("Online Documentation...", bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuOnlineDocumentation)));
+	menu_help->items().push_back (MenuElem(_("About"), bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuAbout)));
+	menu_help->items().push_back (MenuElem(_("Report a Bug..."), bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuBugReport)));
+	menu_help->items().push_back (MenuElem(_("Online Documentation..."), bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuOnlineDocumentation)));
 
 	
 	//
@@ -419,13 +422,13 @@ GUI::create_menus	( )
 	MenuBar *menu_bar = manage (new MenuBar ());
 	
 	MenuList& list_bar = menu_bar->items();
-	list_bar.push_back (MenuElem("_File", Gtk::AccelKey("<alt>F"), *menu_file));
-	list_bar.push_back (MenuElem("_Preset", Gtk::AccelKey("<alt>P"), *menu_preset));
-	list_bar.push_back (MenuElem("_Config", Gtk::AccelKey("<alt>C"), *menu_config));
-	list_bar.push_back (MenuElem("_Utils", Gtk::AccelKey("<alt>U"), *menu_utils));
-	list_bar.push_back (MenuElem("_Help", *menu_help));
+	list_bar.push_back (MenuElem(_("_File"), Gtk::AccelKey("<alt>F"), *menu_file));
+	list_bar.push_back (MenuElem(_("_Preset"), Gtk::AccelKey("<alt>P"), *menu_preset));
+	list_bar.push_back (MenuElem(_("_Config"), Gtk::AccelKey("<alt>C"), *menu_config));
+	list_bar.push_back (MenuElem(_("_Utils"), Gtk::AccelKey("<alt>U"), *menu_utils));
+	list_bar.push_back (MenuElem(_("_Help"), *menu_help));
     
-    gchar *text = g_strdup_printf ("Audio: %s @ %d  MIDI: %s", config.current_audio_driver.c_str(), config.sample_rate, config.current_midi_driver.c_str());
+    gchar *text = g_strdup_printf (_("Audio: %s @ %d  MIDI: %s"), config.current_audio_driver.c_str(), config.sample_rate, config.current_midi_driver.c_str());
     list_bar.push_back (MenuElem (text));
     list_bar.back().set_right_justified();
     list_bar.back().set_sensitive(false);
@@ -502,10 +505,10 @@ GUI::post_init()
 	if (config.current_audio_driver.empty())
 	{
 		bad_config = true;
-		MessageDialog dlg (*this, "amsynth configuration error", false, MESSAGE_ERROR, BUTTONS_OK, true);
+		MessageDialog dlg (*this, _("amsynth configuration error"), false, MESSAGE_ERROR, BUTTONS_OK, true);
 		dlg.set_secondary_text(
-			"amsynth could not initialise the selected audio device.\n\n"
-			"Please review the configuration and restart"
+			_("amsynth could not initialise the selected audio device.\n\n"
+			"Please review the configuration and restart")
 		    );
 		dlg.run();
 	}
@@ -513,10 +516,10 @@ GUI::post_init()
 	if (config.current_midi_driver.empty())
 	{
 		bad_config = true;
-		MessageDialog dlg (*this, "amsynth configuration error", false, MESSAGE_ERROR, BUTTONS_OK, true);
+		MessageDialog dlg (*this, _("amsynth configuration error"), false, MESSAGE_ERROR, BUTTONS_OK, true);
 		dlg.set_secondary_text(
-			"amsynth could not initialise the selected midi device.\n\n"
-			"Please review the configuration and restart"
+			_("amsynth could not initialise the selected midi device.\n\n"
+			"Please review the configuration and restart")
 		    );
 		dlg.run();
 	}
@@ -533,8 +536,8 @@ GUI::post_init()
 	if (config.current_audio_driver_wants_realtime == 1 &&
 		config.realtime == 0)
 	{
-		MessageDialog dlg (*this, "amsynth could not set realtime priority");
-		dlg.set_secondary_text ("You may experience audio buffer underruns resulting in 'clicks' in the audio.\n\nThis is most likely because the program is not SUID root.\n\nUsing the JACK audio subsystem can also help");
+		MessageDialog dlg (*this, _("amsynth could not set realtime priority"));
+		dlg.set_secondary_text (_("You may experience audio buffer underruns resulting in 'clicks' in the audio.\n\nThis is most likely because the program is not SUID root.\n\nUsing the JACK audio subsystem can also help"));
 		dlg.run();
 	}
 #endif
@@ -549,7 +552,7 @@ open_uri(const char *uri)
 												   GTK_DIALOG_DESTROY_WITH_PARENT,
 												   GTK_MESSAGE_ERROR,
 												   GTK_BUTTONS_OK,
-												   "Could not show link");
+												   _("Could not show link"));
 		gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", error->message);
 		gtk_dialog_run(GTK_DIALOG(dialog));
 		gtk_widget_destroy(dialog);
@@ -622,7 +625,7 @@ GUI::event_handler(const int e)
 	
 	case evPresetDelete:
 		{
-			MessageDialog dlg (*this, "Delete the current Preset?", false, MESSAGE_QUESTION, BUTTONS_YES_NO, true);
+			MessageDialog dlg (*this, _("Delete the current Preset?"), false, MESSAGE_QUESTION, BUTTONS_YES_NO, true);
 			if (RESPONSE_YES == dlg.run())
 			{
 				preset_controller->deletePreset();
@@ -635,7 +638,7 @@ GUI::event_handler(const int e)
 	
 	case evPresetExport:
 		{
-			std::string filename = file_dialog(this->gobj(), "Export Preset", true, NULL, NULL, (preset_controller->getCurrentPreset().getName() + ".amSynthPreset").c_str());
+			std::string filename = file_dialog(this->gobj(), _("Export Preset"), true, NULL, NULL, (preset_controller->getCurrentPreset().getName() + ".amSynthPreset").c_str());
 			if (!filename.empty()) {
 				preset_controller->exportPreset(filename);
 			}
@@ -644,7 +647,7 @@ GUI::event_handler(const int e)
 	
 	case evPresetImport:
 		{
-			std::string filename = file_dialog(this->gobj(), "Import Preset", false, "amsynth 1.x files", "*.amSynthPreset", NULL);
+			std::string filename = file_dialog(this->gobj(), _("Import Preset"), false, _("amsynth 1.x files"), "*.amSynthPreset", NULL);
 			if (!filename.empty()) {
 				preset_controller->importPreset(filename);
 			}
@@ -657,7 +660,7 @@ GUI::event_handler(const int e)
 	
 	case evRecDlgFileChooser:
 		{
-			std::string filename = file_dialog(this->gobj(), "Select output WAV file...", true, NULL, NULL, NULL);
+			std::string filename = file_dialog(this->gobj(), _("Select output WAV file..."), true, NULL, NULL, NULL);
 			if (!filename.empty()) {
 				record_entry.set_text(filename);
 			}
@@ -676,7 +679,7 @@ GUI::event_handler(const int e)
 			audio_out->startRecording();
 			record_recording = true;
 			record_statusbar.pop( 1 );
-			record_statusbar.push ("capture status: RECORDING", 1);
+			record_statusbar.push (_("capture status: RECORDING"), 1);
 		}
 		break;
 	
@@ -686,7 +689,7 @@ GUI::event_handler(const int e)
 		    audio_out->stopRecording();
 		    record_recording = false;
 		    record_statusbar.pop( 1 );
-		    record_statusbar.push ("capture status: STOPPED", 1);
+		    record_statusbar.push (_("capture status: STOPPED"), 1);
 	    }
 	    break;
 	
@@ -738,7 +741,7 @@ GUI::event_handler(const int e)
                               "authors", authors,
                               "comments", "Analogue Modelling SYNTHesizer",
                               "website", PACKAGE_URL,
-                              "copyright", "© 2002 - 2016 Nick Dowell and contributors",
+                              "Copyright © 2002 - 2016 Nick Dowell and contributors",
                               NULL);
         break;
     }
@@ -915,7 +918,7 @@ void
 GUI::bank_open		( )
 {
 	Configuration & config = Configuration::get();
-	std::string filename = file_dialog(this->gobj(), "Open Bank", false, NULL, NULL, NULL);
+	std::string filename = file_dialog(this->gobj(), _("Open Bank"), false, NULL, NULL, NULL);
 	if (!filename.empty()) {
 		preset_controller->savePresets(config.current_bank_file.c_str());
 		config.current_bank_file = filename;
@@ -935,7 +938,7 @@ GUI::bank_save_as	( )
 		NULL);
 
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (chooser), PresetController::getUserBanksDirectory().c_str());
-	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (chooser), "new.bank");
+	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (chooser), _("new.bank"));
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (chooser), TRUE);
 
 	if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT) {
@@ -952,13 +955,13 @@ GUI::bank_save_as	( )
 void
 GUI::scale_open		( )
 {
-	std::string filename = file_dialog(this->gobj(), "Open Scala (.scl) alternate tuning file...", false, "Scala scale files", "*.[Ss][Cc][Ll]", NULL);
+	std::string filename = file_dialog(this->gobj(), _("Open Scala (.scl) alternate tuning file..."), false, _("Scala scale files"), "*.[Ss][Cc][Ll]", NULL);
 	if (!filename.empty()) {
 		int error = m_synth->loadTuningScale(filename.c_str());
 		if (error) {
-			MessageDialog msg(*this, "Failed to load new tuning.");
-			msg.set_secondary_text("Reading the tuning file failed for some reason. \
-Make sure your file has the correct format and try again.");
+			MessageDialog msg(*this, _("Failed to load new tuning."));
+			msg.set_secondary_text(_("Reading the tuning file failed for some reason. \
+Make sure your file has the correct format and try again."));
 			msg.run();
 		}
 	}
@@ -967,13 +970,13 @@ Make sure your file has the correct format and try again.");
 void
 GUI::key_map_open	( )
 {
-	std::string filename = file_dialog(this->gobj(), "Open alternate keyboard map (Scala .kbm format)...", false, "Scala keyboard map files", "*.[Kk][Bb][Mm]", NULL);
+	std::string filename = file_dialog(this->gobj(), _("Open alternate keyboard map (Scala .kbm format)..."), false, _("Scala keyboard map files"), "*.[Kk][Bb][Mm]", NULL);
 	if (!filename.empty()) {
 		int error = m_synth->loadTuningKeymap(filename.c_str());
 		if (error) {
-			MessageDialog msg(*this, "Failed to load new keyboard map.");
-			msg.set_secondary_text("Reading the keyboard map file failed for some reason. \
-Make sure your file has the correct format and try again.");
+			MessageDialog msg(*this, _("Failed to load new keyboard map."));
+			msg.set_secondary_text(_("Reading the keyboard map file failed for some reason. \
+Make sure your file has the correct format and try again."));
 			msg.run();
 		}
 	}
@@ -982,7 +985,7 @@ Make sure your file has the correct format and try again.");
 void
 GUI::tuning_reset	( )
 {
-	MessageDialog dlg (*this, "Discard the current scale and keyboard map?");
+	MessageDialog dlg (*this, _("Discard the current scale and keyboard map?"));
 
 	if (dlg.run() == RESPONSE_OK)
 	{

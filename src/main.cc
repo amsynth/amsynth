@@ -58,6 +58,9 @@
 #include <sys/stat.h>
 #include <algorithm>
 
+#include "gettext.h"
+#define _(string) gettext (string)
+
 using namespace std;
 
 #ifdef _DEBUG
@@ -66,31 +69,6 @@ using namespace std;
 #define DEBUGMSG( ... )
 #endif
 
-
-
-string help_text =
-"usage: " PACKAGE " [options]\n\
-\n\
-Any options given here override those in the config file ($HOME/.amSynthrc)\n\
-\n\
-OPTIONS:\n\
-\n\
-	-h          show this usage message\n\
-	-v          show version information\n\
-	-d          show some debugging output\n\
-\n\
-	-b <filename>   use <filename> as the bank to store presets\n\
-	-t <filename>   use <filename> as a tuning file\n\
-\n\
-	-a <string> set the sound output driver to use [alsa/oss/auto(default)]\n\
-	-r <int>    set the sampling rate to use\n\
-	-m <string>	set the midi driver to use [alsa/oss/auto(default)]\n\
-	-c <int>    set the midi channel to respond to (default=all)\n\
-	-p <int>    set the polyphony (maximum active voices)\n\
-\n\
-	-n <name>   specify the JACK client name to use\n\
-	--jack_autoconnect=<true|false>\n\
-\n";
 
 Configuration & config = Configuration::get();
 
@@ -123,12 +101,12 @@ int fcopy (const char * dest, const char *source)
 {
 	FILE *in = fopen (source,"r");
 	if (in == NULL) {
-		fprintf (stderr, "error reading source file %s\n", source);
+		fprintf (stderr, _("error reading source file %s\n"), source);
 		return -1;
 	}
 	FILE *out = fopen (dest,"w");
 	if (out == NULL) {
-		fprintf (stderr, "error creating destination file %s\n", dest);
+		fprintf (stderr, _("error creating destination file %s\n"), dest);
 		return -1;
 	}
 	fseek (in, 0, SEEK_END);
@@ -163,12 +141,12 @@ void install_default_files_if_reqd()
 	
 	if (stat (user_config, &st) == -1)
 	{
-		printf ("installing configuration file to %s\n", user_config);
+		printf (_("installing configuration file to %s\n"), user_config);
 		fcopy (user_config, factory_config);
 	}
 	if (stat (user_bank, &st) == -1)
 	{
-		printf ("installing default sound bank to %s\n", user_bank);
+		printf (_("installing default sound bank to %s\n"), user_bank);
 		fcopy (user_bank, factory_bank);
 	}
 
@@ -254,14 +232,14 @@ static void open_midi()
 	
 	if (config.midi_driver == "alsa" || config.midi_driver == "ALSA") {
 		if (!(midiDriver = opened_midi_driver(CreateAlsaMidiDriver(alsa_client_name)))) {
-			std::cerr << "error: could not open ALSA MIDI interface";
+			std::cerr << _("error: could not open ALSA MIDI interface");
 		}
 		return;
 	}
 
 	if (config.midi_driver == "oss" || config.midi_driver == "OSS") {
 		if (!(midiDriver = opened_midi_driver(CreateOSSMidiDriver()))) {
-			std::cerr << "error: could not open OSS MIDI interface";
+			std::cerr << _("error: could not open OSS MIDI interface");
 		}
 		return;
 	}
@@ -269,7 +247,7 @@ static void open_midi()
 	if (config.midi_driver == "auto") {
 		if (!(midiDriver = opened_midi_driver(CreateAlsaMidiDriver(alsa_client_name)))) {
 			if (!(midiDriver = opened_midi_driver(CreateOSSMidiDriver()))) {
-				std::cerr << "error: could not open any MIDI interface";
+				std::cerr << _("error: could not open any MIDI interface");
 			}
 		}
 		return;
@@ -333,7 +311,29 @@ int main( int argc, char *argv[] )
                 cout << PACKAGE_STRING << endl;
 				return 0;
 			case 'h':
-				cout << help_text;
+				cout << _("usage: ") << PACKAGE << _(" [options]") << endl
+				     << endl
+				     << _("Any options given here override those in the config file ($HOME/.amSynthrc)") << endl
+				     << endl
+				     << _("OPTIONS:") << endl
+				     << endl
+				     << _("	-h          show this usage message") << endl
+				     << _("	-v          show version information") << endl
+				     << _("	-d          show some debugging output") << endl
+				     << endl
+				     << _("	-b <filename>   use <filename> as the bank to store presets") << endl
+				     << _("	-t <filename>   use <filename> as a tuning file") << endl
+				     << endl
+				     << _("	-a <string> set the sound output driver to use [alsa/oss/auto(default)]") << endl
+				     << _("	-r <int>    set the sampling rate to use") << endl
+				     << _("	-m <string>	set the midi driver to use [alsa/oss/auto(default)]") << endl
+				     << _("	-c <int>    set the midi channel to respond to (default=all)") << endl
+				     << _("	-p <int>    set the polyphony (maximum active voices)") << endl
+				     << endl
+				     << _("	-n <name>   specify the JACK client name to use") << endl
+				     << _("	--jack_autoconnect=<true|false>") << endl
+				     << endl;
+
 				return 0;
 			case 'z':
 				ptest();
@@ -451,18 +451,18 @@ int main( int argc, char *argv[] )
 		gui_dealloc();
 	} else {
 #endif
-		printf("amsynth running in headless mode, press ctrl-c to exit\n");
+		printf(_("amsynth running in headless mode, press ctrl-c to exit\n"));
 		signal(SIGINT, &signal_handler);
 		while (!signal_received)
 			sleep(2); // delivery of a signal will wake us early
-		printf("shutting down...\n");
+		printf(_("shutting down...\n"));
 #ifdef WITH_GUI
 	}
 #endif
 
 	out->Stop ();
 
-	if (config.xruns) std::cerr << config.xruns << " audio buffer underruns occurred\n";
+	if (config.xruns) std::cerr << config.xruns << _(" audio buffer underruns occurred\n");
 
 	delete out;
 	return 0;
@@ -553,7 +553,7 @@ amsynth_load_tuning_file(const char *filename)
 {
 	int result = s_synthesizer->loadTuningScale(filename);
 	if (result != 0) {
-		cerr << "error: could not load tuning file " << filename << endl;
+		cerr << _("error: could not load tuning file ") << filename << endl;
 	}
 	return result;
 }
