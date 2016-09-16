@@ -9,6 +9,7 @@ compiler:
 install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq libgtk2.0-dev libgtkmm-2.4-dev libjack-jackd2-dev libasound-dev liblash-compat-dev dssi-dev liblo-dev libsndfile-dev
+  - pip install --user cpp-coveralls
 
 script:
   - autoreconf --install
@@ -20,3 +21,8 @@ script:
   - make V=1 check clean
   - ./configure --without-gui
   - make V=1 check clean
+  - ./configure --without-gui --without-alsa --without-jack --without-dssi --without-lv2 --without-vst --prefix=$HOME/.local CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage'
+  - make V=1 check
+
+after_success:
+  - coveralls --gcov-options '\-lp'
