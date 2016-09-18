@@ -3,3 +3,4 @@ src/GUI/GUI.cc
 src/GUI/MIDILearnDialog.cpp
 src/GUI/PresetControllerView.cc
 src/GUI/presets_menu.cpp
+src/GUI/ConfigDialog.cpp
