@@ -23,6 +23,8 @@
 
 #include "../PresetController.h"
 
+#include <glib/gi18n.h>
+
 static void preset_menu_item_activated(GtkMenuItem *preset_item, GtkAdjustment **adjustments)
 {
 	gchar *bank = (gchar *)g_object_get_data(G_OBJECT(preset_item), "bank");
@@ -46,7 +48,7 @@ GtkWidget *presets_menu_new(GtkAdjustment **adjustments)
 	const std::vector<BankInfo> banks = PresetController::getPresetBanks();
 
 	for (size_t b=0; b<banks.size(); b++) {
-		snprintf(text, sizeof(text), "[%s] %s", banks[b].read_only ? "F" : "U", banks[b].name.c_str());
+		snprintf(text, sizeof(text), "[%s] %s", banks[b].read_only ? _("F") : _("U"), banks[b].name.c_str());
 		GtkWidget *bank_item = gtk_menu_item_new_with_label(text);
 		gtk_menu_shell_append(GTK_MENU_SHELL(presets_menu), bank_item);
 
