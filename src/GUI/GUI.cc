@@ -196,7 +196,7 @@ GUI::GUI(MidiController & mc, Synthesizer *synth, GenericOutput *audio)
 	record_file_hbox.set_spacing( 10 );
 	record_file_hbox.add( record_entry );
 	record_file_hbox.add( record_choose );
-	record_entry.set_text( "amsynth-out.wav" );
+	record_entry.set_text( _("amsynth-out.wav") );
 	record_choose.add_label( "...", 0.5, 0.5 );
 	record_choose.signal_clicked().connect(bind(mem_fun(this, &GUI::event_handler),(int)evRecDlgFileChooser));
 		
@@ -738,9 +738,9 @@ GUI::event_handler(const int e)
                               "logo-icon-name", PACKAGE,
                               "version", version.c_str(),
                               "authors", authors,
-                              "comments", "Analogue Modelling SYNTHesizer",
+                              "comments", _("Analogue Modelling SYNTHesizer"),
                               "website", PACKAGE_URL,
-                              "Copyright © 2002 - 2016 Nick Dowell and contributors",
+                              _("Copyright © 2002 - 2016 Nick Dowell and contributors"),
                               NULL);
         break;
     }
@@ -929,7 +929,7 @@ void
 GUI::bank_save_as	( )
 {
 	GtkWidget *chooser = gtk_file_chooser_dialog_new (
-		"Save Bank",
+		_("Save Bank"),
 		this->gobj(),
 		GTK_FILE_CHOOSER_ACTION_SAVE,
 		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
