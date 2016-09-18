@@ -121,17 +121,17 @@ msgstr "\t--jack_autoconnect=<true|false>"
 #: ../src/main.cc:458
 #, c-format
 msgid "amsynth running in headless mode, press ctrl-c to exit\n"
-msgstr "amsynth est lancé en mode sans-interface-graphique, pressez ctrl-c pour quitter"
+msgstr "amsynth est lancé en mode sans-interface-graphique, pressez ctrl-c pour quitter\n"
 
 #. delivery of a signal will wake us early
 #: ../src/main.cc:462
 #, c-format
 msgid "shutting down...\n"
-msgstr "en train de quitter..."
+msgstr "en train de quitter...\n"
 
 #: ../src/main.cc:469
 msgid " audio buffer underruns occurred\n"
-msgstr " décrochage audio du tampon audio est arrivé"
+msgstr " décrochage audio du tampon audio est arrivé\n"
 
 #: ../src/main.cc:560
 msgid "error: could not load tuning file "
