@@ -27,6 +27,7 @@
 #include "../midi.h"
 
 #include <fstream>
+#include <glib/gi18n.h>
 #include <iostream>
 #include <stdio.h>
 #include <string>
@@ -100,7 +101,7 @@ PresetControllerViewImpl::PresetControllerViewImpl()
 	
 	GtkWidget *widget = NULL;
 
-	widget = gtk_button_new_with_label ("Audition");
+	widget = gtk_button_new_with_label (_("Audition"));
 	g_signal_connect (G_OBJECT (widget), "pressed", G_CALLBACK (&PresetControllerViewImpl::on_audition_pressed), this);
 	g_signal_connect (G_OBJECT (widget), "released", G_CALLBACK (&PresetControllerViewImpl::on_audition_released), this);
     g_signal_connect (G_OBJECT (widget), "key-press-event", G_CALLBACK (&PresetControllerViewImpl::on_audition_key_press_event), this);
@@ -111,7 +112,7 @@ PresetControllerViewImpl::PresetControllerViewImpl()
 	audition_spin = gtk_spin_button_new(audition_adj, 1.0, 0);
 	pack_start (* Glib::wrap (audition_spin), false, false);
 
-	widget = gtk_button_new_with_label ("Panic");
+	widget = gtk_button_new_with_label (_("Panic"));
 	g_signal_connect (G_OBJECT (widget), "clicked", G_CALLBACK (&PresetControllerViewImpl::on_panic_clicked), this);
 	pack_start (* Glib::wrap (widget), false, false);
 }
@@ -204,7 +205,7 @@ void PresetControllerViewImpl::update()
 
 	gtk_list_store_clear (GTK_LIST_STORE (gtk_combo_box_get_model (GTK_COMBO_BOX (bank_combo))));
 	for (size_t i=0; i<banks.size(); i++) {
-		snprintf_truncate (text, sizeof(text), "[%s] %s", banks[i].read_only ? "F" : "U", banks[i].name.c_str());
+		snprintf_truncate (text, sizeof(text), "[%s] %s", banks[i].read_only ? _("F") : _("U"), banks[i].name.c_str());
 		gtk_combo_box_insert_text (GTK_COMBO_BOX (bank_combo), i, text);
 	}
 

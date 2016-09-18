@@ -40,6 +40,15 @@ LT_INIT
 
 AC_LANG(C++)
 
+GETTEXT_PACKAGE=amsynth
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"],
+                   [The domain to use with gettext])
+AM_GNU_GETTEXT_VERSION([0.18.1])
+AM_GNU_GETTEXT([external])
+
+IT_PROG_INTLTOOL
+
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
 dnl Required libraries & packages
@@ -137,6 +146,7 @@ AM_CONDITIONAL([DARWIN], [test "$(uname -s)" = "Darwin"])
 AC_OUTPUT([
     Makefile
     data/amsynth.desktop
+    po/Makefile.in
 ])
 
 dnl

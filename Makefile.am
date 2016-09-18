@@ -17,7 +17,11 @@
 #  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
-AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' @CPPFLAGS@ -fPIC
+AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' -DPACKAGE_LOCALEDIR=\""$(datadir)/locale"\" @CPPFLAGS@ -fPIC
+
+ACLOCAL_AMFLAGS = -I m4
+
+SUBDIRS = po
 
 libcore_sources = \
 	src/Configuration.cpp \
@@ -102,6 +106,7 @@ amsynth_SOURCES = \
 	src/drivers/OSSAudioDriver.h \
 	src/drivers/OSSMidiDriver.cc \
 	src/drivers/OSSMidiDriver.h \
+	src/gettext.h \
 	src/JackOutput.cc \
 	src/JackOutput.h \
 	src/lash.c \

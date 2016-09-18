@@ -1,14 +1,16 @@
-#!/bin/sh -e
+#!/bin/sh
+# Run this to generate all the initial makefiles, etc.
 
-autoreconf --install --symlink
+set -e
 
-libdir() {
-        echo $(cd $1/$(gcc -print-multi-os-directory); pwd)
-}
+srcdir=`dirname $0`
+test -z "$srcdir" && srcdir=.
 
-args="--prefix=/usr \
---sysconfdir=/etc \
---libdir=$(libdir /usr/lib)"
+cd "$srcdir"
+mkdir -p m4 >/dev/null 2>&1 || true
+autoreconf --verbose --force --install
+intltoolize --force
+cd -
 
 echo
 echo "----------------------------------------------------------------"
