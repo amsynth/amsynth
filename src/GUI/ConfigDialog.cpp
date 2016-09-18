@@ -26,7 +26,7 @@
 using namespace Gtk;
 
 ConfigDialog::ConfigDialog (Window& parent)
-:	Dialog ("amsynth configuration", parent)
+:	Dialog (_("amsynth configuration"), parent)
 {
 	mMidiDriver.append_text ("auto");
 	mMidiDriver.append_text ("alsa");
@@ -46,20 +46,20 @@ ConfigDialog::ConfigDialog (Window& parent)
 	mSampleRate.append_text ("176400");
 	mSampleRate.append_text ("192000");
 	
-	get_vbox()->add (* manage (new Label ("Preferred MIDI Driver")));
+	get_vbox()->add (* manage (new Label (_("Preferred MIDI Driver"))));
 	get_vbox()->add (mMidiDriver);
-	get_vbox()->add (*manage (new Label ("OSS MIDI Device")));
+	get_vbox()->add (*manage (new Label (_("OSS MIDI Device"))));
 	get_vbox()->add (mOSSMidiDevice);
-	get_vbox()->add (*manage (new Label ("Preferred Audio Driver")));
+	get_vbox()->add (*manage (new Label (_("Preferred Audio Driver"))));
 	get_vbox()->add (mAudioDriver);
-	get_vbox()->add (*manage (new Label ("OSS Audio Device")));
+	get_vbox()->add (*manage (new Label (_("OSS Audio Device"))));
 	get_vbox()->add (mOSSAudioDevice);
-	get_vbox()->add (*manage (new Label ("ALSA Audio Device")));
+	get_vbox()->add (*manage (new Label (_("ALSA Audio Device"))));
 	get_vbox()->add (mALSAAudioDevice);
-	get_vbox()->add (*manage (new Label ("Sample Rate")));
+	get_vbox()->add (*manage (new Label (_("Sample Rate"))));
 	get_vbox()->add (mSampleRate);
 	get_vbox()->add (*manage (new Label ("")));
-	get_vbox()->add (*manage (new Label ("Changes take effect after restarting amsynth")));
+	get_vbox()->add (*manage (new Label (_("Changes take effect after restarting amsynth"))));
 	
 	ReadValues();
 	
