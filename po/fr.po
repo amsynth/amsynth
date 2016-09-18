@@ -1,0 +1,443 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-11 17:28+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/main.cc:104
+#, c-format
+msgid "error reading source file %s\n"
+msgstr ""
+
+#: src/main.cc:109
+#, c-format
+msgid "error creating destination file %s\n"
+msgstr ""
+
+#: src/main.cc:144
+#, c-format
+msgid "installing configuration file to %s\n"
+msgstr ""
+
+#: src/main.cc:149
+#, c-format
+msgid "installing default sound bank to %s\n"
+msgstr ""
+
+#: src/main.cc:235
+msgid "error: could not open ALSA MIDI interface"
+msgstr ""
+
+#: src/main.cc:242
+msgid "error: could not open OSS MIDI interface"
+msgstr ""
+
+#: src/main.cc:250
+msgid "error: could not open any MIDI interface"
+msgstr ""
+
+#: src/main.cc:314
+msgid "usage: "
+msgstr ""
+
+#: src/main.cc:314
+msgid " [options]"
+msgstr ""
+
+#: src/main.cc:316
+msgid "Any options given here override those in the config file ($HOME/.amSynthrc)"
+msgstr "Toute option donnée ici écrase celle du fichier de configuration"
+
+#: src/main.cc:318
+msgid "OPTIONS:"
+msgstr ""
+
+#: src/main.cc:320
+msgid "\t-h          show this usage message"
+msgstr ""
+
+#: src/main.cc:321
+msgid "\t-v          show version information"
+msgstr ""
+
+#: src/main.cc:322
+msgid "\t-d          show some debugging output"
+msgstr ""
+
+#: src/main.cc:324
+msgid "\t-b <filename>   use <filename> as the bank to store presets"
+msgstr ""
+
+#: src/main.cc:325
+msgid "\t-t <filename>   use <filename> as a tuning file"
+msgstr ""
+
+#: src/main.cc:327
+msgid ""
+"\t-a <string> set the sound output driver to use [alsa/oss/auto(default)]"
+msgstr ""
+
+#: src/main.cc:328
+msgid "\t-r <int>    set the sampling rate to use"
+msgstr ""
+
+#: src/main.cc:329
+msgid "\t-m <string>\tset the midi driver to use [alsa/oss/auto(default)]"
+msgstr ""
+
+#: src/main.cc:330
+msgid "\t-c <int>    set the midi channel to respond to (default=all)"
+msgstr ""
+
+#: src/main.cc:331
+msgid "\t-p <int>    set the polyphony (maximum active voices)"
+msgstr ""
+
+#: src/main.cc:333
+msgid "\t-n <name>   specify the JACK client name to use"
+msgstr ""
+
+#: src/main.cc:334
+msgid "\t--jack_autoconnect=<true|false>"
+msgstr ""
+
+#: src/main.cc:454
+#, c-format
+msgid "amsynth running in headless mode, press ctrl-c to exit\n"
+msgstr ""
+
+#: src/main.cc:458
+#, c-format
+msgid "shutting down...\n"
+msgstr ""
+
+#: src/main.cc:465
+msgid " audio buffer underruns occurred\n"
+msgstr ""
+
+#: src/main.cc:556
+msgid "error: could not load tuning file "
+msgstr ""
+
+#: src/GUI/GUI.cc:106
+msgid "<b>Save changes before closing?</b>"
+msgstr ""
+
+#: src/GUI/GUI.cc:108
+msgid "Close _Without Saving"
+msgstr ""
+
+#: src/GUI/GUI.cc:113
+msgid ""
+"If you don't save, changes to the current preset will be permanently lost."
+msgstr ""
+
+#: src/GUI/GUI.cc:147
+msgid "Rename Preset"
+msgstr ""
+
+#: src/GUI/GUI.cc:151 src/GUI/GUI.cc:169
+msgid "Enter new Preset Name:"
+msgstr ""
+
+#: src/GUI/GUI.cc:154 src/GUI/GUI.cc:172
+msgid "Confirm"
+msgstr ""
+
+#: src/GUI/GUI.cc:158 src/GUI/GUI.cc:176
+msgid "Cancel"
+msgstr ""
+
+#: src/GUI/GUI.cc:165
+msgid "Create a New Preset"
+msgstr ""
+
+#: src/GUI/GUI.cc:184
+msgid "Capture Output"
+msgstr ""
+
+#: src/GUI/GUI.cc:194
+msgid "output file:"
+msgstr ""
+
+#: src/GUI/GUI.cc:214 src/GUI/GUI.cc:692
+msgid "capture status: STOPPED"
+msgstr ""
+
+#: src/GUI/GUI.cc:234
+msgid "New Instance"
+msgstr ""
+
+#: src/GUI/GUI.cc:238
+msgid "_Open Bank"
+msgstr ""
+
+#: src/GUI/GUI.cc:240
+msgid "_Save Bank As..."
+msgstr ""
+
+#: src/GUI/GUI.cc:242
+msgid "Open Alternate Tuning File"
+msgstr ""
+
+#: src/GUI/GUI.cc:243
+msgid "Open Alternate Keyboard Map"
+msgstr ""
+
+#: src/GUI/GUI.cc:244
+msgid "Reset All Tuning Settings to Default"
+msgstr ""
+
+#: src/GUI/GUI.cc:246
+msgid "_Quit"
+msgstr ""
+
+#: src/GUI/GUI.cc:255
+msgid "_New"
+msgstr ""
+
+#: src/GUI/GUI.cc:256
+msgid "_Copy"
+msgstr ""
+
+#: src/GUI/GUI.cc:257
+msgid "_Paste"
+msgstr ""
+
+#: src/GUI/GUI.cc:258
+msgid "Paste as New"
+msgstr ""
+
+#: src/GUI/GUI.cc:260
+msgid "Rename"
+msgstr ""
+
+#: src/GUI/GUI.cc:261
+msgid "Clear"
+msgstr ""
+
+#: src/GUI/GUI.cc:263
+msgid "_Randomise"
+msgstr ""
+
+#: src/GUI/GUI.cc:264
+msgid "Undo"
+msgstr ""
+
+#: src/GUI/GUI.cc:265
+msgid "Redo"
+msgstr ""
+
+#: src/GUI/GUI.cc:267 src/GUI/GUI.cc:650
+msgid "Import Preset"
+msgstr ""
+
+#: src/GUI/GUI.cc:268 src/GUI/GUI.cc:641
+msgid "Export Preset"
+msgstr ""
+
+#: src/GUI/GUI.cc:287
+msgid "All"
+msgstr ""
+
+#: src/GUI/GUI.cc:298
+msgid "MIDI Channel"
+msgstr ""
+
+#: src/GUI/GUI.cc:310
+msgid "Unlimited"
+msgstr ""
+
+#: src/GUI/GUI.cc:322
+msgid "Max. Polyphony"
+msgstr ""
+
+#: src/GUI/GUI.cc:335
+msgid " Semitones"
+msgstr ""
+
+#: src/GUI/GUI.cc:344
+msgid "Pitch Bend Range"
+msgstr ""
+
+#: src/GUI/GUI.cc:347
+msgid "Audio & MIDI..."
+msgstr ""
+
+#: src/GUI/GUI.cc:356
+msgid "Virtual Keyboard"
+msgstr ""
+
+#: src/GUI/GUI.cc:363
+msgid "Record to .wav file..."
+msgstr ""
+
+#: src/GUI/GUI.cc:388
+msgid "MIDI (ALSA) connections"
+msgstr ""
+
+#: src/GUI/GUI.cc:408
+msgid "Audio (JACK) connections"
+msgstr ""
+
+#: src/GUI/GUI.cc:414
+msgid "About"
+msgstr "À _propos"
+
+#: src/GUI/GUI.cc:415
+msgid "Report a Bug..."
+msgstr ""
+
+#: src/GUI/GUI.cc:416
+msgid "Online Documentation..."
+msgstr ""
+
+#: src/GUI/GUI.cc:425
+msgid "_File"
+msgstr ""
+
+#: src/GUI/GUI.cc:426
+msgid "_Preset"
+msgstr ""
+
+#: src/GUI/GUI.cc:427
+msgid "_Config"
+msgstr ""
+
+#: src/GUI/GUI.cc:428
+msgid "_Utils"
+msgstr ""
+
+#: src/GUI/GUI.cc:429
+msgid "_Help"
+msgstr "Aide"
+
+#: src/GUI/GUI.cc:431
+#, c-format
+msgid "Audio: %s @ %d  MIDI: %s"
+msgstr ""
+
+#: src/GUI/GUI.cc:508 src/GUI/GUI.cc:519
+msgid "amsynth configuration error"
+msgstr ""
+
+#: src/GUI/GUI.cc:510
+msgid ""
+"amsynth could not initialise the selected audio device.\n"
+"\n"
+"Please review the configuration and restart"
+msgstr ""
+
+#: src/GUI/GUI.cc:521
+msgid ""
+"amsynth could not initialise the selected midi device.\n"
+"\n"
+"Please review the configuration and restart"
+msgstr ""
+
+#: src/GUI/GUI.cc:539
+msgid "amsynth could not set realtime priority"
+msgstr ""
+
+#: src/GUI/GUI.cc:540
+msgid ""
+"You may experience audio buffer underruns resulting in 'clicks' in the "
+"audio.\n"
+"\n"
+"This is most likely because the program is not SUID root.\n"
+"\n"
+"Using the JACK audio subsystem can also help"
+msgstr ""
+
+#: src/GUI/GUI.cc:555
+msgid "Could not show link"
+msgstr ""
+
+#: src/GUI/GUI.cc:628
+msgid "Delete the current Preset?"
+msgstr ""
+
+#: src/GUI/GUI.cc:650
+msgid "amsynth 1.x files"
+msgstr ""
+
+#: src/GUI/GUI.cc:663
+msgid "Select output WAV file..."
+msgstr ""
+
+#: src/GUI/GUI.cc:682
+msgid "capture status: RECORDING"
+msgstr ""
+
+#: src/GUI/GUI.cc:921
+msgid "Open Bank"
+msgstr ""
+
+#: src/GUI/GUI.cc:941
+msgid "new.bank"
+msgstr ""
+
+#: src/GUI/GUI.cc:958
+msgid "Open Scala (.scl) alternate tuning file..."
+msgstr ""
+
+#: src/GUI/GUI.cc:958
+msgid "Scala scale files"
+msgstr ""
+
+#: src/GUI/GUI.cc:962
+msgid "Failed to load new tuning."
+msgstr ""
+
+#: src/GUI/GUI.cc:963
+msgid ""
+"Reading the tuning file failed for some reason. Make sure your file has the "
+"correct format and try again."
+msgstr ""
+
+#: src/GUI/GUI.cc:973
+msgid "Open alternate keyboard map (Scala .kbm format)..."
+msgstr ""
+
+#: src/GUI/GUI.cc:973
+msgid "Scala keyboard map files"
+msgstr ""
+
+#: src/GUI/GUI.cc:977
+msgid "Failed to load new keyboard map."
+msgstr ""
+
+#: src/GUI/GUI.cc:978
+msgid ""
+"Reading the keyboard map file failed for some reason. Make sure your file "
+"has the correct format and try again."
+msgstr ""
+
+#: src/GUI/GUI.cc:988
+msgid "Discard the current scale and keyboard map?"
+msgstr ""
+
+#: data/amsynth.desktop.in:3 data/amsynth.desktop.in:11
+msgid "amsynth"
+msgstr ""
+
+#: data/amsynth.desktop.in:4
+msgid "Analog Modelling SYNTHesizer"
+msgstr ""
+
+#: data/amsynth.desktop.in:6
+msgid "Two oscillator subtractive software synthesizer"
+msgstr ""
