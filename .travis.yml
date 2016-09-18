@@ -13,10 +13,14 @@ install:
 script:
   - ./autogen.sh
   - ./configure
-  - make V=1 distcheck clean
+  - make V=1 distcheck
+  - make clean
   - ./configure --without-alsa
-  - make V=1 check clean
+  - make V=1 check
+  - make clean
   - ./configure --without-jack
-  - make V=1 check clean
+  - make V=1 check
+  - make clean
   - ./configure --without-gui
-  - make V=1 check clean
+  - make V=1 check
+  - make clean
