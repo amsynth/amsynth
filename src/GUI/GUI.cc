@@ -60,8 +60,7 @@ using std::ostringstream;
 #include "MIDILearnDialog.h"
 #include "PresetControllerView.h"
 
-#include "../gettext.h"
-#define _(string) gettext (string)
+#include <glib/gi18n.h>
 
 enum {
 	evLoad,

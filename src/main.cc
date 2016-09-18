@@ -285,6 +285,10 @@ int main( int argc, char *argv[] )
 	setreuid( getuid(), getuid() );
 	setregid( getgid(), getgid() );	
 
+	bindtextdomain(GETTEXT_PACKAGE, PACKAGE_LOCALEDIR);
+	bind_textdomain_codeset(PACKAGE_TARNAME, "UTF-8");
+	textdomain(GETTEXT_PACKAGE);
+
 #ifdef WITH_GUI
 	bool no_gui = (getenv("AMSYNTH_NO_GUI") != NULL);
 
