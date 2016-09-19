@@ -738,9 +738,10 @@ GUI::event_handler(const int e)
                               "logo-icon-name", PACKAGE,
                               "version", version.c_str(),
                               "authors", authors,
+                              "translator-credits", "Olivier Humbert\nGeorg Krause",
                               "comments", _("Analogue Modelling SYNTHesizer"),
                               "website", PACKAGE_URL,
-                              _("Copyright © 2002 - 2016 Nick Dowell and contributors"),
+                              "copyright", _("Copyright © 2002 - 2016 Nick Dowell and contributors"),
                               NULL);
         break;
     }
