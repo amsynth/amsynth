@@ -33,6 +33,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include "gettext.h"
+#define _(string) gettext (string)
 
 using namespace std;
 
@@ -381,7 +383,7 @@ static void scan_preset_bank(const std::string dir_path, const std::string file_
 
 	std::string bank_name = std::string(file_name);
 	if (bank_name == std::string(".amSynth.presets")) {
-		bank_name = (_"User bank");
+		bank_name = _("User bank");
 	} else {
 		std::string::size_type pos = bank_name.find_first_of(".");
 		if (pos != std::string::npos)

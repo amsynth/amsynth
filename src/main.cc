@@ -407,7 +407,7 @@ int main( int argc, char *argv[] )
 
 	GenericOutput *out = open_audio();
 	if (!out)
-		fatal_error(_("Fatal Error: open_audio() returned NULL.\n")
+		fatal_error(std::string(_("Fatal Error: open_audio() returned NULL.\n")) +
 					"config.audio_driver = " + config.audio_driver);
 
 	// errors now detected & reported in the GUI

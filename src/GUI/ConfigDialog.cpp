@@ -23,6 +23,8 @@
 
 #include "../Configuration.h"
 
+#include <glib/gi18n.h>
+
 using namespace Gtk;
 
 ConfigDialog::ConfigDialog (Window& parent)
