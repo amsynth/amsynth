@@ -82,7 +82,7 @@ void sched_realtime()
 	sched_getparam(0, &sched);
 
 	if (foo) {
-		DEBUGMSG("Failed to set SCHED_FIFO\n");
+		DEBUGMSG(_("Failed to set SCHED_FIFO\n"));
 		config.realtime = 0;
 	}
 	else {
@@ -206,7 +206,7 @@ GenericOutput * open_audio()
 			
 			// we were asked specifically for jack, so don't use anything else
 			if (config.audio_driver == "jack") {
-				std::cerr << "JACK init failed: " << jack_error << "\n";
+				std::cerr << _("JACK init failed: ") << jack_error << "\n";
 				return new NullAudioOutput;
 			}
 		}
@@ -397,17 +397,17 @@ int main( int argc, char *argv[] )
 	
 	if (config.debug_drivers)
 		cout << "\n*** CONFIGURATION:\n"
-				<< "MIDI:- driver:" << config.midi_driver 
-				<< " channel:" << config.midi_channel << endl 
-				<< "AUDIO:- driver:" << config.audio_driver 
-				<< " sample rate:" << config.sample_rate << endl;
+				<< _("MIDI:- driver:") << config.midi_driver 
+				<< _(" channel:") << config.midi_channel << endl 
+				<< _("AUDIO:- driver:") << config.audio_driver 
+				<< _(" sample rate:") << config.sample_rate << endl;
 
 	string amsynth_bank_file = config.current_bank_file;
 	// string amsynth_tuning_file = config.current_tuning_file;
 
 	GenericOutput *out = open_audio();
 	if (!out)
-		fatal_error("Fatal Error: open_audio() returned NULL.\n"
+		fatal_error(std::string(_("Fatal Error: open_audio() returned NULL.\n")) +
 					"config.audio_driver = " + config.audio_driver);
 
 	// errors now detected & reported in the GUI
@@ -619,8 +619,8 @@ void ptest ()
 	unsigned long usec_audio = kTimeSeconds * kNumVoices * 1000000;
 	unsigned long usec_cpu = user_usec + syst_usec;
 	
-	fprintf (stderr, "user time: %f		system time: %f\n", user_usec/1000000.f, syst_usec/1000000.f);
-	fprintf (stderr, "performance index: %f\n", (float) usec_audio / (float) usec_cpu);
+	fprintf (stderr, _("user time: %f		system time: %f\n"), user_usec/1000000.f, syst_usec/1000000.f);
+	fprintf (stderr, _("performance index: %f\n"), (float) usec_audio / (float) usec_cpu);
 	
 	delete [] buffer;
 	delete voiceAllocationUnit;

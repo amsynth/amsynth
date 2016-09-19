@@ -92,7 +92,7 @@ PresetControllerViewImpl::PresetControllerViewImpl()
 	g_signal_connect (G_OBJECT (combo), "notify::popup-shown", G_CALLBACK (&PresetControllerViewImpl::on_combo_popup_shown), this);
 	pack_start (* Glib::wrap (combo), true, true);
 	
-	save_button = gtk_button_new_with_label ("Save");
+	save_button = gtk_button_new_with_label (_("Save"));
 	g_signal_connect (G_OBJECT (save_button), "clicked", G_CALLBACK (&PresetControllerViewImpl::on_save_clicked), this);
 	pack_start (* Glib::wrap (save_button), false, false);
 	
