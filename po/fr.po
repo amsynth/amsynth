@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../src/main.cc:85
 msgid "Failed to set SCHED_FIFO\n"
-msgstr ""
+msgstr "Échec de paramètrage SCHED_FIFO\n"
 
 #: ../src/main.cc:104
 #, c-format
@@ -44,7 +44,7 @@ msgstr "installation de la banque de son par défaut dans %s\n"
 
 #: ../src/main.cc:209
 msgid "JACK init failed: "
-msgstr ""
+msgstr "échec de l'initialisation de JACK : "
 
 #: ../src/main.cc:235
 msgid "error: could not open ALSA MIDI interface"
@@ -136,24 +136,23 @@ msgstr "\t--jack_autoconnect=<true|false>"
 
 #: ../src/main.cc:400
 msgid "MIDI:- driver:"
-msgstr ""
+msgstr "MIDI :- pilote :"
 
 #: ../src/main.cc:401
-#, fuzzy
 msgid " channel:"
-msgstr "Canal MIDI"
+msgstr " canal :"
 
 #: ../src/main.cc:402
 msgid "AUDIO:- driver:"
-msgstr ""
+msgstr "AUDIO :- pilote :"
 
 #: ../src/main.cc:403
 msgid " sample rate:"
-msgstr ""
+msgstr " taux d'échantillonnage :"
 
 #: ../src/main.cc:410
 msgid "Fatal Error: open_audio() returned NULL.\n"
-msgstr ""
+msgstr "Erreur fatale : open_audio() a retourné NULL.\n"
 
 #: ../src/main.cc:458
 #, c-format
@@ -179,12 +178,12 @@ msgstr "erreur : échec du chargement du fichier d'accordage "
 #: ../src/main.cc:622
 #, c-format
 msgid "user time: %f\t\tsystem time: %f\n"
-msgstr ""
+msgstr "temps utilisateur : %f\t\ttemps système : %f\n"
 
 #: ../src/main.cc:623
 #, c-format
 msgid "performance index: %f\n"
-msgstr ""
+msgstr "index de performance : %f\n"
 
 #: ../src/GUI/GUI.cc:105
 msgid "<b>Save changes before closing?</b>"
@@ -240,7 +239,7 @@ msgstr "fichier de sortie :"
 
 #: ../src/GUI/GUI.cc:199
 msgid "amsynth-out.wav"
-msgstr ""
+msgstr "amsynth-sortie.wav"
 
 #: ../src/GUI/GUI.cc:213 ../src/GUI/GUI.cc:691
 msgid "capture status: STOPPED"
@@ -468,20 +467,19 @@ msgstr "status de l'enregistrement : EN TRAIN D'ENREGISTRER"
 
 #: ../src/GUI/GUI.cc:742
 msgid "Analogue Modelling SYNTHesizer"
-msgstr ""
+msgstr "synthétiseur modelant de l'analogique"
 
 #: ../src/GUI/GUI.cc:744
 msgid "Copyright © 2002 - 2016 Nick Dowell and contributors"
-msgstr ""
+msgstr "Copyright © 2002 - 2016 Nick Dowell et contributeurs"
 
 #: ../src/GUI/GUI.cc:921
 msgid "Open Bank"
 msgstr "Ouvrir une banque"
 
 #: ../src/GUI/GUI.cc:933
-#, fuzzy
 msgid "Save Bank"
-msgstr "_Sauvegarder une banque sous..."
+msgstr "Sauvegarder une banque"
 
 #: ../src/GUI/GUI.cc:941
 msgid "new.bank"
@@ -549,7 +547,7 @@ msgstr "Contrôleur MIDI"
 
 #: ../src/GUI/PresetControllerView.cc:95
 msgid "Save"
-msgstr ""
+msgstr "Sauvegarder"
 
 #: ../src/GUI/PresetControllerView.cc:104
 msgid "Audition"
@@ -568,38 +566,37 @@ msgid "U"
 msgstr "U"
 
 #: ../src/GUI/ConfigDialog.cpp:31
-#, fuzzy
 msgid "amsynth configuration"
-msgstr "erreur de configuration d'amsynth"
+msgstr "configuration d'amsynth"
 
 #: ../src/GUI/ConfigDialog.cpp:51
 msgid "Preferred MIDI Driver"
-msgstr ""
+msgstr "Pilote MIDI préféré"
 
 #: ../src/GUI/ConfigDialog.cpp:53
 msgid "OSS MIDI Device"
-msgstr ""
+msgstr "Périphérique MIDI OSS"
 
 #: ../src/GUI/ConfigDialog.cpp:55
 msgid "Preferred Audio Driver"
-msgstr ""
+msgstr ""Pilote audio préféré"
 
 #: ../src/GUI/ConfigDialog.cpp:57
 msgid "OSS Audio Device"
-msgstr ""
+msgstr "Périphérique audio OSS"
 
 #: ../src/GUI/ConfigDialog.cpp:59
 msgid "ALSA Audio Device"
-msgstr ""
+msgstr "Périphérique audio ALSA"
 
 #: ../src/GUI/ConfigDialog.cpp:61
 msgid "Sample Rate"
-msgstr ""
+msgstr "Taux d'échantillonnage"
 
 #: ../src/GUI/ConfigDialog.cpp:64
 msgid "Changes take effect after restarting amsynth"
-msgstr ""
+msgstr "Les modifications prendront effet après avoir redémarré amsynth"
 
 #: ../src/PresetController.cc:386
 msgid "User bank"
-msgstr ""
+msgstr "Banque utilisateur"
