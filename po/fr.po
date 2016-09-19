@@ -579,7 +579,7 @@ msgstr "Périphérique MIDI OSS"
 
 #: ../src/GUI/ConfigDialog.cpp:55
 msgid "Preferred Audio Driver"
-msgstr ""Pilote audio préféré"
+msgstr "Pilote audio préféré"
 
 #: ../src/GUI/ConfigDialog.cpp:57
 msgid "OSS Audio Device"
