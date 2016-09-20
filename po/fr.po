@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-18 12:33+0100\n"
+"POT-Creation-Date: 2016-09-19 18:03+0100\n"
 "PO-Revision-Date: 2016-09-18 14:44+0200\n"
 "Last-Translator: Olivier Humbert <trebmuh@tuxfamily.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/main.cc:85
+msgid "Failed to set SCHED_FIFO\n"
+msgstr "Échec de paramètrage SCHED_FIFO\n"
 
 #: ../src/main.cc:104
 #, c-format
@@ -37,6 +41,10 @@ msgstr "installation du fichier de configuration dans %s\n"
 #, c-format
 msgid "installing default sound bank to %s\n"
 msgstr "installation de la banque de son par défaut dans %s\n"
+
+#: ../src/main.cc:209
+msgid "JACK init failed: "
+msgstr "échec de l'initialisation de JACK : "
 
 #: ../src/main.cc:235
 msgid "error: could not open ALSA MIDI interface"
@@ -62,7 +70,8 @@ msgstr " [options]"
 msgid ""
 "Any options given here override those in the config file ($HOME/.amSynthrc)"
 msgstr ""
-"Toute option donnée ici écrase celle du fichier de configuration ($HOME/.amSynthrc)"
+"Toute option donnée ici écrase celle du fichier de configuration ($HOME/."
+"amSynthrc)"
 
 #: ../src/main.cc:322
 msgid "OPTIONS:"
@@ -82,17 +91,22 @@ msgstr "\t-d          affiche des informations de débogage"
 
 #: ../src/main.cc:328
 msgid "\t-b <filename>   use <filename> as the bank to store presets"
-msgstr "\t-b <nom_de_fichier>   utilise <nom_de_fichier> en tant que banque pour sauvegarder les pré-réglages"
+msgstr ""
+"\t-b <nom_de_fichier>   utilise <nom_de_fichier> en tant que banque pour "
+"sauvegarder les pré-réglages"
 
 #: ../src/main.cc:329
 msgid "\t-t <filename>   use <filename> as a tuning file"
-msgstr "\t-t <nom_de_fichier>   utilise  <nom_de_fichier> en tant que fichier d'accordage"
+msgstr ""
+"\t-t <nom_de_fichier>   utilise  <nom_de_fichier> en tant que fichier "
+"d'accordage"
 
 #: ../src/main.cc:331
 msgid ""
 "\t-a <string> set the sound output driver to use [alsa/oss/auto(default)]"
 msgstr ""
-"\t-a <chaîne_de_caractères> paramètre le pilote de sortie son à utiliser [alsa/oss/auto(défaut)]"
+"\t-a <chaîne_de_caractères> paramètre le pilote de sortie son à utiliser "
+"[alsa/oss/auto(défaut)]"
 
 #: ../src/main.cc:332
 msgid "\t-r <int>    set the sampling rate to use"
@@ -100,7 +114,9 @@ msgstr "\t-r <entier>    paramètre le taux d'échantillonnage à utiliser"
 
 #: ../src/main.cc:333
 msgid "\t-m <string>\tset the midi driver to use [alsa/oss/auto(default)]"
-msgstr "\t-m <chaîne_de_caractères>\tparamètre le pilote MIDI à utiliser [alsa/oss/auto(défaut)]"
+msgstr ""
+"\t-m <chaîne_de_caractères>\tparamètre le pilote MIDI à utiliser [alsa/oss/"
+"auto(défaut)]"
 
 #: ../src/main.cc:334
 msgid "\t-c <int>    set the midi channel to respond to (default=all)"
@@ -118,10 +134,32 @@ msgstr "\t-n <nom>   spécifie le nom de client JACK à utiliser"
 msgid "\t--jack_autoconnect=<true|false>"
 msgstr "\t--jack_autoconnect=<true|false>"
 
+#: ../src/main.cc:400
+msgid "MIDI:- driver:"
+msgstr "MIDI :- pilote :"
+
+#: ../src/main.cc:401
+msgid " channel:"
+msgstr " canal :"
+
+#: ../src/main.cc:402
+msgid "AUDIO:- driver:"
+msgstr "AUDIO :- pilote :"
+
+#: ../src/main.cc:403
+msgid " sample rate:"
+msgstr " taux d'échantillonnage :"
+
+#: ../src/main.cc:410
+msgid "Fatal Error: open_audio() returned NULL.\n"
+msgstr "Erreur fatale : open_audio() a retourné NULL.\n"
+
 #: ../src/main.cc:458
 #, c-format
 msgid "amsynth running in headless mode, press ctrl-c to exit\n"
-msgstr "amsynth est lancé en mode sans-interface-graphique, pressez ctrl-c pour quitter\n"
+msgstr ""
+"amsynth est lancé en mode sans-interface-graphique, pressez ctrl-c pour "
+"quitter\n"
 
 #. delivery of a signal will wake us early
 #: ../src/main.cc:462
@@ -137,6 +175,16 @@ msgstr " décrochage audio du tampon audio est arrivé\n"
 msgid "error: could not load tuning file "
 msgstr "erreur : échec du chargement du fichier d'accordage "
 
+#: ../src/main.cc:622
+#, c-format
+msgid "user time: %f\t\tsystem time: %f\n"
+msgstr "temps utilisateur : %f\t\ttemps système : %f\n"
+
+#: ../src/main.cc:623
+#, c-format
+msgid "performance index: %f\n"
+msgstr "index de performance : %f\n"
+
 #: ../src/GUI/GUI.cc:105
 msgid "<b>Save changes before closing?</b>"
 msgstr "<b>Sauvegarder les modifications avant de quitter ?</b>"
@@ -149,7 +197,8 @@ msgstr "Fermer _sans sauvegarder"
 msgid ""
 "If you don't save, changes to the current preset will be permanently lost."
 msgstr ""
-"Si vous ne sauvegardez pas, les modifications des pré-réglages actuels seront perdues définitivement."
+"Si vous ne sauvegardez pas, les modifications des pré-réglages actuels "
+"seront perdues définitivement."
 
 #.
 #. the preset rename dialog
@@ -187,6 +236,10 @@ msgstr "Enregistrer la sortie"
 #: ../src/GUI/GUI.cc:193
 msgid "output file:"
 msgstr "fichier de sortie :"
+
+#: ../src/GUI/GUI.cc:199
+msgid "amsynth-out.wav"
+msgstr "amsynth-sortie.wav"
 
 #: ../src/GUI/GUI.cc:213 ../src/GUI/GUI.cc:691
 msgid "capture status: STOPPED"
@@ -385,8 +438,8 @@ msgid ""
 "\n"
 "Using the JACK audio subsystem can also help"
 msgstr ""
-"Vous pourriez entendre des décrochages audio ce qui résulterait en "
-"'clicks' dans le son.\n"
+"Vous pourriez entendre des décrochages audio ce qui résulterait en 'clicks' "
+"dans le son.\n"
 "\n"
 "C'est probablement du au fait que le programme n'est pas 'SUID root'.\n"
 "\n"
@@ -412,27 +465,39 @@ msgstr "Sélectionner le fichier WAV de sortie..."
 msgid "capture status: RECORDING"
 msgstr "status de l'enregistrement : EN TRAIN D'ENREGISTRER"
 
-#: ../src/GUI/GUI.cc:920
+#: ../src/GUI/GUI.cc:742
+msgid "Analogue Modelling SYNTHesizer"
+msgstr "synthétiseur modelant de l'analogique"
+
+#: ../src/GUI/GUI.cc:744
+msgid "Copyright © 2002 - 2016 Nick Dowell and contributors"
+msgstr "Copyright © 2002 - 2016 Nick Dowell et contributeurs"
+
+#: ../src/GUI/GUI.cc:921
 msgid "Open Bank"
 msgstr "Ouvrir une banque"
 
-#: ../src/GUI/GUI.cc:940
+#: ../src/GUI/GUI.cc:933
+msgid "Save Bank"
+msgstr "Sauvegarder une banque"
+
+#: ../src/GUI/GUI.cc:941
 msgid "new.bank"
 msgstr "nouvelle.banque"
 
-#: ../src/GUI/GUI.cc:957
+#: ../src/GUI/GUI.cc:958
 msgid "Open Scala (.scl) alternate tuning file..."
 msgstr "Ouvrir un fichier d'accordage alternatif Scala (.scl)..."
 
-#: ../src/GUI/GUI.cc:957
+#: ../src/GUI/GUI.cc:958
 msgid "Scala scale files"
 msgstr "fichiers de gamme Scala"
 
-#: ../src/GUI/GUI.cc:961
+#: ../src/GUI/GUI.cc:962
 msgid "Failed to load new tuning."
 msgstr "Échec du chargement d'un nouvel accordage."
 
-#: ../src/GUI/GUI.cc:962
+#: ../src/GUI/GUI.cc:963
 msgid ""
 "Reading the tuning file failed for some reason. Make sure your file has the "
 "correct format and try again."
@@ -440,27 +505,27 @@ msgstr ""
 "La lecture du fichier d'accordage a échouée pour une raison ou une autre. "
 "Assurez-vous que votre fichier possède le format correct et ré-essayez."
 
-#: ../src/GUI/GUI.cc:972
+#: ../src/GUI/GUI.cc:973
 msgid "Open alternate keyboard map (Scala .kbm format)..."
 msgstr "Ouvrir une carte de clavier alternative (format Scala .kbm)..."
 
-#: ../src/GUI/GUI.cc:972
+#: ../src/GUI/GUI.cc:973
 msgid "Scala keyboard map files"
 msgstr "fichiers de carte de clavier Scala"
 
-#: ../src/GUI/GUI.cc:976
+#: ../src/GUI/GUI.cc:977
 msgid "Failed to load new keyboard map."
 msgstr "Échec du chargement d'une nouvelle carte de clavier."
 
-#: ../src/GUI/GUI.cc:977
+#: ../src/GUI/GUI.cc:978
 msgid ""
 "Reading the keyboard map file failed for some reason. Make sure your file "
 "has the correct format and try again."
 msgstr ""
-"La lecture du fichier de carte de clavier a échouée pour une raison ou une autre."
-"Assurez-vous que votre fichier possède le format correct et ré-essayez."
+"La lecture du fichier de carte de clavier a échouée pour une raison ou une "
+"autre.Assurez-vous que votre fichier possède le format correct et ré-essayez."
 
-#: ../src/GUI/GUI.cc:987
+#: ../src/GUI/GUI.cc:988
 msgid "Discard the current scale and keyboard map?"
 msgstr "Abandonner la gamme et la carte du clavier actuelles ?"
 
@@ -480,6 +545,10 @@ msgstr "Paramètre du synthétiseur :"
 msgid "MIDI Controller"
 msgstr "Contrôleur MIDI"
 
+#: ../src/GUI/PresetControllerView.cc:95
+msgid "Save"
+msgstr "Sauvegarder"
+
 #: ../src/GUI/PresetControllerView.cc:104
 msgid "Audition"
 msgstr "Audition"
@@ -495,3 +564,39 @@ msgstr "F"
 #: ../src/GUI/PresetControllerView.cc:208 ../src/GUI/presets_menu.cpp:51
 msgid "U"
 msgstr "U"
+
+#: ../src/GUI/ConfigDialog.cpp:31
+msgid "amsynth configuration"
+msgstr "configuration d'amsynth"
+
+#: ../src/GUI/ConfigDialog.cpp:51
+msgid "Preferred MIDI Driver"
+msgstr "Pilote MIDI préféré"
+
+#: ../src/GUI/ConfigDialog.cpp:53
+msgid "OSS MIDI Device"
+msgstr "Périphérique MIDI OSS"
+
+#: ../src/GUI/ConfigDialog.cpp:55
+msgid "Preferred Audio Driver"
+msgstr "Pilote audio préféré"
+
+#: ../src/GUI/ConfigDialog.cpp:57
+msgid "OSS Audio Device"
+msgstr "Périphérique audio OSS"
+
+#: ../src/GUI/ConfigDialog.cpp:59
+msgid "ALSA Audio Device"
+msgstr "Périphérique audio ALSA"
+
+#: ../src/GUI/ConfigDialog.cpp:61
+msgid "Sample Rate"
+msgstr "Taux d'échantillonnage"
+
+#: ../src/GUI/ConfigDialog.cpp:64
+msgid "Changes take effect after restarting amsynth"
+msgstr "Les modifications prendront effet après avoir redémarré amsynth"
+
+#: ../src/PresetController.cc:386
+msgid "User bank"
+msgstr "Banque utilisateur"
