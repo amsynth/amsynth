@@ -157,11 +157,29 @@ MidiController::dispatch_note(unsigned char, unsigned char note, unsigned char v
 void
 MidiController::controller_change(unsigned char cc, unsigned char value)
 {
+	_midi_cc_vals[cc] = value;
+
+	if (last_active_controller.getValue() != cc)
+		last_active_controller.setValue(cc);
+
 	if (!_handler || !presetController)
 		return;
 
+	int paramId = _cc_to_param_map[cc];
+	if (paramId >= 0) {
+		presetController->getCurrentPreset().getParameter(paramId).SetNormalisedValue(value / 127.0f);
+		return; // MIDI CCs mapped by the user take precedence over default behaviour
+	}
+
 	switch (cc) {
-		case MIDI_CC_BANK_SELECT_LSB:
+		case MIDI_CC_BANK_SELECT_LSB: {
+			const std::vector<BankInfo> banks = PresetController::getPresetBanks();
+			if (value < banks.size()) {
+				presetController->loadPresets(banks[value].file_path.c_str());
+				presetController->selectPreset(presetController->getCurrPresetNumber());
+			}
+			break;
+		}
 		case MIDI_CC_BANK_SELECT_MSB:
 			break;
 		case MIDI_CC_PAN_MSB: {
@@ -210,15 +228,8 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 			_handler->HandleMidiAllNotesOff();
 		case MIDI_CC_MODULATION_WHEEL:
 		default:
-			if (last_active_controller.getValue() != cc)
-				last_active_controller.setValue(cc);
-			int paramId = _cc_to_param_map[cc];
-			if (paramId >= 0)
-				presetController->getCurrentPreset().getParameter(paramId).SetNormalisedValue(value / 127.0f);
-			_midi_cc_vals[cc] = value;
 			break;
 	}
-	return;
 }
 
 void
