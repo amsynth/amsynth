@@ -232,23 +232,23 @@ static void open_midi()
 	
 	if (config.midi_driver == "alsa" || config.midi_driver == "ALSA") {
 		if (!(midiDriver = opened_midi_driver(CreateAlsaMidiDriver(alsa_client_name)))) {
-			std::cerr << _("error: could not open ALSA MIDI interface");
+			std::cerr << _("error: could not open ALSA MIDI interface") << endl;
 		}
 		return;
 	}
 
 	if (config.midi_driver == "oss" || config.midi_driver == "OSS") {
 		if (!(midiDriver = opened_midi_driver(CreateOSSMidiDriver()))) {
-			std::cerr << _("error: could not open OSS MIDI interface");
+			std::cerr << _("error: could not open OSS MIDI interface") << endl;
 		}
 		return;
 	}
 
 	if (config.midi_driver == "auto") {
-		if (!(midiDriver = opened_midi_driver(CreateAlsaMidiDriver(alsa_client_name)))) {
-			if (!(midiDriver = opened_midi_driver(CreateOSSMidiDriver()))) {
-				std::cerr << _("error: could not open any MIDI interface");
-			}
+		midiDriver = opened_midi_driver(CreateAlsaMidiDriver(alsa_client_name)) ?:
+		             opened_midi_driver(CreateOSSMidiDriver());
+		if (config.current_midi_driver.empty()) {
+			std::cerr << _("error: could not open any MIDI interface") << endl;
 		}
 		return;
 	}
@@ -459,6 +459,7 @@ int main( int argc, char *argv[] )
 		signal(SIGINT, &signal_handler);
 		while (!signal_received)
 			sleep(2); // delivery of a signal will wake us early
+		printf("\n");
 		printf(_("shutting down...\n"));
 #ifdef WITH_GUI
 	}

@@ -141,7 +141,11 @@ int ALSAMidiDriver::open()
 	
 	snd_seq_poll_descriptors( seq_handle, &pollfd_in, 1, POLLIN );
 
-	config.current_midi_driver = "ALSA";
+	if (config.current_midi_driver.empty()) {
+		config.current_midi_driver = "ALSA";
+	} else {
+		config.current_midi_driver += " + ALSA";
+	}
 	config.alsa_seq_client_id = snd_seq_client_id(seq_handle);
 
 	return 0;

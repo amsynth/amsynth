@@ -70,7 +70,11 @@ int OSSMidiDriver::open()
 	if (_fd < 0) {
 		return -1;
 	}
-	config.current_midi_driver = "OSS";
+	if (config.current_midi_driver.empty()) {
+		config.current_midi_driver = "OSS";
+	} else {
+		config.current_midi_driver += " + OSS";
+	}
 	return 0;
 }
 
