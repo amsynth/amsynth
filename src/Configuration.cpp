@@ -104,9 +104,12 @@ Configuration::load	()
 		} else if (buffer=="pitch_bend_range"){
 			file >> buffer;
 			istringstream(buffer) >> pitch_bend_range;
-		} else if (buffer=="tuning_file"){
+		} else if (buffer=="tuning_file") {
 			file >> buffer;
 			current_tuning_file = buffer;
+		} else if (buffer == "ignored_parameters") {
+			file >> buffer;
+			ignored_parameters = buffer;
 		} else {
 			file >> buffer;
 		}
@@ -130,6 +133,7 @@ Configuration::save	()
 	fprintf (fout, "polyphony\t%d\n", polyphony);
 	fprintf (fout, "pitch_bend_range\t%d\n", pitch_bend_range);
 	fprintf (fout, "tuning_file\t%s\n", current_tuning_file.c_str());
+	fprintf (fout, "ignored_parameters\t%s\n", ignored_parameters.c_str());
 	fclose (fout);
 	return 0;
 }

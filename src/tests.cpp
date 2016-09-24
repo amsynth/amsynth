@@ -71,8 +71,21 @@ void testMidiOutput()
     delete synth;
 }
 
+void testPresetIgnoredParameters() {
+    Preset basePreset;
+    basePreset.getParameter(0).setValue(1);
+    Preset newPreset = basePreset;
+    newPreset.getParameter(0).setValue(0);
+    assert(!basePreset.isEqual(newPreset));
+	Preset::setIgnoredParameterNames("amp_attack amp_decay");
+    assert(basePreset.isEqual(newPreset));
+	Preset::setIgnoredParameterNames("");
+	assert(!basePreset.isEqual(newPreset));
+}
+
 int main(int argc, const char * argv[])
 {
     testMidiOutput();
+    testPresetIgnoredParameters();
     return 0;
 }

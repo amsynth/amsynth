@@ -26,6 +26,7 @@
 #include "bitmap_button.h"
 #include "bitmap_knob.h"
 #include "bitmap_popup.h"
+#include "controller_menu.h"
 #include "presets_menu.h"
 
 //#define ENABLE_LAYOUT_EDIT 1
@@ -178,11 +179,11 @@ on_unrealize (GtkWidget *widget, gpointer user_data)
 static void
 on_control_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
-	if (event->type == GDK_BUTTON_PRESS && event->button == 3)
-	{
-		const size_t param_index = (size_t)data;
-		modal_midi_learn(param_index);
+	if (event->button != 3) {
+		return;
 	}
+
+	gtk_menu_popup (GTK_MENU (controller_menu_new((int)(long)data)), NULL, NULL, NULL, NULL, 0, event->time);
 }
 
 static gboolean

@@ -117,6 +117,11 @@ public:
 	std::string	current_tuning_file;
 
 	std::string	amsynthrc_fname;
+
+	/**
+	 * A list of parameter names (separated by spaces) that will be ignored when loading presets.
+	 */
+	std::string ignored_parameters;
 	
 	/* internal */
 	std::string	jack_client_name;

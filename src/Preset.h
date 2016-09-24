@@ -55,6 +55,12 @@ public:
     std::string		toString		();
     bool			fromString		(std::string str);
 
+	static bool 	shouldIgnoreParameter(int parameter);
+	static void 	setShouldIgnoreParameter(int parameter, bool ignore);
+
+	static std::string getIgnoredParameterNames();
+	static void setIgnoredParameterNames(std::string);
+
 private:
     std::string				mName;
 	std::vector<Parameter>	mParameters;

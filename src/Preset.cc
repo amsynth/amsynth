@@ -27,6 +27,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <map>
+#include <iterator>
 
 #ifdef _DEBUG
 #include <iostream>
@@ -128,6 +129,8 @@ Preset&
 Preset::operator =		(const Preset &rhs)
 {
     for (unsigned i=0; i<rhs.ParameterCount(); i++) {
+		if (shouldIgnoreParameter(i))
+			continue;
 		getParameter(i).setValue(rhs.getParameter(i).getValue());
     }
     setName(rhs.getName());
@@ -138,6 +141,8 @@ bool
 Preset::isEqual(const Preset &rhs)
 {
 	for (unsigned i = 0; i < mParameters.size(); i++) {
+		if (shouldIgnoreParameter(i))
+			continue;
 		if (getParameter(i).getValue() != rhs.getParameter(i).getValue()) {
 			return false;
 		}
@@ -333,4 +338,46 @@ const char **parameter_get_value_strings (int parameter_index)
 	Parameter parameter = _preset.getParameter(parameter_index);
 	const char **value_strings = parameter.valueStrings();
 	return value_strings;
+}
+
+static bool s_ignoreParameter[kAmsynthParameterCount];
+
+bool Preset::shouldIgnoreParameter(int parameter)
+{
+	return s_ignoreParameter[parameter];
+}
+
+void Preset::setShouldIgnoreParameter(int parameter, bool ignore)
+{
+	s_ignoreParameter[parameter] = ignore;
+}
+
+std::string Preset::getIgnoredParameterNames()
+{
+	std::string names;
+	for (int i = 0; i < kAmsynthParameterCount; i++) {
+		if (shouldIgnoreParameter(i)) {
+			if (!names.empty())
+				names += " ";
+			names += _preset.getParameter(i).getName();
+		}
+	}
+	return names;
+}
+
+void Preset::setIgnoredParameterNames(std::string names)
+{
+	for (int i = 0; i < kAmsynthParameterCount; i++) {
+		setShouldIgnoreParameter(i, false);
+	}
+
+	std::stringstream ss(names);
+	std::istream_iterator<std::string> begin(ss);
+	std::istream_iterator<std::string> end;
+	std::vector<std::string> vstrings(begin, end);
+
+	std::vector<std::string>::const_iterator name_it;
+	for (name_it = vstrings.begin(); name_it != vstrings.end(); ++name_it) {
+		setShouldIgnoreParameter(parameter_index_from_name(name_it->c_str()), true);
+	}
 }
