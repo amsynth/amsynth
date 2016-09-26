@@ -44,6 +44,7 @@ MIDILearnDialog::MIDILearnDialog(MidiController *midiController, PresetControlle
 	gtk_entry_set_editable(GTK_ENTRY(_paramNameEntry), FALSE);
 
 	_combo = gtk_combo_box_new_text();
+	gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (_combo), 4);
 	gtk_combo_box_insert_text (GTK_COMBO_BOX (_combo), 0, _("None"));
 	for (gint i = 0; i < 128; i++)
 		gtk_combo_box_insert_text (GTK_COMBO_BOX (_combo), i + 1, c_controller_names[i]);
