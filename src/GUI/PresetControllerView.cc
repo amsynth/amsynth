@@ -74,6 +74,17 @@ private:
     bool audition_button_pressed;
 };
 
+static GtkWidget * button_with_image(const gchar *stock_id, const gchar *label)
+{
+	if (!gtk_icon_factory_lookup_default (stock_id)) {
+		return gtk_button_new_with_label (label);
+	}
+	GtkWidget *button = gtk_button_new ();
+	gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_SMALL_TOOLBAR));
+	atk_object_set_name (gtk_widget_get_accessible (button), label);
+	return button;
+}
+
 PresetControllerViewImpl::PresetControllerViewImpl()
 :	presetController(NULL)
 ,	bank_combo(NULL)
@@ -91,8 +102,8 @@ PresetControllerViewImpl::PresetControllerViewImpl()
 	g_signal_connect (G_OBJECT (combo), "changed", G_CALLBACK (&PresetControllerViewImpl::on_combo_changed), this);
 	g_signal_connect (G_OBJECT (combo), "notify::popup-shown", G_CALLBACK (&PresetControllerViewImpl::on_combo_popup_shown), this);
 	pack_start (* Glib::wrap (combo), true, true);
-	
-	save_button = gtk_button_new_with_label (_("Save"));
+
+	save_button = button_with_image (GTK_STOCK_SAVE, _("Save"));
 	g_signal_connect (G_OBJECT (save_button), "clicked", G_CALLBACK (&PresetControllerViewImpl::on_save_clicked), this);
 	pack_start (* Glib::wrap (save_button), false, false);
 	
@@ -101,7 +112,7 @@ PresetControllerViewImpl::PresetControllerViewImpl()
 	
 	GtkWidget *widget = NULL;
 
-	widget = gtk_button_new_with_label (_("Audition"));
+	widget = button_with_image (GTK_STOCK_MEDIA_PLAY, _("Audition"));
 	g_signal_connect (G_OBJECT (widget), "pressed", G_CALLBACK (&PresetControllerViewImpl::on_audition_pressed), this);
 	g_signal_connect (G_OBJECT (widget), "released", G_CALLBACK (&PresetControllerViewImpl::on_audition_released), this);
     g_signal_connect (G_OBJECT (widget), "key-press-event", G_CALLBACK (&PresetControllerViewImpl::on_audition_key_press_event), this);
@@ -112,7 +123,7 @@ PresetControllerViewImpl::PresetControllerViewImpl()
 	audition_spin = gtk_spin_button_new(audition_adj, 1.0, 0);
 	pack_start (* Glib::wrap (audition_spin), false, false);
 
-	widget = gtk_button_new_with_label (_("Panic"));
+	widget = button_with_image (GTK_STOCK_MEDIA_STOP, _("Panic"));
 	g_signal_connect (G_OBJECT (widget), "clicked", G_CALLBACK (&PresetControllerViewImpl::on_panic_clicked), this);
 	pack_start (* Glib::wrap (widget), false, false);
 }
@@ -199,7 +210,7 @@ void PresetControllerViewImpl::update()
 
 	const std::vector<BankInfo> banks = PresetController::getPresetBanks();
 
-	char text [22] = "";
+	char text [48] = "";
 
 	// bank combo
 
@@ -226,7 +237,10 @@ void PresetControllerViewImpl::update()
 		gtk_combo_box_insert_text (GTK_COMBO_BOX (combo), i, text);
 	}
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), presetController->getCurrPresetNumber());
-	
+
+	// allow the preset combo to be narrower than the longest preset name, prevents the window getting wider than the editor
+	gtk_widget_set_size_request (combo, 100, -1);
+
 	inhibit_combo_callback = false;
 }
 
