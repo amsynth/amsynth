@@ -11,5 +11,7 @@
 After adding, removing or changing the translatable text in the source code, the translation files must be updated.
 
 1. Review `POTFILES.in` and add or remove source files as necessary
-2. Run `make update-po` from this `po` directory
-3. Commit the updated `.pot` and `.po` files
+2. Run `make amsynth.pot` from this `po` directory
+3. Run `make update-po` from this `po` directory
+4. Review and edit the `.po` files as necessary
+5. Commit the updated `.pot` and `.po` files
