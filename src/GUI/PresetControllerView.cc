@@ -85,6 +85,16 @@ static GtkWidget * button_with_image(const gchar *stock_id, const gchar *label)
 	return button;
 }
 
+static gboolean on_output(GtkSpinButton *spin, gpointer user_data)
+{
+	static const char *names[12] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+	gchar text[8];
+	gint value = gtk_spin_button_get_value_as_int (spin);
+	sprintf (text, "%s%d", names[value % 12], value / 12 - 1);
+	gtk_entry_set_text (GTK_ENTRY (spin), text);
+	return TRUE;
+}
+
 PresetControllerViewImpl::PresetControllerViewImpl()
 :	presetController(NULL)
 ,	bank_combo(NULL)
@@ -121,6 +131,10 @@ PresetControllerViewImpl::PresetControllerViewImpl()
 	
 	GtkAdjustment *audition_adj = (GtkAdjustment *) gtk_adjustment_new(60.0, 0.0, 127.0, 1.0, 5.0, 0.0);
 	audition_spin = gtk_spin_button_new(audition_adj, 1.0, 0);
+	gtk_editable_set_editable (GTK_EDITABLE (audition_spin), false);
+	gtk_widget_set_can_focus (audition_spin, FALSE);
+	gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (audition_spin), false);
+	g_signal_connect (G_OBJECT (audition_spin), "output", G_CALLBACK (&on_output), NULL);
 	pack_start (* Glib::wrap (audition_spin), false, false);
 
 	widget = button_with_image (GTK_STOCK_MEDIA_STOP, _("Panic"));
