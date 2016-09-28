@@ -165,7 +165,8 @@ public:
         }
         self->m_MIDIBufferReadIndex = idx;
 
-        self->mAudioCallback(outL, outR, numSampleFrames, stride, midi_events.size() ? &midi_events[0] : NULL, midi_events.size());
+        std::vector<amsynth_midi_cc_t> midi_out;
+        amsynth_audio_callback(outL, outR, numSampleFrames, stride, midi_events, midi_out);
     }
 
     static void midiReadProc(const MIDIPacketList *pktlist, void *readProcRefCon, void *srcConnRefCon)
