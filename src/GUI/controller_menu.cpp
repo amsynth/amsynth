@@ -49,12 +49,12 @@ GtkWidget *controller_menu_new(int parameter)
 	GtkWidget *item, *menu = gtk_menu_new ();
 
 	item = gtk_menu_item_new_with_label(_("MIDI Learn..."));
-	g_signal_connect(item, "activate", G_CALLBACK(show_midi_learn_dialog), (gpointer)parameter);
+	g_signal_connect(item, "activate", G_CALLBACK(show_midi_learn_dialog), (gpointer)(long)parameter);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
 	item = gtk_check_menu_item_new_with_label(_("Ignore Preset Value"));
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item), Preset::shouldIgnoreParameter(parameter));
-	g_signal_connect(item, "toggled", G_CALLBACK(override_item_toggled), (gpointer)parameter);
+	g_signal_connect(item, "toggled", G_CALLBACK(override_item_toggled), (gpointer)(long)parameter);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
 	gtk_widget_show_all (menu);
