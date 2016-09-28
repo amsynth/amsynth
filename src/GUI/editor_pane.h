@@ -26,7 +26,7 @@
 
 G_BEGIN_DECLS
 
-GtkWidget * editor_pane_new (GtkAdjustment **adjustments, gboolean enable_popup_menu);
+GtkWidget * editor_pane_new (GtkAdjustment **adjustments, gboolean is_plugin);
 
 void modal_midi_learn(int param_index);
 

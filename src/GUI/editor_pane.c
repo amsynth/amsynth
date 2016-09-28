@@ -176,10 +176,16 @@ on_unrealize (GtkWidget *widget, gpointer user_data)
 
 #endif /////////////////////////////////////////////////////////////////////////
 
+static gboolean g_is_plugin;
+
 static void
 on_control_press (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
 	if (event->button != 3) {
+		return;
+	}
+
+	if (g_is_plugin) {
 		return;
 	}
 
@@ -216,7 +222,7 @@ button_release_event (GtkWidget *widget, GdkEventButton *event, GtkWidget *prese
 #define KEY_CONTROL_PARAM_NUM	"param_num"
 
 GtkWidget *
-editor_pane_new (GtkAdjustment **adjustments, gboolean enable_popup_menu)
+editor_pane_new (GtkAdjustment **adjustments, gboolean is_plugin)
 {
 	static int initialised;
 	if (!initialised) {
@@ -234,6 +240,8 @@ editor_pane_new (GtkAdjustment **adjustments, gboolean enable_popup_menu)
 			0
 		);
 	}
+
+	g_is_plugin = is_plugin;
 
 	GtkWidget *fixed = gtk_fixed_new ();
 	gtk_widget_set_usize (fixed, 400, 300);
@@ -403,7 +411,7 @@ editor_pane_new (GtkAdjustment **adjustments, gboolean enable_popup_menu)
 
 	GtkWidget *eventbox = gtk_event_box_new ();
 	gtk_container_add (GTK_CONTAINER (eventbox), fixed);
-	if (enable_popup_menu) {
+	if (is_plugin) {
 		GtkWidget *presets_menu = presets_menu_new (adjustments);
 		gtk_menu_attach_to_widget (GTK_MENU (presets_menu), eventbox, NULL);
 		g_signal_connect (eventbox, "button-release-event", G_CALLBACK (button_release_event), presets_menu);
