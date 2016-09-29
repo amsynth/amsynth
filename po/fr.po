@@ -1,5 +1,5 @@
 # French translation for amsynth
-# Traduction frnçaise pour amsynth
+# Traduction française pour amsynth
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the amsynth package.
 # Olivier Humbert <trebmuh@tuxfamily.org>, 2016.
@@ -51,14 +51,12 @@ msgid "Changes take effect after restarting amsynth"
 msgstr "Les modifications prendront effet après avoir redémarré amsynth"
 
 #: ../src/GUI/controller_menu.cpp:51
-#, fuzzy
 msgid "MIDI Learn..."
 msgstr "Apprentissage MIDI..."
 
 #: ../src/GUI/controller_menu.cpp:55
-#, fuzzy
 msgid "Ignore Preset Value"
-msgstr "Ignorer pré-réglage"
+msgstr "Ignorer la valeur de pré-réglage"
 
 #: ../src/GUI/GUI.cc:105
 msgid "<b>Save changes before closing?</b>"
