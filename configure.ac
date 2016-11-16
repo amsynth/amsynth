@@ -146,6 +146,7 @@ AM_CONDITIONAL([DARWIN], [test "$(uname -s)" = "Darwin"])
 AC_OUTPUT([
     Makefile
     data/amsynth.desktop
+    data/amsynth.appdata.xml
     po/Makefile.in
 ])
 
