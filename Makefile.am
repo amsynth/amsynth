@@ -285,6 +285,13 @@ desktopdir = $(datadir)/applications
 desktop_in_files = data/amsynth.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
+appdatadir = $(datadir)/appdata
+appdata_in_files = data/amsynth.appdata.xml.in
+appdata_DATA = $(appdata_in_files:.appdata.xml.in=.appdata.xml)
+@INTLTOOL_XML_RULE@
+
+EXTRA_DIST += $(appdata_in_files)
+
 skinsdefaultdir="${pkgdatadir}/skins/default"
 dist_skinsdefault_DATA = \
 	data/default-skin/background.png \

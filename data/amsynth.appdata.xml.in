@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<component>
+  <id>amsynth.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <_name>Analog Modelling SYNTHesizer</_name>
+  <project_license>GPL-2.0+</project_license>
+  <_summary>Analog modelling (a.k.a virtual analog) software synthesizer</_summary>
+  <url type="homepage">http://amsynth.github.io/</url>
+  <description>
+    <_p>Amsynth is an analog modelling (a.k.a virtual analog) software synthesizer.
+It mimics the operation of early analog subtractive synthesizers with
+classic oscillator waveforms, envelopes, filter, modulation and effects.
+The aim is to make it easy to create and modify sounds.</_p>
+    <_p>Features:</_p>
+    <ul>
+      <_li>Dual oscillators (sine / saw / square / noise) with hard sync</_li>
+      <_li>12/24 dB/oct resonant filter (low-pass / high-pass / band-pass / notch)</_li>
+      <_li>Mono / poly / legato keyboard modes</_li>
+      <_li>Dual ADSR envelope generators (filter &amp; amplitude)</_li>
+      <_li>LFO which can modulate the oscillators, filter, and amplitude</_li>
+      <_li>Distortion and reverb</_li>
+      <_li>Hundreds of presets</_li>
+    </ul>
+
+    <_p>There are currently several different ways to run amsynth:</_p>
+    <ul>
+      <_li>Stand-alone application using JACK, ALSA or OSS</_li>
+      <_li>DSSI plug-in</_li>
+      <_li>LV2 plug-in</_li>
+      <_li>VST plug-in</_li>
+    </ul>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image height="462" width="616">http://amsynth.github.io/images/ScreenShot.png</image>
+      <caption>AMSYNTH Main Window</caption>
+    </screenshot>
+  </screenshots>
+  <provides>
+    <binary>amsynth</binary>
+  </provides>
+  <update_contact>nick_AT_nickdowell.com</update_contact>
+  <translation type="gettext">amsynth</translation>
+</component>
