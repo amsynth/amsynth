@@ -7,4 +7,4 @@ src/GUI/PresetControllerView.cc
 src/GUI/presets_menu.cpp
 src/main.cc
 src/PresetController.cc
-data/amsynth.appdata.xml.in
+data/amsynth.appdata.xml
