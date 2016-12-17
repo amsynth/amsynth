@@ -327,7 +327,8 @@ PresetController::loadPresets		(const char *filename)
 	if (!is_amsynth_file(filename))
 		return -1;
 
-	if (strcmp(filename, bank_file.c_str()) == 0 && lastPresetsFileModifiedTime == mtime(filename))
+	unsigned long fileModifiedTime = mtime(filename);
+	if (strcmp(filename, bank_file.c_str()) == 0 && lastPresetsFileModifiedTime == fileModifiedTime)
 		return 0; // file not modified since last load
 
 	void *buffer = NULL;
@@ -368,6 +369,7 @@ PresetController::loadPresets		(const char *filename)
 		presets[preset_index] = Preset();
 	free(buffer);
 
+	lastPresetsFileModifiedTime = fileModifiedTime;
 	bank_file = std::string(filename);
 
 	return 0;
