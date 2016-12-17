@@ -659,7 +659,7 @@ GUI::event_handler(const int e)
 	
 	case evRecDlgFileChooser:
 		{
-			std::string filename = file_dialog(this->gobj(), _("Select output WAV file..."), true, NULL, NULL, NULL);
+			std::string filename = file_dialog(this->gobj(), _("Select output WAV file"), true, NULL, NULL, NULL);
 			if (!filename.empty()) {
 				record_entry.set_text(filename);
 			}
@@ -955,7 +955,7 @@ GUI::bank_save_as	( )
 void
 GUI::scale_open		( )
 {
-	std::string filename = file_dialog(this->gobj(), _("Open Scala (.scl) alternate tuning file..."), false, _("Scala scale files"), "*.[Ss][Cc][Ll]", NULL);
+	std::string filename = file_dialog(this->gobj(), _("Open Scala (.scl) alternate tuning file"), false, _("Scala scale files"), "*.[Ss][Cc][Ll]", NULL);
 	if (!filename.empty()) {
 		int error = m_synth->loadTuningScale(filename.c_str());
 		if (error) {
@@ -970,7 +970,7 @@ Make sure your file has the correct format and try again."));
 void
 GUI::key_map_open	( )
 {
-	std::string filename = file_dialog(this->gobj(), _("Open alternate keyboard map (Scala .kbm format)..."), false, _("Scala keyboard map files"), "*.[Kk][Bb][Mm]", NULL);
+	std::string filename = file_dialog(this->gobj(), _("Open alternate keyboard map (Scala .kbm format)"), false, _("Scala keyboard map files"), "*.[Kk][Bb][Mm]", NULL);
 	if (!filename.empty()) {
 		int error = m_synth->loadTuningKeymap(filename.c_str());
 		if (error) {
