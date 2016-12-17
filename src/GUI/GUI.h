@@ -89,10 +89,8 @@ private:
 
 	void		event_handler	(const int);
 	
-	void		preset_new		( );
 	void		preset_copy		( );
 	void		preset_paste		( );
-	void		preset_paste_as_new	( );
 	
 	void		bank_open		( );
 	void		bank_save_as		( );
@@ -114,7 +112,6 @@ private:
 	void		UpdateParameterOnMainThread(Param, float);
 	
 	static void preset_paste_callback(GtkClipboard *clipboard, const gchar *text, gpointer data);
-	static void preset_paste_as_new_callback(GtkClipboard *clipboard, const gchar *text, gpointer data);
 
 	gint setActiveParam( GdkEventButton *event, Parameter * param );
 	std::string status;
@@ -127,12 +124,6 @@ private:
 	Gtk::Label preset_rename_label;
 	Gtk::Entry preset_rename_entry;
 	Gtk::Button preset_rename_cancel, preset_rename_ok;
-	
-	// new preset dialog
-	Gtk::Dialog		d_preset_new;
-	Gtk::Label		d_preset_new_label;
-	Gtk::Entry		d_preset_new_entry;
-	Gtk::Button		d_preset_new_cancel, d_preset_new_ok;
 	
 	// recording dialog
 	Gtk::Window		record_dialog;

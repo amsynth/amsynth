@@ -159,25 +159,6 @@ GUI::GUI(MidiController & mc, Synthesizer *synth, GenericOutput *audio)
 	preset_rename.set_transient_for( *this );
 	
 	//
-	// the new preset dialog
-	//
-	d_preset_new.set_title(_("Create a New Preset"));
-	d_preset_new.set_size_request( 300, 200 );
-	d_preset_new.set_resizable (false);
-	d_preset_new.get_vbox()->add( d_preset_new_label );
-	d_preset_new_label.set_text(_("Enter new Preset Name:"));
-	d_preset_new.get_vbox()->add( d_preset_new_entry );
-	d_preset_new.get_action_area()->add( d_preset_new_ok );
-	d_preset_new_ok.add_label(_("Confirm"), 0.5, 0.5 );
-	d_preset_new_ok.signal_clicked().connect(sigc::bind(mem_fun(*this, &GUI::event_handler), 0));
-	d_preset_new.get_action_area()->add( d_preset_new_cancel );
-	d_preset_new_cancel.signal_clicked().connect(mem_fun(d_preset_new, &Gtk::Dialog::hide));
-	d_preset_new_cancel.add_label(_("Cancel"), 0.5, 0.5 );
-	d_preset_new.set_modal( true );
-	d_preset_new.set_transient_for( *this );
-	
-	
-	//
 	// the record dialog
 	//
 	record_dialog.set_title(_("Capture Output"));
@@ -251,10 +232,8 @@ GUI::create_menus	( )
 	Menu *menu_preset = manage (new Menu());
 	MenuList& list_preset = menu_preset->items ();
 //	list_preset.push_back (manage (new TearoffMenuItem ()));
-	list_preset.push_back (MenuElem(_("_New"), Gtk::AccelKey("<control>N"), mem_fun(*this, &GUI::preset_new)));
 	list_preset.push_back (MenuElem(_("_Copy"), Gtk::AccelKey("<control>C"), mem_fun(*this, &GUI::preset_copy)));
 	list_preset.push_back (MenuElem(_("_Paste"), Gtk::AccelKey("<control>V"), mem_fun(*this, &GUI::preset_paste)));
-	list_preset.push_back (MenuElem(_("Paste as New"), mem_fun(*this, &GUI::preset_paste_as_new)));
 	list_preset.push_back (SeparatorElem());
 	list_preset.push_back (MenuElem(_("Rename"), sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetRename)));
 	list_preset.push_back (MenuElem(_("Clear"), bind(mem_fun(this,&GUI::event_handler),(int)evPresetDelete)));
@@ -869,12 +848,6 @@ GUI::setPresetController(PresetController & p_c)
 	g_midiLearn = new MIDILearnDialog(midi_controller, preset_controller, this->gobj());
 }
 
-void
-GUI::preset_new		( )
-{
-	preset_controller->newPreset ();
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 
 void
@@ -907,19 +880,6 @@ GUI::preset_paste_callback(GtkClipboard *, const gchar *text, gpointer userdata)
 	
 	_this->preset_controller->getCurrentPreset() = pastedPreset;
 	_this->presetCV->update();
-}
-
-void
-GUI::preset_paste_as_new( )
-{
-	gtk_clipboard_request_text(gtk_clipboard_get(GDK_SELECTION_CLIPBOARD), GUI::preset_paste_as_new_callback, this);
-}
-
-void
-GUI::preset_paste_as_new_callback(GtkClipboard *clipboard, const gchar *text, gpointer userdata)
-{
-	reinterpret_cast<GUI *>(userdata)->preset_new ();
-	preset_paste_callback(clipboard, text, userdata);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

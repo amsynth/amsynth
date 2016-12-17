@@ -89,13 +89,6 @@ PresetController::getPreset			(const string name)
 	return nullpreset;
 }
 
-int
-PresetController::newPreset			()
-{
-	for (int i=0; i<kNumPresets; i++) if (getPreset(i).getName() == "New Preset") return selectPreset (i);
-	return -1;
-}
-
 void
 PresetController::clearPreset		()
 {
