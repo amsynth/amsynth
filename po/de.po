@@ -1,40 +1,44 @@
+# German translation for amsynth
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-17 19:35+0000\n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2016-12-17 23:47+0100\n"
+"Last-Translator: Peter Körner <18427@gmx.net>\n"
 "Language-Team: \n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.8\n"
 
 #: ../src/GUI/ConfigDialog.cpp:31
 msgid "amsynth configuration"
-msgstr "amsynth Konfiguration"
+msgstr "amsynth-Konfiguration"
 
 #: ../src/GUI/ConfigDialog.cpp:51
 msgid "Preferred MIDI Driver"
-msgstr "bevorzugter MIDI Treiber"
+msgstr "Bevorzugter MIDI-Treiber"
 
 #: ../src/GUI/ConfigDialog.cpp:53
 msgid "OSS MIDI Device"
-msgstr "OSS MIDI Gerät"
+msgstr "OSS-MIDI-Gerät"
 
 #: ../src/GUI/ConfigDialog.cpp:55
 msgid "Preferred Audio Driver"
-msgstr "bevorzugter Audio Treiber"
+msgstr "Bevorzugter Audiotreiber"
 
 #: ../src/GUI/ConfigDialog.cpp:57
 msgid "OSS Audio Device"
-msgstr "OSS Audio Gerät"
+msgstr "OSS-Audiogerät"
 
 #: ../src/GUI/ConfigDialog.cpp:59
 msgid "ALSA Audio Device"
-msgstr "Alsa Audio Gerät"
+msgstr "ALSA-Audiogerät"
 
 #: ../src/GUI/ConfigDialog.cpp:61
 msgid "Sample Rate"
@@ -45,14 +49,12 @@ msgid "Changes take effect after restarting amsynth"
 msgstr "Änderungen werden nach einem Neustart von amsynth wirksam"
 
 #: ../src/GUI/controller_menu.cpp:51
-#, fuzzy
 msgid "MIDI Learn..."
-msgstr "MIDI Lernen..."
+msgstr "MIDI-Lernen..."
 
 #: ../src/GUI/controller_menu.cpp:55
-#, fuzzy
 msgid "Ignore Preset Value"
-msgstr "Ignorieren Preset Wert"
+msgstr "Preset-Wert ignorieren"
 
 #: ../src/GUI/GUI.cc:105
 msgid "<b>Save changes before closing?</b>"
@@ -60,13 +62,14 @@ msgstr "<b>Sollen die Änderungen vor dem Beenden gespeichert werden?</b>"
 
 #: ../src/GUI/GUI.cc:107
 msgid "Close _Without Saving"
-msgstr "Beenden ohne zu speichern"
+msgstr "_Beenden ohne zu speichern"
 
 #: ../src/GUI/GUI.cc:112
 msgid ""
 "If you don't save, changes to the current preset will be permanently lost."
 msgstr ""
-"Ohne zu speichern sind die Änderungen am aktuellen Preset dauerhaft verloren."
+"Ohne zu speichern gehen die Änderungen am aktuellen Preset dauerhaft "
+"verloren."
 
 #.
 #. the preset rename dialog
@@ -77,7 +80,7 @@ msgstr "Preset umbenennen"
 
 #: ../src/GUI/GUI.cc:150
 msgid "Enter new Preset Name:"
-msgstr "neuen Preset Namen eingeben:"
+msgstr "Neuen Preset-Namen eingeben:"
 
 #: ../src/GUI/GUI.cc:153
 msgid "Confirm"
@@ -96,7 +99,7 @@ msgstr "Ausgabe aufnehmen"
 
 #: ../src/GUI/GUI.cc:174
 msgid "output file:"
-msgstr "Ausgabe-Datei:"
+msgstr "Ausgabedatei:"
 
 #: ../src/GUI/GUI.cc:180
 msgid "amsynth-out.wav"
@@ -113,7 +116,7 @@ msgstr "Neue Instanz"
 
 #: ../src/GUI/GUI.cc:218
 msgid "_Open Bank"
-msgstr "Öffne Bank"
+msgstr "Öffne B_ank"
 
 #. list_file.push_back (MenuElem("_Save Bank","<control>S", mem_fun(*this, &GUI::bank_save)));
 #: ../src/GUI/GUI.cc:220
@@ -126,7 +129,7 @@ msgstr "Lade andere Stimmung"
 
 #: ../src/GUI/GUI.cc:223
 msgid "Open Alternate Keyboard Map"
-msgstr "Öffne andere Keyboard-Map"
+msgstr "Lade andere Keyboard-Map"
 
 #: ../src/GUI/GUI.cc:224
 msgid "Reset All Tuning Settings to Default"
@@ -134,36 +137,37 @@ msgstr "Setze alle Stimmungseinstellungen auf den Standard zurück"
 
 #: ../src/GUI/GUI.cc:226
 msgid "_Quit"
-msgstr "Beenden"
+msgstr "_Beenden"
 
 #. list_preset.push_back (manage (new TearoffMenuItem ()));
 #: ../src/GUI/GUI.cc:235
 msgid "_Copy"
-msgstr "Kopieren"
+msgstr "_Kopieren"
 
 #: ../src/GUI/GUI.cc:236
 msgid "_Paste"
-msgstr "Einfügen"
+msgstr "_Einfügen"
 
 #: ../src/GUI/GUI.cc:238
 msgid "Rename"
 msgstr "Umbenennen"
 
+# TODO: bessere Übersetzung?
 #: ../src/GUI/GUI.cc:239
 msgid "Clear"
 msgstr "Leeren"
 
 #: ../src/GUI/GUI.cc:241
 msgid "_Randomise"
-msgstr "zufällige Einstellungen"
+msgstr "_Zufällige Einstellungen"
 
 #: ../src/GUI/GUI.cc:242
 msgid "Undo"
-msgstr "Zurück"
+msgstr "Rückgängig"
 
 #: ../src/GUI/GUI.cc:243
 msgid "Redo"
-msgstr "Wiederholen"
+msgstr "Wiederherstellen"
 
 #: ../src/GUI/GUI.cc:245 ../src/GUI/GUI.cc:638
 msgid "Import Preset"
@@ -171,7 +175,7 @@ msgstr "Preset importieren"
 
 #: ../src/GUI/GUI.cc:246 ../src/GUI/GUI.cc:629
 msgid "Export Preset"
-msgstr "Preset eportieren"
+msgstr "Preset exportieren"
 
 #: ../src/GUI/GUI.cc:265
 msgid "All"
@@ -179,7 +183,7 @@ msgstr "Alle"
 
 #: ../src/GUI/GUI.cc:276
 msgid "MIDI Channel"
-msgstr "MIDI Kanal"
+msgstr "MIDI-Kanal"
 
 #: ../src/GUI/GUI.cc:288
 msgid "Unlimited"
@@ -191,11 +195,11 @@ msgstr "Max. Polyphonie"
 
 #: ../src/GUI/GUI.cc:313
 msgid " Semitones"
-msgstr "Halbtöne"
+msgstr " Halbtöne"
 
 #: ../src/GUI/GUI.cc:322
 msgid "Pitch Bend Range"
-msgstr "Pitch Bereich"
+msgstr "Pitch-Bend-Bereich"
 
 #: ../src/GUI/GUI.cc:325
 msgid "Audio & MIDI..."
@@ -203,19 +207,19 @@ msgstr "Audio & MIDI..."
 
 #: ../src/GUI/GUI.cc:334
 msgid "Virtual Keyboard"
-msgstr "virtuelles Keyboard"
+msgstr "Virtuelles Keyboard"
 
 #: ../src/GUI/GUI.cc:341
 msgid "Record to .wav file..."
-msgstr "in .wav-Datei aufnehmen"
+msgstr "In .wav-Datei aufnehmen..."
 
 #: ../src/GUI/GUI.cc:366
 msgid "MIDI (ALSA) connections"
-msgstr "MIDI (ALSA) Verbindungen"
+msgstr "MIDI-Verbindungen (ALSA)"
 
 #: ../src/GUI/GUI.cc:386
 msgid "Audio (JACK) connections"
-msgstr "Audio (JACK) Verbindungen"
+msgstr "Audioverbindungen (JACK)"
 
 #: ../src/GUI/GUI.cc:392
 msgid "About"
@@ -223,15 +227,15 @@ msgstr "Über"
 
 #: ../src/GUI/GUI.cc:393
 msgid "Report a Bug..."
-msgstr "einen Fehler melden..."
+msgstr "Einen Fehler melden..."
 
 #: ../src/GUI/GUI.cc:394
 msgid "Online Documentation..."
-msgstr "Online-Dokumentation"
+msgstr "Online-Dokumentation..."
 
 #: ../src/GUI/GUI.cc:403
 msgid "_File"
-msgstr "Datei"
+msgstr "_Datei"
 
 #: ../src/GUI/GUI.cc:404
 msgid "_Preset"
@@ -239,15 +243,15 @@ msgstr "_Preset"
 
 #: ../src/GUI/GUI.cc:405
 msgid "_Config"
-msgstr "Konfiguration"
+msgstr "_Konfiguration"
 
 #: ../src/GUI/GUI.cc:406
 msgid "_Utils"
-msgstr "Werkzeuge"
+msgstr "_Werkzeuge"
 
 #: ../src/GUI/GUI.cc:407
 msgid "_Help"
-msgstr "Hilfe"
+msgstr "_Hilfe"
 
 #: ../src/GUI/GUI.cc:409
 #, c-format
@@ -256,7 +260,7 @@ msgstr "Audio: %s @ %d MIDI: %s"
 
 #: ../src/GUI/GUI.cc:486 ../src/GUI/GUI.cc:497
 msgid "amsynth configuration error"
-msgstr "amsynth Konfigurationsfehler"
+msgstr "amsynth-Konfigurationsfehler"
 
 #: ../src/GUI/GUI.cc:488
 msgid ""
@@ -264,7 +268,7 @@ msgid ""
 "\n"
 "Please review the configuration and restart"
 msgstr ""
-"amsynth konnte das gewählte Ausgabegerät nicht nutzen.\n"
+"amsynth konnte das gewählte Audiogerät nicht initialisieren.\n"
 "\n"
 "Bitte die Konfiguration prüfen und neu starten"
 
@@ -274,7 +278,7 @@ msgid ""
 "\n"
 "Please review the configuration and restart"
 msgstr ""
-"amsynth konnte das gewählte Midi-Gerät nicht nutzen.\n"
+"amsynth konnte das gewählte MIDI-Gerät nicht initialisieren.\n"
 "\n"
 "Bitte die Konfiguration prüfen und neu starten"
 
@@ -294,42 +298,40 @@ msgstr ""
 "Eventuell werden Audio Buffer Underruns auftreten, bemerkbar durch 'Klicks' "
 "in der Audioausgabe.\n"
 "\n"
-"Wahrscheinlich liegt das daran, dass das Programm nicht SUID Root ist.\n"
+"Wahrscheinlich liegt dies daran, dass das Programm nicht SUID root ist.\n"
 "\n"
-"Eventuell hilft die Verwendung von Jack"
+"Eventuell hilft die Verwendung von JACK"
 
 #: ../src/GUI/GUI.cc:533
 msgid "Could not show link"
 msgstr "Link kann nicht angezeigt werden"
 
+# TODO: bessere Übersetzung?
 #: ../src/GUI/GUI.cc:611
-#, fuzzy
 msgid "Clear current preset?"
-msgstr "Aktuelles Preset entfernen?"
+msgstr "Aktuelles Preset leeren?"
 
 #: ../src/GUI/GUI.cc:615
 msgid "Parameters will be set to default values and the name will be cleared"
-msgstr ""
+msgstr "Parameter werden auf Standardwerte gesetzt und der Name wird gelöscht"
 
 #: ../src/GUI/GUI.cc:638
 msgid "amsynth 1.x files"
-msgstr "amsynth 1.x Dateien"
+msgstr "amsynth-1.x-Dateien"
 
 #: ../src/GUI/GUI.cc:651
 msgid "Select output WAV file..."
-msgstr "Ausgabe WAV Datei auswählen..."
+msgstr "Ausgabe-WAV-Datei auswählen..."
 
 #: ../src/GUI/GUI.cc:670
 msgid "capture status: RECORDING"
-msgstr "Aktueller Status: AUFNAHME"
+msgstr "Aufnahmestatus: AUFNAHME"
 
 #: ../src/GUI/GUI.cc:731
-#, fuzzy
 msgid "Analogue Modelling SYNTHesizer"
-msgstr "Analoger Modellierungssythesizer"
+msgstr "Virtuell-analoger Synthesizer"
 
 #: ../src/GUI/GUI.cc:733
-#, fuzzy
 msgid "Copyright © 2002 - 2016 Nick Dowell and contributors"
 msgstr "Copyright © 2002 - 2016 Nick Dowell und Mitwirkende"
 
@@ -347,11 +349,11 @@ msgstr "neue.bank"
 
 #: ../src/GUI/GUI.cc:928
 msgid "Open Scala (.scl) alternate tuning file..."
-msgstr "Lade andere Stimmung (.scl)"
+msgstr "Lade andere Open-Scala-Stimmungsdatei (.scl)..."
 
 #: ../src/GUI/GUI.cc:928
 msgid "Scala scale files"
-msgstr "Scala Datei"
+msgstr "Scala-Tonleiterdatei"
 
 #: ../src/GUI/GUI.cc:932
 msgid "Failed to load new tuning."
@@ -362,15 +364,16 @@ msgid ""
 "Reading the tuning file failed for some reason. Make sure your file has the "
 "correct format and try again."
 msgstr ""
-"Laden der Stimmung ist fehlgeschlagen. Hat die Datei das richtige Format?"
+"Laden der Stimmungsdatei ist fehlgeschlagen. Hat die Datei das richtige "
+"Format?"
 
 #: ../src/GUI/GUI.cc:943
 msgid "Open alternate keyboard map (Scala .kbm format)..."
-msgstr "Öffne andere Keyboard-Map (Scala .kbm Format)..."
+msgstr "Lade andere Keyboard-Map (Scala-.kbm-Format)..."
 
 #: ../src/GUI/GUI.cc:943
 msgid "Scala keyboard map files"
-msgstr "Scala Keyboard-Map Dateien"
+msgstr "Scala-Keyboard-Map-Dateien"
 
 #: ../src/GUI/GUI.cc:947
 msgid "Failed to load new keyboard map."
@@ -390,19 +393,19 @@ msgstr "Sollen die aktuelle Stimmung und Keyboard-Map verworfen werden?"
 
 #: ../src/GUI/MIDILearnDialog.cpp:38
 msgid "MIDI Learn"
-msgstr "MIDI Lernen"
+msgstr "MIDI-Lernen"
 
 #: ../src/GUI/MIDILearnDialog.cpp:48 ../src/GUI/MIDILearnDialog.cpp:101
 msgid "None"
-msgstr "Kein"
+msgstr "Keiner"
 
 #: ../src/GUI/MIDILearnDialog.cpp:53
 msgid "Synth Parameter:"
-msgstr "Synth Parameter:"
+msgstr "Synth-Parameter:"
 
 #: ../src/GUI/MIDILearnDialog.cpp:55
 msgid "MIDI Controller"
-msgstr "Midi Controller"
+msgstr "MIDI-Controller"
 
 #: ../src/GUI/PresetControllerView.cc:116
 msgid "Save"
@@ -424,24 +427,19 @@ msgstr "F"
 msgid "U"
 msgstr "U"
 
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 #: ../src/main.cc:85
 msgid "Failed to set SCHED_FIFO\n"
-msgstr "Setzen von SHED_FIFO gescheitert\n"
+msgstr "Setzen von SCHED_FIFO gescheitert\n"
 
 #: ../src/main.cc:104
 #, c-format
 msgid "error reading source file %s\n"
-msgstr "Fehler beim Lesen der Datei %s\n"
+msgstr "Fehler beim Lesen der Quelldatei %s\n"
 
 #: ../src/main.cc:109
 #, c-format
 msgid "error creating destination file %s\n"
-msgstr "Fehler beim Anlegen der Ziel-Datei %s\n"
+msgstr "Fehler beim Anlegen der Zieldatei %s\n"
 
 #: ../src/main.cc:144
 #, c-format
@@ -455,34 +453,34 @@ msgstr "Installiere Standard-Soundbank nach %s\n"
 
 #: ../src/main.cc:209
 msgid "JACK init failed: "
-msgstr "Jack Initialisierung gescheitert:"
+msgstr "JACK-Initialisierung gescheitert: "
 
 #: ../src/main.cc:235
 msgid "error: could not open ALSA MIDI interface"
-msgstr "Fehler: Kann ALSA MIDI Interface nicht öffnen"
+msgstr "Fehler: Kann ALSA-MIDI-Interface nicht öffnen"
 
 #: ../src/main.cc:242
 msgid "error: could not open OSS MIDI interface"
-msgstr "Fehler: Kann OSS MIDI Interface nicht öffnen"
+msgstr "Fehler: Kann OSS-MIDI-Interface nicht öffnen"
 
 #: ../src/main.cc:251
 msgid "error: could not open any MIDI interface"
-msgstr "Fehler: Kein Midi Interface kann geöffnet werden"
+msgstr "Fehler: Kein MIDI-Interface kann geöffnet werden"
 
 #: ../src/main.cc:318
 msgid "usage: "
-msgstr "Verwendung:"
+msgstr "Verwendung: "
 
 #: ../src/main.cc:318
 msgid " [options]"
-msgstr "[Optionen]"
+msgstr " [Optionen]"
 
 #: ../src/main.cc:320
 msgid ""
 "Any options given here override those in the config file ($HOME/.amSynthrc)"
 msgstr ""
-"Alle hier angegebenen Optionen Überschreiben die aus der Konfugurationsdatei "
-"($HOME/.amSynthrc)"
+"Alle hier angegebenen Optionen überschreiben diejenigen aus der "
+"Konfigurationsdatei ($HOME/.amSynthrc)"
 
 #: ../src/main.cc:322
 msgid "OPTIONS:"
@@ -490,7 +488,7 @@ msgstr "OPTIONEN:"
 
 #: ../src/main.cc:324
 msgid "\t-h          show this usage message"
-msgstr " \t-h\t\tzeigt diese Verwendungsbeschreibung"
+msgstr "\t-h          zeigt diese Verwendungsbeschreibung"
 
 #: ../src/main.cc:325
 msgid "\t-v          show version information"
@@ -502,40 +500,41 @@ msgstr "\t-d          zeigt Debugging-Informationen"
 
 #: ../src/main.cc:328
 msgid "\t-b <filename>   use <filename> as the bank to store presets"
-msgstr "\t-b <Dateiname>   Nutzt <Dateiname> als Speicher für Presets"
+msgstr ""
+"\t-b <Dateiname>   nutzt <Dateiname> als Bank zum Speichern von Presets"
 
 #: ../src/main.cc:329
 msgid "\t-t <filename>   use <filename> as a tuning file"
-msgstr "\t-t <Dateiname>   Nutzt <Dateiname> als Tuning-Datei"
+msgstr "\t-t <Dateiname>   nutzt <Dateiname> als Stimmungsdatei"
 
 #: ../src/main.cc:331
 msgid ""
 "\t-a <string> set the sound output driver to use [alsa/oss/auto(default)]"
 msgstr ""
-"\t-a <String> Setzt den Audio-Ausgabe-Treiber als [alsa/oss/auto(Standard)]"
+"\t-a <string> setzt den Audio-Ausgabe-Treiber als [alsa/oss/auto(Standard)]"
 
 #: ../src/main.cc:332
 msgid "\t-r <int>    set the sampling rate to use"
-msgstr "\t-r <int>    Setzt die zu verwendende Sample-Rate"
+msgstr "\t-r <int>    setzt die zu verwendende Samplerate"
 
 #: ../src/main.cc:333
 msgid "\t-m <string>\tset the midi driver to use [alsa/oss/auto(default)]"
 msgstr ""
-"\t-m <string>\tSetzt den zu verwendenden Midi-Treiber [alsa/oss/"
+"\t-m <string>\tsetzt den zu verwendenden MIDI-Treiber [alsa/oss/"
 "auto(Standard)]"
 
 #: ../src/main.cc:334
 msgid "\t-c <int>    set the midi channel to respond to (default=all)"
-msgstr "\t-c <int>    Setzt den Midi-Channel (Standard=all)"
+msgstr "\t-c <int>    setzt den MIDI-Kanal (Standard=all)"
 
 #: ../src/main.cc:335
 msgid "\t-p <int>    set the polyphony (maximum active voices)"
 msgstr ""
-"\t-p <int>    Setzt die Polyphonie (maximale Anzahl der aktiven Stimmen)"
+"\t-p <int>    setzt die Polyphonie (maximale Anzahl der aktiven Stimmen)"
 
 #: ../src/main.cc:337
 msgid "\t-n <name>   specify the JACK client name to use"
-msgstr "\t-n <Name>   Legt den Jack-Klient-Namen fest"
+msgstr "\t-n <Name>   legt den JACK-Client-Namen fest"
 
 #: ../src/main.cc:338
 msgid "\t--jack_autoconnect=<true|false>"
@@ -547,7 +546,7 @@ msgstr "MIDI:- Treiber:"
 
 #: ../src/main.cc:401
 msgid " channel:"
-msgstr "Kanal:"
+msgstr " Kanal:"
 
 #: ../src/main.cc:402
 msgid "AUDIO:- driver:"
@@ -564,7 +563,7 @@ msgstr "Fataler Fehler: open_audio() hat NULL zurückgegeben.\n"
 #: ../src/main.cc:458
 #, c-format
 msgid "amsynth running in headless mode, press ctrl-c to exit\n"
-msgstr "amsynth arbeitet ohne grafische Oberfläche, Strg+C zum beenden\n"
+msgstr "amsynth läuft ohne grafische Oberfläche, Strg+C zum Beenden\n"
 
 #: ../src/main.cc:463
 #, c-format
@@ -573,11 +572,11 @@ msgstr "Beende...\n"
 
 #: ../src/main.cc:470
 msgid " audio buffer underruns occurred\n"
-msgstr " ein Audio Buffer Underrun ist aufgetreten\n"
+msgstr " Audio Buffer Underruns sind aufgetreten\n"
 
 #: ../src/main.cc:561
 msgid "error: could not load tuning file "
-msgstr "Fehler: Konnte Stimmung nicht laden"
+msgstr "Fehler: Konnte Stimmungsdatei nicht laden: "
 
 #: ../src/main.cc:623
 #, c-format
@@ -592,12 +591,3 @@ msgstr "Leistungsindex: %f\n"
 #: ../src/PresetController.cc:381
 msgid "User bank"
 msgstr "Benutzerbank"
-
-#~ msgid "Create a New Preset"
-#~ msgstr "Neues Preset erstellen"
-
-#~ msgid "_New"
-#~ msgstr "Neu"
-
-#~ msgid "Paste as New"
-#~ msgstr "Als neu einfügen"
