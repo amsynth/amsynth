@@ -325,12 +325,12 @@ int main( int argc, char *argv[] )
 				     << _("	-v          show version information") << endl
 				     << _("	-d          show some debugging output") << endl
 				     << endl
-				     << _("	-b <filename>   use <filename> as the bank to store presets") << endl
-				     << _("	-t <filename>   use <filename> as a tuning file") << endl
+				     << _("	-b <file>   use <file> as the bank to store presets") << endl
+				     << _("	-t <file>   use <file> as a tuning file") << endl
 				     << endl
 				     << _("	-a <string> set the sound output driver to use [alsa/oss/auto(default)]") << endl
 				     << _("	-r <int>    set the sampling rate to use") << endl
-				     << _("	-m <string>	set the midi driver to use [alsa/oss/auto(default)]") << endl
+				     << _("	-m <string> set the midi driver to use [alsa/oss/auto(default)]") << endl
 				     << _("	-c <int>    set the midi channel to respond to (default=all)") << endl
 				     << _("	-p <int>    set the polyphony (maximum active voices)") << endl
 				     << endl
