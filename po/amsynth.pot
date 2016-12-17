@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-28 17:14+0100\n"
+"POT-Creation-Date: 2016-12-17 15:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,7 +111,7 @@ msgstr ""
 msgid "amsynth-out.wav"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:213 ../src/GUI/GUI.cc:691
+#: ../src/GUI/GUI.cc:213 ../src/GUI/GUI.cc:701
 msgid "capture status: STOPPED"
 msgstr ""
 
@@ -182,11 +182,11 @@ msgstr ""
 msgid "Redo"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:266 ../src/GUI/GUI.cc:649
+#: ../src/GUI/GUI.cc:266 ../src/GUI/GUI.cc:659
 msgid "Import Preset"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:267 ../src/GUI/GUI.cc:640
+#: ../src/GUI/GUI.cc:267 ../src/GUI/GUI.cc:650
 msgid "Export Preset"
 msgstr ""
 
@@ -307,79 +307,83 @@ msgstr ""
 msgid "Could not show link"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:627
-msgid "Delete the current Preset?"
+#: ../src/GUI/GUI.cc:632
+msgid "Clear current preset?"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:649
+#: ../src/GUI/GUI.cc:636
+msgid "Parameters will be set to default values and the name will be cleared"
+msgstr ""
+
+#: ../src/GUI/GUI.cc:659
 msgid "amsynth 1.x files"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:662
+#: ../src/GUI/GUI.cc:672
 msgid "Select output WAV file..."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:681
+#: ../src/GUI/GUI.cc:691
 msgid "capture status: RECORDING"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:742
+#: ../src/GUI/GUI.cc:752
 msgid "Analogue Modelling SYNTHesizer"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:744
+#: ../src/GUI/GUI.cc:754
 msgid "Copyright © 2002 - 2016 Nick Dowell and contributors"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:921
+#: ../src/GUI/GUI.cc:931
 msgid "Open Bank"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:933
+#: ../src/GUI/GUI.cc:943
 msgid "Save Bank"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:941
+#: ../src/GUI/GUI.cc:951
 msgid "new.bank"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:958
+#: ../src/GUI/GUI.cc:968
 msgid "Open Scala (.scl) alternate tuning file..."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:958
+#: ../src/GUI/GUI.cc:968
 msgid "Scala scale files"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:962
+#: ../src/GUI/GUI.cc:972
 msgid "Failed to load new tuning."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:963
+#: ../src/GUI/GUI.cc:973
 msgid ""
 "Reading the tuning file failed for some reason. Make sure your file has the "
 "correct format and try again."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:973
+#: ../src/GUI/GUI.cc:983
 msgid "Open alternate keyboard map (Scala .kbm format)..."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:973
+#: ../src/GUI/GUI.cc:983
 msgid "Scala keyboard map files"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:977
+#: ../src/GUI/GUI.cc:987
 msgid "Failed to load new keyboard map."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:978
+#: ../src/GUI/GUI.cc:988
 msgid ""
 "Reading the keyboard map file failed for some reason. Make sure your file "
 "has the correct format and try again."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:988
+#: ../src/GUI/GUI.cc:998
 msgid "Discard the current scale and keyboard map?"
 msgstr ""
 
@@ -573,6 +577,6 @@ msgstr ""
 msgid "performance index: %f\n"
 msgstr ""
 
-#: ../src/PresetController.cc:386
+#: ../src/PresetController.cc:388
 msgid "User bank"
 msgstr ""

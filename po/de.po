@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-28 17:14+0100\n"
+"POT-Creation-Date: 2016-12-17 15:50+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -109,7 +109,7 @@ msgstr "Ausgabe-Datei:"
 msgid "amsynth-out.wav"
 msgstr "amsynth-ausgabe.wav"
 
-#: ../src/GUI/GUI.cc:213 ../src/GUI/GUI.cc:691
+#: ../src/GUI/GUI.cc:213 ../src/GUI/GUI.cc:701
 msgid "capture status: STOPPED"
 msgstr "Aufnahmestatus: GESTOPPT"
 
@@ -180,11 +180,11 @@ msgstr "Zurück"
 msgid "Redo"
 msgstr "Wiederholen"
 
-#: ../src/GUI/GUI.cc:266 ../src/GUI/GUI.cc:649
+#: ../src/GUI/GUI.cc:266 ../src/GUI/GUI.cc:659
 msgid "Import Preset"
 msgstr "Preset importieren"
 
-#: ../src/GUI/GUI.cc:267 ../src/GUI/GUI.cc:640
+#: ../src/GUI/GUI.cc:267 ../src/GUI/GUI.cc:650
 msgid "Export Preset"
 msgstr "Preset eportieren"
 
@@ -317,76 +317,81 @@ msgstr ""
 msgid "Could not show link"
 msgstr "Link kann nicht angezeigt werden"
 
-#: ../src/GUI/GUI.cc:627
-msgid "Delete the current Preset?"
+#: ../src/GUI/GUI.cc:632
+#, fuzzy
+msgid "Clear current preset?"
 msgstr "Aktuelles Preset entfernen?"
 
-#: ../src/GUI/GUI.cc:649
+#: ../src/GUI/GUI.cc:636
+msgid "Parameters will be set to default values and the name will be cleared"
+msgstr ""
+
+#: ../src/GUI/GUI.cc:659
 msgid "amsynth 1.x files"
 msgstr "amsynth 1.x Dateien"
 
-#: ../src/GUI/GUI.cc:662
+#: ../src/GUI/GUI.cc:672
 msgid "Select output WAV file..."
 msgstr "Ausgabe WAV Datei auswählen..."
 
-#: ../src/GUI/GUI.cc:681
+#: ../src/GUI/GUI.cc:691
 msgid "capture status: RECORDING"
 msgstr "Aktueller Status: AUFNAHME"
 
-#: ../src/GUI/GUI.cc:742
+#: ../src/GUI/GUI.cc:752
 #, fuzzy
 msgid "Analogue Modelling SYNTHesizer"
 msgstr "Analoger Modellierungssythesizer"
 
-#: ../src/GUI/GUI.cc:744
+#: ../src/GUI/GUI.cc:754
 #, fuzzy
 msgid "Copyright © 2002 - 2016 Nick Dowell and contributors"
 msgstr "Copyright © 2002 - 2016 Nick Dowell und Mitwirkende"
 
-#: ../src/GUI/GUI.cc:921
+#: ../src/GUI/GUI.cc:931
 msgid "Open Bank"
 msgstr "Öffne Bank"
 
-#: ../src/GUI/GUI.cc:933
+#: ../src/GUI/GUI.cc:943
 msgid "Save Bank"
 msgstr "Speichere Bank"
 
-#: ../src/GUI/GUI.cc:941
+#: ../src/GUI/GUI.cc:951
 msgid "new.bank"
 msgstr "neue.bank"
 
-#: ../src/GUI/GUI.cc:958
+#: ../src/GUI/GUI.cc:968
 msgid "Open Scala (.scl) alternate tuning file..."
 msgstr "Lade andere Stimmung (.scl)"
 
-#: ../src/GUI/GUI.cc:958
+#: ../src/GUI/GUI.cc:968
 msgid "Scala scale files"
 msgstr "Scala Datei"
 
-#: ../src/GUI/GUI.cc:962
+#: ../src/GUI/GUI.cc:972
 msgid "Failed to load new tuning."
 msgstr "Laden der neuen Stimmung ist gescheitert."
 
-#: ../src/GUI/GUI.cc:963
+#: ../src/GUI/GUI.cc:973
 msgid ""
 "Reading the tuning file failed for some reason. Make sure your file has the "
 "correct format and try again."
 msgstr ""
 "Laden der Stimmung ist fehlgeschlagen. Hat die Datei das richtige Format?"
 
-#: ../src/GUI/GUI.cc:973
+#: ../src/GUI/GUI.cc:983
 msgid "Open alternate keyboard map (Scala .kbm format)..."
 msgstr "Öffne andere Keyboard-Map (Scala .kbm Format)..."
 
-#: ../src/GUI/GUI.cc:973
+#: ../src/GUI/GUI.cc:983
 msgid "Scala keyboard map files"
 msgstr "Scala Keyboard-Map Dateien"
 
-#: ../src/GUI/GUI.cc:977
+#: ../src/GUI/GUI.cc:987
 msgid "Failed to load new keyboard map."
 msgstr "Laden der neuen Keyboard-Map ist fehlgeschlagen."
 
-#: ../src/GUI/GUI.cc:978
+#: ../src/GUI/GUI.cc:988
 msgid ""
 "Reading the keyboard map file failed for some reason. Make sure your file "
 "has the correct format and try again."
@@ -394,7 +399,7 @@ msgstr ""
 "Das Laden der neuen Keyboard-Map ist fehlgeschlafen. Hat die Datei das "
 "richtige Format?"
 
-#: ../src/GUI/GUI.cc:988
+#: ../src/GUI/GUI.cc:998
 msgid "Discard the current scale and keyboard map?"
 msgstr "Sollen die aktuelle Stimmung und Keyboard-Map verworfen werden?"
 
@@ -599,6 +604,6 @@ msgstr "Benutzerzeit: %f\t\tSystemzeit: %f\n"
 msgid "performance index: %f\n"
 msgstr "Leistungsindex: %f\n"
 
-#: ../src/PresetController.cc:386
+#: ../src/PresetController.cc:388
 msgid "User bank"
 msgstr "Benutzerbank"

@@ -64,7 +64,9 @@ public:
 
 	// Selects a new, unused preset ready for editing.
 	int		newPreset			();
-	void	deletePreset		();
+
+	// Resets all parameters to default value and clears the name.
+	void	clearPreset			();
 
 	// Manages undo/redo for changes to current preset.
 	void	pushParamChange		( const Param param, const float value );

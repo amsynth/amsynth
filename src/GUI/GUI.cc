@@ -624,14 +624,24 @@ GUI::event_handler(const int e)
 	
 	case evPresetDelete:
 		{
-			MessageDialog dlg (*this, _("Delete the current Preset?"), false, MESSAGE_QUESTION, BUTTONS_YES_NO, true);
-			if (RESPONSE_YES == dlg.run())
-			{
-				preset_controller->deletePreset();
-				preset_controller->commitPreset();
-				preset_controller->selectPreset( 0 );
+			GtkWidget *dialog = gtk_message_dialog_new (
+					this->gobj(),
+					GTK_DIALOG_MODAL,
+					GTK_MESSAGE_QUESTION,
+					GTK_BUTTONS_YES_NO,
+					_("Clear current preset?"));
+
+			gtk_message_dialog_format_secondary_text (
+					GTK_MESSAGE_DIALOG (dialog),
+					_("Parameters will be set to default values and the name will be cleared"));
+
+			gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+			if (result == GTK_RESPONSE_YES) {
+				preset_controller->clearPreset();
 				presetCV->update();
 			}
+
+			gtk_widget_destroy (dialog);
 		}
 		break;
 	

@@ -97,10 +97,10 @@ PresetController::newPreset			()
 }
 
 void
-PresetController::deletePreset		()
+PresetController::clearPreset		()
 {
 	currentPreset = blankPreset;
-	notify ();
+	commitPreset();
 	clearChangeBuffers();
 }
 

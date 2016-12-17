@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-28 17:14+0100\n"
+"POT-Creation-Date: 2016-12-17 15:50+0000\n"
 "PO-Revision-Date: 2016-09-18 14:44+0200\n"
 "Last-Translator: Olivier Humbert <trebmuh@tuxfamily.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -114,7 +114,7 @@ msgstr "fichier de sortie :"
 msgid "amsynth-out.wav"
 msgstr "amsynth-sortie.wav"
 
-#: ../src/GUI/GUI.cc:213 ../src/GUI/GUI.cc:691
+#: ../src/GUI/GUI.cc:213 ../src/GUI/GUI.cc:701
 msgid "capture status: STOPPED"
 msgstr "status de l'enregistrement : STOPPÉ"
 
@@ -185,11 +185,11 @@ msgstr "_Annuler"
 msgid "Redo"
 msgstr "_Refaire"
 
-#: ../src/GUI/GUI.cc:266 ../src/GUI/GUI.cc:649
+#: ../src/GUI/GUI.cc:266 ../src/GUI/GUI.cc:659
 msgid "Import Preset"
 msgstr "Importer un pré-réglage"
 
-#: ../src/GUI/GUI.cc:267 ../src/GUI/GUI.cc:640
+#: ../src/GUI/GUI.cc:267 ../src/GUI/GUI.cc:650
 msgid "Export Preset"
 msgstr "Exporter un pré-réglage"
 
@@ -322,55 +322,60 @@ msgstr ""
 msgid "Could not show link"
 msgstr "Ne peut pas montrer le lien"
 
-#: ../src/GUI/GUI.cc:627
-msgid "Delete the current Preset?"
+#: ../src/GUI/GUI.cc:632
+#, fuzzy
+msgid "Clear current preset?"
 msgstr "Effacer le pré-réglage actuel ?"
 
-#: ../src/GUI/GUI.cc:649
+#: ../src/GUI/GUI.cc:636
+msgid "Parameters will be set to default values and the name will be cleared"
+msgstr ""
+
+#: ../src/GUI/GUI.cc:659
 msgid "amsynth 1.x files"
 msgstr "fichiers amsynth 1.x files"
 
-#: ../src/GUI/GUI.cc:662
+#: ../src/GUI/GUI.cc:672
 msgid "Select output WAV file..."
 msgstr "Sélectionner le fichier WAV de sortie..."
 
-#: ../src/GUI/GUI.cc:681
+#: ../src/GUI/GUI.cc:691
 msgid "capture status: RECORDING"
 msgstr "status de l'enregistrement : EN TRAIN D'ENREGISTRER"
 
-#: ../src/GUI/GUI.cc:742
+#: ../src/GUI/GUI.cc:752
 msgid "Analogue Modelling SYNTHesizer"
 msgstr "synthétiseur modelant de l'analogique"
 
-#: ../src/GUI/GUI.cc:744
+#: ../src/GUI/GUI.cc:754
 msgid "Copyright © 2002 - 2016 Nick Dowell and contributors"
 msgstr "Copyright © 2002 - 2016 Nick Dowell et contributeurs"
 
-#: ../src/GUI/GUI.cc:921
+#: ../src/GUI/GUI.cc:931
 msgid "Open Bank"
 msgstr "Ouvrir une banque"
 
-#: ../src/GUI/GUI.cc:933
+#: ../src/GUI/GUI.cc:943
 msgid "Save Bank"
 msgstr "Sauvegarder une banque"
 
-#: ../src/GUI/GUI.cc:941
+#: ../src/GUI/GUI.cc:951
 msgid "new.bank"
 msgstr "nouvelle.banque"
 
-#: ../src/GUI/GUI.cc:958
+#: ../src/GUI/GUI.cc:968
 msgid "Open Scala (.scl) alternate tuning file..."
 msgstr "Ouvrir un fichier d'accordage alternatif Scala (.scl)..."
 
-#: ../src/GUI/GUI.cc:958
+#: ../src/GUI/GUI.cc:968
 msgid "Scala scale files"
 msgstr "fichiers de gamme Scala"
 
-#: ../src/GUI/GUI.cc:962
+#: ../src/GUI/GUI.cc:972
 msgid "Failed to load new tuning."
 msgstr "Échec du chargement d'un nouvel accordage."
 
-#: ../src/GUI/GUI.cc:963
+#: ../src/GUI/GUI.cc:973
 msgid ""
 "Reading the tuning file failed for some reason. Make sure your file has the "
 "correct format and try again."
@@ -378,19 +383,19 @@ msgstr ""
 "La lecture du fichier d'accordage a échouée pour une raison ou une autre. "
 "Assurez-vous que votre fichier possède le format correct et ré-essayez."
 
-#: ../src/GUI/GUI.cc:973
+#: ../src/GUI/GUI.cc:983
 msgid "Open alternate keyboard map (Scala .kbm format)..."
 msgstr "Ouvrir une carte de clavier alternative (format Scala .kbm)..."
 
-#: ../src/GUI/GUI.cc:973
+#: ../src/GUI/GUI.cc:983
 msgid "Scala keyboard map files"
 msgstr "fichiers de carte de clavier Scala"
 
-#: ../src/GUI/GUI.cc:977
+#: ../src/GUI/GUI.cc:987
 msgid "Failed to load new keyboard map."
 msgstr "Échec du chargement d'une nouvelle carte de clavier."
 
-#: ../src/GUI/GUI.cc:978
+#: ../src/GUI/GUI.cc:988
 msgid ""
 "Reading the keyboard map file failed for some reason. Make sure your file "
 "has the correct format and try again."
@@ -398,7 +403,7 @@ msgstr ""
 "La lecture du fichier de carte de clavier a échouée pour une raison ou une "
 "autre.Assurez-vous que votre fichier possède le format correct et ré-essayez."
 
-#: ../src/GUI/GUI.cc:988
+#: ../src/GUI/GUI.cc:998
 msgid "Discard the current scale and keyboard map?"
 msgstr "Abandonner la gamme et la carte du clavier actuelles ?"
 
@@ -604,6 +609,6 @@ msgstr "temps utilisateur : %f\t\ttemps système : %f\n"
 msgid "performance index: %f\n"
 msgstr "index de performance : %f\n"
 
-#: ../src/PresetController.cc:386
+#: ../src/PresetController.cc:388
 msgid "User bank"
 msgstr "Banque utilisateur"
