@@ -42,19 +42,16 @@ public:
 			PresetController	();
 			~PresetController	();
 	
-	/* Selects a Preset and makes it current, updating averything as neccessary.
+	/* Selects a Preset and makes it current, updating everything as necessary.
 	 * If the requested preset does not exist, then the request is ignored, and
 	 * an error value is returned. */
 	int		selectPreset		(const int preset);
-	int		selectPreset		(const std::string preset);
 
 	// returns the preset currently being edited
 	Preset&	getCurrentPreset	() { return currentPreset; }
 	
 	// access presets in the memory bank
 	Preset&	getPreset			(int preset) { return presets[preset]; }
-	const Preset & getPreset	(int preset) const { return presets[preset]; }
-	Preset&	getPreset			(const std::string name);
 
 	bool	containsPresetWithName(const std::string name);
 	bool	isCurrentPresetModified() { return !currentPreset.isEqual(presets[currentPresetNo]); }

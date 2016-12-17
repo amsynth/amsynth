@@ -66,13 +66,6 @@ PresetController::selectPreset		(const int presetNo)
 	return 0;
 }
 
-int 
-PresetController::selectPreset		(const string name)
-{
-	for (int i=0; i<kNumPresets; i++) if (getPreset(i).getName() == name) return selectPreset (i);
-	return -1;
-}
-
 bool
 PresetController::containsPresetWithName(const string name)
 {
@@ -80,13 +73,6 @@ PresetController::containsPresetWithName(const string name)
 		if (getPreset(i).getName() == name) 
 			return true;
 	return false;
-}
-
-Preset&
-PresetController::getPreset			(const string name)
-{
-	for (int i=0; i<kNumPresets; i++) if (getPreset(i).getName() == name) return getPreset (i);
-	return nullpreset;
 }
 
 void
