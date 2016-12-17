@@ -215,12 +215,12 @@ GUI::create_menus	( )
 	list_file.push_back (SeparatorElem());
 #endif
 	
-	list_file.push_back (MenuElem(_("_Open Bank"), Gtk::AccelKey("<control>O"), mem_fun(*this, &GUI::bank_open)));
+	list_file.push_back (MenuElem(_("_Open Bank..."), Gtk::AccelKey("<control>O"), mem_fun(*this, &GUI::bank_open)));
 //	list_file.push_back (MenuElem("_Save Bank","<control>S", mem_fun(*this, &GUI::bank_save)));
 	list_file.push_back (MenuElem(_("_Save Bank As..."), Gtk::AccelKey("<control>S"), mem_fun(*this, &GUI::bank_save_as)));
 	list_file.push_back (SeparatorElem());
-	list_file.push_back (MenuElem(_("Open Alternate Tuning File"), mem_fun(*this, &GUI::scale_open)));
-	list_file.push_back (MenuElem(_("Open Alternate Keyboard Map"), mem_fun(*this, &GUI::key_map_open)));
+	list_file.push_back (MenuElem(_("Open Alternate Tuning File..."), mem_fun(*this, &GUI::scale_open)));
+	list_file.push_back (MenuElem(_("Open Alternate Keyboard Map..."), mem_fun(*this, &GUI::key_map_open)));
 	list_file.push_back (MenuElem(_("Reset All Tuning Settings to Default"), mem_fun(*this, &GUI::tuning_reset)));
 	list_file.push_back (SeparatorElem());
 	list_file.push_back (MenuElem(_("_Quit"), Gtk::AccelKey("<control>Q"), bind(mem_fun(this, &GUI::event_handler),(int)evQuit)));
@@ -235,15 +235,15 @@ GUI::create_menus	( )
 	list_preset.push_back (MenuElem(_("_Copy"), Gtk::AccelKey("<control>C"), mem_fun(*this, &GUI::preset_copy)));
 	list_preset.push_back (MenuElem(_("_Paste"), Gtk::AccelKey("<control>V"), mem_fun(*this, &GUI::preset_paste)));
 	list_preset.push_back (SeparatorElem());
-	list_preset.push_back (MenuElem(_("Rename"), sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetRename)));
+	list_preset.push_back (MenuElem(_("Rename..."), sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetRename)));
 	list_preset.push_back (MenuElem(_("Clear"), bind(mem_fun(this,&GUI::event_handler),(int)evPresetDelete)));
 	list_preset.push_back (SeparatorElem());
 	list_preset.push_back (MenuElem(_("_Randomise"), Gtk::AccelKey("<control>R"), sigc::mem_fun(preset_controller, &PresetController::randomiseCurrentPreset)));
 	list_preset.push_back (MenuElem(_("Undo"), Gtk::AccelKey("<control>Z"), sigc::mem_fun(preset_controller, &PresetController::undoChange)));
 	list_preset.push_back (MenuElem(_("Redo"), Gtk::AccelKey("<control>Y"), sigc::mem_fun(preset_controller, &PresetController::redoChange)));
 	list_preset.push_back (SeparatorElem());
-	list_preset.push_back (MenuElem(_("Import Preset"), bind(mem_fun(*this, &GUI::event_handler), (int)evPresetImport)));
-	list_preset.push_back (MenuElem(_("Export Preset"), bind(mem_fun(*this, &GUI::event_handler), (int)evPresetExport)));
+	list_preset.push_back (MenuElem(_("Import Preset..."), bind(mem_fun(*this, &GUI::event_handler), (int)evPresetImport)));
+	list_preset.push_back (MenuElem(_("Export Preset..."), bind(mem_fun(*this, &GUI::event_handler), (int)evPresetExport)));
 
 			
 	//
@@ -390,8 +390,8 @@ GUI::create_menus	( )
 	//
 	Menu *menu_help = manage (new Menu());
 	menu_help->items().push_back (MenuElem(_("About"), bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuAbout)));
-	menu_help->items().push_back (MenuElem(_("Report a Bug..."), bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuBugReport)));
-	menu_help->items().push_back (MenuElem(_("Online Documentation..."), bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuOnlineDocumentation)));
+	menu_help->items().push_back (MenuElem(_("Report a Bug"), bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuBugReport)));
+	menu_help->items().push_back (MenuElem(_("Online Documentation"), bind(mem_fun(this, &GUI::event_handler), (int)evHelpMenuOnlineDocumentation)));
 
 	
 	//
@@ -648,7 +648,7 @@ GUI::event_handler(const int e)
 	
 	case evRecDlgFileChooser:
 		{
-			std::string filename = file_dialog(this->gobj(), _("Select output WAV file..."), true, NULL, NULL, NULL);
+			std::string filename = file_dialog(this->gobj(), _("Select output WAV file"), true, NULL, NULL, NULL);
 			if (!filename.empty()) {
 				record_entry.set_text(filename);
 			}
@@ -925,7 +925,7 @@ GUI::bank_save_as	( )
 void
 GUI::scale_open		( )
 {
-	std::string filename = file_dialog(this->gobj(), _("Open Scala (.scl) alternate tuning file..."), false, _("Scala scale files"), "*.[Ss][Cc][Ll]", NULL);
+	std::string filename = file_dialog(this->gobj(), _("Open Scala (.scl) alternate tuning file"), false, _("Scala scale files"), "*.[Ss][Cc][Ll]", NULL);
 	if (!filename.empty()) {
 		int error = m_synth->loadTuningScale(filename.c_str());
 		if (error) {
@@ -940,7 +940,7 @@ Make sure your file has the correct format and try again."));
 void
 GUI::key_map_open	( )
 {
-	std::string filename = file_dialog(this->gobj(), _("Open alternate keyboard map (Scala .kbm format)..."), false, _("Scala keyboard map files"), "*.[Kk][Bb][Mm]", NULL);
+	std::string filename = file_dialog(this->gobj(), _("Open alternate keyboard map (Scala .kbm format)"), false, _("Scala keyboard map files"), "*.[Kk][Bb][Mm]", NULL);
 	if (!filename.empty()) {
 		int error = m_synth->loadTuningKeymap(filename.c_str());
 		if (error) {
