@@ -34,7 +34,7 @@ Configuration::Configuration()
 #ifndef _WIN32
 	amsynthrc_fname = string(getenv("HOME")) + string("/.amSynthrc");
 #endif
-	sample_rate = midi_channel = active_voices = polyphony = debug_drivers = xruns = 0;
+	sample_rate = midi_channel = active_voices = polyphony = xruns = 0;
 #ifdef ENABLE_REALTIME
 	realtime = 0;
 #endif

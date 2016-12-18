@@ -128,7 +128,6 @@ public:
 	std::string	jack_client_name_preference;
 	std::string	jack_session_uuid;
 	int 	alsa_seq_client_id;
-	int	debug_drivers;
 	// used to count buffer underruns
 	int	xruns;
 };

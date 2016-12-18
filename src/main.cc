@@ -323,7 +323,6 @@ int main( int argc, char *argv[] )
 				     << endl
 				     << _("	-h          show this usage message") << endl
 				     << _("	-v          show version information") << endl
-				     << _("	-d          show some debugging output") << endl
 				     << endl
 				     << _("	-b <file>   use <file> as the bank to store presets") << endl
 				     << _("	-t <file>   use <file> as a tuning file") << endl
@@ -360,9 +359,6 @@ int main( int argc, char *argv[] )
 			case 'a':
 				config.audio_driver = optarg;
 				break;
-			case 'd':
-				config.debug_drivers = 1;
-				break;
 			case 'r':
 				config.sample_rate = atoi( optarg );
 				break;
@@ -393,14 +389,6 @@ int main( int argc, char *argv[] )
 	mkdir ((std::string(getenv("HOME")) + std::string("/.amsynth") + std::string("/banks")).c_str(), 0000755);
 
 	install_default_files_if_reqd();
-
-	
-	if (config.debug_drivers)
-		cout << "\n*** CONFIGURATION:\n"
-				<< _("MIDI:- driver:") << config.midi_driver 
-				<< _(" channel:") << config.midi_channel << endl 
-				<< _("AUDIO:- driver:") << config.audio_driver 
-				<< _(" sample rate:") << config.sample_rate << endl;
 
 	string amsynth_bank_file = config.current_bank_file;
 	// string amsynth_tuning_file = config.current_tuning_file;
