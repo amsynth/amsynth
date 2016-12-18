@@ -101,7 +101,7 @@ private:
 	Preset			blankPreset;
 	Preset 			nullpreset;
 	int 			currentPresetNo;
-	unsigned long 	lastPresetsFileModifiedTime;
+	long int 		lastPresetsFileModifiedTime;
 
 	class ChangeData {
 		public:

@@ -185,7 +185,7 @@ PresetController::importPreset		(const string filename)
 	}
 }
 
-static unsigned long mtime(const char *filename)
+static long int mtime(const char *filename)
 {
 	struct stat st;
 	if (stat(filename, &st) != 0) {
@@ -308,7 +308,7 @@ PresetController::loadPresets		(const char *filename)
 	if (!is_amsynth_file(filename))
 		return -1;
 
-	unsigned long fileModifiedTime = mtime(filename);
+	long int fileModifiedTime = mtime(filename);
 	if (strcmp(filename, bank_file.c_str()) == 0 && lastPresetsFileModifiedTime == fileModifiedTime)
 		return 0; // file not modified since last load
 
