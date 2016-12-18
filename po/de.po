@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-18 13:41+0000\n"
+"POT-Creation-Date: 2016-12-18 16:05+0000\n"
 "PO-Revision-Date: 2016-12-17 23:47+0100\n"
 "Last-Translator: Peter Körner <18427@gmx.net>\n"
 "Language-Team: \n"
@@ -557,37 +557,44 @@ msgid "\t-n <name>   specify the JACK client name to use"
 msgstr "\t-n <Name>   legt den JACK-Client-Namen fest"
 
 #: ../src/main.cc:337
-msgid "\t--jack_autoconnect=<true|false>"
+#, fuzzy
+msgid "\t--jack_autoconnect[=<true|false>]"
 msgstr "\t--jack_autoconnect=<true|false>"
 
-#: ../src/main.cc:398
+#: ../src/main.cc:338
+msgid ""
+"\t            automatically connect jack audio ports to hardware I/O ports. "
+"(Default: true)"
+msgstr ""
+
+#: ../src/main.cc:399
 msgid "Fatal Error: open_audio() returned NULL.\n"
 msgstr "Fataler Fehler: open_audio() hat NULL zurückgegeben.\n"
 
-#: ../src/main.cc:446
+#: ../src/main.cc:447
 #, c-format
 msgid "amsynth running in headless mode, press ctrl-c to exit\n"
 msgstr "amsynth läuft ohne grafische Oberfläche, Strg+C zum Beenden\n"
 
-#: ../src/main.cc:451
+#: ../src/main.cc:452
 #, c-format
 msgid "shutting down...\n"
 msgstr "Beende...\n"
 
-#: ../src/main.cc:458
+#: ../src/main.cc:459
 msgid " audio buffer underruns occurred\n"
 msgstr " Audio Buffer Underruns sind aufgetreten\n"
 
-#: ../src/main.cc:549
+#: ../src/main.cc:550
 msgid "error: could not load tuning file "
 msgstr "Fehler: Konnte Stimmungsdatei nicht laden: "
 
-#: ../src/main.cc:611
+#: ../src/main.cc:612
 #, c-format
 msgid "user time: %f\t\tsystem time: %f\n"
 msgstr "Benutzerzeit: %f\t\tSystemzeit: %f\n"
 
-#: ../src/main.cc:612
+#: ../src/main.cc:613
 #, c-format
 msgid "performance index: %f\n"
 msgstr "Leistungsindex: %f\n"

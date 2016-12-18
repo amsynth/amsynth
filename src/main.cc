@@ -334,7 +334,8 @@ int main( int argc, char *argv[] )
 				     << _("	-p <int>    set the polyphony (maximum active voices)") << endl
 				     << endl
 				     << _("	-n <name>   specify the JACK client name to use") << endl
-				     << _("	--jack_autoconnect=<true|false>") << endl
+				     << _("	--jack_autoconnect[=<true|false>]") << endl
+				     << _("	            automatically connect jack audio ports to hardware I/O ports. (Default: true)") << endl
 				     << endl;
 
 				return 0;
