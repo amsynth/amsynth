@@ -73,9 +73,8 @@ public:
 	 */
 	void	setPresetController	(PresetController & p_c);
 
-	int	delete_event_impl	(GdkEventAny *);
-	int	delete_events		(GdkEventAny *, Gtk::Window *dialog)
-					{ dialog->hide_all(); return 0; };
+	virtual bool on_delete_event(GdkEventAny *);
+
 	void	update();
         void    onUpdate();
 	
@@ -83,6 +82,7 @@ public:
 
 protected:
 	virtual void	on_hide () { Gtk::Main::quit(); }
+	bool confirm_quit();
 	
 private:
 	Gtk::MenuBar*	create_menus		( );

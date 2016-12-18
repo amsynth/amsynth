@@ -93,8 +93,14 @@ void modal_midi_learn(int param_index) // called by editor_pane upon right-click
 		g_midiLearn->run_modal(param_index);
 }
 
-int
-GUI::delete_event_impl(GdkEventAny *)
+bool
+GUI::on_delete_event(GdkEventAny *)
+{
+	return !confirm_quit();
+}
+
+bool
+GUI::confirm_quit()
 {
 	if (m_presetIsNotSaved) {
         GtkWidget *dialog;
@@ -124,7 +130,6 @@ GUI::delete_event_impl(GdkEventAny *)
             preset_controller->savePresets();
         }
 	}
-	hide_all();
 	return true;
 }
 
@@ -643,7 +648,9 @@ GUI::event_handler(const int e)
 		break;
 	
 	case evQuit:
-		delete_event_impl(0);
+		if (confirm_quit()) {
+			gtk_main_quit();
+		}
 		break;
 	
 	case evRecDlgFileChooser:
