@@ -330,8 +330,8 @@ int main( int argc, char *argv[] )
 				     << endl
 				     << _("	-a <string> set the sound output driver to use [alsa/oss/auto(default)]") << endl
 				     << _("	-r <int>    set the sampling rate to use") << endl
-				     << _("	-m <string> set the midi driver to use [alsa/oss/auto(default)]") << endl
-				     << _("	-c <int>    set the midi channel to respond to (default=all)") << endl
+				     << _("	-m <string> set the MIDI driver to use [alsa/oss/auto(default)]") << endl
+				     << _("	-c <int>    set the MIDI channel to respond to (default=all)") << endl
 				     << _("	-p <int>    set the polyphony (maximum active voices)") << endl
 				     << endl
 				     << _("	-n <name>   specify the JACK client name to use") << endl

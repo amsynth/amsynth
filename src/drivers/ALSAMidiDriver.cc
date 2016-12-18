@@ -157,7 +157,7 @@ ALSAMidiDriver::ALSAMidiDriver(const char *client_name)
 	seq_handle = NULL;
 	memset( &pollfd_in, 0, sizeof(pollfd_in) );
 	if( snd_midi_event_new( 32, &seq_midi_parser ) )
-		cout << "Error creating midi event parser\n";
+		cout << "Error creating MIDI event parser\n";
 }
 
 ALSAMidiDriver::~ALSAMidiDriver()

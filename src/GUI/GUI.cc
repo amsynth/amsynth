@@ -501,7 +501,7 @@ GUI::post_init()
 		bad_config = true;
 		MessageDialog dlg (*this, _("amsynth configuration error"), false, MESSAGE_ERROR, BUTTONS_OK, true);
 		dlg.set_secondary_text(
-			_("amsynth could not initialise the selected midi device.\n\n"
+			_("amsynth could not initialise the selected MIDI device.\n\n"
 			"Please review the configuration and restart")
 		    );
 		dlg.run();
