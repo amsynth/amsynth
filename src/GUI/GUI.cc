@@ -962,12 +962,23 @@ Make sure your file has the correct format and try again."));
 void
 GUI::tuning_reset	( )
 {
-	MessageDialog dlg (*this, _("Discard the current scale and keyboard map?"));
+	GtkWidget *dialog = gtk_message_dialog_new (
+			this->gobj(),
+			GTK_DIALOG_MODAL,
+			GTK_MESSAGE_QUESTION,
+			GTK_BUTTONS_YES_NO,
+			_("Reset All Tuning Settings to Default"));
 
-	if (dlg.run() == RESPONSE_OK)
-	{
+	gtk_message_dialog_format_secondary_text (
+			GTK_MESSAGE_DIALOG (dialog),
+			_("Discard the current scale and keyboard map?"));
+
+	gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+	if (result == GTK_RESPONSE_YES) {
 		m_synth->defaultTuning();
 	}
+
+	gtk_widget_destroy (dialog);
 }
 
 // returns 0 if executable was found
