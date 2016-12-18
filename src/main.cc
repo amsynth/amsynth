@@ -323,6 +323,7 @@ int main( int argc, char *argv[] )
 				     << endl
 				     << _("	-h          show this usage message") << endl
 				     << _("	-v          show version information") << endl
+				     << _("	-x          run in headless mode (without GUI)") << endl
 				     << endl
 				     << _("	-b <file>   use <file> as the bank to store presets") << endl
 				     << _("	-t <file>   use <file> as a tuning file") << endl

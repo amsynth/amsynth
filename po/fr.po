@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-18 16:05+0000\n"
+"POT-Creation-Date: 2016-12-18 16:12+0000\n"
 "PO-Revision-Date: 2016-09-18 14:44+0200\n"
 "Last-Translator: Olivier Humbert <trebmuh@tuxfamily.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -515,92 +515,96 @@ msgstr "\t-h          affiche ce message d'aide"
 msgid "\t-v          show version information"
 msgstr "\t-v          affiche les informations de version"
 
-#: ../src/main.cc:327
+#: ../src/main.cc:326
+msgid "\t-x          run in headless mode (without GUI)"
+msgstr ""
+
+#: ../src/main.cc:328
 #, fuzzy
 msgid "\t-b <file>   use <file> as the bank to store presets"
 msgstr ""
 "\t-b <nom_de_fichier>   utilise <nom_de_fichier> en tant que banque pour "
 "sauvegarder les pré-réglages"
 
-#: ../src/main.cc:328
+#: ../src/main.cc:329
 #, fuzzy
 msgid "\t-t <file>   use <file> as a tuning file"
 msgstr ""
 "\t-t <nom_de_fichier>   utilise  <nom_de_fichier> en tant que fichier "
 "d'accordage"
 
-#: ../src/main.cc:330
+#: ../src/main.cc:331
 msgid ""
 "\t-a <string> set the sound output driver to use [alsa/oss/auto(default)]"
 msgstr ""
 "\t-a <chaîne_de_caractères> paramètre le pilote de sortie son à utiliser "
 "[alsa/oss/auto(défaut)]"
 
-#: ../src/main.cc:331
+#: ../src/main.cc:332
 msgid "\t-r <int>    set the sampling rate to use"
 msgstr "\t-r <entier>    paramètre le taux d'échantillonnage à utiliser"
 
-#: ../src/main.cc:332
+#: ../src/main.cc:333
 #, fuzzy
 msgid "\t-m <string> set the MIDI driver to use [alsa/oss/auto(default)]"
 msgstr ""
 "\t-m <chaîne_de_caractères>\tparamètre le pilote MIDI à utiliser [alsa/oss/"
 "auto(défaut)]"
 
-#: ../src/main.cc:333
+#: ../src/main.cc:334
 #, fuzzy
 msgid "\t-c <int>    set the MIDI channel to respond to (default=all)"
 msgstr "\t-c <entier>    paramètre le canal MIDI auquel répondre (défaut=tous)"
 
-#: ../src/main.cc:334
+#: ../src/main.cc:335
 msgid "\t-p <int>    set the polyphony (maximum active voices)"
 msgstr "\t-p <entier>    paramètre la polyphonie (voix actives maximum)"
 
-#: ../src/main.cc:336
+#: ../src/main.cc:337
 msgid "\t-n <name>   specify the JACK client name to use"
 msgstr "\t-n <nom>   spécifie le nom de client JACK à utiliser"
 
-#: ../src/main.cc:337
+#: ../src/main.cc:338
 #, fuzzy
 msgid "\t--jack_autoconnect[=<true|false>]"
 msgstr "\t--jack_autoconnect=<true|false>"
 
-#: ../src/main.cc:338
+#: ../src/main.cc:339
 msgid ""
 "\t            automatically connect jack audio ports to hardware I/O ports. "
 "(Default: true)"
 msgstr ""
 
-#: ../src/main.cc:399
+#: ../src/main.cc:400
 msgid "Fatal Error: open_audio() returned NULL.\n"
 msgstr "Erreur fatale : open_audio() a retourné NULL.\n"
 
-#: ../src/main.cc:447
+#: ../src/main.cc:448
 #, c-format
 msgid "amsynth running in headless mode, press ctrl-c to exit\n"
 msgstr ""
 "amsynth est lancé en mode sans-interface-graphique, pressez ctrl-c pour "
 "quitter\n"
 
-#: ../src/main.cc:452
+#: ../src/main.cc:453
 #, c-format
 msgid "shutting down...\n"
 msgstr "en train de quitter...\n"
 
-#: ../src/main.cc:459
+#: ../src/main.cc:460
 msgid " audio buffer underruns occurred\n"
 msgstr " décrochage audio du tampon audio est arrivé\n"
 
-#: ../src/main.cc:550
+#: ../src/main.cc:551
 msgid "error: could not load tuning file "
 msgstr "erreur : échec du chargement du fichier d'accordage "
 
-#: ../src/main.cc:612
+#: ../src/main.cc:613
 #, c-format
 msgid "user time: %f\t\tsystem time: %f\n"
 msgstr "temps utilisateur : %f\t\ttemps système : %f\n"
 
-#: ../src/main.cc:613
+#: ../src/main.cc:614
 #, c-format
 msgid "performance index: %f\n"
 msgstr "index de performance : %f\n"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-18 16:05+0000\n"
+"POT-Creation-Date: 2016-12-18 16:12+0000\n"
 "PO-Revision-Date: 2016-12-17 23:47+0100\n"
 "Last-Translator: Peter Körner <18427@gmx.net>\n"
 "Language-Team: \n"
@@ -514,87 +514,91 @@ msgstr "\t-h          zeigt diese Verwendungsbeschreibung"
 msgid "\t-v          show version information"
 msgstr "\t-v          zeigt Versionsinformationen"
 
-#: ../src/main.cc:327
+#: ../src/main.cc:326
+msgid "\t-x          run in headless mode (without GUI)"
+msgstr ""
+
+#: ../src/main.cc:328
 #, fuzzy
 msgid "\t-b <file>   use <file> as the bank to store presets"
 msgstr ""
 "\t-b <Dateiname>   nutzt <Dateiname> als Bank zum Speichern von Presets"
 
-#: ../src/main.cc:328
+#: ../src/main.cc:329
 #, fuzzy
 msgid "\t-t <file>   use <file> as a tuning file"
 msgstr "\t-t <Dateiname>   nutzt <Dateiname> als Stimmungsdatei"
 
-#: ../src/main.cc:330
+#: ../src/main.cc:331
 msgid ""
 "\t-a <string> set the sound output driver to use [alsa/oss/auto(default)]"
 msgstr ""
 "\t-a <string> setzt den Audio-Ausgabe-Treiber als [alsa/oss/auto(Standard)]"
 
-#: ../src/main.cc:331
+#: ../src/main.cc:332
 msgid "\t-r <int>    set the sampling rate to use"
 msgstr "\t-r <int>    setzt die zu verwendende Samplerate"
 
-#: ../src/main.cc:332
+#: ../src/main.cc:333
 #, fuzzy
 msgid "\t-m <string> set the MIDI driver to use [alsa/oss/auto(default)]"
 msgstr ""
 "\t-m <string>\tsetzt den zu verwendenden MIDI-Treiber [alsa/oss/"
 "auto(Standard)]"
 
-#: ../src/main.cc:333
+#: ../src/main.cc:334
 #, fuzzy
 msgid "\t-c <int>    set the MIDI channel to respond to (default=all)"
 msgstr "\t-c <int>    setzt den MIDI-Kanal (Standard=all)"
 
-#: ../src/main.cc:334
+#: ../src/main.cc:335
 msgid "\t-p <int>    set the polyphony (maximum active voices)"
 msgstr ""
 "\t-p <int>    setzt die Polyphonie (maximale Anzahl der aktiven Stimmen)"
 
-#: ../src/main.cc:336
+#: ../src/main.cc:337
 msgid "\t-n <name>   specify the JACK client name to use"
 msgstr "\t-n <Name>   legt den JACK-Client-Namen fest"
 
-#: ../src/main.cc:337
+#: ../src/main.cc:338
 #, fuzzy
 msgid "\t--jack_autoconnect[=<true|false>]"
 msgstr "\t--jack_autoconnect=<true|false>"
 
-#: ../src/main.cc:338
+#: ../src/main.cc:339
 msgid ""
 "\t            automatically connect jack audio ports to hardware I/O ports. "
 "(Default: true)"
 msgstr ""
 
-#: ../src/main.cc:399
+#: ../src/main.cc:400
 msgid "Fatal Error: open_audio() returned NULL.\n"
 msgstr "Fataler Fehler: open_audio() hat NULL zurückgegeben.\n"
 
-#: ../src/main.cc:447
+#: ../src/main.cc:448
 #, c-format
 msgid "amsynth running in headless mode, press ctrl-c to exit\n"
 msgstr "amsynth läuft ohne grafische Oberfläche, Strg+C zum Beenden\n"
 
-#: ../src/main.cc:452
+#: ../src/main.cc:453
 #, c-format
 msgid "shutting down...\n"
 msgstr "Beende...\n"
 
-#: ../src/main.cc:459
+#: ../src/main.cc:460
 msgid " audio buffer underruns occurred\n"
 msgstr " Audio Buffer Underruns sind aufgetreten\n"
 
-#: ../src/main.cc:550
+#: ../src/main.cc:551
 msgid "error: could not load tuning file "
 msgstr "Fehler: Konnte Stimmungsdatei nicht laden: "
 
-#: ../src/main.cc:612
+#: ../src/main.cc:613
 #, c-format
 msgid "user time: %f\t\tsystem time: %f\n"
 msgstr "Benutzerzeit: %f\t\tSystemzeit: %f\n"
 
-#: ../src/main.cc:613
+#: ../src/main.cc:614
 #, c-format
 msgid "performance index: %f\n"
 msgstr "Leistungsindex: %f\n"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-18 16:05+0000\n"
+"POT-Creation-Date: 2016-12-18 16:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -481,77 +481,81 @@ msgstr ""
 msgid "\t-v          show version information"
 msgstr ""
 
-#: ../src/main.cc:327
-msgid "\t-b <file>   use <file> as the bank to store presets"
+#: ../src/main.cc:326
+msgid "\t-x          run in headless mode (without GUI)"
 msgstr ""
 
 #: ../src/main.cc:328
+msgid "\t-b <file>   use <file> as the bank to store presets"
+msgstr ""
+
+#: ../src/main.cc:329
 msgid "\t-t <file>   use <file> as a tuning file"
 msgstr ""
 
-#: ../src/main.cc:330
+#: ../src/main.cc:331
 msgid ""
 "\t-a <string> set the sound output driver to use [alsa/oss/auto(default)]"
 msgstr ""
 
-#: ../src/main.cc:331
+#: ../src/main.cc:332
 msgid "\t-r <int>    set the sampling rate to use"
 msgstr ""
 
-#: ../src/main.cc:332
+#: ../src/main.cc:333
 msgid "\t-m <string> set the MIDI driver to use [alsa/oss/auto(default)]"
 msgstr ""
 
-#: ../src/main.cc:333
+#: ../src/main.cc:334
 msgid "\t-c <int>    set the MIDI channel to respond to (default=all)"
 msgstr ""
 
-#: ../src/main.cc:334
+#: ../src/main.cc:335
 msgid "\t-p <int>    set the polyphony (maximum active voices)"
 msgstr ""
 
-#: ../src/main.cc:336
+#: ../src/main.cc:337
 msgid "\t-n <name>   specify the JACK client name to use"
 msgstr ""
 
-#: ../src/main.cc:337
+#: ../src/main.cc:338
 msgid "\t--jack_autoconnect[=<true|false>]"
 msgstr ""
 
-#: ../src/main.cc:338
+#: ../src/main.cc:339
 msgid ""
 "\t            automatically connect jack audio ports to hardware I/O ports. "
 "(Default: true)"
 msgstr ""
 
-#: ../src/main.cc:399
+#: ../src/main.cc:400
 msgid "Fatal Error: open_audio() returned NULL.\n"
 msgstr ""
 
-#: ../src/main.cc:447
+#: ../src/main.cc:448
 #, c-format
 msgid "amsynth running in headless mode, press ctrl-c to exit\n"
 msgstr ""
 
-#: ../src/main.cc:452
+#: ../src/main.cc:453
 #, c-format
 msgid "shutting down...\n"
 msgstr ""
 
-#: ../src/main.cc:459
+#: ../src/main.cc:460
 msgid " audio buffer underruns occurred\n"
 msgstr ""
 
-#: ../src/main.cc:550
+#: ../src/main.cc:551
 msgid "error: could not load tuning file "
 msgstr ""
 
-#: ../src/main.cc:612
+#: ../src/main.cc:613
 #, c-format
 msgid "user time: %f\t\tsystem time: %f\n"
 msgstr ""
 
-#: ../src/main.cc:613
+#: ../src/main.cc:614
 #, c-format
 msgid "performance index: %f\n"
 msgstr ""
