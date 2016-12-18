@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-17 19:35+0000\n"
+"POT-Creation-Date: 2016-12-18 13:33+0000\n"
 "PO-Revision-Date: 2016-09-18 14:44+0200\n"
 "Last-Translator: Olivier Humbert <trebmuh@tuxfamily.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,15 +58,15 @@ msgstr "Apprentissage MIDI..."
 msgid "Ignore Preset Value"
 msgstr "Ignorer la valeur de pré-réglage"
 
-#: ../src/GUI/GUI.cc:105
+#: ../src/GUI/GUI.cc:111
 msgid "<b>Save changes before closing?</b>"
 msgstr "<b>Sauvegarder les modifications avant de quitter ?</b>"
 
-#: ../src/GUI/GUI.cc:107
+#: ../src/GUI/GUI.cc:113
 msgid "Close _Without Saving"
 msgstr "Fermer _sans sauvegarder"
 
-#: ../src/GUI/GUI.cc:112
+#: ../src/GUI/GUI.cc:118
 msgid ""
 "If you don't save, changes to the current preset will be permanently lost."
 msgstr ""
@@ -76,194 +76,202 @@ msgstr ""
 #.
 #. the preset rename dialog
 #.
-#: ../src/GUI/GUI.cc:146
+#: ../src/GUI/GUI.cc:151
 msgid "Rename Preset"
 msgstr "Renommer le pré-réglage"
 
-#: ../src/GUI/GUI.cc:150
+#: ../src/GUI/GUI.cc:155
 msgid "Enter new Preset Name:"
 msgstr "Entrer le nom du nouveau pré-réglage :"
 
-#: ../src/GUI/GUI.cc:153
+#: ../src/GUI/GUI.cc:158
 msgid "Confirm"
 msgstr "Confirmer"
 
-#: ../src/GUI/GUI.cc:157
+#: ../src/GUI/GUI.cc:162
 msgid "Cancel"
 msgstr "Annuler"
 
 #.
 #. the record dialog
 #.
-#: ../src/GUI/GUI.cc:164
+#: ../src/GUI/GUI.cc:169
 msgid "Capture Output"
 msgstr "Enregistrer la sortie"
 
-#: ../src/GUI/GUI.cc:174
+#: ../src/GUI/GUI.cc:179
 msgid "output file:"
 msgstr "fichier de sortie :"
 
-#: ../src/GUI/GUI.cc:180
+#: ../src/GUI/GUI.cc:185
 msgid "amsynth-out.wav"
 msgstr "amsynth-sortie.wav"
 
-#: ../src/GUI/GUI.cc:194 ../src/GUI/GUI.cc:680
+#: ../src/GUI/GUI.cc:199 ../src/GUI/GUI.cc:687
 msgid "capture status: STOPPED"
 msgstr "status de l'enregistrement : STOPPÉ"
 
 #. create-new-instance currently only supported on Linux
-#: ../src/GUI/GUI.cc:214
+#: ../src/GUI/GUI.cc:219
 msgid "New Instance"
 msgstr "Nouvelle instance"
 
-#: ../src/GUI/GUI.cc:218
-msgid "_Open Bank"
+#: ../src/GUI/GUI.cc:223
+#, fuzzy
+msgid "_Open Bank..."
 msgstr "_Ouvrir une banque"
 
 #. list_file.push_back (MenuElem("_Save Bank","<control>S", mem_fun(*this, &GUI::bank_save)));
-#: ../src/GUI/GUI.cc:220
+#: ../src/GUI/GUI.cc:225
 msgid "_Save Bank As..."
 msgstr "_Sauvegarder une banque sous..."
 
-#: ../src/GUI/GUI.cc:222
-msgid "Open Alternate Tuning File"
+#: ../src/GUI/GUI.cc:227
+#, fuzzy
+msgid "Open Alternate Tuning File..."
 msgstr "Ouvrir un fichier d'accordage alternatif"
 
-#: ../src/GUI/GUI.cc:223
-msgid "Open Alternate Keyboard Map"
+#: ../src/GUI/GUI.cc:228
+#, fuzzy
+msgid "Open Alternate Keyboard Map..."
 msgstr "Ouvrir une carte de clavier alternative"
 
-#: ../src/GUI/GUI.cc:224
+#: ../src/GUI/GUI.cc:229 ../src/GUI/GUI.cc:970
 msgid "Reset All Tuning Settings to Default"
 msgstr "Réinitialiser tous les paramètres d'accordage par défaut"
 
-#: ../src/GUI/GUI.cc:226
+#: ../src/GUI/GUI.cc:231
 msgid "_Quit"
 msgstr "_Quitter"
 
 #. list_preset.push_back (manage (new TearoffMenuItem ()));
-#: ../src/GUI/GUI.cc:235
+#: ../src/GUI/GUI.cc:240
 msgid "_Copy"
 msgstr "_Copie"
 
-#: ../src/GUI/GUI.cc:236
+#: ../src/GUI/GUI.cc:241
 msgid "_Paste"
 msgstr "Col_ler"
 
-#: ../src/GUI/GUI.cc:238
-msgid "Rename"
+#: ../src/GUI/GUI.cc:243
+#, fuzzy
+msgid "Rename..."
 msgstr "Renommer"
 
-#: ../src/GUI/GUI.cc:239
+#: ../src/GUI/GUI.cc:244
 msgid "Clear"
 msgstr "Nettoyer"
 
-#: ../src/GUI/GUI.cc:241
+#: ../src/GUI/GUI.cc:246
 msgid "_Randomise"
 msgstr "Aléat_oire"
 
-#: ../src/GUI/GUI.cc:242
+#: ../src/GUI/GUI.cc:247
 msgid "Undo"
 msgstr "_Annuler"
 
-#: ../src/GUI/GUI.cc:243
+#: ../src/GUI/GUI.cc:248
 msgid "Redo"
 msgstr "_Refaire"
 
-#: ../src/GUI/GUI.cc:245 ../src/GUI/GUI.cc:638
-msgid "Import Preset"
+#: ../src/GUI/GUI.cc:250
+#, fuzzy
+msgid "Import Preset..."
 msgstr "Importer un pré-réglage"
 
-#: ../src/GUI/GUI.cc:246 ../src/GUI/GUI.cc:629
-msgid "Export Preset"
+#: ../src/GUI/GUI.cc:251
+#, fuzzy
+msgid "Export Preset..."
 msgstr "Exporter un pré-réglage"
 
-#: ../src/GUI/GUI.cc:265
+#: ../src/GUI/GUI.cc:270
 msgid "All"
 msgstr "Tous"
 
-#: ../src/GUI/GUI.cc:276
+#: ../src/GUI/GUI.cc:281
 msgid "MIDI Channel"
 msgstr "Canal MIDI"
 
-#: ../src/GUI/GUI.cc:288
+#: ../src/GUI/GUI.cc:293
 msgid "Unlimited"
 msgstr "Illimitée"
 
-#: ../src/GUI/GUI.cc:300
+#: ../src/GUI/GUI.cc:305
 msgid "Max. Polyphony"
 msgstr "Polyphonie maximum"
 
-#: ../src/GUI/GUI.cc:313
+#: ../src/GUI/GUI.cc:318
 msgid " Semitones"
 msgstr " demi-tons"
 
-#: ../src/GUI/GUI.cc:322
+#: ../src/GUI/GUI.cc:327
 msgid "Pitch Bend Range"
 msgstr "Plage de la modulation de hauteur tonale"
 
-#: ../src/GUI/GUI.cc:325
+#: ../src/GUI/GUI.cc:330
 msgid "Audio & MIDI..."
 msgstr "Audio & MIDI..."
 
-#: ../src/GUI/GUI.cc:334
+#: ../src/GUI/GUI.cc:339
 msgid "Virtual Keyboard"
 msgstr "Clavier virtuel"
 
-#: ../src/GUI/GUI.cc:341
+#: ../src/GUI/GUI.cc:346
 msgid "Record to .wav file..."
 msgstr "Enregistrer dans un fichier .wav..."
 
-#: ../src/GUI/GUI.cc:366
+#: ../src/GUI/GUI.cc:371
 msgid "MIDI (ALSA) connections"
 msgstr "Connexions MIDI (ALSA)"
 
-#: ../src/GUI/GUI.cc:386
+#: ../src/GUI/GUI.cc:391
 msgid "Audio (JACK) connections"
 msgstr "Connexions audio (JACK)"
 
-#: ../src/GUI/GUI.cc:392
+#: ../src/GUI/GUI.cc:397
 msgid "About"
 msgstr "À propos"
 
-#: ../src/GUI/GUI.cc:393
-msgid "Report a Bug..."
+#: ../src/GUI/GUI.cc:398
+#, fuzzy
+msgid "Report a Bug"
 msgstr "Remonter un bogue..."
 
-#: ../src/GUI/GUI.cc:394
-msgid "Online Documentation..."
+#: ../src/GUI/GUI.cc:399
+#, fuzzy
+msgid "Online Documentation"
 msgstr "Documentation en ligne..."
 
-#: ../src/GUI/GUI.cc:403
+#: ../src/GUI/GUI.cc:408
 msgid "_File"
 msgstr "_Fichier"
 
-#: ../src/GUI/GUI.cc:404
+#: ../src/GUI/GUI.cc:409
 msgid "_Preset"
 msgstr "_Pré-réglage"
 
-#: ../src/GUI/GUI.cc:405
+#: ../src/GUI/GUI.cc:410
 msgid "_Config"
 msgstr "_Configuration"
 
-#: ../src/GUI/GUI.cc:406
+#: ../src/GUI/GUI.cc:411
 msgid "_Utils"
 msgstr "_Utilitaires"
 
-#: ../src/GUI/GUI.cc:407
+#: ../src/GUI/GUI.cc:412
 msgid "_Help"
 msgstr "_Aide"
 
-#: ../src/GUI/GUI.cc:409
+#: ../src/GUI/GUI.cc:414
 #, c-format
 msgid "Audio: %s @ %d  MIDI: %s"
 msgstr "Audio : %s @ %d  MIDI : %s"
 
-#: ../src/GUI/GUI.cc:486 ../src/GUI/GUI.cc:497
+#: ../src/GUI/GUI.cc:491 ../src/GUI/GUI.cc:502
 msgid "amsynth configuration error"
 msgstr "erreur de configuration d'amsynth"
 
-#: ../src/GUI/GUI.cc:488
+#: ../src/GUI/GUI.cc:493
 msgid ""
 "amsynth could not initialise the selected audio device.\n"
 "\n"
@@ -273,9 +281,10 @@ msgstr ""
 "\n"
 "Veuillez revoir la configuration et redémarrer"
 
-#: ../src/GUI/GUI.cc:499
+#: ../src/GUI/GUI.cc:504
+#, fuzzy
 msgid ""
-"amsynth could not initialise the selected midi device.\n"
+"amsynth could not initialise the selected MIDI device.\n"
 "\n"
 "Please review the configuration and restart"
 msgstr ""
@@ -283,11 +292,11 @@ msgstr ""
 "\n"
 "Veuillez revoir la configuration et redémarrer"
 
-#: ../src/GUI/GUI.cc:517
+#: ../src/GUI/GUI.cc:522
 msgid "amsynth could not set realtime priority"
 msgstr "amsynth n'a pas pu paramétrer la priorité temps-réel"
 
-#: ../src/GUI/GUI.cc:518
+#: ../src/GUI/GUI.cc:523
 msgid ""
 "You may experience audio buffer underruns resulting in 'clicks' in the "
 "audio.\n"
@@ -303,64 +312,74 @@ msgstr ""
 "\n"
 "L'utilisation du serveur audio JACK peut également aider"
 
-#: ../src/GUI/GUI.cc:533
+#: ../src/GUI/GUI.cc:538
 msgid "Could not show link"
 msgstr "Ne peut pas montrer le lien"
 
-#: ../src/GUI/GUI.cc:611
+#: ../src/GUI/GUI.cc:616
 #, fuzzy
 msgid "Clear current preset?"
 msgstr "Effacer le pré-réglage actuel ?"
 
-#: ../src/GUI/GUI.cc:615
+#: ../src/GUI/GUI.cc:620
 msgid "Parameters will be set to default values and the name will be cleared"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:638
+#: ../src/GUI/GUI.cc:634
+msgid "Export Preset"
+msgstr "Exporter un pré-réglage"
+
+#: ../src/GUI/GUI.cc:643
+msgid "Import Preset"
+msgstr "Importer un pré-réglage"
+
+#: ../src/GUI/GUI.cc:643
 msgid "amsynth 1.x files"
 msgstr "fichiers amsynth 1.x files"
 
-#: ../src/GUI/GUI.cc:651
-msgid "Select output WAV file..."
+#: ../src/GUI/GUI.cc:658
+#, fuzzy
+msgid "Select output WAV file"
 msgstr "Sélectionner le fichier WAV de sortie..."
 
-#: ../src/GUI/GUI.cc:670
+#: ../src/GUI/GUI.cc:677
 msgid "capture status: RECORDING"
 msgstr "status de l'enregistrement : EN TRAIN D'ENREGISTRER"
 
-#: ../src/GUI/GUI.cc:731
+#: ../src/GUI/GUI.cc:738
 msgid "Analogue Modelling SYNTHesizer"
 msgstr "synthétiseur modelant de l'analogique"
 
-#: ../src/GUI/GUI.cc:733
+#: ../src/GUI/GUI.cc:740
 msgid "Copyright © 2002 - 2016 Nick Dowell and contributors"
 msgstr "Copyright © 2002 - 2016 Nick Dowell et contributeurs"
 
-#: ../src/GUI/GUI.cc:891
+#: ../src/GUI/GUI.cc:898
 msgid "Open Bank"
 msgstr "Ouvrir une banque"
 
-#: ../src/GUI/GUI.cc:903
+#: ../src/GUI/GUI.cc:910
 msgid "Save Bank"
 msgstr "Sauvegarder une banque"
 
-#: ../src/GUI/GUI.cc:911
+#: ../src/GUI/GUI.cc:918
 msgid "new.bank"
 msgstr "nouvelle.banque"
 
-#: ../src/GUI/GUI.cc:928
-msgid "Open Scala (.scl) alternate tuning file..."
+#: ../src/GUI/GUI.cc:935
+#, fuzzy
+msgid "Open Scala (.scl) alternate tuning file"
 msgstr "Ouvrir un fichier d'accordage alternatif Scala (.scl)..."
 
-#: ../src/GUI/GUI.cc:928
+#: ../src/GUI/GUI.cc:935
 msgid "Scala scale files"
 msgstr "fichiers de gamme Scala"
 
-#: ../src/GUI/GUI.cc:932
+#: ../src/GUI/GUI.cc:939
 msgid "Failed to load new tuning."
 msgstr "Échec du chargement d'un nouvel accordage."
 
-#: ../src/GUI/GUI.cc:933
+#: ../src/GUI/GUI.cc:940
 msgid ""
 "Reading the tuning file failed for some reason. Make sure your file has the "
 "correct format and try again."
@@ -368,19 +387,20 @@ msgstr ""
 "La lecture du fichier d'accordage a échouée pour une raison ou une autre. "
 "Assurez-vous que votre fichier possède le format correct et ré-essayez."
 
-#: ../src/GUI/GUI.cc:943
-msgid "Open alternate keyboard map (Scala .kbm format)..."
+#: ../src/GUI/GUI.cc:950
+#, fuzzy
+msgid "Open alternate keyboard map (Scala .kbm format)"
 msgstr "Ouvrir une carte de clavier alternative (format Scala .kbm)..."
 
-#: ../src/GUI/GUI.cc:943
+#: ../src/GUI/GUI.cc:950
 msgid "Scala keyboard map files"
 msgstr "fichiers de carte de clavier Scala"
 
-#: ../src/GUI/GUI.cc:947
+#: ../src/GUI/GUI.cc:954
 msgid "Failed to load new keyboard map."
 msgstr "Échec du chargement d'une nouvelle carte de clavier."
 
-#: ../src/GUI/GUI.cc:948
+#: ../src/GUI/GUI.cc:955
 msgid ""
 "Reading the keyboard map file failed for some reason. Make sure your file "
 "has the correct format and try again."
@@ -388,7 +408,7 @@ msgstr ""
 "La lecture du fichier de carte de clavier a échouée pour une raison ou une "
 "autre.Assurez-vous que votre fichier possède le format correct et ré-essayez."
 
-#: ../src/GUI/GUI.cc:958
+#: ../src/GUI/GUI.cc:974
 msgid "Discard the current scale and keyboard map?"
 msgstr "Abandonner la gamme et la carte du clavier actuelles ?"
 
@@ -500,13 +520,15 @@ msgid "\t-d          show some debugging output"
 msgstr "\t-d          affiche des informations de débogage"
 
 #: ../src/main.cc:328
-msgid "\t-b <filename>   use <filename> as the bank to store presets"
+#, fuzzy
+msgid "\t-b <file>   use <file> as the bank to store presets"
 msgstr ""
 "\t-b <nom_de_fichier>   utilise <nom_de_fichier> en tant que banque pour "
 "sauvegarder les pré-réglages"
 
 #: ../src/main.cc:329
-msgid "\t-t <filename>   use <filename> as a tuning file"
+#, fuzzy
+msgid "\t-t <file>   use <file> as a tuning file"
 msgstr ""
 "\t-t <nom_de_fichier>   utilise  <nom_de_fichier> en tant que fichier "
 "d'accordage"
@@ -523,13 +545,15 @@ msgid "\t-r <int>    set the sampling rate to use"
 msgstr "\t-r <entier>    paramètre le taux d'échantillonnage à utiliser"
 
 #: ../src/main.cc:333
-msgid "\t-m <string>\tset the midi driver to use [alsa/oss/auto(default)]"
+#, fuzzy
+msgid "\t-m <string> set the MIDI driver to use [alsa/oss/auto(default)]"
 msgstr ""
 "\t-m <chaîne_de_caractères>\tparamètre le pilote MIDI à utiliser [alsa/oss/"
 "auto(défaut)]"
 
 #: ../src/main.cc:334
-msgid "\t-c <int>    set the midi channel to respond to (default=all)"
+#, fuzzy
+msgid "\t-c <int>    set the MIDI channel to respond to (default=all)"
 msgstr "\t-c <entier>    paramètre le canal MIDI auquel répondre (défaut=tous)"
 
 #: ../src/main.cc:335
@@ -594,7 +618,7 @@ msgstr "temps utilisateur : %f\t\ttemps système : %f\n"
 msgid "performance index: %f\n"
 msgstr "index de performance : %f\n"
 
-#: ../src/PresetController.cc:381
+#: ../src/PresetController.cc:369
 msgid "User bank"
 msgstr "Banque utilisateur"
 
