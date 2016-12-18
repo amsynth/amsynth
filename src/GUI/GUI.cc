@@ -67,7 +67,7 @@ enum {
 	evCommit,
 	evPresetRename,
 	evPresetRenameOk,
-	evPresetDelete,
+	evPresetClear,
 	evPresetExport,
 	evPresetImport,
 	evQuit,
@@ -241,7 +241,7 @@ GUI::create_menus	( )
 	list_preset.push_back (MenuElem(_("_Paste"), Gtk::AccelKey("<control>V"), mem_fun(*this, &GUI::preset_paste)));
 	list_preset.push_back (SeparatorElem());
 	list_preset.push_back (MenuElem(_("Rename..."), sigc::bind(mem_fun(*this, &GUI::event_handler), (int)evPresetRename)));
-	list_preset.push_back (MenuElem(_("Clear"), bind(mem_fun(this,&GUI::event_handler),(int)evPresetDelete)));
+	list_preset.push_back (MenuElem(_("Clear"), bind(mem_fun(this,&GUI::event_handler),(int)evPresetClear)));
 	list_preset.push_back (SeparatorElem());
 	list_preset.push_back (MenuElem(_("_Randomise"), Gtk::AccelKey("<control>R"), sigc::mem_fun(preset_controller, &PresetController::randomiseCurrentPreset)));
 	list_preset.push_back (MenuElem(_("Undo"), Gtk::AccelKey("<control>Z"), sigc::mem_fun(preset_controller, &PresetController::undoChange)));
@@ -606,7 +606,7 @@ GUI::event_handler(const int e)
 		preset_rename.hide();
 		break;
 	
-	case evPresetDelete:
+	case evPresetClear:
 		{
 			GtkWidget *dialog = gtk_message_dialog_new (
 					this->gobj(),

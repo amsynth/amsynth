@@ -78,8 +78,10 @@ PresetController::containsPresetWithName(const string name)
 void
 PresetController::clearPreset		()
 {
+	loadPresets();
 	currentPreset = blankPreset;
 	commitPreset();
+	savePresets();
 	clearChangeBuffers();
 }
 
