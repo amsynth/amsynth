@@ -51,3 +51,4 @@ po/stamp-it
 stamp-h1
 test-driver
 test-suite.log
+/data/amsynth.appdata.xml
