@@ -734,7 +734,7 @@ GUI::event_handler(const int e)
                               "logo-icon-name", PACKAGE,
                               "version", version.c_str(),
                               "authors", authors,
-                              "translator-credits", "Olivier Humbert - French\nGeorg Krause - German",
+                              "translator-credits", "Olivier Humbert - French\nGeorg Krause - German\nPeter Körner - German",
                               "comments", _("Analogue Modelling SYNTHesizer"),
                               "website", PACKAGE_URL,
                               "copyright", _("Copyright © 2002 - 2016 Nick Dowell and contributors"),
