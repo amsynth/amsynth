@@ -289,20 +289,13 @@ int main( int argc, char *argv[] )
 	bind_textdomain_codeset(PACKAGE_TARNAME, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
 
-#ifdef WITH_GUI
-	bool no_gui = (getenv("AMSYNTH_NO_GUI") != NULL);
-
-	if (!no_gui)
-		gui_kit_init(argc, argv);
-#else
-  bool no_gui = true;
-#endif
-	
 	int initial_preset_no = 0;
 
 	// needs to be called before our own command line parsing code
 	amsynth_lash_process_args(&argc, &argv);
 	
+	bool no_gui = (getenv("AMSYNTH_NO_GUI") != NULL);
+
 	static struct option longopts[] = {
 		{ "jack_autoconnect", optional_argument, NULL, 0 },
 		{ 0 }
@@ -385,6 +378,11 @@ int main( int argc, char *argv[] )
 				break;
 		}
 	}
+
+#ifdef WITH_GUI
+	if (!no_gui)
+		gui_kit_init(argc, argv);
+#endif
 
 	// all config files should eventually be migrated to the ~./amsynth directory
 	mkdir ((std::string(getenv("HOME")) + std::string("/.amsynth")).c_str(), 0000755);
