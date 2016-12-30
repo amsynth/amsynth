@@ -356,6 +356,11 @@ GUI::create_menus	( )
 		menu_item->set_sensitive( false );
 	list_utils_keyboards.push_back (*menu_item);
 
+	menu_item = manage (new MenuItem(_("Virtual MIDI Piano Keyboard (VMPK)")));
+	menu_item->signal_activate().connect(sigc::bind(mem_fun(*this, &GUI::command_run),"vmpk"));
+	if (command_exists("vmpk") != 0) menu_item->set_sensitive( false );
+	list_utils_keyboards.push_back (*menu_item);
+
 	list_utils.push_back (MenuElem(_("Virtual Keyboards"), *menu_utils_keyboards));
 
 	//
