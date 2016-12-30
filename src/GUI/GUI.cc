@@ -381,6 +381,12 @@ GUI::create_menus	( )
 	if (config.alsa_seq_client_id==0) menu_item->set_sensitive( false );
 	list_utils_midi.push_back (*menu_item);
 	
+	menu_item = manage (new MenuItem("Patchage"));
+	menu_item->signal_activate().connect (sigc::bind(mem_fun(*this, &GUI::command_run),"patchage --no-jack"));
+	if (command_exists ("patchage") != 0) menu_item->set_sensitive( false );
+	if (config.alsa_seq_client_id==0) menu_item->set_sensitive( false );
+	list_utils_midi.push_back (*menu_item);
+
 	list_utils.push_back (MenuElem(_("MIDI (ALSA) connections"), *menu_utils_midi));
 	
 	//
@@ -401,6 +407,12 @@ GUI::create_menus	( )
 	if (config.current_audio_driver != "jack" && config.current_audio_driver != "JACK") menu_item->set_sensitive( false );
 	list_utils_jack.push_back (*menu_item);
 	
+	menu_item = manage (new MenuItem("Patchage"));
+	menu_item->signal_activate().connect (sigc::bind(mem_fun(*this, &GUI::command_run),"patchage --no-alsa"));
+	if (command_exists ("patchage") != 0) menu_item->set_sensitive( false );
+	if (config.current_audio_driver != "jack" && config.current_audio_driver != "JACK") menu_item->set_sensitive( false );
+	list_utils_jack.push_back (*menu_item);
+
 	list_utils.push_back (MenuElem(_("Audio (JACK) connections"), *menu_utils_jack));
 
 	//
