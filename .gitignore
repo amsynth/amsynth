@@ -52,3 +52,9 @@ stamp-h1
 test-driver
 test-suite.log
 /data/amsynth.appdata.xml
+
+# CLion
+.idea/dictionaries
+.idea/workspace.xml
+cmake-build-*
+
