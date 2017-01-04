@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-18 16:12+0000\n"
+"POT-Creation-Date: 2017-01-04 22:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,7 +104,7 @@ msgstr ""
 msgid "amsynth-out.wav"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:199 ../src/GUI/GUI.cc:687
+#: ../src/GUI/GUI.cc:199 ../src/GUI/GUI.cc:712
 msgid "capture status: STOPPED"
 msgstr ""
 
@@ -130,7 +130,7 @@ msgstr ""
 msgid "Open Alternate Keyboard Map..."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:229 ../src/GUI/GUI.cc:970
+#: ../src/GUI/GUI.cc:229 ../src/GUI/GUI.cc:995
 msgid "Reset All Tuning Settings to Default"
 msgstr ""
 
@@ -204,81 +204,89 @@ msgid "Audio & MIDI..."
 msgstr ""
 
 #: ../src/GUI/GUI.cc:339
-msgid "Virtual Keyboard"
-msgstr ""
-
-#: ../src/GUI/GUI.cc:346
 msgid "Record to .wav file..."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:371
+#: ../src/GUI/GUI.cc:352
+msgid "Virtual Keyboard (vkeybd)"
+msgstr ""
+
+#: ../src/GUI/GUI.cc:359
+msgid "Virtual MIDI Piano Keyboard (VMPK)"
+msgstr ""
+
+#: ../src/GUI/GUI.cc:364
+msgid "Virtual Keyboards"
+msgstr ""
+
+#: ../src/GUI/GUI.cc:390
 msgid "MIDI (ALSA) connections"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:391
+#: ../src/GUI/GUI.cc:416
 msgid "Audio (JACK) connections"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:397
+#: ../src/GUI/GUI.cc:422
 msgid "About"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:398
+#: ../src/GUI/GUI.cc:423
 msgid "Report a Bug"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:399
+#: ../src/GUI/GUI.cc:424
 msgid "Online Documentation"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:408
+#: ../src/GUI/GUI.cc:433
 msgid "_File"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:409
+#: ../src/GUI/GUI.cc:434
 msgid "_Preset"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:410
+#: ../src/GUI/GUI.cc:435
 msgid "_Config"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:411
+#: ../src/GUI/GUI.cc:436
 msgid "_Utils"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:412
+#: ../src/GUI/GUI.cc:437
 msgid "_Help"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:414
+#: ../src/GUI/GUI.cc:439
 #, c-format
 msgid "Audio: %s @ %d  MIDI: %s"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:491 ../src/GUI/GUI.cc:502
+#: ../src/GUI/GUI.cc:516 ../src/GUI/GUI.cc:527
 msgid "amsynth configuration error"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:493
+#: ../src/GUI/GUI.cc:518
 msgid ""
 "amsynth could not initialise the selected audio device.\n"
 "\n"
 "Please review the configuration and restart"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:504
+#: ../src/GUI/GUI.cc:529
 msgid ""
 "amsynth could not initialise the selected MIDI device.\n"
 "\n"
 "Please review the configuration and restart"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:522
+#: ../src/GUI/GUI.cc:547
 msgid "amsynth could not set realtime priority"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:523
+#: ../src/GUI/GUI.cc:548
 msgid ""
 "You may experience audio buffer underruns resulting in 'clicks' in the "
 "audio.\n"
@@ -288,95 +296,95 @@ msgid ""
 "Using the JACK audio subsystem can also help"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:538
+#: ../src/GUI/GUI.cc:563
 msgid "Could not show link"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:616
+#: ../src/GUI/GUI.cc:641
 msgid "Clear current preset?"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:620
+#: ../src/GUI/GUI.cc:645
 msgid "Parameters will be set to default values and the name will be cleared"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:634
+#: ../src/GUI/GUI.cc:659
 msgid "Export Preset"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:643
+#: ../src/GUI/GUI.cc:668
 msgid "Import Preset"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:643
+#: ../src/GUI/GUI.cc:668
 msgid "amsynth 1.x files"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:658
+#: ../src/GUI/GUI.cc:683
 msgid "Select output WAV file"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:677
+#: ../src/GUI/GUI.cc:702
 msgid "capture status: RECORDING"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:738
+#: ../src/GUI/GUI.cc:763
 msgid "Analogue Modelling SYNTHesizer"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:740
+#: ../src/GUI/GUI.cc:765
 msgid "Copyright © 2002 - 2016 Nick Dowell and contributors"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:898
+#: ../src/GUI/GUI.cc:923
 msgid "Open Bank"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:910
+#: ../src/GUI/GUI.cc:935
 msgid "Save Bank"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:918
+#: ../src/GUI/GUI.cc:943
 msgid "new.bank"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:935
+#: ../src/GUI/GUI.cc:960
 msgid "Open Scala (.scl) alternate tuning file"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:935
+#: ../src/GUI/GUI.cc:960
 msgid "Scala scale files"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:939
+#: ../src/GUI/GUI.cc:964
 msgid "Failed to load new tuning."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:940
+#: ../src/GUI/GUI.cc:965
 msgid ""
 "Reading the tuning file failed for some reason. Make sure your file has the "
 "correct format and try again."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:950
+#: ../src/GUI/GUI.cc:975
 msgid "Open alternate keyboard map (Scala .kbm format)"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:950
+#: ../src/GUI/GUI.cc:975
 msgid "Scala keyboard map files"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:954
+#: ../src/GUI/GUI.cc:979
 msgid "Failed to load new keyboard map."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:955
+#: ../src/GUI/GUI.cc:980
 msgid ""
 "Reading the keyboard map file failed for some reason. Make sure your file "
 "has the correct format and try again."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:974
+#: ../src/GUI/GUI.cc:999
 msgid "Discard the current scale and keyboard map?"
 msgstr ""
 
@@ -456,106 +464,106 @@ msgstr ""
 msgid "error: could not open any MIDI interface"
 msgstr ""
 
-#: ../src/main.cc:318
+#: ../src/main.cc:311
 msgid "usage: "
 msgstr ""
 
-#: ../src/main.cc:318
+#: ../src/main.cc:311
 msgid " [options]"
 msgstr ""
 
-#: ../src/main.cc:320
+#: ../src/main.cc:313
 msgid ""
 "Any options given here override those in the config file ($HOME/.amSynthrc)"
 msgstr ""
 
-#: ../src/main.cc:322
+#: ../src/main.cc:315
 msgid "OPTIONS:"
 msgstr ""
 
-#: ../src/main.cc:324
+#: ../src/main.cc:317
 msgid "\t-h          show this usage message"
 msgstr ""
 
-#: ../src/main.cc:325
+#: ../src/main.cc:318
 msgid "\t-v          show version information"
 msgstr ""
 
-#: ../src/main.cc:326
+#: ../src/main.cc:319
 msgid "\t-x          run in headless mode (without GUI)"
 msgstr ""
 
-#: ../src/main.cc:328
+#: ../src/main.cc:321
 msgid "\t-b <file>   use <file> as the bank to store presets"
 msgstr ""
 
-#: ../src/main.cc:329
+#: ../src/main.cc:322
 msgid "\t-t <file>   use <file> as a tuning file"
 msgstr ""
 
-#: ../src/main.cc:331
+#: ../src/main.cc:324
 msgid ""
 "\t-a <string> set the sound output driver to use [alsa/oss/auto(default)]"
 msgstr ""
 
-#: ../src/main.cc:332
+#: ../src/main.cc:325
 msgid "\t-r <int>    set the sampling rate to use"
 msgstr ""
 
-#: ../src/main.cc:333
+#: ../src/main.cc:326
 msgid "\t-m <string> set the MIDI driver to use [alsa/oss/auto(default)]"
 msgstr ""
 
-#: ../src/main.cc:334
+#: ../src/main.cc:327
 msgid "\t-c <int>    set the MIDI channel to respond to (default=all)"
 msgstr ""
 
-#: ../src/main.cc:335
+#: ../src/main.cc:328
 msgid "\t-p <int>    set the polyphony (maximum active voices)"
 msgstr ""
 
-#: ../src/main.cc:337
+#: ../src/main.cc:330
 msgid "\t-n <name>   specify the JACK client name to use"
 msgstr ""
 
-#: ../src/main.cc:338
+#: ../src/main.cc:331
 msgid "\t--jack_autoconnect[=<true|false>]"
 msgstr ""
 
-#: ../src/main.cc:339
+#: ../src/main.cc:332
 msgid ""
 "\t            automatically connect jack audio ports to hardware I/O ports. "
 "(Default: true)"
 msgstr ""
 
-#: ../src/main.cc:400
+#: ../src/main.cc:398
 msgid "Fatal Error: open_audio() returned NULL.\n"
 msgstr ""
 
-#: ../src/main.cc:448
+#: ../src/main.cc:446
 #, c-format
 msgid "amsynth running in headless mode, press ctrl-c to exit\n"
 msgstr ""
 
-#: ../src/main.cc:453
+#: ../src/main.cc:451
 #, c-format
 msgid "shutting down...\n"
 msgstr ""
 
-#: ../src/main.cc:460
+#: ../src/main.cc:458
 msgid " audio buffer underruns occurred\n"
 msgstr ""
 
-#: ../src/main.cc:551
+#: ../src/main.cc:549
 msgid "error: could not load tuning file "
 msgstr ""
 
-#: ../src/main.cc:613
+#: ../src/main.cc:611
 #, c-format
 msgid "user time: %f\t\tsystem time: %f\n"
 msgstr ""
 
-#: ../src/main.cc:614
+#: ../src/main.cc:612
 #, c-format
 msgid "performance index: %f\n"
 msgstr ""
