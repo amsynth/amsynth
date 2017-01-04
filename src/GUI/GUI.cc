@@ -336,20 +336,33 @@ GUI::create_menus	( )
 	Menu *menu_utils = manage (new Menu());
 	MenuList& list_utils = menu_utils->items ();
 
-	MenuItem *menu_item = manage (new MenuItem(_("Virtual Keyboard")));
-	menu_item->signal_activate().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evVkeybd));
-	// vkeybd must exist, and we must be using ALSA MIDI
-	if (config.alsa_seq_client_id == 0 || command_exists("vkeybd") != 0)
-		menu_item->set_sensitive( false );
-	list_utils.push_back (*menu_item);
-
-	menu_item = manage (new MenuItem(_("Record to .wav file...")));
+	MenuItem *menu_item = manage (new MenuItem(_("Record to .wav file...")));
 	menu_item->signal_activate().connect(mem_fun(record_dialog, &Gtk::Dialog::show_all));
 	if (audio_out) if (!audio_out->canRecord ()) menu_item->set_sensitive (false);
 	list_utils.push_back (*menu_item);
 
 	list_utils.push_back (SeparatorElem());
-	
+
+	//
+	// Virtual keyboards sub-menu
+	//
+	Menu *menu_utils_keyboards = manage (new Menu());
+	MenuList& list_utils_keyboards = menu_utils_keyboards->items ();
+
+	menu_item = manage (new MenuItem(_("Virtual Keyboard (vkeybd)")));
+	menu_item->signal_activate().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evVkeybd));
+	// vkeybd must exist, and we must be using ALSA MIDI
+	if (config.alsa_seq_client_id == 0 || command_exists("vkeybd") != 0)
+		menu_item->set_sensitive( false );
+	list_utils_keyboards.push_back (*menu_item);
+
+	menu_item = manage (new MenuItem(_("Virtual MIDI Piano Keyboard (VMPK)")));
+	menu_item->signal_activate().connect(sigc::bind(mem_fun(*this, &GUI::command_run),"vmpk"));
+	if (command_exists("vmpk") != 0) menu_item->set_sensitive( false );
+	list_utils_keyboards.push_back (*menu_item);
+
+	list_utils.push_back (MenuElem(_("Virtual Keyboards"), *menu_utils_keyboards));
+
 	//
 	// ALSA-MIDI sub-menu
 	//
@@ -368,6 +381,12 @@ GUI::create_menus	( )
 	if (config.alsa_seq_client_id==0) menu_item->set_sensitive( false );
 	list_utils_midi.push_back (*menu_item);
 	
+	menu_item = manage (new MenuItem("Patchage"));
+	menu_item->signal_activate().connect (sigc::bind(mem_fun(*this, &GUI::command_run),"patchage --no-jack"));
+	if (command_exists ("patchage") != 0) menu_item->set_sensitive( false );
+	if (config.alsa_seq_client_id==0) menu_item->set_sensitive( false );
+	list_utils_midi.push_back (*menu_item);
+
 	list_utils.push_back (MenuElem(_("MIDI (ALSA) connections"), *menu_utils_midi));
 	
 	//
@@ -388,6 +407,12 @@ GUI::create_menus	( )
 	if (config.current_audio_driver != "jack" && config.current_audio_driver != "JACK") menu_item->set_sensitive( false );
 	list_utils_jack.push_back (*menu_item);
 	
+	menu_item = manage (new MenuItem("Patchage"));
+	menu_item->signal_activate().connect (sigc::bind(mem_fun(*this, &GUI::command_run),"patchage --no-alsa"));
+	if (command_exists ("patchage") != 0) menu_item->set_sensitive( false );
+	if (config.current_audio_driver != "jack" && config.current_audio_driver != "JACK") menu_item->set_sensitive( false );
+	list_utils_jack.push_back (*menu_item);
+
 	list_utils.push_back (MenuElem(_("Audio (JACK) connections"), *menu_utils_jack));
 
 	//
