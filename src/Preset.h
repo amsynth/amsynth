@@ -39,7 +39,7 @@ public:
 	
 	bool			isEqual			(const Preset &);
 
-	const std::string getName		() const { return mName; }
+	const std::string& getName		() const { return mName; }
 	void			setName			(const std::string name) { mName = name; }
 	
 	Parameter&		getParameter	(const std::string name);
