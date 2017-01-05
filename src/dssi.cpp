@@ -137,7 +137,10 @@ static void select_program(LADSPA_Handle Instance, unsigned long Bank, unsigned 
 
 	TRACE_ARGS("Bank = %d Index = %d", Bank, Index);
 
-	if (Bank == 0 && Index < 128) {
+	const std::vector<BankInfo> banks = PresetController::getPresetBanks();
+
+	if (Bank < banks.size() && Index < PresetController::kNumPresets) {
+		s_presetController->loadPresets(banks[Bank].file_path.c_str());
 		a->synth->setPresetNumber(Index);
 		// now update DSSI host's view of the parameters
 		for (unsigned i = 0; i < kAmsynthParameterCount; i++) {
