@@ -21,9 +21,11 @@
 
 #include "midi.h"
 #include "Preset.h"
+#include "PresetController.h"
 #include "Synthesizer.h"
 
 #include <assert.h>
+#include <climits>
 #include <dssi.h>
 #include <ladspa.h>
 #include <math.h>
@@ -42,6 +44,8 @@
 
 static LADSPA_Descriptor *	s_ladspaDescriptor = NULL;
 static DSSI_Descriptor *	s_dssiDescriptor   = NULL;
+static PresetController *	s_presetController = NULL;
+static unsigned long 		s_lastBankGet = ULONG_MAX;
 
 #define MIDI_BUFFER_SIZE 4096
 
@@ -106,19 +110,24 @@ static void cleanup (LADSPA_Handle instance)
 
 static const DSSI_Program_Descriptor *get_program(LADSPA_Handle Instance, unsigned long Index)
 {
-	amsynth_wrapper * a = (amsynth_wrapper *) Instance;
-
 	static DSSI_Program_Descriptor descriptor;
 	memset(&descriptor, 0, sizeof(descriptor));
 
-	if (Index < 128) {
-		descriptor.Bank = 0;
-		descriptor.Program = Index;
-		descriptor.Name = a->synth->getPresetName(Index);
+	descriptor.Program = Index % PresetController::kNumPresets;
+	descriptor.Bank = Index / PresetController::kNumPresets;
+
+	const std::vector<BankInfo> banks = PresetController::getPresetBanks();
+	if (descriptor.Bank < banks.size())
+	{
+		if (descriptor.Bank != s_lastBankGet) {
+			s_presetController->loadPresets(banks[descriptor.Bank].file_path.c_str());
+			s_lastBankGet = descriptor.Bank;
+		}
+		descriptor.Name = s_presetController->getPreset(descriptor.Program).getName().c_str();
 		TRACE_ARGS("%d %d %s", descriptor.Bank, descriptor.Program, descriptor.Name);
 		return &descriptor;
 	}
-	
+
 	return NULL;
 }
 
@@ -227,6 +236,7 @@ static void run (LADSPA_Handle instance, unsigned long sample_count)
 
 void __attribute__ ((constructor)) my_init ()
 {
+	s_presetController = new PresetController;
     const char **port_names;
     LADSPA_PortDescriptor *port_descriptors;
     LADSPA_PortRangeHint *port_range_hints;
@@ -340,4 +350,9 @@ void __attribute__ ((destructor)) my_fini ()
 	{
 		free (s_dssiDescriptor);
     }
+	if (s_presetController)
+	{
+		delete s_presetController;
+	}
+
 }
