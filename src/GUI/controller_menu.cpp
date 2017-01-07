@@ -26,12 +26,12 @@
 
 #include <glib/gi18n.h>
 
-extern "C" void modal_midi_learn(int param_index);
+extern "C" void modal_midi_learn(Param param_index);
 
 static void
 show_midi_learn_dialog (GtkMenuItem *, gpointer user_data)
 {
-	modal_midi_learn((int)(long)user_data);
+	modal_midi_learn((Param)(int)(long)user_data);
 }
 
 static void

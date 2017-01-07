@@ -284,14 +284,14 @@ MidiController::saveControllerMap()
 }
 
 int
-MidiController::getControllerForParameter(int paramId)
+MidiController::getControllerForParameter(Param paramId)
 {
 	assert(0 <= paramId && paramId < kAmsynthParameterCount);
 	return _param_to_cc_map[paramId];
 }
 
 void
-MidiController::setControllerForParameter(int paramId, int cc)
+MidiController::setControllerForParameter(Param paramId, int cc)
 {
 	assert(paramId < kAmsynthParameterCount && cc < MAX_CC);
 

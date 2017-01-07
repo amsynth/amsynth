@@ -66,7 +66,7 @@ MIDILearnDialog::~MIDILearnDialog()
 }
 
 void
-MIDILearnDialog::run_modal(unsigned param_idx)
+MIDILearnDialog::run_modal(Param param_idx)
 {
 	int cc = _midiController->getControllerForParameter(param_idx);
 	gtk_entry_set_text(GTK_ENTRY(_paramNameEntry), parameter_name_from_index (param_idx));

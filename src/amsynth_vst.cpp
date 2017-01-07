@@ -121,7 +121,7 @@ static void on_adjustment_value_changed(GtkAdjustment *adjustment, AEffect *effe
 	}
 }
 
-void modal_midi_learn(int param_index) {}
+void modal_midi_learn(Param param_index) {}
 
 static void XEventProc(XEvent *xevent)
 {

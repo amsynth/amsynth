@@ -166,7 +166,7 @@ lv2_ui_port_event(LV2UI_Handle ui,
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void modal_midi_learn(int param_index)
+void modal_midi_learn(Param param_index)
 {
 }
 

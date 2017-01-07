@@ -34,7 +34,7 @@ public:
 	MIDILearnDialog(MidiController *midiController, PresetController *presetController, GtkWindow *parent);
 	~MIDILearnDialog();
 
-	void run_modal(unsigned param_idx);
+	void run_modal(Param param_idx);
 
 private:
 

@@ -87,7 +87,7 @@ enum {
 
 static MIDILearnDialog *g_midiLearn = NULL;
 
-void modal_midi_learn(int param_index) // called by editor_pane upon right-clicking a control
+void modal_midi_learn(Param param_index) // called by editor_pane upon right-clicking a control
 {
 	if (g_midiLearn)
 		g_midiLearn->run_modal(param_index);

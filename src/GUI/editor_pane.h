@@ -22,13 +22,15 @@
 #ifndef _editor_pane_h
 #define _editor_pane_h
 
+#include "../controls.h"
+
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
 GtkWidget * editor_pane_new (GtkAdjustment **adjustments, gboolean is_plugin);
 
-void modal_midi_learn(int param_index);
+void modal_midi_learn(Param param_index);
 
 G_END_DECLS
 

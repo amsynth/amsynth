@@ -236,7 +236,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void modal_midi_learn(int param_index)
+void modal_midi_learn(Param param_index)
 {
 }
 

@@ -60,8 +60,8 @@ public:
 	void	clearControllerMap();
 	void	loadControllerMap();
 
-	int		getControllerForParameter(int paramId);
-	void	setControllerForParameter(int paramId, int cc);
+	int		getControllerForParameter(Param paramId);
+	void	setControllerForParameter(Param paramId, int cc);
 
 	Parameter & getLastControllerParam() { return last_active_controller; };
 
