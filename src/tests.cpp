@@ -37,11 +37,11 @@ void testMidiOutput()
     std::vector<amsynth_midi_cc_t> midiOut;
     
     synth->process(32, midiIn, midiOut, &audioBuffer[0], &audioBuffer[32]);
-
-    Parameter &parameter = synth->getPresetController()->getCurrentPreset().getParameter(kAmsynthParameter_ReverbWet);
     
+    Param param = kAmsynthParameter_ReverbWet;
+
     unsigned char cc = 2;
-    synth->getMidiController()->setControllerForParameter(parameter.GetId(), cc);
+    synth->getMidiController()->setControllerForParameter(param, cc);
     
     for (unsigned char value = 0; value <= 127; value++) {
         unsigned char midi[4] = { MIDI_STATUS_CONTROLLER, cc, value };
@@ -55,7 +55,7 @@ void testMidiOutput()
         midiOut.clear();
         synth->process(32, midiIn, midiOut, &audioBuffer[0], &audioBuffer[32]);
 
-        int outputValue = roundf(synth->getNormalizedParameterValue(parameter.GetId()) * 127.0f);
+        int outputValue = (int)roundf(synth->getNormalizedParameterValue(param) * 127.0f);
         assert(outputValue == value || !"parameter value should be changed when a cc is processed");
 
         assert(midiOut.empty() || !"no midi output should be generated when a cc is processed");
@@ -63,7 +63,7 @@ void testMidiOutput()
     
     midiIn.clear();
     midiOut.clear();
-    synth->setNormalizedParameterValue(parameter.GetId(), 0);
+    synth->setNormalizedParameterValue(param, 0);
     synth->process(32, midiIn, midiOut, &audioBuffer[0], &audioBuffer[32]);
     assert(midiOut.size() == 1 || !"midi output should be generated when a parameter is changed");
     assert(midiOut[0].value == 0 || !"midi output value is incorrect");
