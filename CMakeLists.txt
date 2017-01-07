@@ -7,7 +7,22 @@ find_package(PkgConfig REQUIRED)
 
 project(amsynth)
 
-set(SOURCE_FILES
+pkg_check_modules(ALSA REQUIRED alsa)
+pkg_check_modules(JACK REQUIRED jack)
+pkg_check_modules(GTKMM REQUIRED gtkmm-2.4)
+
+include_directories(
+        ${PROJECT_SOURCE_DIR}/include
+        ${ALSA_INCLUDE_DIRS}
+        ${JACK_INCLUDE_DIRS}
+        ${GTKMM_INCLUDE_DIRS}
+)
+
+#
+#
+#
+
+add_executable(amsynth
         src/drivers/ALSAAudioDriver.cc
         src/drivers/ALSAAudioDriver.h
         src/drivers/ALSAMidiDriver.cc
@@ -99,23 +114,9 @@ set(SOURCE_FILES
         src/UpdateListener.h
         src/VoiceAllocationUnit.cc
         src/VoiceAllocationUnit.h
-)
+        )
 
-add_executable(amsynth ${SOURCE_FILES})
-
-pkg_check_modules(ALSA REQUIRED alsa)
-pkg_check_modules(JACK REQUIRED jack)
-pkg_check_modules(GTKMM REQUIRED gtkmm-2.4)
-
-include_directories(
-        ${PROJECT_SOURCE_DIR}/include
-        ${ALSA_INCLUDE_DIRS}
-        ${JACK_INCLUDE_DIRS}
-        ${GTKMM_INCLUDE_DIRS}
-)
-
-target_compile_options(
-        amsynth
+target_compile_options(amsynth
         PUBLIC
         -DVERSION="dev"
         -DPACKAGE="amsynth"
@@ -134,12 +135,65 @@ target_compile_options(
         ${ALSA_CFLAGS_OTHER}
         ${JACK_CFLAGS_OTHER}
         ${GTKMM_CFLAGS_OTHER}
-)
+        )
 
-target_link_libraries(
-        amsynth
+target_link_libraries(amsynth
         pthread
         ${ALSA_LIBRARIES}
         ${JACK_LIBRARIES}
         ${GTKMM_LIBRARIES}
-)
+        )
+
+#
+#
+#
+
+add_executable(amsynth_tests
+        src/Effects/Distortion.cc
+        src/Effects/Distortion.h
+        src/Effects/SoftLimiter.cc
+        src/Effects/SoftLimiter.h
+        src/freeverb/allpass.cpp
+        src/freeverb/allpass.hpp
+        src/freeverb/comb.cpp
+        src/freeverb/comb.hpp
+        src/freeverb/denormals.h
+        src/freeverb/revmodel.cpp
+        src/freeverb/revmodel.hpp
+        src/freeverb/tuning.h
+        src/VoiceBoard/ADSR.cc
+        src/VoiceBoard/ADSR.h
+        src/VoiceBoard/LowPassFilter.cc
+        src/VoiceBoard/LowPassFilter.h
+        src/VoiceBoard/Oscillator.cc
+        src/VoiceBoard/Oscillator.h
+        src/VoiceBoard/Synth--.h
+        src/VoiceBoard/VoiceBoard.cc
+        src/VoiceBoard/VoiceBoard.h
+        src/amsynth_lv2.cpp
+        src/Configuration.cpp
+        src/Configuration.h
+        src/controls.h
+        src/gettext.h
+        src/lash.c
+        src/lash.h
+        src/midi.h
+        src/MidiController.cc
+        src/MidiController.h
+        src/Parameter.cc
+        src/Parameter.h
+        src/Preset.cc
+        src/Preset.h
+        src/PresetController.cc
+        src/PresetController.h
+        src/Synthesizer.cpp
+        src/Synthesizer.h
+        src/tests.cpp
+        src/Thread.h
+        src/TuningMap.cc
+        src/TuningMap.h
+        src/types.h
+        src/UpdateListener.h
+        src/VoiceAllocationUnit.cc
+        src/VoiceAllocationUnit.h
+        )
