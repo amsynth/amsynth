@@ -24,8 +24,7 @@
 
 #include <stdlib.h>
 
-enum Param 
-{
+typedef enum {
 	kAmsynthParameter_AmpEnvAttack             = 0,
 	kAmsynthParameter_AmpEnvDecay              = 1,
 	kAmsynthParameter_AmpEnvSustain            = 2,
@@ -88,7 +87,7 @@ enum Param
 	kAmsynthParameter_PortamentoMode           = 40,
 
 	kAmsynthParameterCount
-};
+} Param;
 
 typedef enum {
 	KeyboardModePoly,
