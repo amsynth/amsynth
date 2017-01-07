@@ -50,6 +50,7 @@
 #include <getopt.h>
 #include <unistd.h>
 #include <string>
+#include <climits>
 #include <cstring>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -386,9 +387,17 @@ int main( int argc, char *argv[] )
 		gui_kit_init(argc, argv);
 #endif
 
-	// all config files should eventually be migrated to the ~./amsynth directory
-	mkdir ((std::string(getenv("HOME")) + std::string("/.amsynth")).c_str(), 0000755);
-	mkdir ((std::string(getenv("HOME")) + std::string("/.amsynth") + std::string("/banks")).c_str(), 0000755);
+	/* all config files should eventually be migrated to the ~./amsynth directory */ {
+		char *path = NULL;
+		if (asprintf(&path, "%s/.amsynth", getenv("HOME")) > 0) {
+			mkdir(path, 0000755);
+			free(path), path = NULL;
+		}
+		if (asprintf(&path, "%s/.amsynth/banks", getenv("HOME")) > 0) {
+			mkdir(path, 0000755);
+			free(path), path = NULL;
+		}
+	}
 
 	install_default_files_if_reqd();
 

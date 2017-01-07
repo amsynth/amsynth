@@ -656,7 +656,8 @@ GUI::event_handler(const int e)
 	
 	case evPresetExport:
 		{
-			std::string filename = file_dialog(this->gobj(), _("Export Preset"), true, NULL, NULL, (preset_controller->getCurrentPreset().getName() + ".amSynthPreset").c_str());
+			std::string filename = preset_controller->getCurrentPreset().getName() + ".amSynthPreset";
+			filename = file_dialog(this->gobj(), _("Export Preset"), true, NULL, NULL, filename.c_str());
 			if (!filename.empty()) {
 				preset_controller->exportPreset(filename);
 			}
@@ -939,7 +940,8 @@ GUI::bank_save_as	( )
 		GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 		NULL);
 
-	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (chooser), PresetController::getUserBanksDirectory().c_str());
+	std::string directory = PresetController::getUserBanksDirectory();
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (chooser), directory.c_str());
 	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (chooser), _("new.bank"));
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (chooser), TRUE);
 
