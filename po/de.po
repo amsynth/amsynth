@@ -8,14 +8,13 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-01-04 22:01+0000\n"
-"PO-Revision-Date: 2017-01-04 22:07+0000\n"
+"PO-Revision-Date: 2017-01-07 16:28+0100\n"
 "Last-Translator: Peter Körner <18427@gmx.net>\n"
 "Language-Team: \n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.11\n"
 
 #: ../src/GUI/ConfigDialog.cpp:31
 msgid "amsynth configuration"
@@ -212,16 +211,15 @@ msgstr "In .wav-Datei aufnehmen..."
 
 #: ../src/GUI/GUI.cc:352
 msgid "Virtual Keyboard (vkeybd)"
-msgstr "Virtuelles Keyboard (vkeybd)"
+msgstr "Virtual Keyboard (vkeybd)"
 
 #: ../src/GUI/GUI.cc:359
 msgid "Virtual MIDI Piano Keyboard (VMPK)"
-msgstr "Virtuelles Keyboard (VMPK)"
+msgstr "Virtual MIDI Piano Keyboard (VMPK)"
 
 #: ../src/GUI/GUI.cc:364
-#, fuzzy
 msgid "Virtual Keyboards"
-msgstr "Virtuelles Keyboard"
+msgstr "Virtuelle Keyboards"
 
 #: ../src/GUI/GUI.cc:390
 msgid "MIDI (ALSA) connections"
@@ -266,7 +264,7 @@ msgstr "_Hilfe"
 #: ../src/GUI/GUI.cc:439
 #, c-format
 msgid "Audio: %s @ %d  MIDI: %s"
-msgstr "Audio: %s @ %d MIDI: %s"
+msgstr "Audio: %s @ %d  MIDI: %s"
 
 #: ../src/GUI/GUI.cc:516 ../src/GUI/GUI.cc:527
 msgid "amsynth configuration error"
