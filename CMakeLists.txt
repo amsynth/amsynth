@@ -125,8 +125,7 @@ target_compile_options(
         -DGETTEXT_PACKAGE="amsynth"
         -DPACKAGE_URL="https://amsynth.github.io"
         -DPACKAGE_BUGREPORT="https://www.github.com/amsynth/amsynth/issues"
-        -DPKGDATADIR="/home/nick/.local/share/amsynth"
-        -DPACKAGE_LOCALEDIR="/home/nick/.local/share/locale"
+        -DPKGDATADIR="${PROJECT_SOURCE_DIR}/data"
         -DWITH_GUI
         -DWITH_ALSA
         -DWITH_JACK

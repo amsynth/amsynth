@@ -285,9 +285,11 @@ int main( int argc, char *argv[] )
 	setreuid( getuid(), getuid() );
 	setregid( getgid(), getgid() );	
 
+#ifdef PACKAGE_LOCALEDIR
 	bindtextdomain(GETTEXT_PACKAGE, PACKAGE_LOCALEDIR);
 	bind_textdomain_codeset(PACKAGE_TARNAME, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
+#endif
 
 	int initial_preset_no = 0;
 

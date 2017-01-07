@@ -294,26 +294,26 @@ EXTRA_DIST += $(appdata_in_files)
 
 skinsdefaultdir="${pkgdatadir}/skins/default"
 dist_skinsdefault_DATA = \
-	data/default-skin/background.png \
-	data/default-skin/button_simple.png \
-	data/default-skin/filter_slope.png \
-	data/default-skin/filter_type.png \
-	data/default-skin/keybmode.png \
-	data/default-skin/knob.png \
-	data/default-skin/knob_boost.png \
-	data/default-skin/knob_boost_cut.png \
-	data/default-skin/knob_mix.png \
-	data/default-skin/knob_osc_octave.png \
-	data/default-skin/knob_osc_pitch.png \
-	data/default-skin/knob_spot.png \
-	data/default-skin/knob_width.png \
-	data/default-skin/layout.ini \
-	data/default-skin/osc_select.png \
-	data/default-skin/portamento_modes.png \
-	data/default-skin/slider_boost_1.png \
-	data/default-skin/slider_boost_2.png \
-	data/default-skin/waveform_lfo.png \
-	data/default-skin/waveform_pics.png
+	data/skins/default/background.png \
+	data/skins/default/button_simple.png \
+	data/skins/default/filter_slope.png \
+	data/skins/default/filter_type.png \
+	data/skins/default/keybmode.png \
+	data/skins/default/knob.png \
+	data/skins/default/knob_boost.png \
+	data/skins/default/knob_boost_cut.png \
+	data/skins/default/knob_mix.png \
+	data/skins/default/knob_osc_octave.png \
+	data/skins/default/knob_osc_pitch.png \
+	data/skins/default/knob_spot.png \
+	data/skins/default/knob_width.png \
+	data/skins/default/layout.ini \
+	data/skins/default/osc_select.png \
+	data/skins/default/portamento_modes.png \
+	data/skins/default/slider_boost_1.png \
+	data/skins/default/slider_boost_2.png \
+	data/skins/default/waveform_lfo.png \
+	data/skins/default/waveform_pics.png
 
 banksdir = $(pkgdatadir)/banks
 dist_banks_DATA = \
