@@ -215,11 +215,11 @@ msgstr "Clavier virtuel (vkeybd)"
 
 #: ../src/GUI/GUI.cc:359
 msgid "Virtual MIDI Piano Keyboard (VMPK)"
-msgstr "Clavier virtuel (VMPK)"
+msgstr "Clavier virtuel de piano MIDI (VMPK)"
 
 #: ../src/GUI/GUI.cc:364
 msgid "Virtual Keyboards"
-msgstr "Claviers virtuel"
+msgstr "Claviers virtuels"
 
 #: ../src/GUI/GUI.cc:390
 msgid "MIDI (ALSA) connections"
@@ -524,7 +524,7 @@ msgstr ""
 #: ../src/main.cc:322
 msgid "\t-t <file>   use <file> as a tuning file"
 msgstr ""
-"\t-t <nom_de_fichier>   utilise  <nom_de_fichier> en tant que fichier "
+"\t-t <nom_de_fichier>   utilise <nom_de_fichier> en tant que fichier "
 "d'accordage"
 
 #: ../src/main.cc:324
