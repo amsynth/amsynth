@@ -24,9 +24,8 @@
 
 #include "types.h"
 
-#include <vector>
-
 #ifdef __cplusplus
+#include <vector>
 extern "C" {
 #endif
 
@@ -38,14 +37,15 @@ extern int  amsynth_load_tuning_file(const char *filename);
 extern int  amsynth_get_preset_number();
 extern void amsynth_set_preset_number(int preset_no);
 
+extern void amsynth_midi_input(unsigned char status, unsigned char data1, unsigned char data2);
+
+#ifdef __cplusplus
+
 extern void amsynth_audio_callback(
         float *buffer_l, float *buffer_r, unsigned num_frames, int stride,
         const std::vector<amsynth_midi_event_t> &midi_in,
         std::vector<amsynth_midi_cc_t> &midi_out);
 
-extern void amsynth_midi_input(unsigned char status, unsigned char data1, unsigned char data2);
-
-#ifdef __cplusplus
 }
 #endif
 
