@@ -7,15 +7,24 @@ find_package(PkgConfig REQUIRED)
 
 project(amsynth)
 
+SET(EXTRA_COMPILE_OPTIONS)
+
 pkg_check_modules(ALSA REQUIRED alsa)
 pkg_check_modules(JACK REQUIRED jack)
 pkg_check_modules(GTKMM REQUIRED gtkmm-2.4)
+
+pkg_check_modules(LASH lash-1.0)
+if (LASH_FOUND)
+    SET(EXTRA_COMPILE_OPTIONS ${EXTRA_COMPILE_OPTIONS} -DWITH_LASH)
+endif (LASH_FOUND)
+
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/include
         ${ALSA_INCLUDE_DIRS}
         ${JACK_INCLUDE_DIRS}
         ${GTKMM_INCLUDE_DIRS}
+        ${LASH_INCLUDE_DIRS}
 )
 
 #
@@ -135,6 +144,7 @@ target_compile_options(amsynth
         ${ALSA_CFLAGS_OTHER}
         ${JACK_CFLAGS_OTHER}
         ${GTKMM_CFLAGS_OTHER}
+        ${EXTRA_COMPILE_OPTIONS}
         )
 
 target_link_libraries(amsynth
@@ -142,6 +152,7 @@ target_link_libraries(amsynth
         ${ALSA_LIBRARIES}
         ${JACK_LIBRARIES}
         ${GTKMM_LIBRARIES}
+        ${LASH_LIBRARIES}
         )
 
 #
