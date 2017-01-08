@@ -62,7 +62,7 @@ MidiController::HandleMidiData(const unsigned char* bytes, unsigned numBytes)
 		}
 		// now we have at least one data byte
 
-		if (config.midi_channel && ((int) channel != config.midi_channel-1)) break;
+		bool ignore = config.midi_channel && ((int) channel != config.midi_channel - 1);
 
 		switch (status & 0xf0)
 		{
@@ -73,7 +73,7 @@ MidiController::HandleMidiData(const unsigned char* bytes, unsigned numBytes)
 				data = byte;
 				break;
 			}
-			dispatch_note( channel, data, 0 );
+			if (!ignore) dispatch_note( channel, data, 0 );
 			data = 0xff;
 			break;
 	
@@ -82,7 +82,7 @@ MidiController::HandleMidiData(const unsigned char* bytes, unsigned numBytes)
 				data = byte;
 				break;
 			}
-			dispatch_note(channel, data, byte);
+				if (!ignore) dispatch_note(channel, data, byte);
 			data = 0xff;
 			break;
 	
@@ -99,12 +99,12 @@ MidiController::HandleMidiData(const unsigned char* bytes, unsigned numBytes)
 				data = byte;
 				break;
 			}
-			controller_change(data, byte);
+				if (!ignore) controller_change(data, byte);
 			data = 0xFF;
 			break;
 
 		case MIDI_STATUS_PROGRAM_CHANGE:
-			if (presetController->getCurrPresetNumber() != byte) {
+			if (!ignore && presetController->getCurrPresetNumber() != byte) {
 				if (_handler) _handler->HandleMidiAllSoundOff();
 				presetController->selectPreset((int) byte);
 			}
@@ -124,7 +124,7 @@ MidiController::HandleMidiData(const unsigned char* bytes, unsigned numBytes)
 			}
 			int bend; bend = (int) ((data & 0x7F) | ((byte & 0x7F) << 7));
 			float fbend; fbend = (float) (bend - 0x2000) / (float) (0x2000);
-			pitch_wheel_change(fbend);
+			if (!ignore) pitch_wheel_change(fbend);
 			data = 0xFF;
 			break;
 	
