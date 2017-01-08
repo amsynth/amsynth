@@ -2,7 +2,7 @@
 # Traduction française pour amsynth
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the amsynth package.
-# Olivier Humbert <trebmuh@tuxfamily.org>, 2016.
+# Olivier Humbert <trebmuh@tuxfamily.org>, 2016-2017.
 #
 msgid ""
 msgstr ""
@@ -117,9 +117,8 @@ msgid "New Instance"
 msgstr "Nouvelle instance"
 
 #: ../src/GUI/GUI.cc:223
-#, fuzzy
 msgid "_Open Bank..."
-msgstr "_Ouvrir une banque"
+msgstr "_Ouvrir une banque..."
 
 #. list_file.push_back (MenuElem("_Save Bank","<control>S", mem_fun(*this, &GUI::bank_save)));
 #: ../src/GUI/GUI.cc:225
@@ -127,14 +126,12 @@ msgid "_Save Bank As..."
 msgstr "_Sauvegarder une banque sous..."
 
 #: ../src/GUI/GUI.cc:227
-#, fuzzy
 msgid "Open Alternate Tuning File..."
-msgstr "Ouvrir un fichier d'accordage alternatif"
+msgstr "Ouvrir un fichier d'accordage alternatif..."
 
 #: ../src/GUI/GUI.cc:228
-#, fuzzy
 msgid "Open Alternate Keyboard Map..."
-msgstr "Ouvrir une carte de clavier alternative"
+msgstr "Ouvrir une carte de clavier alternative..."
 
 #: ../src/GUI/GUI.cc:229 ../src/GUI/GUI.cc:995
 msgid "Reset All Tuning Settings to Default"
@@ -154,9 +151,8 @@ msgid "_Paste"
 msgstr "Col_ler"
 
 #: ../src/GUI/GUI.cc:243
-#, fuzzy
 msgid "Rename..."
-msgstr "Renommer"
+msgstr "Renommer..."
 
 #: ../src/GUI/GUI.cc:244
 msgid "Clear"
@@ -175,14 +171,12 @@ msgid "Redo"
 msgstr "_Refaire"
 
 #: ../src/GUI/GUI.cc:250
-#, fuzzy
 msgid "Import Preset..."
-msgstr "Importer un pré-réglage"
+msgstr "Importer un pré-réglage..."
 
 #: ../src/GUI/GUI.cc:251
-#, fuzzy
 msgid "Export Preset..."
-msgstr "Exporter un pré-réglage"
+msgstr "Exporter un pré-réglage..."
 
 #: ../src/GUI/GUI.cc:270
 msgid "All"
@@ -241,14 +235,12 @@ msgid "About"
 msgstr "À propos"
 
 #: ../src/GUI/GUI.cc:423
-#, fuzzy
 msgid "Report a Bug"
-msgstr "Remonter un bogue..."
+msgstr "Remonter un bogue"
 
 #: ../src/GUI/GUI.cc:424
-#, fuzzy
 msgid "Online Documentation"
-msgstr "Documentation en ligne..."
+msgstr "Documentation en ligne"
 
 #: ../src/GUI/GUI.cc:433
 msgid "_File"
@@ -290,7 +282,6 @@ msgstr ""
 "Veuillez revoir la configuration et redémarrer"
 
 #: ../src/GUI/GUI.cc:529
-#, fuzzy
 msgid ""
 "amsynth could not initialise the selected MIDI device.\n"
 "\n"
@@ -325,13 +316,14 @@ msgid "Could not show link"
 msgstr "Ne peut pas montrer le lien"
 
 #: ../src/GUI/GUI.cc:641
-#, fuzzy
 msgid "Clear current preset?"
 msgstr "Effacer le pré-réglage actuel ?"
 
 #: ../src/GUI/GUI.cc:645
 msgid "Parameters will be set to default values and the name will be cleared"
 msgstr ""
+"Les paramètres seront réinitialisés aux valeurs par défaut et le nom sera "
+"effacé"
 
 #: ../src/GUI/GUI.cc:659
 msgid "Export Preset"
@@ -346,9 +338,8 @@ msgid "amsynth 1.x files"
 msgstr "fichiers amsynth 1.x files"
 
 #: ../src/GUI/GUI.cc:683
-#, fuzzy
 msgid "Select output WAV file"
-msgstr "Sélectionner le fichier WAV de sortie..."
+msgstr "Sélectionner le fichier WAV de sortie"
 
 #: ../src/GUI/GUI.cc:702
 msgid "capture status: RECORDING"
@@ -375,9 +366,8 @@ msgid "new.bank"
 msgstr "nouvelle.banque"
 
 #: ../src/GUI/GUI.cc:960
-#, fuzzy
 msgid "Open Scala (.scl) alternate tuning file"
-msgstr "Ouvrir un fichier d'accordage alternatif Scala (.scl)..."
+msgstr "Ouvrir un fichier d'accordage alternatif Scala (.scl)"
 
 #: ../src/GUI/GUI.cc:960
 msgid "Scala scale files"
@@ -396,9 +386,8 @@ msgstr ""
 "Assurez-vous que votre fichier possède le format correct et ré-essayez."
 
 #: ../src/GUI/GUI.cc:975
-#, fuzzy
 msgid "Open alternate keyboard map (Scala .kbm format)"
-msgstr "Ouvrir une carte de clavier alternative (format Scala .kbm)..."
+msgstr "Ouvrir une carte de clavier alternative (format Scala .kbm)"
 
 #: ../src/GUI/GUI.cc:975
 msgid "Scala keyboard map files"
@@ -525,17 +514,15 @@ msgstr "\t-v          affiche les informations de version"
 
 #: ../src/main.cc:319
 msgid "\t-x          run in headless mode (without GUI)"
-msgstr ""
+msgstr "\t-x          lancer en mode sans-interface-graphique"
 
 #: ../src/main.cc:321
-#, fuzzy
 msgid "\t-b <file>   use <file> as the bank to store presets"
 msgstr ""
 "\t-b <nom_de_fichier>   utilise <nom_de_fichier> en tant que banque pour "
 "sauvegarder les pré-réglages"
 
 #: ../src/main.cc:322
-#, fuzzy
 msgid "\t-t <file>   use <file> as a tuning file"
 msgstr ""
 "\t-t <nom_de_fichier>   utilise  <nom_de_fichier> en tant que fichier "
@@ -553,14 +540,12 @@ msgid "\t-r <int>    set the sampling rate to use"
 msgstr "\t-r <entier>    paramètre le taux d'échantillonnage à utiliser"
 
 #: ../src/main.cc:326
-#, fuzzy
 msgid "\t-m <string> set the MIDI driver to use [alsa/oss/auto(default)]"
 msgstr ""
-"\t-m <chaîne_de_caractères>\tparamètre le pilote MIDI à utiliser [alsa/oss/"
+"\t-m <chaîne_de_caractères> paramètre le pilote MIDI à utiliser [alsa/oss/"
 "auto(défaut)]"
 
 #: ../src/main.cc:327
-#, fuzzy
 msgid "\t-c <int>    set the MIDI channel to respond to (default=all)"
 msgstr "\t-c <entier>    paramètre le canal MIDI auquel répondre (défaut=tous)"
 
@@ -573,15 +558,16 @@ msgid "\t-n <name>   specify the JACK client name to use"
 msgstr "\t-n <nom>   spécifie le nom de client JACK à utiliser"
 
 #: ../src/main.cc:331
-#, fuzzy
 msgid "\t--jack_autoconnect[=<true|false>]"
-msgstr "\t--jack_autoconnect=<true|false>"
+msgstr "\t--jack_autoconnect[=<true|false>]"
 
 #: ../src/main.cc:332
 msgid ""
 "\t            automatically connect jack audio ports to hardware I/O ports. "
 "(Default: true)"
 msgstr ""
+"\t            connecter automatiquement les ports audio jack aux ports "
+"d'entrées/sorties matériels. (par défaut : true)"
 
 #: ../src/main.cc:398
 msgid "Fatal Error: open_audio() returned NULL.\n"
