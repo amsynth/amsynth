@@ -482,6 +482,9 @@ amsynth_timer_callback()
 void amsynth_midi_input(unsigned char status, unsigned char data1, unsigned char data2)
 {
 	unsigned char buffer[3] = { status, data1, data2 };
+	if (config.midi_channel > 1) {
+		buffer[0] |= ((config.midi_channel - 1) & 0x0f);
+	}
 	write(gui_midi_pipe[1], buffer, sizeof(buffer));
 }
 
