@@ -761,7 +761,7 @@ GUI::event_handler(const int e)
                               "version", version.c_str(),
                               "authors", authors,
                               "translator-credits", "Olivier Humbert - French\nGeorg Krause - German\nPeter Körner - German",
-                              "comments", _("Analogue Modelling SYNTHesizer"),
+                              "comments", _("Analog Modelling SYNTHesizer"),
                               "website", PACKAGE_URL,
                               "copyright", _("Copyright © 2002 - 2016 Nick Dowell and contributors"),
                               NULL);
