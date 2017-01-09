@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-04 22:01+0000\n"
+"POT-Creation-Date: 2017-01-09 21:25+0000\n"
 "PO-Revision-Date: 2017-01-08 23:08+0100\n"
 "Last-Translator: Olivier Humbert <trebmuh@tuxfamily.org>\n"
+"Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language-Team: \n"
 
 #: ../src/GUI/ConfigDialog.cpp:31
 msgid "amsynth configuration"
@@ -106,7 +106,7 @@ msgstr "fichier de sortie :"
 msgid "amsynth-out.wav"
 msgstr "amsynth-sortie.wav"
 
-#: ../src/GUI/GUI.cc:199 ../src/GUI/GUI.cc:712
+#: ../src/GUI/GUI.cc:199 ../src/GUI/GUI.cc:713
 msgid "capture status: STOPPED"
 msgstr "status de l'enregistrement : STOPPÉ"
 
@@ -132,7 +132,7 @@ msgstr "Ouvrir un fichier d'accordage alternatif..."
 msgid "Open Alternate Keyboard Map..."
 msgstr "Ouvrir une carte de clavier alternative..."
 
-#: ../src/GUI/GUI.cc:229 ../src/GUI/GUI.cc:995
+#: ../src/GUI/GUI.cc:229 ../src/GUI/GUI.cc:997
 msgid "Reset All Tuning Settings to Default"
 msgstr "Réinitialiser tous les paramètres d'accordage par défaut"
 
@@ -324,59 +324,60 @@ msgstr ""
 "Les paramètres seront réinitialisés aux valeurs par défaut et le nom sera "
 "effacé"
 
-#: ../src/GUI/GUI.cc:659
+#: ../src/GUI/GUI.cc:660
 msgid "Export Preset"
 msgstr "Exporter un pré-réglage"
 
-#: ../src/GUI/GUI.cc:668
+#: ../src/GUI/GUI.cc:669
 msgid "Import Preset"
 msgstr "Importer un pré-réglage"
 
-#: ../src/GUI/GUI.cc:668
+#: ../src/GUI/GUI.cc:669
 msgid "amsynth 1.x files"
 msgstr "fichiers amsynth 1.x files"
 
-#: ../src/GUI/GUI.cc:683
+#: ../src/GUI/GUI.cc:684
 msgid "Select output WAV file"
 msgstr "Sélectionner le fichier WAV de sortie"
 
-#: ../src/GUI/GUI.cc:702
+#: ../src/GUI/GUI.cc:703
 msgid "capture status: RECORDING"
 msgstr "status de l'enregistrement : EN TRAIN D'ENREGISTRER"
 
-#: ../src/GUI/GUI.cc:763
-msgid "Analogue Modelling SYNTHesizer"
+#: ../src/GUI/GUI.cc:764 ../data/amsynth.appdata.xml.in.h:1
+#, fuzzy
+msgid "Analog Modelling SYNTHesizer"
 msgstr "synthétiseur modelant de l'analogique"
 
-#: ../src/GUI/GUI.cc:765
+#: ../src/GUI/GUI.cc:766
 msgid "Copyright © 2002 - 2016 Nick Dowell and contributors"
 msgstr "Copyright © 2002 - 2016 Nick Dowell et contributeurs"
 
-#: ../src/GUI/GUI.cc:923
+#: ../src/GUI/GUI.cc:924
 msgid "Open Bank"
 msgstr "Ouvrir une banque"
 
-#: ../src/GUI/GUI.cc:935
+#: ../src/GUI/GUI.cc:936
 msgid "Save Bank"
 msgstr "Sauvegarder une banque"
 
-#: ../src/GUI/GUI.cc:943
+#: ../src/GUI/GUI.cc:945
 msgid "new.bank"
 msgstr "nouvelle.banque"
 
-#: ../src/GUI/GUI.cc:960
+#: ../src/GUI/GUI.cc:962
 msgid "Open Scala (.scl) alternate tuning file"
 msgstr "Ouvrir un fichier d'accordage alternatif Scala (.scl)"
 
-#: ../src/GUI/GUI.cc:960
+#: ../src/GUI/GUI.cc:962
 msgid "Scala scale files"
 msgstr "fichiers de gamme Scala"
 
-#: ../src/GUI/GUI.cc:964
+#: ../src/GUI/GUI.cc:966
 msgid "Failed to load new tuning."
 msgstr "Échec du chargement d'un nouvel accordage."
 
-#: ../src/GUI/GUI.cc:965
+#: ../src/GUI/GUI.cc:967
 msgid ""
 "Reading the tuning file failed for some reason. Make sure your file has the "
 "correct format and try again."
@@ -384,19 +385,19 @@ msgstr ""
 "La lecture du fichier d'accordage a échouée pour une raison ou une autre. "
 "Assurez-vous que votre fichier possède le format correct et ré-essayez."
 
-#: ../src/GUI/GUI.cc:975
+#: ../src/GUI/GUI.cc:977
 msgid "Open alternate keyboard map (Scala .kbm format)"
 msgstr "Ouvrir une carte de clavier alternative (format Scala .kbm)"
 
-#: ../src/GUI/GUI.cc:975
+#: ../src/GUI/GUI.cc:977
 msgid "Scala keyboard map files"
 msgstr "fichiers de carte de clavier Scala"
 
-#: ../src/GUI/GUI.cc:979
+#: ../src/GUI/GUI.cc:981
 msgid "Failed to load new keyboard map."
 msgstr "Échec du chargement d'une nouvelle carte de clavier."
 
-#: ../src/GUI/GUI.cc:980
+#: ../src/GUI/GUI.cc:982
 msgid ""
 "Reading the keyboard map file failed for some reason. Make sure your file "
 "has the correct format and try again."
@@ -404,7 +405,7 @@ msgstr ""
 "La lecture du fichier de carte de clavier a échouée pour une raison ou une "
 "autre.Assurez-vous que votre fichier possède le format correct et ré-essayez."
 
-#: ../src/GUI/GUI.cc:999
+#: ../src/GUI/GUI.cc:1001
 msgid "Discard the current scale and keyboard map?"
 msgstr "Abandonner la gamme et la carte du clavier actuelles ?"
 
@@ -444,123 +445,123 @@ msgstr "F"
 msgid "U"
 msgstr "U"
 
-#: ../src/main.cc:85
+#: ../src/main.cc:86
 msgid "Failed to set SCHED_FIFO\n"
 msgstr "Échec de paramètrage SCHED_FIFO\n"
 
-#: ../src/main.cc:104
+#: ../src/main.cc:105
 #, c-format
 msgid "error reading source file %s\n"
 msgstr "erreur de la lecture du fichier source %s\n"
 
-#: ../src/main.cc:109
+#: ../src/main.cc:110
 #, c-format
 msgid "error creating destination file %s\n"
 msgstr "erreur de la création du fichier de destination %s\n"
 
-#: ../src/main.cc:144
+#: ../src/main.cc:145
 #, c-format
 msgid "installing configuration file to %s\n"
 msgstr "installation du fichier de configuration dans %s\n"
 
-#: ../src/main.cc:149
+#: ../src/main.cc:150
 #, c-format
 msgid "installing default sound bank to %s\n"
 msgstr "installation de la banque de son par défaut dans %s\n"
 
-#: ../src/main.cc:209
+#: ../src/main.cc:210
 msgid "JACK init failed: "
 msgstr "échec de l'initialisation de JACK : "
 
-#: ../src/main.cc:235
+#: ../src/main.cc:236
 msgid "error: could not open ALSA MIDI interface"
 msgstr "erreur : n'a pas pu ouvrir l'interface MIDI ALSA"
 
-#: ../src/main.cc:242
+#: ../src/main.cc:243
 msgid "error: could not open OSS MIDI interface"
 msgstr "erreur : n'a pas pu ouvrir l'interface MIDI OSS"
 
-#: ../src/main.cc:251
+#: ../src/main.cc:252
 msgid "error: could not open any MIDI interface"
 msgstr "erreur : n'a pu ouvrir aucune interface MIDI"
 
-#: ../src/main.cc:311
+#: ../src/main.cc:314
 msgid "usage: "
 msgstr "utilisation : "
 
-#: ../src/main.cc:311
+#: ../src/main.cc:314
 msgid " [options]"
 msgstr " [options]"
 
-#: ../src/main.cc:313
+#: ../src/main.cc:316
 msgid ""
 "Any options given here override those in the config file ($HOME/.amSynthrc)"
 msgstr ""
 "Toute option donnée ici écrase celle du fichier de configuration ($HOME/."
 "amSynthrc)"
 
-#: ../src/main.cc:315
+#: ../src/main.cc:318
 msgid "OPTIONS:"
 msgstr "OPTIONS :"
 
-#: ../src/main.cc:317
+#: ../src/main.cc:320
 msgid "\t-h          show this usage message"
 msgstr "\t-h          affiche ce message d'aide"
 
-#: ../src/main.cc:318
+#: ../src/main.cc:321
 msgid "\t-v          show version information"
 msgstr "\t-v          affiche les informations de version"
 
-#: ../src/main.cc:319
+#: ../src/main.cc:322
 msgid "\t-x          run in headless mode (without GUI)"
 msgstr "\t-x          lancer en mode sans-interface-graphique"
 
-#: ../src/main.cc:321
+#: ../src/main.cc:324
 msgid "\t-b <file>   use <file> as the bank to store presets"
 msgstr ""
 "\t-b <nom_de_fichier>   utilise <nom_de_fichier> en tant que banque pour "
 "sauvegarder les pré-réglages"
 
-#: ../src/main.cc:322
+#: ../src/main.cc:325
 msgid "\t-t <file>   use <file> as a tuning file"
 msgstr ""
 "\t-t <nom_de_fichier>   utilise <nom_de_fichier> en tant que fichier "
 "d'accordage"
 
-#: ../src/main.cc:324
+#: ../src/main.cc:327
 msgid ""
 "\t-a <string> set the sound output driver to use [alsa/oss/auto(default)]"
 msgstr ""
 "\t-a <chaîne_de_caractères> paramètre le pilote de sortie son à utiliser "
 "[alsa/oss/auto(défaut)]"
 
-#: ../src/main.cc:325
+#: ../src/main.cc:328
 msgid "\t-r <int>    set the sampling rate to use"
 msgstr "\t-r <entier>    paramètre le taux d'échantillonnage à utiliser"
 
-#: ../src/main.cc:326
+#: ../src/main.cc:329
 msgid "\t-m <string> set the MIDI driver to use [alsa/oss/auto(default)]"
 msgstr ""
 "\t-m <chaîne_de_caractères> paramètre le pilote MIDI à utiliser [alsa/oss/"
 "auto(défaut)]"
 
-#: ../src/main.cc:327
+#: ../src/main.cc:330
 msgid "\t-c <int>    set the MIDI channel to respond to (default=all)"
 msgstr "\t-c <entier>    paramètre le canal MIDI auquel répondre (défaut=tous)"
 
-#: ../src/main.cc:328
+#: ../src/main.cc:331
 msgid "\t-p <int>    set the polyphony (maximum active voices)"
 msgstr "\t-p <entier>    paramètre la polyphonie (voix actives maximum)"
 
-#: ../src/main.cc:330
+#: ../src/main.cc:333
 msgid "\t-n <name>   specify the JACK client name to use"
 msgstr "\t-n <nom>   spécifie le nom de client JACK à utiliser"
 
-#: ../src/main.cc:331
+#: ../src/main.cc:334
 msgid "\t--jack_autoconnect[=<true|false>]"
 msgstr "\t--jack_autoconnect[=<true|false>]"
 
-#: ../src/main.cc:332
+#: ../src/main.cc:335
 msgid ""
 "\t            automatically connect jack audio ports to hardware I/O ports. "
 "(Default: true)"
@@ -568,36 +569,36 @@ msgstr ""
 "\t            connecter automatiquement les ports audio jack aux ports "
 "d'entrées/sorties matériels. (par défaut : true)"
 
-#: ../src/main.cc:398
+#: ../src/main.cc:409
 msgid "Fatal Error: open_audio() returned NULL.\n"
 msgstr "Erreur fatale : open_audio() a retourné NULL.\n"
 
-#: ../src/main.cc:446
+#: ../src/main.cc:457
 #, c-format
 msgid "amsynth running in headless mode, press ctrl-c to exit\n"
 msgstr ""
 "amsynth est lancé en mode sans-interface-graphique, pressez ctrl-c pour "
 "quitter\n"
 
-#: ../src/main.cc:451
+#: ../src/main.cc:462
 #, c-format
 msgid "shutting down...\n"
 msgstr "en train de quitter...\n"
 
-#: ../src/main.cc:458
+#: ../src/main.cc:469
 msgid " audio buffer underruns occurred\n"
 msgstr " décrochage audio du tampon audio est arrivé\n"
 
-#: ../src/main.cc:549
+#: ../src/main.cc:563
 msgid "error: could not load tuning file "
 msgstr "erreur : échec du chargement du fichier d'accordage "
 
-#: ../src/main.cc:611
+#: ../src/main.cc:625
 #, c-format
 msgid "user time: %f\t\tsystem time: %f\n"
 msgstr "temps utilisateur : %f\t\ttemps système : %f\n"
 
-#: ../src/main.cc:612
+#: ../src/main.cc:626
 #, c-format
 msgid "performance index: %f\n"
 msgstr "index de performance : %f\n"
@@ -605,6 +606,70 @@ msgstr "index de performance : %f\n"
 #: ../src/PresetController.cc:369
 msgid "User bank"
 msgstr "Banque utilisateur"
+
+#: ../data/amsynth.appdata.xml.in.h:2
+msgid "Analog modelling (a.k.a virtual analog) software synthesizer"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:3
+msgid ""
+"Amsynth is an analog modelling (a.k.a virtual analog) software synthesizer. "
+"It mimics the operation of early analog subtractive synthesizers with "
+"classic oscillator waveforms, envelopes, filter, modulation and effects. The "
+"aim is to make it easy to create and modify sounds."
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:4
+msgid "Features:"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:5
+msgid "Dual oscillators (sine / saw / square / noise) with hard sync"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:6
+msgid "12/24 dB/oct resonant filter (low-pass / high-pass / band-pass / notch)"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:7
+msgid "Mono / poly / legato keyboard modes"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:8
+msgid "Dual ADSR envelope generators (filter &amp; amplitude)"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:9
+msgid "LFO which can modulate the oscillators, filter, and amplitude"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:10
+msgid "Distortion and reverb"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:11
+msgid "Hundreds of presets"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:12
+msgid "There are currently several different ways to run amsynth:"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:13
+msgid "Stand-alone application using JACK, ALSA or OSS"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:14
+msgid "DSSI plug-in"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:15
+msgid "LV2 plug-in"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:16
+msgid "VST plug-in"
+msgstr ""
 
 #~ msgid "\t-d          show some debugging output"
 #~ msgstr "\t-d          affiche des informations de débogage"
