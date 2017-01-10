@@ -349,6 +349,7 @@ GUI::create_menus	( )
 	Menu *menu_utils_keyboards = manage (new Menu());
 	MenuList& list_utils_keyboards = menu_utils_keyboards->items ();
 
+	// @translators: This is an application name and its abbreviation
 	menu_item = manage (new MenuItem(_("Virtual Keyboard (vkeybd)")));
 	menu_item->signal_activate().connect(sigc::bind(mem_fun(*this, &GUI::event_handler),(int)evVkeybd));
 	// vkeybd must exist, and we must be using ALSA MIDI
@@ -356,6 +357,7 @@ GUI::create_menus	( )
 		menu_item->set_sensitive( false );
 	list_utils_keyboards.push_back (*menu_item);
 
+	// @translators: This is an application name and its abbreviation
 	menu_item = manage (new MenuItem(_("Virtual MIDI Piano Keyboard (VMPK)")));
 	menu_item->signal_activate().connect(sigc::bind(mem_fun(*this, &GUI::command_run),"vmpk"));
 	if (command_exists("vmpk") != 0) menu_item->set_sensitive( false );
