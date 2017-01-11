@@ -38,6 +38,7 @@ Makefile.in
 missing
 po/*.gmo
 po/*.header
+po/.intltool-merge-cache
 po/boldquot.sed
 po/insert-header.sin
 po/Makefile.in
