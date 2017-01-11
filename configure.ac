@@ -22,6 +22,7 @@ AC_COPYRIGHT([Copyright (C) 2001-2015 Nick Dowell])
 AC_INIT([amsynth], [git], [https://github.com/amsynth/amsynth/issues], [amsynth], [https://amsynth.github.io])
 AC_CONFIG_SRCDIR([src/main.cc])
 AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIRS([m4])
 AM_INIT_AUTOMAKE([subdir-objects])
 AM_SILENT_RULES([yes])
 
@@ -44,7 +45,7 @@ GETTEXT_PACKAGE=amsynth
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"],
                    [The domain to use with gettext])
-AM_GNU_GETTEXT_VERSION([0.18.1])
+AM_GNU_GETTEXT_VERSION([0.19])
 AM_GNU_GETTEXT([external])
 
 IT_PROG_INTLTOOL
@@ -143,11 +144,14 @@ AM_CONDITIONAL([ENABLE_REALTIME], [test x$enable_realtime != x])
 
 AM_CONDITIONAL([DARWIN], [test "$(uname -s)" = "Darwin"])
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
     Makefile
     data/amsynth.desktop
     po/Makefile.in
 ])
+
+AC_OUTPUT
+
 
 dnl
 dnl
