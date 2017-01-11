@@ -292,6 +292,8 @@ appdata_DATA = $(appdata_in_files:.appdata.xml.in=.appdata.xml)
 
 EXTRA_DIST += $(appdata_in_files)
 
+DISTCLEANFILES = $(appdata_DATA)
+
 skinsdefaultdir="${pkgdatadir}/skins/default"
 dist_skinsdefault_DATA = \
 	data/skins/default/background.png \
