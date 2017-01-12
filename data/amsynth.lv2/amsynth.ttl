@@ -174,7 +174,7 @@
         lv2:maximum 4.000000 ;
         lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "sine"] ;
         lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "square / pulse" ] ;
-        lv2:scalePoint [ rdf:value 2.0 ; rdfs:label "saw / triangle" ] ;
+        lv2:scalePoint [ rdf:value 2.0 ; rdfs:label "triangle / saw" ] ;
         lv2:scalePoint [ rdf:value 3.0 ; rdfs:label "white noise" ] ;
         lv2:scalePoint [ rdf:value 4.0 ; rdfs:label "noise + sample & hold" ] ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_osc1> ;
@@ -286,7 +286,7 @@
         lv2:maximum 4.000000 ;
         lv2:scalePoint [ rdf:value 0.0 ; rdfs:label "sine"] ;
         lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "square / pulse" ] ;
-        lv2:scalePoint [ rdf:value 2.0 ; rdfs:label "saw / triangle" ] ;
+        lv2:scalePoint [ rdf:value 2.0 ; rdfs:label "triangle / saw" ] ;
         lv2:scalePoint [ rdf:value 3.0 ; rdfs:label "white noise" ] ;
         lv2:scalePoint [ rdf:value 4.0 ; rdfs:label "noise + sample & hold" ] ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_osc2> ;
