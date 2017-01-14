@@ -1,11 +1,11 @@
 % AMSYNTH(1) amsynth VERSION | Commandes utilisateur
 %
-% Septembre 2016
+% Janvier 2017
 
 NOM
 ===
 
-amsynth - un synthétiseur logiciel à deux oscillateurs.
+amsynth - un synthétiseur logiciel soustractif à deux oscillateurs
 
 SYNOPSIS
 ========
@@ -15,23 +15,16 @@ SYNOPSIS
 DESCRIPTION
 ===========
 
-amsynth VERSION \[Janv 19 2016\]  \[http://amsynth.github.io/\].
-Copyright 2001-2017 Nick Dowell <nick@nickdowell.com>.
-
 amsynth est un synthétiseur logiciel facile à utiliser avec une topologie de synthétiseur soustractif classique.
-
-amsynth est fourni SANS AUCUNE GARANTIE.
-C'est un logiciel libre, et vous êtes encouragé à le redistribuer sous certaines conditions.
-Voir le fichier COPYING pour les détails.
 
 OPTIONS
 =======
 
-Toute option donnée ici écrase celle du fichier de configuration (\$HOME/.amSynthrc).
+Les options suivantes écrase celle du fichier de configuration (\$HOME/.amSynthrc).
 
 `-h`
 
-:   affiche un message d'aide (en anglais)
+:   affiche un message d'aide
 
 `-v`
 
@@ -61,7 +54,7 @@ Toute option donnée ici écrase celle du fichier de configuration (\$HOME/.amSy
 
 :   paramètre le pilote MIDI à utiliser \[alsa/oss/auto(défaut)\]
 
-`-c` \<chaîne\_de\_caractères\>
+`-c` \<entier\>
 
 :   paramètre le canal MIDI auquel répondre (défaut=tous)
 
@@ -80,22 +73,28 @@ Toute option donnée ici écrase celle du fichier de configuration (\$HOME/.amSy
 FICHIERS
 ========
 
-**\$HOME/.amSynthrc**
+`$HOME/.amSynthrc`
 
-Configuration pour amsynth.
+:   Configuration pour amsynth.
 
-**\$HOME/.amsynth/\***
+`$HOME/.amsynth/*`
 
-Banques et autres.
+:   Banques et autres.
 
-**\$HOME/.amSynth.presets**
+`$HOME/.amSynth.presets`
 
-Pré-réglages.
+:   Pré-réglages.
 
-ENVIRONEMENT
-============
+ENVIRONNEMENT
+=============
 
-nothing
+`AMSYNTH_NO_GUI`
+
+:   If AMSYNTH\_NO\_GUI is set, amsynth is started in headless mode (without GUI).
+
+`AMSYNTH_SKIN`
+
+:   Specifies the directory from which amsynth should load its skin.
 
 BOGUES & DEMANDE DE FONCTIONNALITÉS
 ===================================
@@ -107,7 +106,4 @@ AUTEURS
 
 Nick Dowell et contributeurs. Voir la liste complète dans le dialogue d'amsynth : "Aide" -> "À propos".
 
-DIVERS
-======
-
-Cette page de manuel a été écrite par Olivier Humbert <trebmuh@tuxfamily.org> le 06 septembre 2016 en tant que partie du projet LibraZiK (et peut être utilisé par d'autres).
+La version initiale de cette page de manuel a été écrite par Olivier Humbert <trebmuh@tuxfamily.org> le 06 septembre 2016 en tant que partie du projet LibraZiK (et peut être utilisé par d'autres).

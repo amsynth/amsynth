@@ -1,11 +1,11 @@
 % AMSYNTH(1) amsynth VERSION | User Commands
 %
-% September 2016
+% January 2017
 
 NAME
 ====
 
-amsynth - a two oscillators software synthesizer.
+amsynth - a two oscillator subtractive software synthesizer
 
 SYNOPSIS
 ========
@@ -15,19 +15,12 @@ SYNOPSIS
 DESCRIPTION
 ===========
 
-amsynth VERSION \[Jan 19 2016\]  \[http://amsynth.github.io/\].
-Copyright 2001-2017 Nick Dowell <nick@nickdowell.com>.
-
 amsynth is an easy-to-use software synth with a classic subtractive synthesizer topology.
-
-amsynth comes with ABSOLUTELY NO WARRANTY.
-This is free software, and you are welcome to redistribute it
-under certain conditions. See the file COPYING for details.
 
 OPTIONS
 =======
 
-Any options given here override those in the config file (\$HOME/.amSynthrc).
+The following options override those in the config file (\$HOME/.amSynthrc).
 
 `-h`
 
@@ -41,13 +34,13 @@ Any options given here override those in the config file (\$HOME/.amSynthrc).
 
 :   run in headless mode (without GUI)
 
-`-b` \<filename\>
+`-b` \<file\>
 
-:   use \<filename\> as the bank to store presets
+:   use \<file\> as the bank to store presets
 
-`-t` \<filename\>
+`-t` \<file\>
 
-:   use \<filename\> as a tuning file
+:   use \<file\> as a tuning file
 
 `-a` \<string\>
 
@@ -80,34 +73,37 @@ Any options given here override those in the config file (\$HOME/.amSynthrc).
 FILES
 =====
 
-**\$HOME/.amSynthrc**
+`$HOME/.amSynthrc`
 
-Configuration for amsynth.
+:   Configuration for amsynth.
 
-**\$HOME/.amsynth/\***
+`$HOME/.amsynth/*`
 
-Banks and others.
+:   Banks and others.
 
-**\$HOME/.amSynth.presets**
+`$HOME/.amSynth.presets`
 
-Presets.
+:   Presets.
 
 ENVIRONMENT
 ===========
 
-nothing
+`AMSYNTH_NO_GUI`
 
-BUGS & FEATURES REQUEST
+:   If AMSYNTH\_NO\_GUI is set, amsynth is started in headless mode (without GUI).
+
+`AMSYNTH_SKIN`
+
+:   Specifies the directory from which amsynth should load its skin.
+
+BUGS & FEATURE REQUESTS
 =======================
 
-If you find any bug or if you would like to propose a new feature, please report it to https://github.com/amsynth/amsynth/issues .
+If you find a bug or if you would like to propose a new feature, please report it at https://github.com/amsynth/amsynth/issues .
 
 AUTHORS
 =======
 
-Nick Dowell and contributors. See complete list at amsynth's "Help" -> "About" Dialog.
+Nick Dowell and contributors. See complete list in amsynth's "Help" -> "About" dialog.
 
-MISC
-====
-
-This manual page was written by Olivier Humbert <trebmuh@tuxfamily.org> on September the 06 2016 as a part of the LibraZiK project (and can be used by others).
+The initial version of this manual page was written by Olivier Humbert <trebmuh@tuxfamily.org> on September 06, 2016 as a part of the LibraZiK project (and can be used by others).
