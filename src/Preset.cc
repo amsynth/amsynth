@@ -41,7 +41,7 @@ Parameter TimeParameter (const std::string name, Param id)
 }
 
 const char *osc_waveform_names[] = {
-	"sine", "square / pulse", "saw / triangle", "white noise", "noise + sample & hold", NULL
+	"sine", "square / pulse", "triangle / saw", "white noise", "noise + sample & hold", NULL
 };
 
 const char *lfo_waveform_names[] = {
