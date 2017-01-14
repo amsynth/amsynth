@@ -1,35 +1,54 @@
 cmake_minimum_required(VERSION 3.0)
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_VERBOSE_MAKEFILE true)
+#set(CMAKE_VERBOSE_MAKEFILE true)
 
 find_package(PkgConfig REQUIRED)
 
 project(amsynth)
 
-SET(EXTRA_COMPILE_OPTIONS)
 SET(CMAKE_POSITION_INDEPENDENT_CODE True)
 
-pkg_check_modules(ALSA REQUIRED alsa)
-pkg_check_modules(JACK REQUIRED jack)
-pkg_check_modules(GTKMM REQUIRED gtkmm-2.4)
+include_directories(${PROJECT_SOURCE_DIR}/include)
+
+add_compile_options(
+        -DVERSION="dev"
+        -DPACKAGE="amsynth"
+        -DPACKAGE_NAME="amsynth"
+        -DPACKAGE_TARNAME="amsynth"
+        -DPACKAGE_STRING="amsynth dev"
+        -DPACKAGE_URL="https://amsynth.github.io"
+        -DPACKAGE_BUGREPORT="https://www.github.com/amsynth/amsynth/issues"
+        -DPKGDATADIR="${PROJECT_SOURCE_DIR}/data"
+)
+
+add_compile_options(
+        -DENABLE_NLS
+        -DGETTEXT_PACKAGE="amsynth"
+        -DPACKAGE_LOCALEDIR="/usr/local/share/locale"
+)
+
+pkg_check_modules(ALSA alsa)
+if (ALSA_FOUND)
+    add_compile_options(-DWITH_ALSA)
+    include_directories(${ALSA_INCLUDE_DIRS})
+endif (ALSA_FOUND)
+
+pkg_check_modules(JACK jack)
+if (JACK_FOUND)
+    add_compile_options(-DWITH_JACK -DHAVE_JACK_MIDIPORT_H -DHAVE_JACK_SESSION_H)
+    include_directories(${JACK_INCLUDE_DIRS})
+endif (JACK_FOUND)
+
+pkg_check_modules(GTKMM gtkmm-2.4)
+add_compile_options(-DWITH_GUI)
+include_directories(${GTKMM_INCLUDE_DIRS})
 
 pkg_check_modules(LASH lash-1.0)
 if (LASH_FOUND)
-    SET(EXTRA_COMPILE_OPTIONS ${EXTRA_COMPILE_OPTIONS} -DWITH_LASH)
+    add_compile_options(-DWITH_LASH)
+    include_directories(${LASH_INCLUDE_DIRS})
 endif (LASH_FOUND)
-
-#
-#
-#
-
-include_directories(
-        ${PROJECT_SOURCE_DIR}/include
-        ${ALSA_INCLUDE_DIRS}
-        ${JACK_INCLUDE_DIRS}
-        ${GTKMM_INCLUDE_DIRS}
-        ${LASH_INCLUDE_DIRS}
-)
 
 #
 #
@@ -136,34 +155,6 @@ add_executable(amsynth
         src/main.h
         )
 
-target_compile_options(amsynth
-        PUBLIC
-
-        -DVERSION="dev"
-        -DPACKAGE="amsynth"
-        -DPACKAGE_NAME="amsynth"
-        -DPACKAGE_TARNAME="amsynth"
-        -DPACKAGE_STRING="amsynth dev"
-        -DPACKAGE_URL="https://amsynth.github.io"
-        -DPACKAGE_BUGREPORT="https://www.github.com/amsynth/amsynth/issues"
-        -DPKGDATADIR="${PROJECT_SOURCE_DIR}/data"
-
-        -DENABLE_NLS
-        -DGETTEXT_PACKAGE="amsynth"
-        -DPACKAGE_LOCALEDIR="/usr/local/share/locale"
-
-        -DWITH_GUI
-        -DWITH_ALSA
-        -DWITH_JACK
-        -DHAVE_JACK_MIDIPORT_H
-        -DHAVE_JACK_SESSION_H
-
-        ${ALSA_CFLAGS_OTHER}
-        ${JACK_CFLAGS_OTHER}
-        ${GTKMM_CFLAGS_OTHER}
-        ${EXTRA_COMPILE_OPTIONS}
-        )
-
 target_link_libraries(amsynth
         pthread
         amsynth_core
@@ -178,14 +169,40 @@ target_link_libraries(amsynth
 #
 
 add_library(amsynth_dssi MODULE src/dssi.cpp)
+set_target_properties(amsynth_dssi PROPERTIES PREFIX "")
 target_link_libraries(amsynth_dssi amsynth_core)
 
+
 add_library(amsynth_lv2 MODULE src/amsynth_lv2.cpp)
+set_target_properties(amsynth_lv2 PROPERTIES PREFIX "")
 target_link_libraries(amsynth_lv2 amsynth_core)
+
+
+add_library(amsynth_lv2_gtk MODULE
+        src/GUI/bitmap_button.c
+        src/GUI/bitmap_button.h
+        src/GUI/bitmap_knob.c
+        src/GUI/bitmap_knob.h
+        src/GUI/bitmap_popup.c
+        src/GUI/bitmap_popup.h
+        src/GUI/controller_menu.cpp
+        src/GUI/controller_menu.h
+        src/GUI/controllers.h
+        src/GUI/editor_pane.c
+        src/GUI/editor_pane.h
+        src/GUI/presets_menu.cpp
+        src/GUI/presets_menu.h
+        src/amsynth_lv2_ui_gtk.c
+        )
+set_target_properties(amsynth_lv2_gtk PROPERTIES PREFIX "")
+target_link_libraries(amsynth_lv2_gtk amsynth_core ${GTKMM_LIBRARIES})
+
 
 add_library(amsynth_vst MODULE src/amsynth_vst.cpp)
 target_compile_options(amsynth_vst PUBLIC -DWITH_GUI)
-target_link_libraries(amsynth_vst amsynth_core)
+set_target_properties(amsynth_vst PROPERTIES PREFIX "")
+target_link_libraries(amsynth_vst amsynth_core ${GTKMM_LIBRARIES})
+
 
 add_executable(amsynth_tests src/tests.cpp)
 target_link_libraries(amsynth_tests amsynth_core)
