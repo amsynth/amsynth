@@ -113,12 +113,14 @@ void bitmap_popup_set_strings (GtkWidget *widget, const gchar **strings)
 	gtk_menu_attach_to_widget (GTK_MENU (self->menu), widget, NULL);
 	
 	gint i;
-	const gint min = gtk_adjustment_get_lower (self->adjustment);
-	const gint max = gtk_adjustment_get_upper (self->adjustment);
+	GSList *group = NULL;
+	const gint min = (gint)gtk_adjustment_get_lower (self->adjustment);
+	const gint max = (gint)gtk_adjustment_get_upper (self->adjustment);
 	for (i = min; i <= max; i++)
 	{
 		gchar *label = g_strstrip (g_strdup(strings[i - min]));
-		GtkWidget *menu_item = gtk_menu_item_new_with_label (label);
+		GtkWidget *menu_item = gtk_radio_menu_item_new_with_label (group, label);
+		group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (menu_item));
 		gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
 			(GtkSignalFunc) bitmap_popup_menuitem_activated,
 			(gpointer) self );
@@ -172,6 +174,17 @@ gboolean
 bitmap_popup_button_release ( GtkWidget *widget, GdkEventButton *event )
 {
 	bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
+	gint min = (gint)gtk_adjustment_get_lower (self->adjustment);
+	gint max = (gint)gtk_adjustment_get_upper (self->adjustment);
+	gint val = (gint)gtk_adjustment_get_value (self->adjustment);
+	gint i; for (i = min; i <= max; i++) {
+		if (i == val) {
+			GList *items = gtk_container_get_children (GTK_CONTAINER (self->menu));
+			GtkWidget *menu_item = g_list_nth_data (items, (guint) (i - min));
+			gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), TRUE);
+			break;
+		}
+	}
 	g_signal_emit_by_name(self->adjustment, "start_atomic_value_change");
 	gtk_menu_popup (GTK_MENU (self->menu), NULL, NULL, NULL, NULL, event->button, event->time);
 	return TRUE;
