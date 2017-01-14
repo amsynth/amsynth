@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-01-14 09:08+0000\n"
-"PO-Revision-Date: 2017-01-08 23:08+0100\n"
+"PO-Revision-Date: 2017-01-14 17:42+0100\n"
 "Last-Translator: Olivier Humbert <trebmuh@tuxfamily.org>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -18,13 +18,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../data/amsynth.appdata.xml.in.h:1 ../src/GUI/GUI.cc:766
-#, fuzzy
 msgid "Analog Modelling SYNTHesizer"
-msgstr "synthétiseur modelant de l'analogique"
+msgstr "Synthétiseur modelant de l'analogique"
 
 #: ../data/amsynth.appdata.xml.in.h:2
 msgid "Analog modelling (a.k.a virtual analog) software synthesizer"
-msgstr ""
+msgstr "Synthétiseur logiciel (analogique virtuel) modelant de l'analogique"
 
 #: ../data/amsynth.appdata.xml.in.h:3
 msgid ""
@@ -33,58 +32,67 @@ msgid ""
 "classic oscillator waveforms, envelopes, filter, modulation and effects. The "
 "aim is to make it easy to create and modify sounds."
 msgstr ""
+"Amsynth est un synthétiseur logiciel (analogique virtuel) modelant de "
+"l'analogique. Il imite les opérations des synthétiseurs soustractifs "
+"analogiques des premiers jours avec des formes d'onde d'oscillateur "
+"classique, des enveloppes, un filtre, une modulation, et des effets. Le but "
+"est de rendre facile la création et la modification des sons."
 
 #: ../data/amsynth.appdata.xml.in.h:4
 msgid "Features:"
-msgstr ""
+msgstr "Fonctionnalités :"
 
 #: ../data/amsynth.appdata.xml.in.h:5
 msgid "Dual oscillators (sine / saw / square / noise) with hard sync"
 msgstr ""
+"Oscillateurs double (sinusoïde / dent-de-scie / carré / bruit) avec une "
+"synchronisation dure"
 
 #: ../data/amsynth.appdata.xml.in.h:6
 msgid "12/24 dB/oct resonant filter (low-pass / high-pass / band-pass / notch)"
 msgstr ""
+"filtre résonnant 12/24 dB/oct (passe-bas / passe-haut / passe-bande / à "
+"encoche)"
 
 #: ../data/amsynth.appdata.xml.in.h:7
 msgid "Mono / poly / legato keyboard modes"
-msgstr ""
+msgstr "modes de clavier mono / poly / legato"
 
 #: ../data/amsynth.appdata.xml.in.h:8
 msgid "Dual ADSR envelope generators (filter &amp; amplitude)"
-msgstr ""
+msgstr "Générateurs d'enveloppe ADSR double (filtre &amp; amplitude)"
 
 #: ../data/amsynth.appdata.xml.in.h:9
 msgid "LFO which can modulate the oscillators, filter, and amplitude"
-msgstr ""
+msgstr "LFO qui peut moduler les oscillateurs, le filtre et l'amplitude"
 
 #: ../data/amsynth.appdata.xml.in.h:10
 msgid "Distortion and reverb"
-msgstr ""
+msgstr "Distorsion et réverbération"
 
 #: ../data/amsynth.appdata.xml.in.h:11
 msgid "Hundreds of presets"
-msgstr ""
+msgstr "Centaines de pré-réglages"
 
 #: ../data/amsynth.appdata.xml.in.h:12
 msgid "There are currently several different ways to run amsynth:"
-msgstr ""
+msgstr "Il y a actuellement plusieurs manières de lancer amsynth :"
 
 #: ../data/amsynth.appdata.xml.in.h:13
 msgid "Stand-alone application using JACK, ALSA or OSS"
-msgstr ""
+msgstr "Application autonome utilisant JACK, ALSA, ou OSS"
 
 #: ../data/amsynth.appdata.xml.in.h:14
 msgid "DSSI plug-in"
-msgstr ""
+msgstr "greffon DSSI"
 
 #: ../data/amsynth.appdata.xml.in.h:15
 msgid "LV2 plug-in"
-msgstr ""
+msgstr "greffon LV2"
 
 #: ../data/amsynth.appdata.xml.in.h:16
 msgid "VST plug-in"
-msgstr ""
+msgstr "greffon VST"
 
 #: ../src/GUI/ConfigDialog.cpp:31
 msgid "amsynth configuration"
@@ -662,99 +670,99 @@ msgstr "index de performance : %f\n"
 
 #: ../src/Preset.cc:322 ../src/Preset.cc:332
 msgid "sine"
-msgstr ""
+msgstr "sinusoïde"
 
 #: ../src/Preset.cc:323
 msgid "square / pulse"
-msgstr ""
+msgstr "carré / pulsation"
 
 #: ../src/Preset.cc:324
 msgid "triangle / saw"
-msgstr ""
+msgstr "triangle / dent-de-scie"
 
 #: ../src/Preset.cc:325
 msgid "white noise"
-msgstr ""
+msgstr "bruit blanc"
 
 #: ../src/Preset.cc:326 ../src/Preset.cc:336
 msgid "noise + sample & hold"
-msgstr ""
+msgstr "bruit + échantillon & maintien"
 
 #: ../src/Preset.cc:333
 msgid "square"
-msgstr ""
+msgstr "carré"
 
 #: ../src/Preset.cc:334
 msgid "triangle"
-msgstr ""
+msgstr "triangle"
 
 #: ../src/Preset.cc:335
 msgid "noise"
-msgstr ""
+msgstr "bruit"
 
 #: ../src/Preset.cc:337
 msgid "sawtooth (up)"
-msgstr ""
+msgstr "dent-de-scie (vers le haut)"
 
 #: ../src/Preset.cc:338
 msgid "sawtooth (down)"
-msgstr ""
+msgstr "dent-de-scie (vers le bas)"
 
 #: ../src/Preset.cc:344
 msgid "poly"
-msgstr ""
+msgstr "poly"
 
 #: ../src/Preset.cc:345
 msgid "mono"
-msgstr ""
+msgstr "mono"
 
 #: ../src/Preset.cc:346 ../src/Preset.cc:378
 msgid "legato"
-msgstr ""
+msgstr "legato"
 
 #: ../src/Preset.cc:352
 msgid "low pass"
-msgstr ""
+msgstr "passe-bas"
 
 #: ../src/Preset.cc:353
 msgid "high pass"
-msgstr ""
+msgstr "passe-haut"
 
 #: ../src/Preset.cc:354
 msgid "band pass"
-msgstr ""
+msgstr "passe-bande"
 
 #: ../src/Preset.cc:355
 msgid "notch"
-msgstr ""
+msgstr "à encoche"
 
 #: ../src/Preset.cc:356
 msgid "bypass"
-msgstr ""
+msgstr "court-circuit"
 
 #: ../src/Preset.cc:362
 msgid "12 dB / octave"
-msgstr ""
+msgstr "12 dB / octave"
 
 #: ../src/Preset.cc:363
 msgid "24 dB / octave"
-msgstr ""
+msgstr "24 dB / octave"
 
 #: ../src/Preset.cc:369
 msgid "osc 1+2"
-msgstr ""
+msgstr "osc 1+2"
 
 #: ../src/Preset.cc:370
 msgid "osc 1"
-msgstr ""
+msgstr "osc 1"
 
 #: ../src/Preset.cc:371
 msgid "osc 2"
-msgstr ""
+msgstr "osc 2"
 
 #: ../src/Preset.cc:377
 msgid "always"
-msgstr ""
+msgstr "toujours"
 
 #: ../src/PresetController.cc:369
 msgid "User bank"
