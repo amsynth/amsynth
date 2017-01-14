@@ -36,7 +36,6 @@ Parameter::Parameter	(std::string name, Param id, float value, float min, float 
 ,	_controlValue(NAN)
 ,	_base		(base)
 ,	_offset		(offset)
-,	_valueStrings(NULL)
 {
 	assert(min < max);
 	setValue (value);

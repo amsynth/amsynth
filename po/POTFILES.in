@@ -1,3 +1,4 @@
+data/amsynth.appdata.xml.in
 src/GUI/ConfigDialog.cpp
 src/GUI/controller_menu.cpp
 src/GUI/GUI.cc
@@ -6,5 +7,5 @@ src/GUI/PresetControllerView.cc
 src/GUI/PresetControllerView.cc
 src/GUI/presets_menu.cpp
 src/main.cc
+src/Preset.cc
 src/PresetController.cc
-data/amsynth.appdata.xml.in

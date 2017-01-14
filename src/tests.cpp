@@ -19,17 +19,20 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cassert>
-#include <iostream>
-
+#include "controls.h"
 #include "midi.h"
 #include "MidiController.h"
 #include "Synthesizer.h"
+#include "VoiceBoard/Oscillator.h"
+#include "VoiceBoard/LowPassFilter.h"
 
-static float audioBuffer[64];
+#include <cassert>
+#include <iostream>
 
-void testMidiOutput()
-{
+
+void testMidiOutput()  {
+    static float audioBuffer[64];
+
     Synthesizer *synth = new Synthesizer();
     synth->setSampleRate(44100);
     
@@ -83,9 +86,25 @@ void testPresetIgnoredParameters() {
 	assert(!basePreset.isEqual(newPreset));
 }
 
-int main(int argc, const char * argv[])
-{
+size_t count(const char **strings) {
+    size_t count;
+    for (count = 0; strings[count]; count ++);
+    return count;
+}
+
+void testPresetValueStrings() {
+    assert(count(parameter_get_value_strings(kAmsynthParameter_Oscillator1Waveform)) == Oscillator::Waveform_Random + 1);
+    assert(count(parameter_get_value_strings(kAmsynthParameter_Oscillator2Waveform)) == Oscillator::Waveform_Random + 1);
+    assert(count(parameter_get_value_strings(kAmsynthParameter_KeyboardMode)) == KeyboardModeLegato + 1);
+    assert(count(parameter_get_value_strings(kAmsynthParameter_FilterType)) == SynthFilter::FilterTypeCount);
+    assert(count(parameter_get_value_strings(kAmsynthParameter_FilterSlope)) == SynthFilter::FilterSlope12 + 2);
+    assert(count(parameter_get_value_strings(kAmsynthParameter_LFOOscillatorSelect)) == 3);
+    assert(count(parameter_get_value_strings(kAmsynthParameter_PortamentoMode)) == PortamentoModeLegato + 1);
+}
+
+int main(int argc, const char * argv[])  {
     testMidiOutput();
     testPresetIgnoredParameters();
+    testPresetValueStrings();
     return 0;
 }

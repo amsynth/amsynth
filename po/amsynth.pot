@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-09 21:25+0000\n"
+"POT-Creation-Date: 2017-01-14 09:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,74 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: ../data/amsynth.appdata.xml.in.h:1 ../src/GUI/GUI.cc:766
+msgid "Analog Modelling SYNTHesizer"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:2
+msgid "Analog modelling (a.k.a virtual analog) software synthesizer"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:3
+msgid ""
+"Amsynth is an analog modelling (a.k.a virtual analog) software synthesizer. "
+"It mimics the operation of early analog subtractive synthesizers with "
+"classic oscillator waveforms, envelopes, filter, modulation and effects. The "
+"aim is to make it easy to create and modify sounds."
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:4
+msgid "Features:"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:5
+msgid "Dual oscillators (sine / saw / square / noise) with hard sync"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:6
+msgid "12/24 dB/oct resonant filter (low-pass / high-pass / band-pass / notch)"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:7
+msgid "Mono / poly / legato keyboard modes"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:8
+msgid "Dual ADSR envelope generators (filter &amp; amplitude)"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:9
+msgid "LFO which can modulate the oscillators, filter, and amplitude"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:10
+msgid "Distortion and reverb"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:11
+msgid "Hundreds of presets"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:12
+msgid "There are currently several different ways to run amsynth:"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:13
+msgid "Stand-alone application using JACK, ALSA or OSS"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:14
+msgid "DSSI plug-in"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:15
+msgid "LV2 plug-in"
+msgstr ""
+
+#: ../data/amsynth.appdata.xml.in.h:16
+msgid "VST plug-in"
+msgstr ""
 
 #: ../src/GUI/ConfigDialog.cpp:31
 msgid "amsynth configuration"
@@ -70,9 +138,6 @@ msgid ""
 "If you don't save, changes to the current preset will be permanently lost."
 msgstr ""
 
-#.
-#. the preset rename dialog
-#.
 #: ../src/GUI/GUI.cc:151
 msgid "Rename Preset"
 msgstr ""
@@ -89,9 +154,6 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#.
-#. the record dialog
-#.
 #: ../src/GUI/GUI.cc:169
 msgid "Capture Output"
 msgstr ""
@@ -104,11 +166,10 @@ msgstr ""
 msgid "amsynth-out.wav"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:199 ../src/GUI/GUI.cc:713
+#: ../src/GUI/GUI.cc:199 ../src/GUI/GUI.cc:715
 msgid "capture status: STOPPED"
 msgstr ""
 
-#. create-new-instance currently only supported on Linux
 #: ../src/GUI/GUI.cc:219
 msgid "New Instance"
 msgstr ""
@@ -117,7 +178,6 @@ msgstr ""
 msgid "_Open Bank..."
 msgstr ""
 
-#. list_file.push_back (MenuElem("_Save Bank","<control>S", mem_fun(*this, &GUI::bank_save)));
 #: ../src/GUI/GUI.cc:225
 msgid "_Save Bank As..."
 msgstr ""
@@ -130,7 +190,7 @@ msgstr ""
 msgid "Open Alternate Keyboard Map..."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:229 ../src/GUI/GUI.cc:997
+#: ../src/GUI/GUI.cc:229 ../src/GUI/GUI.cc:999
 msgid "Reset All Tuning Settings to Default"
 msgstr ""
 
@@ -138,7 +198,6 @@ msgstr ""
 msgid "_Quit"
 msgstr ""
 
-#. list_preset.push_back (manage (new TearoffMenuItem ()));
 #: ../src/GUI/GUI.cc:240
 msgid "_Copy"
 msgstr ""
@@ -207,86 +266,88 @@ msgstr ""
 msgid "Record to .wav file..."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:352
+#. @translators: This is an application name and its abbreviation
+#: ../src/GUI/GUI.cc:353
 msgid "Virtual Keyboard (vkeybd)"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:359
+#. @translators: This is an application name and its abbreviation
+#: ../src/GUI/GUI.cc:361
 msgid "Virtual MIDI Piano Keyboard (VMPK)"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:364
+#: ../src/GUI/GUI.cc:366
 msgid "Virtual Keyboards"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:390
+#: ../src/GUI/GUI.cc:392
 msgid "MIDI (ALSA) connections"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:416
+#: ../src/GUI/GUI.cc:418
 msgid "Audio (JACK) connections"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:422
+#: ../src/GUI/GUI.cc:424
 msgid "About"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:423
+#: ../src/GUI/GUI.cc:425
 msgid "Report a Bug"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:424
+#: ../src/GUI/GUI.cc:426
 msgid "Online Documentation"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:433
+#: ../src/GUI/GUI.cc:435
 msgid "_File"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:434
+#: ../src/GUI/GUI.cc:436
 msgid "_Preset"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:435
+#: ../src/GUI/GUI.cc:437
 msgid "_Config"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:436
+#: ../src/GUI/GUI.cc:438
 msgid "_Utils"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:437
+#: ../src/GUI/GUI.cc:439
 msgid "_Help"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:439
+#: ../src/GUI/GUI.cc:441
 #, c-format
 msgid "Audio: %s @ %d  MIDI: %s"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:516 ../src/GUI/GUI.cc:527
+#: ../src/GUI/GUI.cc:518 ../src/GUI/GUI.cc:529
 msgid "amsynth configuration error"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:518
+#: ../src/GUI/GUI.cc:520
 msgid ""
 "amsynth could not initialise the selected audio device.\n"
 "\n"
 "Please review the configuration and restart"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:529
+#: ../src/GUI/GUI.cc:531
 msgid ""
 "amsynth could not initialise the selected MIDI device.\n"
 "\n"
 "Please review the configuration and restart"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:547
+#: ../src/GUI/GUI.cc:549
 msgid "amsynth could not set realtime priority"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:548
+#: ../src/GUI/GUI.cc:550
 msgid ""
 "You may experience audio buffer underruns resulting in 'clicks' in the "
 "audio.\n"
@@ -296,95 +357,91 @@ msgid ""
 "Using the JACK audio subsystem can also help"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:563
+#: ../src/GUI/GUI.cc:565
 msgid "Could not show link"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:641
+#: ../src/GUI/GUI.cc:643
 msgid "Clear current preset?"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:645
+#: ../src/GUI/GUI.cc:647
 msgid "Parameters will be set to default values and the name will be cleared"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:660
+#: ../src/GUI/GUI.cc:662
 msgid "Export Preset"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:669
+#: ../src/GUI/GUI.cc:671
 msgid "Import Preset"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:669
+#: ../src/GUI/GUI.cc:671
 msgid "amsynth 1.x files"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:684
+#: ../src/GUI/GUI.cc:686
 msgid "Select output WAV file"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:703
+#: ../src/GUI/GUI.cc:705
 msgid "capture status: RECORDING"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:764 ../data/amsynth.appdata.xml.in.h:1
-msgid "Analog Modelling SYNTHesizer"
-msgstr ""
-
-#: ../src/GUI/GUI.cc:766
+#: ../src/GUI/GUI.cc:768
 msgid "Copyright © 2002 - 2016 Nick Dowell and contributors"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:924
+#: ../src/GUI/GUI.cc:926
 msgid "Open Bank"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:936
+#: ../src/GUI/GUI.cc:938
 msgid "Save Bank"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:945
+#: ../src/GUI/GUI.cc:947
 msgid "new.bank"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:962
+#: ../src/GUI/GUI.cc:964
 msgid "Open Scala (.scl) alternate tuning file"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:962
+#: ../src/GUI/GUI.cc:964
 msgid "Scala scale files"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:966
+#: ../src/GUI/GUI.cc:968
 msgid "Failed to load new tuning."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:967
+#: ../src/GUI/GUI.cc:969
 msgid ""
 "Reading the tuning file failed for some reason. Make sure your file has the "
 "correct format and try again."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:977
+#: ../src/GUI/GUI.cc:979
 msgid "Open alternate keyboard map (Scala .kbm format)"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:977
+#: ../src/GUI/GUI.cc:979
 msgid "Scala keyboard map files"
 msgstr ""
 
-#: ../src/GUI/GUI.cc:981
+#: ../src/GUI/GUI.cc:983
 msgid "Failed to load new keyboard map."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:982
+#: ../src/GUI/GUI.cc:984
 msgid ""
 "Reading the keyboard map file failed for some reason. Make sure your file "
 "has the correct format and try again."
 msgstr ""
 
-#: ../src/GUI/GUI.cc:1001
+#: ../src/GUI/GUI.cc:1003
 msgid "Discard the current scale and keyboard map?"
 msgstr ""
 
@@ -568,70 +625,102 @@ msgstr ""
 msgid "performance index: %f\n"
 msgstr ""
 
+#: ../src/Preset.cc:322 ../src/Preset.cc:332
+msgid "sine"
+msgstr ""
+
+#: ../src/Preset.cc:323
+msgid "square / pulse"
+msgstr ""
+
+#: ../src/Preset.cc:324
+msgid "triangle / saw"
+msgstr ""
+
+#: ../src/Preset.cc:325
+msgid "white noise"
+msgstr ""
+
+#: ../src/Preset.cc:326 ../src/Preset.cc:336
+msgid "noise + sample & hold"
+msgstr ""
+
+#: ../src/Preset.cc:333
+msgid "square"
+msgstr ""
+
+#: ../src/Preset.cc:334
+msgid "triangle"
+msgstr ""
+
+#: ../src/Preset.cc:335
+msgid "noise"
+msgstr ""
+
+#: ../src/Preset.cc:337
+msgid "sawtooth (up)"
+msgstr ""
+
+#: ../src/Preset.cc:338
+msgid "sawtooth (down)"
+msgstr ""
+
+#: ../src/Preset.cc:344
+msgid "poly"
+msgstr ""
+
+#: ../src/Preset.cc:345
+msgid "mono"
+msgstr ""
+
+#: ../src/Preset.cc:346 ../src/Preset.cc:378
+msgid "legato"
+msgstr ""
+
+#: ../src/Preset.cc:352
+msgid "low pass"
+msgstr ""
+
+#: ../src/Preset.cc:353
+msgid "high pass"
+msgstr ""
+
+#: ../src/Preset.cc:354
+msgid "band pass"
+msgstr ""
+
+#: ../src/Preset.cc:355
+msgid "notch"
+msgstr ""
+
+#: ../src/Preset.cc:356
+msgid "bypass"
+msgstr ""
+
+#: ../src/Preset.cc:362
+msgid "12 dB / octave"
+msgstr ""
+
+#: ../src/Preset.cc:363
+msgid "24 dB / octave"
+msgstr ""
+
+#: ../src/Preset.cc:369
+msgid "osc 1+2"
+msgstr ""
+
+#: ../src/Preset.cc:370
+msgid "osc 1"
+msgstr ""
+
+#: ../src/Preset.cc:371
+msgid "osc 2"
+msgstr ""
+
+#: ../src/Preset.cc:377
+msgid "always"
+msgstr ""
+
 #: ../src/PresetController.cc:369
 msgid "User bank"
-msgstr ""
-
-#: ../data/amsynth.appdata.xml.in.h:2
-msgid "Analog modelling (a.k.a virtual analog) software synthesizer"
-msgstr ""
-
-#: ../data/amsynth.appdata.xml.in.h:3
-msgid ""
-"Amsynth is an analog modelling (a.k.a virtual analog) software synthesizer. "
-"It mimics the operation of early analog subtractive synthesizers with "
-"classic oscillator waveforms, envelopes, filter, modulation and effects. The "
-"aim is to make it easy to create and modify sounds."
-msgstr ""
-
-#: ../data/amsynth.appdata.xml.in.h:4
-msgid "Features:"
-msgstr ""
-
-#: ../data/amsynth.appdata.xml.in.h:5
-msgid "Dual oscillators (sine / saw / square / noise) with hard sync"
-msgstr ""
-
-#: ../data/amsynth.appdata.xml.in.h:6
-msgid "12/24 dB/oct resonant filter (low-pass / high-pass / band-pass / notch)"
-msgstr ""
-
-#: ../data/amsynth.appdata.xml.in.h:7
-msgid "Mono / poly / legato keyboard modes"
-msgstr ""
-
-#: ../data/amsynth.appdata.xml.in.h:8
-msgid "Dual ADSR envelope generators (filter &amp; amplitude)"
-msgstr ""
-
-#: ../data/amsynth.appdata.xml.in.h:9
-msgid "LFO which can modulate the oscillators, filter, and amplitude"
-msgstr ""
-
-#: ../data/amsynth.appdata.xml.in.h:10
-msgid "Distortion and reverb"
-msgstr ""
-
-#: ../data/amsynth.appdata.xml.in.h:11
-msgid "Hundreds of presets"
-msgstr ""
-
-#: ../data/amsynth.appdata.xml.in.h:12
-msgid "There are currently several different ways to run amsynth:"
-msgstr ""
-
-#: ../data/amsynth.appdata.xml.in.h:13
-msgid "Stand-alone application using JACK, ALSA or OSS"
-msgstr ""
-
-#: ../data/amsynth.appdata.xml.in.h:14
-msgid "DSSI plug-in"
-msgstr ""
-
-#: ../data/amsynth.appdata.xml.in.h:15
-msgid "LV2 plug-in"
-msgstr ""
-
-#: ../data/amsynth.appdata.xml.in.h:16
-msgid "VST plug-in"
 msgstr ""

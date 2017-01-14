@@ -102,16 +102,12 @@ public:
 	// The label assocaited with this Parameter. (e.g. "seconds")
 	const std::string getLabel		() const { return _label; }
 
-	const char **   valueStrings    () const { return _valueStrings; }
-	void            setValueStrings (const char **valueStrings) { _valueStrings = valueStrings; }
-
 private:
 	Param							mParamId;
 	std::string						_name, _label;
 	int								_controlMode;
 	float							_value, _min, _max, _step, _controlValue, _base, _offset;
 	std::vector<UpdateListener*>	_updateListeners;
-	const char **					_valueStrings;
 };
 
 #endif
