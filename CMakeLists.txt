@@ -8,6 +8,7 @@ find_package(PkgConfig REQUIRED)
 project(amsynth)
 
 SET(EXTRA_COMPILE_OPTIONS)
+SET(CMAKE_POSITION_INDEPENDENT_CODE True)
 
 pkg_check_modules(ALSA REQUIRED alsa)
 pkg_check_modules(JACK REQUIRED jack)
@@ -18,6 +19,9 @@ if (LASH_FOUND)
     SET(EXTRA_COMPILE_OPTIONS ${EXTRA_COMPILE_OPTIONS} -DWITH_LASH)
 endif (LASH_FOUND)
 
+#
+#
+#
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/include
@@ -29,6 +33,58 @@ include_directories(
 
 #
 #
+#
+
+add_library(amsynth_core STATIC
+        src/Effects/Distortion.cc
+        src/Effects/Distortion.h
+        src/Effects/SoftLimiter.cc
+        src/Effects/SoftLimiter.h
+        src/freeverb/allpass.cpp
+        src/freeverb/allpass.hpp
+        src/freeverb/comb.cpp
+        src/freeverb/comb.hpp
+        src/freeverb/denormals.h
+        src/freeverb/revmodel.cpp
+        src/freeverb/revmodel.hpp
+        src/freeverb/tuning.h
+        src/VoiceBoard/ADSR.cc
+        src/VoiceBoard/ADSR.h
+        src/VoiceBoard/LowPassFilter.cc
+        src/VoiceBoard/LowPassFilter.h
+        src/VoiceBoard/Oscillator.cc
+        src/VoiceBoard/Oscillator.h
+        src/VoiceBoard/Synth--.h
+        src/VoiceBoard/VoiceBoard.cc
+        src/VoiceBoard/VoiceBoard.h
+        src/Configuration.cpp
+        src/Configuration.h
+        src/controls.h
+        src/gettext.h
+        src/lash.c
+        src/lash.h
+        src/midi.h
+        src/MidiController.cc
+        src/MidiController.h
+        src/Parameter.cc
+        src/Parameter.h
+        src/Preset.cc
+        src/Preset.h
+        src/PresetController.cc
+        src/PresetController.h
+        src/Synthesizer.cpp
+        src/Synthesizer.h
+        src/Thread.h
+        src/TuningMap.cc
+        src/TuningMap.h
+        src/types.h
+        src/UpdateListener.h
+        src/VoiceAllocationUnit.cc
+        src/VoiceAllocationUnit.h
+        )
+
+#
+# Stand-alone application
 #
 
 add_executable(amsynth
@@ -46,18 +102,6 @@ add_executable(amsynth
         src/drivers/OSSAudioDriver.h
         src/drivers/OSSMidiDriver.cc
         src/drivers/OSSMidiDriver.h
-        src/Effects/Distortion.cc
-        src/Effects/Distortion.h
-        src/Effects/SoftLimiter.cc
-        src/Effects/SoftLimiter.h
-        src/freeverb/allpass.cpp
-        src/freeverb/allpass.hpp
-        src/freeverb/comb.cpp
-        src/freeverb/comb.hpp
-        src/freeverb/denormals.h
-        src/freeverb/revmodel.cpp
-        src/freeverb/revmodel.hpp
-        src/freeverb/tuning.h
         src/GUI/bitmap_button.c
         src/GUI/bitmap_button.h
         src/GUI/bitmap_knob.c
@@ -82,65 +126,38 @@ add_executable(amsynth
         src/GUI/presets_menu.cpp
         src/GUI/presets_menu.h
         src/GUI/Request.h
-        src/VoiceBoard/ADSR.cc
-        src/VoiceBoard/ADSR.h
-        src/VoiceBoard/LowPassFilter.cc
-        src/VoiceBoard/LowPassFilter.h
-        src/VoiceBoard/Oscillator.cc
-        src/VoiceBoard/Oscillator.h
-        src/VoiceBoard/Synth--.h
-        src/VoiceBoard/VoiceBoard.cc
-        src/VoiceBoard/VoiceBoard.h
-        src/amsynth_lv2.cpp
-#        src/amsynth_vst.cpp
         src/AudioOutput.cc
         src/AudioOutput.h
-        src/Configuration.cpp
-        src/Configuration.h
-        src/controls.h
-        src/gettext.h
         src/JackOutput.cc
         src/JackOutput.h
         src/lash.c
         src/lash.h
         src/main.cc
         src/main.h
-        src/midi.h
-        src/MidiController.cc
-        src/MidiController.h
-        src/Parameter.cc
-        src/Parameter.h
-        src/Preset.cc
-        src/Preset.h
-        src/PresetController.cc
-        src/PresetController.h
-        src/Synthesizer.cpp
-        src/Synthesizer.h
-        src/Thread.h
-        src/TuningMap.cc
-        src/TuningMap.h
-        src/types.h
-        src/UpdateListener.h
-        src/VoiceAllocationUnit.cc
-        src/VoiceAllocationUnit.h
         )
 
 target_compile_options(amsynth
         PUBLIC
+
         -DVERSION="dev"
         -DPACKAGE="amsynth"
         -DPACKAGE_NAME="amsynth"
         -DPACKAGE_TARNAME="amsynth"
         -DPACKAGE_STRING="amsynth dev"
-        -DGETTEXT_PACKAGE="amsynth"
         -DPACKAGE_URL="https://amsynth.github.io"
         -DPACKAGE_BUGREPORT="https://www.github.com/amsynth/amsynth/issues"
         -DPKGDATADIR="${PROJECT_SOURCE_DIR}/data"
+
+        -DENABLE_NLS
+        -DGETTEXT_PACKAGE="amsynth"
+        -DPACKAGE_LOCALEDIR="/usr/local/share/locale"
+
         -DWITH_GUI
         -DWITH_ALSA
         -DWITH_JACK
         -DHAVE_JACK_MIDIPORT_H
         -DHAVE_JACK_SESSION_H
+
         ${ALSA_CFLAGS_OTHER}
         ${JACK_CFLAGS_OTHER}
         ${GTKMM_CFLAGS_OTHER}
@@ -149,6 +166,7 @@ target_compile_options(amsynth
 
 target_link_libraries(amsynth
         pthread
+        amsynth_core
         ${ALSA_LIBRARIES}
         ${JACK_LIBRARIES}
         ${GTKMM_LIBRARIES}
@@ -159,52 +177,15 @@ target_link_libraries(amsynth
 #
 #
 
-add_executable(amsynth_tests
-        src/Effects/Distortion.cc
-        src/Effects/Distortion.h
-        src/Effects/SoftLimiter.cc
-        src/Effects/SoftLimiter.h
-        src/freeverb/allpass.cpp
-        src/freeverb/allpass.hpp
-        src/freeverb/comb.cpp
-        src/freeverb/comb.hpp
-        src/freeverb/denormals.h
-        src/freeverb/revmodel.cpp
-        src/freeverb/revmodel.hpp
-        src/freeverb/tuning.h
-        src/VoiceBoard/ADSR.cc
-        src/VoiceBoard/ADSR.h
-        src/VoiceBoard/LowPassFilter.cc
-        src/VoiceBoard/LowPassFilter.h
-        src/VoiceBoard/Oscillator.cc
-        src/VoiceBoard/Oscillator.h
-        src/VoiceBoard/Synth--.h
-        src/VoiceBoard/VoiceBoard.cc
-        src/VoiceBoard/VoiceBoard.h
-        src/amsynth_lv2.cpp
-        src/Configuration.cpp
-        src/Configuration.h
-        src/controls.h
-        src/gettext.h
-        src/lash.c
-        src/lash.h
-        src/midi.h
-        src/MidiController.cc
-        src/MidiController.h
-        src/Parameter.cc
-        src/Parameter.h
-        src/Preset.cc
-        src/Preset.h
-        src/PresetController.cc
-        src/PresetController.h
-        src/Synthesizer.cpp
-        src/Synthesizer.h
-        src/tests.cpp
-        src/Thread.h
-        src/TuningMap.cc
-        src/TuningMap.h
-        src/types.h
-        src/UpdateListener.h
-        src/VoiceAllocationUnit.cc
-        src/VoiceAllocationUnit.h
-        )
+add_library(amsynth_dssi MODULE src/dssi.cpp)
+target_link_libraries(amsynth_dssi amsynth_core)
+
+add_library(amsynth_lv2 MODULE src/amsynth_lv2.cpp)
+target_link_libraries(amsynth_lv2 amsynth_core)
+
+add_library(amsynth_vst MODULE src/amsynth_vst.cpp)
+target_compile_options(amsynth_vst PUBLIC -DWITH_GUI)
+target_link_libraries(amsynth_vst amsynth_core)
+
+add_executable(amsynth_tests src/tests.cpp)
+target_link_libraries(amsynth_tests amsynth_core)

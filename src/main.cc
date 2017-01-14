@@ -286,9 +286,9 @@ int main( int argc, char *argv[] )
 	setreuid( getuid(), getuid() );
 	setregid( getgid(), getgid() );	
 
-#ifdef PACKAGE_LOCALEDIR
+#ifdef ENABLE_NLS
 	bindtextdomain(GETTEXT_PACKAGE, PACKAGE_LOCALEDIR);
-	bind_textdomain_codeset(PACKAGE_TARNAME, "UTF-8");
+	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
 #endif
 
