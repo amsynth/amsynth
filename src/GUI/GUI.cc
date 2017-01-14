@@ -1,7 +1,7 @@
 /*
  *  GUI.cc
  *
- *  Copyright (c) 2001-2016 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell7
  *  Portions of this file (c) 2003 Darrick Servis
  *
  *  This file is part of amsynth.
@@ -37,11 +37,6 @@
 #include <gtkmm.h>
 #include <gtk/gtk.h>
 #include <sigc++/bind.h>
-
-#if defined(__linux)
-#include <X11/Xlib.h>
-#include <gdk/gdkx.h>
-#endif
 
 using namespace Gtk;
 using std::cout;
@@ -765,7 +760,7 @@ GUI::event_handler(const int e)
                               "translator-credits", "Olivier Humbert - French\nGeorg Krause - German\nPeter Körner - German",
                               "comments", _("Analog Modelling SYNTHesizer"),
                               "website", PACKAGE_URL,
-                              "copyright", _("Copyright © 2002 - 2016 Nick Dowell and contributors"),
+                              "copyright", _("Copyright © 2002 - 2017 Nick Dowell and contributors"),
                               NULL);
         break;
     }
