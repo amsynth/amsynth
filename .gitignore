@@ -53,6 +53,8 @@ stamp-h1
 test-driver
 test-suite.log
 /data/amsynth.appdata.xml
+data/amsynth.1
+data/amsynth.*.1
 
 # CLion
 .idea/dictionaries
