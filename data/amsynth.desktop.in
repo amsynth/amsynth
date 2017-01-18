@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=amsynth
 GenericName=Analog Modelling SYNTHesizer
+GenericName[de]=Virtuell-analoger Synthesizer
 GenericName[fr]=Synthétiseur modelant de l'analogique
 Comment=Two oscillator subtractive software synthesizer
+Comment[de]=Subtraktiver Softwaresynthesizer mit zwei Oszillatoren
 Comment[fr]=Synthétiseur logiciel soustractif à deux oscillateurs 
 Type=Application
 Categories=AudioVideo;Audio;X-Synthesis;
