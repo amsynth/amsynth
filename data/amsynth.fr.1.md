@@ -1,4 +1,4 @@
-% AMSYNTH(1) amsynth 1.6.4 | Commandes utilisateur
+% AMSYNTH(1) amsynth VERSION | Commandes utilisateur
 %
 % Septembre 2016
 
@@ -15,7 +15,7 @@ SYNOPSIS
 DESCRIPTION
 ===========
 
-amsynth 1.6.4 \[Janv 19 2016\]  \[http://amsynth.github.io/\].
+amsynth VERSION \[Janv 19 2016\]  \[http://amsynth.github.io/\].
 Copyright 2001-2017 Nick Dowell <nick@nickdowell.com>.
 
 amsynth est un synthétiseur logiciel facile à utiliser avec une topologie de synthétiseur soustractif classique.

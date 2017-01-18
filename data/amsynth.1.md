@@ -1,4 +1,4 @@
-% AMSYNTH(1) amsynth 1.6.4 | User Commands
+% AMSYNTH(1) amsynth VERSION | User Commands
 %
 % September 2016
 
@@ -15,7 +15,7 @@ SYNOPSIS
 DESCRIPTION
 ===========
 
-amsynth 1.6.4 \[Jan 19 2016\]  \[http://amsynth.github.io/\].
+amsynth VERSION \[Jan 19 2016\]  \[http://amsynth.github.io/\].
 Copyright 2001-2017 Nick Dowell <nick@nickdowell.com>.
 
 amsynth is an easy-to-use software synth with a classic subtractive synthesizer topology.
