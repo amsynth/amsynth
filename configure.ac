@@ -66,6 +66,12 @@ dnl ## Gtk::MessageDialog::set_secondary_text()
 dnl ## Gtk::AboutDialog
 AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.6.0])])
 
+dnl For man page generation
+AC_CHECK_PROG([PANDOC], [pandoc], [yes])
+if test "x$PANDOC" != "xyes"; then
+    AC_MSG_ERROR([pandoc not found, but needed to generate man pages.])
+fi
+
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
 dnl Optional packages
