@@ -16,7 +16,7 @@ DESCRIPTION
 ===========
 
 amsynth 1.6.4 \[Janv 19 2016\]  \[http://amsynth.github.io/\].
-Copyright 2001-2016 Nick Dowell <nixx@nixx.org.uk>.
+Copyright 2001-2017 Nick Dowell <nick@nickdowell.com>.
 
 amsynth est un synthétiseur logiciel facile à utiliser avec une topologie de synthétiseur soustractif classique.
 
