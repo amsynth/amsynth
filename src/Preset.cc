@@ -1,7 +1,7 @@
 /*
  *  Preset.cc
  *
- *  Copyright (c) 2001-2014 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -20,6 +20,10 @@
  */
 
 #include "Preset.h"
+
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include "controls.h"
 #include "VoiceBoard/LowPassFilter.h"
