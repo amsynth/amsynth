@@ -337,7 +337,8 @@ MidiController::generateMidiOutput(std::vector<amsynth_midi_cc_t> &output)
 			unsigned char value = (unsigned char) roundf(parameter.GetNormalisedValue() * 127.0f);
 			if (_midi_cc_vals[cc] != value) {
 				_midi_cc_vals[cc] = value;
-				output.push_back((amsynth_midi_cc_t){channel, (unsigned char) cc, value });
+				amsynth_midi_cc_t out = { channel, (unsigned char)cc, value };
+				output.push_back(out);
 			}
 		}
 	}
