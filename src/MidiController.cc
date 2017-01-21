@@ -23,6 +23,7 @@
 
 #include "Configuration.h"
 #include "midi.h"
+#include "VoiceBoard/Synth--.h"
 
 #include <assert.h>
 #include <cmath>
@@ -252,6 +253,9 @@ MidiController::clearControllerMap()
 void
 MidiController::loadControllerMap()
 {
+#if _WIN32
+	return;
+#endif
 	clearControllerMap();
 
 	std::string fname(getenv("HOME"));
@@ -270,6 +274,9 @@ MidiController::loadControllerMap()
 void
 MidiController::saveControllerMap()
 {
+#if _WIN32
+	return;
+#endif
 	std::string fname(getenv("HOME"));
 	fname += "/.amSynthControllersrc";
 	std::ofstream file(fname.c_str(), std::ios::out);

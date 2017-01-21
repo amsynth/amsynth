@@ -474,6 +474,9 @@ static float getParameter(AEffect *effect, int i)
 	return plugin->synthesizer->getNormalizedParameterValue((Param) i);
 }
 
+#if _WIN32
+__declspec(dllexport)
+#endif
 extern "C" AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 {
 #if DEBUG
@@ -505,6 +508,16 @@ extern "C" AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 	return effect;
 }
 
+#if _WIN32
+
+__declspec(dllexport)
+extern "C" AEffect * MAIN(audioMasterCallback audioMaster)
+{
+	return VSTPluginMain (audioMaster);
+}
+
+#else
+
 // this is required because GCC throws an error if we declare a non-standard function named 'main'
 extern "C" __attribute__ ((visibility("default"))) AEffect * main_plugin(audioMasterCallback audioMaster) asm ("main");
 
@@ -512,3 +525,5 @@ extern "C" __attribute__ ((visibility("default"))) AEffect * main_plugin(audioMa
 {
 	return VSTPluginMain (audioMaster);
 }
+
+#endif
