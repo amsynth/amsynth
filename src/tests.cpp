@@ -102,9 +102,11 @@ void testPresetValueStrings() {
     assert(count(parameter_get_value_strings(kAmsynthParameter_PortamentoMode)) == PortamentoModeLegato + 1);
 }
 
+#define RUN_TEST(testFunction) do { printf("%s()... ", #testFunction); testFunction(); printf("\n"); } while (0)
+
 int main(int argc, const char * argv[])  {
-    testMidiOutput();
-    testPresetIgnoredParameters();
-    testPresetValueStrings();
+	RUN_TEST(testMidiOutput);
+	RUN_TEST(testPresetIgnoredParameters);
+	RUN_TEST(testPresetValueStrings);
     return 0;
 }
