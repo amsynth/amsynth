@@ -20,7 +20,7 @@ amsynth est un synthétiseur logiciel facile à utiliser avec une topologie de s
 OPTIONS
 =======
 
-Les options suivantes écrase celle du fichier de configuration (\$HOME/.amSynthrc).
+Les options suivantes écrasent celles du fichier de configuration (\$HOME/.amSynthrc).
 
 `-h`
 
@@ -32,7 +32,7 @@ Les options suivantes écrase celle du fichier de configuration (\$HOME/.amSynth
 
 `-x`
 
-:   run in headless mode (without GUI)
+:   lancer amsynth en mode sans interface graphique
 
 `-b` \<nom\_de\_fichier\>
 
@@ -68,7 +68,7 @@ Les options suivantes écrase celle du fichier de configuration (\$HOME/.amSynth
 
 `--jack_autoconnect[=<true|false>]`
 
-:   automatically connect jack audio ports to hardware I/O ports. (Default: true)
+:   connecter automatiquement les ports audio JACK aux ports d'entrée/sortie matériels. (défaut : true)
 
 FICHIERS
 ========
@@ -90,11 +90,11 @@ ENVIRONNEMENT
 
 `AMSYNTH_NO_GUI`
 
-:   If AMSYNTH\_NO\_GUI is set, amsynth is started in headless mode (without GUI).
+:   Si AMSYNTH\_NO\_GUI est paramétré, amsynth est démarré en mode sans interface graphique.
 
 `AMSYNTH_SKIN`
 
-:   Specifies the directory from which amsynth should load its skin.
+:   Spécifie le répertoire depuis lequel amsynth devrait charger son habillage.
 
 BOGUES & DEMANDE DE FONCTIONNALITÉS
 ===================================
