@@ -351,7 +351,7 @@ man_out_files = $(man_in_files:.1.md=.1)
 noinst_DATA = $(man_out_files)
 
 data/%.1: data/%.1.md
-	cat $< | $(SED) 's/VERSION/$(PACKAGE_VERSION)/' | pandoc -s -t man -o $@
+	pandoc -s -t man -V footer='$(PACKAGE_STRING)' -o $@ $<
 
 EXTRA_DIST += $(man_in_files)
 
