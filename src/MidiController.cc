@@ -253,10 +253,11 @@ MidiController::clearControllerMap()
 void
 MidiController::loadControllerMap()
 {
+	clearControllerMap();
+
 #if _WIN32
 	return;
 #endif
-	clearControllerMap();
 
 	std::string fname(getenv("HOME"));
 	fname += "/.amSynthControllersrc";
