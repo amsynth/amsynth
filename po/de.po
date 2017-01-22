@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-01-14 09:08+0000\n"
-"PO-Revision-Date: 2017-01-07 16:28+0100\n"
+"PO-Revision-Date: 2017-01-18 21:05+0100\n"
 "Last-Translator: Peter Körner <18427@gmx.net>\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -17,13 +17,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../data/amsynth.appdata.xml.in.h:1 ../src/GUI/GUI.cc:766
-#, fuzzy
 msgid "Analog Modelling SYNTHesizer"
 msgstr "Virtuell-analoger Synthesizer"
 
 #: ../data/amsynth.appdata.xml.in.h:2
 msgid "Analog modelling (a.k.a virtual analog) software synthesizer"
-msgstr ""
+msgstr "Virtuell-analoger Softwaresynthesizer"
 
 #: ../data/amsynth.appdata.xml.in.h:3
 msgid ""
@@ -32,58 +31,65 @@ msgid ""
 "classic oscillator waveforms, envelopes, filter, modulation and effects. The "
 "aim is to make it easy to create and modify sounds."
 msgstr ""
+"Amsynth ist ein virtuell-analoger Softwaresynthesizer. Er ahmt die "
+"Funktionsweise früher analoger subtraktiver Synthesizer mit klassischen "
+"Oszillator-Wellenformen, Hüllkurven, Filtern, Modulation und Effekten nach. "
+"Das Ziel ist, das einfache Erstellen und Verändern von Klängen zu "
+"ermöglichen."
 
 #: ../data/amsynth.appdata.xml.in.h:4
 msgid "Features:"
-msgstr ""
+msgstr "Funktionen:"
 
+# "Rechteck" von "Rechteckschwingung" <-> "square wave"
 #: ../data/amsynth.appdata.xml.in.h:5
 msgid "Dual oscillators (sine / saw / square / noise) with hard sync"
-msgstr ""
+msgstr "Zwei Oszillatoren (Sinus/Sägezahn/Rechteck/Rauschen) mit Hard Sync"
 
 #: ../data/amsynth.appdata.xml.in.h:6
 msgid "12/24 dB/oct resonant filter (low-pass / high-pass / band-pass / notch)"
-msgstr ""
+msgstr "12/24 db/Okt Resonanzfilter (Tiefpass/Hochpass/Bandpass/Kerbfilter)"
 
 #: ../data/amsynth.appdata.xml.in.h:7
 msgid "Mono / poly / legato keyboard modes"
-msgstr ""
+msgstr "Mono-/Poly-/Legato-Keyboardmodi"
 
 #: ../data/amsynth.appdata.xml.in.h:8
 msgid "Dual ADSR envelope generators (filter &amp; amplitude)"
-msgstr ""
+msgstr "Zwei ADSR-Hüllkurvengeneratoren (Filter &amp; Amplitude)"
 
 #: ../data/amsynth.appdata.xml.in.h:9
 msgid "LFO which can modulate the oscillators, filter, and amplitude"
-msgstr ""
+msgstr "LFO, der die Oszillatoren, Filter und Amplitude modulieren kann"
 
 #: ../data/amsynth.appdata.xml.in.h:10
 msgid "Distortion and reverb"
-msgstr ""
+msgstr "Verzerrung und Hall"
 
 #: ../data/amsynth.appdata.xml.in.h:11
 msgid "Hundreds of presets"
-msgstr ""
+msgstr "Hunderte von Presets"
 
 #: ../data/amsynth.appdata.xml.in.h:12
 msgid "There are currently several different ways to run amsynth:"
 msgstr ""
+"Es gibt im Moment mehrere verschiedene Möglichkeiten, amsynth auszuführen:"
 
 #: ../data/amsynth.appdata.xml.in.h:13
 msgid "Stand-alone application using JACK, ALSA or OSS"
-msgstr ""
+msgstr "Eigenständige Anwendung unter Verwendung von JACK, ALSA oder OSS"
 
 #: ../data/amsynth.appdata.xml.in.h:14
 msgid "DSSI plug-in"
-msgstr ""
+msgstr "DSSI-Plugin"
 
 #: ../data/amsynth.appdata.xml.in.h:15
 msgid "LV2 plug-in"
-msgstr ""
+msgstr "LV2-Plugin"
 
 #: ../data/amsynth.appdata.xml.in.h:16
 msgid "VST plug-in"
-msgstr ""
+msgstr "VST-Plugin"
 
 #: ../src/GUI/ConfigDialog.cpp:31
 msgid "amsynth configuration"
@@ -553,8 +559,8 @@ msgstr " [Optionen]"
 msgid ""
 "Any options given here override those in the config file ($HOME/.amSynthrc)"
 msgstr ""
-"Alle hier angegebenen Optionen überschreiben diejenigen aus der "
-"Konfigurationsdatei ($HOME/.amSynthrc)"
+"Alle hier angegebenen Optionen setzen diejenigen aus der "
+"Konfigurationsdatei ($HOME/.amSynthrc) außer Kraft"
 
 #: ../src/main.cc:318
 msgid "OPTIONS:"
@@ -598,7 +604,7 @@ msgstr ""
 
 #: ../src/main.cc:330
 msgid "\t-c <int>    set the MIDI channel to respond to (default=all)"
-msgstr "\t-c <int>    setzt den MIDI-Kanal (Standard=all)"
+msgstr "\t-c <int>    setzt den MIDI-Kanal, auf den reagiert werden soll (Standard=alle)"
 
 #: ../src/main.cc:331
 msgid "\t-p <int>    set the polyphony (maximum active voices)"
@@ -655,99 +661,101 @@ msgstr "Leistungsindex: %f\n"
 
 #: ../src/Preset.cc:322 ../src/Preset.cc:332
 msgid "sine"
-msgstr ""
+msgstr "Sinus"
 
+# "Rechteck" von "Rechteckschwingung" <-> "square wave"
 #: ../src/Preset.cc:323
 msgid "square / pulse"
-msgstr ""
+msgstr "Rechteck / Puls"
 
 #: ../src/Preset.cc:324
 msgid "triangle / saw"
-msgstr ""
+msgstr "Dreieck / Sägezahn"
 
 #: ../src/Preset.cc:325
 msgid "white noise"
-msgstr ""
+msgstr "Weißes Rauschen"
 
 #: ../src/Preset.cc:326 ../src/Preset.cc:336
 msgid "noise + sample & hold"
-msgstr ""
+msgstr "Rauschen + Sample & Hold"
 
+# "Rechteck" von "Rechteckschwingung" <-> "square wave"
 #: ../src/Preset.cc:333
 msgid "square"
-msgstr ""
+msgstr "Rechteck"
 
 #: ../src/Preset.cc:334
 msgid "triangle"
-msgstr ""
+msgstr "Dreieck"
 
 #: ../src/Preset.cc:335
 msgid "noise"
-msgstr ""
+msgstr "Rauschen"
 
 #: ../src/Preset.cc:337
 msgid "sawtooth (up)"
-msgstr ""
+msgstr "Sägezahn (aufwärts)"
 
 #: ../src/Preset.cc:338
 msgid "sawtooth (down)"
-msgstr ""
+msgstr "Sägezahn (abwärts)"
 
 #: ../src/Preset.cc:344
 msgid "poly"
-msgstr ""
+msgstr "Poly"
 
 #: ../src/Preset.cc:345
 msgid "mono"
-msgstr ""
+msgstr "Mono"
 
 #: ../src/Preset.cc:346 ../src/Preset.cc:378
 msgid "legato"
-msgstr ""
+msgstr "Legato"
 
 #: ../src/Preset.cc:352
 msgid "low pass"
-msgstr ""
+msgstr "Tiefpass"
 
 #: ../src/Preset.cc:353
 msgid "high pass"
-msgstr ""
+msgstr "Hochpass"
 
 #: ../src/Preset.cc:354
 msgid "band pass"
-msgstr ""
+msgstr "Bandpass"
 
 #: ../src/Preset.cc:355
 msgid "notch"
-msgstr ""
+msgstr "Kerbfilter"
 
 #: ../src/Preset.cc:356
 msgid "bypass"
-msgstr ""
+msgstr "Umgehen"
 
 #: ../src/Preset.cc:362
 msgid "12 dB / octave"
-msgstr ""
+msgstr "12 db/Oktave"
 
 #: ../src/Preset.cc:363
 msgid "24 dB / octave"
-msgstr ""
+msgstr "24 db/Oktave"
 
 #: ../src/Preset.cc:369
 msgid "osc 1+2"
-msgstr ""
+msgstr "osc 1+2"
 
 #: ../src/Preset.cc:370
 msgid "osc 1"
-msgstr ""
+msgstr "osc 1"
 
 #: ../src/Preset.cc:371
 msgid "osc 2"
-msgstr ""
+msgstr "osc 2"
 
 #: ../src/Preset.cc:377
 msgid "always"
-msgstr ""
+msgstr "Immer"
 
 #: ../src/PresetController.cc:369
 msgid "User bank"

@@ -345,7 +345,7 @@ dist_banks_DATA = \
 # Man pages
 #
 
-man_in_files = data/amsynth.1.md data/amsynth.fr.1.md
+man_in_files = data/amsynth.1.md data/amsynth.de.1.md data/amsynth.fr.1.md
 
 man_out_files = $(man_in_files:.1.md=.1)
 noinst_DATA = $(man_out_files)
