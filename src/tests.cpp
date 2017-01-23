@@ -27,6 +27,7 @@
 #include "VoiceBoard/LowPassFilter.h"
 
 #include <cassert>
+#include <cstdio>
 #include <iostream>
 
 
@@ -80,10 +81,10 @@ void testPresetIgnoredParameters() {
     Preset newPreset = basePreset;
     newPreset.getParameter(0).setValue(0);
     assert(!basePreset.isEqual(newPreset));
-	Preset::setIgnoredParameterNames("amp_attack amp_decay");
+    Preset::setIgnoredParameterNames("amp_attack amp_decay");
     assert(basePreset.isEqual(newPreset));
-	Preset::setIgnoredParameterNames("");
-	assert(!basePreset.isEqual(newPreset));
+    Preset::setIgnoredParameterNames("");
+    assert(!basePreset.isEqual(newPreset));
 }
 
 size_t count(const char **strings) {
@@ -102,11 +103,11 @@ void testPresetValueStrings() {
     assert(count(parameter_get_value_strings(kAmsynthParameter_PortamentoMode)) == PortamentoModeLegato + 1);
 }
 
-#define RUN_TEST(testFunction) do { printf("%s()... ", #testFunction); testFunction(); printf("\n"); } while (0)
+#define RUN_TEST(testFunction) do { printf("%s()... ", #testFunction); testFunction(); printf("OK\n"); } while (0)
 
 int main(int argc, const char * argv[])  {
-	RUN_TEST(testMidiOutput);
-	RUN_TEST(testPresetIgnoredParameters);
-	RUN_TEST(testPresetValueStrings);
+    RUN_TEST(testMidiOutput);
+    RUN_TEST(testPresetIgnoredParameters);
+    RUN_TEST(testPresetValueStrings);
     return 0;
 }
