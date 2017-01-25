@@ -66,12 +66,6 @@ dnl ## Gtk::MessageDialog::set_secondary_text()
 dnl ## Gtk::AboutDialog
 AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.6.0])])
 
-dnl For man page generation
-AC_CHECK_PROG([PANDOC], [pandoc], [yes])
-if test "x$PANDOC" != "xyes"; then
-    AC_MSG_ERROR([pandoc not found, but needed to generate man pages.])
-fi
-
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
 dnl Optional packages
@@ -136,6 +130,28 @@ AM_CONDITIONAL([BUILD_LV2], [test "x$with_lv2" != "xno"])
 AC_ARG_WITH([vst], [AS_HELP_STRING([--with-vst], [build VST plug-in] [default=yes])], [], [with_vst=yes])
 AM_CONDITIONAL([BUILD_VST], [test "x$with_vst" != "xno"])
 
+dnl For man page generation
+
+AC_CHECK_PROG([PANDOC], [pandoc], [yes])
+
+AC_ARG_WITH([pandoc], [AS_HELP_STRING([--with-pandoc], [generate man pages using pandoc @<:@default=check@:>@])], [], [with_pandoc=check])
+AS_CASE(
+    ["$with_pandoc"],
+    [check],
+    [AS_IF(
+        [test "x$PANDOC" = "xyes"],
+        [with_pandoc=yes],
+        [with_pandoc=no]
+    )],
+    [yes],
+    [AS_IF(
+        [test "x$PANDOC" != "xyes"],
+        [AC_MSG_ERROR([pandoc not found, but needed to generate man pages.])]
+    )]
+)
+AM_CONDITIONAL([GENERATE_MAN_PAGES], [test "x$with_pandoc" != "xno"])
+
+
 dnl
 dnl
 dnl
@@ -190,6 +206,8 @@ echo \| Build LV2 plugin...................................... : $with_lv2
 echo \| Build VST plugin...................................... : $with_vst
 echo \|
 echo \| Use libsndfile for .wav output support................ : $with_sndfile
+echo \|
+echo \| Generate man pages using pandoc....................... : $with_pandoc
 echo
 echo configure complete. now type \'make\' to build $PACKAGE
 echo and then, as root, \'make install\' to install
