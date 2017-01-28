@@ -345,6 +345,8 @@ dist_banks_DATA = \
 # Man pages
 #
 
+if GENERATE_MAN_PAGES
+
 man_in_files = data/amsynth.1.md data/amsynth.de.1.md data/amsynth.fr.1.md
 
 man_out_files = $(man_in_files:.1.md=.1)
@@ -356,6 +358,8 @@ data/%.1: data/%.1.md
 EXTRA_DIST += $(man_in_files)
 
 DISTCLEANFILES += $(man_out_files)
+
+endif
 
 
 #
