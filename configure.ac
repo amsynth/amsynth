@@ -169,6 +169,9 @@ AM_CONDITIONAL([DARWIN], [test "$(uname -s)" = "Darwin"])
 AC_CONFIG_FILES([
     Makefile
     data/amsynth.desktop
+    man/Makefile
+    man/de/Makefile
+    man/fr/Makefile
     po/Makefile.in
 ])
 
