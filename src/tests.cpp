@@ -19,12 +19,17 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define _ALLOW_KEYWORD_MACROS // to allow macro-izing the private keyword with visual c++
+#define private public
+
 #include "controls.h"
 #include "midi.h"
 #include "MidiController.h"
 #include "Synthesizer.h"
+#include "VoiceAllocationUnit.h"
 #include "VoiceBoard/Oscillator.h"
 #include "VoiceBoard/LowPassFilter.h"
+#include "VoiceBoard/VoiceBoard.h"
 
 #include <cassert>
 #include <cstdio>
@@ -75,6 +80,57 @@ void testMidiOutput()  {
     delete synth;
 }
 
+int countActiveVoices(Synthesizer *synth) {
+    int count = 0;
+    for (int i = 0; i < 128; i++) {
+        count = count + (synth->_voiceAllocationUnit->active[i] ? 1 : 0);
+    }
+    return count;
+}
+
+void testMidiAllNotesOff() {
+    static float audioBuffer[64];
+
+    Synthesizer *synth = new Synthesizer();
+    synth->setSampleRate(44100);
+    synth->setParameterValue(kAmsynthParameter_KeyboardMode, KeyboardModePoly);
+
+    std::vector<amsynth_midi_event_t> midiIn;
+    std::vector<amsynth_midi_cc_t> midiOut;
+
+    synth->process(32, midiIn, midiOut, &audioBuffer[0], &audioBuffer[32]);
+    assert(countActiveVoices(synth) == 0);
+
+    /* */ {
+        unsigned char midi[4] = { MIDI_STATUS_NOTE_ON, 64, 100 };
+        amsynth_midi_event_t e = { 0, 3, midi };
+        midiIn.clear();
+        midiIn.push_back(e);
+        synth->process(32, midiIn, midiOut, &audioBuffer[0], &audioBuffer[32]);
+        assert(countActiveVoices(synth) == 1);
+    }
+
+    /* */ {
+        unsigned char midi[4] = { MIDI_STATUS_NOTE_ON, 80, 100 };
+        amsynth_midi_event_t e = { 0, 3, midi };
+        midiIn.clear();
+        midiIn.push_back(e);
+        synth->process(32, midiIn, midiOut, &audioBuffer[0], &audioBuffer[32]);
+        assert(countActiveVoices(synth) == 2);
+    }
+
+    /* */ {
+        unsigned char midi[4] = { MIDI_STATUS_CONTROLLER, MIDI_CC_ALL_NOTES_OFF, 0 };
+        amsynth_midi_event_t e = { 0, 3, midi };
+        midiIn.clear();
+        midiIn.push_back(e);
+        synth->process(32, midiIn, midiOut, &audioBuffer[0], &audioBuffer[32]);
+        assert(countActiveVoices(synth) == 0);
+    }
+
+    delete synth;
+}
+
 void testPresetIgnoredParameters() {
     Preset basePreset;
     basePreset.getParameter(0).setValue(1);
@@ -109,5 +165,6 @@ int main(int argc, const char * argv[])  {
     RUN_TEST(testMidiOutput);
     RUN_TEST(testPresetIgnoredParameters);
     RUN_TEST(testPresetValueStrings);
+    RUN_TEST(testMidiAllNotesOff);
     return 0;
 }
