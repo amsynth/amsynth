@@ -28,8 +28,6 @@
 #include "VoiceBoard/LowPassFilter.h"
 #include "VoiceBoard/VoiceBoard.h"
 
-#undef private
-
 #include <cassert>
 #include <cstdio>
 #include <iostream>
