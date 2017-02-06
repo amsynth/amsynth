@@ -1,7 +1,7 @@
 /*
  *  Synthesizer.cpp
  *
- *  Copyright (c) 2014-2016 Nick Dowell
+ *  Copyright (c) 2014-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -78,8 +78,9 @@ public:
 
     MidiController *getMidiController() DEPRECATED { return _midiController; };
     PresetController *getPresetController() DEPRECATED { return _presetController; }
+    VoiceAllocationUnit *getVoiceAllocationUnit() DEPRECATED { return _voiceAllocationUnit; }
     
-private:
+// private:
 
     double _sampleRate;
     MidiController *_midiController;

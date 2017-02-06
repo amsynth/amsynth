@@ -1,7 +1,7 @@
 /*
  *  VoiceAllocationUnit.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -69,7 +69,7 @@ public:
 	int		loadKeyMap		(const std::string & kbmFileName);
 	void	defaultTuning	();
 
-private:
+// private:
 
 	void	resetAllVoices();
 

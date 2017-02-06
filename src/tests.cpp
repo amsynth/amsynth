@@ -1,7 +1,7 @@
 /*
  *  tests.cpp
  *
- *  Copyright (c) 2016 Nick Dowell
+ *  Copyright (c) 2016-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -19,9 +19,6 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define _ALLOW_KEYWORD_MACROS // to allow macro-izing the private keyword with visual c++
-#define private public
-
 #include "controls.h"
 #include "midi.h"
 #include "MidiController.h"
@@ -30,6 +27,8 @@
 #include "VoiceBoard/Oscillator.h"
 #include "VoiceBoard/LowPassFilter.h"
 #include "VoiceBoard/VoiceBoard.h"
+
+#undef private
 
 #include <cassert>
 #include <cstdio>
