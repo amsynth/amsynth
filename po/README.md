@@ -2,9 +2,16 @@
 ## To add a new translation
 
 1. Add the new language code to `LINGUAS`
-2. Create a new `.po` file using `amsynth.pot` as the starting point and edit with a tool such as [Gtranslator](https://wiki.gnome.org/Apps/Gtranslator)
-3. Do a `make install` and run amsynth to check that the translations appear as expected
-4. Create a pull request containing both files
+2. Run `make amsynth.pot` from this `po` directory
+3. Create a new `.po` file using `amsynth.pot` as the starting point and edit with a tool such as [Gtranslator](https://wiki.gnome.org/Apps/Gtranslator)
+4. Do a `make install` and run amsynth to check that the translations appear as expected
+5. Create a pull request containing both files
+
+## Testing translations
+
+You can run amsynth in a different language using the following syntax;
+
+    LANGUAGE=fr ./amsynth
 
 ## To update the translation files
 
