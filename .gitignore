@@ -57,6 +57,7 @@ stamp-h1
 test-driver
 test-suite.log
 /data/amsynth.appdata.xml
+/data/*metainfo.xml
 man/amsynth.1
 man/*/amsynth.1
 
