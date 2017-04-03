@@ -3,7 +3,7 @@
   <id>dssi-amsynth-plugin</id>
   <extends>amsynth.desktop</extends>
   <_name>DSSI plugin</_name>
-  <_summary>Plugin for the dssi audio API</_summary>
+  <_summary>Plugin for the DSSI audio API</_summary>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0</project_license>
   <translation type="gettext">amsynth</translation>
