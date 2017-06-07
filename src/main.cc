@@ -275,16 +275,16 @@ static void signal_handler(int signal)
 
 int main( int argc, char *argv[] )
 {
+	srand(time(NULL));
+
 #ifdef ENABLE_REALTIME
 	sched_realtime();
-#endif
 
-	srand(time(NULL));
-	
 	// need to drop our suid-root permissions :-
 	// GTK will not work SUID for security reasons..
-	setreuid( getuid(), getuid() );
-	setregid( getgid(), getgid() );	
+	setreuid(getuid(), getuid());
+	setregid(getgid(), getgid());
+#endif
 
 #ifdef ENABLE_NLS
 	setlocale(LC_ALL, "");
