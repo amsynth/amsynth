@@ -22,12 +22,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "editor_pane.h"
+
 #include "../controls.h"
 #include "bitmap_button.h"
 #include "bitmap_knob.h"
 #include "bitmap_popup.h"
-#include "controller_menu.h"
-#include "presets_menu.h"
+#include "editor_menus.h"
 
 //#define ENABLE_LAYOUT_EDIT 1
 

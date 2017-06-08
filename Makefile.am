@@ -76,13 +76,11 @@ libgui_sources = \
 	src/GUI/bitmap_knob.h \
 	src/GUI/bitmap_popup.c \
 	src/GUI/bitmap_popup.h \
-	src/GUI/controller_menu.cpp \
-	src/GUI/controller_menu.h \
 	src/GUI/controllers.h \
+	src/GUI/editor_menus.cpp \
+	src/GUI/editor_menus.h \
 	src/GUI/editor_pane.c \
-	src/GUI/editor_pane.h \
-	src/GUI/presets_menu.cpp \
-	src/GUI/presets_menu.h
+	src/GUI/editor_pane.h
 
 
 #

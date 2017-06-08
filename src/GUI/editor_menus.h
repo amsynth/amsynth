@@ -1,7 +1,7 @@
 /*
- *  controller_menu.h
+ *  editor_menus.h
  *
- *  Copyright (c) 2001-2016 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -19,12 +19,19 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef _editor_menus_h
+#define _editor_menus_h
 
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
-GtkWidget *controller_menu_new(int parameter);
+GtkWidget *
+controller_menu_new(int parameter);
+
+GtkWidget *
+presets_menu_new(GtkAdjustment **adjustments);
 
 G_END_DECLS
+
+#endif

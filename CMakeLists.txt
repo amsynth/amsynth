@@ -129,9 +129,9 @@ add_executable(amsynth
         src/GUI/bitmap_popup.h
         src/GUI/ConfigDialog.cpp
         src/GUI/ConfigDialog.h
-        src/GUI/controller_menu.cpp
-        src/GUI/controller_menu.h
         src/GUI/controllers.h
+        src/GUI/editor_menus.cpp
+        src/GUI/editor_menus.h
         src/GUI/editor_pane.c
         src/GUI/editor_pane.h
         src/GUI/GUI.cc
@@ -142,8 +142,6 @@ add_executable(amsynth
         src/GUI/MIDILearnDialog.h
         src/GUI/PresetControllerView.cc
         src/GUI/PresetControllerView.h
-        src/GUI/presets_menu.cpp
-        src/GUI/presets_menu.h
         src/GUI/Request.h
         src/AudioOutput.cc
         src/AudioOutput.h
@@ -185,13 +183,11 @@ add_library(amsynth_lv2_gtk MODULE
         src/GUI/bitmap_knob.h
         src/GUI/bitmap_popup.c
         src/GUI/bitmap_popup.h
-        src/GUI/controller_menu.cpp
-        src/GUI/controller_menu.h
         src/GUI/controllers.h
+        src/GUI/editor_menus.cpp
+        src/GUI/editor_menus.h
         src/GUI/editor_pane.c
         src/GUI/editor_pane.h
-        src/GUI/presets_menu.cpp
-        src/GUI/presets_menu.h
         src/amsynth_lv2_ui_gtk.c
         )
 set_target_properties(amsynth_lv2_gtk PROPERTIES PREFIX "")

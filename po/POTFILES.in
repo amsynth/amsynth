@@ -3,12 +3,11 @@ data/dssi-amsynth-plugin.metainfo.xml.in
 data/lv2-amsynth-plugin.metainfo.xml.in
 data/vst-amsynth-plugin.metainfo.xml.in
 src/GUI/ConfigDialog.cpp
-src/GUI/controller_menu.cpp
+src/GUI/editor_menus.cpp
 src/GUI/GUI.cc
 src/GUI/MIDILearnDialog.cpp
 src/GUI/PresetControllerView.cc
 src/GUI/PresetControllerView.cc
-src/GUI/presets_menu.cpp
 src/main.cc
 src/Preset.cc
 src/PresetController.cc
