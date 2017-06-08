@@ -132,7 +132,7 @@ presets_menu_new(GtkAdjustment **adjustments)
 //
 
 static void
-add_menu_item(GtkWidget *menu, gchar *label, GCallback callback, gpointer data)
+add_menu_item(GtkWidget *menu, const gchar *label, GCallback callback, gpointer data)
 {
     GtkWidget *item = gtk_menu_item_new_with_label(label);
     g_signal_connect(item, "activate", callback, data);
@@ -140,7 +140,7 @@ add_menu_item(GtkWidget *menu, gchar *label, GCallback callback, gpointer data)
 }
 
 static void
-add_menu_item(GtkWidget *menu, gchar *label, GtkWidget *submenu)
+add_menu_item(GtkWidget *menu, const gchar *label, GtkWidget *submenu)
 {
     GtkWidget *item = gtk_menu_item_new_with_label(label);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
@@ -173,7 +173,7 @@ editor_menu_new(void *synth, GtkAdjustment **adjustments)
 //
 
 static GtkWidget *
-file_open_dialog(GtkWindow *parent, gchar *title, gchar *filter_name, gchar *filter_pattern)
+file_open_dialog(GtkWindow *parent, const gchar *title, const gchar *filter_name, const gchar *filter_pattern)
 {
     GtkWidget *dialog = gtk_file_chooser_dialog_new(
             title, parent,
@@ -191,7 +191,7 @@ file_open_dialog(GtkWindow *parent, gchar *title, gchar *filter_name, gchar *fil
 }
 
 static void
-show_error_dialog(GtkWindow *parent, gchar *message, gchar *secondary)
+show_error_dialog(GtkWindow *parent, const gchar *message, const gchar *secondary)
 {
     GtkWidget *dialog = gtk_message_dialog_new(parent,
             GTK_DIALOG_DESTROY_WITH_PARENT,
