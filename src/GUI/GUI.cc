@@ -472,7 +472,7 @@ GUI::init()
 			0, 0);
 	}
 	
-	Gtk::Widget *editor = Glib::wrap (editor_pane_new (m_adjustments, FALSE));
+	Gtk::Widget *editor = Glib::wrap(editor_pane_new(m_synth, m_adjustments, FALSE));
 	
 	// start_atomic_value_change is not registered until editor_pane_new is called
 	for (int i=0; i<kAmsynthParameterCount; i++) {

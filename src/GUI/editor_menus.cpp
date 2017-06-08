@@ -22,16 +22,27 @@
 #include "editor_menus.h"
 
 // Project includes
+
 #include "../Configuration.h"
 #include "../Preset.h"
 #include "../PresetController.h"
+#include "../Synthesizer.h"
 
 // External includes
+
 #include <glib/gi18n.h>
 
 
+// Function prototypes
+
 extern "C" void modal_midi_learn(Param param_index);
 
+static void tuning_menu_open_scl(GtkWidget *widget, Synthesizer *synth);
+static void tuning_menu_open_kbm(GtkWidget *widget, Synthesizer *synth);
+static void tuning_menu_reset   (GtkWidget *widget, Synthesizer *synth);
+
+
+//
 
 static void
 show_midi_learn_dialog(GtkMenuItem *, gpointer user_data)
@@ -67,6 +78,8 @@ controller_menu_new(int parameter)
 
     return menu;
 }
+
+//
 
 static void
 preset_menu_item_activated(GtkMenuItem *preset_item, GtkAdjustment **adjustments)
@@ -114,4 +127,125 @@ presets_menu_new(GtkAdjustment **adjustments)
 
     gtk_widget_show_all (presets_menu);
     return presets_menu;
+}
+
+//
+
+static void
+add_menu_item(GtkWidget *menu, gchar *label, GCallback callback, gpointer data)
+{
+    GtkWidget *item = gtk_menu_item_new_with_label(label);
+    g_signal_connect(item, "activate", callback, data);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+}
+
+static void
+add_menu_item(GtkWidget *menu, gchar *label, GtkWidget *submenu)
+{
+    GtkWidget *item = gtk_menu_item_new_with_label(label);
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+}
+
+GtkWidget *
+editor_menu_new(void *synth, GtkAdjustment **adjustments)
+{
+    GtkWidget *presets_menu = presets_menu_new(adjustments);
+    if (!synth)
+        return presets_menu;
+    
+    GtkWidget *menu = gtk_menu_new();
+    
+    add_menu_item(menu, _("Preset"), presets_menu);
+    
+    GtkWidget *item = gtk_menu_item_new_with_label(_("Tuning"));
+    GtkWidget *submenu = gtk_menu_new();
+    add_menu_item(submenu, _("Open Alternate Tuning File..."),          G_CALLBACK(tuning_menu_open_scl), synth);
+    add_menu_item(submenu, _("Open Alternate Keyboard Map..."),         G_CALLBACK(tuning_menu_open_kbm), synth);
+    add_menu_item(submenu, _("Reset All Tuning Settings to Default"),   G_CALLBACK(tuning_menu_reset),    synth);
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+    
+    gtk_widget_show_all(menu);
+    return menu;
+}
+
+//
+
+static GtkWidget *
+file_open_dialog(GtkWindow *parent, gchar *title, gchar *filter_name, gchar *filter_pattern)
+{
+    GtkWidget *dialog = gtk_file_chooser_dialog_new(
+            title, parent,
+            GTK_FILE_CHOOSER_ACTION_OPEN,
+            GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+            GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+            NULL);
+    
+    GtkFileFilter *filter = gtk_file_filter_new();
+    gtk_file_filter_set_name(filter, filter_name);
+    gtk_file_filter_add_pattern(filter, filter_pattern);
+    gtk_file_chooser_set_filter(GTK_FILE_CHOOSER(dialog), filter);
+    
+    return dialog;
+}
+
+static void
+show_error_dialog(GtkWindow *parent, gchar *message, gchar *secondary)
+{
+    GtkWidget *dialog = gtk_message_dialog_new(parent,
+            GTK_DIALOG_DESTROY_WITH_PARENT,
+            GTK_MESSAGE_ERROR,
+            GTK_BUTTONS_OK,
+            message);
+    gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), secondary);
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+}
+
+static void tuning_menu_open_scl(GtkWidget *widget, Synthesizer *synth)
+{
+    GtkWindow *parent = GTK_WINDOW(gtk_widget_get_toplevel(widget));
+    GtkWidget *dialog = file_open_dialog(parent,
+            _("Open Scala (.scl) alternate tuning file"),
+            _("Scala scale files"), "*.[Ss][Cc][Ll]");
+    
+    if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+        char *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+        if (synth->loadTuningScale(filename) != 0) {
+            show_error_dialog(parent,
+                    _("Failed to load new tuning."),
+                    _("Reading the tuning file failed for some reason. \n"
+                      "Make sure your file has the correct format and try again."));
+        }
+        g_free(filename);
+    }
+    
+    gtk_widget_destroy(dialog);
+}
+
+static void tuning_menu_open_kbm(GtkWidget *widget, Synthesizer *synth)
+{
+    GtkWindow *parent = GTK_WINDOW(gtk_widget_get_toplevel(widget));
+    GtkWidget *dialog = file_open_dialog(parent,
+            _("Open alternate keyboard map (Scala .kbm format)"),
+            _("Scala keyboard map files"), "*.[Kk][Bb][Mm]");
+    
+    if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+        char *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+        if (synth->loadTuningKeymap(filename) != 0) {
+            show_error_dialog(parent,
+                    _("Failed to load new keyboard map."),
+                    _("Reading the keyboard map file failed for some reason. \n"
+                      "Make sure your file has the correct format and try again."));
+        }
+        g_free(filename);
+    }
+    
+    gtk_widget_destroy(dialog);
+}
+
+static void tuning_menu_reset(GtkWidget *widget, Synthesizer *synth)
+{
+    synth->defaultTuning();
 }

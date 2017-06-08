@@ -222,7 +222,7 @@ button_release_event (GtkWidget *widget, GdkEventButton *event, GtkWidget *prese
 #define KEY_CONTROL_PARAM_NUM	"param_num"
 
 GtkWidget *
-editor_pane_new (GtkAdjustment **adjustments, gboolean is_plugin)
+editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plugin)
 {
 	static int initialised;
 	if (!initialised) {
@@ -412,9 +412,9 @@ editor_pane_new (GtkAdjustment **adjustments, gboolean is_plugin)
 	GtkWidget *eventbox = gtk_event_box_new ();
 	gtk_container_add (GTK_CONTAINER (eventbox), fixed);
 	if (is_plugin) {
-		GtkWidget *presets_menu = presets_menu_new (adjustments);
-		gtk_menu_attach_to_widget (GTK_MENU (presets_menu), eventbox, NULL);
-		g_signal_connect (eventbox, "button-release-event", G_CALLBACK (button_release_event), presets_menu);
+		GtkWidget *menu = editor_menu_new (synthesizer, adjustments);
+		gtk_menu_attach_to_widget (GTK_MENU (menu), eventbox, NULL);
+		g_signal_connect (eventbox, "button-release-event", G_CALLBACK (button_release_event), menu);
 	}
 
 	return eventbox;

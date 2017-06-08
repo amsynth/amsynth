@@ -30,7 +30,7 @@ GtkWidget *
 controller_menu_new(int parameter);
 
 GtkWidget *
-presets_menu_new(GtkAdjustment **adjustments);
+editor_menu_new(void *synth, GtkAdjustment **adjustments);
 
 G_END_DECLS
 

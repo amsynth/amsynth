@@ -294,7 +294,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 					g_object_ref_sink(plugin->adjustments[i]); // assumes ownership of the floating reference
 					g_signal_connect(plugin->adjustments[i], "value-changed", G_CALLBACK(on_adjustment_value_changed), effect);
 				}
-				plugin->editorWidget = editor_pane_new(plugin->adjustments, TRUE);
+				plugin->editorWidget = editor_pane_new(plugin->synthesizer, plugin->adjustments, TRUE);
 				g_object_ref_sink(plugin->editorWidget);
 			}
 
@@ -372,13 +372,13 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 					continue;
 				}
 
-				memcpy(buffer, event->midiData, 4);
+				memcpy(buffer, event->midiData, event->byteSize);
 
 				amsynth_midi_event_t midi_event;
 				memset(&midi_event, 0, sizeof(midi_event));
 				midi_event.offset_frames = event->deltaFrames;
 				midi_event.buffer = buffer;
-				midi_event.length = 4;
+				midi_event.length = event->byteSize;
 				plugin->midiEvents.push_back(midi_event);
 
 				buffer += event->byteSize;

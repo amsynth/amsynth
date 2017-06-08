@@ -28,11 +28,11 @@
 
 G_BEGIN_DECLS
 
-GtkWidget * editor_pane_new (GtkAdjustment **adjustments, gboolean is_plugin);
+GtkWidget *
+editor_pane_new(void *synthesizer, GtkAdjustment **adjustments, gboolean is_plugin);
 
 void modal_midi_learn(Param param_index);
 
 G_END_DECLS
 
 #endif
-
