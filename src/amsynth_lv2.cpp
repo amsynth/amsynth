@@ -1,7 +1,7 @@
 /*
  *  amsynth_lv2.cpp
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -19,25 +19,18 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "midi.h"
+#include "amsynth_lv2.h"
+
 #include "Preset.h"
 #include "Synthesizer.h"
 
-#include "lv2/lv2plug.in/ns/ext/atom/util.h"
-#include "lv2/lv2plug.in/ns/ext/state/state.h"
-#include "lv2/lv2plug.in/ns/ext/urid/urid.h"
-#include "lv2/lv2plug.in/ns/ext/worker/worker.h"
+#include "lv2/lv2plug.in/ns/ext/atom/forge.h"
 #include "lv2/lv2plug.in/ns/ext/midi/midi.h"
-#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
+#include "lv2/lv2plug.in/ns/ext/patch/patch.h"
+#include "lv2/lv2plug.in/ns/ext/state/state.h"
+#include "lv2/lv2plug.in/ns/ext/worker/worker.h"
+#include "lv2/lv2plug.in/ns/lv2core/lv2_util.h"
 
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#define AMSYNTH_LV2_URI			"http://code.google.com/p/amsynth/amsynth"
-
-#define LOG_ERROR(msg)			fprintf(stderr, AMSYNTH_LV2_URI " error: " msg "\n")
 #ifdef DEBUG
 #define LOG_FUNCTION_CALL()		fprintf(stderr, AMSYNTH_LV2_URI " %s\n", __FUNCTION__)
 #else
@@ -49,10 +42,20 @@ struct amsynth_wrapper {
 	Synthesizer *synth;
 	float * out_l;
 	float * out_r;
+
 	const LV2_Atom_Sequence *midi_in_port;
+	const LV2_Atom_Sequence *control_port;
+	LV2_Atom_Forge forge;
+	LV2_Worker_Schedule *schedule;
+
 	float ** params;
 	struct {
 		LV2_URID midiEvent;
+		LV2_URID patch_Set;
+		LV2_URID patch_property;
+		LV2_URID patch_value;
+		LV2_URID amsynth_kbm_file;
+		LV2_URID amsynth_scl_file;
 	} uris;
 };
 
@@ -61,23 +64,32 @@ lv2_instantiate(const struct _LV2_Descriptor *descriptor, double sample_rate, co
 {
 	LOG_FUNCTION_CALL();
 
+	amsynth_wrapper *a = (amsynth_wrapper *)calloc(1, sizeof(amsynth_wrapper));
+
 	LV2_URID_Map *urid_map = NULL;
-	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_URID__map)) {
-			urid_map = (LV2_URID_Map *)features[i]->data;
-		}
-	}
-	if (urid_map == NULL) {
-		LOG_ERROR("host does not support " LV2_URID__map);
+	const char *missing = lv2_features_query(
+			features,
+			LV2_URID__map,        &urid_map,      true,
+			LV2_WORKER__schedule, &a->schedule,   true,
+			NULL);
+	if (missing) {
+		free(a);
 		return NULL;
 	}
 
-	amsynth_wrapper *a = (amsynth_wrapper *)calloc(1, sizeof(amsynth_wrapper));
 	a->bundle_path = strdup(bundle_path);
 	a->synth = new Synthesizer;
 	a->synth->setSampleRate((int)sample_rate);
 	a->params = (float **) calloc (kAmsynthParameterCount, sizeof (float *));
-	a->uris.midiEvent = urid_map->map(urid_map->handle, LV2_MIDI__MidiEvent);
+
+	a->uris.midiEvent          = urid_map->map(urid_map->handle, LV2_MIDI__MidiEvent);
+	a->uris.patch_Set          = urid_map->map(urid_map->handle, LV2_PATCH__Set);
+	a->uris.patch_property     = urid_map->map(urid_map->handle, LV2_PATCH__property);
+	a->uris.patch_value        = urid_map->map(urid_map->handle, LV2_PATCH__value);
+	a->uris.amsynth_kbm_file   = urid_map->map(urid_map->handle, AMSYNTH__tuning_kbm_file);
+	a->uris.amsynth_scl_file   = urid_map->map(urid_map->handle, AMSYNTH__tuning_scl_file);
+
+	lv2_atom_forge_init(&a->forge, urid_map);
 
 	return (LV2_Handle) a;
 }
@@ -99,12 +111,25 @@ lv2_connect_port(LV2_Handle instance, uint32_t port, void *data_location)
 {
 	amsynth_wrapper * a = (amsynth_wrapper *) instance;
 	switch (port) {
-	case 0: a->out_l = (float *)data_location; break;
-	case 1: a->out_r = (float *)data_location; break;
-	case 2: a->midi_in_port = (LV2_Atom_Sequence *)data_location; break;
-	default:
-		if ((port - 3) < kAmsynthParameterCount) { a->params[port-3] = (float *)data_location; }
-		break;
+		case PORT_CONTROL:
+			a->control_port = (LV2_Atom_Sequence *) data_location;
+			break;
+		case PORT_NOTIFY:
+			break;
+		case PORT_AUDIO_L:
+			a->out_l = (float *) data_location;
+			break;
+		case PORT_AUDIO_R:
+			a->out_r = (float *) data_location;
+			break;
+		case PORT_MIDI_IN:
+			a->midi_in_port = (LV2_Atom_Sequence *) data_location;
+			break;
+		default:
+			if (PORT_FIRST_PARAMETER >= port && (port - PORT_FIRST_PARAMETER) < kAmsynthParameterCount) {
+				a->params[port - PORT_FIRST_PARAMETER] = (float *) data_location;
+			}
+			break;
 	}
 }
 
@@ -136,6 +161,15 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 		}
 	}
 
+	LV2_ATOM_SEQUENCE_FOREACH(a->control_port, ev) {
+		if (lv2_atom_forge_is_object_type(&a->forge, ev->body.type)) {
+			const LV2_Atom_Object *obj = (const LV2_Atom_Object *) &ev->body;
+			if (obj->body.otype == a->uris.patch_Set) {
+				a->schedule->schedule_work(a->schedule->handle, lv2_atom_total_size(&ev->body), &ev->body);
+			}
+		}
+	}
+
 	for (unsigned i=0; i<kAmsynthParameterCount; i++) {
 		const float *host_value = a->params[i];
 		if (host_value != NULL) {
@@ -159,7 +193,8 @@ save(LV2_Handle                instance,
 	LOG_FUNCTION_CALL();
 
 	// host takes care of saving port values
-	// we have no additional state to save
+
+	// TODO: store current tuning setup
 
 	return LV2_STATE_SUCCESS;
 }
@@ -174,9 +209,65 @@ restore(LV2_Handle                  instance,
 	LOG_FUNCTION_CALL();
 
 	// host takes care of restoring port values
-	// we have no additional state to restore
-	
+
+	// TODO: restore current tuning setup
+
 	return LV2_STATE_SUCCESS;
+}
+
+static LV2_Worker_Status
+work(LV2_Handle                  instance,
+	 LV2_Worker_Respond_Function respond,
+	 LV2_Worker_Respond_Handle   handle,
+	 uint32_t                    size,
+	 const void*                 data)
+{
+	LOG_FUNCTION_CALL();
+
+	amsynth_wrapper * a = (amsynth_wrapper *) instance;
+
+	const LV2_Atom_Object *obj = (const LV2_Atom_Object *) data;
+	if (obj->body.otype == a->uris.patch_Set) {
+		const LV2_Atom *property = NULL;
+		const LV2_Atom *value = NULL;
+		lv2_atom_object_get(obj,
+							a->uris.patch_property, &property,
+							a->uris.patch_value, &value,
+							0);
+
+		LV2_URID urid = ((LV2_Atom_URID *) (void *) property)->body;
+		const char *filename = (const char *) LV2_ATOM_BODY_CONST(value);
+
+		fprintf(stderr, "amsynth lv2 worker: urid=%d filename=%s\n", urid, filename);
+
+		if (urid == a->uris.amsynth_kbm_file) {
+			if (strlen(filename)) {
+				a->synth->loadTuningKeymap(filename);
+			} else {
+				a->synth->defaultTuning();
+			}
+		}
+
+		if (urid == a->uris.amsynth_scl_file) {
+			if (strlen(filename)) {
+				a->synth->loadTuningScale(filename);
+			} else {
+				a->synth->defaultTuning();
+			}
+		}
+	}
+
+	return LV2_WORKER_SUCCESS;
+}
+
+static LV2_Worker_Status
+work_response(LV2_Handle  instance,
+			  uint32_t    size,
+			  const void* data)
+{
+	LOG_FUNCTION_CALL();
+
+	return LV2_WORKER_SUCCESS;
 }
 
 static const void *
@@ -184,10 +275,16 @@ lv2_extension_data(const char *uri)
 {
 	LOG_FUNCTION_CALL();
 
-	if (!strcmp(uri, LV2_STATE__interface)) {
+	if (strcmp(uri, LV2_STATE__interface) == 0) {
 		static const LV2_State_Interface state = { save, restore };
 		return &state;
 	}
+
+	if (strcmp(uri, LV2_WORKER__interface) == 0) {
+		static const LV2_Worker_Interface worker = { work, work_response, NULL };
+		return &worker;
+	}
+
 	return NULL;
 }
 

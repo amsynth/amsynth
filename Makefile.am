@@ -184,7 +184,7 @@ if BUILD_LV2
 
 amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
 noinst_LTLIBRARIES += amsynth_lv2.la
-amsynth_lv2_la_SOURCES = src/amsynth_lv2.cpp $(libcore_sources) $(libdsp_sources) \
+amsynth_lv2_la_SOURCES = src/amsynth_lv2.cpp src/amsynth_lv2.h $(libcore_sources) $(libdsp_sources) \
 	include/lv2/lv2plug.in/ns/lv2core/lv2.h \
 	include/lv2/lv2plug.in/ns/lv2core/lv2_util.h \
 	include/lv2/lv2plug.in/ns/ext/time/time.h \
@@ -218,7 +218,7 @@ amsynth_lv2_la_CPPFLAGS = $(AM_CPPFLAGS) -I"$(top_srcdir)/include" @LV2_CFLAGS@
 amsynth_lv2_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2_descriptor" -disable-static
 
 noinst_LTLIBRARIES += amsynth_lv2_gtk.la
-amsynth_lv2_gtk_la_SOURCES = src/amsynth_lv2_ui_gtk.c $(libcore_sources) $(libgui_sources)
+amsynth_lv2_gtk_la_SOURCES = src/amsynth_lv2_ui_gtk.cpp $(libcore_sources) $(libgui_sources)
 amsynth_lv2_gtk_la_CPPFLAGS = $(AM_CPPFLAGS) -I"$(top_srcdir)/include" @LV2_CFLAGS@
 amsynth_lv2_gtk_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2ui_descriptor" -disable-static
 amsynth_lv2_gtk_la_LIBADD = @LV2_LIBS@

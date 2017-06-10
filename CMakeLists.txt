@@ -217,11 +217,12 @@ add_library(amsynth_lv2_gtk MODULE
         src/GUI/editor_menus.h
         src/GUI/editor_pane.c
         src/GUI/editor_pane.h
-        src/amsynth_lv2_ui_gtk.c
+        src/amsynth_lv2_ui_gtk.cpp
         )
 set_target_properties(amsynth_lv2_gtk PROPERTIES PREFIX "")
 target_link_libraries(amsynth_lv2_gtk amsynth_core ${GTKMM_LIBRARIES})
 
+add_dependencies(amsynth_lv2 amsynth_lv2_gtk)
 
 add_library(amsynth_vst MODULE src/amsynth_vst.cpp)
 target_compile_options(amsynth_vst PUBLIC -DWITH_GUI)
