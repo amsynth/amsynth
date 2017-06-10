@@ -31,6 +31,8 @@
 #include "lv2/lv2plug.in/ns/ext/worker/worker.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2_util.h"
 
+#include <stdio.h>
+
 #ifdef DEBUG
 #define LOG_FUNCTION_CALL()		fprintf(stderr, AMSYNTH_LV2_URI " %s\n", __FUNCTION__)
 #else
