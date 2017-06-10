@@ -160,7 +160,7 @@ if BUILD_DSSI
 
 dssidir = $(libdir)/dssi
 noinst_LTLIBRARIES += amsynth_dssi.la
-amsynth_dssi_la_SOURCES = src/dssi.cpp $(libcore_sources) $(libdsp_sources)
+amsynth_dssi_la_SOURCES = src/amsynth_dssi.cpp src/amsynth_dssi.h $(libcore_sources) $(libdsp_sources)
 amsynth_dssi_la_CPPFLAGS = $(AM_CPPFLAGS) @DSSI_CFLAGS@
 amsynth_dssi_la_LDFLAGS = -rpath $(dssidir) -avoid-version -module -export-symbols-regex "dssi_descriptor" -disable-static
 
@@ -169,7 +169,7 @@ endif
 if BUILD_DSSI_GUI
 
 noinst_PROGRAMS = amsynth_dssi_gtk
-amsynth_dssi_gtk_SOURCES = src/amsynth_dssi_gui.c $(libcore_sources) $(libgui_sources)
+amsynth_dssi_gtk_SOURCES = src/amsynth_dssi_gtk.cpp $(libcore_sources) $(libgui_sources)
 amsynth_dssi_gtk_CPPFLAGS = $(AM_CPPFLAGS) @DSSI_CFLAGS@ @GTK_CFLAGS@ @LIBLO_CFLAGS@
 amsynth_dssi_gtk_LDADD = @DSSI_LIBS@ @GTK_LIBS@ @LIBLO_LIBS@ -lstdc++
 
