@@ -37,7 +37,7 @@
 
 // works around an issue in qtractor version <= 0.5.6
 // http://sourceforge.net/p/qtractor/tickets/19/
-//#define CALL_LV2UI_WRITE_FUNCTION_ON_IDLE 1
+#define CALL_LV2UI_WRITE_FUNCTION_ON_IDLE 1
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -84,7 +84,7 @@ static gboolean lv2_ui_on_idle(gpointer data)
 		if (ui->_adjustment_changed[i] && ui->_adjustments[i]) {
 			float value = gtk_adjustment_get_value(ui->_adjustments[i]);
 			ui->_write_function(ui->_controller,
-				kAmsynthPortIndexForFirstParameter + i,
+				PORT_FIRST_PARAMETER + i,
 				sizeof(float), 0, &value);
 		}
 	}
@@ -227,7 +227,7 @@ on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
 			float value = gtk_adjustment_get_value(adjustment);
 			if (ui->_write_function != 0) {
 				ui->_write_function(ui->_controller,
-									PORT_FIRST_PARAMETER + i,
+					PORT_FIRST_PARAMETER + i,
 					sizeof(float), 0, &value);
 			}
 #endif
