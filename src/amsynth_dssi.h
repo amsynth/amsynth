@@ -22,7 +22,4 @@
 #ifndef AMSYNTH_DSSI_H
 #define AMSYNTH_DSSI_H
 
-#define DSSI_CONFIGURE_KEY_KBM_FILE "tuning-kbm-file"
-#define DSSI_CONFIGURE_KEY_SCL_FILE "tuning-scl-file"
-
 #endif //AMSYNTH_DSSI_H

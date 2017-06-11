@@ -27,6 +27,13 @@
 
 #include <vector>
 
+//
+// Property names
+//
+#define PROP_KBM_FILE "tuning_kbm_file"
+#define PROP_SCL_FILE "tuning_scl_file"
+
+
 class MidiController;
 class PresetController;
 class VoiceAllocationUnit;

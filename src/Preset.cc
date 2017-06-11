@@ -151,20 +151,18 @@ Preset::AddListenerToAll	(UpdateListener* ul)
 	for (unsigned i=0; i<mParameters.size(); i++) getParameter(i).addUpdateListener (*ul);
 }
 
-std::string
-Preset::toString()
+void
+Preset::toString(std::stringstream &stream)
 {
-	std::stringstream stream;
 	stream << "amSynth1.0preset" << std::endl;
 	stream << "<preset> " << "<name> " << getName() << std::endl;
 	for (unsigned n = 0; n < ParameterCount(); n++) {
 		stream << "<parameter> " << getParameter(n).getName() << " " << getParameter(n).getValue() << std::endl;
 	}
-	return stream.str();
 }
 
 bool
-Preset::fromString(std::string str)
+Preset::fromString(const std::string &str)
 {
 	std::stringstream stream (str);
 

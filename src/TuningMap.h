@@ -49,11 +49,16 @@ public:
 	void	defaultScale		();
 	void	defaultKeyMap		();
 
+	const std::string & getScaleFile() const { return scaleFile; }
+	const std::string & getKeyMapFile() const { return keyMapFile; }
+
 	double	noteToPitch		(int note) const;
 
 	bool	inActiveRange   (int note) const { return activeRange[note]; }
+
 private:
-	std::string		scaleDesc;
+	std::string scaleFile;
+	std::string keyMapFile;
 
 	std::vector<double>	scale;
 	// note that logical indices to this begin with 1

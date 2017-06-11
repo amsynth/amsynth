@@ -112,12 +112,12 @@ static char * configure(LADSPA_Handle Instance, const char *Key, const char *Val
 {
 	Synthesizer *synthesizer = ((amsynth_wrapper *) Instance)->synth;
 
-	if (strcmp(Key, DSSI_CONFIGURE_KEY_KBM_FILE) == 0) {
+	if (strcmp(Key, PROP_KBM_FILE) == 0) {
 		synthesizer->loadTuningKeymap(Value);
 		return NULL;
 	}
 
-	if (strcmp(Key, DSSI_CONFIGURE_KEY_SCL_FILE) == 0) {
+	if (strcmp(Key, PROP_SCL_FILE) == 0) {
 		synthesizer->loadTuningScale(Value);
 		return NULL;
 	}

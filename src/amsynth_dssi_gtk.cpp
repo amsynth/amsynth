@@ -191,18 +191,12 @@ struct SynthesizerStub : ISynthesizer
 {
 	virtual int loadTuningKeymap(const char *filename)
 	{
-		return host_configure(DSSI_CONFIGURE_KEY_KBM_FILE, filename);
+		return host_configure(PROP_KBM_FILE, filename);
 	}
 
 	virtual int loadTuningScale(const char *filename)
 	{
-		return host_configure(DSSI_CONFIGURE_KEY_SCL_FILE, filename);
-	}
-
-	virtual void defaultTuning()
-	{
-		host_configure(DSSI_CONFIGURE_KEY_KBM_FILE, "");
-		host_configure(DSSI_CONFIGURE_KEY_SCL_FILE, "");
+		return host_configure(PROP_SCL_FILE, filename);
 	}
 };
 

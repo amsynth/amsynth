@@ -26,6 +26,7 @@
 
 #include "Parameter.h"
 
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -51,9 +52,10 @@ public:
     void			randomise		();
     
     void			AddListenerToAll(UpdateListener*);
-    
-    std::string		toString		();
-    bool			fromString		(std::string str);
+
+    std::string		toString		() { std::stringstream stream; toString(stream); return stream.str(); }
+    void			toString		(std::stringstream &);
+    bool			fromString		(const std::string &str);
 
 	static bool 	shouldIgnoreParameter(int parameter);
 	static void 	setShouldIgnoreParameter(int parameter, bool ignore);
