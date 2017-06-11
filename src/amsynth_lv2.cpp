@@ -128,7 +128,7 @@ lv2_connect_port(LV2_Handle instance, uint32_t port, void *data_location)
 			a->midi_in_port = (LV2_Atom_Sequence *) data_location;
 			break;
 		default:
-			if (PORT_FIRST_PARAMETER >= port && (port - PORT_FIRST_PARAMETER) < kAmsynthParameterCount) {
+			if (PORT_FIRST_PARAMETER <= port && (port - PORT_FIRST_PARAMETER) < kAmsynthParameterCount) {
 				a->params[port - PORT_FIRST_PARAMETER] = (float *) data_location;
 			}
 			break;
