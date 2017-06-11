@@ -163,7 +163,7 @@ void Synthesizer::setMaxNumVoices(int value)
 
 int Synthesizer::loadTuningKeymap(const char *filename)
 {
-	if (strlen(filename))
+	if (filename && strlen(filename))
 		return _voiceAllocationUnit->loadKeyMap(filename);
 
 	_voiceAllocationUnit->tuningMap.defaultKeyMap();
@@ -172,7 +172,7 @@ int Synthesizer::loadTuningKeymap(const char *filename)
 
 int Synthesizer::loadTuningScale(const char *filename)
 {
-	if (strlen(filename))
+	if (filename && strlen(filename))
 		return _voiceAllocationUnit->loadScale(filename);
 
 	_voiceAllocationUnit->tuningMap.defaultScale();
