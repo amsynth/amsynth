@@ -243,13 +243,12 @@ restore(LV2_Handle                  instance,
 
 	// host takes care of restoring port values
 
-	std::vector<LV2_URID> urids { a->uris.amsynth_kbm_file, a->uris.amsynth_scl_file };
-	std::vector<LV2_URID>::iterator it;
-	for (it = urids.begin(); it != urids.end(); ++it) {
+	LV2_URID urids[] = { a->uris.amsynth_kbm_file, a->uris.amsynth_scl_file };
+	for (int i = 0; i < sizeof(urids) / sizeof(urids[0]); i ++) {
 		size_t size = 0; uint32_t type = 0, vflags = 0;
-		const void *value = retrieve(handle, *it, &size, &type, &vflags);
+		const void *value = retrieve(handle, urids[i], &size, &type, &vflags);
 		if (value && type == a->uris.atom_String) {
-			a->patchSet(*it, (const char *) value);
+			a->patchSet(urids[i], (const char *) value);
 		}
 	}
 
