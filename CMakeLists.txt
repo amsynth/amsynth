@@ -224,7 +224,20 @@ target_link_libraries(amsynth_lv2_gtk amsynth_core ${GTKMM_LIBRARIES})
 
 add_dependencies(amsynth_lv2 amsynth_lv2_gtk)
 
-add_library(amsynth_vst MODULE src/amsynth_vst.cpp)
+add_library(amsynth_vst MODULE
+        src/amsynth_vst.cpp
+        src/GUI/bitmap_button.c
+        src/GUI/bitmap_button.h
+        src/GUI/bitmap_knob.c
+        src/GUI/bitmap_knob.h
+        src/GUI/bitmap_popup.c
+        src/GUI/bitmap_popup.h
+        src/GUI/controllers.h
+        src/GUI/editor_menus.cpp
+        src/GUI/editor_menus.h
+        src/GUI/editor_pane.c
+        src/GUI/editor_pane.h
+        )
 target_compile_options(amsynth_vst PUBLIC -DWITH_GUI)
 set_target_properties(amsynth_vst PROPERTIES PREFIX "")
 target_link_libraries(amsynth_vst amsynth_core ${GTKMM_LIBRARIES})
