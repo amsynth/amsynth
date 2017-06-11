@@ -35,7 +35,6 @@ struct ISynthesizer
 {
     virtual int loadTuningKeymap(const char *filename) = 0;
     virtual int loadTuningScale(const char *filename) = 0;
-    virtual void defaultTuning() = 0;
 };
 
 class Synthesizer : ISynthesizer
@@ -74,7 +73,6 @@ public:
 
 	virtual int loadTuningKeymap(const char *filename);
 	virtual int loadTuningScale(const char *filename);
-	virtual void defaultTuning();
 
 	void setSampleRate(int sampleRate);
 

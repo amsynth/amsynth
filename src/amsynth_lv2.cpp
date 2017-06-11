@@ -72,19 +72,11 @@ struct amsynth_wrapper {
 	{
 		patch_values[urid] = (std::string) value;
 
-		if (urid == uris.amsynth_kbm_file) {
-			if (strlen(value))
-				synth.loadTuningKeymap(value);
-			else
-				synth.defaultTuning();
-		}
+		if (urid == uris.amsynth_kbm_file)
+			synth.loadTuningKeymap(value);
 
-		if (urid == uris.amsynth_scl_file) {
-			if (strlen(value))
-				synth.loadTuningScale(value);
-			else
-				synth.defaultTuning();
-		}
+		if (urid == uris.amsynth_scl_file)
+			synth.loadTuningScale(value);
 	}
 };
 

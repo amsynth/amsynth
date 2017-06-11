@@ -247,5 +247,6 @@ static void tuning_menu_open_kbm(GtkWidget *widget, Synthesizer *synth)
 
 static void tuning_menu_reset(GtkWidget *widget, Synthesizer *synth)
 {
-    synth->defaultTuning();
+    synth->loadTuningKeymap(NULL);
+    synth->loadTuningScale(NULL);
 }

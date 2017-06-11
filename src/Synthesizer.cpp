@@ -163,17 +163,20 @@ void Synthesizer::setMaxNumVoices(int value)
 
 int Synthesizer::loadTuningKeymap(const char *filename)
 {
-	return _voiceAllocationUnit->loadKeyMap(filename);
+	if (strlen(filename))
+		return _voiceAllocationUnit->loadKeyMap(filename);
+
+	_voiceAllocationUnit->tuningMap.defaultKeyMap();
+	return 0;
 }
 
 int Synthesizer::loadTuningScale(const char *filename)
 {
-	return _voiceAllocationUnit->loadScale(filename);
-}
+	if (strlen(filename))
+		return _voiceAllocationUnit->loadScale(filename);
 
-void Synthesizer::defaultTuning()
-{
-	_voiceAllocationUnit->defaultTuning();
+	_voiceAllocationUnit->tuningMap.defaultScale();
+	return 0;
 }
 
 void Synthesizer::setSampleRate(int sampleRate)

@@ -999,7 +999,8 @@ GUI::tuning_reset	( )
 
 	gint result = gtk_dialog_run (GTK_DIALOG (dialog));
 	if (result == GTK_RESPONSE_YES) {
-		m_synth->defaultTuning();
+		m_synth->loadTuningKeymap(NULL);
+		m_synth->loadTuningScale(NULL);
 	}
 
 	gtk_widget_destroy (dialog);
