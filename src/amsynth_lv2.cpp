@@ -40,17 +40,8 @@
 #endif
 
 struct amsynth_wrapper {
-	const char *bundle_path;
 	Synthesizer *synth;
-	float * out_l;
-	float * out_r;
 
-	const LV2_Atom_Sequence *midi_in_port;
-	const LV2_Atom_Sequence *control_port;
-	LV2_Atom_Forge forge;
-	LV2_Worker_Schedule *schedule;
-
-	float ** params;
 	struct {
 		LV2_URID midiEvent;
 		LV2_URID patch_Set;
@@ -59,6 +50,15 @@ struct amsynth_wrapper {
 		LV2_URID amsynth_kbm_file;
 		LV2_URID amsynth_scl_file;
 	} uris;
+
+	LV2_Atom_Forge forge;
+	LV2_Worker_Schedule *schedule;
+
+	const LV2_Atom_Sequence *control_port;
+	const LV2_Atom_Sequence *midi_in_port;
+	float *out_l;
+	float *out_r;
+	float *param_ports[kAmsynthParameterCount];
 };
 
 static LV2_Handle
@@ -79,10 +79,8 @@ lv2_instantiate(const struct _LV2_Descriptor *descriptor, double sample_rate, co
 		return NULL;
 	}
 
-	a->bundle_path = strdup(bundle_path);
 	a->synth = new Synthesizer;
 	a->synth->setSampleRate((int)sample_rate);
-	a->params = (float **) calloc (kAmsynthParameterCount, sizeof (float *));
 
 	a->uris.midiEvent          = urid_map->map(urid_map->handle, LV2_MIDI__MidiEvent);
 	a->uris.patch_Set          = urid_map->map(urid_map->handle, LV2_PATCH__Set);
@@ -102,9 +100,7 @@ lv2_cleanup(LV2_Handle instance)
 	LOG_FUNCTION_CALL();
 
 	amsynth_wrapper * a = (amsynth_wrapper *) instance;
-	free ((void *)a->bundle_path);
 	delete a->synth;
-	free (a->params);
 	free ((void *)a);
 }
 
@@ -129,7 +125,7 @@ lv2_connect_port(LV2_Handle instance, uint32_t port, void *data_location)
 			break;
 		default:
 			if (PORT_FIRST_PARAMETER <= port && (port - PORT_FIRST_PARAMETER) < kAmsynthParameterCount) {
-				a->params[port - PORT_FIRST_PARAMETER] = (float *) data_location;
+				a->param_ports[port - PORT_FIRST_PARAMETER] = (float *) data_location;
 			}
 			break;
 	}
@@ -173,7 +169,7 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 	}
 
 	for (unsigned i=0; i<kAmsynthParameterCount; i++) {
-		const float *host_value = a->params[i];
+		const float *host_value = a->param_ports[i];
 		if (host_value != NULL) {
 			if (a->synth->getParameterValue((Param)i) != *host_value) {
 				a->synth->setParameterValue((Param)i, *host_value);
