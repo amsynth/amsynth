@@ -163,7 +163,7 @@ void testOscillatorHighFrequency() {
     osc.SetSampleRate(44100);
     for (int waveform = Oscillator::Waveform_Sine; waveform <= Oscillator::Waveform_Random; waveform++) {
         osc.SetWaveform((Oscillator::Waveform)waveform);
-        osc.ProcessSamples(buffer, VoiceBoard::kMaxProcessBufferSize, INT_MAX, 0.5f);
+        osc.ProcessSamples(buffer, VoiceBoard::kMaxProcessBufferSize, 99999, 0.5f);
     }
 }
 
