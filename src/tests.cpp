@@ -156,6 +156,17 @@ void testPresetValueStrings() {
     assert(count(parameter_get_value_strings(kAmsynthParameter_PortamentoMode)) == PortamentoModeLegato + 1);
 }
 
+void testOscillatorHighFrequency() {
+    static float buffer[VoiceBoard::kMaxProcessBufferSize];
+    
+    Oscillator osc;
+    osc.SetSampleRate(44100);
+    for (int waveform = Oscillator::Waveform_Sine; waveform <= Oscillator::Waveform_Random; waveform++) {
+        osc.SetWaveform((Oscillator::Waveform)waveform);
+        osc.ProcessSamples(buffer, VoiceBoard::kMaxProcessBufferSize, INT_MAX, 0.5f);
+    }
+}
+
 #define RUN_TEST(testFunction) do { printf("%s()... ", #testFunction); testFunction(); printf("OK\n"); } while (0)
 
 int main(int argc, const char * argv[])  {
@@ -163,5 +174,6 @@ int main(int argc, const char * argv[])  {
     RUN_TEST(testPresetIgnoredParameters);
     RUN_TEST(testPresetValueStrings);
     RUN_TEST(testMidiAllNotesOff);
+    RUN_TEST(testOscillatorHighFrequency);
     return 0;
 }
