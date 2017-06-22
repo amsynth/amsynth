@@ -101,20 +101,14 @@ struct SynthesizerStub : ISynthesizer
 
 	virtual int loadTuningKeymap(const char *filename)
 	{
-		send(ui->uris.amsynth_kbm_file, filename);
+		send(ui->uris.amsynth_kbm_file, filename ?: "");
 		return 0;
 	}
 
 	virtual int loadTuningScale(const char *filename)
 	{
-		send(ui->uris.amsynth_scl_file, filename);
+		send(ui->uris.amsynth_scl_file, filename ?: "");
 		return 0;
-	}
-
-	virtual void defaultTuning()
-	{
-		send(ui->uris.amsynth_kbm_file, "");
-		send(ui->uris.amsynth_scl_file, "");
 	}
 
 	void send(LV2_URID key, const char *value)
