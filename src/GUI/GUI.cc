@@ -722,8 +722,7 @@ GUI::event_handler(const int e)
 	
 	case evConfig:
 	{
-		ConfigDialog dlg (*this);
-		dlg.run ();
+		config_dialog_run(this->gobj());
 		break;
 	}
 	

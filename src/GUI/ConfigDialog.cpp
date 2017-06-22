@@ -1,7 +1,7 @@
 /*
  *  ConfigDialog.cpp
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -23,90 +23,92 @@
 
 #include "../Configuration.h"
 
+#include <cstdarg>
 #include <glib/gi18n.h>
+#include <strings.h>
 
-using namespace Gtk;
 
-ConfigDialog::ConfigDialog (Window& parent)
-:	Dialog (_("amsynth configuration"), parent)
+static GtkWidget *
+make_combo(const char *selected, const char *text1, ...)
 {
-	mMidiDriver.append_text ("auto");
-	mMidiDriver.append_text ("alsa");
-	mMidiDriver.append_text ("oss");
-	
-	mAudioDriver.append_text ("auto");
-	mAudioDriver.append_text ("jack");
-	mAudioDriver.append_text ("alsa-mmap");
-	mAudioDriver.append_text ("alsa");
-	mAudioDriver.append_text ("oss");
-	
-	mSampleRate.append_text ("22050");
-	mSampleRate.append_text ("44100");
-	mSampleRate.append_text ("48000");
-	mSampleRate.append_text ("88200");
-	mSampleRate.append_text ("96000");
-	mSampleRate.append_text ("176400");
-	mSampleRate.append_text ("192000");
-	
-	get_vbox()->add (* manage (new Label (_("Preferred MIDI Driver"))));
-	get_vbox()->add (mMidiDriver);
-	get_vbox()->add (*manage (new Label (_("OSS MIDI Device"))));
-	get_vbox()->add (mOSSMidiDevice);
-	get_vbox()->add (*manage (new Label (_("Preferred Audio Driver"))));
-	get_vbox()->add (mAudioDriver);
-	get_vbox()->add (*manage (new Label (_("OSS Audio Device"))));
-	get_vbox()->add (mOSSAudioDevice);
-	get_vbox()->add (*manage (new Label (_("ALSA Audio Device"))));
-	get_vbox()->add (mALSAAudioDevice);
-	get_vbox()->add (*manage (new Label (_("Sample Rate"))));
-	get_vbox()->add (mSampleRate);
-	get_vbox()->add (*manage (new Label ("")));
-	get_vbox()->add (*manage (new Label (_("Changes take effect after restarting amsynth"))));
-	
-	ReadValues();
-	
-	add_button (Stock::OK, RESPONSE_OK);
-	add_button (Stock::CANCEL, RESPONSE_CANCEL);
-	
-	show_all_children();
+	GtkWidget *widget = gtk_combo_box_text_new();
+
+	va_list args;
+	va_start(args, text1);
+	gint i = 0, active = 0;
+	const char *text = text1;
+	while (text) {
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(widget), text);
+		if (strcasecmp(text, selected) == 0)
+			active = i;
+		text = va_arg(args, const char *);
+		i++;
+	}
+	va_end(args);
+
+	gtk_combo_box_set_active(GTK_COMBO_BOX(widget), active);
+
+	return widget;
 }
 
-#include <cctype>
-std::string stringToLower(std::string myString)
-{
-	std::transform (myString.begin(), myString.end(), myString.begin(), tolower);
-	return myString;
-}
-
-void
-ConfigDialog::ReadValues ()
+void config_dialog_run(GtkWindow *parent)
 {
 	Configuration & config = Configuration::get();
-	mMidiDriver.set_active_text (stringToLower (config.midi_driver));
-	mOSSMidiDevice.set_text (config.oss_midi_device);
-	mAudioDriver.set_active_text (stringToLower (config.audio_driver));
-	mOSSAudioDevice.set_text (config.oss_audio_device);
-	mALSAAudioDevice.set_text (config.alsa_audio_device);
-	std::ostringstream rateStr; rateStr << config.sample_rate;
-	mSampleRate.set_active_text (rateStr.str());
-}
 
-void
-ConfigDialog::WriteValues ()
-{
-	Configuration & config = Configuration::get();
-	config.midi_driver = mMidiDriver.get_active_text ();
-	config.oss_midi_device = mOSSMidiDevice.get_text ();
-	config.audio_driver = mAudioDriver.get_active_text ();
-	config.oss_audio_device = mOSSAudioDevice.get_text ();
-	config.alsa_audio_device = mALSAAudioDevice.get_text ();
-	config.sample_rate = strtol (mSampleRate.get_active_text().c_str(), NULL, 0);
-	config.save();
-}
+	GtkWidget *dialog = gtk_dialog_new_with_buttons(
+			_("amsynth configuration"), parent, GTK_DIALOG_MODAL,
+			GTK_STOCK_OK,     GTK_RESPONSE_ACCEPT,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+			NULL);
 
-void
-ConfigDialog::on_response (int response_id)
-{
-	if (RESPONSE_OK == response_id) WriteValues ();
-}
+	GtkWidget *widget = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+	GtkBox *vbox = GTK_BOX(widget);
 
+	gtk_box_pack_start_defaults(vbox, gtk_label_new(_("Preferred MIDI Driver")));
+	GtkWidget *midi_combo = make_combo(config.midi_driver.c_str(), "auto", "oss", "alsa", NULL);
+	gtk_box_pack_start_defaults(vbox, midi_combo);
+
+	gtk_box_pack_start_defaults(vbox, gtk_label_new(_("OSS MIDI Device")));
+	GtkWidget *oss_midi_entry = gtk_entry_new();
+	gtk_entry_set_text(GTK_ENTRY(oss_midi_entry), config.oss_midi_device.c_str());
+	gtk_box_pack_start_defaults(vbox, oss_midi_entry);
+
+	gtk_box_pack_start_defaults(vbox, gtk_label_new(_("Preferred Audio Driver")));
+	GtkWidget *audio_combo = make_combo(config.audio_driver.c_str(), "auto", "jack", "alsa-mmap", "alsa", "oss", NULL);
+	gtk_box_pack_start_defaults(vbox, audio_combo);
+
+	gtk_box_pack_start_defaults(vbox, gtk_label_new(_("OSS Audio Device")));
+	GtkWidget *oss_audio_entry = gtk_entry_new();
+	gtk_entry_set_text(GTK_ENTRY(oss_audio_entry), config.oss_audio_device.c_str());
+	gtk_box_pack_start_defaults(vbox, oss_audio_entry);
+
+	gtk_box_pack_start_defaults(vbox, gtk_label_new(_("ALSA Audio Device")));
+	GtkWidget *alsa_audio_entry = gtk_entry_new();
+	gtk_entry_set_text(GTK_ENTRY(alsa_audio_entry), config.alsa_audio_device.c_str());
+	gtk_box_pack_start_defaults(vbox, alsa_audio_entry);
+
+	gtk_box_pack_start_defaults(vbox, gtk_label_new(_("Sample Rate")));
+	char sample_rate[10] = "";
+	sprintf(sample_rate, "%d", config.sample_rate);
+	GtkWidget *sample_rate_combo = make_combo(sample_rate, "22050", "44100", "48000", "88200", "96000", "176400", "192000", NULL);
+
+	gtk_box_pack_start_defaults(vbox, sample_rate_combo);
+
+	gtk_box_pack_start_defaults(vbox, gtk_label_new(_("")));
+	gtk_box_pack_start_defaults(vbox, gtk_label_new(_("Changes take effect after restarting amsynth")));
+
+	gtk_widget_show_all(dialog);
+
+	const gint response = gtk_dialog_run(GTK_DIALOG(dialog));
+	if (response == GTK_RESPONSE_ACCEPT) {
+		config.midi_driver = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(midi_combo));
+		config.oss_midi_device = gtk_entry_get_text(GTK_ENTRY(oss_midi_entry));
+		config.audio_driver = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(audio_combo));
+		config.oss_audio_device = gtk_entry_get_text(GTK_ENTRY(oss_audio_entry));
+		config.alsa_audio_device = gtk_entry_get_text(GTK_ENTRY(alsa_audio_entry));
+		config.sample_rate = strtol(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(sample_rate_combo)), NULL, 0);
+		config.save();
+	}
+
+	gtk_widget_destroy(dialog);
+}

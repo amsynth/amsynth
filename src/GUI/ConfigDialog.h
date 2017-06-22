@@ -1,7 +1,7 @@
 /*
  *  ConfigDialog.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -22,25 +22,8 @@
 #ifndef _ConfigDialog_h
 #define _ConfigDialog_h
 
-#include <gtkmm.h>
+#include <gtk/gtk.h>
 
-class ConfigDialog : public Gtk::Dialog
-{
-public:
-	ConfigDialog (Gtk::Window& parent);
-	
-protected:
-	void ReadValues ();
-	void WriteValues ();
-	virtual void on_response (int);
-
-private:
-	Gtk::ComboBoxText	mMidiDriver;
-	Gtk::ComboBoxText	mAudioDriver;
-	Gtk::ComboBoxText	mSampleRate;
-	Gtk::Entry		mOSSMidiDevice;
-	Gtk::Entry		mOSSAudioDevice;
-	Gtk::Entry		mALSAAudioDevice;
-};
+void config_dialog_run(GtkWindow *parent);
 
 #endif
