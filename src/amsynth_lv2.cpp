@@ -43,7 +43,7 @@
 #endif
 
 struct amsynth_wrapper {
-	amsynth_wrapper() : schedule(0), control_port(0), midi_in_port(0), out_l(0), out_r(0) {}
+	amsynth_wrapper() : schedule(0), control_port(0), out_l(0), out_r(0) {}
 
 	Synthesizer synth;
 
@@ -61,7 +61,6 @@ struct amsynth_wrapper {
 	LV2_Worker_Schedule *schedule;
 
 	const LV2_Atom_Sequence *control_port;
-	const LV2_Atom_Sequence *midi_in_port;
 	float *out_l;
 	float *out_r;
 	float *param_ports[kAmsynthParameterCount];
@@ -137,9 +136,6 @@ lv2_connect_port(LV2_Handle instance, uint32_t port, void *data_location)
 		case PORT_AUDIO_R:
 			a->out_r = (float *) data_location;
 			break;
-		case PORT_MIDI_IN:
-			a->midi_in_port = (LV2_Atom_Sequence *) data_location;
-			break;
 		default:
 			if (PORT_FIRST_PARAMETER <= port && (port - PORT_FIRST_PARAMETER) < kAmsynthParameterCount) {
 				a->param_ports[port - PORT_FIRST_PARAMETER] = (float *) data_location;
@@ -166,7 +162,7 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 	amsynth_wrapper * a = (amsynth_wrapper *) instance;
 
 	std::vector<amsynth_midi_event_t> midi_events;
-	LV2_ATOM_SEQUENCE_FOREACH(a->midi_in_port, ev) {
+	LV2_ATOM_SEQUENCE_FOREACH(a->control_port, ev) {
 		if (ev->body.type == a->uris.midiEvent) {
 			amsynth_midi_event_t midi_event = {0};
 			midi_event.offset_frames = ev->time.frames;
@@ -174,9 +170,6 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 			midi_event.length = ev->body.size;
 			midi_events.push_back(midi_event);
 		}
-	}
-
-	LV2_ATOM_SEQUENCE_FOREACH(a->control_port, ev) {
 		if (lv2_atom_forge_is_object_type(&a->forge, ev->body.type)) {
 			const LV2_Atom_Object *obj = (const LV2_Atom_Object *) &ev->body;
 			if (obj->body.otype == a->uris.patch_Set) {

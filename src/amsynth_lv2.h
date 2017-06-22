@@ -31,8 +31,7 @@ enum {
     PORT_NOTIFY             = 1,
     PORT_AUDIO_L            = 2,
     PORT_AUDIO_R            = 3,
-    PORT_MIDI_IN            = 4,
-    PORT_FIRST_PARAMETER    = 5,
+    PORT_FIRST_PARAMETER    = 4,
 };
 
 #endif //AMSYNTH_LV2_H

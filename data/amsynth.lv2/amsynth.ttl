@@ -1,5 +1,6 @@
 @prefix atom:    <http://lv2plug.in/ns/ext/atom#> .
 @prefix lv2:     <http://lv2plug.in/ns/lv2core#> .
+@prefix midi:    <http://lv2plug.in/ns/ext/midi#> .
 @prefix epp:     <http://lv2plug.in/ns/ext/port-props#> .
 @prefix uiext:   <http://lv2plug.in/ns/extensions/ui#> .
 @prefix pg:      <http://lv2plug.in/ns/ext/port-groups#> .
@@ -97,7 +98,8 @@
         a lv2:InputPort ,
             atom:AtomPort ;
         atom:bufferType atom:Sequence ;
-        atom:supports patch:Message ;
+        atom:supports midi:MidiEvent ,
+            patch:Message ;
         lv2:designation lv2:control ;
         lv2:index 0 ;
         lv2:symbol "control" ;
@@ -129,16 +131,8 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_out> ;
     ] , [
         a lv2:InputPort ,
-            atom:AtomPort ;
-        atom:bufferType atom:Sequence ;
-        atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ;
-        lv2:index 4 ;
-        lv2:symbol "midi";
-        lv2:name "Input";
-    ] , [
-        a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 5 ;
+        lv2:index 4 ;
         lv2:symbol "amp_attack" ;
         lv2:name "Amp Attack" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -150,7 +144,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 6 ;
+        lv2:index 5 ;
         lv2:symbol "amp_decay" ;
         lv2:name "Amp Decay" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -162,7 +156,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 7 ;
+        lv2:index 6 ;
         lv2:symbol "amp_sustain" ;
         lv2:name "Amp Sustain" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -174,7 +168,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 8 ;
+        lv2:index 7 ;
         lv2:symbol "amp_release" ;
         lv2:name "Amp Release" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -186,7 +180,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 9 ;
+        lv2:index 8 ;
         lv2:symbol "osc1_waveform" ;
         lv2:name "Osc1 Waveform" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -204,7 +198,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 10 ;
+        lv2:index 9 ;
         lv2:symbol "filter_attack" ;
         lv2:name "Filter Attack" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -216,7 +210,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 11 ;
+        lv2:index 10 ;
         lv2:symbol "filter_decay" ;
         lv2:name "Filter Decay" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -228,7 +222,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 12 ;
+        lv2:index 11 ;
         lv2:symbol "filter_sustain" ;
         lv2:name "Filter Sustain" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -240,7 +234,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 13 ;
+        lv2:index 12 ;
         lv2:symbol "filter_release" ;
         lv2:name "Filter Release" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -252,7 +246,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 14 ;
+        lv2:index 13 ;
         lv2:symbol "filter_resonance" ;
         lv2:name "Filter Resonance" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -264,7 +258,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 15 ;
+        lv2:index 14 ;
         lv2:symbol "filter_env_amount" ;
         lv2:name "Filter Env Amount" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -275,7 +269,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 16 ;
+        lv2:index 15 ;
         lv2:symbol "filter_cutoff" ;
         lv2:name "Filter Cutoff" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -287,7 +281,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 17 ;
+        lv2:index 16 ;
         lv2:symbol "osc2_detune" ;
         lv2:name "Osc2 Detune" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -298,7 +292,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 18 ;
+        lv2:index 17 ;
         lv2:symbol "osc2_waveform" ;
         lv2:name "Osc2 Waveform" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -316,7 +310,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 19 ;
+        lv2:index 18 ;
         lv2:symbol "master_vol" ;
         lv2:name "Master Vol" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -327,7 +321,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 20 ;
+        lv2:index 19 ;
         lv2:symbol "lfo_freq" ;
         lv2:name "LFO Freq" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -339,7 +333,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 21 ;
+        lv2:index 20 ;
         lv2:symbol "lfo_waveform" ;
         lv2:name "LFO Waveform" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -359,7 +353,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 22 ;
+        lv2:index 21 ;
         lv2:symbol "osc2_range" ;
         lv2:name "Osc2 Range" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -370,7 +364,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 23 ;
+        lv2:index 22 ;
         lv2:symbol "osc_mix" ;
         lv2:name "Osc Mix" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -384,7 +378,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 24 ;
+        lv2:index 23 ;
         lv2:symbol "freq_mod_amount" ;
         lv2:name "Freq Mod Amount" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -395,7 +389,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 25 ;
+        lv2:index 24 ;
         lv2:symbol "filter_mod_amount" ;
         lv2:name "Filter Mod Amount" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -406,7 +400,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 26 ;
+        lv2:index 25 ;
         lv2:symbol "amp_mod_amount" ;
         lv2:name "Amp Mod Amount" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -417,7 +411,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 27 ;
+        lv2:index 26 ;
         lv2:symbol "osc_mix_mode" ;
         lv2:name "Ring Mod" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -428,7 +422,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 28 ;
+        lv2:index 27 ;
         lv2:symbol "osc1_pulsewidth" ;
         lv2:name "Osc1 Pulsewidth" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -440,7 +434,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 29 ;
+        lv2:index 28 ;
         lv2:symbol "osc2_pulsewidth" ;
         lv2:name "Osc2 Pulsewidth" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -452,7 +446,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 30 ;
+        lv2:index 29 ;
         lv2:symbol "reverb_roomsize" ;
         lv2:name "Reverb Roomsize" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -463,7 +457,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 31 ;
+        lv2:index 30 ;
         lv2:symbol "reverb_damp" ;
         lv2:name "Reverb Damp" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -474,7 +468,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 32 ;
+        lv2:index 31 ;
         lv2:symbol "reverb_wet" ;
         lv2:name "Reverb Wet" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -485,7 +479,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 33 ;
+        lv2:index 32 ;
         lv2:symbol "reverb_width" ;
         lv2:name "Reverb Width" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -496,7 +490,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 34 ;
+        lv2:index 33 ;
         lv2:symbol "distortion_crunch" ;
         lv2:name "Distortion Crunch" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -507,7 +501,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 35 ;
+        lv2:index 34 ;
         lv2:symbol "osc2_sync" ;
         lv2:name "Osc2 Sync" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -518,7 +512,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 36 ;
+        lv2:index 35 ;
         lv2:symbol "portamento_time" ;
         lv2:name "Portamento Time" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -529,7 +523,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 37 ;
+        lv2:index 36 ;
         lv2:symbol "keyboard_mode" ;
         lv2:name "Keyboard Mode" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -544,7 +538,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 38 ;
+        lv2:index 37 ;
         lv2:symbol "osc2_pitch" ;
         lv2:name "Osc2 Pitch" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -557,7 +551,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 39 ;
+        lv2:index 38 ;
         lv2:symbol "filter_type" ;
         lv2:name "Filter Type" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -572,7 +566,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 40 ;
+        lv2:index 39 ;
         lv2:symbol "filter_slope" ;
         lv2:name "Filter Slope" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -586,7 +580,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 41 ;
+        lv2:index 40 ;
         lv2:symbol "freq_mod_osc" ;
         lv2:name "Freq Mod to Oscillator" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -601,7 +595,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 42 ;
+        lv2:index 41 ;
         lv2:symbol "filter_kbd_track" ;
         lv2:name "Filter Key Track" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -612,7 +606,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 43 ;
+        lv2:index 42 ;
         lv2:symbol "filter_vel_sens" ;
         lv2:name "Filter Velocity Track" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -623,7 +617,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 44 ;
+        lv2:index 43 ;
         lv2:symbol "amp_vel_sens" ;
         lv2:name "Amp Velocity Amount" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -634,7 +628,7 @@
     ] , [
         a lv2:InputPort ,
             lv2:ControlPort ;
-        lv2:index 45 ;
+        lv2:index 44 ;
         lv2:symbol "portamento_mode" ;
         lv2:name "Portamento Mode" ;
         lv2:portProperty epp:hasStrictBounds ;
