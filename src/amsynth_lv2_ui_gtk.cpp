@@ -126,7 +126,9 @@ struct SynthesizerStub : ISynthesizer
 		lv2_atom_forge_pop(forge, &frame);
 
 		ui->_write_function(
-				ui->_controller, 0, lv2_atom_total_size(msg),
+				ui->_controller,
+				PORT_CONTROL,
+				lv2_atom_total_size(msg),
 				ui->uris.atom_eventTransfer,
 				msg);
 	}
