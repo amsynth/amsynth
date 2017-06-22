@@ -25,6 +25,7 @@
 
 #include <cstdarg>
 #include <glib/gi18n.h>
+#include <stdlib.h>
 #include <strings.h>
 
 
