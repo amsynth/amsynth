@@ -385,7 +385,7 @@ int main( int argc, char *argv[] )
 
 #ifdef WITH_GUI
 	if (!no_gui)
-		gui_kit_init(argc, argv);
+		gui_kit_init(&argc, &argv);
 #endif
 
 	/* all config files should eventually be migrated to the ~./amsynth directory */ {

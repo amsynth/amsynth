@@ -1,5 +1,5 @@
 /*
- *  gui_main.h
+ *  MainMenu.h
  *
  *  Copyright (c) 2001-2017 Nick Dowell
  *
@@ -19,23 +19,6 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <string>
+#include <gtk/gtk.h>
 
-class GenericOutput;
-class Synthesizer;
-
-void gui_kit_init(int *argc, char ***argv);
-
-void gui_kit_run(unsigned (*timer_callback)());
-
-void gui_init(Synthesizer *, GenericOutput *);
-
-void gui_dealloc();
-
-void ShowModalErrorMessage(const std::string & msg, const std::string & secondaryText = "");
-
-#if defined(__linux)
-
-void spawn_new_instance();
-
-#endif
+void main_menu_init(GtkWidget *window, GtkAccelGroup *accelGroup, GtkMenuBar *menuBar, class Synthesizer *synthesizer);

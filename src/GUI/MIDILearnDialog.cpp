@@ -24,7 +24,6 @@
 #include "../MidiController.h"
 #include "../PresetController.h"
 #include "controllers.h"
-#include "Request.h"
 
 #include <cassert>
 #include <glib/gi18n.h>
@@ -85,7 +84,9 @@ MIDILearnDialog::run_modal(Param param_idx)
 void
 MIDILearnDialog::update()
 {
-	CALL_ON_GUI_THREAD(*this, &MIDILearnDialog::last_active_controller_changed);
+	gdk_threads_enter();
+	last_active_controller_changed();
+	gdk_threads_leave();
 }
 
 void

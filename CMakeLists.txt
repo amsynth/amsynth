@@ -40,9 +40,9 @@ if (JACK_FOUND)
     include_directories(${JACK_INCLUDE_DIRS})
 endif (JACK_FOUND)
 
-pkg_check_modules(GTKMM gtkmm-2.4)
+pkg_check_modules(GTK gtk+-2.0)
 add_compile_options(-DWITH_GUI)
-include_directories(${GTKMM_INCLUDE_DIRS})
+include_directories(${GTK_INCLUDE_DIRS})
 
 pkg_check_modules(LASH lash-1.0)
 if (LASH_FOUND)
@@ -139,15 +139,16 @@ add_executable(amsynth
         src/GUI/editor_menus.h
         src/GUI/editor_pane.c
         src/GUI/editor_pane.h
-        src/GUI/GUI.cc
-        src/GUI/GUI.h
         src/GUI/gui_main.cc
         src/GUI/gui_main.h
+        src/GUI/MainMenu.cpp
+        src/GUI/MainMenu.h
+        src/GUI/MainWindow.cpp
+        src/GUI/MainWindow.h
         src/GUI/MIDILearnDialog.cpp
         src/GUI/MIDILearnDialog.h
         src/GUI/PresetControllerView.cc
         src/GUI/PresetControllerView.h
-        src/GUI/Request.h
         src/AudioOutput.cc
         src/AudioOutput.h
         src/JackOutput.cc
@@ -163,7 +164,7 @@ target_link_libraries(amsynth
         amsynth_core
         ${ALSA_LIBRARIES}
         ${JACK_LIBRARIES}
-        ${GTKMM_LIBRARIES}
+        ${GTK_LIBRARIES}
         ${LASH_LIBRARIES}
         )
 
@@ -192,7 +193,7 @@ add_executable(amsynth_dssi_gtk
 
 target_link_libraries(amsynth_dssi_gtk
         amsynth_core
-        ${GTKMM_LIBRARIES}
+        ${GTK_LIBRARIES}
         ${LIBLO_LIBRARIES}
         )
 
@@ -220,7 +221,7 @@ add_library(amsynth_lv2_gtk MODULE
         src/amsynth_lv2_ui_gtk.cpp
         )
 set_target_properties(amsynth_lv2_gtk PROPERTIES PREFIX "")
-target_link_libraries(amsynth_lv2_gtk amsynth_core ${GTKMM_LIBRARIES})
+target_link_libraries(amsynth_lv2_gtk amsynth_core ${GTK_LIBRARIES})
 
 add_dependencies(amsynth_lv2 amsynth_lv2_gtk)
 
@@ -240,7 +241,7 @@ add_library(amsynth_vst MODULE
         )
 target_compile_options(amsynth_vst PUBLIC -DWITH_GUI)
 set_target_properties(amsynth_vst PROPERTIES PREFIX "")
-target_link_libraries(amsynth_vst amsynth_core ${GTKMM_LIBRARIES})
+target_link_libraries(amsynth_vst amsynth_core ${GTK_LIBRARIES})
 
 
 add_executable(amsynth_tests src/tests.cpp)
