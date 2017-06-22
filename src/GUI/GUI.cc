@@ -472,7 +472,7 @@ GUI::init()
 			0, 0);
 	}
 	
-	Gtk::Widget *editor = Glib::wrap (editor_pane_new (m_adjustments, FALSE));
+	Gtk::Widget *editor = Glib::wrap(editor_pane_new(m_synth, m_adjustments, FALSE));
 	
 	// start_atomic_value_change is not registered until editor_pane_new is called
 	for (int i=0; i<kAmsynthParameterCount; i++) {
@@ -999,7 +999,8 @@ GUI::tuning_reset	( )
 
 	gint result = gtk_dialog_run (GTK_DIALOG (dialog));
 	if (result == GTK_RESPONSE_YES) {
-		m_synth->defaultTuning();
+		m_synth->loadTuningKeymap(NULL);
+		m_synth->loadTuningScale(NULL);
 	}
 
 	gtk_widget_destroy (dialog);

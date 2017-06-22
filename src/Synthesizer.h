@@ -27,11 +27,24 @@
 
 #include <vector>
 
+//
+// Property names
+//
+#define PROP_KBM_FILE "tuning_kbm_file"
+#define PROP_SCL_FILE "tuning_scl_file"
+
+
 class MidiController;
 class PresetController;
 class VoiceAllocationUnit;
 
-class Synthesizer
+struct ISynthesizer
+{
+    virtual int loadTuningKeymap(const char *filename) = 0;
+    virtual int loadTuningScale(const char *filename) = 0;
+};
+
+class Synthesizer : ISynthesizer
 {
 public:
     
@@ -65,9 +78,8 @@ public:
 	int getMaxNumVoices();
 	void setMaxNumVoices(int value);
 
-	int loadTuningKeymap(const char *filename);
-	int loadTuningScale(const char *filename);
-	void defaultTuning();
+	virtual int loadTuningKeymap(const char *filename);
+	virtual int loadTuningScale(const char *filename);
 
 	void setSampleRate(int sampleRate);
 

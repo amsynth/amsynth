@@ -1,7 +1,7 @@
 /*
- *  dssi.cpp
+ *  amsynth_dssi.cpp
  *
- *  Copyright (c) 2001-2014 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -18,6 +18,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+#include "amsynth_dssi.h"
 
 #include "midi.h"
 #include "Preset.h"
@@ -104,6 +106,23 @@ static void cleanup (LADSPA_Handle instance)
     free (a->midi_buffer);
     free (a->params);
     delete a;
+}
+
+static char * configure(LADSPA_Handle Instance, const char *Key, const char *Value)
+{
+	Synthesizer *synthesizer = ((amsynth_wrapper *) Instance)->synth;
+
+	if (strcmp(Key, PROP_KBM_FILE) == 0) {
+		synthesizer->loadTuningKeymap(Value);
+		return NULL;
+	}
+
+	if (strcmp(Key, PROP_SCL_FILE) == 0) {
+		synthesizer->loadTuningScale(Value);
+		return NULL;
+	}
+
+	return NULL;
 }
 
 //////////////////// Program handling //////////////////////////////////////////
@@ -329,7 +348,7 @@ void __attribute__ ((constructor)) my_init ()
 	{
 		s_dssiDescriptor->DSSI_API_Version				= 1;
 		s_dssiDescriptor->LADSPA_Plugin				= s_ladspaDescriptor;
-		s_dssiDescriptor->configure					= NULL;
+		s_dssiDescriptor->configure					= configure;
 		s_dssiDescriptor->get_program 					= get_program;
 		s_dssiDescriptor->get_midi_controller_for_port	= NULL;
 		s_dssiDescriptor->select_program 				= select_program;

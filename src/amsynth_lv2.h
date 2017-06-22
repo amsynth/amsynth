@@ -1,7 +1,7 @@
 /*
- *  presets_menu.h
+ *  amsynth_lv2.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -19,12 +19,19 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef AMSYNTH_LV2_H
+#define AMSYNTH_LV2_H
 
-#include <gtk/gtk.h>
+#define AMSYNTH_LV2_URI             "http://code.google.com/p/amsynth/amsynth"
+#define AMSYNTH__tuning_kbm_file    AMSYNTH_LV2_URI "#tuning_kbm_file"
+#define AMSYNTH__tuning_scl_file    AMSYNTH_LV2_URI "#tuning_scl_file"
 
-G_BEGIN_DECLS
+enum {
+    PORT_CONTROL            = 0,
+    PORT_NOTIFY             = 1,
+    PORT_AUDIO_L            = 2,
+    PORT_AUDIO_R            = 3,
+    PORT_FIRST_PARAMETER    = 4,
+};
 
-GtkWidget *presets_menu_new(GtkAdjustment **adjustments);
-
-G_END_DECLS
+#endif //AMSYNTH_LV2_H

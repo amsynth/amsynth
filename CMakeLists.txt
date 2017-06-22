@@ -50,6 +50,11 @@ if (LASH_FOUND)
     include_directories(${LASH_INCLUDE_DIRS})
 endif (LASH_FOUND)
 
+pkg_check_modules(LIBLO liblo)
+if (LIBLO_FOUND)
+    include_directories(${LIBLO_INCLUDE_DIRS})
+endif (LIBLO_FOUND)
+
 #
 #
 #
@@ -129,9 +134,9 @@ add_executable(amsynth
         src/GUI/bitmap_popup.h
         src/GUI/ConfigDialog.cpp
         src/GUI/ConfigDialog.h
-        src/GUI/controller_menu.cpp
-        src/GUI/controller_menu.h
         src/GUI/controllers.h
+        src/GUI/editor_menus.cpp
+        src/GUI/editor_menus.h
         src/GUI/editor_pane.c
         src/GUI/editor_pane.h
         src/GUI/GUI.cc
@@ -142,8 +147,6 @@ add_executable(amsynth
         src/GUI/MIDILearnDialog.h
         src/GUI/PresetControllerView.cc
         src/GUI/PresetControllerView.h
-        src/GUI/presets_menu.cpp
-        src/GUI/presets_menu.h
         src/GUI/Request.h
         src/AudioOutput.cc
         src/AudioOutput.h
@@ -168,10 +171,34 @@ target_link_libraries(amsynth
 #
 #
 
-add_library(amsynth_dssi MODULE src/dssi.cpp)
+add_library(amsynth_dssi MODULE src/amsynth_dssi.cpp src/amsynth_dssi.h)
 set_target_properties(amsynth_dssi PROPERTIES PREFIX "")
 target_link_libraries(amsynth_dssi amsynth_core)
 
+add_executable(amsynth_dssi_gtk
+        src/amsynth_dssi_gtk.cpp
+        src/GUI/bitmap_button.c
+        src/GUI/bitmap_button.h
+        src/GUI/bitmap_knob.c
+        src/GUI/bitmap_knob.h
+        src/GUI/bitmap_popup.c
+        src/GUI/bitmap_popup.h
+        src/GUI/controllers.h
+        src/GUI/editor_menus.cpp
+        src/GUI/editor_menus.h
+        src/GUI/editor_pane.c
+        src/GUI/editor_pane.h
+        )
+
+target_link_libraries(amsynth_dssi_gtk
+        amsynth_core
+        ${GTKMM_LIBRARIES}
+        ${LIBLO_LIBRARIES}
+        )
+
+#
+#
+#
 
 add_library(amsynth_lv2 MODULE src/amsynth_lv2.cpp)
 set_target_properties(amsynth_lv2 PROPERTIES PREFIX "")
@@ -185,20 +212,32 @@ add_library(amsynth_lv2_gtk MODULE
         src/GUI/bitmap_knob.h
         src/GUI/bitmap_popup.c
         src/GUI/bitmap_popup.h
-        src/GUI/controller_menu.cpp
-        src/GUI/controller_menu.h
         src/GUI/controllers.h
+        src/GUI/editor_menus.cpp
+        src/GUI/editor_menus.h
         src/GUI/editor_pane.c
         src/GUI/editor_pane.h
-        src/GUI/presets_menu.cpp
-        src/GUI/presets_menu.h
-        src/amsynth_lv2_ui_gtk.c
+        src/amsynth_lv2_ui_gtk.cpp
         )
 set_target_properties(amsynth_lv2_gtk PROPERTIES PREFIX "")
 target_link_libraries(amsynth_lv2_gtk amsynth_core ${GTKMM_LIBRARIES})
 
+add_dependencies(amsynth_lv2 amsynth_lv2_gtk)
 
-add_library(amsynth_vst MODULE src/amsynth_vst.cpp)
+add_library(amsynth_vst MODULE
+        src/amsynth_vst.cpp
+        src/GUI/bitmap_button.c
+        src/GUI/bitmap_button.h
+        src/GUI/bitmap_knob.c
+        src/GUI/bitmap_knob.h
+        src/GUI/bitmap_popup.c
+        src/GUI/bitmap_popup.h
+        src/GUI/controllers.h
+        src/GUI/editor_menus.cpp
+        src/GUI/editor_menus.h
+        src/GUI/editor_pane.c
+        src/GUI/editor_pane.h
+        )
 target_compile_options(amsynth_vst PUBLIC -DWITH_GUI)
 set_target_properties(amsynth_vst PROPERTIES PREFIX "")
 target_link_libraries(amsynth_vst amsynth_core ${GTKMM_LIBRARIES})

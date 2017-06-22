@@ -1,7 +1,7 @@
 /*
- *  editor_pane.h
+ *  amsynth_dssi.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -19,20 +19,7 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _editor_pane_h
-#define _editor_pane_h
+#ifndef AMSYNTH_DSSI_H
+#define AMSYNTH_DSSI_H
 
-#include "../controls.h"
-
-#include <gtk/gtk.h>
-
-G_BEGIN_DECLS
-
-GtkWidget *
-editor_pane_new(void *synthesizer, GtkAdjustment **adjustments, gboolean is_plugin);
-
-void modal_midi_learn(Param param_index);
-
-G_END_DECLS
-
-#endif
+#endif //AMSYNTH_DSSI_H

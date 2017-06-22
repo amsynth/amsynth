@@ -1,5 +1,5 @@
 /*
-  Copyright 2008-2014 David Robillard <http://drobilla.net>
+  Copyright 2008-2016 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -163,6 +163,7 @@ lv2_atom_forge_init(LV2_Atom_Forge* forge, LV2_URID_Map* map)
 	forge->Vector   = map->map(map->handle, LV2_ATOM__Vector);
 }
 
+/** Access the Atom pointed to by a reference. */
 static inline LV2_Atom*
 lv2_atom_forge_deref(LV2_Atom_Forge* forge, LV2_Atom_Forge_Ref ref)
 {
