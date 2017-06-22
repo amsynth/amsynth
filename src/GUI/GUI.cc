@@ -487,7 +487,7 @@ GUI::init()
 	}
 	
 	vbox.pack_start (*(create_menus ()),0,0);
-	vbox.pack_start (*presetCV, false, false);
+	vbox.pack_start (*Glib::wrap(presetCV->getWidget()), false, false);
 	vbox.pack_start (*editor, Gtk::PACK_EXPAND_WIDGET,0);
 	add(vbox);
 
