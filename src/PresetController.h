@@ -33,6 +33,7 @@ struct BankInfo {
 	std::string name;
 	std::string file_path;
 	bool read_only;
+	Preset presets[128];
 };
 
 class PresetController {
@@ -74,11 +75,14 @@ public:
 	int		exportPreset		(const std::string filename);
 	int		importPreset		(const std::string filename);
 	
-	// Loading & Saving of bank files
+	// Loading & Saving of bank files - NOT REALTIME SAFE
 	int		loadPresets			(const char *filename = NULL);
 	int		savePresets			(const char *filename = NULL);
 
-    void	setUpdateListener	(UpdateListener & ul) { updateListener = &ul; }
+	// Switch bank at runtime - safe to call on audio thread
+	void	selectBank			(int bankNumber);
+
+	void	setUpdateListener	(UpdateListener & ul) { updateListener = &ul; }
 
     int		getCurrPresetNumber	() { return currentPresetNo; }
 
@@ -96,10 +100,11 @@ protected:
 private:
 	std::string		bank_file;
 	UpdateListener*	updateListener;
-	Preset*			presets;
+	Preset			presets[kNumPresets];
 	Preset 			currentPreset;
 	Preset			blankPreset;
 	Preset 			nullpreset;
+	int				currentBankNo;
 	int 			currentPresetNo;
 	long int 		lastPresetsFileModifiedTime;
 

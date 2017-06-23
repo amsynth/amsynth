@@ -46,15 +46,14 @@ PresetController::PresetController	()
 :	bank_file ("")
 ,	updateListener (0)
 ,	nullpreset ("null preset")
+,	currentBankNo (-1)
 ,	currentPresetNo (-1)
 ,	lastPresetsFileModifiedTime (0)
 {
-	presets = new Preset [kNumPresets];
 }
 
 PresetController::~PresetController	()
 {
-	delete[] presets;
 	clearChangeBuffers();
 }
 
@@ -308,23 +307,17 @@ static float float_from_string(const char *s)
 	return rez * fact;
 }
 
-int
-PresetController::loadPresets		(const char *filename)
+static bool readBankFile(const char *filename, Preset *presets)
 {
-	if (filename == NULL)
-		filename = bank_file.c_str();
-
-	if (!is_amsynth_file(filename))
-		return -1;
-
-	long int fileModifiedTime = mtime(filename);
-	if (strcmp(filename, bank_file.c_str()) == 0 && lastPresetsFileModifiedTime == fileModifiedTime)
-		return 0; // file not modified since last load
-
 	void *buffer = NULL;
 	off_t buffer_length = file_read_contents(filename, &buffer);
 	if (!buffer)
-		return -1;
+		return false;
+
+	if (memcmp(buffer, amsynth_file_header, sizeof(amsynth_file_header)) != 0) {
+		free(buffer);
+		return false;
+	}
 
 	char *buffer_end = ((char *)buffer) + buffer_length;
 
@@ -339,7 +332,7 @@ PresetController::loadPresets		(const char *filename)
 			if (strncmp(line_ptr, preset_prefix, sizeof(preset_prefix) - 1) == 0) {
 				presets[++preset_index] = Preset(std::string(line_ptr + sizeof(preset_prefix) - 1));
 			}
-			
+
 			static char parameter_prefix[] = "<parameter> ";
 			if (strncmp(line_ptr, parameter_prefix, sizeof(parameter_prefix) - 1) == 0) {
 				char *ptr = line_ptr + sizeof(parameter_prefix) - 1;
@@ -355,14 +348,58 @@ PresetController::loadPresets		(const char *filename)
 			line_ptr = end_ptr;
 		}
 	}
-	for (preset_index++; preset_index < kNumPresets; preset_index++)
+	for (preset_index++; preset_index < PresetController::kNumPresets; preset_index++)
 		presets[preset_index] = Preset();
 	free(buffer);
+
+	return true;
+}
+
+int
+PresetController::loadPresets		(const char *filename)
+{
+	if (filename == NULL)
+		filename = bank_file.c_str();
+
+	long int fileModifiedTime = mtime(filename);
+	if (strcmp(filename, bank_file.c_str()) == 0 && lastPresetsFileModifiedTime == fileModifiedTime)
+		return 0; // file not modified since last load
+
+	if (!readBankFile(filename, presets))
+		return -1;
+
+	currentBankNo = -1;
+	const std::vector<BankInfo> &banks = getPresetBanks();
+	for (int i = 0; i < banks.size(); i++) {
+		if (banks[i].file_path == (std::string) filename) {
+			currentBankNo = i;
+			break;
+		}
+	}
 
 	lastPresetsFileModifiedTime = fileModifiedTime;
 	bank_file = std::string(filename);
 
 	return 0;
+}
+
+void
+PresetController::selectBank(int bankNumber)
+{
+	const std::vector<BankInfo> &banks = getPresetBanks();
+
+	if (bankNumber >= banks.size())
+		return;
+
+	if (currentBankNo == bankNumber)
+		return;
+
+	for (int i = 0; i < kNumPresets; i++)
+		presets[i] = banks[bankNumber].presets[i];
+
+	currentBankNo = bankNumber;
+	bank_file = banks[bankNumber].file_path;
+	lastPresetsFileModifiedTime = mtime(banks[bankNumber].file_path.c_str());
 }
 
 ///////////////////////////////////
@@ -391,6 +428,7 @@ static void scan_preset_bank(const std::string dir_path, const std::string file_
 	bank_info.name = bank_name;
 	bank_info.file_path = file_path;
 	bank_info.read_only = read_only;
+	readBankFile(file_path.c_str(), bank_info.presets);
 	s_banks.push_back(bank_info);
 }
 

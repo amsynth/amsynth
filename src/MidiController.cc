@@ -174,11 +174,8 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 
 	switch (cc) {
 		case MIDI_CC_BANK_SELECT_LSB: {
-			const std::vector<BankInfo> banks = PresetController::getPresetBanks();
-			if (value < banks.size()) {
-				presetController->loadPresets(banks[value].file_path.c_str());
-				presetController->selectPreset(presetController->getCurrPresetNumber());
-			}
+			presetController->selectBank(value);
+			presetController->selectPreset(presetController->getCurrPresetNumber());
 			break;
 		}
 		case MIDI_CC_BANK_SELECT_MSB:
