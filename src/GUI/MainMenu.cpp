@@ -147,10 +147,12 @@ struct FileMenu
 		return menu;
 	}
 
+#if defined(__linux)
 	static void newInstance(GtkWidget *widget, gpointer data)
 	{
 		spawn_new_instance();
 	}
+#endif
 
 	static void openBank(GtkWidget *widget, Synthesizer *synthesizer)
 	{
