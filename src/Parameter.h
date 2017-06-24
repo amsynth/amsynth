@@ -86,7 +86,9 @@ public:
 	// notified and updated when this Parameter changes.
 	void			addUpdateListener (UpdateListener& ul);
 	void			removeUpdateListener (UpdateListener& ul);
-	
+
+	float			getDefault		() const { return _default; }
+
 	// min/max values apply for calls to setValue() not ControlValue
 	float			getMin			() const { return _min; }
 	float			getMax			() const { return _max; }
@@ -106,7 +108,7 @@ private:
 	Param							mParamId;
 	std::string						_name, _label;
 	int								_controlMode;
-	float							_value, _min, _max, _step, _controlValue, _base, _offset;
+	float							_default, _value, _min, _max, _step, _controlValue, _base, _offset;
 	std::vector<UpdateListener*>	_updateListeners;
 };
 

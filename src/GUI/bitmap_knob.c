@@ -1,7 +1,7 @@
 /*
  *  bitmap_knob.c
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -220,11 +220,19 @@ bitmap_knob_expose( GtkWidget *widget, GdkEventExpose *event )
 gboolean
 bitmap_knob_button_press ( GtkWidget *widget, GdkEventButton *event )
 {
+	bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
+
+	if (event->type == GDK_2BUTTON_PRESS) {
+		GValue *value = g_object_get_data (G_OBJECT(self->adjustment), "default-value");
+		float defaultValue = g_value_get_float(value);
+		gtk_adjustment_set_value (self->adjustment, defaultValue);
+		return TRUE;
+	}
+
 	if (event->type == GDK_BUTTON_PRESS && event->button == 1)
 	{
 		gtk_widget_grab_focus(widget);
     	gtk_grab_add(widget);
-		bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 		g_signal_emit_by_name(self->adjustment, "start_atomic_value_change");
 		self->origin_val = gtk_adjustment_get_value (self->adjustment);
 		self->origin_y = event->y;
