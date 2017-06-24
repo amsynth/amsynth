@@ -94,7 +94,6 @@ public:
 	static void setFactoryBanksDirectory(std::string path);
 	static std::string getUserBanksDirectory();
 
-protected:
 	void	notify				() { if (updateListener) updateListener->update(); }
 
 private:

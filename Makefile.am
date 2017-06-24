@@ -114,7 +114,7 @@ amsynth_SOURCES = \
 	src/main.h \
 	src/main.cc
 
-amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @SNDFILE_CFLAGS@ @GTKMM_CFLAGS@
+amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @SNDFILE_CFLAGS@ @GTK_CFLAGS@
 
 amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @SNDFILE_LIBS@ @LIBS@
 
@@ -122,16 +122,17 @@ if BUILD_GUI
 amsynth_SOURCES += $(libgui_sources) \
 	src/GUI/ConfigDialog.cpp \
 	src/GUI/ConfigDialog.h \
-	src/GUI/GUI.cc \
-	src/GUI/GUI.h \
 	src/GUI/gui_main.cc \
 	src/GUI/gui_main.h \
+	src/GUI/MainMenu.cpp \
+	src/GUI/MainMenu.h \
+	src/GUI/MainWindow.cpp \
+	src/GUI/MainWindow.h \
 	src/GUI/MIDILearnDialog.cpp \
 	src/GUI/MIDILearnDialog.h \
 	src/GUI/PresetControllerView.cc \
-	src/GUI/PresetControllerView.h \
-	src/GUI/Request.h
-amsynth_LDADD += @GTKMM_LIBS@
+	src/GUI/PresetControllerView.h
+amsynth_LDADD += @GTK_LIBS@
 endif
 
 if DARWIN

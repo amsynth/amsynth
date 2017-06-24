@@ -1,7 +1,7 @@
 /*
  *  gui_main.cc
  *
- *  Copyright (c) 2001-2016 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -21,90 +21,63 @@
 
 #include "gui_main.h"
 
-#include "../AudioOutput.h"
-#include "../Synthesizer.h"
-#include "GUI.h"
+#include "MainWindow.h"
 
-#include <assert.h>
 
-static GUI *gui = NULL;
-static Gtk::Main *kit = NULL;
-static int  gdk_input_pipe[2];
-static void gdk_input_function(gpointer, gint, GdkInputCondition);
 static char **_argv = NULL;
 
-void gui_kit_init(int & argc, char ** & argv)
+void gui_kit_init(int *argc, char ***argv)
 {
-	_argv = g_strdupv(argv);
-	kit = new Gtk::Main(argc, argv);
+	_argv = g_strdupv(*argv);
+	gtk_init(argc, argv);
 }
 
 void gui_kit_run(unsigned (*timer_callback)())
 {
 	g_timeout_add(250, (GSourceFunc)timer_callback, NULL);
-	kit->run();
+	gtk_main();
 }
 
 void gui_init(Synthesizer *synth, GenericOutput *out)
 {
-	if (pipe(gdk_input_pipe) == -1)
-		perror("pipe()");
-    
     gtk_window_set_default_icon_name("amsynth");
-	
-	gui = new GUI(*synth->getMidiController(), synth, out);
-	gui->setPresetController(*synth->getPresetController());
-	gui->init();
-	
-	// make GDK loop read events from the pipe
-	gdk_input_add(gdk_input_pipe[0], GDK_INPUT_READ, gdk_input_function, NULL);
+
+	GtkWidget *window = main_window_new(synth, out);
+	gtk_widget_show_all(window);
 }
 
 void gui_dealloc()
 {
-	if (gui) {
-		delete gui;
-		gui = NULL;
-	}
+//	if (gui) {
+//		delete gui;
+//		gui = NULL;
+//	}
 }
 
-void ShowModalErrorMessage(const string & msg)
+void ShowModalErrorMessage(const std::string & msg, const std::string & secondaryText)
 {
-	Gtk::MessageDialog dlg ("amsynth", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
-	dlg.set_secondary_text(msg);
-	dlg.run();
+	GtkWidget *dialog = gtk_message_dialog_new(
+			NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+			"%s", msg.c_str());
+
+	if (secondaryText.size())
+		gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", secondaryText.c_str());
+
+	gtk_dialog_run(GTK_DIALOG(dialog));
+
+	gtk_widget_destroy(dialog);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef struct { sigc::slot<void> slot; } Request;
-
-void call_slot_on_gui_thread( sigc::slot<void> sigc_slot )
-{
-	Request *req = new Request; req->slot = sigc_slot;
-	ssize_t bytesWritten = write(gdk_input_pipe[1], &req, sizeof(req));
-	assert(bytesWritten == sizeof(req));
-}
-
-void gdk_input_function(gpointer, gint source, GdkInputCondition)
-{
-	Request *request = NULL;
-	ssize_t bytesRead = read(source, &request, sizeof(request));
-	assert(bytesRead == sizeof(request));
-	assert(request != NULL);
-	
-	if (bytesRead == sizeof(request) && request != NULL) {
-		request->slot();
-		delete request;
-	}
-}
+#if defined(__linux)
 
 void spawn_new_instance()
 {
-#ifdef linux
 	static char exe_path[4096] = "";
 	readlink("/proc/self/exe", exe_path, sizeof(exe_path));
 	_argv[0] = exe_path;
-#endif
 	g_spawn_async(NULL, _argv, NULL, (GSpawnFlags)0, NULL, NULL, NULL, NULL);
 }
+
+#endif

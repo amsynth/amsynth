@@ -60,12 +60,6 @@ AC_CHECK_LIB(pthread, pthread_create, [], exit)
 
 AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])])
 
-dnl ## http://www.gtkmm.org/docs/gtkmm-2.4/docs/reference/html/newin2p6s.html
-dnl ## we use the following APIs only available in gtkmm 2.6 and up:
-dnl ## Gtk::MessageDialog::set_secondary_text()
-dnl ## Gtk::AboutDialog
-AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.6.0])])
-
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
 dnl Optional packages
@@ -189,7 +183,6 @@ echo -------------------------------------------------------- $PACKAGE $VERSION
 echo \|
 AS_IF([test "x$with_gui" != "xno"], [
 echo \| GTK version........................................... : `pkg-config --modversion gtk+-2.0`
-echo \| GTK-- version......................................... : `pkg-config --modversion gtkmm-2.4`
 ])
 echo \| Build with GUI support................................ : $with_gui
 echo \|

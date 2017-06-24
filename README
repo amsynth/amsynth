@@ -41,15 +41,3 @@ Any valid preset banks that are found in these directories will be show in the
 drop-down bank selector on the GUI (standalone version only.)
 
 Plug-in versions can load presets by right-clicking on the GUI's background.
-
-
-Building on Fedora 23 / latest gtkmm
-------------------------------------
-
-The latest versions of gtkmm require C++11 support, but it is not enabled by
-default in current versions of GCC.
-
-If you encounter build errors relating to C++11 support, please configure
-the build like so:
-
-    ./configure CXXFLAGS='-std=c++11'

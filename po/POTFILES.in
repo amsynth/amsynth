@@ -4,9 +4,9 @@ data/lv2-amsynth-plugin.metainfo.xml.in
 data/vst-amsynth-plugin.metainfo.xml.in
 src/GUI/ConfigDialog.cpp
 src/GUI/editor_menus.cpp
-src/GUI/GUI.cc
+src/GUI/MainMenu.cpp
+src/GUI/MainWindow.cpp
 src/GUI/MIDILearnDialog.cpp
-src/GUI/PresetControllerView.cc
 src/GUI/PresetControllerView.cc
 src/main.cc
 src/Preset.cc

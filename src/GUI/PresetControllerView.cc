@@ -22,11 +22,11 @@
 #include "PresetControllerView.h"
 
 #include "../PresetController.h"
-#include "../VoiceAllocationUnit.h"
 #include "../main.h"
 #include "../midi.h"
 
 #include <fstream>
+#include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
 #include <iostream>
 #include <stdio.h>
@@ -51,6 +51,7 @@ public:
 	virtual void setPresetController(PresetController *presetController);
 	virtual void update();
 	virtual int getAuditionNote();
+	virtual GtkWidget * getWidget() { return widget; }
 
 private:
 
@@ -65,6 +66,7 @@ private:
     static gboolean on_audition_key_release_event (GtkWidget *widget, GdkEventKey *event, PresetControllerViewImpl *);
 
     PresetController *presetController;
+	GtkWidget *widget;
 	GtkWidget *bank_combo;
 	GtkWidget *combo;
 	GtkWidget *save_button;
@@ -97,29 +99,32 @@ static gboolean on_output(GtkSpinButton *spin, gpointer user_data)
 
 PresetControllerViewImpl::PresetControllerViewImpl()
 :	presetController(NULL)
+,	widget(NULL)
 ,	bank_combo(NULL)
 ,	combo(NULL)
 ,	audition_spin(NULL)
 ,	audition_note(0)
 ,	inhibit_combo_callback(false)
 {
+	this->widget = gtk_hbox_new (FALSE, 0);
+	GtkBox *hbox = GTK_BOX (this->widget);
+
 	bank_combo = gtk_combo_box_new_text ();
 	g_signal_connect (G_OBJECT (bank_combo), "changed", G_CALLBACK (&PresetControllerViewImpl::on_combo_changed), this);
-	pack_start (* Glib::wrap (bank_combo), false, false);
+	gtk_box_pack_start (hbox, bank_combo, FALSE, FALSE, 0);
 
 	combo = gtk_combo_box_new_text ();
 	gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (combo), 4);
 	g_signal_connect (G_OBJECT (combo), "changed", G_CALLBACK (&PresetControllerViewImpl::on_combo_changed), this);
 	g_signal_connect (G_OBJECT (combo), "notify::popup-shown", G_CALLBACK (&PresetControllerViewImpl::on_combo_popup_shown), this);
-	pack_start (* Glib::wrap (combo), true, true);
+	gtk_box_pack_start (hbox, combo, TRUE, TRUE, 0);
 
 	save_button = button_with_image (GTK_STOCK_SAVE, _("Save"));
 	g_signal_connect (G_OBJECT (save_button), "clicked", G_CALLBACK (&PresetControllerViewImpl::on_save_clicked), this);
-	pack_start (* Glib::wrap (save_button), false, false);
-	
-	Gtk::Label *blank = manage (new Gtk::Label ("  "));
-	pack_start (*blank, false, false);
-	
+	gtk_box_pack_start (hbox, save_button, FALSE, FALSE, 0);
+
+	gtk_box_pack_start (hbox, gtk_label_new ("  "), FALSE, FALSE, 0);
+
 	GtkWidget *widget = NULL;
 
 	widget = button_with_image (GTK_STOCK_MEDIA_PLAY, _("Audition"));
@@ -127,7 +132,7 @@ PresetControllerViewImpl::PresetControllerViewImpl()
 	g_signal_connect (G_OBJECT (widget), "released", G_CALLBACK (&PresetControllerViewImpl::on_audition_released), this);
     g_signal_connect (G_OBJECT (widget), "key-press-event", G_CALLBACK (&PresetControllerViewImpl::on_audition_key_press_event), this);
     g_signal_connect (G_OBJECT (widget), "key-release-event", G_CALLBACK (&PresetControllerViewImpl::on_audition_key_release_event), this);
-	pack_start (* Glib::wrap (widget), false, false);
+	gtk_box_pack_start (hbox, widget, FALSE, FALSE, 0);
 	
 	GtkAdjustment *audition_adj = (GtkAdjustment *) gtk_adjustment_new(60.0, 0.0, 127.0, 1.0, 5.0, 0.0);
 	audition_spin = gtk_spin_button_new(audition_adj, 1.0, 0);
@@ -135,11 +140,11 @@ PresetControllerViewImpl::PresetControllerViewImpl()
 	gtk_widget_set_can_focus (audition_spin, FALSE);
 	gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (audition_spin), false);
 	g_signal_connect (G_OBJECT (audition_spin), "output", G_CALLBACK (&on_output), NULL);
-	pack_start (* Glib::wrap (audition_spin), false, false);
+	gtk_box_pack_start (hbox, audition_spin, FALSE, FALSE, 0);
 
 	widget = button_with_image (GTK_STOCK_MEDIA_STOP, _("Panic"));
 	g_signal_connect (G_OBJECT (widget), "clicked", G_CALLBACK (&PresetControllerViewImpl::on_panic_clicked), this);
-	pack_start (* Glib::wrap (widget), false, false);
+	gtk_box_pack_start (hbox, widget, FALSE, FALSE, 0);
 }
 
 void PresetControllerViewImpl::setPresetController(PresetController *presetController)

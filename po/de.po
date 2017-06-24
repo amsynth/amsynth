@@ -3,11 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#: ../src/GUI/ConfigDialog.cpp:98
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 08:12+0100\n"
+"POT-Creation-Date: 2017-06-24 11:36+0100\n"
 "PO-Revision-Date: 2017-01-18 21:05+0100\n"
 "Last-Translator: Peter Körner <18427@gmx.net>\n"
 "Language-Team: \n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../data/amsynth.appdata.xml.in.h:1 ../src/GUI/GUI.cc:761
+#: ../data/amsynth.appdata.xml.in.h:1 ../src/GUI/MainMenu.cpp:652
 msgid "Analog Modelling SYNTHesizer"
 msgstr "Virtuell-analoger Synthesizer"
 
@@ -118,35 +119,35 @@ msgstr "VST-Plugin"
 msgid "Amsynth plugin for the VST protocol"
 msgstr ""
 
-#: ../src/GUI/ConfigDialog.cpp:31
+#: ../src/GUI/ConfigDialog.cpp:60
 msgid "amsynth configuration"
 msgstr "amsynth-Konfiguration"
 
-#: ../src/GUI/ConfigDialog.cpp:51
+#: ../src/GUI/ConfigDialog.cpp:68
 msgid "Preferred MIDI Driver"
 msgstr "Bevorzugter MIDI-Treiber"
 
-#: ../src/GUI/ConfigDialog.cpp:53
+#: ../src/GUI/ConfigDialog.cpp:72
 msgid "OSS MIDI Device"
 msgstr "OSS-MIDI-Gerät"
 
-#: ../src/GUI/ConfigDialog.cpp:55
+#: ../src/GUI/ConfigDialog.cpp:77
 msgid "Preferred Audio Driver"
 msgstr "Bevorzugter Audiotreiber"
 
-#: ../src/GUI/ConfigDialog.cpp:57
+#: ../src/GUI/ConfigDialog.cpp:81
 msgid "OSS Audio Device"
 msgstr "OSS-Audiogerät"
 
-#: ../src/GUI/ConfigDialog.cpp:59
+#: ../src/GUI/ConfigDialog.cpp:86
 msgid "ALSA Audio Device"
 msgstr "ALSA-Audiogerät"
 
-#: ../src/GUI/ConfigDialog.cpp:61
+#: ../src/GUI/ConfigDialog.cpp:91
 msgid "Sample Rate"
 msgstr "Samplerate"
 
-#: ../src/GUI/ConfigDialog.cpp:64
+#: ../src/GUI/ConfigDialog.cpp:99
 msgid "Changes take effect after restarting amsynth"
 msgstr "Änderungen werden nach einem Neustart von amsynth wirksam"
 
@@ -158,11 +159,11 @@ msgstr "MIDI-Lernen..."
 msgid "Ignore Preset Value"
 msgstr "Preset-Wert ignorieren"
 
-#: ../src/GUI/editor_menus.cpp:109 ../src/GUI/PresetControllerView.cc:233
+#: ../src/GUI/editor_menus.cpp:109 ../src/GUI/PresetControllerView.cc:238
 msgid "F"
 msgstr "F"
 
-#: ../src/GUI/editor_menus.cpp:109 ../src/GUI/PresetControllerView.cc:233
+#: ../src/GUI/editor_menus.cpp:109 ../src/GUI/PresetControllerView.cc:238
 msgid "U"
 msgstr "U"
 
@@ -175,27 +176,28 @@ msgstr "_Preset"
 msgid "Tuning"
 msgstr ""
 
-#: ../src/GUI/editor_menus.cpp:163 ../src/GUI/GUI.cc:222
+#: ../src/GUI/editor_menus.cpp:163 ../src/GUI/MainMenu.cpp:140
 msgid "Open Alternate Tuning File..."
 msgstr "Lade andere Stimmung..."
 
-#: ../src/GUI/editor_menus.cpp:164 ../src/GUI/GUI.cc:223
+#: ../src/GUI/editor_menus.cpp:164 ../src/GUI/MainMenu.cpp:141
 msgid "Open Alternate Keyboard Map..."
 msgstr "Lade andere Keyboard-Map..."
 
-#: ../src/GUI/editor_menus.cpp:165 ../src/GUI/GUI.cc:224 ../src/GUI/GUI.cc:994
+#: ../src/GUI/editor_menus.cpp:165 ../src/GUI/MainMenu.cpp:142
+#: ../src/GUI/MainMenu.cpp:226
 msgid "Reset All Tuning Settings to Default"
 msgstr "Setze alle Stimmungseinstellungen auf den Standard zurück"
 
-#: ../src/GUI/editor_menus.cpp:210 ../src/GUI/GUI.cc:959
+#: ../src/GUI/editor_menus.cpp:210
 msgid "Open Scala (.scl) alternate tuning file"
 msgstr "Lade andere Open-Scala-Stimmungsdatei (.scl)"
 
-#: ../src/GUI/editor_menus.cpp:211 ../src/GUI/GUI.cc:959
+#: ../src/GUI/editor_menus.cpp:211 ../src/GUI/MainMenu.cpp:195
 msgid "Scala scale files"
 msgstr "Scala-Tonleiterdatei"
 
-#: ../src/GUI/editor_menus.cpp:217 ../src/GUI/GUI.cc:963
+#: ../src/GUI/editor_menus.cpp:217 ../src/GUI/MainMenu.cpp:199
 msgid "Failed to load new tuning."
 msgstr "Laden der neuen Stimmung ist gescheitert."
 
@@ -208,15 +210,15 @@ msgstr ""
 "Laden der Stimmungsdatei ist fehlgeschlagen. Hat die Datei das richtige "
 "Format?"
 
-#: ../src/GUI/editor_menus.cpp:231 ../src/GUI/GUI.cc:974
+#: ../src/GUI/editor_menus.cpp:231
 msgid "Open alternate keyboard map (Scala .kbm format)"
 msgstr "Lade andere Keyboard-Map (Scala-.kbm-Format)"
 
-#: ../src/GUI/editor_menus.cpp:232 ../src/GUI/GUI.cc:974
+#: ../src/GUI/editor_menus.cpp:232 ../src/GUI/MainMenu.cpp:208
 msgid "Scala keyboard map files"
 msgstr "Scala-Keyboard-Map-Dateien"
 
-#: ../src/GUI/editor_menus.cpp:238 ../src/GUI/GUI.cc:978
+#: ../src/GUI/editor_menus.cpp:238 ../src/GUI/MainMenu.cpp:212
 msgid "Failed to load new keyboard map."
 msgstr "Laden der neuen Keyboard-Map ist fehlgeschlagen."
 
@@ -229,202 +231,246 @@ msgstr ""
 "Das Laden der neuen Keyboard-Map ist fehlgeschlafen. Hat die Datei das "
 "richtige Format?"
 
-#: ../src/GUI/GUI.cc:106
+#: ../src/GUI/MainMenu.cpp:132
+msgid "New Instance"
+msgstr "Neue Instanz"
+
+#: ../src/GUI/MainMenu.cpp:136
+msgid "_Open Bank..."
+msgstr "Öffne B_ank..."
+
+#: ../src/GUI/MainMenu.cpp:137
+msgid "_Save Bank As..."
+msgstr "_Speichere Bank unter..."
+
+#: ../src/GUI/MainMenu.cpp:145
+msgid "_Quit"
+msgstr "_Beenden"
+
+#: ../src/GUI/MainMenu.cpp:160
+msgid "Open Bank"
+msgstr "Öffne Bank"
+
+#: ../src/GUI/MainMenu.cpp:171
+msgid "Save Bank"
+msgstr "Speichere Bank"
+
+#: ../src/GUI/MainMenu.cpp:179
+msgid "new.bank"
+msgstr "neue.bank"
+
+#: ../src/GUI/MainMenu.cpp:195
+#, fuzzy
+msgid "Open Scala(.scl) alternate tuning file"
+msgstr "Lade andere Open-Scala-Stimmungsdatei (.scl)"
+
+#: ../src/GUI/MainMenu.cpp:200
+msgid ""
+"Reading the tuning file failed for some reason. Make sure your file has the "
+"correct format and try again."
+msgstr ""
+"Laden der Stimmungsdatei ist fehlgeschlagen. Hat die Datei das richtige "
+"Format?"
+
+#: ../src/GUI/MainMenu.cpp:208
+#, fuzzy
+msgid "Open alternate keyboard map(Scala .kbm format)"
+msgstr "Lade andere Keyboard-Map (Scala-.kbm-Format)"
+
+#: ../src/GUI/MainMenu.cpp:213
+msgid ""
+"Reading the keyboard map file failed for some reason. Make sure your file "
+"has the correct format and try again."
+msgstr ""
+"Das Laden der neuen Keyboard-Map ist fehlgeschlafen. Hat die Datei das "
+"richtige Format?"
+
+#: ../src/GUI/MainMenu.cpp:230
+msgid "Discard the current scale and keyboard map?"
+msgstr "Sollen die aktuelle Stimmung und Keyboard-Map verworfen werden?"
+
+#: ../src/GUI/MainMenu.cpp:263
+msgid "_Copy"
+msgstr "_Kopieren"
+
+#: ../src/GUI/MainMenu.cpp:264
+msgid "_Paste"
+msgstr "_Einfügen"
+
+#: ../src/GUI/MainMenu.cpp:267
+msgid "Rename..."
+msgstr "Umbenennen..."
+
+# TODO: bessere Übersetzung?
+#: ../src/GUI/MainMenu.cpp:268
+msgid "Clear"
+msgstr "Leeren"
+
+#: ../src/GUI/MainMenu.cpp:271
+msgid "_Randomise"
+msgstr "_Zufällige Einstellungen"
+
+#: ../src/GUI/MainMenu.cpp:272
+msgid "Undo"
+msgstr "Rückgängig"
+
+#: ../src/GUI/MainMenu.cpp:273
+msgid "Redo"
+msgstr "Wiederherstellen"
+
+#: ../src/GUI/MainMenu.cpp:276
+msgid "Import Preset..."
+msgstr "Preset importieren..."
+
+#: ../src/GUI/MainMenu.cpp:277
+msgid "Export Preset..."
+msgstr "Preset exportieren..."
+
+#: ../src/GUI/MainMenu.cpp:315
+msgid "Rename Preset"
+msgstr "Preset umbenennen"
+
+#: ../src/GUI/MainMenu.cpp:323
+msgid "Enter new Preset Name:"
+msgstr "Neuen Preset-Namen eingeben:"
+
+# TODO: bessere Übersetzung?
+#: ../src/GUI/MainMenu.cpp:349
+msgid "Clear current preset?"
+msgstr "Aktuelles Preset leeren?"
+
+#: ../src/GUI/MainMenu.cpp:353
+msgid "Parameters will be set to default values and the name will be cleared"
+msgstr "Parameter werden auf Standardwerte gesetzt und der Name wird gelöscht"
+
+#: ../src/GUI/MainMenu.cpp:380
+msgid "Import Preset"
+msgstr "Preset importieren"
+
+#: ../src/GUI/MainMenu.cpp:380
+msgid "amsynth 1.x files"
+msgstr "amsynth-1.x-Dateien"
+
+#: ../src/GUI/MainMenu.cpp:389
+msgid "Export Preset"
+msgstr "Preset exportieren"
+
+#: ../src/GUI/MainMenu.cpp:410
+msgid "All"
+msgstr "Alle"
+
+#: ../src/GUI/MainMenu.cpp:418
+msgid "MIDI Channel"
+msgstr "MIDI-Kanal"
+
+#: ../src/GUI/MainMenu.cpp:428
+msgid "Unlimited"
+msgstr "Unbegrenzt"
+
+#: ../src/GUI/MainMenu.cpp:436
+msgid "Max. Polyphony"
+msgstr "Max. Polyphonie"
+
+#: ../src/GUI/MainMenu.cpp:446
+msgid " Semitones"
+msgstr " Halbtöne"
+
+#: ../src/GUI/MainMenu.cpp:454
+msgid "Pitch Bend Range"
+msgstr "Pitch-Bend-Bereich"
+
+#: ../src/GUI/MainMenu.cpp:456
+msgid "Audio & MIDI..."
+msgstr "Audio & MIDI..."
+
+#. @translators: This is an application name and its abbreviation
+#: ../src/GUI/MainMenu.cpp:524
+msgid "Virtual Keyboard (vkeybd)"
+msgstr "Virtual Keyboard (vkeybd)"
+
+#. @translators: This is an application name and its abbreviation
+#: ../src/GUI/MainMenu.cpp:529
+msgid "Virtual MIDI Piano Keyboard (VMPK)"
+msgstr "Virtual MIDI Piano Keyboard (VMPK)"
+
+#: ../src/GUI/MainMenu.cpp:533
+msgid "Virtual Keyboards"
+msgstr "Virtuelle Keyboards"
+
+#: ../src/GUI/MainMenu.cpp:551
+msgid "MIDI (ALSA) connections"
+msgstr "MIDI-Verbindungen (ALSA)"
+
+#: ../src/GUI/MainMenu.cpp:571
+msgid "Audio (JACK) connections"
+msgstr "Audioverbindungen (JACK)"
+
+#: ../src/GUI/MainMenu.cpp:616
+msgid "About"
+msgstr "Über"
+
+#: ../src/GUI/MainMenu.cpp:617
+msgid "Report a Bug"
+msgstr "Einen Fehler melden"
+
+#: ../src/GUI/MainMenu.cpp:618
+msgid "Online Documentation"
+msgstr "Online-Dokumentation"
+
+#: ../src/GUI/MainMenu.cpp:654
+#, fuzzy
+msgid "Copyright © 2002 - 2017 Nick Dowell and contributors"
+msgstr "Copyright © 2002 - 2016 Nick Dowell und Mitwirkende"
+
+#: ../src/GUI/MainMenu.cpp:662
+msgid "Could not show link"
+msgstr "Link kann nicht angezeigt werden"
+
+#: ../src/GUI/MainMenu.cpp:673
+msgid "_File"
+msgstr "_Datei"
+
+#: ../src/GUI/MainMenu.cpp:674
+msgid "_Preset"
+msgstr "_Preset"
+
+#: ../src/GUI/MainMenu.cpp:675
+msgid "_Config"
+msgstr "_Konfiguration"
+
+#: ../src/GUI/MainMenu.cpp:676
+msgid "_Utils"
+msgstr "_Werkzeuge"
+
+#: ../src/GUI/MainMenu.cpp:677
+msgid "_Help"
+msgstr "_Hilfe"
+
+#: ../src/GUI/MainWindow.cpp:67
+#, c-format
+msgid "Audio: %s @ %d  MIDI: %s"
+msgstr "Audio: %s @ %d  MIDI: %s"
+
+#: ../src/GUI/MainWindow.cpp:176
 msgid "<b>Save changes before closing?</b>"
 msgstr "<b>Sollen die Änderungen vor dem Beenden gespeichert werden?</b>"
 
-#: ../src/GUI/GUI.cc:108
+#: ../src/GUI/MainWindow.cpp:178
 msgid "Close _Without Saving"
 msgstr "_Beenden ohne zu speichern"
 
-#: ../src/GUI/GUI.cc:113
+#: ../src/GUI/MainWindow.cpp:182
 msgid ""
 "If you don't save, changes to the current preset will be permanently lost."
 msgstr ""
 "Ohne zu speichern gehen die Änderungen am aktuellen Preset dauerhaft "
 "verloren."
 
-#: ../src/GUI/GUI.cc:146
-msgid "Rename Preset"
-msgstr "Preset umbenennen"
-
-#: ../src/GUI/GUI.cc:150
-msgid "Enter new Preset Name:"
-msgstr "Neuen Preset-Namen eingeben:"
-
-#: ../src/GUI/GUI.cc:153
-msgid "Confirm"
-msgstr "Bestätigen"
-
-#: ../src/GUI/GUI.cc:157
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: ../src/GUI/GUI.cc:164
-msgid "Capture Output"
-msgstr "Ausgabe aufnehmen"
-
-#: ../src/GUI/GUI.cc:174
-msgid "output file:"
-msgstr "Ausgabedatei:"
-
-#: ../src/GUI/GUI.cc:180
-msgid "amsynth-out.wav"
-msgstr "amsynth-ausgabe.wav"
-
-#: ../src/GUI/GUI.cc:194 ../src/GUI/GUI.cc:710
-msgid "capture status: STOPPED"
-msgstr "Aufnahmestatus: GESTOPPT"
-
-#: ../src/GUI/GUI.cc:214
-msgid "New Instance"
-msgstr "Neue Instanz"
-
-#: ../src/GUI/GUI.cc:218
-msgid "_Open Bank..."
-msgstr "Öffne B_ank..."
-
-#: ../src/GUI/GUI.cc:220
-msgid "_Save Bank As..."
-msgstr "_Speichere Bank unter..."
-
-#: ../src/GUI/GUI.cc:226
-msgid "_Quit"
-msgstr "_Beenden"
-
-#: ../src/GUI/GUI.cc:235
-msgid "_Copy"
-msgstr "_Kopieren"
-
-#: ../src/GUI/GUI.cc:236
-msgid "_Paste"
-msgstr "_Einfügen"
-
-#: ../src/GUI/GUI.cc:238
-msgid "Rename..."
-msgstr "Umbenennen..."
-
-# TODO: bessere Übersetzung?
-#: ../src/GUI/GUI.cc:239
-msgid "Clear"
-msgstr "Leeren"
-
-#: ../src/GUI/GUI.cc:241
-msgid "_Randomise"
-msgstr "_Zufällige Einstellungen"
-
-#: ../src/GUI/GUI.cc:242
-msgid "Undo"
-msgstr "Rückgängig"
-
-#: ../src/GUI/GUI.cc:243
-msgid "Redo"
-msgstr "Wiederherstellen"
-
-#: ../src/GUI/GUI.cc:245
-msgid "Import Preset..."
-msgstr "Preset importieren..."
-
-#: ../src/GUI/GUI.cc:246
-msgid "Export Preset..."
-msgstr "Preset exportieren..."
-
-#: ../src/GUI/GUI.cc:265
-msgid "All"
-msgstr "Alle"
-
-#: ../src/GUI/GUI.cc:276
-msgid "MIDI Channel"
-msgstr "MIDI-Kanal"
-
-#: ../src/GUI/GUI.cc:288
-msgid "Unlimited"
-msgstr "Unbegrenzt"
-
-#: ../src/GUI/GUI.cc:300
-msgid "Max. Polyphony"
-msgstr "Max. Polyphonie"
-
-#: ../src/GUI/GUI.cc:313
-msgid " Semitones"
-msgstr " Halbtöne"
-
-#: ../src/GUI/GUI.cc:322
-msgid "Pitch Bend Range"
-msgstr "Pitch-Bend-Bereich"
-
-#: ../src/GUI/GUI.cc:325
-msgid "Audio & MIDI..."
-msgstr "Audio & MIDI..."
-
-#: ../src/GUI/GUI.cc:334
-msgid "Record to .wav file..."
-msgstr "In .wav-Datei aufnehmen..."
-
-#. @translators: This is an application name and its abbreviation
-#: ../src/GUI/GUI.cc:348
-msgid "Virtual Keyboard (vkeybd)"
-msgstr "Virtual Keyboard (vkeybd)"
-
-#. @translators: This is an application name and its abbreviation
-#: ../src/GUI/GUI.cc:356
-msgid "Virtual MIDI Piano Keyboard (VMPK)"
-msgstr "Virtual MIDI Piano Keyboard (VMPK)"
-
-#: ../src/GUI/GUI.cc:361
-msgid "Virtual Keyboards"
-msgstr "Virtuelle Keyboards"
-
-#: ../src/GUI/GUI.cc:387
-msgid "MIDI (ALSA) connections"
-msgstr "MIDI-Verbindungen (ALSA)"
-
-#: ../src/GUI/GUI.cc:413
-msgid "Audio (JACK) connections"
-msgstr "Audioverbindungen (JACK)"
-
-#: ../src/GUI/GUI.cc:419
-msgid "About"
-msgstr "Über"
-
-#: ../src/GUI/GUI.cc:420
-msgid "Report a Bug"
-msgstr "Einen Fehler melden"
-
-#: ../src/GUI/GUI.cc:421
-msgid "Online Documentation"
-msgstr "Online-Dokumentation"
-
-#: ../src/GUI/GUI.cc:430
-msgid "_File"
-msgstr "_Datei"
-
-#: ../src/GUI/GUI.cc:431
-msgid "_Preset"
-msgstr "_Preset"
-
-#: ../src/GUI/GUI.cc:432
-msgid "_Config"
-msgstr "_Konfiguration"
-
-#: ../src/GUI/GUI.cc:433
-msgid "_Utils"
-msgstr "_Werkzeuge"
-
-#: ../src/GUI/GUI.cc:434
-msgid "_Help"
-msgstr "_Hilfe"
-
-#: ../src/GUI/GUI.cc:436
-#, c-format
-msgid "Audio: %s @ %d  MIDI: %s"
-msgstr "Audio: %s @ %d  MIDI: %s"
-
-#: ../src/GUI/GUI.cc:513 ../src/GUI/GUI.cc:524
+#: ../src/GUI/MainWindow.cpp:260 ../src/GUI/MainWindow.cpp:267
 msgid "amsynth configuration error"
 msgstr "amsynth-Konfigurationsfehler"
 
-#: ../src/GUI/GUI.cc:515
+#: ../src/GUI/MainWindow.cpp:261
 msgid ""
 "amsynth could not initialise the selected audio device.\n"
 "\n"
@@ -434,7 +480,7 @@ msgstr ""
 "\n"
 "Bitte die Konfiguration prüfen und neu starten"
 
-#: ../src/GUI/GUI.cc:526
+#: ../src/GUI/MainWindow.cpp:268
 msgid ""
 "amsynth could not initialise the selected MIDI device.\n"
 "\n"
@@ -444,121 +490,31 @@ msgstr ""
 "\n"
 "Bitte die Konfiguration prüfen und neu starten"
 
-#: ../src/GUI/GUI.cc:544
-msgid "amsynth could not set realtime priority"
-msgstr "amsynth konnte die Echtzeit-Priorität nicht setzen"
-
-#: ../src/GUI/GUI.cc:545
-msgid ""
-"You may experience audio buffer underruns resulting in 'clicks' in the "
-"audio.\n"
-"\n"
-"This is most likely because the program is not SUID root.\n"
-"\n"
-"Using the JACK audio subsystem can also help"
-msgstr ""
-"Eventuell werden Audio Buffer Underruns auftreten, bemerkbar durch 'Klicks' "
-"in der Audioausgabe.\n"
-"\n"
-"Wahrscheinlich liegt dies daran, dass das Programm nicht SUID root ist.\n"
-"\n"
-"Eventuell hilft die Verwendung von JACK"
-
-#: ../src/GUI/GUI.cc:560
-msgid "Could not show link"
-msgstr "Link kann nicht angezeigt werden"
-
-# TODO: bessere Übersetzung?
-#: ../src/GUI/GUI.cc:638
-msgid "Clear current preset?"
-msgstr "Aktuelles Preset leeren?"
-
-#: ../src/GUI/GUI.cc:642
-msgid "Parameters will be set to default values and the name will be cleared"
-msgstr "Parameter werden auf Standardwerte gesetzt und der Name wird gelöscht"
-
-#: ../src/GUI/GUI.cc:657
-msgid "Export Preset"
-msgstr "Preset exportieren"
-
-#: ../src/GUI/GUI.cc:666
-msgid "Import Preset"
-msgstr "Preset importieren"
-
-#: ../src/GUI/GUI.cc:666
-msgid "amsynth 1.x files"
-msgstr "amsynth-1.x-Dateien"
-
-#: ../src/GUI/GUI.cc:681
-msgid "Select output WAV file"
-msgstr "Ausgabe-WAV-Datei auswählen"
-
-#: ../src/GUI/GUI.cc:700
-msgid "capture status: RECORDING"
-msgstr "Aufnahmestatus: AUFNAHME"
-
-#: ../src/GUI/GUI.cc:763
-#, fuzzy
-msgid "Copyright © 2002 - 2017 Nick Dowell and contributors"
-msgstr "Copyright © 2002 - 2016 Nick Dowell und Mitwirkende"
-
-#: ../src/GUI/GUI.cc:921
-msgid "Open Bank"
-msgstr "Öffne Bank"
-
-#: ../src/GUI/GUI.cc:933
-msgid "Save Bank"
-msgstr "Speichere Bank"
-
-#: ../src/GUI/GUI.cc:942
-msgid "new.bank"
-msgstr "neue.bank"
-
-#: ../src/GUI/GUI.cc:964
-msgid ""
-"Reading the tuning file failed for some reason. Make sure your file has the "
-"correct format and try again."
-msgstr ""
-"Laden der Stimmungsdatei ist fehlgeschlagen. Hat die Datei das richtige "
-"Format?"
-
-#: ../src/GUI/GUI.cc:979
-msgid ""
-"Reading the keyboard map file failed for some reason. Make sure your file "
-"has the correct format and try again."
-msgstr ""
-"Das Laden der neuen Keyboard-Map ist fehlgeschlafen. Hat die Datei das "
-"richtige Format?"
-
-#: ../src/GUI/GUI.cc:998
-msgid "Discard the current scale and keyboard map?"
-msgstr "Sollen die aktuelle Stimmung und Keyboard-Map verworfen werden?"
-
-#: ../src/GUI/MIDILearnDialog.cpp:38
+#: ../src/GUI/MIDILearnDialog.cpp:37
 msgid "MIDI Learn"
 msgstr "MIDI-Lernen"
 
-#: ../src/GUI/MIDILearnDialog.cpp:48 ../src/GUI/MIDILearnDialog.cpp:101
+#: ../src/GUI/MIDILearnDialog.cpp:47 ../src/GUI/MIDILearnDialog.cpp:102
 msgid "None"
 msgstr "Keiner"
 
-#: ../src/GUI/MIDILearnDialog.cpp:53
+#: ../src/GUI/MIDILearnDialog.cpp:52
 msgid "Synth Parameter:"
 msgstr "Synth-Parameter:"
 
-#: ../src/GUI/MIDILearnDialog.cpp:55
+#: ../src/GUI/MIDILearnDialog.cpp:54
 msgid "MIDI Controller"
 msgstr "MIDI-Controller"
 
-#: ../src/GUI/PresetControllerView.cc:116
+#: ../src/GUI/PresetControllerView.cc:122
 msgid "Save"
 msgstr "Speichern"
 
-#: ../src/GUI/PresetControllerView.cc:125
+#: ../src/GUI/PresetControllerView.cc:130
 msgid "Audition"
 msgstr "Hörprobe"
 
-#: ../src/GUI/PresetControllerView.cc:140
+#: ../src/GUI/PresetControllerView.cc:145
 msgid "Panic"
 msgstr "Panik"
 
@@ -814,6 +770,51 @@ msgstr "osc 2"
 msgid "always"
 msgstr "Immer"
 
-#: ../src/PresetController.cc:378
+#: ../src/PresetController.cc:415
 msgid "User bank"
 msgstr "Benutzerbank"
+
+#~ msgid "Confirm"
+#~ msgstr "Bestätigen"
+
+#~ msgid "Cancel"
+#~ msgstr "Abbrechen"
+
+#~ msgid "Capture Output"
+#~ msgstr "Ausgabe aufnehmen"
+
+#~ msgid "output file:"
+#~ msgstr "Ausgabedatei:"
+
+#~ msgid "amsynth-out.wav"
+#~ msgstr "amsynth-ausgabe.wav"
+
+#~ msgid "capture status: STOPPED"
+#~ msgstr "Aufnahmestatus: GESTOPPT"
+
+#~ msgid "Record to .wav file..."
+#~ msgstr "In .wav-Datei aufnehmen..."
+
+#~ msgid "amsynth could not set realtime priority"
+#~ msgstr "amsynth konnte die Echtzeit-Priorität nicht setzen"
+
+#~ msgid ""
+#~ "You may experience audio buffer underruns resulting in 'clicks' in the "
+#~ "audio.\n"
+#~ "\n"
+#~ "This is most likely because the program is not SUID root.\n"
+#~ "\n"
+#~ "Using the JACK audio subsystem can also help"
+#~ msgstr ""
+#~ "Eventuell werden Audio Buffer Underruns auftreten, bemerkbar durch "
+#~ "'Klicks' in der Audioausgabe.\n"
+#~ "\n"
+#~ "Wahrscheinlich liegt dies daran, dass das Programm nicht SUID root ist.\n"
+#~ "\n"
+#~ "Eventuell hilft die Verwendung von JACK"
+
+#~ msgid "Select output WAV file"
+#~ msgstr "Ausgabe-WAV-Datei auswählen"
+
+#~ msgid "capture status: RECORDING"
+#~ msgstr "Aufnahmestatus: AUFNAHME"

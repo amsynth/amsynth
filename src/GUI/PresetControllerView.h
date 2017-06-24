@@ -22,15 +22,16 @@
 #ifndef _PRESETCONTROLLERVIEW_H
 #define _PRESETCONTROLLERVIEW_H
 
-#include <gtkmm.h>
+#include <gtk/gtk.h>
 
 class PresetController;
 
-class PresetControllerView : public Gtk::HBox { public:
+class PresetControllerView { public:
 	static PresetControllerView * create();
 	virtual void setPresetController(PresetController *presetController) = 0;
     virtual void update() = 0;
     virtual int getAuditionNote() = 0;
+	virtual GtkWidget * getWidget() = 0;
 };
 
 #endif
