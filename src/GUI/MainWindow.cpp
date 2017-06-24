@@ -95,24 +95,47 @@ struct MainWindow : public UpdateListener
 					parameter.getStep(),
 					0, 0);
 			parameter.addUpdateListener(*this);
-			gtk_signal_connect(
-					GTK_OBJECT(adjustments[i]), "value_changed",
-					G_CALLBACK(MainWindow::on_adjustment_value_changed), (gpointer) &parameter);
 		}
-
-		//
 
 		GtkWidget *editor = editor_pane_new(synthesizer, adjustments, FALSE);
 		gtk_box_pack_start(GTK_BOX(vbox), editor, FALSE, FALSE, 0);
+
+		//
+		// start_atomic_value_change is not registered by editor_pane_new
+		//
+		for (int i = 0; i < kAmsynthParameterCount; i++) {
+			Preset &preset = presetController->getCurrentPreset();
+			Parameter &parameter = preset.getParameter(i);
+
+			g_object_set_data(G_OBJECT(adjustments[i]), "Parameter", &parameter);
+
+			g_signal_connect_after(
+					G_OBJECT(adjustments[i]), "start_atomic_value_change",
+					G_CALLBACK(MainWindow::on_adjustment_start_atomic_value_change),
+					(gpointer) this);
+
+			g_signal_connect(
+					G_OBJECT(adjustments[i]), "value_changed",
+					G_CALLBACK(MainWindow::on_adjustment_value_changed),
+					(gpointer) this);
+		}
 
 		//
 
 		gtk_container_add(GTK_CONTAINER(window), vbox);
 	}
 
-	static void on_adjustment_value_changed(GtkAdjustment *adjustment, Parameter *parameter)
+	static void on_adjustment_start_atomic_value_change(GtkAdjustment *adjustment, MainWindow *mainWindow)
 	{
 		gdouble value = gtk_adjustment_get_value(adjustment);
+		Parameter *parameter = (Parameter *) g_object_get_data(G_OBJECT(adjustment), "Parameter");
+		mainWindow->presetController->pushParamChange(parameter->GetId(), (float) value);
+	}
+
+	static void on_adjustment_value_changed(GtkAdjustment *adjustment, MainWindow *mainWindow)
+	{
+		gdouble value = gtk_adjustment_get_value(adjustment);
+		Parameter *parameter = (Parameter *) g_object_get_data(G_OBJECT(adjustment), "Parameter");
 		parameter->setValue((float) value);
 	}
 
