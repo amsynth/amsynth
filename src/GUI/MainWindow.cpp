@@ -84,6 +84,8 @@ struct MainWindow : public UpdateListener
 
 		//
 
+		memset(defaults, 0, sizeof(defaults));
+
 		presetController->setUpdateListener(*this);
 		for (int i = 0; i < kAmsynthParameterCount; i++) {
 			Preset &preset = presetController->getCurrentPreset();
@@ -94,11 +96,8 @@ struct MainWindow : public UpdateListener
 					parameter.getMax(),
 					parameter.getStep(),
 					0, 0);
-
-			defaults[i] = G_VALUE_INIT;
 			g_value_init(&defaults[i], G_TYPE_FLOAT);
 			g_value_set_float(&defaults[i], parameter.getDefault());
-
 			g_object_set_data(G_OBJECT(adjustments[i]), "default-value", &defaults[i]);
 			parameter.addUpdateListener(*this);
 		}
