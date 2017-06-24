@@ -256,8 +256,6 @@ delete_event(GtkWidget *widget, GdkEvent *event, MainWindow *mainWindow)
 static gboolean
 startup_check(gpointer data)
 {
-	g_idle_remove_by_data(data);
-
 	Configuration & config = Configuration::get();
 	bool bad_config = false;
 
@@ -278,6 +276,8 @@ startup_check(gpointer data)
 	if (bad_config) {
 		config_dialog_run(NULL);
 	}
+
+    return G_SOURCE_REMOVE;
 }
 
 GtkWidget *
