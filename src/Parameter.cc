@@ -29,6 +29,7 @@ Parameter::Parameter	(std::string name, Param id, float value, float min, float 
 ,	_name		(name)
 ,	_label		(label)
 ,	_controlMode	(type)
+,	_default	(value)
 ,	_value		(NAN)
 ,	_min		(min)
 ,	_max		(max)

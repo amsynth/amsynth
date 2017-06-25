@@ -81,12 +81,43 @@ void Synthesizer::saveBank(const char *filename)
 
 void Synthesizer::loadState(char *buffer)
 {
-	_presetController->getCurrentPreset().fromString(buffer);
+	if (!_presetController->getCurrentPreset().fromString(buffer))
+		return;
+
+	std::istringstream input (buffer);
+	for (std::string line; std::getline(input, line); ) {
+		std::istringstream stream (line);
+		std::string type, key, value;
+		stream >> type;
+
+		if (type == "<property>") {
+			stream >> key;
+			stream.get(); // skip whitespace
+			std::getline(stream, value); // value may contain whitespace
+
+			if (key == PROP_KBM_FILE)
+				loadTuningKeymap(value.c_str());
+
+			if (key == PROP_SCL_FILE)
+				loadTuningScale(value.c_str());
+		}
+	}
 }
 
 int Synthesizer::saveState(char **buffer)
 {
-	std::string string = _presetController->getCurrentPreset().toString();
+	std::stringstream stream;
+	_presetController->getCurrentPreset().toString(stream);
+
+	const std::string &tuning_kbm_file = _voiceAllocationUnit->tuningMap.getKeyMapFile();
+	if (tuning_kbm_file.length())
+		stream << "<property> " PROP_KBM_FILE " " << tuning_kbm_file << std::endl;
+
+	const std::string &tuning_scl_file = _voiceAllocationUnit->tuningMap.getScaleFile();
+	if (tuning_scl_file.length())
+		stream << "<property> " PROP_SCL_FILE " " << tuning_scl_file << std::endl;
+
+	std::string string = stream.str();
 	*buffer = (char *)malloc(4096);
 	return sprintf(*buffer, "%s", string.c_str());
 }
@@ -163,17 +194,20 @@ void Synthesizer::setMaxNumVoices(int value)
 
 int Synthesizer::loadTuningKeymap(const char *filename)
 {
-	return _voiceAllocationUnit->loadKeyMap(filename);
+	if (filename && strlen(filename))
+		return _voiceAllocationUnit->loadKeyMap(filename);
+
+	_voiceAllocationUnit->tuningMap.defaultKeyMap();
+	return 0;
 }
 
 int Synthesizer::loadTuningScale(const char *filename)
 {
-	return _voiceAllocationUnit->loadScale(filename);
-}
+	if (filename && strlen(filename))
+		return _voiceAllocationUnit->loadScale(filename);
 
-void Synthesizer::defaultTuning()
-{
-	_voiceAllocationUnit->defaultTuning();
+	_voiceAllocationUnit->tuningMap.defaultScale();
+	return 0;
 }
 
 void Synthesizer::setSampleRate(int sampleRate)

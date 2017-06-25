@@ -1,7 +1,7 @@
 /*
- *  amsynth_dssi_gui.c
+ *  amsynth_dssi_gtk.cpp
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -19,6 +19,8 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "amsynth_dssi.h"
+
 #define _GNU_SOURCE
 #include <assert.h>
 #include <stdio.h>
@@ -30,6 +32,7 @@
 
 #include "controls.h"
 #include "Preset.h"
+#include "Synthesizer.h"
 #include "GUI/editor_pane.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -151,9 +154,9 @@ int host_set_control(int control, float value)
     return err;
 }
 
-int host_set_program(int bank, int program)
+int host_configure(const char *key, const char *value)
 {
-    int err = lo_send(_osc_host_addr, tmpstr("%s/program", _osc_path), "ii", bank, program);
+    int err = lo_send(_osc_host_addr, tmpstr("%s/configure", _osc_path), "ss", key, value);
     return err;
 }
 
@@ -181,6 +184,21 @@ void on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
     int port_number = parameter_index + 2;
     host_set_control(port_number, gtk_adjustment_get_value(adjustment));
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+struct SynthesizerStub : ISynthesizer
+{
+	virtual int loadTuningKeymap(const char *filename)
+	{
+		return host_configure(PROP_KBM_FILE, filename);
+	}
+
+	virtual int loadTuningScale(const char *filename)
+	{
+		return host_configure(PROP_SCL_FILE, filename);
+	}
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -227,7 +245,7 @@ int main(int argc, char *argv[])
         g_signal_connect(_adjustments[i], "value-changed", (GCallback)&on_adjustment_value_changed, (gpointer)i);
     }
 
-    GtkWidget *editor = editor_pane_new(_adjustments, TRUE);
+    GtkWidget *editor = editor_pane_new(new SynthesizerStub, _adjustments, TRUE);
     gtk_container_add(GTK_CONTAINER(_window), editor);
     gtk_widget_show_all(GTK_WIDGET(editor));
     

@@ -76,13 +76,11 @@ libgui_sources = \
 	src/GUI/bitmap_knob.h \
 	src/GUI/bitmap_popup.c \
 	src/GUI/bitmap_popup.h \
-	src/GUI/controller_menu.cpp \
-	src/GUI/controller_menu.h \
 	src/GUI/controllers.h \
+	src/GUI/editor_menus.cpp \
+	src/GUI/editor_menus.h \
 	src/GUI/editor_pane.c \
-	src/GUI/editor_pane.h \
-	src/GUI/presets_menu.cpp \
-	src/GUI/presets_menu.h
+	src/GUI/editor_pane.h
 
 
 #
@@ -116,7 +114,7 @@ amsynth_SOURCES = \
 	src/main.h \
 	src/main.cc
 
-amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @SNDFILE_CFLAGS@ @GTKMM_CFLAGS@
+amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @SNDFILE_CFLAGS@ @GTK_CFLAGS@
 
 amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @SNDFILE_LIBS@ @LIBS@
 
@@ -124,16 +122,17 @@ if BUILD_GUI
 amsynth_SOURCES += $(libgui_sources) \
 	src/GUI/ConfigDialog.cpp \
 	src/GUI/ConfigDialog.h \
-	src/GUI/GUI.cc \
-	src/GUI/GUI.h \
 	src/GUI/gui_main.cc \
 	src/GUI/gui_main.h \
+	src/GUI/MainMenu.cpp \
+	src/GUI/MainMenu.h \
+	src/GUI/MainWindow.cpp \
+	src/GUI/MainWindow.h \
 	src/GUI/MIDILearnDialog.cpp \
 	src/GUI/MIDILearnDialog.h \
 	src/GUI/PresetControllerView.cc \
-	src/GUI/PresetControllerView.h \
-	src/GUI/Request.h
-amsynth_LDADD += @GTKMM_LIBS@
+	src/GUI/PresetControllerView.h
+amsynth_LDADD += @GTK_LIBS@
 endif
 
 if DARWIN
@@ -162,7 +161,7 @@ if BUILD_DSSI
 
 dssidir = $(libdir)/dssi
 noinst_LTLIBRARIES += amsynth_dssi.la
-amsynth_dssi_la_SOURCES = src/dssi.cpp $(libcore_sources) $(libdsp_sources)
+amsynth_dssi_la_SOURCES = src/amsynth_dssi.cpp src/amsynth_dssi.h $(libcore_sources) $(libdsp_sources)
 amsynth_dssi_la_CPPFLAGS = $(AM_CPPFLAGS) @DSSI_CFLAGS@
 amsynth_dssi_la_LDFLAGS = -rpath $(dssidir) -avoid-version -module -export-symbols-regex "dssi_descriptor" -disable-static
 
@@ -171,7 +170,7 @@ endif
 if BUILD_DSSI_GUI
 
 noinst_PROGRAMS = amsynth_dssi_gtk
-amsynth_dssi_gtk_SOURCES = src/amsynth_dssi_gui.c $(libcore_sources) $(libgui_sources)
+amsynth_dssi_gtk_SOURCES = src/amsynth_dssi_gtk.cpp $(libcore_sources) $(libgui_sources)
 amsynth_dssi_gtk_CPPFLAGS = $(AM_CPPFLAGS) @DSSI_CFLAGS@ @GTK_CFLAGS@ @LIBLO_CFLAGS@
 amsynth_dssi_gtk_LDADD = @DSSI_LIBS@ @GTK_LIBS@ @LIBLO_LIBS@ -lstdc++
 
@@ -186,35 +185,41 @@ if BUILD_LV2
 
 amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
 noinst_LTLIBRARIES += amsynth_lv2.la
-amsynth_lv2_la_SOURCES = src/amsynth_lv2.cpp $(libcore_sources) $(libdsp_sources) \
+amsynth_lv2_la_SOURCES = src/amsynth_lv2.cpp src/amsynth_lv2.h $(libcore_sources) $(libdsp_sources) \
 	include/lv2/lv2plug.in/ns/lv2core/lv2.h \
-	include/lv2/lv2plug.in/ns/extensions/units/units.h \
-	include/lv2/lv2plug.in/ns/extensions/ui/ui.h \
-	include/lv2/lv2plug.in/ns/ext/worker/worker.h \
-	include/lv2/lv2plug.in/ns/ext/data-access/data-access.h \
-	include/lv2/lv2plug.in/ns/ext/event/event-helpers.h \
-	include/lv2/lv2plug.in/ns/ext/event/event.h \
-	include/lv2/lv2plug.in/ns/ext/instance-access/instance-access.h \
+	include/lv2/lv2plug.in/ns/lv2core/lv2_util.h \
 	include/lv2/lv2plug.in/ns/ext/time/time.h \
-	include/lv2/lv2plug.in/ns/ext/patch/patch.h \
+	include/lv2/lv2plug.in/ns/ext/state/state.h \
 	include/lv2/lv2plug.in/ns/ext/uri-map/uri-map.h \
-	include/lv2/lv2plug.in/ns/ext/port-groups/port-groups.h \
-	include/lv2/lv2plug.in/ns/ext/port-props/port-props.h \
-	include/lv2/lv2plug.in/ns/ext/log/log.h \
-	include/lv2/lv2plug.in/ns/ext/resize-port/resize-port.h \
+	include/lv2/lv2plug.in/ns/ext/parameters/parameters.h \
 	include/lv2/lv2plug.in/ns/ext/midi/midi.h \
-	include/lv2/lv2plug.in/ns/ext/presets/presets.h \
+	include/lv2/lv2plug.in/ns/ext/patch/patch.h \
+	include/lv2/lv2plug.in/ns/ext/event/event.h \
+	include/lv2/lv2plug.in/ns/ext/event/event-helpers.h \
+	include/lv2/lv2plug.in/ns/ext/options/options.h \
 	include/lv2/lv2plug.in/ns/ext/atom/atom.h \
 	include/lv2/lv2plug.in/ns/ext/atom/util.h \
 	include/lv2/lv2plug.in/ns/ext/atom/forge.h \
-	include/lv2/lv2plug.in/ns/ext/state/state.h \
+	include/lv2/lv2plug.in/ns/ext/port-props/port-props.h \
+	include/lv2/lv2plug.in/ns/ext/log/log.h \
+	include/lv2/lv2plug.in/ns/ext/log/logger.h \
+	include/lv2/lv2plug.in/ns/ext/morph/morph.h \
+	include/lv2/lv2plug.in/ns/ext/worker/worker.h \
+	include/lv2/lv2plug.in/ns/ext/resize-port/resize-port.h \
+	include/lv2/lv2plug.in/ns/ext/presets/presets.h \
 	include/lv2/lv2plug.in/ns/ext/urid/urid.h \
-	include/lv2/lv2plug.in/ns/ext/dynmanifest/dynmanifest.h
+	include/lv2/lv2plug.in/ns/ext/buf-size/buf-size.h \
+	include/lv2/lv2plug.in/ns/ext/data-access/data-access.h \
+	include/lv2/lv2plug.in/ns/ext/port-groups/port-groups.h \
+	include/lv2/lv2plug.in/ns/ext/instance-access/instance-access.h \
+	include/lv2/lv2plug.in/ns/ext/dynmanifest/dynmanifest.h \
+	include/lv2/lv2plug.in/ns/extensions/ui/ui.h \
+	include/lv2/lv2plug.in/ns/extensions/units/units.h
 amsynth_lv2_la_CPPFLAGS = $(AM_CPPFLAGS) -I"$(top_srcdir)/include" @LV2_CFLAGS@
 amsynth_lv2_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2_descriptor" -disable-static
 
 noinst_LTLIBRARIES += amsynth_lv2_gtk.la
-amsynth_lv2_gtk_la_SOURCES = src/amsynth_lv2_ui_gtk.c $(libcore_sources) $(libgui_sources)
+amsynth_lv2_gtk_la_SOURCES = src/amsynth_lv2_ui_gtk.cpp $(libcore_sources) $(libgui_sources)
 amsynth_lv2_gtk_la_CPPFLAGS = $(AM_CPPFLAGS) -I"$(top_srcdir)/include" @LV2_CFLAGS@
 amsynth_lv2_gtk_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2ui_descriptor" -disable-static
 amsynth_lv2_gtk_la_LIBADD = @LV2_LIBS@
@@ -241,7 +246,8 @@ dist_amsynth_lv2_DATA = \
 	data/amsynth.lv2/BriansBank16.amSynth.bank.ttl \
 	data/amsynth.lv2/BriansBank17.amSynth.bank.ttl \
 	data/amsynth.lv2/BriansBank18.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank19.amSynth.bank.ttl
+	data/amsynth.lv2/BriansBank19.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank20.amSynth.bank.ttl
 
 endif
 
@@ -341,7 +347,8 @@ dist_banks_DATA = \
 	data/banks/BriansBank16.amSynth.bank \
 	data/banks/BriansBank17.amSynth.bank \
 	data/banks/BriansBank18.amSynth.bank \
-	data/banks/BriansBank19.amSynth.bank
+	data/banks/BriansBank19.amSynth.bank \
+	data/banks/BriansBank20.amSynth.bank
 
 
 #

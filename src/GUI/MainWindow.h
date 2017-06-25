@@ -1,7 +1,7 @@
 /*
- *  Request.h
+ *  MainWindow.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -19,14 +19,12 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _REQUEST_H
-#define _REQUEST_H
+#ifndef _MAINWINDOW_H
+#define _MAINWINDOW_H
 
-#include <sigc++/slot.h>
+#include <gtk/gtk.h>
 
-#define CALL_ON_GUI_THREAD( object, method ) \
-	call_slot_on_gui_thread( sigc::mem_fun((object), (method)) )
-
-void call_slot_on_gui_thread( sigc::slot<void> sigc_slot );
+GtkWidget *
+main_window_new(class Synthesizer *, class GenericOutput *);
 
 #endif

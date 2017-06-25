@@ -75,7 +75,8 @@ Oscillator::setPolarity(float polarity)
 void
 Oscillator::ProcessSamples	(float *buffer, int nFrames, float freq_hz, float pw, float sync_freq)
 {
-	mFrequency.configure(mFrequency.getFinalValue(), freq_hz, nFrames);
+	float maxFreq = rate / 2.f;
+	mFrequency.configure(mFrequency.getFinalValue(), MIN(freq_hz, maxFreq), nFrames);
 	mPulseWidth = pw;
 	mSyncFrequency = sync_freq;
 	

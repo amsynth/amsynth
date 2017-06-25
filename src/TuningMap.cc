@@ -38,7 +38,6 @@ TuningMap::TuningMap		()
 void
 TuningMap::defaultScale		()
 {
-	scaleDesc = "12-per-octave equal temperament (default)";
 	scale.clear();
 	for (int i = 1; i <= 12; ++i)
 		scale.push_back(pow(2., i/12.));
@@ -175,7 +174,7 @@ TuningMap::loadScale		(const string & filename)
 	if (!gotDesc || (int) newScale.size() != scaleSize)
 		return -1;
 
-	scaleDesc = newScaleDesc;
+	scaleFile = filename;
 	scale = newScale;
 	updateBasePitch();
 	return 0;
@@ -299,6 +298,7 @@ TuningMap::loadKeyMap		(const string & filename)
 	{ // special case for "automatic" linear mapping
 		if (!newMapping.empty())
 			return -1;
+		keyMapFile = filename;
 		zeroNote = newZeroNote;
 		refNote = newRefNote;
 		refPitch = newRefPitch;

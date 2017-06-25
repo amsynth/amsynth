@@ -1,7 +1,6 @@
 @prefix atom:    <http://lv2plug.in/ns/ext/atom#> .
 @prefix lv2:     <http://lv2plug.in/ns/lv2core#> .
-@prefix lv2midi: <http://lv2plug.in/ns/ext/midi#> .
-@prefix lv2ev:   <http://lv2plug.in/ns/ext/event#>.
+@prefix midi:    <http://lv2plug.in/ns/ext/midi#> .
 @prefix epp:     <http://lv2plug.in/ns/ext/port-props#> .
 @prefix uiext:   <http://lv2plug.in/ns/extensions/ui#> .
 @prefix pg:      <http://lv2plug.in/ns/ext/port-groups#> .
@@ -13,6 +12,9 @@
 @prefix urid:    <http://lv2plug.in/ns/ext/urid#> .
 @prefix units:   <http://lv2plug.in/ns/extensions/units#> .
 @prefix param:   <http://lv2plug.in/ns/ext/parameters#> .
+@prefix patch:   <http://lv2plug.in/ns/ext/patch#> .
+@prefix state:   <http://lv2plug.in/ns/ext/state#> .
+@prefix work:    <http://lv2plug.in/ns/ext/worker#> .
 
 <http://code.google.com/p/amsynth/amsynth/ui/gtk>
     a uiext:GtkUI ;
@@ -86,37 +88,51 @@
     doap:name "amsynth" ;
     doap:maintainer [ foaf:name "Nick Dowell" ; ] ;
     doap:license <http://usefulinc.com/doap/licenses/gpl> ;
-    lv2:requiredFeature urid:map ;
+    lv2:requiredFeature urid:map ,
+        work:schedule ;
     lv2:optionalFeature lv2:hardRTCapable;
+    lv2:extensionData state:interface ,
+        work:interface ;
     uiext:ui <http://code.google.com/p/amsynth/amsynth/ui/gtk> ;
     lv2:port [
-        a lv2:OutputPort ;
-        a lv2:AudioPort ;
+        a lv2:InputPort ,
+            atom:AtomPort ;
+        atom:bufferType atom:Sequence ;
+        atom:supports midi:MidiEvent ,
+            patch:Message ;
+        lv2:designation lv2:control ;
         lv2:index 0 ;
+        lv2:symbol "control" ;
+        lv2:name "Control"
+    ] , [
+        a lv2:OutputPort ,
+            atom:AtomPort ;
+        atom:bufferType atom:Sequence ;
+        atom:supports patch:Message ;
+        lv2:designation lv2:control ;
+        lv2:index 1 ;
+        lv2:symbol "notify" ;
+        lv2:name "Notify"
+    ] , [
+        a lv2:OutputPort ,
+            lv2:AudioPort ;
+        lv2:index 2 ;
         lv2:symbol "out_l" ;
         lv2:name "Left" ;
         lv2:designation pg:left ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_out> ;
     ] , [
-        a lv2:OutputPort ;
-        a lv2:AudioPort ;
-        lv2:index 1 ;
+        a lv2:OutputPort ,
+            lv2:AudioPort;
+        lv2:index 3 ;
         lv2:symbol "out_r" ;
         lv2:name "Right" ;
         lv2:designation pg:right ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_out> ;
     ] , [
         a lv2:InputPort ,
-            atom:AtomPort ;
-        atom:bufferType atom:Sequence ;
-        atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ;
-        lv2:index 2 ;
-        lv2:symbol "midi";
-        lv2:name "Input";
-    ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 3 ;
+            lv2:ControlPort ;
+        lv2:index 4 ;
         lv2:symbol "amp_attack" ;
         lv2:name "Amp Attack" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -126,9 +142,9 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_amp_env> ;
         lv2:designation param:attack ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 4 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 5 ;
         lv2:symbol "amp_decay" ;
         lv2:name "Amp Decay" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -138,9 +154,9 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_amp_env> ;
         lv2:designation param:decay ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 5 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 6 ;
         lv2:symbol "amp_sustain" ;
         lv2:name "Amp Sustain" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -150,9 +166,9 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_amp_env> ;
         lv2:designation param:sustain ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 6 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 7 ;
         lv2:symbol "amp_release" ;
         lv2:name "Amp Release" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -162,9 +178,9 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_amp_env> ;
         lv2:designation param:release ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 7 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 8 ;
         lv2:symbol "osc1_waveform" ;
         lv2:name "Osc1 Waveform" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -180,9 +196,9 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_osc1> ;
         lv2:designation param:waveform ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 8 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 9 ;
         lv2:symbol "filter_attack" ;
         lv2:name "Filter Attack" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -192,9 +208,9 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_filter_env> ;
         lv2:designation param:attack ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 9 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 10 ;
         lv2:symbol "filter_decay" ;
         lv2:name "Filter Decay" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -204,9 +220,9 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_filter_env> ;
         lv2:designation param:decay ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 10 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 11 ;
         lv2:symbol "filter_sustain" ;
         lv2:name "Filter Sustain" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -216,9 +232,9 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_filter_env> ;
         lv2:designation param:sustain ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 11 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 12 ;
         lv2:symbol "filter_release" ;
         lv2:name "Filter Release" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -228,9 +244,9 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_filter_env> ;
         lv2:designation param:release ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 12 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 13 ;
         lv2:symbol "filter_resonance" ;
         lv2:name "Filter Resonance" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -240,9 +256,9 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_filter> ;
         lv2:designation param:resonance ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 13 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 14 ;
         lv2:symbol "filter_env_amount" ;
         lv2:name "Filter Env Amount" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -251,9 +267,9 @@
         lv2:maximum 16.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_filter> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 14 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 15 ;
         lv2:symbol "filter_cutoff" ;
         lv2:name "Filter Cutoff" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -263,9 +279,9 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_filter> ;
         lv2:designation param:cutoffFrequency ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 15 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 16 ;
         lv2:symbol "osc2_detune" ;
         lv2:name "Osc2 Detune" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -274,9 +290,9 @@
         lv2:maximum 1.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_osc2> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 16 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 17 ;
         lv2:symbol "osc2_waveform" ;
         lv2:name "Osc2 Waveform" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -292,9 +308,9 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_osc2> ;
         lv2:designation param:waveform ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 17 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 18 ;
         lv2:symbol "master_vol" ;
         lv2:name "Master Vol" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -303,9 +319,9 @@
         lv2:maximum 1.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_amp> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 18 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 19 ;
         lv2:symbol "lfo_freq" ;
         lv2:name "LFO Freq" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -315,9 +331,9 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_lfo> ;
         lv2:designation param:frequency ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 19 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 20 ;
         lv2:symbol "lfo_waveform" ;
         lv2:name "LFO Waveform" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -335,20 +351,20 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_lfo> ;
         lv2:designation param:waveform ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 20 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 21 ;
         lv2:symbol "osc2_range" ;
         lv2:name "Osc2 Range" ;
         lv2:portProperty epp:hasStrictBounds ;
         lv2:default 0.000000 ;
-        lv2:minimum -1.000000 ;
-        lv2:maximum 2.000000 ;
+        lv2:minimum -3.000000 ;
+        lv2:maximum 4.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_osc2> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 21 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 22 ;
         lv2:symbol "osc_mix" ;
         lv2:name "Osc Mix" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -360,9 +376,9 @@
         lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "osc 2"] ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_mix> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 22 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 23 ;
         lv2:symbol "freq_mod_amount" ;
         lv2:name "Freq Mod Amount" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -371,9 +387,9 @@
         lv2:maximum 1.259921 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_lfo> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 23 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 24 ;
         lv2:symbol "filter_mod_amount" ;
         lv2:name "Filter Mod Amount" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -382,9 +398,9 @@
         lv2:maximum 1.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_keyboard> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 24 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 25 ;
         lv2:symbol "amp_mod_amount" ;
         lv2:name "Amp Mod Amount" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -393,9 +409,9 @@
         lv2:maximum 1.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_keyboard> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 25 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 26 ;
         lv2:symbol "osc_mix_mode" ;
         lv2:name "Ring Mod" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -404,9 +420,9 @@
         lv2:maximum 1.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_mix> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 26 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 27 ;
         lv2:symbol "osc1_pulsewidth" ;
         lv2:name "Osc1 Pulsewidth" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -416,9 +432,9 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_osc1> ;
         lv2:designation param:pulseWidth ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 27 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 28 ;
         lv2:symbol "osc2_pulsewidth" ;
         lv2:name "Osc2 Pulsewidth" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -428,9 +444,9 @@
         pg:group <http://code.google.com/p/amsynth/amsynth#group_osc2> ;
         lv2:designation param:pulseWidth ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 28 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 29 ;
         lv2:symbol "reverb_roomsize" ;
         lv2:name "Reverb Roomsize" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -439,9 +455,9 @@
         lv2:maximum 1.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_reverb> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 29 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 30 ;
         lv2:symbol "reverb_damp" ;
         lv2:name "Reverb Damp" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -450,9 +466,9 @@
         lv2:maximum 1.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_reverb> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 30 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 31 ;
         lv2:symbol "reverb_wet" ;
         lv2:name "Reverb Wet" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -461,9 +477,9 @@
         lv2:maximum 1.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_reverb> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 31 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 32 ;
         lv2:symbol "reverb_width" ;
         lv2:name "Reverb Width" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -472,9 +488,9 @@
         lv2:maximum 1.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_reverb> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 32 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 33 ;
         lv2:symbol "distortion_crunch" ;
         lv2:name "Distortion Crunch" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -483,9 +499,9 @@
         lv2:maximum 0.900000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_amp> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 33 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 34 ;
         lv2:symbol "osc2_sync" ;
         lv2:name "Osc2 Sync" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -494,9 +510,9 @@
         lv2:maximum 1.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_osc2> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 34 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 35 ;
         lv2:symbol "portamento_time" ;
         lv2:name "Portamento Time" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -505,9 +521,9 @@
         lv2:maximum 1.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_keyboard> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 35 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 36 ;
         lv2:symbol "keyboard_mode" ;
         lv2:name "Keyboard Mode" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -520,9 +536,9 @@
         lv2:scalePoint [ rdf:value 2.0 ; rdfs:label "legato"] ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_keyboard> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 36 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 37 ;
         lv2:symbol "osc2_pitch" ;
         lv2:name "Osc2 Pitch" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -533,9 +549,9 @@
         lv2:maximum 12.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_osc2> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 37 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 38 ;
         lv2:symbol "filter_type" ;
         lv2:name "Filter Type" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -548,9 +564,9 @@
         lv2:scalePoint [ rdf:value 2.0 ; rdfs:label "band pass" ] ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_filter> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 38 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 39 ;
         lv2:symbol "filter_slope" ;
         lv2:name "Filter Slope" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -562,9 +578,9 @@
         lv2:scalePoint [ rdf:value 1.0 ; rdfs:label "24 dB / octave"] ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_filter> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 39 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 40 ;
         lv2:symbol "freq_mod_osc" ;
         lv2:name "Freq Mod to Oscillator" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -577,9 +593,9 @@
         lv2:scalePoint [ rdf:value 2.0 ; rdfs:label "osc 2"] ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_lfo> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 40 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 41 ;
         lv2:symbol "filter_kbd_track" ;
         lv2:name "Filter Key Track" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -588,9 +604,9 @@
         lv2:maximum 1.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_lfo> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 41 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 42 ;
         lv2:symbol "filter_vel_sens" ;
         lv2:name "Filter Velocity Track" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -599,9 +615,9 @@
         lv2:maximum 1.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_filter> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 42 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 43 ;
         lv2:symbol "amp_vel_sens" ;
         lv2:name "Amp Velocity Amount" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -610,9 +626,9 @@
         lv2:maximum 1.000000 ;
         pg:group <http://code.google.com/p/amsynth/amsynth#group_amp> ;
     ] , [
-        a lv2:InputPort ;
-        a lv2:ControlPort ;
-        lv2:index 43 ;
+        a lv2:InputPort ,
+            lv2:ControlPort ;
+        lv2:index 44 ;
         lv2:symbol "portamento_mode" ;
         lv2:name "Portamento Mode" ;
         lv2:portProperty epp:hasStrictBounds ;
@@ -15294,6 +15310,778 @@
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "BriansBank19: 127: VulcanoBass" ;
     rdfs:seeAlso <BriansBank19.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20>
+    a pset:Bank ;
+    rdfs:label "BriansBank20" .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_000_MeltedIceCream2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 000: MeltedIceCream2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_001_DarkWave>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 001: DarkWave" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_002_SquareCords>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 002: SquareCords" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_003_Vulcano4>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 003: Vulcano4" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_004_Snappy2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 004: Snappy2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_005_Snappy3>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 005: Snappy3" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_006_Soloist3>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 006: Soloist3" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_007_BuzzedHorns>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 007: BuzzedHorns" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_008_OldenHorns5>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 008: OldenHorns5" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_009_RazeDayz>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 009: RazeDayz" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_010_SpaceyBeat9>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 010: SpaceyBeat9" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_011_Charlatans>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 011: Charlatans" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_012_basic9revisited>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 012: basic9revisited" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_013_BonesAndWood>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 013: BonesAndWood" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_014_Hypnotize3>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 014: Hypnotize3" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_015_OrganB>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 015: OrganB" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_016_Tinkering>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 016: Tinkering" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_017_BlackNWhite>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 017: BlackNWhite" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_018_BestHornSynth>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 018: BestHornSynth" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_019_BestPlucked>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 019: BestPlucked" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_020_CallingOut>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 020: CallingOut" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_021_SoftAires>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 021: SoftAires" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_022_SoftAires2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 022: SoftAires2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_023_SoftYellow>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 023: SoftYellow" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_024_Sopranos2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 024: Sopranos2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_025_WarmAnalog7>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 025: WarmAnalog7" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_026_Speared2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 026: Speared2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_027_StrongRed>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 027: StrongRed" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_028_Synth106new>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 028: Synth106new" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_029_Margherita5>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 029: Margherita5" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_030_LookingFor03>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 030: LookingFor03" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_031_Various4b>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 031: Various4b" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_032_Principio6>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 032: Principio6" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_033_ParticularThreesome>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 033: ParticularThreesome" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_034_LookingFor05>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 034: LookingFor05" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_035_Expressive>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 035: Expressive" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_036_SnappySource>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 036: SnappySource" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_037_Blast>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 037: Blast" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_038_Sprite>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 038: Sprite" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_039_SnappySource2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 039: SnappySource2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_040_JackTheRipper>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 040: JackTheRipper" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_041_PiuDiCosi>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 041: PiuDiCosi" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_042_Brilliance>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 042: Brilliance" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_043_Brassone2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 043: Brassone2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_044_Percussion1-5x>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 044: Percussion1-5x" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_045_Circularity2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 045: Circularity2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_046_ClassicOrgan>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 046: ClassicOrgan" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_047_Corg26a>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 047: Corg26a" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_048_Jarrred>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 048: Jarrred" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_049_SuperStrings>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 049: SuperStrings" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_050_SmallPiano>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 050: SmallPiano" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_051_RealWealth>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 051: RealWealth" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_052_Done>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 052: Done" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_053_WishUponaStar>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 053: WishUponaStar" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_054_DiminishedForYou>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 054: DiminishedForYou" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_055_HighSeas>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 055: HighSeas" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_056_Neptune>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 056: Neptune" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_057_Done2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 057: Done2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_058_Cartella>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 058: Cartella" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_059_MonoIsGood>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 059: MonoIsGood" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_060_CZ>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 060: CZ" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_061_Hurricane2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 061: Hurricane2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_062_evening5downtown>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 062: evening5downtown" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_063_Backdrop2z>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 063: Backdrop2z" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_064_DalisTwo>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 064: DalisTwo" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_065_Seventees>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 065: Seventees" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_066_Seventees2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 066: Seventees2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_067_Perfektion>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 067: Perfektion" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_068_SeventeesRezzEx>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 068: SeventeesRezzEx" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_069_SorryToGo>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 069: SorryToGo" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_070_DentistFriend>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 070: DentistFriend" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_071_Polyanna>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 071: Polyanna" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_072_FrequencyCBA>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 072: FrequencyCBA" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_073_HesitationZ>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 073: HesitationZ" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_074_Without2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 074: Without2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_075_BeeSting>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 075: BeeSting" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_076_Corg26>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 076: Corg26" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_077_BeeSting3>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 077: BeeSting3" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_078_FuzzAir3>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 078: FuzzAir3" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_079_FantomGuitar>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 079: FantomGuitar" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_080_ALittleBetter>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 080: ALittleBetter" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_081_Knocks1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 081: Knocks1" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_082_OldenHorns4>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 082: OldenHorns4" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_083_Partenza25>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 083: Partenza25" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_084_Knocks2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 084: Knocks2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_085_AllAroundBass2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 085: AllAroundBass2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_086_NoHellBells>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 086: NoHellBells" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_087_Pear>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 087: Pear" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_088_Synth105>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 088: Synth105" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_089_OnSaturnBliss>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 089: OnSaturnBliss" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_090_YouPickWhich>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 090: YouPickWhich" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_091_Synth101return>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 091: Synth101return" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_092_Outline4>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 092: Outline4" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_093_Outline5>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 093: Outline5" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_094_Overpass3>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 094: Overpass3" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_095_Starfall9>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 095: Starfall9" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_096_TheUsualLBis>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 096: TheUsualLBis" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_097_GlassBay2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 097: GlassBay2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_098_SlicedFifths>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 098: SlicedFifths" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_099_CZvariant>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 099: CZvariant" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_100_CZvariant2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 100: CZvariant2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_101_MarsFields3>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 101: MarsFields3" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_102_MarsFields4>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 102: MarsFields4" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_103_Operator>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 103: Operator" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_104_FMpurity>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 104: FMpurity" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_105_Angels>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 105: Angels" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_106_Heaven>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 106: Heaven" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_107_Yesteryear5>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 107: Yesteryear5" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_108_Ladder1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 108: Ladder1" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_109_ManyRungs>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 109: ManyRungs" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_110_ManyRungs3>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 110: ManyRungs3" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_111_Ladder2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 111: Ladder2" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_112_OperatorBroken>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 112: OperatorBroken" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_113_Dreamtime>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 113: Dreamtime" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_114_BellHistory>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 114: BellHistory" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_115_TerribleTwos>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 115: TerribleTwos" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_116_MadCats>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 116: MadCats" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_117_BedrockRevisited>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 117: BedrockRevisited" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_118_RecentStorm>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 118: RecentStorm" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_119_GoodForFilm>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 119: GoodForFilm" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_120_OpenKeys>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 120: OpenKeys" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_121_Done4>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 121: Done4" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_122_Teknocolor>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 122: Teknocolor" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_123_Sinth>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 123: Sinth" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_124_RotatingNotch>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 124: RotatingNotch" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_125_Done5>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 125: Done5" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_126_NotTooClean>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 126: NotTooClean" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#BriansBank20_127_BassOrLead>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "BriansBank20: 127: BassOrLead" ;
+    rdfs:seeAlso <BriansBank20.amSynth.bank.ttl> .
 
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory>
     a pset:Bank ;

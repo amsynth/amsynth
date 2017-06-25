@@ -19,7 +19,7 @@ dnl  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 dnl
 
 AC_COPYRIGHT([Copyright (C) 2001-2015 Nick Dowell])
-AC_INIT([amsynth], [git], [https://github.com/amsynth/amsynth/issues], [amsynth], [https://amsynth.github.io])
+AC_INIT([amsynth], [1.8.0], [https://github.com/amsynth/amsynth/issues], [amsynth], [https://amsynth.github.io])
 AC_CONFIG_SRCDIR([src/main.cc])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -59,12 +59,6 @@ AC_CHECK_LIB(m, sin, , exit)
 AC_CHECK_LIB(pthread, pthread_create, [], exit)
 
 AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])])
-
-dnl ## http://www.gtkmm.org/docs/gtkmm-2.4/docs/reference/html/newin2p6s.html
-dnl ## we use the following APIs only available in gtkmm 2.6 and up:
-dnl ## Gtk::MessageDialog::set_secondary_text()
-dnl ## Gtk::AboutDialog
-AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTKMM], [gtkmm-2.4 >= 2.6.0])])
 
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
@@ -189,7 +183,6 @@ echo -------------------------------------------------------- $PACKAGE $VERSION
 echo \|
 AS_IF([test "x$with_gui" != "xno"], [
 echo \| GTK version........................................... : `pkg-config --modversion gtk+-2.0`
-echo \| GTK-- version......................................... : `pkg-config --modversion gtkmm-2.4`
 ])
 echo \| Build with GUI support................................ : $with_gui
 echo \|

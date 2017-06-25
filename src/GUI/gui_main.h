@@ -1,7 +1,7 @@
 /*
  *  gui_main.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -24,16 +24,18 @@
 class GenericOutput;
 class Synthesizer;
 
-// Gtk::Main()
-void gui_kit_init(int & argc, char ** & argv);
+void gui_kit_init(int *argc, char ***argv);
 
-// Gtk::Main::run()
 void gui_kit_run(unsigned (*timer_callback)());
 
 void gui_init(Synthesizer *, GenericOutput *);
 
 void gui_dealloc();
 
-void ShowModalErrorMessage(const std::string & msg);
+void ShowModalErrorMessage(const std::string & msg, const std::string & secondaryText = "");
+
+#if defined(__linux)
 
 void spawn_new_instance();
+
+#endif
