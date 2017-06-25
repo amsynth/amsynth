@@ -1,3 +1,11 @@
+amsynth 1.8.0 -- 2017-06-25
+
+  - controls can now be reset to their default value via a double-click
+  - alternate tuning scales & keyboard maps can now be loaded in plug-ins
+  - fixed an issue where bank switching via MIDI caused jack zombification
+  - removed dependency on gtkmm (gtk is still required for the UI)
+
+
 amsynth 1.7.1 -- 2017-03-15
 
   - fixed MIDI channel filtering
