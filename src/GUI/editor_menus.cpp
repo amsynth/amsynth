@@ -197,8 +197,8 @@ show_error_dialog(GtkWindow *parent, const gchar *message, const gchar *secondar
             GTK_DIALOG_DESTROY_WITH_PARENT,
             GTK_MESSAGE_ERROR,
             GTK_BUTTONS_OK,
-            message);
-    gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), secondary);
+            "%s",message);
+    gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog),"%s", secondary);
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
 }
