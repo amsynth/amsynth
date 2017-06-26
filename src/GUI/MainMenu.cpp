@@ -192,7 +192,7 @@ struct FileMenu
 
 	static void openScaleFile(GtkWidget *widget, Synthesizer *synthesizer)
 	{
-		std::string filename = file_dialog(NULL, _("Open Scala(.scl) alternate tuning file"), false, _("Scala scale files"), "*.[Ss][Cc][Ll]", NULL);
+		std::string filename = file_dialog(NULL, _("Open Scala (.scl) alternate tuning file"), false, _("Scala scale files"), "*.[Ss][Cc][Ll]", NULL);
 		if (!filename.empty()) {
 			int error = synthesizer->loadTuningScale(filename.c_str());
 			if (error) {
@@ -205,7 +205,7 @@ Make sure your file has the correct format and try again."));
 
 	static void openKeyboardMap(GtkWidget *widget, Synthesizer *synthesizer)
 	{
-		std::string filename = file_dialog(NULL, _("Open alternate keyboard map(Scala .kbm format)"), false, _("Scala keyboard map files"), "*.[Kk][Bb][Mm]", NULL);
+		std::string filename = file_dialog(NULL, _("Open alternate keyboard map (Scala .kbm format)"), false, _("Scala keyboard map files"), "*.[Kk][Bb][Mm]", NULL);
 		if (!filename.empty()) {
 			int error = synthesizer->loadTuningKeymap(filename.c_str());
 			if (error) {
