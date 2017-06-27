@@ -296,7 +296,7 @@ appdata_in_files = data/amsynth.appdata.xml.in
 appdata_in_files += data/dssi-amsynth-plugin.metainfo.xml.in
 appdata_in_files += data/lv2-amsynth-plugin.metainfo.xml.in
 appdata_in_files += data/vst-amsynth-plugin.metainfo.xml.in
-appdata_DATA = $(appdata_in_files:.appdata.xml.in=.appdata.xml)
+appdata_DATA = $(appdata_in_files:.xml.in=.xml)
 @INTLTOOL_XML_RULE@
 
 EXTRA_DIST += $(appdata_in_files)
