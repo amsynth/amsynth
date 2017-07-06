@@ -215,7 +215,7 @@ static void tuning_menu_open_scl(GtkWidget *widget, Synthesizer *synth)
         if (synth->loadTuningScale(filename) != 0) {
             show_error_dialog(parent,
                     _("Failed to load new tuning."),
-                    _("Reading the tuning file failed for some reason. \n"
+                    _("Reading the tuning file failed for some reason.\n"
                       "Make sure your file has the correct format and try again."));
         }
         g_free(filename);
@@ -236,7 +236,7 @@ static void tuning_menu_open_kbm(GtkWidget *widget, Synthesizer *synth)
         if (synth->loadTuningKeymap(filename) != 0) {
             show_error_dialog(parent,
                     _("Failed to load new keyboard map."),
-                    _("Reading the keyboard map file failed for some reason. \n"
+                    _("Reading the keyboard map file failed for some reason.\n"
                       "Make sure your file has the correct format and try again."));
         }
         g_free(filename);
