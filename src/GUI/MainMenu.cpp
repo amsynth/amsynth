@@ -197,8 +197,8 @@ struct FileMenu
 			int error = synthesizer->loadTuningScale(filename.c_str());
 			if (error) {
 				ShowModalErrorMessage(_("Failed to load new tuning."),
-									  _("Reading the tuning file failed for some reason. \
-Make sure your file has the correct format and try again."));
+									  _("Reading the tuning file failed for some reason.\n"
+										"Make sure your file has the correct format and try again."));
 			}
 		}
 	}
@@ -210,8 +210,8 @@ Make sure your file has the correct format and try again."));
 			int error = synthesizer->loadTuningKeymap(filename.c_str());
 			if (error) {
 				ShowModalErrorMessage(_("Failed to load new keyboard map."),
-									  _("Reading the keyboard map file failed for some reason. \
-Make sure your file has the correct format and try again."));
+									  _("Reading the keyboard map file failed for some reason.\n"
+										"Make sure your file has the correct format and try again."));
 			}
 		}
 	}
