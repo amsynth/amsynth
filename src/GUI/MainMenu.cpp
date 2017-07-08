@@ -38,6 +38,9 @@
 ////
 
 #define ACCEL_NONE NULL
+#define ALT "<Alt>"
+#define CTRL "<Ctrl>"
+#define SHIFT "<Shift>"
 
 static GtkWidget *
 new_menu_item(GtkWidget *menu, GtkAccelGroup *accelGroup, const gchar *accelerator, const gchar *label)
@@ -129,12 +132,12 @@ struct FileMenu
 		gtk_menu_set_accel_group(GTK_MENU(menu), accelGroup);
 
 #if defined(__linux)
-		add_menu_item(menu, accelGroup, "<Shift><Control>N", _("New Instance"), G_CALLBACK(FileMenu::newInstance), NULL);
+		add_menu_item(menu, accelGroup, SHIFT CTRL "N", _("New Instance"), G_CALLBACK(FileMenu::newInstance), NULL);
 		add_separator(menu);
 #endif
 
-		add_menu_item(menu, accelGroup, "<Control>O", _("_Open Bank..."), G_CALLBACK(FileMenu::openBank), synthesizer);
-		add_menu_item(menu, accelGroup, "<Shift><Control>S", _("_Save Bank As..."), G_CALLBACK(FileMenu::saveBankAs), synthesizer);
+		add_menu_item(menu, accelGroup,       CTRL "O", _("_Open Bank..."), G_CALLBACK(FileMenu::openBank), synthesizer);
+		add_menu_item(menu, accelGroup, SHIFT CTRL "S", _("_Save Bank As..."), G_CALLBACK(FileMenu::saveBankAs), synthesizer);
 		add_separator(menu);
 
 		add_menu_item(menu, accelGroup, ACCEL_NONE, _("Open Alternate Tuning File..."), G_CALLBACK(FileMenu::openScaleFile), synthesizer);
@@ -142,7 +145,7 @@ struct FileMenu
 		add_menu_item(menu, accelGroup, ACCEL_NONE, _("Reset All Tuning Settings to Default"), G_CALLBACK(FileMenu::resetTuning), synthesizer);
 		add_separator(menu);
 
-		add_menu_item(menu, accelGroup, "<Control>Q", _("_Quit"), G_CALLBACK(FileMenu::quit), window);
+		add_menu_item(menu, accelGroup, CTRL "Q", _("_Quit"), G_CALLBACK(FileMenu::quit), window);
 
 		return menu;
 	}
@@ -260,17 +263,17 @@ struct PresetMenu
 		GtkWidget *menu = gtk_menu_new();
 		gtk_menu_set_accel_group(GTK_MENU(menu), accelGroup);
 
-		add_menu_item(menu, accelGroup, "<Control>C", _("_Copy"),  G_CALLBACK(PresetMenu::copy), synthesizer);
-		add_menu_item(menu, accelGroup, "<Control>V", _("_Paste"), G_CALLBACK(PresetMenu::paste), synthesizer);
+		add_menu_item(menu, accelGroup, CTRL "C", _("_Copy"),  G_CALLBACK(PresetMenu::copy), synthesizer);
+		add_menu_item(menu, accelGroup, CTRL "V", _("_Paste"), G_CALLBACK(PresetMenu::paste), synthesizer);
 		add_separator(menu);
 
-		add_menu_item(menu, accelGroup, "<Shift><Control>R", _("Rename..."), G_CALLBACK(PresetMenu::rename), synthesizer);
-		add_menu_item(menu, accelGroup, "<Control>K", _("Clear"),     G_CALLBACK(PresetMenu::clear), synthesizer);
+		add_menu_item(menu, accelGroup, SHIFT CTRL "R", _("Rename..."), G_CALLBACK(PresetMenu::rename), synthesizer);
+		add_menu_item(menu, accelGroup,       CTRL "K", _("Clear"),     G_CALLBACK(PresetMenu::clear), synthesizer);
 		add_separator(menu);
 
-		add_menu_item(menu, accelGroup, "<Control>R", _("_Randomise"), G_CALLBACK(PresetMenu::randomise), synthesizer);
-		add_menu_item(menu, accelGroup, "<Control>Z", _("Undo"),       G_CALLBACK(PresetMenu::undo), synthesizer);
-		add_menu_item(menu, accelGroup, "<Control>Y", _("Redo"),       G_CALLBACK(PresetMenu::redo), synthesizer);
+		add_menu_item(menu, accelGroup, CTRL "R", _("_Randomise"), G_CALLBACK(PresetMenu::randomise), synthesizer);
+		add_menu_item(menu, accelGroup, CTRL "Z", _("Undo"),       G_CALLBACK(PresetMenu::undo), synthesizer);
+		add_menu_item(menu, accelGroup, CTRL "Y", _("Redo"),       G_CALLBACK(PresetMenu::redo), synthesizer);
 		add_separator(menu);
 
 		add_menu_item(menu, accelGroup, ACCEL_NONE, _("Import Preset..."), G_CALLBACK(PresetMenu::importPreset), synthesizer);
@@ -670,9 +673,9 @@ void main_menu_init(GtkWidget *window, GtkAccelGroup *accelGroup, GtkMenuBar *me
 {
 	GtkWidget *menu = (GtkWidget *)menuBar;
 
-	add_menu_item(menu, accelGroup, "<Alt>F", _("_File"),   FileMenu::create(window, accelGroup, synthesizer));
-	add_menu_item(menu, accelGroup, "<Alt>P", _("_Preset"), PresetMenu::create(window, accelGroup, synthesizer));
-	add_menu_item(menu, accelGroup, "<Alt>C", _("_Config"), ConfigMenu::create(window, accelGroup, synthesizer));
-	add_menu_item(menu, accelGroup, "<Alt>U", _("_Utils"),  UtilsMenu::create(window, accelGroup));
-	add_menu_item(menu, accelGroup, "<Alt>H", _("_Help"),   HelpMenu::create(window, accelGroup));
+	add_menu_item(menu, accelGroup, ALT "F", _("_File"),   FileMenu::create(window, accelGroup, synthesizer));
+	add_menu_item(menu, accelGroup, ALT "P", _("_Preset"), PresetMenu::create(window, accelGroup, synthesizer));
+	add_menu_item(menu, accelGroup, ALT "C", _("_Config"), ConfigMenu::create(window, accelGroup, synthesizer));
+	add_menu_item(menu, accelGroup, ALT "U", _("_Utils"),  UtilsMenu::create(window, accelGroup));
+	add_menu_item(menu, accelGroup, ALT "H", _("_Help"),   HelpMenu::create(window, accelGroup));
 }
