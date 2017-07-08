@@ -28,6 +28,8 @@
 #include "../PresetController.h"
 #include "../Synthesizer.h"
 
+#include "gui_main.h"
+
 // External includes
 
 #include <glib/gi18n.h>
@@ -190,19 +192,6 @@ file_open_dialog(GtkWindow *parent, const gchar *title, const gchar *filter_name
     return dialog;
 }
 
-static void
-show_error_dialog(GtkWindow *parent, const gchar *message, const gchar *secondary)
-{
-    GtkWidget *dialog = gtk_message_dialog_new(parent,
-            GTK_DIALOG_DESTROY_WITH_PARENT,
-            GTK_MESSAGE_ERROR,
-            GTK_BUTTONS_OK,
-            "%s",message);
-    gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog),"%s", secondary);
-    gtk_dialog_run(GTK_DIALOG(dialog));
-    gtk_widget_destroy(dialog);
-}
-
 static void tuning_menu_open_scl(GtkWidget *widget, Synthesizer *synth)
 {
     GtkWindow *parent = GTK_WINDOW(gtk_widget_get_toplevel(widget));
@@ -213,7 +202,7 @@ static void tuning_menu_open_scl(GtkWidget *widget, Synthesizer *synth)
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
         char *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
         if (synth->loadTuningScale(filename) != 0) {
-            show_error_dialog(parent,
+            ShowModalErrorMessage(
                     _("Failed to load new tuning."),
                     _("Reading the tuning file failed for some reason.\n"
                       "Make sure your file has the correct format and try again."));
@@ -234,7 +223,7 @@ static void tuning_menu_open_kbm(GtkWidget *widget, Synthesizer *synth)
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
         char *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
         if (synth->loadTuningKeymap(filename) != 0) {
-            show_error_dialog(parent,
+            ShowModalErrorMessage(
                     _("Failed to load new keyboard map."),
                     _("Reading the keyboard map file failed for some reason.\n"
                       "Make sure your file has the correct format and try again."));
