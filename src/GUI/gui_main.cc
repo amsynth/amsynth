@@ -19,6 +19,10 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "gui_main.h"
 
 #include "MainWindow.h"
