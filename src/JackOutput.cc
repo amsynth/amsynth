@@ -117,7 +117,7 @@ JackOutput::init()
     if (!config.jack_session_uuid.empty()) {
         autoconnect = false;
     }
-	
+
 	return 0;
 #endif
 	UNUSED_PARAM(config);
@@ -186,6 +186,7 @@ JackOutput::Start	()
 		if (port_names) {
 			jack_connect(client, jack_port_name(l_port), port_names[0]);
 			jack_connect(client, jack_port_name(r_port), port_names[1]);
+			jack_free(port_names);
 		}
 	}
 	return true;
