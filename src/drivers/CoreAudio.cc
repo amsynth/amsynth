@@ -74,6 +74,8 @@ public:
         if (m_currInput) {
             MIDIPortConnectSource(m_inPort, m_currInput, NULL);
         }
+		
+		return 0;
 	}
 	
 	virtual bool Start()
@@ -167,6 +169,8 @@ public:
 
         std::vector<amsynth_midi_cc_t> midi_out;
         amsynth_audio_callback(outL, outR, numSampleFrames, stride, midi_events, midi_out);
+		
+		return noErr;
     }
 
     static void midiReadProc(const MIDIPacketList *pktlist, void *readProcRefCon, void *srcConnRefCon)
