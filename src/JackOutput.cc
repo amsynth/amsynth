@@ -182,10 +182,18 @@ JackOutput::Start	()
 		return false;
 	}
 	if (autoconnect) {
-		const char **port_names = jack_get_ports(client, NULL, NULL, JackPortIsPhysical | JackPortIsInput);
+		const char **port_names = jack_get_ports(client, NULL, JACK_DEFAULT_AUDIO_TYPE, JackPortIsPhysical | JackPortIsInput);
 		if (port_names) {
 			jack_connect(client, jack_port_name(l_port), port_names[0]);
 			jack_connect(client, jack_port_name(r_port), port_names[1]);
+			jack_free(port_names);
+		}
+
+		port_names = jack_get_ports(client, NULL, JACK_DEFAULT_MIDI_TYPE, JackPortIsPhysical | JackPortIsOutput);
+		if (port_names) {
+			for (int i = 0; port_names[i]; i++) { const char *port = port_names[i];
+				jack_connect(client, port, jack_port_name(m_port));
+			}
 			jack_free(port_names);
 		}
 	}
