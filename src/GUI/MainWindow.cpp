@@ -38,6 +38,7 @@
 #include "PresetControllerView.h"
 
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 
 
 static MIDILearnDialog *midiLearnDialog;
@@ -295,6 +296,12 @@ main_window_new(Synthesizer *synthesizer, GenericOutput *audio)
 	g_idle_add(startup_check, mainWindow);
 
 	return mainWindow->window;
+}
+
+void
+main_window_show(Synthesizer *synthesizer, GenericOutput *audio)
+{
+	gtk_widget_show_all(main_window_new(synthesizer, audio));
 }
 
 void

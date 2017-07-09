@@ -80,7 +80,9 @@ libgui_sources = \
 	src/GUI/editor_menus.cpp \
 	src/GUI/editor_menus.h \
 	src/GUI/editor_pane.c \
-	src/GUI/editor_pane.h
+	src/GUI/editor_pane.h \
+	src/GUI/gui_main.cc \
+	src/GUI/gui_main.h
 
 
 #
@@ -122,8 +124,6 @@ if BUILD_GUI
 amsynth_SOURCES += $(libgui_sources) \
 	src/GUI/ConfigDialog.cpp \
 	src/GUI/ConfigDialog.h \
-	src/GUI/gui_main.cc \
-	src/GUI/gui_main.h \
 	src/GUI/MainMenu.cpp \
 	src/GUI/MainMenu.h \
 	src/GUI/MainWindow.cpp \

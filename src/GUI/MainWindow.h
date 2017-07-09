@@ -22,9 +22,7 @@
 #ifndef _MAINWINDOW_H
 #define _MAINWINDOW_H
 
-#include <gtk/gtk.h>
-
-GtkWidget *
-main_window_new(class Synthesizer *, class GenericOutput *);
+void
+main_window_show(class Synthesizer *, class GenericOutput *);
 
 #endif

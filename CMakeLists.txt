@@ -189,6 +189,8 @@ add_executable(amsynth_dssi_gtk
         src/GUI/editor_menus.h
         src/GUI/editor_pane.c
         src/GUI/editor_pane.h
+        src/GUI/gui_main.cc
+        src/GUI/gui_main.h
         )
 
 target_link_libraries(amsynth_dssi_gtk
@@ -218,6 +220,8 @@ add_library(amsynth_lv2_gtk MODULE
         src/GUI/editor_menus.h
         src/GUI/editor_pane.c
         src/GUI/editor_pane.h
+        src/GUI/gui_main.cc
+        src/GUI/gui_main.h
         src/amsynth_lv2_ui_gtk.cpp
         )
 set_target_properties(amsynth_lv2_gtk PROPERTIES PREFIX "")
@@ -238,6 +242,8 @@ add_library(amsynth_vst MODULE
         src/GUI/editor_menus.h
         src/GUI/editor_pane.c
         src/GUI/editor_pane.h
+        src/GUI/gui_main.cc
+        src/GUI/gui_main.h
         )
 target_compile_options(amsynth_vst PUBLIC -DWITH_GUI)
 set_target_properties(amsynth_vst PROPERTIES PREFIX "")

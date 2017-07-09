@@ -21,16 +21,9 @@
 
 #include <string>
 
-class GenericOutput;
-class Synthesizer;
-
 void gui_kit_init(int *argc, char ***argv);
 
 void gui_kit_run(unsigned (*timer_callback)());
-
-void gui_init(Synthesizer *, GenericOutput *);
-
-void gui_dealloc();
 
 void ShowModalErrorMessage(const std::string & msg, const std::string & secondaryText = "");
 

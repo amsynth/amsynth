@@ -31,6 +31,7 @@
 #include "drivers/OSSMidiDriver.h"
 #ifdef WITH_GUI
 #include "GUI/gui_main.h"
+#include "GUI/MainWindow.h"
 #endif
 #include "JackOutput.h"
 #include "lash.h"
@@ -450,9 +451,8 @@ int main( int argc, char *argv[] )
 
 #ifdef WITH_GUI
 	if (!no_gui) {
-		gui_init(s_synthesizer, out);
+		main_window_show(s_synthesizer, out);
 		gui_kit_run(&amsynth_timer_callback);
-		gui_dealloc();
 	} else {
 #endif
 		printf(_("amsynth running in headless mode, press ctrl-c to exit\n"));
