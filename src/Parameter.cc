@@ -62,7 +62,7 @@ Parameter::setValue(float value)
 {
 	float newValue = std::min(std::max(value, _min), _max);
 
-	if (_step) {
+	if (_step > 0.f) {
 		newValue = _min + roundf((newValue - _min) / _step) * _step;
 		assert(::fmodf(newValue - _min, _step) == 0);
 	}

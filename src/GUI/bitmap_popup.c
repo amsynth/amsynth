@@ -31,10 +31,10 @@ typedef struct {
 	
 	GdkPixbuf *pixbuf;
 	GdkPixbuf *background;
-	guint current_frame;
-	guint frame_width;
-	guint frame_height;
-	guint frame_count;
+	gint current_frame;
+	gint frame_width;
+	gint frame_height;
+	gint frame_count;
 	
 	GtkWidget *menu;
 
@@ -57,9 +57,9 @@ static void		bitmap_popup_menuitem_activated			( GtkWidget *menu_item, gpointer 
 GtkWidget *
 bitmap_popup_new( GtkAdjustment *adjustment,
 				 GdkPixbuf *pixbuf,
-				 guint frame_width,
-				 guint frame_height,
-				 guint frame_count )
+				 gint frame_width,
+				 gint frame_height,
+				 gint frame_count )
 {
 	bitmap_popup *self = g_malloc0 (sizeof(bitmap_popup));
 
@@ -203,7 +203,7 @@ bitmap_popup_menuitem_activated (GtkWidget *menu_item, gpointer data)
 	gtk_adjustment_set_value (self->adjustment, lower + i);
 }
 
-void
+static void
 bitmap_popup_update (GtkWidget *widget)
 {
 	bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
@@ -211,26 +211,26 @@ bitmap_popup_update (GtkWidget *widget)
 	gdouble value = gtk_adjustment_get_value (self->adjustment);
 	gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 	gdouble upper = gtk_adjustment_get_upper (self->adjustment);
-	guint	frame = self->frame_count * ((value - lower) / (upper - lower));
+	gint	frame = (gint) (self->frame_count * (int) ((value - lower) / (upper - lower)));
 
 	self->current_frame = MIN (frame, (self->frame_count - 1));
 	
 	gtk_widget_queue_draw (widget);
 }
 
-void
+static void
 bitmap_popup_adjustment_changed			( GtkAdjustment *adjustment, gpointer data )
 {
 	bitmap_popup_update (data);
 }
 
-void
+static void
 bitmap_popup_adjustment_value_changed	( GtkAdjustment *adjustment, gpointer data )
 {
 	bitmap_popup_update (data);
 }
 
-void
+static void
 bitmap_popup_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 {
 	bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);

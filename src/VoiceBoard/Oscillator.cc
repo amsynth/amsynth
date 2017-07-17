@@ -199,7 +199,7 @@ static inline float randf()
 void 
 Oscillator::doRandom(float *buffer, int nFrames)
 {
-    register int period = (int) (rate / mFrequency.getFinalValue());
+    int period = (int) (rate / mFrequency.getFinalValue());
     for (int i = 0; i < nFrames; i++) {
 	if (random_count > period) {
 	    random_count = 0;

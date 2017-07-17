@@ -94,7 +94,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 	if (!tuningMap.inActiveRange(note))
 		return;
 
-	double pitch = noteToPitch(note);
+	float pitch = (float) noteToPitch(note);
 	if (pitch < 0) { // unmapped key
 		return;
 	}
@@ -120,7 +120,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 			unsigned count = 0;
 			for (int i=0; i<128; i++)
 				count = count + (active[i] ? 1 : 0);
-			if (count >= mMaxVoices) {
+			if (count >= (unsigned) mMaxVoices) {
 				int idx = -1;
 				// strategy 1) find the oldest voice in release phase
 				unsigned keyPress = _keyPressCounter + 1;
@@ -223,7 +223,7 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 		_keyPresses[note] = 0;
 		
 		int nextNote = -1;
-		for (int i = 0, keyPress = 0; i < 128; i++) {
+		for (unsigned i = 0, keyPress = 0; i < 128; i++) {
 			if (keyPress < _keyPresses[i]) {
 				keyPress = _keyPresses[i];
 				nextNote = i;
@@ -241,7 +241,7 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 		VoiceBoard *voice = _voices[0];
 		
 		if (0 <= nextNote) {
-			voice->setFrequency(voice->getFrequency(), noteToPitch(nextNote), mPortamentoTime);
+			voice->setFrequency(voice->getFrequency(), (float) noteToPitch(nextNote), mPortamentoTime);
 			if (_keyboardMode == KeyboardModeMono)
 				voice->triggerOn();
 		} else {
@@ -348,7 +348,7 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_AmpDistortion:	distortion->SetCrunch (value);	break;
 	case kAmsynthParameter_PortamentoTime: 	mPortamentoTime = value; break;
 	case kAmsynthParameter_KeyboardMode:	setKeyboardMode((KeyboardMode)(int)value); break;
-	case kAmsynthParameter_PortamentoMode:	mPortamentoMode = value; break;
+	case kAmsynthParameter_PortamentoMode:	mPortamentoMode = (int) value; break;
 	default: for (unsigned i=0; i<_voices.size(); i++) _voices[i]->UpdateParameter (param, value); break;
 	}
 }

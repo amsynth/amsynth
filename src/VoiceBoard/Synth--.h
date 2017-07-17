@@ -24,16 +24,18 @@
 
 #include <cmath>
 
-#ifndef M_E
-#define M_E		2.7182818284590452354
+#ifdef M_E
+#undef M_E
 #endif
+#define M_E		2.7182818284590452354f
 
-#ifndef M_PI_2
-#define M_PI_2	1.57079632679489661923
+#ifdef M_PI_2
+#undef M_PI_2
 #endif
+#define M_PI_2	1.57079632679489661923f
 
-#define TWO_PI 6.28318530717958647692
-#define PI     3.14159265358979323846
+#define TWO_PI 6.28318530717958647692f
+#define PI     3.14159265358979323846f
 
 #ifndef MIN
 #define MIN(a,b) (((a) < (b)) ? (a) : (b))

@@ -25,7 +25,7 @@
 
 #include <climits>
 
-static const float kMinimumTime = 0.0005;
+static const float kMinimumTime = 0.0005f;
 
 ADSR::ADSR(float * buffer)
 :	m_attack(0)
@@ -45,17 +45,17 @@ void
 ADSR::triggerOn()
 {
 	m_state = attack;
-	m_frames_left_in_state = (m_attack * m_sample_rate);
+	m_frames_left_in_state = (int) (m_attack * m_sample_rate);
 	const float target = m_decay <= kMinimumTime ? m_sustain : 1.0;
-	m_inc = (target - m_value) / (double)m_frames_left_in_state;
+	m_inc = (target - m_value) / (float) m_frames_left_in_state;
 }
 
 void 
 ADSR::triggerOff()
 {
 	m_state = release;
-	m_frames_left_in_state = (m_release * m_sample_rate);
-	m_inc = (0.0 - m_value) / (double)m_frames_left_in_state;
+	m_frames_left_in_state = (int) (m_release * m_sample_rate);
+	m_inc = (0.f - m_value) / (float) m_frames_left_in_state;
 }
 
 void
@@ -76,7 +76,7 @@ ADSR::getNFData(unsigned int frames)
 
 		const unsigned int count = MIN(frames, m_frames_left_in_state);
 
-		for (int i=0; i<count; i++) {
+		for (unsigned i = 0; i < count; i++) {
 			*buffer = m_value;
 			m_value += m_inc;
 			buffer++;
@@ -88,8 +88,8 @@ ADSR::getNFData(unsigned int frames)
 			switch (m_state) {
 				case attack:
 					m_state = decay;
-					m_frames_left_in_state = (m_decay * m_sample_rate);
-					m_inc = (m_sustain - m_value) / (double)m_frames_left_in_state;
+					m_frames_left_in_state = (int) (m_decay * m_sample_rate);
+					m_inc = (m_sustain - m_value) / (float) m_frames_left_in_state;
 					break;
 				case decay:
 					m_state = sustain;

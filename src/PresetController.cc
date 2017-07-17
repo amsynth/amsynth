@@ -370,7 +370,7 @@ PresetController::loadPresets		(const char *filename)
 
 	currentBankNo = -1;
 	const std::vector<BankInfo> &banks = getPresetBanks();
-	for (int i = 0; i < banks.size(); i++) {
+	for (int i = 0; i < (int) banks.size(); i++) {
 		if (banks[i].file_path == (std::string) filename) {
 			currentBankNo = i;
 			break;
@@ -388,7 +388,7 @@ PresetController::selectBank(int bankNumber)
 {
 	const std::vector<BankInfo> &banks = getPresetBanks();
 
-	if (bankNumber >= banks.size())
+	if (bankNumber >= (int) banks.size())
 		return;
 
 	if (currentBankNo == bankNumber)

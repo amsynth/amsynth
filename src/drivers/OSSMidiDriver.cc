@@ -90,7 +90,7 @@ int OSSMidiDriver::close()
 
 int OSSMidiDriver::read(unsigned char *bytes, unsigned maxBytes)
 {
-    return ::read(_fd, bytes, maxBytes);
+    return (int) ::read(_fd, bytes, maxBytes);
 }
 
 

@@ -226,11 +226,11 @@ struct FileMenu
 				GTK_DIALOG_MODAL,
 				GTK_MESSAGE_QUESTION,
 				GTK_BUTTONS_YES_NO,
-				_("Reset All Tuning Settings to Default"));
+				"%s", _("Reset All Tuning Settings to Default"));
 
 		gtk_message_dialog_format_secondary_text(
 				GTK_MESSAGE_DIALOG(dialog),
-				_("Discard the current scale and keyboard map?"));
+				"%s", _("Discard the current scale and keyboard map?"));
 
 		gint result = gtk_dialog_run(GTK_DIALOG(dialog));
 		if (result == GTK_RESPONSE_YES) {
@@ -349,11 +349,11 @@ struct PresetMenu
 				GTK_DIALOG_MODAL,
 				GTK_MESSAGE_QUESTION,
 				GTK_BUTTONS_YES_NO,
-				_("Clear current preset?"));
+				"%s", _("Clear current preset?"));
 
 		gtk_message_dialog_format_secondary_text(
 				GTK_MESSAGE_DIALOG(dialog),
-				_("Parameters will be set to default values and the name will be cleared"));
+				"%s", _("Parameters will be set to default values and the name will be cleared"));
 
 		gint result = gtk_dialog_run(GTK_DIALOG(dialog));
 		if (result == GTK_RESPONSE_YES) {

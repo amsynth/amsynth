@@ -95,11 +95,3 @@ MIDILearnDialog::last_active_controller_changed()
 	int cc = (int)_midiController->getLastControllerParam().getValue();
 	gtk_combo_box_set_active (GTK_COMBO_BOX (_combo), cc + 1);
 }
-
-static gboolean on_output(GtkSpinButton *spin, gpointer)
-{
-	int cc = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin)) - 1;
-	const gchar *text = cc < 0 ? _("None") : c_controller_names[cc];
-	gtk_entry_set_text(GTK_ENTRY(spin), text);
-	return TRUE;
-}

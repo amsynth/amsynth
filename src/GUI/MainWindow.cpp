@@ -179,13 +179,13 @@ struct MainWindow : public UpdateListener
 				GTK_DIALOG_DESTROY_WITH_PARENT,
 				GTK_MESSAGE_WARNING,
 				GTK_BUTTONS_NONE,
-				_("<b>Save changes before closing?</b>"));
+				"<b>%s</b>", _("Save changes before closing?"));
 
 		gtk_dialog_add_button(GTK_DIALOG(dialog), _("Close _Without Saving"), GTK_RESPONSE_NO);
 		gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
 		gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_SAVE, GTK_RESPONSE_YES);
 
-		gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), _("If you don't save, changes to the current preset will be permanently lost."));
+		gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", _("If you don't save, changes to the current preset will be permanently lost."));
 
 		gint result = gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
@@ -281,7 +281,7 @@ startup_check(gpointer data)
     return G_SOURCE_REMOVE;
 }
 
-GtkWidget *
+static GtkWidget *
 main_window_new(Synthesizer *synthesizer, GenericOutput *audio)
 {
 	MainWindow *mainWindow = new MainWindow(synthesizer, audio);

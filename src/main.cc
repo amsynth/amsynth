@@ -75,7 +75,7 @@ using namespace std;
 Configuration & config = Configuration::get();
 
 #ifdef ENABLE_REALTIME
-void sched_realtime()
+static void sched_realtime()
 {
 #ifdef linux
 	struct sched_param sched = {0};
@@ -99,7 +99,7 @@ void sched_realtime()
 }
 #endif
 
-int fcopy (const char * dest, const char *source)
+static int fcopy (const char * dest, const char *source)
 {
 	FILE *in = fopen (source,"r");
 	if (in == NULL) {
@@ -124,14 +124,14 @@ int fcopy (const char * dest, const char *source)
 	return 0;
 }
 
-const char *build_path(const char *path, const char *suffix)
+static const char *build_path(const char *path, const char *suffix)
 {
 	char *result = NULL;
 	asprintf(&result, "%s/%s", path, suffix);
 	return result;
 }
 
-void install_default_files_if_reqd()
+static void install_default_files_if_reqd()
 {
 	const char * factory_config = build_path (PKGDATADIR, "rc");
 	const char * factory_bank = build_path (PKGDATADIR, "banks/amsynth_factory.bank");
@@ -171,7 +171,7 @@ static int gui_midi_pipe[2];
 
 ////////////////////////////////////////////////////////////////////////////////
 
-GenericOutput * open_audio()
+static GenericOutput * open_audio()
 {	
 #if	__APPLE__
 
@@ -256,7 +256,7 @@ static void open_midi()
 	}
 }
 
-void fatal_error(const std::string & msg)
+static void fatal_error(const std::string & msg)
 {
 	std::cerr << msg << "\n";
 #ifdef WITH_GUI
@@ -276,7 +276,7 @@ static void signal_handler(int signal)
 
 int main( int argc, char *argv[] )
 {
-	srand(time(NULL));
+	srand((unsigned) time(NULL));
 
 #ifdef ENABLE_REALTIME
 	sched_realtime();
@@ -437,7 +437,7 @@ int main( int argc, char *argv[] )
 		amsynth_lash_init();
 
 	if (config.alsa_seq_client_id != 0) // alsa midi is active
-		amsynth_lash_set_alsa_client_id(config.alsa_seq_client_id);
+		amsynth_lash_set_alsa_client_id((unsigned char) config.alsa_seq_client_id);
 
 	if (!config.jack_client_name.empty())
 		amsynth_lash_set_jack_client_name(config.jack_client_name.c_str());
@@ -510,7 +510,7 @@ void amsynth_audio_callback(
 			if (bytes_read > 0) {
 				amsynth_midi_event_t event = {0};
 				event.offset_frames = num_frames - 1;
-				event.length = bytes_read;
+				event.length = (unsigned int) bytes_read;
 				event.buffer = buffer;
 				midi_in_merged.push_back(event);
 				buffer += bytes_read;
@@ -519,7 +519,7 @@ void amsynth_audio_callback(
 		}
 
 		if (midiDriver) {
-			int bytes_read = midiDriver->read(buffer, bufferSize);
+			int bytes_read = midiDriver->read(buffer, (unsigned) bufferSize);
 			if (bytes_read > 0) {
 				amsynth_midi_event_t event = {0};
 				event.offset_frames = num_frames - 1;
@@ -605,7 +605,7 @@ void ptest ()
 	
 	long total_samples = kTestSampleRate * kTimeSeconds;
 	long total_calls = total_samples / kTestBufSize;
-	long remain_samples = total_samples % kTestBufSize;
+	unsigned remain_samples = total_samples % kTestBufSize;
 	for (int i=0; i<total_calls; i++) {
 		voiceAllocationUnit->Process (buffer, buffer, kTestBufSize);
 	}

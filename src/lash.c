@@ -19,9 +19,14 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef WITH_LASH
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include "lash.h"
+
+#ifdef WITH_LASH
+
 #include "main.h"
 
 #include <stdio.h>

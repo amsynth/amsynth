@@ -24,12 +24,12 @@
 #include <cassert>
 #include <cmath>
 
-#define BLEND(x0, x1, m) (((x0) * (1.0 - (m))) + ((x1) * (m)))
+#define BLEND(x0, x1, m) (((x0) * (1.f - (m))) + ((x1) * (m)))
 
 // Low-pass filter the VCA control signal to prevent nasty clicking sounds
 const float kVCALowPassFreq = 4000.0f;
 
-const float kKeyTrackBaseFreq = 261.626; // Middle C
+const float kKeyTrackBaseFreq = 261.626f; // Middle C
 
 VoiceBoard::VoiceBoard()
 :	mFrequencyDirty (false)
@@ -95,8 +95,8 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_Oscillator2Pulsewidth:	mOsc2PulseWidth = value;	break;
 	case kAmsynthParameter_Oscillator2Octave:	mOsc2Octave = value;		break;
 	case kAmsynthParameter_Oscillator2Detune:	mOsc2Detune = value;		break;
-	case kAmsynthParameter_Oscillator2Pitch:	mOsc2Pitch = ::pow(2, value / 12); break;
-	case kAmsynthParameter_Oscillator2Sync:		mOsc2Sync  = !!round(value); break;
+	case kAmsynthParameter_Oscillator2Pitch:	mOsc2Pitch = ::powf(2, value / 12); break;
+	case kAmsynthParameter_Oscillator2Sync:		mOsc2Sync  = roundf(value) != 0.f; break;
 
 	case kAmsynthParameter_LFOToFilterCutoff:	mFilterModAmt = (value+1.0f)/2.0f;break;
 	case kAmsynthParameter_FilterEnvAmount:	mFilterEnvAmt = value;		break;
@@ -138,7 +138,7 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 
 	if (mFrequencyDirty) {
 		mFrequencyDirty = false;
-		mFrequency.configure(mFrequencyStart, mFrequencyTarget, mFrequencyTime * mSampleRate);
+		mFrequency.configure(mFrequencyStart, mFrequencyTarget, (int) (mFrequencyTime * mSampleRate));
 	}
 
 	//
@@ -166,7 +166,7 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 
 	float env_f = filter_env.getNFData(numSamples)[numSamples - 1];
 	float cutoff_base = BLEND(kKeyTrackBaseFreq, frequency, mFilterKbdTrack);
-	float cutoff_vel_mult = BLEND(1.0, mKeyVelocity, mFilterVelSens);
+	float cutoff_vel_mult = BLEND(1.f, mKeyVelocity, mFilterVelSens);
 	float cutoff_lfo_mult = (lfo1buf[0] * 0.5f + 0.5f) * mFilterModAmt + 1 - mFilterModAmt;
 	float cutoff = mFilterCutoff * cutoff_base * cutoff_vel_mult * cutoff_lfo_mult;
 	if (mFilterEnvAmt > 0.f) cutoff += (frequency * env_f * mFilterEnvAmt);
@@ -195,8 +195,8 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	//
 	// Osc Mix
 	//
-	float osc1vol = mOsc1Vol * (1.0 - mRingModAmt);
-	float osc2vol = mOsc2Vol * (1.0 - mRingModAmt);
+	float osc1vol = mOsc1Vol * (1.f - mRingModAmt);
+	float osc2vol = mOsc2Vol * (1.f - mRingModAmt);
 	for (int i=0; i<numSamples; i++)
 		osc1buf[i] =
 			osc1vol * osc1buf[i] +
@@ -213,7 +213,7 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	// 
 	float *ampenvbuf = amp_env.getNFData (numSamples);
 	for (int i=0; i<numSamples; i++) {
-		const float amplitude = ampenvbuf[i] * BLEND(1.0, mKeyVelocity, mAmpVelSens) *
+		const float amplitude = ampenvbuf[i] * BLEND(1.f, mKeyVelocity, mAmpVelSens) *
 			( ((lfo1buf[i] * 0.5f) + 0.5f) * mAmpModAmount + 1 - mAmpModAmount);
 		osc1buf[i] = osc1buf[i] * _vcaFilter.processSample(amplitude);
 	}

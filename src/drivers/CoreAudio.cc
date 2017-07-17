@@ -36,7 +36,7 @@ class CoreAudioOutput : public GenericOutput
 {
 public:
 
-	CoreAudioOutput() : m_DeviceID(0), m_clientRef(NULL), m_MIDIBuffer(NULL), m_MIDIBufferWriteIndex(0), m_MIDIBufferReadIndex(0)
+	CoreAudioOutput() : m_DeviceID(0), m_clientRef(0), m_MIDIBuffer(NULL), m_MIDIBufferWriteIndex(0), m_MIDIBufferReadIndex(0)
 	{
 		UInt32 size; Boolean writable; OSStatus err;
 		
@@ -113,7 +113,7 @@ public:
         
         if (m_currInput) {
             MIDIPortDisconnectSource(m_inPort, m_currInput);
-            m_currInput = NULL;
+            m_currInput = 0;
         }
 	}
     
@@ -177,7 +177,7 @@ public:
     {
         CoreAudioOutput *self = (CoreAudioOutput *)srcConnRefCon;
         
-        for (int i=0; i<pktlist->numPackets; i++) {
+        for (UInt32 i = 0; i < pktlist->numPackets; i++) {
             uint8_t *data = (unsigned char *)(pktlist->packet + i)->data;
             const UInt16 length = (pktlist->packet + i)->length;
             if (length > 3) {

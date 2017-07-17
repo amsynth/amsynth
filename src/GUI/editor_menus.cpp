@@ -95,14 +95,14 @@ preset_menu_item_activated(GtkMenuItem *preset_item, GtkAdjustment **adjustments
 
     PresetController presetController;
     presetController.loadPresets(bank);
-    Preset &preset = presetController.getPreset(preset_index);
+    Preset &preset = presetController.getPreset((int) preset_index);
     for (unsigned int i = 0; i < kAmsynthParameterCount; i++) {
         float value = preset.getParameter(i).getValue();
         gtk_adjustment_set_value (adjustments[i], value);
     }
 }
 
-GtkWidget *
+static GtkWidget *
 presets_menu_new(GtkAdjustment **adjustments)
 {
     char text[64];

@@ -30,7 +30,7 @@ class PresetControllerView { public:
 	static PresetControllerView * create();
 	virtual void setPresetController(PresetController *presetController) = 0;
     virtual void update() = 0;
-    virtual int getAuditionNote() = 0;
+    virtual unsigned char getAuditionNote() = 0;
 	virtual GtkWidget * getWidget() = 0;
 };
 

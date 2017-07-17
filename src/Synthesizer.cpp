@@ -42,7 +42,7 @@ Synthesizer::Synthesizer()
 	Configuration &config = Configuration::get();
 
 	_voiceAllocationUnit = new VoiceAllocationUnit;
-	_voiceAllocationUnit->SetSampleRate(_sampleRate);
+	_voiceAllocationUnit->SetSampleRate((int) _sampleRate);
 	_voiceAllocationUnit->SetMaxVoices(config.polyphony);
 	_voiceAllocationUnit->setPitchBendRangeSemitones(config.pitch_bend_range);
 	
@@ -174,7 +174,7 @@ void Synthesizer::getParameterDisplay(Param parameter, char *buffer, size_t maxL
 
 int Synthesizer::getPitchBendRangeSemitones()
 {
-	return _voiceAllocationUnit->getPitchBendRangeSemitones();
+	return (int) _voiceAllocationUnit->getPitchBendRangeSemitones();
 }
 
 void Synthesizer::setPitchBendRangeSemitones(int value)

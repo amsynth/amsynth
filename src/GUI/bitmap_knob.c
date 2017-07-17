@@ -44,10 +44,10 @@ typedef struct {
 	
 	GdkPixbuf *pixbuf;
 	GdkPixbuf *background;
-	guint current_frame;
-	guint frame_width;
-	guint frame_height;
-	guint frame_count;
+	gint current_frame;
+	gint frame_width;
+	gint frame_height;
+	gint frame_count;
 	
 	gdouble origin_y;
 	gdouble origin_val;
@@ -72,9 +72,9 @@ static void		bitmap_knob_adjustment_value_changed	( GtkAdjustment *adjustment, g
 GtkWidget *
 bitmap_knob_new( GtkAdjustment *adjustment,
                  GdkPixbuf *pixbuf,
-                 guint frame_width,
-                 guint frame_height,
-                 guint frame_count )
+                 gint frame_width,
+                 gint frame_height,
+                 gint frame_count )
 {
 	bitmap_knob *self = g_malloc0 (sizeof(bitmap_knob));
 
@@ -147,9 +147,9 @@ void bitmap_knob_set_parameter_index (GtkWidget *widget, unsigned long parameter
 
 static int tooltip_update (bitmap_knob *self)
 {
-	gdouble value = gtk_adjustment_get_value (self->adjustment);
+	float value = (float) gtk_adjustment_get_value (self->adjustment);
 	char display[32] = "";
-	int result = parameter_get_display (self->parameter_index, value, display, sizeof(display));
+	int result = parameter_get_display ((int) self->parameter_index, value, display, sizeof(display));
 	gtk_label_set_text (GTK_LABEL (self->tooltip_label), display);
 	return result;
 }
@@ -267,7 +267,7 @@ bitmap_knob_motion_notify ( GtkWidget *widget, GdkEventMotion *event )
 		gdouble step  = gtk_adjustment_get_step_increment (self->adjustment);
 		gdouble range = upper - lower;
 		guint sensitivity = SENSITIVITY_NORMAL;
-		if (!step) {
+		if (step == 0.0) {
 			if (event->state & GDK_SHIFT_MASK) {
 				sensitivity *= 4;
 			}
@@ -291,7 +291,7 @@ bitmap_knob_motion_notify ( GtkWidget *widget, GdkEventMotion *event )
 	return FALSE;
 }
 
-void
+static void
 bitmap_knob_update ( GtkWidget *widget )
 {
 	bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
@@ -299,7 +299,7 @@ bitmap_knob_update ( GtkWidget *widget )
 	gdouble value = gtk_adjustment_get_value (self->adjustment);
 	gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 	gdouble upper = gtk_adjustment_get_upper (self->adjustment);
-	guint	frame = self->frame_count * ((value - lower) / (upper - lower));
+	gint	frame = (gint) (self->frame_count * ((value - lower) / (upper - lower)));
 
 	frame = MIN (frame, (self->frame_count - 1));
 
@@ -309,19 +309,19 @@ bitmap_knob_update ( GtkWidget *widget )
 	}
 }
 
-void
+static void
 bitmap_knob_adjustment_changed			( GtkAdjustment *adjustment, gpointer data )
 {
 	bitmap_knob_update (data);
 }
 
-void
+static void
 bitmap_knob_adjustment_value_changed	( GtkAdjustment *adjustment, gpointer data )
 {
 	bitmap_knob_update (data);
 }
 
-void
+static void
 bitmap_knob_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 {
 	bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);

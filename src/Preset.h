@@ -47,7 +47,7 @@ public:
 	Parameter&		getParameter	(const int no) { return mParameters[no]; };
 	const Parameter& getParameter	(const int no) const { return mParameters[no]; };
 	
-	unsigned		ParameterCount	() const { return mParameters.size(); }
+	size_t			ParameterCount	() const { return mParameters.size(); }
 	
     void			randomise		();
     
