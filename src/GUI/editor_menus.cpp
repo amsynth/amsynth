@@ -71,7 +71,7 @@ controller_menu_new(int parameter)
 {
     GtkWidget *item, *menu = gtk_menu_new ();
 
-    item = gtk_menu_item_new_with_label(_("MIDI Learn..."));
+    item = gtk_menu_item_new_with_label(_("Assign MIDI Controller..."));
     g_signal_connect(item, "activate", G_CALLBACK(show_midi_learn_dialog), (gpointer)(long)parameter);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 

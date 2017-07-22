@@ -1,7 +1,7 @@
 /*
  *  MIDILearnDialog.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -45,6 +45,7 @@ private:
 	GtkWidget		*_dialog;
 	GtkWidget		*_paramNameEntry;
 	GtkWidget		*_combo;
+	GtkWidget		*_checkButton;
 
 	MidiController	*_midiController;
 	PresetController *_presetController;
