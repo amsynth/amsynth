@@ -84,14 +84,14 @@ MIDILearnDialog::run_modal(Param param_idx)
 void
 MIDILearnDialog::update()
 {
-	gdk_threads_enter();
-	last_active_controller_changed();
-	gdk_threads_leave();
+	g_idle_add(MIDILearnDialog::last_active_controller_changed, this);
 }
 
-void
-MIDILearnDialog::last_active_controller_changed()
+gboolean
+MIDILearnDialog::last_active_controller_changed(gpointer data)
 {
-	int cc = (int)_midiController->getLastControllerParam().getValue();
-	gtk_combo_box_set_active (GTK_COMBO_BOX (_combo), cc + 1);
+	MIDILearnDialog *dialog = (MIDILearnDialog *) data;
+	int cc = (int)dialog->_midiController->getLastControllerParam().getValue();
+	gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->_combo), cc + 1);
+	return G_SOURCE_REMOVE;
 }

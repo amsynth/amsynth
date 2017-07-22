@@ -36,11 +36,11 @@ public:
 
 	void run_modal(Param param_idx);
 
-private:
-
 	virtual void update();
 
-	void last_active_controller_changed();
+	static gboolean last_active_controller_changed(gpointer);
+
+private:
 
 	GtkWidget		*_dialog;
 	GtkWidget		*_paramNameEntry;
