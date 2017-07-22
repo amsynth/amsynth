@@ -28,6 +28,14 @@ add_compile_options(
         -DPACKAGE_LOCALEDIR="/usr/local/share/locale"
 )
 
+add_compile_options(
+        -Wall
+        -Wno-reorder
+        -Wno-format-zero-length
+        -Wno-deprecated-declarations
+        -Werror
+)
+
 pkg_check_modules(ALSA alsa)
 if (ALSA_FOUND)
     add_compile_options(-DWITH_ALSA)

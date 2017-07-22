@@ -29,6 +29,7 @@
 
 #include "main.h"
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -146,6 +147,9 @@ void amsynth_lash_poll_events()
 
 			case LASH_Quit:
 				quit = 1;
+				break;
+
+			default:
 				break;
 		}
 
