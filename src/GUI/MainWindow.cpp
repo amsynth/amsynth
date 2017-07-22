@@ -50,6 +50,9 @@ struct MainWindow : public UpdateListener
 			synthesizer(synthesizer),
 			presetController(synthesizer->getPresetController())
 	{
+		mainThread = g_thread_self();
+		parameterUpdateQueue = g_async_queue_new();
+
 		window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 		gtk_window_set_title(GTK_WINDOW(window), PACKAGE_NAME);
 		gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
@@ -203,31 +206,51 @@ struct MainWindow : public UpdateListener
 		return true;
 	}
 
+	typedef std::pair<int, float> ParameterUpdate;
+
 	virtual void update()
 	{
-		gdk_threads_enter();
-
-		updateTitle();
-		updateParameter((Param) -1, 0); // to update the '*' in window title
-		presetControllerView->update(); // note: PresetControllerView::update() is expensive
-
-		gdk_threads_leave();
+		if (g_thread_self() == mainThread) {
+			parameterDidChange(-1, NAN);
+		} else {
+			g_async_queue_push(parameterUpdateQueue, new ParameterUpdate(-1, NAN));
+			g_idle_add(MainWindow::parameterUpdateIdleCallback, this);
+		}
 	}
 
 	virtual void UpdateParameter(Param paramID, float paramValue)
 	{
-		gdk_threads_enter();
-
-		updateParameter(paramID, paramValue);
-
-		gdk_threads_leave();
+		if (g_thread_self() == mainThread) {
+			parameterDidChange(paramID, paramValue);
+		} else {
+			g_async_queue_push(parameterUpdateQueue, new ParameterUpdate((int) paramID, paramValue));
+			g_idle_add(MainWindow::parameterUpdateIdleCallback, this);
+		}
 	}
 
-	void updateParameter(Param paramID, float paramValue)
+	static gboolean parameterUpdateIdleCallback(gpointer data)
 	{
-		if (0 <= paramID && paramID < kAmsynthParameterCount) {
-			const Parameter &param = presetController->getCurrentPreset().getParameter(paramID);
-			gtk_adjustment_set_value (adjustments[paramID], param.getValue());
+		MainWindow *mainWindow = (MainWindow *) data;
+
+		ParameterUpdate *update;
+		while ((update = (ParameterUpdate *) g_async_queue_try_pop(mainWindow->parameterUpdateQueue))) {
+			mainWindow->parameterDidChange(update->first, update->second);
+			delete update;
+		}
+
+		return G_SOURCE_REMOVE;
+	}
+
+	void parameterDidChange(int parameter, float value)
+	{
+		if (parameter == -1) {
+			presetControllerView->update(); // note: PresetControllerView::update() is expensive
+			updateTitle();
+			return;
+		}
+		if (0 <= parameter && parameter < kAmsynthParameterCount) {
+			const Parameter &param = presetController->getCurrentPreset().getParameter(parameter);
+			gtk_adjustment_set_value (adjustments[parameter], param.getValue());
 		}
 		bool isModified = presetController->isCurrentPresetModified();
 		if (presetIsNotSaved != isModified) {
@@ -245,6 +268,9 @@ struct MainWindow : public UpdateListener
 	GtkAdjustment *adjustments[kAmsynthParameterCount];
 	GValue defaults[kAmsynthParameterCount];
 	bool presetIsNotSaved;
+
+	GThread *mainThread;
+	GAsyncQueue *parameterUpdateQueue;
 };
 
 
