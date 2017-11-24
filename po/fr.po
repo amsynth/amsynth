@@ -1,6 +1,6 @@
 # French translation for amsynth
 # Traduction française pour amsynth
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2016-2017 Olivier Humbert <trebmuh@tuxfamily.org>
 # This file is distributed under the same license as the amsynth package.
 # Olivier Humbert <trebmuh@tuxfamily.org>, 2016-2017.
 #
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-17 18:26+0100\n"
-"PO-Revision-Date: 2017-01-14 17:42+0100\n"
+"PO-Revision-Date: 2017-11-25 00:30+0100\n"
 "Last-Translator: Olivier Humbert <trebmuh@tuxfamily.org>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -96,31 +96,28 @@ msgid "VST plug-in"
 msgstr "greffon VST"
 
 #: ../data/dssi-amsynth-plugin.metainfo.xml.in.h:1
-#, fuzzy
 msgid "DSSI plugin"
 msgstr "greffon DSSI"
 
 #: ../data/dssi-amsynth-plugin.metainfo.xml.in.h:2
 msgid "Plugin for the DSSI audio API"
-msgstr ""
+msgstr "Greffon pour l'API audio DSSI"
 
 #: ../data/lv2-amsynth-plugin.metainfo.xml.in.h:1
-#, fuzzy
 msgid "LV2 plugin"
 msgstr "greffon LV2"
 
 #: ../data/lv2-amsynth-plugin.metainfo.xml.in.h:2
 msgid "Plugin for the LV2 audio standard"
-msgstr ""
+msgstr "Greffon pour le standard audio LV2"
 
 #: ../data/vst-amsynth-plugin.metainfo.xml.in.h:1
-#, fuzzy
 msgid "VST plugin"
 msgstr "greffon VST"
 
 #: ../data/vst-amsynth-plugin.metainfo.xml.in.h:2
 msgid "Plugin for the VST protocol"
-msgstr ""
+msgstr "Greffon pour le protocole VST"
 
 #: ../src/GUI/ConfigDialog.cpp:60
 msgid "amsynth configuration"
@@ -171,13 +168,12 @@ msgid "U"
 msgstr "U"
 
 #: ../src/GUI/editor_menus.cpp:165
-#, fuzzy
 msgid "Preset"
-msgstr "_Pré-réglage"
+msgstr "Pré-réglage"
 
 #: ../src/GUI/editor_menus.cpp:167
 msgid "Tuning"
-msgstr ""
+msgstr "Accordage"
 
 #: ../src/GUI/editor_menus.cpp:169 ../src/GUI/MainMenu.cpp:143
 msgid "Open Alternate Tuning File..."
@@ -205,12 +201,11 @@ msgid "Failed to load new tuning."
 msgstr "Échec du chargement d'un nouvel accordage."
 
 #: ../src/GUI/editor_menus.cpp:211 ../src/GUI/MainMenu.cpp:203
-#, fuzzy
 msgid ""
 "Reading the tuning file failed for some reason.\n"
 "Make sure your file has the correct format and try again."
 msgstr ""
-"La lecture du fichier d'accordage a échouée pour une raison ou une autre. "
+"La lecture du fichier d'accordage a échouée pour une raison quelconque.\n"
 "Assurez-vous que votre fichier possède le format correct et ré-essayez."
 
 #: ../src/GUI/editor_menus.cpp:224 ../src/GUI/MainMenu.cpp:211
@@ -226,13 +221,13 @@ msgid "Failed to load new keyboard map."
 msgstr "Échec du chargement d'une nouvelle carte de clavier."
 
 #: ../src/GUI/editor_menus.cpp:232 ../src/GUI/MainMenu.cpp:216
-#, fuzzy
 msgid ""
 "Reading the keyboard map file failed for some reason.\n"
 "Make sure your file has the correct format and try again."
 msgstr ""
-"La lecture du fichier de carte de clavier a échouée pour une raison ou une "
-"autre.Assurez-vous que votre fichier possède le format correct et ré-essayez."
+"La lecture du fichier de carte de clavier a échouée pour une raison "
+"quelconque.\n"
+"Assurez-vous que votre fichier possède le format correct et ré-essayez."
 
 #: ../src/GUI/MainMenu.cpp:135
 msgid "New Instance"
@@ -395,9 +390,8 @@ msgid "Online Documentation"
 msgstr "Documentation en ligne"
 
 #: ../src/GUI/MainMenu.cpp:657
-#, fuzzy
 msgid "Copyright © 2002 - 2017 Nick Dowell and contributors"
-msgstr "Copyright © 2002 - 2016 Nick Dowell et contributeurs"
+msgstr "Copyright © 2002 - 2017 Nick Dowell et contributeurs"
 
 #: ../src/GUI/MainMenu.cpp:665
 msgid "Could not show link"
@@ -429,7 +423,6 @@ msgid "Audio: %s @ %d  MIDI: %s"
 msgstr "Audio : %s @ %d  MIDI : %s"
 
 #: ../src/GUI/MainWindow.cpp:182
-#, fuzzy
 msgid "Save changes before closing?"
 msgstr "Sauvegarder les modifications avant de quitter ?"
 
@@ -754,11 +747,9 @@ msgstr "toujours"
 msgid "User bank"
 msgstr "Banque utilisateur"
 
-#, fuzzy
 #~ msgid "lv2 plugin"
 #~ msgstr "greffon LV2"
 
-#, fuzzy
 #~ msgid "Open Scala(.scl) alternate tuning file"
 #~ msgstr "Ouvrir un fichier d'accordage alternatif Scala (.scl)"
 
@@ -769,7 +760,6 @@ msgstr "Banque utilisateur"
 #~ "La lecture du fichier d'accordage a échouée pour une raison ou une autre. "
 #~ "Assurez-vous que votre fichier possède le format correct et ré-essayez."
 
-#, fuzzy
 #~ msgid "Open alternate keyboard map(Scala .kbm format)"
 #~ msgstr "Ouvrir une carte de clavier alternative (format Scala .kbm)"
 
