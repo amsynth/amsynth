@@ -41,14 +41,11 @@ LT_INIT
 
 AC_LANG(C++)
 
+IT_PROG_INTLTOOL
+
 GETTEXT_PACKAGE=amsynth
 AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"],
-                   [The domain to use with gettext])
-AM_GNU_GETTEXT_VERSION([0.18])
-AM_GNU_GETTEXT([external])
-
-IT_PROG_INTLTOOL
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package])
 
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
