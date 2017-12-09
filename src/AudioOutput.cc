@@ -107,7 +107,6 @@ AudioOutput::Start ()
 	if (!(driver = open_driver())) {
 		return false;
 	}
-	driver->setRealtime();
 	if (Thread::Run() != 0) {
 		driver->close();
 		driver = NULL;
