@@ -177,6 +177,6 @@ class AudioDriver * CreateOSSAudioDriver()
 #ifdef WITH_OSS
     return new OSSAudioDriver();
 #else
-    return NULL;
+    return 0;
 #endif
 }
