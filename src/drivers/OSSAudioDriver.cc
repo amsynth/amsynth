@@ -1,7 +1,7 @@
 /*
  *  OSSAudioDriver.cc
  *
- *  Copyright (c) 2001-2015 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -23,46 +23,117 @@
 #include "config.h"
 #endif
 
-#include <cstddef>
-
 #include "OSSAudioDriver.h"
 
 #ifdef WITH_OSS
+
 #include "../Configuration.h"
 #include "AudioDriver.h"
 
+#include <cstddef>
 #include <fcntl.h>
-#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/ioctl.h>
 #include <sys/soundcard.h>
 #include <unistd.h>
 
-using namespace std;
-
 
 class OSSAudioDriver : public AudioDriver
 {
   public:
-    OSSAudioDriver();
+    OSSAudioDriver() : _fd(-1), _outputBuffer(0), _outputBufferFrames(0) {}
+
     int open();
     void close();
-    int write( float *buffer, int frames );
-    int setChannels( int channels );
-    int setRate( int rate );
-    int getRate(){ return rate_; };
-    int setRealtime();
+    int write(float *buffer, int frames);
 
   private:
-    int dsp_handle_, rate_, stereo_, format_, channels_;
+    int _fd;
     unsigned char *_outputBuffer;
     unsigned int _outputBufferFrames;
 };
 
+#define ON_ERROR do { \
+    if (_fd != -1) { \
+        ::close(_fd); \
+        _fd = -1; \
+    } \
+    return -1; \
+} while (0)
+
+int
+OSSAudioDriver::open()
+{
+    Configuration &config = Configuration::get();
+    const char *name = config.oss_audio_device.c_str();
+
+    if ((_fd = ::open(name, O_WRONLY, 0)) == -1) {
+        perror("Could not open OSS audio device");
+        ON_ERROR;
+    }
+
+    // Buffer size
+
+    int fragment = 0x0004000A; // 4 fragments of 256 samples (1024 bytes)
+
+    if (ioctl(_fd, SNDCTL_DSP_SETFRAGMENT, &fragment) == -1) {
+        perror("SNDCTL_DSP_SETFRAGMENT");
+        ON_ERROR;
+    }
+
+    // Sample format
+
+    int fmt = AFMT_S16_NE;
+
+    if (ioctl(_fd, SNDCTL_DSP_SETFMT, &fmt) == -1) {
+        perror("SNDCTL_DSP_SETFMT");
+        ON_ERROR;
+    }
+
+    if (fmt != AFMT_S16_NE) {
+        fprintf(stderr, "The device does not support AFMT_S16_NE\n");
+        ON_ERROR;
+    }
+
+    // Channel count
+
+    int channels = config.channels;
+
+    if (ioctl(_fd, SNDCTL_DSP_CHANNELS, &channels) == -1) {
+        perror("SNDCTL_DSP_CHANNELS");
+        ON_ERROR;
+    }
+
+    if (channels != config.channels) {
+        fprintf(stderr, "The device does not support stereo output\n");
+        ON_ERROR;
+    }
+
+    // Sample rate
+
+    int sample_rate = config.sample_rate;
+    if (ioctl(_fd, SNDCTL_DSP_SPEED, &sample_rate) == -1) {
+        perror("SNDCTL_DSP_SPEED");
+        ON_ERROR;
+    }
+
+    config.sample_rate = sample_rate;
+
+    config.current_audio_driver = "OSS";
+
+#ifdef ENABLE_REALTIME
+    config.current_audio_driver_wants_realtime = 1;
+#endif
+
+    return 0;
+}
+
 int
 OSSAudioDriver::write(float *buffer, int frames)
 {
+    Configuration &config = Configuration::get();
+
     int p = 0;
 	int i;
 	signed short _tmp;
@@ -70,124 +141,30 @@ OSSAudioDriver::write(float *buffer, int frames)
 	if (_outputBufferFrames < (unsigned int)frames) {
 		_outputBufferFrames = (unsigned int)frames;
 		if (_outputBuffer) { free(_outputBuffer); }
-		_outputBuffer = (unsigned char*)malloc(frames * 2 * channels_);
+		_outputBuffer = (unsigned char*)malloc(frames * 2 * config.channels);
 	}
 	
-    for ( i = 0; i < (frames * channels_); i++) {
+    for ( i = 0; i < (frames * config.channels); i++) {
 		_tmp = (signed short) (buffer[i] * 30000);
 		_outputBuffer[p++] = (unsigned char) (_tmp & 0xff);
 		_outputBuffer[p++] = (unsigned char) ((_tmp >> 8) & 0xff);
     }
 
-    if ((::write(dsp_handle_, _outputBuffer, frames*2 )) != frames * 2) {
-		perror("<OSSAudioDriver> error writing to dsp_handle_");
+    if ((::write(_fd, _outputBuffer, frames * 2)) != frames * 2) {
+		perror("Error writing to OSS audio device");
 		return -1;
 	}
 	
 	return 0;
 }
 
-int OSSAudioDriver::open()
-{
-    Configuration & config = Configuration::get();
-
-    if ((dsp_handle_ =::open(config.oss_audio_device.c_str(), O_WRONLY)) == -1){
-		cout << "<OSSAudioDriver> error: could not open dsp device " 
-			<< config.oss_audio_device << endl;
-	return -1;
-   }
-
-    //  setRealtime();
-
-    // set sample format (number of bits)
-    if (ioctl(dsp_handle_, SNDCTL_DSP_SETFMT, &format_) == -1)
-		perror("ioctl format");
-    setChannels( config.channels );
-    setRate( config.sample_rate );
-	config.sample_rate = getRate();
-	
-	config.current_audio_driver = "OSS";
-#ifdef ENABLE_REALTIME
-	config.current_audio_driver_wants_realtime = 1;
-#endif
-	
-    return 0;
-}
-
-int OSSAudioDriver::setChannels(int channels)
-{
-    channels_ = channels;
-    switch (channels_) {
-    case 1:
-	stereo_ = 0;
-	break;
-    case 2:
-	stereo_ = 1;
-	break;
-    default:
-	return -1;
-    }
-
-    if (ioctl(dsp_handle_, SNDCTL_DSP_STEREO, &stereo_) == -1) {
-	perror("ioctl stereo");
-	return -1;
-    }
-    return 0;
-}
-
-int OSSAudioDriver::setRate(int rate)
-{
-    rate_ = rate;
-    // set sampling rate
-    if (ioctl(dsp_handle_, SNDCTL_DSP_SPEED, &rate_) == -1) {
-		perror("ioctl sample rate");
-		return -1;
-    }
-    return 0;
-}
-
-int OSSAudioDriver::setRealtime()
-{
-    /* set fragment size... (WHAT IS IT?!?)
-     * fragment size 0xMMMMSSSS
-     * fragment size (bytes) = 2^SSSS eg SSSS=0008 = fragment size of 256
-     * experimentation on my athlon (500) + SBLive gives:
-     * 0007 (128 bytes)= smallest usable (no - slight glitches)
-     * 0008 (256 bytes)= good latency
-     * 0009 (512 bytes)= i can notice the delay here..
-     * !OSS Documentation warns against using frag < 0008
-     * apparently its best to fill the fragment in one go with each write() 
-     * 2^MMMM = number of fragments. min=2, 0x7fff = no limit
-     * 0001 (2) fragments @ 256bytes = disastrous
-     * 0002 (4) fragments @ 256bytes = good (fine?)  [1024 bytes total buffer]
-     * 0003 (8) fragments @ 256bytes = ok (latency?) -problems under ALSA-OSS
-     * 0004 (16) frags @128bytes = good (both)         [2048 bytes total buffer]
-     * unlimited              = disastrous for latency..
-     */
-    int frag = 0x00060008;
-    if (ioctl(dsp_handle_, SNDCTL_DSP_SETFRAGMENT, &frag) == -1) {
-	perror("err: ioctl fragment");
-	return -1;
-    }
-    return 0;
-}
-
 void OSSAudioDriver::close()
 {
-    if (dsp_handle_ != -1) {
-	::close(dsp_handle_);
-	free(_outputBuffer);
-	_outputBuffer = NULL;
-	_outputBufferFrames = 0;
+    if (_fd != -1) {
+	   ::close(_fd);
+       _fd = -1;
     }
-}
-
-OSSAudioDriver::OSSAudioDriver()
-{
-    rate_ = 0;
-    stereo_ = 1;
-    format_ = AFMT_S16_LE;
-    dsp_handle_ = -1;
+    free(_outputBuffer);
     _outputBuffer = NULL;
     _outputBufferFrames = 0;
 }
@@ -200,6 +177,6 @@ class AudioDriver * CreateOSSAudioDriver()
 #ifdef WITH_OSS
     return new OSSAudioDriver();
 #else
-    return NULL;
+    return 0;
 #endif
 }
