@@ -222,7 +222,7 @@ void Synthesizer::process(unsigned int nframes,
 						  float *audio_l, float *audio_r, unsigned audio_stride)
 {
 	if (_sampleRate < 0) {
-		assert(!"sample rate has not been set");
+		assert(0 == "sample rate has not been set");
 		return;
 	}
 	std::vector<amsynth_midi_event_t>::const_iterator event = midi_in.begin();

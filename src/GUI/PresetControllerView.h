@@ -32,6 +32,7 @@ class PresetControllerView { public:
     virtual void update() = 0;
     virtual unsigned char getAuditionNote() = 0;
 	virtual GtkWidget * getWidget() = 0;
+    virtual ~PresetControllerView() {}
 };
 
 #endif

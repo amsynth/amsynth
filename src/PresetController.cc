@@ -256,7 +256,8 @@ static bool is_amsynth_file(const char *filename)
 
 	char buffer[sizeof(amsynth_file_header)] = {0};
 	fread(buffer, sizeof(buffer), 1, file);
-	fclose(file), file = NULL;
+	fclose(file);
+	file = NULL;
 
 	if (memcmp(buffer, amsynth_file_header, sizeof(amsynth_file_header)) != 0)
 		return false;
@@ -279,7 +280,8 @@ static off_t file_read_contents(const char *filename, void **result)
 	void *buffer = calloc(length + 1, 1);
 	fseek(file, 0, SEEK_SET);
 	fread(buffer, length, 1, file);
-	fclose(file), file = NULL;
+	fclose(file);
+	file = NULL;
 	*result = buffer;
 	return length;
 }

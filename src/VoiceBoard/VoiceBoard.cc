@@ -80,7 +80,7 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 			case randomize:     mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Random); break;
 			case sawtooth_up:   mLFOPulseWidth = 1.0; lfo1.SetWaveform(Oscillator::Waveform_Saw);    lfo1.setPolarity(+1.0); break;
 			case sawtooth_down: mLFOPulseWidth = 1.0; lfo1.SetWaveform(Oscillator::Waveform_Saw);    lfo1.setPolarity(-1.0); break;
-			default: assert(!"invalid LFO waveform"); break;
+			default: assert(0 == "invalid LFO waveform"); break;
 		}
 		break;
 	}

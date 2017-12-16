@@ -42,6 +42,8 @@ struct ISynthesizer
 {
     virtual int loadTuningKeymap(const char *filename) = 0;
     virtual int loadTuningScale(const char *filename) = 0;
+    
+    virtual ~ISynthesizer() {}
 };
 
 class Synthesizer : ISynthesizer
@@ -49,7 +51,7 @@ class Synthesizer : ISynthesizer
 public:
     
     Synthesizer();
-    ~Synthesizer();
+    virtual ~Synthesizer();
     
     void loadBank(const char *filename);
     void saveBank(const char *filename);

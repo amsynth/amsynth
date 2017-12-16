@@ -32,8 +32,9 @@
 #include <cstdio>
 #include <iostream>
 
+#define TEST(name) static void name()
 
-void testMidiOutput()  {
+TEST(testMidiOutput) {
     static float audioBuffer[64];
 
     Synthesizer *synth = new Synthesizer();
@@ -62,22 +63,22 @@ void testMidiOutput()  {
         synth->process(32, midiIn, midiOut, &audioBuffer[0], &audioBuffer[32]);
 
         int outputValue = (int)roundf(synth->getNormalizedParameterValue(param) * 127.0f);
-        assert(outputValue == value || !"parameter value should be changed when a cc is processed");
+        assert(outputValue == value || 0 == "parameter value should be changed when a cc is processed");
 
-        assert(midiOut.empty() || !"no midi output should be generated when a cc is processed");
+        assert(midiOut.empty() || 0 == "no midi output should be generated when a cc is processed");
     }
     
     midiIn.clear();
     midiOut.clear();
     synth->setNormalizedParameterValue(param, 0);
     synth->process(32, midiIn, midiOut, &audioBuffer[0], &audioBuffer[32]);
-    assert(midiOut.size() == 1 || !"midi output should be generated when a parameter is changed");
-    assert(midiOut[0].value == 0 || !"midi output value is incorrect");
+    assert(midiOut.size() == 1 || 0 == "midi output should be generated when a parameter is changed");
+    assert(midiOut[0].value == 0 || 0 == "midi output value is incorrect");
 
     delete synth;
 }
 
-int countActiveVoices(Synthesizer *synth) {
+static int countActiveVoices(Synthesizer *synth) {
     int count = 0;
     for (int i = 0; i < 128; i++) {
         count = count + (synth->_voiceAllocationUnit->active[i] ? 1 : 0);
@@ -85,7 +86,7 @@ int countActiveVoices(Synthesizer *synth) {
     return count;
 }
 
-void testMidiAllNotesOff() {
+TEST(testMidiAllNotesOff) {
     static float audioBuffer[64];
 
     Synthesizer *synth = new Synthesizer();
@@ -128,7 +129,7 @@ void testMidiAllNotesOff() {
     delete synth;
 }
 
-void testPresetIgnoredParameters() {
+TEST(testPresetIgnoredParameters) {
     Preset basePreset;
     basePreset.getParameter(0).setValue(1);
     Preset newPreset = basePreset;
@@ -140,13 +141,13 @@ void testPresetIgnoredParameters() {
     assert(!basePreset.isEqual(newPreset));
 }
 
-size_t count(const char **strings) {
+static size_t count(const char **strings) {
     size_t count;
     for (count = 0; strings[count]; count ++);
     return count;
 }
 
-void testPresetValueStrings() {
+TEST(testPresetValueStrings) {
     assert(count(parameter_get_value_strings(kAmsynthParameter_Oscillator1Waveform)) == Oscillator::Waveform_Random + 1);
     assert(count(parameter_get_value_strings(kAmsynthParameter_Oscillator2Waveform)) == Oscillator::Waveform_Random + 1);
     assert(count(parameter_get_value_strings(kAmsynthParameter_KeyboardMode)) == KeyboardModeLegato + 1);
@@ -156,7 +157,7 @@ void testPresetValueStrings() {
     assert(count(parameter_get_value_strings(kAmsynthParameter_PortamentoMode)) == PortamentoModeLegato + 1);
 }
 
-void testOscillatorHighFrequency() {
+TEST(testOscillatorHighFrequency) {
     static float buffer[VoiceBoard::kMaxProcessBufferSize];
     
     Oscillator osc;

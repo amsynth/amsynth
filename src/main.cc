@@ -393,11 +393,13 @@ int main( int argc, char *argv[] )
 		char *path = NULL;
 		if (asprintf(&path, "%s/.amsynth", getenv("HOME")) > 0) {
 			mkdir(path, 0000755);
-			free(path), path = NULL;
+			free(path);
+			path = NULL;
 		}
 		if (asprintf(&path, "%s/.amsynth/banks", getenv("HOME")) > 0) {
 			mkdir(path, 0000755);
-			free(path), path = NULL;
+			free(path);
+			path = NULL;
 		}
 	}
 
