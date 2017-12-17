@@ -61,6 +61,11 @@ if (LIBLO_FOUND)
     include_directories(${LIBLO_INCLUDE_DIRS})
 endif (LIBLO_FOUND)
 
+pkg_check_modules(SNDFILE sndfile)
+if (SNDFILE_FOUND)
+    add_compile_options(-Dwith_sndfile)
+endif(SNDFILE_FOUND)
+
 #
 #
 #
@@ -172,6 +177,7 @@ target_link_libraries(amsynth
         ${JACK_LIBRARIES}
         ${GTK_LIBRARIES}
         ${LASH_LIBRARIES}
+        ${SNDFILE_LIBRARIES}
         )
 
 #
