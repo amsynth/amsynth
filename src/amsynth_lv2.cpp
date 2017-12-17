@@ -229,7 +229,7 @@ restore(LV2_Handle                  instance,
 	// host takes care of restoring port values
 
 	LV2_URID urids[] = { a->uris.amsynth_kbm_file, a->uris.amsynth_scl_file };
-	for (int i = 0; i < sizeof(urids) / sizeof(urids[0]); i ++) {
+	for (unsigned i = 0; i < sizeof(urids) / sizeof(urids[0]); i ++) {
 		size_t size = 0; uint32_t type = 0, vflags = 0;
 		const void *value = retrieve(handle, urids[i], &size, &type, &vflags);
 		if (value && type == a->uris.atom_String) {

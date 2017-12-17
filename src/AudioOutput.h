@@ -75,7 +75,6 @@ public:
 	void	ThreadAction	();
 
 private:
-  int running;
   int channels;
   class AudioDriver *driver;
   string wavoutfile;

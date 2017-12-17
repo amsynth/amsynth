@@ -308,7 +308,6 @@ void __attribute__ ((constructor)) my_init ()
 			const float min = parameter.getMin();
 			const float max = parameter.getMax();
 			const float med = (parameter.getMin() + parameter.getMax()) / 2.0;
-			const float rng = parameter.getMax() - parameter.getMin();
 			//
 			if (def == 0)			port_range_hints[i+2].HintDescriptor |= LADSPA_HINT_DEFAULT_0;
 			else if (def == 1)		port_range_hints[i+2].HintDescriptor |= LADSPA_HINT_DEFAULT_1;

@@ -301,7 +301,8 @@ int parameter_get_display (int parameter_index, float parameter_value, char *buf
             if (filter_type_names) {
                 return snprintf(buffer, maxlen, "%s", filter_type_names[(int)real_value]);
             } else {
-                return snprintf(buffer, maxlen, "");
+                strcpy(buffer, "");
+                return 0;
             }
         }
 	}

@@ -20,6 +20,7 @@ add_compile_options(
         -DPACKAGE_URL="https://amsynth.github.io"
         -DPACKAGE_BUGREPORT="https://www.github.com/amsynth/amsynth/issues"
         -DPKGDATADIR="${PROJECT_SOURCE_DIR}/data"
+        -DWITH_OSS
 )
 
 add_compile_options(
@@ -30,9 +31,6 @@ add_compile_options(
 
 add_compile_options(
         -Wall
-        -Wno-reorder
-        -Wno-format-zero-length
-        -Wno-deprecated-declarations
         -Werror
 )
 

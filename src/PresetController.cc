@@ -443,12 +443,9 @@ static void scan_preset_banks(const std::string dir_path, bool read_only)
 
 	std::vector<std::string> filenames;
 
-	int return_code = 0;
-	struct dirent entry = {0};
-	struct dirent *result = NULL;
-
-	for (return_code = readdir_r(dir, &entry, &result); result != NULL && return_code == 0; return_code = readdir_r(dir, &entry, &result))
-		filenames.push_back(std::string(entry.d_name));
+	struct dirent *entry;
+	while ((entry = readdir(dir)))
+		filenames.push_back(std::string(entry->d_name));
 
 	closedir(dir);
 

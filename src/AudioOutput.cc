@@ -34,12 +34,11 @@ static AudioDriver * open_driver();
 
 
 AudioOutput::AudioOutput()
-:	buffer (NULL)
-,	driver(NULL)
+:	driver(0)
+,	wavoutfile("/tmp/amSynth.wav")
+,	recording(0)
+,	buffer(0)
 {
-	running = 0;
-	recording = 0;
-	wavoutfile = "/tmp/amSynth.wav";
 }
 
 AudioOutput::~AudioOutput()
