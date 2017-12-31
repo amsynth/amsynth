@@ -34,13 +34,17 @@ enum {
     MIDI_STATUS_PITCH_WHEEL             = 0xE0,
 };
 
+/* https://www.midi.org/specifications/item/table-3-control-change-messages-data-bytes-2
+ */
 enum {
-    MIDI_CC_BANK_SELECT_LSB             = 0x00,
-    MIDI_CC_MODULATION_WHEEL            = 0x01,
-	MIDI_CC_DATA_ENTRY_MSB              = 0x06,
-	MIDI_CC_PAN_MSB                     = 0x0A,
-    MIDI_CC_BANK_SELECT_MSB             = 0x20,
-	MIDI_CC_DATA_ENTRY_LSB              = 0x26,
+    MIDI_CC_BANK_SELECT_MSB             = 0x00,
+    MIDI_CC_MODULATION_WHEEL_MSB        = 0x01,
+    MIDI_CC_DATA_ENTRY_MSB              = 0x06,
+    MIDI_CC_PAN_MSB                     = 0x0A,
+
+    MIDI_CC_BANK_SELECT_LSB             = 0x20,
+    MIDI_CC_DATA_ENTRY_LSB              = 0x26,
+
     MIDI_CC_SUSTAIN_PEDAL               = 0x40,
     MIDI_CC_PORTAMENTO                  = 0x41,
     MIDI_CC_SOSTENUTO                   = 0x42,

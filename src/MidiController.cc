@@ -173,12 +173,12 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 	}
 
 	switch (cc) {
-		case MIDI_CC_BANK_SELECT_LSB: {
+		case MIDI_CC_BANK_SELECT_MSB: {
 			presetController->selectBank(value);
 			presetController->selectPreset(presetController->getCurrPresetNumber());
 			break;
 		}
-		case MIDI_CC_BANK_SELECT_MSB:
+		case MIDI_CC_BANK_SELECT_LSB:
 			break;
 		case MIDI_CC_PAN_MSB: {
 			// http://www.midi.org/techspecs/rp36.php
@@ -224,7 +224,7 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 		case MIDI_CC_MONO_MODE_ON:
 		case MIDI_CC_POLY_MODE_ON:
 			_handler->HandleMidiAllNotesOff();
-		case MIDI_CC_MODULATION_WHEEL:
+		case MIDI_CC_MODULATION_WHEEL_MSB:
 		default:
 			break;
 	}
