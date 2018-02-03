@@ -167,7 +167,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 	}
 	
 	if (_keyboardMode == KeyboardModeMono || _keyboardMode == KeyboardModeLegato) {
-		
+
 		int previousNote = -1;
 		unsigned keyPress = 0;
 		for (int i = 0; i < 128; i++) {
@@ -208,8 +208,11 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 		}
 		_keyPresses[note] = 0;
 	}
-	
+
 	if (_keyboardMode == KeyboardModeMono || _keyboardMode == KeyboardModeLegato) {
+
+		if (sustain)
+			return;
 
 		int currentNote = -1;
 		unsigned keyPress = 0;
@@ -224,7 +227,7 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 		
 		int nextNote = -1;
 		for (unsigned i = 0, keyPress = 0; i < 128; i++) {
-			if (keyPress < _keyPresses[i]) {
+			if (keyPress < _keyPresses[i] && (keyPressed[i] || sustain)) {
 				keyPress = _keyPresses[i];
 				nextNote = i;
 			}
@@ -278,10 +281,13 @@ VoiceAllocationUnit::HandleMidiAllNotesOff()
 void
 VoiceAllocationUnit::HandleMidiSustainPedal(uchar value)
 {
-	sustain = value ? 1 : 0;
-	if (sustain) return;
-	for(unsigned i=0; i<_voices.size(); i++) {
-		if (!keyPressed[i]) _voices[i]->triggerOff();
+	if ((sustain = (value > 0)))
+		return;
+
+	for (unsigned i = 0; i < _voices.size(); i++) {
+		if (!keyPressed[i] && _keyPresses[i] > 0) {
+			HandleMidiNoteOff(i, 0);
+		}
 	}
 }
 
