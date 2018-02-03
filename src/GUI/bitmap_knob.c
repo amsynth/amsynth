@@ -299,7 +299,7 @@ bitmap_knob_update ( GtkWidget *widget )
 	gdouble value = gtk_adjustment_get_value (self->adjustment);
 	gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 	gdouble upper = gtk_adjustment_get_upper (self->adjustment);
-	gint	frame = (gint) (self->frame_count * ((value - lower) / (upper - lower)));
+	gint	frame = (gint) ((self->frame_count - 1) * ((value - lower) / (upper - lower)));
 
 	frame = MIN (frame, (self->frame_count - 1));
 
