@@ -81,6 +81,7 @@ VoiceAllocationUnit::SetSampleRate	(int rate)
 {
 	limiter->SetSampleRate (rate);
 	for (unsigned i=0; i<_voices.size(); ++i) _voices[i]->SetSampleRate (rate);
+    reverb->setrate(rate);
 }
 
 void

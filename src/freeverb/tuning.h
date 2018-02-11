@@ -56,6 +56,9 @@ const int allpasstuningR3	= 341+stereospread;
 const int allpasstuningL4	= 225;
 const int allpasstuningR4	= 225+stereospread;
 
+#define TUNING_MAX_SAMPLE_RATE 192000
+#define TUNING(name, rate) (int)(name * rate / 44100.f)
+
 #endif//_tuning_
 
 //ends
