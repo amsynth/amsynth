@@ -50,6 +50,7 @@ struct MainWindow : public UpdateListener
 			synthesizer(synthesizer),
 			presetController(synthesizer->getPresetController())
 	{
+		presetIsNotSaved = false;
 		mainThread = g_thread_self();
 		parameterUpdateQueue = g_async_queue_new();
 
