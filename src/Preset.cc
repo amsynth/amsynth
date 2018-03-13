@@ -311,7 +311,7 @@ int parameter_get_display (int parameter_index, float parameter_value, char *buf
 
 const char **parameter_get_value_strings (int parameter_index)
 {
-    static std::vector<std::vector<const char *>> parameterStrings(kAmsynthParameterCount);
+    static std::vector<std::vector<const char *> > parameterStrings(kAmsynthParameterCount);
     if (parameter_index < 0 || parameter_index >= parameterStrings.size())
         return NULL;
 
@@ -387,7 +387,7 @@ const char **parameter_get_value_strings (int parameter_index)
         }
     }
 
-    return strings.data();
+    return &strings[0];
 }
 
 static std::vector<bool> s_ignoreParameter(kAmsynthParameterCount);
