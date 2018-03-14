@@ -50,6 +50,13 @@ typedef struct
 }
 resource_info;
 
+static void free_resource_info(gpointer data)
+{
+	resource_info * info = (resource_info *)data;
+	g_object_unref(info->pixbuf);
+	g_free(info);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 static gboolean
@@ -277,7 +284,10 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 			return fixed;
 		}
 	}
-	
+
+	g_free(skin_path);
+	skin_path = NULL;
+
 	{
 		GData *resources = NULL;
 		g_datalist_init (&resources);
@@ -334,9 +344,9 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 				info->fr_width  = width;
 				info->fr_height = height;
 				info->fr_count  = frames;
-				
-				g_datalist_set_data (&resources, resource_name, (gpointer)info);
-				
+
+				g_datalist_set_data_full (&resources, resource_name, (gpointer)info, free_resource_info);
+
 				g_free (file);
 				g_free (path);
 			}
@@ -406,6 +416,7 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 		}
 		
 		g_key_file_free (gkey_file);
+		g_datalist_clear (&resources);
 	}
 	
 	//deldir (skin_dir);

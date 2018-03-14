@@ -30,8 +30,6 @@ revmodel::revmodel()
 	setmode(initialmode);
 
 	update();
-	// Buffer will be full of rubbish - so we MUST mute them
-	mute();
 }
 
 void revmodel::setrate(int rate)
@@ -62,6 +60,9 @@ void revmodel::setrate(int rate)
     allpassR[2].setbuffer(bufallpassR3, TUNING(allpasstuningR3, rate));
     allpassL[3].setbuffer(bufallpassL4, TUNING(allpasstuningL4, rate));
     allpassR[3].setbuffer(bufallpassR4, TUNING(allpasstuningR4, rate));
+
+    // Buffer will be full of rubbish - so we MUST mute them
+    mute();
 }
 
 void revmodel::mute()

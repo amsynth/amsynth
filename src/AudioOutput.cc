@@ -122,6 +122,7 @@ AudioOutput::Stop ()
 
 	if (driver) {
 		driver->close();
+		delete driver;
 		driver = NULL;
 	}
 }

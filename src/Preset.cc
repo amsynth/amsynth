@@ -311,17 +311,17 @@ int parameter_get_display (int parameter_index, float parameter_value, char *buf
 
 const char **parameter_get_value_strings (int parameter_index)
 {
-    static const char **parameterStrings[kAmsynthParameterCount];
-    if (parameter_index < 0 || parameter_index >= kAmsynthParameterCount)
+    static std::vector<std::vector<const char *> > parameterStrings(kAmsynthParameterCount);
+    if (parameter_index < 0 || parameter_index >= parameterStrings.size())
         return NULL;
 
-    const char **strings = parameterStrings[parameter_index];
-    if (!strings) {
+    std::vector<const char *> & strings = parameterStrings[parameter_index];
+    if (strings.empty()) {
         size_t i = 0, size = 0;
         switch (parameter_index) {
             case kAmsynthParameter_Oscillator1Waveform:
             case kAmsynthParameter_Oscillator2Waveform:
-                strings = (const char **)calloc((size = 6), sizeof(char *));
+                strings.resize(size = 6);
                 strings[i++] = _("sine");
                 strings[i++] = _("square / pulse");
                 strings[i++] = _("triangle / saw");
@@ -331,7 +331,7 @@ const char **parameter_get_value_strings (int parameter_index)
                 break;
 
             case kAmsynthParameter_LFOWaveform:
-                strings = (const char **)calloc((size = 8), sizeof(char *));
+                strings.resize(size = 8);
                 strings[i++] = _("sine");
                 strings[i++] = _("square");
                 strings[i++] = _("triangle");
@@ -343,7 +343,7 @@ const char **parameter_get_value_strings (int parameter_index)
                 break;
 
             case kAmsynthParameter_KeyboardMode:
-                strings = (const char **)calloc((size = 4), sizeof(char *));
+                strings.resize(size = 4);
                 strings[i++] = _("poly");
                 strings[i++] = _("mono");
                 strings[i++] = _("legato");
@@ -351,7 +351,7 @@ const char **parameter_get_value_strings (int parameter_index)
                 break;
 
             case kAmsynthParameter_FilterType:
-                strings = (const char **)calloc((size = 6), sizeof(char *));
+                strings.resize(size = 6);
                 strings[i++] = _("low pass");
                 strings[i++] = _("high pass");
                 strings[i++] = _("band pass");
@@ -361,14 +361,14 @@ const char **parameter_get_value_strings (int parameter_index)
                 break;
 
             case kAmsynthParameter_FilterSlope:
-                strings = (const char **)calloc((size = 3), sizeof(char *));
+                strings.resize(size = 3);
                 strings[i++] = _("12 dB / octave");
                 strings[i++] = _("24 dB / octave");
                 assert(i < size);
                 break;
 
             case kAmsynthParameter_LFOOscillatorSelect:
-                strings = (const char **)calloc((size = 4), sizeof(char *));
+                strings.resize(size = 4);
                 strings[i++] = _("osc 1+2");
                 strings[i++] = _("osc 1");
                 strings[i++] = _("osc 2");
@@ -376,7 +376,7 @@ const char **parameter_get_value_strings (int parameter_index)
                 break;
 
             case kAmsynthParameter_PortamentoMode:
-                strings = (const char **)calloc((size = 3), sizeof(char *));
+                strings.resize(size = 3);
                 strings[i++] = _("always");
                 strings[i++] = _("legato");
                 assert(i < size);
@@ -385,21 +385,22 @@ const char **parameter_get_value_strings (int parameter_index)
             default:
                 break;
         }
-        parameterStrings[parameter_index] = strings;
     }
 
-    return strings;
+    return &strings[0];
 }
 
-static bool s_ignoreParameter[kAmsynthParameterCount];
+static std::vector<bool> s_ignoreParameter(kAmsynthParameterCount);
 
 bool Preset::shouldIgnoreParameter(int parameter)
 {
+	assert(parameter >= 0 && parameter < s_ignoreParameter.size());
 	return s_ignoreParameter[parameter];
 }
 
 void Preset::setShouldIgnoreParameter(int parameter, bool ignore)
 {
+	assert(parameter >= 0 && parameter < s_ignoreParameter.size());
 	s_ignoreParameter[parameter] = ignore;
 }
 
@@ -429,6 +430,9 @@ void Preset::setIgnoredParameterNames(std::string names)
 
 	std::vector<std::string>::const_iterator name_it;
 	for (name_it = vstrings.begin(); name_it != vstrings.end(); ++name_it) {
-		setShouldIgnoreParameter(parameter_index_from_name(name_it->c_str()), true);
+		int index = parameter_index_from_name(name_it->c_str());
+		if (index != -1) {
+			setShouldIgnoreParameter(index, true);
+		}
 	}
 }
