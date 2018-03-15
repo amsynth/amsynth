@@ -203,18 +203,14 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 
 	keyPressed[note] = false;
 
+	if (sustain)
+		return;
+
 	if (_keyboardMode == KeyboardModePoly) {
-		if (!sustain) {
-			_voices[note]->triggerOff();
-		}
-		_keyPresses[note] = 0;
+		_voices[note]->triggerOff();
 	}
 
 	if (_keyboardMode == KeyboardModeMono || _keyboardMode == KeyboardModeLegato) {
-
-		if (sustain)
-			return;
-
 		int currentNote = -1;
 		unsigned keyPress = 0;
 		for (int i = 0; i < 128; i++) {
