@@ -194,7 +194,7 @@ target_link_libraries(amsynth
 
 add_library(amsynth_dssi MODULE src/amsynth_dssi.cpp src/amsynth_dssi.h)
 set_target_properties(amsynth_dssi PROPERTIES PREFIX "")
-target_link_libraries(amsynth_dssi amsynth_core oscpack)
+target_link_libraries(amsynth_dssi amsynth_core ${LIBLO_LIBRARIES} oscpack)
 
 add_executable(amsynth_dssi_gtk
         src/amsynth_dssi_gtk.cpp
@@ -226,7 +226,7 @@ target_link_libraries(amsynth_dssi_gtk
 
 add_library(amsynth_lv2 MODULE src/amsynth_lv2.cpp)
 set_target_properties(amsynth_lv2 PROPERTIES PREFIX "")
-target_link_libraries(amsynth_lv2 amsynth_core oscpack)
+target_link_libraries(amsynth_lv2 amsynth_core ${LIBLO_LIBRARIES} oscpack)
 
 
 add_library(amsynth_lv2_gtk MODULE
@@ -246,7 +246,7 @@ add_library(amsynth_lv2_gtk MODULE
         src/amsynth_lv2_ui_gtk.cpp
         )
 set_target_properties(amsynth_lv2_gtk PROPERTIES PREFIX "")
-target_link_libraries(amsynth_lv2_gtk amsynth_core ${GTK_LIBRARIES} oscpack)
+target_link_libraries(amsynth_lv2_gtk amsynth_core ${GTK_LIBRARIES} ${LIBLO_LIBRARIES} oscpack)
 
 add_dependencies(amsynth_lv2 amsynth_lv2_gtk)
 
@@ -268,8 +268,8 @@ add_library(amsynth_vst MODULE
         )
 target_compile_options(amsynth_vst PUBLIC -DWITH_GUI)
 set_target_properties(amsynth_vst PROPERTIES PREFIX "")
-target_link_libraries(amsynth_vst amsynth_core ${GTK_LIBRARIES} oscpack)
+target_link_libraries(amsynth_vst amsynth_core ${GTK_LIBRARIES} ${LIBLO_LIBRARIES} oscpack)
 
 
 add_executable(amsynth_tests src/tests.cpp)
-target_link_libraries(amsynth_tests amsynth_core oscpack)
+target_link_libraries(amsynth_tests amsynth_core ${LIBLO_LIBRARIES} oscpack)
