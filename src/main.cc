@@ -20,6 +20,8 @@
  */
 
 #include "main.h"
+#include "NsmClient.h"
+#include "NsmHandler.h"
 
 #if HAVE_CONFIG_H
 #include "config.h"
@@ -62,6 +64,7 @@
 
 #include "gettext.h"
 #define _(string) gettext (string)
+
 
 using namespace std;
 
@@ -278,6 +281,7 @@ int main( int argc, char *argv[] )
 {
 	srand((unsigned) time(NULL));
 
+
 #ifdef ENABLE_REALTIME
 	sched_realtime();
 
@@ -418,9 +422,13 @@ int main( int argc, char *argv[] )
 
 	s_synthesizer = new Synthesizer();
 	s_synthesizer->setSampleRate(config.sample_rate);
-	
+
 	amsynth_load_bank(config.current_bank_file.c_str());
 	amsynth_set_preset_number(initial_preset_no);
+
+    NsmClient NSMC (argv[0]) ;
+    NsmHandler nsmHandler (&NSMC) ;
+    NSMC.Init () ;
 
 	if (config.current_tuning_file != "default")
 		amsynth_load_tuning_file(config.current_tuning_file.c_str());
