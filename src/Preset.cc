@@ -312,7 +312,7 @@ int parameter_get_display (int parameter_index, float parameter_value, char *buf
 const char **parameter_get_value_strings (int parameter_index)
 {
     static std::vector<std::vector<const char *> > parameterStrings(kAmsynthParameterCount);
-    if (parameter_index < 0 || parameter_index >= parameterStrings.size())
+    if (parameter_index < 0 || parameter_index >= (int)parameterStrings.size())
         return NULL;
 
     std::vector<const char *> & strings = parameterStrings[parameter_index];
@@ -394,13 +394,13 @@ static std::vector<bool> s_ignoreParameter(kAmsynthParameterCount);
 
 bool Preset::shouldIgnoreParameter(int parameter)
 {
-	assert(parameter >= 0 && parameter < s_ignoreParameter.size());
+	assert(parameter >= 0 && parameter < (int)s_ignoreParameter.size());
 	return s_ignoreParameter[parameter];
 }
 
 void Preset::setShouldIgnoreParameter(int parameter, bool ignore)
 {
-	assert(parameter >= 0 && parameter < s_ignoreParameter.size());
+	assert(parameter >= 0 && parameter < (int)s_ignoreParameter.size());
 	s_ignoreParameter[parameter] = ignore;
 }
 

@@ -26,6 +26,7 @@
 
 #ifdef __cplusplus
 #include <vector>
+
 extern "C" {
 #endif
 
@@ -47,6 +48,7 @@ extern void amsynth_audio_callback(
         std::vector<amsynth_midi_cc_t> &midi_out);
 
 }
+
 #endif
 
 #endif
