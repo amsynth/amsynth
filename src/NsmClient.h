@@ -4,7 +4,7 @@
 #include <string>
 #include <mutex>
 #include <condition_variable>
-#include <sigs/sigs.h>
+#include "sigs/sigs.h"
 #include "DebugMessage.h"
 
 typedef void * nsm_client_t ;
