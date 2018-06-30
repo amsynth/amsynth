@@ -73,6 +73,7 @@ typedef struct _amsynth_wrapper {
  *   available.  Each non-NULL return is the DSSI_Descriptor
  *   of a distinct plugin type.
  */
+__attribute__((visibility("default")))
 const DSSI_Descriptor *dssi_descriptor (unsigned long index)
 {
     switch (index)

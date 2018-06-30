@@ -476,10 +476,13 @@ static float getParameter(AEffect *effect, int i)
 	return plugin->synthesizer->getNormalizedParameterValue((Param) i);
 }
 
+extern "C"
 #if _WIN32
 __declspec(dllexport)
+#else
+__attribute__((visibility("default")))
 #endif
-extern "C" AEffect * VSTPluginMain(audioMasterCallback audioMaster)
+AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 {
 #if DEBUG
 	if (!logFile) {
