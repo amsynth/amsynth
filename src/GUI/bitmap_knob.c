@@ -132,7 +132,7 @@ void bitmap_knob_set_bg (GtkWidget *widget, GdkPixbuf *pixbuf)
 		g_object_unref (G_OBJECT (self->background));
 	}
 
-	self->background = pixbuf ? g_object_ref (G_OBJECT (pixbuf)) : NULL;
+	self->background = pixbuf ? GDK_PIXBUF (g_object_ref (G_OBJECT (pixbuf))) : NULL;
 
 	gtk_widget_queue_draw (widget);
 }
@@ -332,7 +332,7 @@ bitmap_knob_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 		gtk_object_unref (GTK_OBJECT (self->adjustment) );
 	}
 	
-	self->adjustment = g_object_ref (GTK_OBJECT (adjustment) );
+	self->adjustment = GTK_ADJUSTMENT (g_object_ref (GTK_OBJECT (adjustment)));
 	
 	gtk_signal_connect (GTK_OBJECT (adjustment), "changed",
 		(GtkSignalFunc) bitmap_knob_adjustment_changed,
