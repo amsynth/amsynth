@@ -124,7 +124,8 @@ amsynth_SOURCES = \
     src/NsmClient.C \
     src/NsmClient.h \
     src/NsmHandler.C \
-    src/NsmHandler.h
+    src/NsmHandler.h \
+    src/sigs/sigs.h
 
 amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @SNDFILE_CFLAGS@ @GTK_CFLAGS@
 
