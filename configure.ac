@@ -73,6 +73,7 @@ AS_IF([test "x$with_gui" != "xno"], [
        with_lv2="no"
        with_dssi_gui="no"])
 AM_CONDITIONAL([BUILD_GUI], [test "x$with_gui" != "xno"])
+AM_CONDITIONAL([BUILD_WITHOUT_GUI], [test "x$with_gui" != "xyes"])
 
 AC_ARG_WITH([oss], [AS_HELP_STRING([--with-oss], [build support for Open Sound System])])
 AS_IF([test "x$with_oss" != "xno"], [

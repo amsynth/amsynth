@@ -25,7 +25,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = po
 
-#AM_LDFLAGS = -loscpack -llo
+AM_LDFLAGS = -loscpack -llo
 
 libcore_sources = \
 	src/Configuration.cpp \
@@ -145,7 +145,11 @@ amsynth_SOURCES += $(libgui_sources) \
 	src/GUI/PresetControllerView.cc \
 	src/GUI/PresetControllerView.h
 amsynth_LDADD += @GTK_LIBS@
-amsynth_LDFLAGS = -loscpack -llo
+amsynth_LDFLAGS = $(AM_LDFLAGS)
+endif
+
+if BUILD_WITHOUT_GUI
+amsynth_LDFLAGS = $(AM_LDFLAGS)
 endif
 
 if DARWIN
