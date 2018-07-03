@@ -4,7 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <csignal>
-#include <non/nsm.h>
+#include "non/nsm.h"
 #include "NsmHandler.h"
 #include "main.h"
 #include "NsmClient.h"
