@@ -9,6 +9,10 @@ class NsmClient ;
 class NsmHandler {
 public:
 
+static void NsmOpenCallback (void *This, std::string Name, std::string DisplayName, std::string ClientId) ;
+static void NsmSaveCallback (void *This) ;
+static void NsmActiveCallback (void *This, bool isActive) ;
+
   NsmHandler( NsmClient *nsmClient) ;
 
   ~NsmHandler( ) ;

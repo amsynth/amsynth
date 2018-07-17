@@ -12,7 +12,6 @@ DebugMessage NsmClient::debugMessage ;
 
 
 void NsmClient::Debug (string message) {
-  //DebugString (message) ;
   debugMessage.SendMessage (message) ;
 }
 
@@ -61,9 +60,24 @@ void NsmClient::setSaveResult (int result) {
 void NsmClient::setActiveResult (int result) {
   activeResult = result ;
 }
+
+void NsmClient::setHandlerOpenCallback (void *handlerThis, HandlerOpenCallback callback) {
+  openHandlerThis = handlerThis ;
+  handlerOpenCallback = callback ;
+}
+
+void NsmClient::setHandlerSaveCallback (void *handlerThis, HandlerSaveCallback callback) {
+  saveHandlerThis = handlerThis ;
+  handlerSaveCallback = callback ;
+}
+
+void NsmClient::setHandlerActiveCallback (void *handlerThis, HandlerActiveCallback callback) {
+  activeHandlerThis = handlerThis ;
+  handlerActiveCallback = callback ;
+}
                                                           
 
-NsmClient::NsmClient (std::string programName) : nsm(0) {
+NsmClient::NsmClient (string programName) : nsm(0) {
   NSMClient = this ;
   this->programName = programName ;
 
@@ -72,7 +86,7 @@ NsmClient::NsmClient (std::string programName) : nsm(0) {
   activeResult = -1 ;
 }
 
-void NsmClient::Init (void) {
+void NsmClient::Init (string programLabel) {
   Debug ("NsmClient: Constructor()\n") ;
 
   const char *nsm_url = getenv("NSM_URL") ;
@@ -89,7 +103,7 @@ void NsmClient::Init (void) {
     nsm_set_active_callback (nsm, activeCallback, this);
 
     if (nsm_init_thread (nsm, nsm_url) == 0) {
-      nsm_send_announce( nsm, "AmSynth", "", programName.c_str() );
+      nsm_send_announce( nsm, programLabel.c_str(), "", programName.c_str() );
       nsm_thread_start (nsm) ;
     }
     else {
@@ -113,7 +127,7 @@ NsmClient::~NsmClient (void) {
 
 int NsmClient::open (const char* name, const char* displayName, const char* clientId) {
   Debug ("NsmClient: open()\n") ;
-  Open (string(name), string(displayName), string(clientId)) ;
+  handlerOpenCallback (openHandlerThis, string(name), string(displayName), string(clientId)) ;
 
   Debug ("Open Result: ") ;
   Debug (to_string (openResult)) ;
@@ -124,7 +138,7 @@ int NsmClient::open (const char* name, const char* displayName, const char* clie
 
 int NsmClient::save (void) {
   Debug ("NsmClient: save()\n") ;
-  Save () ;
+  handlerSaveCallback (saveHandlerThis) ;
 
   Debug ("Save Result: ") ;
   Debug (to_string (saveResult)) ;
@@ -135,7 +149,7 @@ int NsmClient::save (void) {
 
 void NsmClient::active (bool isActive) {
   Debug ("NsmClient: active()\n") ;
-  Active (isActive) ;
+  handlerActiveCallback (activeHandlerThis, isActive) ;
 
   Debug ("Active Result: ") ;
   Debug (to_string (activeResult)) ;

@@ -19,7 +19,7 @@
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
 AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' -DPACKAGE_LOCALEDIR=\""$(datadir)/locale"\" @CPPFLAGS@ -fPIC -fvisibility=hidden
 
-AM_CXXFLAGS = -std=c++1y @CXXFLAGS@
+AM_CXXFLAGS = -std=c++11 @CXXFLAGS@
 
 ACLOCAL_AMFLAGS = -I m4
 
@@ -125,7 +125,6 @@ amsynth_SOURCES = \
     src/NsmClient.h \
     src/NsmHandler.C \
     src/NsmHandler.h \
-    src/sigs/sigs.h \
     src/non/nsm.h
 
 amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @SNDFILE_CFLAGS@ @GTK_CFLAGS@

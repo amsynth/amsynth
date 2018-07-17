@@ -428,7 +428,7 @@ int main( int argc, char *argv[] )
 
     NsmClient NSMC (argv[0]) ;
     NsmHandler nsmHandler (&NSMC) ;
-    NSMC.Init () ;
+    NSMC.Init ("AmSynth") ;
 
 	if (config.current_tuning_file != "default")
 		amsynth_load_tuning_file(config.current_tuning_file.c_str());

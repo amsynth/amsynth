@@ -56,10 +56,9 @@ void NsmHandler::SetFilePaths (string Path) {
 
 void NsmHandler::setNsmClient (NsmClient *client) {
   nsmClient = client ;
-  nsmClient->Open.connect (this, sigs::Use<string,string,string>::overloadOf (&NsmHandler::NsmOpen)) ;
-  nsmClient->Save.connect (this, &NsmHandler::NsmSave) ;
-  nsmClient->Active.connect (this, sigs::Use<bool>::overloadOf (&NsmHandler::NsmActive)) ;
-  nsmClient->DebugString.connect (this, sigs::Use<string>::overloadOf (&NsmHandler::Debug)) ;
+  nsmClient->setHandlerOpenCallback (this, NsmHandler::NsmOpenCallback) ;
+  nsmClient->setHandlerSaveCallback (this, NsmHandler::NsmSaveCallback) ;
+  nsmClient->setHandlerActiveCallback (this, NsmHandler::NsmActiveCallback) ;
 }
 
 
@@ -67,6 +66,11 @@ void NsmHandler::Debug (string message) {
   nsmClient->Debug (message) ;
 }
 
+
+void NsmHandler::NsmOpenCallback (void *This, string Name, string DisplayName, string ClientId) {
+  NsmHandler *nsmHandler = (NsmHandler*)This ;
+  nsmHandler->NsmOpen (Name, DisplayName, ClientId) ;
+}
 
 void NsmHandler::NsmOpen (string Name, string DisplayName, string ClientId) {
   stringstream Stream ;
@@ -114,6 +118,11 @@ void NsmHandler::NsmOpen (string Name, string DisplayName, string ClientId) {
 }
 
 
+void NsmHandler::NsmSaveCallback (void *This) {
+  NsmHandler *nsmHandler = (NsmHandler*)This ;
+  nsmHandler->NsmSave () ;
+}
+
 void NsmHandler::NsmSave (void) {
   Debug ("NsmHandler::NsmSave()\n") ;
   if (loadStatus != LoadStatus::Error) {
@@ -123,6 +132,11 @@ void NsmHandler::NsmSave (void) {
   else {
     nsmClient->setSaveResult (ERR_GENERAL) ;
   }
+}
+
+void NsmHandler::NsmActiveCallback (void *This, bool isActive) {
+  NsmHandler *nsmHandler = (NsmHandler*)This ;
+  nsmHandler->NsmActive (isActive) ;
 }
 
 void NsmHandler::NsmActive (bool isActive) {

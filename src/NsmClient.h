@@ -4,10 +4,12 @@
 #include <string>
 #include <mutex>
 #include <condition_variable>
-#include "sigs/sigs.h"
 #include "DebugMessage.h"
 
 typedef void * nsm_client_t ;
+typedef void (*HandlerOpenCallback) (void *HandlerThis, std::string Name, std::string DisplayName, std::string ClientId) ;
+typedef void (*HandlerSaveCallback) (void *HandlerThis) ;
+typedef void (*HandlerActiveCallback) (void *HandlerThis, bool isActive) ;
 
 class NsmClient {
 
@@ -22,21 +24,15 @@ public:
   int open (const char* name, const char* displayName, const char* clientId) ;
   int save (void) ;
   void active (bool isActive) ;
-  void Init (void) ;
+  void Init (std::string programLabel) ;
   void Debug (std::string message) ;
   void setOpenResult (int result) ;
   void setSaveResult (int result) ;
   void setActiveResult (int result) ;
+  void setHandlerOpenCallback (void *handlerThis, HandlerOpenCallback callback) ;
+  void setHandlerSaveCallback (void *handlerThis, HandlerSaveCallback callback) ;
+  void setHandlerActiveCallback (void *handlerThis, HandlerActiveCallback callback) ;
 
-  std::condition_variable_any openFinished ;
-  std::condition_variable_any saveFinished ;
-  std::condition_variable_any activeFinished ;
-
-//signals:
-  sigs::Signal<void(std::string, std::string, const std::string&)> Open ;
-  sigs::Signal<void(void)> Save ;
-  sigs::Signal <void(bool&)> Active ;
-  sigs::Signal<void(const std::string&)> DebugString ;
 
 private:
   std::string programName ;
@@ -44,6 +40,13 @@ private:
   int saveResult ;
   int activeResult ;
   nsm_client_t *nsm ;
+  void *openHandlerThis ;
+  void *saveHandlerThis ;
+  void *activeHandlerThis ;
+
+  HandlerOpenCallback handlerOpenCallback ;
+  HandlerSaveCallback handlerSaveCallback ;
+  HandlerActiveCallback handlerActiveCallback ;
 } ;
 
 
