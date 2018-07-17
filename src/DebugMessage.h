@@ -7,11 +7,11 @@
 
 class DebugMessage {
 public:
-  DebugMessage (void) ;
-  void SendMessage (std::string message) ;
-  std::string AddressPattern ;
-  std::string TypeTag ;
-  std::list<std::string> Arguments ;
+    DebugMessage (void) ;
+    void SendMessage (std::string message) ;
+    std::string AddressPattern ;
+    std::string TypeTag ;
+    std::list<std::string> Arguments ;
 } ;
 
 #endif // __DebugMessage__
