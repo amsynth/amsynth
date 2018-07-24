@@ -168,6 +168,12 @@ add_executable(amsynth
         src/lash.h
         src/main.cc
         src/main.h
+        src/DebugMessage.C
+        src/DebugMessage.h
+        src/NsmClient.C
+        src/NsmClient.h
+        src/NsmHandler.C
+        src/NsmHandler.h
         )
 
 target_link_libraries(amsynth
@@ -178,6 +184,8 @@ target_link_libraries(amsynth
         ${GTK_LIBRARIES}
         ${LASH_LIBRARIES}
         ${SNDFILE_LIBRARIES}
+        ${LIBLO_LIBRARIES}
+        oscpack
         )
 
 #

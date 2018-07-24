@@ -23,6 +23,8 @@ ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = po
 
+AM_LDFLAGS = -loscpack -llo
+
 libcore_sources = \
 	src/Configuration.cpp \
 	src/Configuration.h \
@@ -114,7 +116,14 @@ amsynth_SOURCES = \
 	src/lash.c \
 	src/lash.h \
 	src/main.h \
-	src/main.cc
+	src/main.cc \
+    src/DebugMessage.C \
+    src/DebugMessage.h \
+    src/NsmClient.C \
+    src/NsmClient.h \
+    src/NsmHandler.C \
+    src/NsmHandler.h \
+    src/non/nsm.h
 
 amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @SNDFILE_CFLAGS@ @GTK_CFLAGS@
 
@@ -133,6 +142,11 @@ amsynth_SOURCES += $(libgui_sources) \
 	src/GUI/PresetControllerView.cc \
 	src/GUI/PresetControllerView.h
 amsynth_LDADD += @GTK_LIBS@
+amsynth_LDFLAGS = $(AM_LDFLAGS)
+endif
+
+if BUILD_WITHOUT_GUI
+amsynth_LDFLAGS = $(AM_LDFLAGS)
 endif
 
 if DARWIN

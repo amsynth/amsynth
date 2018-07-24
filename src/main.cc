@@ -20,6 +20,8 @@
  */
 
 #include "main.h"
+#include "NsmClient.h"
+#include "NsmHandler.h"
 
 #if HAVE_CONFIG_H
 #include "config.h"
@@ -421,6 +423,10 @@ int main( int argc, char *argv[] )
 	
 	amsynth_load_bank(config.current_bank_file.c_str());
 	amsynth_set_preset_number(initial_preset_no);
+
+	NsmClient nsmClient(argv[0]);
+	NsmHandler nsmHandler(&nsmClient);
+	nsmClient.Init(PACKAGE_NAME);
 
 	if (config.current_tuning_file != "default")
 		amsynth_load_tuning_file(config.current_tuning_file.c_str());

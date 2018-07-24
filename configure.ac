@@ -1,7 +1,7 @@
 dnl
 dnl  amsynth configure.ac
 dnl
-dnl  Copyright (C) 2001-2015 Nick Dowell
+dnl  Copyright (C) 2001-2018 Nick Dowell
 dnl
 dnl  This program is free software; you can redistribute it and/or modify
 dnl  it under the terms of the GNU General Public License as published by
@@ -18,13 +18,15 @@ dnl  along with this program; if not, write to the Free Software
 dnl  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 dnl
 
-AC_COPYRIGHT([Copyright (C) 2001-2015 Nick Dowell])
+AC_COPYRIGHT([Copyright (C) 2001-2018 Nick Dowell])
 AC_INIT([amsynth], [1.8.0], [https://github.com/amsynth/amsynth/issues], [amsynth], [https://amsynth.github.io])
 AC_CONFIG_SRCDIR([src/main.cc])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([subdir-objects])
 AM_SILENT_RULES([yes])
+
+AX_CXX_COMPILE_STDCXX_11
 
 # make CXXFLAGS inherit from CFLAGS unless CXXFLAGS were specified
 AS_IF([test "x$CXXFLAGS" = "x"], [CXXFLAGS="$CFLAGS"])
@@ -70,6 +72,7 @@ AS_IF([test "x$with_gui" != "xno"], [
        with_lv2="no"
        with_dssi_gui="no"])
 AM_CONDITIONAL([BUILD_GUI], [test "x$with_gui" != "xno"])
+AM_CONDITIONAL([BUILD_WITHOUT_GUI], [test "x$with_gui" != "xyes"])
 
 AC_ARG_WITH([oss], [AS_HELP_STRING([--with-oss], [build support for Open Sound System])])
 AS_IF([test "x$with_oss" != "xno"], [
