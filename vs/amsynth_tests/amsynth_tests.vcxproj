@@ -147,23 +147,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Configuration.cpp" />
-    <ClCompile Include="..\..\src\Effects\Distortion.cc" />
-    <ClCompile Include="..\..\src\Effects\SoftLimiter.cc" />
+    <ClCompile Include="..\..\src\Effects\Distortion.cpp" />
+    <ClCompile Include="..\..\src\Effects\SoftLimiter.cpp" />
     <ClCompile Include="..\..\src\freeverb\allpass.cpp" />
     <ClCompile Include="..\..\src\freeverb\comb.cpp" />
     <ClCompile Include="..\..\src\freeverb\revmodel.cpp" />
-    <ClCompile Include="..\..\src\MidiController.cc" />
-    <ClCompile Include="..\..\src\Parameter.cc" />
-    <ClCompile Include="..\..\src\Preset.cc" />
-    <ClCompile Include="..\..\src\PresetController.cc" />
+    <ClCompile Include="..\..\src\MidiController.cpp" />
+    <ClCompile Include="..\..\src\Parameter.cpp" />
+    <ClCompile Include="..\..\src\Preset.cpp" />
+    <ClCompile Include="..\..\src\PresetController.cpp" />
     <ClCompile Include="..\..\src\Synthesizer.cpp" />
     <ClCompile Include="..\..\src\tests.cpp" />
-    <ClCompile Include="..\..\src\TuningMap.cc" />
-    <ClCompile Include="..\..\src\VoiceAllocationUnit.cc" />
-    <ClCompile Include="..\..\src\VoiceBoard\ADSR.cc" />
-    <ClCompile Include="..\..\src\VoiceBoard\LowPassFilter.cc" />
-    <ClCompile Include="..\..\src\VoiceBoard\Oscillator.cc" />
-    <ClCompile Include="..\..\src\VoiceBoard\VoiceBoard.cc" />
+    <ClCompile Include="..\..\src\TuningMap.cpp" />
+    <ClCompile Include="..\..\src\VoiceAllocationUnit.cpp" />
+    <ClCompile Include="..\..\src\VoiceBoard\ADSR.cpp" />
+    <ClCompile Include="..\..\src\VoiceBoard\LowPassFilter.cpp" />
+    <ClCompile Include="..\..\src\VoiceBoard\Oscillator.cpp" />
+    <ClCompile Include="..\..\src\VoiceBoard\VoiceBoard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Configuration.h" />

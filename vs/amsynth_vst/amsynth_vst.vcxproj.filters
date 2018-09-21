@@ -21,37 +21,37 @@
     <ClCompile Include="..\..\src\Configuration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\MidiController.cc">
+    <ClCompile Include="..\..\src\MidiController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Parameter.cc">
+    <ClCompile Include="..\..\src\Parameter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Preset.cc">
+    <ClCompile Include="..\..\src\Preset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\PresetController.cc">
+    <ClCompile Include="..\..\src\PresetController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Synthesizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\TuningMap.cc">
+    <ClCompile Include="..\..\src\TuningMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\VoiceAllocationUnit.cc">
+    <ClCompile Include="..\..\src\VoiceAllocationUnit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\VoiceBoard\ADSR.cc">
+    <ClCompile Include="..\..\src\VoiceBoard\ADSR.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\VoiceBoard\LowPassFilter.cc">
+    <ClCompile Include="..\..\src\VoiceBoard\LowPassFilter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\VoiceBoard\Oscillator.cc">
+    <ClCompile Include="..\..\src\VoiceBoard\Oscillator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\VoiceBoard\VoiceBoard.cc">
+    <ClCompile Include="..\..\src\VoiceBoard\VoiceBoard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\freeverb\allpass.cpp">
@@ -63,10 +63,10 @@
     <ClCompile Include="..\..\src\freeverb\revmodel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Effects\Distortion.cc">
+    <ClCompile Include="..\..\src\Effects\Distortion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Effects\SoftLimiter.cc">
+    <ClCompile Include="..\..\src\Effects\SoftLimiter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
