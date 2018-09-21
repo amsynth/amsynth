@@ -1,5 +1,5 @@
 /*
- *  gui_main.cc
+ *  gui_main.cpp
  *
  *  Copyright (c) 2001-2017 Nick Dowell
  *

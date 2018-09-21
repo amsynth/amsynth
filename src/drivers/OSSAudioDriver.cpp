@@ -1,5 +1,5 @@
 /*
- *  OSSAudioDriver.cc
+ *  OSSAudioDriver.cpp
  *
  *  Copyright (c) 2001-2017 Nick Dowell
  *

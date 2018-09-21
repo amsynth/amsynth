@@ -32,22 +32,22 @@ libcore_sources = \
 	src/Configuration.h \
 	src/controls.h \
 	src/midi.h \
-	src/MidiController.cc \
+	src/MidiController.cpp \
 	src/MidiController.h \
-	src/Parameter.cc \
+	src/Parameter.cpp \
 	src/Parameter.h \
-	src/Preset.cc \
+	src/Preset.cpp \
 	src/Preset.h \
-	src/PresetController.cc \
+	src/PresetController.cpp \
 	src/PresetController.h \
 	src/Thread.h \
 	src/types.h \
 	src/UpdateListener.h
 
 libdsp_sources = \
-	src/Effects/Distortion.cc \
+	src/Effects/Distortion.cpp \
 	src/Effects/Distortion.h \
-	src/Effects/SoftLimiter.cc \
+	src/Effects/SoftLimiter.cpp \
 	src/Effects/SoftLimiter.h \
 	src/freeverb/allpass.cpp \
 	src/freeverb/allpass.hpp \
@@ -59,18 +59,18 @@ libdsp_sources = \
 	src/freeverb/tuning.h \
 	src/Synthesizer.cpp \
 	src/Synthesizer.h \
-	src/TuningMap.cc \
+	src/TuningMap.cpp \
 	src/TuningMap.h \
-	src/VoiceAllocationUnit.cc \
+	src/VoiceAllocationUnit.cpp \
 	src/VoiceAllocationUnit.h \
-	src/VoiceBoard/ADSR.cc \
+	src/VoiceBoard/ADSR.cpp \
 	src/VoiceBoard/ADSR.h \
-	src/VoiceBoard/LowPassFilter.cc \
+	src/VoiceBoard/LowPassFilter.cpp \
 	src/VoiceBoard/LowPassFilter.h \
-	src/VoiceBoard/Oscillator.cc \
+	src/VoiceBoard/Oscillator.cpp \
 	src/VoiceBoard/Oscillator.h \
 	src/VoiceBoard/Synth--.h \
-	src/VoiceBoard/VoiceBoard.cc \
+	src/VoiceBoard/VoiceBoard.cpp \
 	src/VoiceBoard/VoiceBoard.h
 
 libgui_sources = \
@@ -85,7 +85,7 @@ libgui_sources = \
 	src/GUI/editor_menus.h \
 	src/GUI/editor_pane.c \
 	src/GUI/editor_pane.h \
-	src/GUI/gui_main.cc \
+	src/GUI/gui_main.cpp \
 	src/GUI/gui_main.h
 
 
@@ -98,32 +98,32 @@ bin_PROGRAMS = amsynth
 amsynth_SOURCES = \
 	$(libcore_sources) \
 	$(libdsp_sources) \
-	src/AudioOutput.cc \
+	src/AudioOutput.cpp \
 	src/AudioOutput.h \
-	src/drivers/ALSAAudioDriver.cc \
+	src/drivers/ALSAAudioDriver.cpp \
 	src/drivers/ALSAAudioDriver.h \
-	src/drivers/ALSAMidiDriver.cc \
+	src/drivers/ALSAMidiDriver.cpp \
 	src/drivers/ALSAMidiDriver.h \
-	src/drivers/ALSAmmapAudioDriver.cc \
+	src/drivers/ALSAmmapAudioDriver.cpp \
 	src/drivers/ALSAmmapAudioDriver.h \
 	src/drivers/AudioDriver.h \
 	src/drivers/MidiDriver.h \
-	src/drivers/OSSAudioDriver.cc \
+	src/drivers/OSSAudioDriver.cpp \
 	src/drivers/OSSAudioDriver.h \
-	src/drivers/OSSMidiDriver.cc \
+	src/drivers/OSSMidiDriver.cpp \
 	src/drivers/OSSMidiDriver.h \
 	src/gettext.h \
-	src/JackOutput.cc \
+	src/JackOutput.cpp \
 	src/JackOutput.h \
 	src/lash.c \
 	src/lash.h \
 	src/main.h \
-	src/main.cc \
-    src/DebugMessage.C \
+	src/main.cpp \
+    src/DebugMessage.cpp \
     src/DebugMessage.h \
-    src/NsmClient.C \
+    src/NsmClient.cpp \
     src/NsmClient.h \
-    src/NsmHandler.C \
+    src/NsmHandler.cpp \
     src/NsmHandler.h \
     src/non/nsm.h
 
@@ -141,7 +141,7 @@ amsynth_SOURCES += $(libgui_sources) \
 	src/GUI/MainWindow.h \
 	src/GUI/MIDILearnDialog.cpp \
 	src/GUI/MIDILearnDialog.h \
-	src/GUI/PresetControllerView.cc \
+	src/GUI/PresetControllerView.cpp \
 	src/GUI/PresetControllerView.h
 amsynth_LDADD += @GTK_LIBS@
 amsynth_LDFLAGS = $(AM_LDFLAGS)
@@ -153,7 +153,7 @@ endif
 
 if DARWIN
 amsynth_SOURCES += \
-	src/drivers/CoreAudio.cc \
+	src/drivers/CoreAudio.cpp \
 	src/drivers/CoreAudio.h
 amsynth_LDFLAGS = $(AM_LDFLAGS) -framework CoreFoundation -framework CoreAudio -framework CoreMIDI
 endif

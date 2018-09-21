@@ -1,5 +1,5 @@
 /*
- *  main.cc
+ *  main.cpp
  *
  *  Copyright (c) 2001-2016 Nick Dowell
  *

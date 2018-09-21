@@ -1,5 +1,5 @@
 /*
- *  MidiController.cc
+ *  MidiController.cpp
  *
  *  Copyright (c) 2001-2016 Nick Dowell
  *

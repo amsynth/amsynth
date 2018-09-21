@@ -1,5 +1,5 @@
 /*
- *  ADSR.cc
+ *  ADSR.cpp
  *
  *  Copyright (c) 2001-2012 Nick Dowell
  *

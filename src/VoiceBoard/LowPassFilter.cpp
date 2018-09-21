@@ -1,5 +1,5 @@
 /*
- *  LowPassFilter.cc
+ *  LowPassFilter.cpp
  *
  *  Copyright (c) 2001-2014 Nick Dowell
  *

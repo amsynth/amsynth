@@ -1,5 +1,5 @@
 /*
- *  ALSAmmapAudioDriver.cc
+ *  ALSAmmapAudioDriver.cpp
  *
  *  Copyright (c) 2001-2015 Nick Dowell, Karsten Wiese
  *
