@@ -159,11 +159,11 @@ msgstr "MIDI-Lernen..."
 msgid "Ignore Preset Value"
 msgstr "Preset-Wert ignorieren"
 
-#: ../src/GUI/editor_menus.cpp:115 ../src/GUI/PresetControllerView.cc:238
+#: ../src/GUI/editor_menus.cpp:115 ../src/GUI/PresetControllerView.cpp:238
 msgid "F"
 msgstr "F"
 
-#: ../src/GUI/editor_menus.cpp:115 ../src/GUI/PresetControllerView.cc:238
+#: ../src/GUI/editor_menus.cpp:115 ../src/GUI/PresetControllerView.cpp:238
 msgid "U"
 msgstr "U"
 
@@ -481,133 +481,133 @@ msgstr "Synth-Parameter:"
 msgid "MIDI Controller"
 msgstr "MIDI-Controller"
 
-#: ../src/GUI/PresetControllerView.cc:122
+#: ../src/GUI/PresetControllerView.cpp:122
 msgid "Save"
 msgstr "Speichern"
 
-#: ../src/GUI/PresetControllerView.cc:130
+#: ../src/GUI/PresetControllerView.cpp:130
 msgid "Audition"
 msgstr "Hörprobe"
 
-#: ../src/GUI/PresetControllerView.cc:145
+#: ../src/GUI/PresetControllerView.cpp:145
 msgid "Panic"
 msgstr "Panik"
 
-#: ../src/main.cc:87
+#: ../src/main.cpp:87
 msgid "Failed to set SCHED_FIFO\n"
 msgstr "Setzen von SCHED_FIFO gescheitert\n"
 
-#: ../src/main.cc:106
+#: ../src/main.cpp:106
 #, c-format
 msgid "error reading source file %s\n"
 msgstr "Fehler beim Lesen der Quelldatei %s\n"
 
-#: ../src/main.cc:111
+#: ../src/main.cpp:111
 #, c-format
 msgid "error creating destination file %s\n"
 msgstr "Fehler beim Anlegen der Zieldatei %s\n"
 
-#: ../src/main.cc:146
+#: ../src/main.cpp:146
 #, c-format
 msgid "installing configuration file to %s\n"
 msgstr "Installiere Konfigurationsdatei nach %s\n"
 
-#: ../src/main.cc:151
+#: ../src/main.cpp:151
 #, c-format
 msgid "installing default sound bank to %s\n"
 msgstr "Installiere Standard-Soundbank nach %s\n"
 
-#: ../src/main.cc:211
+#: ../src/main.cpp:211
 msgid "JACK init failed: "
 msgstr "JACK-Initialisierung gescheitert: "
 
-#: ../src/main.cc:237
+#: ../src/main.cpp:237
 msgid "error: could not open ALSA MIDI interface"
 msgstr "Fehler: Kann ALSA-MIDI-Interface nicht öffnen"
 
-#: ../src/main.cc:244
+#: ../src/main.cpp:244
 msgid "error: could not open OSS MIDI interface"
 msgstr "Fehler: Kann OSS-MIDI-Interface nicht öffnen"
 
-#: ../src/main.cc:253
+#: ../src/main.cpp:253
 msgid "error: could not open any MIDI interface"
 msgstr "Fehler: Kein MIDI-Interface kann geöffnet werden"
 
-#: ../src/main.cc:316
+#: ../src/main.cpp:316
 msgid "usage: "
 msgstr "Verwendung: "
 
-#: ../src/main.cc:316
+#: ../src/main.cpp:316
 msgid " [options]"
 msgstr " [Optionen]"
 
-#: ../src/main.cc:318
+#: ../src/main.cpp:318
 msgid ""
 "Any options given here override those in the config file ($HOME/.amSynthrc)"
 msgstr ""
 "Alle hier angegebenen Optionen setzen diejenigen aus der Konfigurationsdatei "
 "($HOME/.amSynthrc) außer Kraft"
 
-#: ../src/main.cc:320
+#: ../src/main.cpp:320
 msgid "OPTIONS:"
 msgstr "OPTIONEN:"
 
-#: ../src/main.cc:322
+#: ../src/main.cpp:322
 msgid "\t-h          show this usage message"
 msgstr "\t-h          zeigt diese Verwendungsbeschreibung"
 
-#: ../src/main.cc:323
+#: ../src/main.cpp:323
 msgid "\t-v          show version information"
 msgstr "\t-v          zeigt Versionsinformationen"
 
-#: ../src/main.cc:324
+#: ../src/main.cpp:324
 msgid "\t-x          run in headless mode (without GUI)"
 msgstr "\t-x          führt amsynth ohne grafische Oberfläche aus"
 
-#: ../src/main.cc:326
+#: ../src/main.cpp:326
 msgid "\t-b <file>   use <file> as the bank to store presets"
 msgstr "\t-b <Datei>  nutzt <Datei> als Bank zum Speichern von Presets"
 
-#: ../src/main.cc:327
+#: ../src/main.cpp:327
 msgid "\t-t <file>   use <file> as a tuning file"
 msgstr "\t-t <Datei>  nutzt <Datei> als Stimmungsdatei"
 
-#: ../src/main.cc:329
+#: ../src/main.cpp:329
 msgid ""
 "\t-a <string> set the sound output driver to use [alsa/oss/auto(default)]"
 msgstr ""
 "\t-a <string> setzt den Audio-Ausgabe-Treiber als [alsa/oss/auto(Standard)]"
 
-#: ../src/main.cc:330
+#: ../src/main.cpp:330
 msgid "\t-r <int>    set the sampling rate to use"
 msgstr "\t-r <int>    setzt die zu verwendende Samplerate"
 
-#: ../src/main.cc:331
+#: ../src/main.cpp:331
 msgid "\t-m <string> set the MIDI driver to use [alsa/oss/auto(default)]"
 msgstr ""
 "\t-m <string> setzt den zu verwendenden MIDI-Treiber [alsa/oss/"
 "auto(Standard)]"
 
-#: ../src/main.cc:332
+#: ../src/main.cpp:332
 msgid "\t-c <int>    set the MIDI channel to respond to (default=all)"
 msgstr ""
 "\t-c <int>    setzt den MIDI-Kanal, auf den reagiert werden soll "
 "(Standard=alle)"
 
-#: ../src/main.cc:333
+#: ../src/main.cpp:333
 msgid "\t-p <int>    set the polyphony (maximum active voices)"
 msgstr ""
 "\t-p <int>    setzt die Polyphonie (maximale Anzahl der aktiven Stimmen)"
 
-#: ../src/main.cc:335
+#: ../src/main.cpp:335
 msgid "\t-n <name>   specify the JACK client name to use"
 msgstr "\t-n <Name>   legt den JACK-Client-Namen fest"
 
-#: ../src/main.cc:336
+#: ../src/main.cpp:336
 msgid "\t--jack_autoconnect[=<true|false>]"
 msgstr "\t--jack_autoconnect[=<true|false>]"
 
-#: ../src/main.cc:337
+#: ../src/main.cpp:337
 msgid ""
 "\t            automatically connect jack audio ports to hardware I/O ports. "
 "(Default: true)"
@@ -615,137 +615,137 @@ msgstr ""
 "\t            legt die automatische Verbindung von JACK-Audio-Ports mit "
 "Hardware-I/O-Ports fest. (Standard: true)"
 
-#: ../src/main.cc:411
+#: ../src/main.cpp:411
 msgid "Fatal Error: open_audio() returned NULL.\n"
 msgstr "Fataler Fehler: open_audio() hat NULL zurückgegeben.\n"
 
-#: ../src/main.cc:458
+#: ../src/main.cpp:458
 #, c-format
 msgid "amsynth running in headless mode, press ctrl-c to exit\n"
 msgstr "amsynth läuft ohne grafische Oberfläche, Strg+C zum Beenden\n"
 
-#: ../src/main.cc:463
+#: ../src/main.cpp:463
 #, c-format
 msgid "shutting down...\n"
 msgstr "Beende...\n"
 
-#: ../src/main.cc:470
+#: ../src/main.cpp:470
 msgid " audio buffer underruns occurred\n"
 msgstr " Audio Buffer Underruns sind aufgetreten\n"
 
-#: ../src/main.cc:564
+#: ../src/main.cpp:564
 msgid "error: could not load tuning file "
 msgstr "Fehler: Konnte Stimmungsdatei nicht laden: "
 
-#: ../src/main.cc:626
+#: ../src/main.cpp:626
 #, c-format
 msgid "user time: %f\t\tsystem time: %f\n"
 msgstr "Benutzerzeit: %f\t\tSystemzeit: %f\n"
 
-#: ../src/main.cc:627
+#: ../src/main.cpp:627
 #, c-format
 msgid "performance index: %f\n"
 msgstr "Leistungsindex: %f\n"
 
-#: ../src/Preset.cc:324 ../src/Preset.cc:334
+#: ../src/Preset.cpp:324 ../src/Preset.cpp:334
 msgid "sine"
 msgstr "Sinus"
 
 # "Rechteck" von "Rechteckschwingung" <-> "square wave"
-#: ../src/Preset.cc:325
+#: ../src/Preset.cpp:325
 msgid "square / pulse"
 msgstr "Rechteck / Puls"
 
-#: ../src/Preset.cc:326
+#: ../src/Preset.cpp:326
 msgid "triangle / saw"
 msgstr "Dreieck / Sägezahn"
 
-#: ../src/Preset.cc:327
+#: ../src/Preset.cpp:327
 msgid "white noise"
 msgstr "Weißes Rauschen"
 
-#: ../src/Preset.cc:328 ../src/Preset.cc:338
+#: ../src/Preset.cpp:328 ../src/Preset.cpp:338
 msgid "noise + sample & hold"
 msgstr "Rauschen + Sample & Hold"
 
 # "Rechteck" von "Rechteckschwingung" <-> "square wave"
-#: ../src/Preset.cc:335
+#: ../src/Preset.cpp:335
 msgid "square"
 msgstr "Rechteck"
 
-#: ../src/Preset.cc:336
+#: ../src/Preset.cpp:336
 msgid "triangle"
 msgstr "Dreieck"
 
-#: ../src/Preset.cc:337
+#: ../src/Preset.cpp:337
 msgid "noise"
 msgstr "Rauschen"
 
-#: ../src/Preset.cc:339
+#: ../src/Preset.cpp:339
 msgid "sawtooth (up)"
 msgstr "Sägezahn (aufwärts)"
 
-#: ../src/Preset.cc:340
+#: ../src/Preset.cpp:340
 msgid "sawtooth (down)"
 msgstr "Sägezahn (abwärts)"
 
-#: ../src/Preset.cc:346
+#: ../src/Preset.cpp:346
 msgid "poly"
 msgstr "Poly"
 
-#: ../src/Preset.cc:347
+#: ../src/Preset.cpp:347
 msgid "mono"
 msgstr "Mono"
 
-#: ../src/Preset.cc:348 ../src/Preset.cc:380
+#: ../src/Preset.cpp:348 ../src/Preset.cpp:380
 msgid "legato"
 msgstr "Legato"
 
-#: ../src/Preset.cc:354
+#: ../src/Preset.cpp:354
 msgid "low pass"
 msgstr "Tiefpass"
 
-#: ../src/Preset.cc:355
+#: ../src/Preset.cpp:355
 msgid "high pass"
 msgstr "Hochpass"
 
-#: ../src/Preset.cc:356
+#: ../src/Preset.cpp:356
 msgid "band pass"
 msgstr "Bandpass"
 
-#: ../src/Preset.cc:357
+#: ../src/Preset.cpp:357
 msgid "notch"
 msgstr "Kerbfilter"
 
-#: ../src/Preset.cc:358
+#: ../src/Preset.cpp:358
 msgid "bypass"
 msgstr "Umgehen"
 
-#: ../src/Preset.cc:364
+#: ../src/Preset.cpp:364
 msgid "12 dB / octave"
 msgstr "12 db/Oktave"
 
-#: ../src/Preset.cc:365
+#: ../src/Preset.cpp:365
 msgid "24 dB / octave"
 msgstr "24 db/Oktave"
 
-#: ../src/Preset.cc:371
+#: ../src/Preset.cpp:371
 msgid "osc 1+2"
 msgstr "osc 1+2"
 
-#: ../src/Preset.cc:372
+#: ../src/Preset.cpp:372
 msgid "osc 1"
 msgstr "osc 1"
 
-#: ../src/Preset.cc:373
+#: ../src/Preset.cpp:373
 msgid "osc 2"
 msgstr "osc 2"
 
-#: ../src/Preset.cc:379
+#: ../src/Preset.cpp:379
 msgid "always"
 msgstr "Immer"
 
-#: ../src/PresetController.cc:415
+#: ../src/PresetController.cpp:415
 msgid "User bank"
 msgstr "Benutzerbank"
 
