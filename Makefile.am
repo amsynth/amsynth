@@ -146,13 +146,13 @@ endif
 
 if BUILD_NSM
 amsynth_SOURCES += \
-	src/DebugMessage.cpp \
-	src/DebugMessage.h \
-	src/NsmClient.cpp \
-	src/NsmClient.h \
-	src/NsmHandler.cpp \
-	src/NsmHandler.h \
-	src/non/nsm.h
+	src/nsm/DebugMessage.cpp \
+	src/nsm/DebugMessage.h \
+	src/nsm/NsmClient.cpp \
+	src/nsm/NsmClient.h \
+	src/nsm/NsmHandler.cpp \
+	src/nsm/NsmHandler.h \
+	src/nsm/nsm.h
 amsynth_LDFLAGS = $(AM_LDFLAGS) -llo -loscpack
 endif
 

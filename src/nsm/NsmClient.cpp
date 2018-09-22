@@ -1,6 +1,6 @@
 #include "DebugMessage.h"
-#include "main.h"
-#include "non/nsm.h"
+#include "../main.h"
+#include "nsm.h"
 #include "NsmClient.h"
 
 using namespace std ;

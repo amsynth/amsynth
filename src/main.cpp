@@ -42,8 +42,8 @@
 #include "VoiceBoard/LowPassFilter.h"
 
 #ifdef WITH_NSM
-#include "NsmClient.h"
-#include "NsmHandler.h"
+#include "nsm/NsmClient.h"
+#include "nsm/NsmHandler.h"
 #endif
 
 #if __APPLE__
