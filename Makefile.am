@@ -19,8 +19,6 @@
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
 AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' -DPACKAGE_LOCALEDIR=\""$(datadir)/locale"\" @CPPFLAGS@ -fPIC -fvisibility=hidden
 
-AM_CXXFLAGS = -std=c++11 @CXXFLAGS@
-
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = po
