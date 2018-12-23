@@ -19,13 +19,9 @@
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
 AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' -DPACKAGE_LOCALEDIR=\""$(datadir)/locale"\" @CPPFLAGS@ -fPIC -fvisibility=hidden
 
-AM_CXXFLAGS = -std=c++11 @CXXFLAGS@
-
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = po
-
-AM_LDFLAGS = -loscpack -llo
 
 libcore_sources = \
 	src/Configuration.cpp \
@@ -118,14 +114,7 @@ amsynth_SOURCES = \
 	src/lash.c \
 	src/lash.h \
 	src/main.h \
-	src/main.cpp \
-    src/DebugMessage.cpp \
-    src/DebugMessage.h \
-    src/NsmClient.cpp \
-    src/NsmClient.h \
-    src/NsmHandler.cpp \
-    src/NsmHandler.h \
-    src/non/nsm.h
+	src/main.cpp
 
 amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @SNDFILE_CFLAGS@ @GTK_CFLAGS@
 
@@ -144,11 +133,6 @@ amsynth_SOURCES += $(libgui_sources) \
 	src/GUI/PresetControllerView.cpp \
 	src/GUI/PresetControllerView.h
 amsynth_LDADD += @GTK_LIBS@
-amsynth_LDFLAGS = $(AM_LDFLAGS)
-endif
-
-if BUILD_WITHOUT_GUI
-amsynth_LDFLAGS = $(AM_LDFLAGS)
 endif
 
 if DARWIN
@@ -158,6 +142,17 @@ amsynth_SOURCES += \
 amsynth_LDFLAGS = $(AM_LDFLAGS) -framework CoreFoundation -framework CoreAudio -framework CoreMIDI
 endif
 
+if BUILD_NSM
+amsynth_SOURCES += \
+	src/nsm/DebugMessage.cpp \
+	src/nsm/DebugMessage.h \
+	src/nsm/NsmClient.cpp \
+	src/nsm/NsmClient.h \
+	src/nsm/NsmHandler.cpp \
+	src/nsm/NsmHandler.h \
+	src/nsm/nsm.h
+amsynth_LDFLAGS = $(AM_LDFLAGS) -llo -loscpack
+endif
 
 #
 # plugins

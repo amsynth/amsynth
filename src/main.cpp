@@ -20,8 +20,6 @@
  */
 
 #include "main.h"
-#include "NsmClient.h"
-#include "NsmHandler.h"
 
 #if HAVE_CONFIG_H
 #include "config.h"
@@ -42,6 +40,11 @@
 #include "Synthesizer.h"
 #include "VoiceAllocationUnit.h"
 #include "VoiceBoard/LowPassFilter.h"
+
+#ifdef WITH_NSM
+#include "nsm/NsmClient.h"
+#include "nsm/NsmHandler.h"
+#endif
 
 #if __APPLE__
 #include "drivers/CoreAudio.h"
@@ -424,9 +427,11 @@ int main( int argc, char *argv[] )
 	amsynth_load_bank(config.current_bank_file.c_str());
 	amsynth_set_preset_number(initial_preset_no);
 
+#ifdef WITH_NSM
 	NsmClient nsmClient(argv[0]);
 	NsmHandler nsmHandler(&nsmClient);
 	nsmClient.Init(PACKAGE_NAME);
+#endif
 
 	if (config.current_tuning_file != "default")
 		amsynth_load_tuning_file(config.current_tuning_file.c_str());

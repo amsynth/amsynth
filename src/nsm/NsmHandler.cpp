@@ -4,11 +4,12 @@
 #include <iostream>
 #include <sstream>
 #include <csignal>
-#include "non/nsm.h"
-#include "NsmHandler.h"
-#include "main.h"
-#include "NsmClient.h"
+
 #include "DebugMessage.h"
+#include "../main.h"
+#include "nsm.h"
+#include "NsmClient.h"
+#include "NsmHandler.h"
 
 using namespace std ;
 

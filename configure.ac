@@ -59,6 +59,17 @@ AC_CHECK_LIB(pthread, pthread_create, [], exit)
 
 AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])])
 
+AC_CHECK_HEADER([oscpack/ip/UdpSocket.h], [
+    AC_CHECK_HEADER([lo/lo.h], [
+        AC_CHECK_LIB([lo], [main], [
+            AC_MSG_RESULT([enabling NSM support])
+            AC_DEFINE([WITH_NSM], [], [Build NSM support])
+            with_nsm="yes"
+        ])
+    ])
+])
+AM_CONDITIONAL([BUILD_NSM], [test "x$with_nsm" == "xyes"])
+
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
 dnl Optional packages
