@@ -27,8 +27,7 @@ private:
     void NsmActive (bool isActive) ;
     void Debug (std::string message) ;
 
-
-    enum class LoadStatus {Ok, NoSuchFile, Error} ;
+    enum LoadStatus {Ok, NoSuchFile, Error} ;
     LoadStatus loadStatus ;
 
     NsmClient *nsmClient ;
