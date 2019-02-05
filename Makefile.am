@@ -19,6 +19,9 @@
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
 AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' -DPACKAGE_LOCALEDIR=\""$(datadir)/locale"\" @CPPFLAGS@ -fPIC -fvisibility=hidden
 
+# amsynth still maintains support for compilers that do not fully support the C++11 standard
+AM_CXXFLAGS = -std=c++98 @CXXFLAGS@
+
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = po

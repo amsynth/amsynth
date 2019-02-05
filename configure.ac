@@ -26,8 +26,6 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([subdir-objects])
 AM_SILENT_RULES([yes])
 
-AX_CXX_COMPILE_STDCXX_11
-
 # make CXXFLAGS inherit from CFLAGS unless CXXFLAGS were specified
 AS_IF([test "x$CXXFLAGS" = "x"], [CXXFLAGS="$CFLAGS"])
 
