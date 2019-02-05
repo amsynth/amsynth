@@ -3,15 +3,13 @@
 #include "nsm.h"
 #include "NsmClient.h"
 
-using namespace std ;
-
 
 NsmClient *NSMClient ;
 
 DebugMessage NsmClient::debugMessage ;
 
 
-void NsmClient::Debug (string message) {
+void NsmClient::Debug (std::string message) {
     debugMessage.SendMessage (message) ;
 }
 
@@ -77,7 +75,7 @@ void NsmClient::setHandlerActiveCallback (void *handlerThis, HandlerActiveCallba
 }
                                                           
 
-NsmClient::NsmClient (string programName) : nsm(0) {
+NsmClient::NsmClient (std::string programName) : nsm(0) {
     NSMClient = this ;
     this->programName = programName ;
 
@@ -86,14 +84,14 @@ NsmClient::NsmClient (string programName) : nsm(0) {
     activeResult = -1 ;
 }
 
-void NsmClient::Init (string programLabel) {
+void NsmClient::Init (std::string programLabel) {
     Debug ("NsmClient: Constructor()\n") ;
 
     const char *nsm_url = getenv("NSM_URL") ;
 
     if (nsm_url) {
         Debug ("nsm_url: ") ;
-        Debug (string(nsm_url)) ;
+        Debug (std::string(nsm_url)) ;
         Debug ("\n") ;
 
         nsm = nsm_new ();
@@ -127,10 +125,10 @@ NsmClient::~NsmClient (void) {
 
 int NsmClient::open (const char* name, const char* displayName, const char* clientId) {
     Debug ("NsmClient: open()\n") ;
-    handlerOpenCallback (openHandlerThis, string(name), string(displayName), string(clientId)) ;
+    handlerOpenCallback (openHandlerThis, std::string(name), std::string(displayName), std::string(clientId)) ;
 
     Debug ("Open Result: ") ;
-    Debug (to_string (openResult)) ;
+    Debug (std::to_string (openResult)) ;
     Debug ("\n") ;
 
     return openResult ;
@@ -141,7 +139,7 @@ int NsmClient::save (void) {
     handlerSaveCallback (saveHandlerThis) ;
 
     Debug ("Save Result: ") ;
-    Debug (to_string (saveResult)) ;
+    Debug (std::to_string (saveResult)) ;
     Debug ("\n") ;
 
     return saveResult ;
@@ -152,6 +150,6 @@ void NsmClient::active (bool isActive) {
     handlerActiveCallback (activeHandlerThis, isActive) ;
 
     Debug ("Active Result: ") ;
-    Debug (to_string (activeResult)) ;
+    Debug (std::to_string (activeResult)) ;
     Debug ("\n") ;
 }

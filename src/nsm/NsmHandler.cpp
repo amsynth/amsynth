@@ -11,8 +11,6 @@
 #include "NsmClient.h"
 #include "NsmHandler.h"
 
-using namespace std ;
-
 
 NsmHandler::NsmHandler( NsmClient *nsmClient) {
     loadStatus = LoadStatus::Ok ;
@@ -48,7 +46,7 @@ void NsmHandler::SaveAll (void) {
 
 
 
-void NsmHandler::SetFilePaths (string Path) {
+void NsmHandler::SetFilePaths (std::string Path) {
     if (!(Path.empty()))  {
         RootPath = BankPath = PresetPath = Path ;
         BankPath.append ("/bank") ;
@@ -65,18 +63,18 @@ void NsmHandler::setNsmClient (NsmClient *client) {
 }
 
 
-void NsmHandler::Debug (string message) {
+void NsmHandler::Debug (std::string message) {
     nsmClient->Debug (message) ;
 }
 
 
-void NsmHandler::NsmOpenCallback (void *This, string Name, string DisplayName, string ClientId) {
+void NsmHandler::NsmOpenCallback (void *This, std::string Name, std::string DisplayName, std::string ClientId) {
     NsmHandler *nsmHandler = (NsmHandler*)This ;
     nsmHandler->NsmOpen (Name, DisplayName, ClientId) ;
 }
 
-void NsmHandler::NsmOpen (string Name, string DisplayName, string ClientId) {
-    stringstream Stream ;
+void NsmHandler::NsmOpen (std::string Name, std::string DisplayName, std::string ClientId) {
+    std::stringstream Stream ;
 
     Stream << "NsmHandler::NsmOpen()\n" ;
     Stream << "Name: " << Name << "\n" ;
@@ -91,7 +89,7 @@ void NsmHandler::NsmOpen (string Name, string DisplayName, string ClientId) {
     // Note mkdir is unix-specific; please add other os versions here for different platforms.
     mkdir (RootPath.c_str(), S_IRUSR | S_IWUSR | S_IXUSR) ;
 
-    ifstream bankStream (BankPath.c_str()) ;
+    std::ifstream bankStream (BankPath.c_str()) ;
 
     if (bankStream.good()) {
         amsynth_load_bank(BankPath.c_str());
@@ -104,7 +102,7 @@ void NsmHandler::NsmOpen (string Name, string DisplayName, string ClientId) {
         loadStatus = LoadStatus::NoSuchFile ;
     }
 
-    ifstream presetStream (PresetPath.c_str()) ;
+    std::ifstream presetStream (PresetPath.c_str()) ;
 
     if (presetStream.good()) {
         int preset_number ;

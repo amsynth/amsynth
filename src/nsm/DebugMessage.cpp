@@ -10,15 +10,13 @@
 
 #define OUTPUT_BUFFER_SIZE 1024
 
-using namespace std ;
-
 DebugMessage::DebugMessage (void) {
 }
 
-void DebugMessage::SendMessage (string message) {
-    list<string>::iterator a ;
-    string::iterator t ;
-    stringstream Stream  ;
+void DebugMessage::SendMessage (std::string message) {
+    std::list<std::string>::iterator a ;
+    std::string::iterator t ;
+    std::stringstream Stream  ;
 
     AddressPattern = "/Message" ;
     TypeTag = "s" ;
@@ -35,7 +33,7 @@ void DebugMessage::SendMessage (string message) {
     p << osc::BeginBundleImmediate << osc::BeginMessage( AddressPattern.c_str() ) ;
 
     for (a=Arguments.begin(), t=TypeTag.begin(); a!=Arguments.end()&&t!=TypeTag.end();) {
-        string Arg ;
+        std::string Arg ;
 
         switch ((*t)) {
             case ',':
@@ -45,13 +43,13 @@ void DebugMessage::SendMessage (string message) {
                 break ;
             }
             case 'T': {
-                cout << "True arg: " << endl ;
+                std::cout << "True arg: " << std::endl ;
                 p << true ;
                 t++ ;
                 break ;
             }
             case 'F': {
-                cout << "False arg: " << endl ;
+                std::cout << "False arg: " << std::endl ;
                 p << false ;
                 t++ ;
                 break ;
@@ -96,7 +94,7 @@ void DebugMessage::SendMessage (string message) {
                 break ;
             }
             case 's': {
-                string s = (*a) ;
+                std::string s = (*a) ;
                 p << s.c_str() ;
                 t++ ;
                 a++ ;
