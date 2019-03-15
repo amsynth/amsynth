@@ -160,6 +160,13 @@ add_executable(amsynth
         src/GUI/MIDILearnDialog.h
         src/GUI/PresetControllerView.cpp
         src/GUI/PresetControllerView.h
+        src/nsm/DebugMessage.cpp
+        src/nsm/DebugMessage.h
+        src/nsm/nsm.h
+        src/nsm/NsmClient.cpp
+        src/nsm/NsmClient.h
+        src/nsm/NsmHandler.cpp
+        src/nsm/NsmHandler.h
         src/AudioOutput.cpp
         src/AudioOutput.h
         src/JackOutput.cpp
@@ -168,12 +175,6 @@ add_executable(amsynth
         src/lash.h
         src/main.cpp
         src/main.h
-        src/DebugMessage.cpp
-        src/DebugMessage.h
-        src/NsmClient.cpp
-        src/NsmClient.h
-        src/NsmHandler.cpp
-        src/NsmHandler.h
         )
 
 target_link_libraries(amsynth
