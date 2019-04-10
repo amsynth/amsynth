@@ -1,0 +1,11 @@
+name: amjson
+
+targets:
+  amjson:
+    type: tool
+    platform: macOS
+    sources:
+      - path: src/amjson.cpp
+      - path: src/Parameter.cpp
+      - path: src/Preset.cpp
+      - path: src/PresetController.cpp
