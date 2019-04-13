@@ -50,6 +50,13 @@ typedef struct
 }
 resource_info;
 
+static void free_resource_info(gpointer data)
+{
+	resource_info * info = (resource_info *)data;
+	g_object_unref(info->pixbuf);
+	g_free(info);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 static gboolean
@@ -72,7 +79,8 @@ editor_pane_expose_event_handler (GtkWidget *widget, gpointer data)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-int deldir (const char *dir_path)
+static int
+deldir (const char *dir_path)
 {
 //	g_assert (dir_path);
 //	gchar *command = g_strdup_printf("rm -r \"%s\"", dir_path);
@@ -82,7 +90,8 @@ int deldir (const char *dir_path)
 	return 0;
 }
 
-gchar *extract_skin (char *skin_file)
+static gchar *
+extract_skin (char *skin_file)
 {
 	gchar *tempdir = g_strconcat(g_get_tmp_dir(), "/amsynth.skin.XXXXXXXX", NULL);
 	if (!mkdtemp(tempdir)) {
@@ -275,7 +284,10 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 			return fixed;
 		}
 	}
-	
+
+	g_free(skin_path);
+	skin_path = NULL;
+
 	{
 		GData *resources = NULL;
 		g_datalist_init (&resources);
@@ -332,9 +344,9 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 				info->fr_width  = width;
 				info->fr_height = height;
 				info->fr_count  = frames;
-				
-				g_datalist_set_data (&resources, resource_name, (gpointer)info);
-				
+
+				g_datalist_set_data_full (&resources, resource_name, (gpointer)info, free_resource_info);
+
 				g_free (file);
 				g_free (path);
 			}
@@ -346,7 +358,7 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 		
 		for (i=0; i<kAmsynthParameterCount; i++)
 		{
-			const gchar *control_name = parameter_name_from_index (i);
+			const gchar *control_name = parameter_name_from_index ((int) i);
 			
 			if (!g_key_file_has_group (gkey_file, control_name)) {
 				g_warning ("layout.ini contains no entry for control '%s'", control_name);
@@ -382,7 +394,7 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 			}
 			else if (g_strcmp0 (KEY_CONTROL_TYPE_POPUP, type) == 0)
 			{
-				const char **value_strings = parameter_get_value_strings(i);
+				const char **value_strings = parameter_get_value_strings((int) i);
 				widget = bitmap_popup_new (adj, res->pixbuf, res->fr_width, res->fr_height, res->fr_count);
 				bitmap_popup_set_strings (widget, value_strings);
 				bitmap_popup_set_bg (widget, subpixpuf);
@@ -404,6 +416,7 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 		}
 		
 		g_key_file_free (gkey_file);
+		g_datalist_clear (&resources);
 	}
 	
 	//deldir (skin_dir);

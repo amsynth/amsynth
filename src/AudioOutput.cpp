@@ -1,5 +1,5 @@
 /*
- *  AudioOutput.cc
+ *  AudioOutput.cpp
  *
  *  Copyright (c) 2001-2016 Nick Dowell
  *
@@ -34,12 +34,11 @@ static AudioDriver * open_driver();
 
 
 AudioOutput::AudioOutput()
-:	buffer (NULL)
-,	driver(NULL)
+:	driver(0)
+,	wavoutfile("/tmp/amSynth.wav")
+,	recording(0)
+,	buffer(0)
 {
-	running = 0;
-	recording = 0;
-	wavoutfile = "/tmp/amSynth.wav";
 }
 
 AudioOutput::~AudioOutput()
@@ -107,7 +106,6 @@ AudioOutput::Start ()
 	if (!(driver = open_driver())) {
 		return false;
 	}
-	driver->setRealtime();
 	if (Thread::Run() != 0) {
 		driver->close();
 		driver = NULL;
@@ -124,6 +122,7 @@ AudioOutput::Stop ()
 
 	if (driver) {
 		driver->close();
+		delete driver;
 		driver = NULL;
 	}
 }

@@ -174,6 +174,7 @@ static void setEventProc(Display *display, Window window)
 #endif
 }
 
+#if DEBUG
 static void gdk_event_handler(GdkEvent *event, gpointer	data)
 {
 	static const char *names[] = {
@@ -219,6 +220,7 @@ static void gdk_event_handler(GdkEvent *event, gpointer	data)
 			names[event->any.type], event->any.window, event->any.send_event);
 	gtk_main_do_event(event);
 }
+#endif // DEBUG
 
 #endif // WITH_GUI
 
@@ -474,10 +476,13 @@ static float getParameter(AEffect *effect, int i)
 	return plugin->synthesizer->getNormalizedParameterValue((Param) i);
 }
 
+extern "C"
 #if _WIN32
 __declspec(dllexport)
+#else
+__attribute__((visibility("default")))
 #endif
-extern "C" AEffect * VSTPluginMain(audioMasterCallback audioMaster)
+AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 {
 #if DEBUG
 	if (!logFile) {

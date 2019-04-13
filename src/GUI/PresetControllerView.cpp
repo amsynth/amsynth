@@ -1,5 +1,5 @@
 /*
- *  PresetControllerView.cc
+ *  PresetControllerView.cpp
  *
  *  Copyright (c) 2001-2012 Nick Dowell
  *
@@ -37,7 +37,7 @@ static void snprintf_truncate(char *str, size_t size, const char *format, ...)
 {
 	va_list va_args;
 	va_start(va_args, format);
-	int count = vsnprintf(str, size, format, va_args);
+	size_t count = vsnprintf(str, size, format, va_args);
 	va_end(va_args);
 	if (count >= size - 1)
 		strcpy(str + size - 4, "...");
@@ -50,7 +50,7 @@ public:
 
 	virtual void setPresetController(PresetController *presetController);
 	virtual void update();
-	virtual int getAuditionNote();
+	virtual unsigned char getAuditionNote();
 	virtual GtkWidget * getWidget() { return widget; }
 
 private:
@@ -71,7 +71,7 @@ private:
 	GtkWidget *combo;
 	GtkWidget *save_button;
 	GtkWidget *audition_spin;
-	int audition_note;
+	unsigned char audition_note;
 	bool inhibit_combo_callback;
     bool audition_button_pressed;
 };
@@ -236,13 +236,13 @@ void PresetControllerViewImpl::update()
 	gtk_list_store_clear (GTK_LIST_STORE (gtk_combo_box_get_model (GTK_COMBO_BOX (bank_combo))));
 	for (size_t i=0; i<banks.size(); i++) {
 		snprintf_truncate (text, sizeof(text), "[%s] %s", banks[i].read_only ? _("F") : _("U"), banks[i].name.c_str());
-		gtk_combo_box_insert_text (GTK_COMBO_BOX (bank_combo), i, text);
+		gtk_combo_box_insert_text (GTK_COMBO_BOX (bank_combo), (gint) i, text);
 	}
 
 	const std::string current_file_path = presetController->getFilePath();
 	for (size_t i=0; i<banks.size(); i++) {
 		if (current_file_path == banks[i].file_path) {
-			gtk_combo_box_set_active (GTK_COMBO_BOX (bank_combo), i);
+			gtk_combo_box_set_active (GTK_COMBO_BOX (bank_combo), (gint) i);
 			gtk_widget_set_sensitive (save_button, !banks[i].read_only);
 		}
 	}
@@ -263,9 +263,9 @@ void PresetControllerViewImpl::update()
 	inhibit_combo_callback = false;
 }
 
-int PresetControllerViewImpl::getAuditionNote()
+unsigned char PresetControllerViewImpl::getAuditionNote()
 {
-	audition_note = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(audition_spin));
+	audition_note = (unsigned char) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(audition_spin));
 	return audition_note;
 }
 

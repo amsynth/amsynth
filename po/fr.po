@@ -1,6 +1,6 @@
 # French translation for amsynth
 # Traduction française pour amsynth
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2016-2017 Olivier Humbert <trebmuh@tuxfamily.org>
 # This file is distributed under the same license as the amsynth package.
 # Olivier Humbert <trebmuh@tuxfamily.org>, 2016-2017.
 #
@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-24 11:36+0100\n"
-"PO-Revision-Date: 2017-01-14 17:42+0100\n"
+"POT-Creation-Date: 2017-07-17 18:26+0100\n"
+"PO-Revision-Date: 2017-11-25 00:30+0100\n"
 "Last-Translator: Olivier Humbert <trebmuh@tuxfamily.org>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../data/amsynth.appdata.xml.in.h:1 ../src/GUI/MainMenu.cpp:652
+#: ../data/amsynth.appdata.xml.in.h:1 ../src/GUI/MainMenu.cpp:655
 msgid "Analog Modelling SYNTHesizer"
 msgstr "Synthétiseur modelant de l'analogique"
 
@@ -96,31 +96,28 @@ msgid "VST plug-in"
 msgstr "greffon VST"
 
 #: ../data/dssi-amsynth-plugin.metainfo.xml.in.h:1
-#, fuzzy
 msgid "DSSI plugin"
 msgstr "greffon DSSI"
 
 #: ../data/dssi-amsynth-plugin.metainfo.xml.in.h:2
 msgid "Plugin for the DSSI audio API"
-msgstr ""
+msgstr "Greffon pour l'API audio DSSI"
 
 #: ../data/lv2-amsynth-plugin.metainfo.xml.in.h:1
-#, fuzzy
-msgid "lv2 plugin"
+msgid "LV2 plugin"
 msgstr "greffon LV2"
 
 #: ../data/lv2-amsynth-plugin.metainfo.xml.in.h:2
 msgid "Plugin for the LV2 audio standard"
-msgstr ""
+msgstr "Greffon pour le standard audio LV2"
 
 #: ../data/vst-amsynth-plugin.metainfo.xml.in.h:1
-#, fuzzy
 msgid "VST plugin"
 msgstr "greffon VST"
 
 #: ../data/vst-amsynth-plugin.metainfo.xml.in.h:2
-msgid "Amsynth plugin for the VST protocol"
-msgstr ""
+msgid "Plugin for the VST protocol"
+msgstr "Greffon pour le protocole VST"
 
 #: ../src/GUI/ConfigDialog.cpp:60
 msgid "amsynth configuration"
@@ -154,326 +151,297 @@ msgstr "Taux d'échantillonnage"
 msgid "Changes take effect after restarting amsynth"
 msgstr "Les modifications prendront effet après avoir redémarré amsynth"
 
-#: ../src/GUI/editor_menus.cpp:68
+#: ../src/GUI/editor_menus.cpp:74
 msgid "MIDI Learn..."
 msgstr "Apprentissage MIDI..."
 
-#: ../src/GUI/editor_menus.cpp:72
+#: ../src/GUI/editor_menus.cpp:78
 msgid "Ignore Preset Value"
 msgstr "Ignorer la valeur de pré-réglage"
 
-#: ../src/GUI/editor_menus.cpp:109 ../src/GUI/PresetControllerView.cc:238
+#: ../src/GUI/editor_menus.cpp:115 ../src/GUI/PresetControllerView.cpp:238
 msgid "F"
 msgstr "F"
 
-#: ../src/GUI/editor_menus.cpp:109 ../src/GUI/PresetControllerView.cc:238
+#: ../src/GUI/editor_menus.cpp:115 ../src/GUI/PresetControllerView.cpp:238
 msgid "U"
 msgstr "U"
 
-#: ../src/GUI/editor_menus.cpp:159
-#, fuzzy
+#: ../src/GUI/editor_menus.cpp:165
 msgid "Preset"
-msgstr "_Pré-réglage"
+msgstr "Pré-réglage"
 
-#: ../src/GUI/editor_menus.cpp:161
+#: ../src/GUI/editor_menus.cpp:167
 msgid "Tuning"
-msgstr ""
+msgstr "Accordage"
 
-#: ../src/GUI/editor_menus.cpp:163 ../src/GUI/MainMenu.cpp:140
+#: ../src/GUI/editor_menus.cpp:169 ../src/GUI/MainMenu.cpp:143
 msgid "Open Alternate Tuning File..."
 msgstr "Ouvrir un fichier d'accordage alternatif..."
 
-#: ../src/GUI/editor_menus.cpp:164 ../src/GUI/MainMenu.cpp:141
+#: ../src/GUI/editor_menus.cpp:170 ../src/GUI/MainMenu.cpp:144
 msgid "Open Alternate Keyboard Map..."
 msgstr "Ouvrir une carte de clavier alternative..."
 
-#: ../src/GUI/editor_menus.cpp:165 ../src/GUI/MainMenu.cpp:142
-#: ../src/GUI/MainMenu.cpp:226
+#: ../src/GUI/editor_menus.cpp:171 ../src/GUI/MainMenu.cpp:145
+#: ../src/GUI/MainMenu.cpp:229
 msgid "Reset All Tuning Settings to Default"
 msgstr "Réinitialiser tous les paramètres d'accordage par défaut"
 
-#: ../src/GUI/editor_menus.cpp:210
+#: ../src/GUI/editor_menus.cpp:203 ../src/GUI/MainMenu.cpp:198
 msgid "Open Scala (.scl) alternate tuning file"
 msgstr "Ouvrir un fichier d'accordage alternatif Scala (.scl)"
 
-#: ../src/GUI/editor_menus.cpp:211 ../src/GUI/MainMenu.cpp:195
+#: ../src/GUI/editor_menus.cpp:204 ../src/GUI/MainMenu.cpp:198
 msgid "Scala scale files"
 msgstr "fichiers de gamme Scala"
 
-#: ../src/GUI/editor_menus.cpp:217 ../src/GUI/MainMenu.cpp:199
+#: ../src/GUI/editor_menus.cpp:210 ../src/GUI/MainMenu.cpp:202
 msgid "Failed to load new tuning."
 msgstr "Échec du chargement d'un nouvel accordage."
 
-#: ../src/GUI/editor_menus.cpp:218
-#, fuzzy
+#: ../src/GUI/editor_menus.cpp:211 ../src/GUI/MainMenu.cpp:203
 msgid ""
-"Reading the tuning file failed for some reason. \n"
+"Reading the tuning file failed for some reason.\n"
 "Make sure your file has the correct format and try again."
 msgstr ""
-"La lecture du fichier d'accordage a échouée pour une raison ou une autre. "
+"La lecture du fichier d'accordage a échouée pour une raison quelconque.\n"
 "Assurez-vous que votre fichier possède le format correct et ré-essayez."
 
-#: ../src/GUI/editor_menus.cpp:231
+#: ../src/GUI/editor_menus.cpp:224 ../src/GUI/MainMenu.cpp:211
 msgid "Open alternate keyboard map (Scala .kbm format)"
 msgstr "Ouvrir une carte de clavier alternative (format Scala .kbm)"
 
-#: ../src/GUI/editor_menus.cpp:232 ../src/GUI/MainMenu.cpp:208
+#: ../src/GUI/editor_menus.cpp:225 ../src/GUI/MainMenu.cpp:211
 msgid "Scala keyboard map files"
 msgstr "fichiers de carte de clavier Scala"
 
-#: ../src/GUI/editor_menus.cpp:238 ../src/GUI/MainMenu.cpp:212
+#: ../src/GUI/editor_menus.cpp:231 ../src/GUI/MainMenu.cpp:215
 msgid "Failed to load new keyboard map."
 msgstr "Échec du chargement d'une nouvelle carte de clavier."
 
-#: ../src/GUI/editor_menus.cpp:239
-#, fuzzy
+#: ../src/GUI/editor_menus.cpp:232 ../src/GUI/MainMenu.cpp:216
 msgid ""
-"Reading the keyboard map file failed for some reason. \n"
+"Reading the keyboard map file failed for some reason.\n"
 "Make sure your file has the correct format and try again."
 msgstr ""
-"La lecture du fichier de carte de clavier a échouée pour une raison ou une "
-"autre.Assurez-vous que votre fichier possède le format correct et ré-essayez."
+"La lecture du fichier de carte de clavier a échouée pour une raison "
+"quelconque.\n"
+"Assurez-vous que votre fichier possède le format correct et ré-essayez."
 
-#: ../src/GUI/MainMenu.cpp:132
+#: ../src/GUI/MainMenu.cpp:135
 msgid "New Instance"
 msgstr "Nouvelle instance"
 
-#: ../src/GUI/MainMenu.cpp:136
+#: ../src/GUI/MainMenu.cpp:139
 msgid "_Open Bank..."
 msgstr "_Ouvrir une banque..."
 
-#: ../src/GUI/MainMenu.cpp:137
+#: ../src/GUI/MainMenu.cpp:140
 msgid "_Save Bank As..."
 msgstr "_Sauvegarder une banque sous..."
 
-#: ../src/GUI/MainMenu.cpp:145
+#: ../src/GUI/MainMenu.cpp:148
 msgid "_Quit"
 msgstr "_Quitter"
 
-#: ../src/GUI/MainMenu.cpp:160
+#: ../src/GUI/MainMenu.cpp:163
 msgid "Open Bank"
 msgstr "Ouvrir une banque"
 
-#: ../src/GUI/MainMenu.cpp:171
+#: ../src/GUI/MainMenu.cpp:174
 msgid "Save Bank"
 msgstr "Sauvegarder une banque"
 
-#: ../src/GUI/MainMenu.cpp:179
+#: ../src/GUI/MainMenu.cpp:182
 msgid "new.bank"
 msgstr "nouvelle.banque"
 
-#: ../src/GUI/MainMenu.cpp:195
-#, fuzzy
-msgid "Open Scala(.scl) alternate tuning file"
-msgstr "Ouvrir un fichier d'accordage alternatif Scala (.scl)"
-
-#: ../src/GUI/MainMenu.cpp:200
-msgid ""
-"Reading the tuning file failed for some reason. Make sure your file has the "
-"correct format and try again."
-msgstr ""
-"La lecture du fichier d'accordage a échouée pour une raison ou une autre. "
-"Assurez-vous que votre fichier possède le format correct et ré-essayez."
-
-#: ../src/GUI/MainMenu.cpp:208
-#, fuzzy
-msgid "Open alternate keyboard map(Scala .kbm format)"
-msgstr "Ouvrir une carte de clavier alternative (format Scala .kbm)"
-
-#: ../src/GUI/MainMenu.cpp:213
-msgid ""
-"Reading the keyboard map file failed for some reason. Make sure your file "
-"has the correct format and try again."
-msgstr ""
-"La lecture du fichier de carte de clavier a échouée pour une raison ou une "
-"autre.Assurez-vous que votre fichier possède le format correct et ré-essayez."
-
-#: ../src/GUI/MainMenu.cpp:230
+#: ../src/GUI/MainMenu.cpp:233
 msgid "Discard the current scale and keyboard map?"
 msgstr "Abandonner la gamme et la carte du clavier actuelles ?"
 
-#: ../src/GUI/MainMenu.cpp:263
+#: ../src/GUI/MainMenu.cpp:266
 msgid "_Copy"
 msgstr "_Copie"
 
-#: ../src/GUI/MainMenu.cpp:264
+#: ../src/GUI/MainMenu.cpp:267
 msgid "_Paste"
 msgstr "Col_ler"
 
-#: ../src/GUI/MainMenu.cpp:267
+#: ../src/GUI/MainMenu.cpp:270
 msgid "Rename..."
 msgstr "Renommer..."
 
-#: ../src/GUI/MainMenu.cpp:268
+#: ../src/GUI/MainMenu.cpp:271
 msgid "Clear"
 msgstr "Nettoyer"
 
-#: ../src/GUI/MainMenu.cpp:271
+#: ../src/GUI/MainMenu.cpp:274
 msgid "_Randomise"
 msgstr "Aléat_oire"
 
-#: ../src/GUI/MainMenu.cpp:272
+#: ../src/GUI/MainMenu.cpp:275
 msgid "Undo"
 msgstr "_Annuler"
 
-#: ../src/GUI/MainMenu.cpp:273
+#: ../src/GUI/MainMenu.cpp:276
 msgid "Redo"
 msgstr "_Refaire"
 
-#: ../src/GUI/MainMenu.cpp:276
+#: ../src/GUI/MainMenu.cpp:279
 msgid "Import Preset..."
 msgstr "Importer un pré-réglage..."
 
-#: ../src/GUI/MainMenu.cpp:277
+#: ../src/GUI/MainMenu.cpp:280
 msgid "Export Preset..."
 msgstr "Exporter un pré-réglage..."
 
-#: ../src/GUI/MainMenu.cpp:315
+#: ../src/GUI/MainMenu.cpp:318
 msgid "Rename Preset"
 msgstr "Renommer le pré-réglage"
 
-#: ../src/GUI/MainMenu.cpp:323
+#: ../src/GUI/MainMenu.cpp:326
 msgid "Enter new Preset Name:"
 msgstr "Entrer le nom du nouveau pré-réglage :"
 
-#: ../src/GUI/MainMenu.cpp:349
+#: ../src/GUI/MainMenu.cpp:352
 msgid "Clear current preset?"
 msgstr "Effacer le pré-réglage actuel ?"
 
-#: ../src/GUI/MainMenu.cpp:353
+#: ../src/GUI/MainMenu.cpp:356
 msgid "Parameters will be set to default values and the name will be cleared"
 msgstr ""
 "Les paramètres seront réinitialisés aux valeurs par défaut et le nom sera "
 "effacé"
 
-#: ../src/GUI/MainMenu.cpp:380
+#: ../src/GUI/MainMenu.cpp:383
 msgid "Import Preset"
 msgstr "Importer un pré-réglage"
 
-#: ../src/GUI/MainMenu.cpp:380
+#: ../src/GUI/MainMenu.cpp:383
 msgid "amsynth 1.x files"
 msgstr "fichiers amsynth 1.x files"
 
-#: ../src/GUI/MainMenu.cpp:389
+#: ../src/GUI/MainMenu.cpp:392
 msgid "Export Preset"
 msgstr "Exporter un pré-réglage"
 
-#: ../src/GUI/MainMenu.cpp:410
+#: ../src/GUI/MainMenu.cpp:413
 msgid "All"
 msgstr "Tous"
 
-#: ../src/GUI/MainMenu.cpp:418
+#: ../src/GUI/MainMenu.cpp:421
 msgid "MIDI Channel"
 msgstr "Canal MIDI"
 
-#: ../src/GUI/MainMenu.cpp:428
+#: ../src/GUI/MainMenu.cpp:431
 msgid "Unlimited"
 msgstr "Illimitée"
 
-#: ../src/GUI/MainMenu.cpp:436
+#: ../src/GUI/MainMenu.cpp:439
 msgid "Max. Polyphony"
 msgstr "Polyphonie maximum"
 
-#: ../src/GUI/MainMenu.cpp:446
+#: ../src/GUI/MainMenu.cpp:449
 msgid " Semitones"
 msgstr " demi-tons"
 
-#: ../src/GUI/MainMenu.cpp:454
+#: ../src/GUI/MainMenu.cpp:457
 msgid "Pitch Bend Range"
 msgstr "Plage de la modulation de hauteur tonale"
 
-#: ../src/GUI/MainMenu.cpp:456
+#: ../src/GUI/MainMenu.cpp:459
 msgid "Audio & MIDI..."
 msgstr "Audio & MIDI..."
 
 #. @translators: This is an application name and its abbreviation
-#: ../src/GUI/MainMenu.cpp:524
+#: ../src/GUI/MainMenu.cpp:527
 msgid "Virtual Keyboard (vkeybd)"
 msgstr "Clavier virtuel (vkeybd)"
 
 #. @translators: This is an application name and its abbreviation
-#: ../src/GUI/MainMenu.cpp:529
+#: ../src/GUI/MainMenu.cpp:532
 msgid "Virtual MIDI Piano Keyboard (VMPK)"
 msgstr "Clavier virtuel de piano MIDI (VMPK)"
 
-#: ../src/GUI/MainMenu.cpp:533
+#: ../src/GUI/MainMenu.cpp:536
 msgid "Virtual Keyboards"
 msgstr "Claviers virtuels"
 
-#: ../src/GUI/MainMenu.cpp:551
+#: ../src/GUI/MainMenu.cpp:554
 msgid "MIDI (ALSA) connections"
 msgstr "Connexions MIDI (ALSA)"
 
-#: ../src/GUI/MainMenu.cpp:571
+#: ../src/GUI/MainMenu.cpp:574
 msgid "Audio (JACK) connections"
 msgstr "Connexions audio (JACK)"
 
-#: ../src/GUI/MainMenu.cpp:616
+#: ../src/GUI/MainMenu.cpp:619
 msgid "About"
 msgstr "À propos"
 
-#: ../src/GUI/MainMenu.cpp:617
+#: ../src/GUI/MainMenu.cpp:620
 msgid "Report a Bug"
 msgstr "Remonter un bogue"
 
-#: ../src/GUI/MainMenu.cpp:618
+#: ../src/GUI/MainMenu.cpp:621
 msgid "Online Documentation"
 msgstr "Documentation en ligne"
 
-#: ../src/GUI/MainMenu.cpp:654
-#, fuzzy
+#: ../src/GUI/MainMenu.cpp:657
 msgid "Copyright © 2002 - 2017 Nick Dowell and contributors"
-msgstr "Copyright © 2002 - 2016 Nick Dowell et contributeurs"
+msgstr "Copyright © 2002 - 2017 Nick Dowell et contributeurs"
 
-#: ../src/GUI/MainMenu.cpp:662
+#: ../src/GUI/MainMenu.cpp:665
 msgid "Could not show link"
 msgstr "Ne peut pas montrer le lien"
 
-#: ../src/GUI/MainMenu.cpp:673
+#: ../src/GUI/MainMenu.cpp:676
 msgid "_File"
 msgstr "_Fichier"
 
-#: ../src/GUI/MainMenu.cpp:674
+#: ../src/GUI/MainMenu.cpp:677
 msgid "_Preset"
 msgstr "_Pré-réglage"
 
-#: ../src/GUI/MainMenu.cpp:675
+#: ../src/GUI/MainMenu.cpp:678
 msgid "_Config"
 msgstr "_Configuration"
 
-#: ../src/GUI/MainMenu.cpp:676
+#: ../src/GUI/MainMenu.cpp:679
 msgid "_Utils"
 msgstr "_Utilitaires"
 
-#: ../src/GUI/MainMenu.cpp:677
+#: ../src/GUI/MainMenu.cpp:680
 msgid "_Help"
 msgstr "_Aide"
 
-#: ../src/GUI/MainWindow.cpp:67
+#: ../src/GUI/MainWindow.cpp:68
 #, c-format
 msgid "Audio: %s @ %d  MIDI: %s"
 msgstr "Audio : %s @ %d  MIDI : %s"
 
-#: ../src/GUI/MainWindow.cpp:176
-msgid "<b>Save changes before closing?</b>"
-msgstr "<b>Sauvegarder les modifications avant de quitter ?</b>"
+#: ../src/GUI/MainWindow.cpp:182
+msgid "Save changes before closing?"
+msgstr "Sauvegarder les modifications avant de quitter ?"
 
-#: ../src/GUI/MainWindow.cpp:178
+#: ../src/GUI/MainWindow.cpp:184
 msgid "Close _Without Saving"
 msgstr "Fermer _sans sauvegarder"
 
-#: ../src/GUI/MainWindow.cpp:182
+#: ../src/GUI/MainWindow.cpp:188
 msgid ""
 "If you don't save, changes to the current preset will be permanently lost."
 msgstr ""
 "Si vous ne sauvegardez pas, les modifications des pré-réglages actuels "
 "seront perdues définitivement."
 
-#: ../src/GUI/MainWindow.cpp:260 ../src/GUI/MainWindow.cpp:267
+#: ../src/GUI/MainWindow.cpp:265 ../src/GUI/MainWindow.cpp:272
 msgid "amsynth configuration error"
 msgstr "erreur de configuration d'amsynth"
 
-#: ../src/GUI/MainWindow.cpp:261
+#: ../src/GUI/MainWindow.cpp:266
 msgid ""
 "amsynth could not initialise the selected audio device.\n"
 "\n"
@@ -483,7 +451,7 @@ msgstr ""
 "\n"
 "Veuillez revoir la configuration et redémarrer"
 
-#: ../src/GUI/MainWindow.cpp:268
+#: ../src/GUI/MainWindow.cpp:273
 msgid ""
 "amsynth could not initialise the selected MIDI device.\n"
 "\n"
@@ -497,7 +465,7 @@ msgstr ""
 msgid "MIDI Learn"
 msgstr "Apprentissage MIDI"
 
-#: ../src/GUI/MIDILearnDialog.cpp:47 ../src/GUI/MIDILearnDialog.cpp:102
+#: ../src/GUI/MIDILearnDialog.cpp:47
 msgid "None"
 msgstr "Aucun"
 
@@ -509,135 +477,135 @@ msgstr "Paramètre du synthétiseur :"
 msgid "MIDI Controller"
 msgstr "Contrôleur MIDI"
 
-#: ../src/GUI/PresetControllerView.cc:122
+#: ../src/GUI/PresetControllerView.cpp:122
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: ../src/GUI/PresetControllerView.cc:130
+#: ../src/GUI/PresetControllerView.cpp:130
 msgid "Audition"
 msgstr "Audition"
 
-#: ../src/GUI/PresetControllerView.cc:145
+#: ../src/GUI/PresetControllerView.cpp:145
 msgid "Panic"
 msgstr "Panique"
 
-#: ../src/main.cc:86
+#: ../src/main.cpp:87
 msgid "Failed to set SCHED_FIFO\n"
 msgstr "Échec de paramètrage SCHED_FIFO\n"
 
-#: ../src/main.cc:105
+#: ../src/main.cpp:106
 #, c-format
 msgid "error reading source file %s\n"
 msgstr "erreur de la lecture du fichier source %s\n"
 
-#: ../src/main.cc:110
+#: ../src/main.cpp:111
 #, c-format
 msgid "error creating destination file %s\n"
 msgstr "erreur de la création du fichier de destination %s\n"
 
-#: ../src/main.cc:145
+#: ../src/main.cpp:146
 #, c-format
 msgid "installing configuration file to %s\n"
 msgstr "installation du fichier de configuration dans %s\n"
 
-#: ../src/main.cc:150
+#: ../src/main.cpp:151
 #, c-format
 msgid "installing default sound bank to %s\n"
 msgstr "installation de la banque de son par défaut dans %s\n"
 
-#: ../src/main.cc:210
+#: ../src/main.cpp:211
 msgid "JACK init failed: "
 msgstr "échec de l'initialisation de JACK : "
 
-#: ../src/main.cc:236
+#: ../src/main.cpp:237
 msgid "error: could not open ALSA MIDI interface"
 msgstr "erreur : n'a pas pu ouvrir l'interface MIDI ALSA"
 
-#: ../src/main.cc:243
+#: ../src/main.cpp:244
 msgid "error: could not open OSS MIDI interface"
 msgstr "erreur : n'a pas pu ouvrir l'interface MIDI OSS"
 
-#: ../src/main.cc:252
+#: ../src/main.cpp:253
 msgid "error: could not open any MIDI interface"
 msgstr "erreur : n'a pu ouvrir aucune interface MIDI"
 
-#: ../src/main.cc:315
+#: ../src/main.cpp:316
 msgid "usage: "
 msgstr "utilisation : "
 
-#: ../src/main.cc:315
+#: ../src/main.cpp:316
 msgid " [options]"
 msgstr " [options]"
 
-#: ../src/main.cc:317
+#: ../src/main.cpp:318
 msgid ""
 "Any options given here override those in the config file ($HOME/.amSynthrc)"
 msgstr ""
 "Toute option donnée ici écrase celle du fichier de configuration ($HOME/."
 "amSynthrc)"
 
-#: ../src/main.cc:319
+#: ../src/main.cpp:320
 msgid "OPTIONS:"
 msgstr "OPTIONS :"
 
-#: ../src/main.cc:321
+#: ../src/main.cpp:322
 msgid "\t-h          show this usage message"
 msgstr "\t-h          affiche ce message d'aide"
 
-#: ../src/main.cc:322
+#: ../src/main.cpp:323
 msgid "\t-v          show version information"
 msgstr "\t-v          affiche les informations de version"
 
-#: ../src/main.cc:323
+#: ../src/main.cpp:324
 msgid "\t-x          run in headless mode (without GUI)"
 msgstr "\t-x          lancer en mode sans-interface-graphique"
 
-#: ../src/main.cc:325
+#: ../src/main.cpp:326
 msgid "\t-b <file>   use <file> as the bank to store presets"
 msgstr ""
 "\t-b <nom_de_fichier>   utilise <nom_de_fichier> en tant que banque pour "
 "sauvegarder les pré-réglages"
 
-#: ../src/main.cc:326
+#: ../src/main.cpp:327
 msgid "\t-t <file>   use <file> as a tuning file"
 msgstr ""
 "\t-t <nom_de_fichier>   utilise <nom_de_fichier> en tant que fichier "
 "d'accordage"
 
-#: ../src/main.cc:328
+#: ../src/main.cpp:329
 msgid ""
 "\t-a <string> set the sound output driver to use [alsa/oss/auto(default)]"
 msgstr ""
 "\t-a <chaîne_de_caractères> paramètre le pilote de sortie son à utiliser "
 "[alsa/oss/auto(défaut)]"
 
-#: ../src/main.cc:329
+#: ../src/main.cpp:330
 msgid "\t-r <int>    set the sampling rate to use"
 msgstr "\t-r <entier>    paramètre le taux d'échantillonnage à utiliser"
 
-#: ../src/main.cc:330
+#: ../src/main.cpp:331
 msgid "\t-m <string> set the MIDI driver to use [alsa/oss/auto(default)]"
 msgstr ""
 "\t-m <chaîne_de_caractères> paramètre le pilote MIDI à utiliser [alsa/oss/"
 "auto(défaut)]"
 
-#: ../src/main.cc:331
+#: ../src/main.cpp:332
 msgid "\t-c <int>    set the MIDI channel to respond to (default=all)"
 msgstr "\t-c <entier>    paramètre le canal MIDI auquel répondre (défaut=tous)"
 
-#: ../src/main.cc:332
+#: ../src/main.cpp:333
 msgid "\t-p <int>    set the polyphony (maximum active voices)"
 msgstr "\t-p <entier>    paramètre la polyphonie (voix actives maximum)"
 
-#: ../src/main.cc:334
+#: ../src/main.cpp:335
 msgid "\t-n <name>   specify the JACK client name to use"
 msgstr "\t-n <nom>   spécifie le nom de client JACK à utiliser"
 
-#: ../src/main.cc:335
+#: ../src/main.cpp:336
 msgid "\t--jack_autoconnect[=<true|false>]"
 msgstr "\t--jack_autoconnect[=<true|false>]"
 
-#: ../src/main.cc:336
+#: ../src/main.cpp:337
 msgid ""
 "\t            automatically connect jack audio ports to hardware I/O ports. "
 "(Default: true)"
@@ -645,139 +613,163 @@ msgstr ""
 "\t            connecter automatiquement les ports audio jack aux ports "
 "d'entrées/sorties matériels. (par défaut : true)"
 
-#: ../src/main.cc:410
+#: ../src/main.cpp:411
 msgid "Fatal Error: open_audio() returned NULL.\n"
 msgstr "Erreur fatale : open_audio() a retourné NULL.\n"
 
-#: ../src/main.cc:458
+#: ../src/main.cpp:458
 #, c-format
 msgid "amsynth running in headless mode, press ctrl-c to exit\n"
 msgstr ""
 "amsynth est lancé en mode sans-interface-graphique, pressez ctrl-c pour "
 "quitter\n"
 
-#: ../src/main.cc:463
+#: ../src/main.cpp:463
 #, c-format
 msgid "shutting down...\n"
 msgstr "en train de quitter...\n"
 
-#: ../src/main.cc:470
+#: ../src/main.cpp:470
 msgid " audio buffer underruns occurred\n"
 msgstr " décrochage audio du tampon audio est arrivé\n"
 
-#: ../src/main.cc:564
+#: ../src/main.cpp:564
 msgid "error: could not load tuning file "
 msgstr "erreur : échec du chargement du fichier d'accordage "
 
-#: ../src/main.cc:626
+#: ../src/main.cpp:626
 #, c-format
 msgid "user time: %f\t\tsystem time: %f\n"
 msgstr "temps utilisateur : %f\t\ttemps système : %f\n"
 
-#: ../src/main.cc:627
+#: ../src/main.cpp:627
 #, c-format
 msgid "performance index: %f\n"
 msgstr "index de performance : %f\n"
 
-#: ../src/Preset.cc:324 ../src/Preset.cc:334
+#: ../src/Preset.cpp:324 ../src/Preset.cpp:334
 msgid "sine"
 msgstr "sinusoïde"
 
-#: ../src/Preset.cc:325
+#: ../src/Preset.cpp:325
 msgid "square / pulse"
 msgstr "carré / pulsation"
 
-#: ../src/Preset.cc:326
+#: ../src/Preset.cpp:326
 msgid "triangle / saw"
 msgstr "triangle / dent-de-scie"
 
-#: ../src/Preset.cc:327
+#: ../src/Preset.cpp:327
 msgid "white noise"
 msgstr "bruit blanc"
 
-#: ../src/Preset.cc:328 ../src/Preset.cc:338
+#: ../src/Preset.cpp:328 ../src/Preset.cpp:338
 msgid "noise + sample & hold"
 msgstr "bruit + échantillon & maintien"
 
-#: ../src/Preset.cc:335
+#: ../src/Preset.cpp:335
 msgid "square"
 msgstr "carré"
 
-#: ../src/Preset.cc:336
+#: ../src/Preset.cpp:336
 msgid "triangle"
 msgstr "triangle"
 
-#: ../src/Preset.cc:337
+#: ../src/Preset.cpp:337
 msgid "noise"
 msgstr "bruit"
 
-#: ../src/Preset.cc:339
+#: ../src/Preset.cpp:339
 msgid "sawtooth (up)"
 msgstr "dent-de-scie (vers le haut)"
 
-#: ../src/Preset.cc:340
+#: ../src/Preset.cpp:340
 msgid "sawtooth (down)"
 msgstr "dent-de-scie (vers le bas)"
 
-#: ../src/Preset.cc:346
+#: ../src/Preset.cpp:346
 msgid "poly"
 msgstr "poly"
 
-#: ../src/Preset.cc:347
+#: ../src/Preset.cpp:347
 msgid "mono"
 msgstr "mono"
 
-#: ../src/Preset.cc:348 ../src/Preset.cc:380
+#: ../src/Preset.cpp:348 ../src/Preset.cpp:380
 msgid "legato"
 msgstr "legato"
 
-#: ../src/Preset.cc:354
+#: ../src/Preset.cpp:354
 msgid "low pass"
 msgstr "passe-bas"
 
-#: ../src/Preset.cc:355
+#: ../src/Preset.cpp:355
 msgid "high pass"
 msgstr "passe-haut"
 
-#: ../src/Preset.cc:356
+#: ../src/Preset.cpp:356
 msgid "band pass"
 msgstr "passe-bande"
 
-#: ../src/Preset.cc:357
+#: ../src/Preset.cpp:357
 msgid "notch"
 msgstr "à encoche"
 
-#: ../src/Preset.cc:358
+#: ../src/Preset.cpp:358
 msgid "bypass"
 msgstr "court-circuit"
 
-#: ../src/Preset.cc:364
+#: ../src/Preset.cpp:364
 msgid "12 dB / octave"
 msgstr "12 dB / octave"
 
-#: ../src/Preset.cc:365
+#: ../src/Preset.cpp:365
 msgid "24 dB / octave"
 msgstr "24 dB / octave"
 
-#: ../src/Preset.cc:371
+#: ../src/Preset.cpp:371
 msgid "osc 1+2"
 msgstr "osc 1+2"
 
-#: ../src/Preset.cc:372
+#: ../src/Preset.cpp:372
 msgid "osc 1"
 msgstr "osc 1"
 
-#: ../src/Preset.cc:373
+#: ../src/Preset.cpp:373
 msgid "osc 2"
 msgstr "osc 2"
 
-#: ../src/Preset.cc:379
+#: ../src/Preset.cpp:379
 msgid "always"
 msgstr "toujours"
 
-#: ../src/PresetController.cc:415
+#: ../src/PresetController.cpp:415
 msgid "User bank"
 msgstr "Banque utilisateur"
+
+#~ msgid "lv2 plugin"
+#~ msgstr "greffon LV2"
+
+#~ msgid "Open Scala(.scl) alternate tuning file"
+#~ msgstr "Ouvrir un fichier d'accordage alternatif Scala (.scl)"
+
+#~ msgid ""
+#~ "Reading the tuning file failed for some reason. Make sure your file has "
+#~ "the correct format and try again."
+#~ msgstr ""
+#~ "La lecture du fichier d'accordage a échouée pour une raison ou une autre. "
+#~ "Assurez-vous que votre fichier possède le format correct et ré-essayez."
+
+#~ msgid "Open alternate keyboard map(Scala .kbm format)"
+#~ msgstr "Ouvrir une carte de clavier alternative (format Scala .kbm)"
+
+#~ msgid ""
+#~ "Reading the keyboard map file failed for some reason. Make sure your file "
+#~ "has the correct format and try again."
+#~ msgstr ""
+#~ "La lecture du fichier de carte de clavier a échouée pour une raison ou "
+#~ "une autre.Assurez-vous que votre fichier possède le format correct et ré-"
+#~ "essayez."
 
 #~ msgid "Confirm"
 #~ msgstr "Confirmer"

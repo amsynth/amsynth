@@ -19,6 +19,10 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "editor_menus.h"
 
 // Project includes
@@ -27,6 +31,8 @@
 #include "../Preset.h"
 #include "../PresetController.h"
 #include "../Synthesizer.h"
+
+#include "gui_main.h"
 
 // External includes
 
@@ -65,7 +71,7 @@ controller_menu_new(int parameter)
 {
     GtkWidget *item, *menu = gtk_menu_new ();
 
-    item = gtk_menu_item_new_with_label(_("MIDI Learn..."));
+    item = gtk_menu_item_new_with_label(_("Assign MIDI Controller..."));
     g_signal_connect(item, "activate", G_CALLBACK(show_midi_learn_dialog), (gpointer)(long)parameter);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 
@@ -89,14 +95,14 @@ preset_menu_item_activated(GtkMenuItem *preset_item, GtkAdjustment **adjustments
 
     PresetController presetController;
     presetController.loadPresets(bank);
-    Preset &preset = presetController.getPreset(preset_index);
+    Preset &preset = presetController.getPreset((int) preset_index);
     for (unsigned int i = 0; i < kAmsynthParameterCount; i++) {
         float value = preset.getParameter(i).getValue();
         gtk_adjustment_set_value (adjustments[i], value);
     }
 }
 
-GtkWidget *
+static GtkWidget *
 presets_menu_new(GtkAdjustment **adjustments)
 {
     char text[64];
@@ -190,19 +196,6 @@ file_open_dialog(GtkWindow *parent, const gchar *title, const gchar *filter_name
     return dialog;
 }
 
-static void
-show_error_dialog(GtkWindow *parent, const gchar *message, const gchar *secondary)
-{
-    GtkWidget *dialog = gtk_message_dialog_new(parent,
-            GTK_DIALOG_DESTROY_WITH_PARENT,
-            GTK_MESSAGE_ERROR,
-            GTK_BUTTONS_OK,
-            message);
-    gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), secondary);
-    gtk_dialog_run(GTK_DIALOG(dialog));
-    gtk_widget_destroy(dialog);
-}
-
 static void tuning_menu_open_scl(GtkWidget *widget, Synthesizer *synth)
 {
     GtkWindow *parent = GTK_WINDOW(gtk_widget_get_toplevel(widget));
@@ -213,9 +206,9 @@ static void tuning_menu_open_scl(GtkWidget *widget, Synthesizer *synth)
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
         char *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
         if (synth->loadTuningScale(filename) != 0) {
-            show_error_dialog(parent,
+            ShowModalErrorMessage(
                     _("Failed to load new tuning."),
-                    _("Reading the tuning file failed for some reason. \n"
+                    _("Reading the tuning file failed for some reason.\n"
                       "Make sure your file has the correct format and try again."));
         }
         g_free(filename);
@@ -234,9 +227,9 @@ static void tuning_menu_open_kbm(GtkWidget *widget, Synthesizer *synth)
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
         char *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
         if (synth->loadTuningKeymap(filename) != 0) {
-            show_error_dialog(parent,
+            ShowModalErrorMessage(
                     _("Failed to load new keyboard map."),
-                    _("Reading the keyboard map file failed for some reason. \n"
+                    _("Reading the keyboard map file failed for some reason.\n"
                       "Make sure your file has the correct format and try again."));
         }
         g_free(filename);

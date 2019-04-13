@@ -57,7 +57,7 @@ public:
 
 private:
     float rads, twopi_rate, random;
-	double a0, a1, b1, d; // for the low-pass filter
+	double d; // for the low-pass filter
     int rate, random_count;
 
 	Waveform waveform;

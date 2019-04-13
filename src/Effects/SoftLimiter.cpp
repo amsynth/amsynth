@@ -1,5 +1,5 @@
 /*
- *  SoftLimiter.cc
+ *  SoftLimiter.cpp
  *
  *  Copyright (c) 2001-2012 Nick Dowell
  *
@@ -39,8 +39,8 @@ SoftLimiter::SetSampleRate	(int rate)
 void
 SoftLimiter::Process	(float *l, float *r, unsigned nframes, int stride)
 {
-	register double x;
-	register unsigned i;
+	double x;
+	unsigned i;
 	for (i=0; i<nframes; i++)
 	{
 		x = fabs(*l) + fabs (*r);

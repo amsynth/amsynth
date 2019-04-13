@@ -31,10 +31,10 @@ typedef struct {
 	
 	GdkPixbuf *pixbuf;
 	GdkPixbuf *background;
-	guint current_frame;
-	guint frame_width;
-	guint frame_height;
-	guint frame_count;
+	gint current_frame;
+	gint frame_width;
+	gint frame_height;
+	gint frame_count;
 	
 	GtkWidget *menu;
 
@@ -57,9 +57,9 @@ static void		bitmap_popup_menuitem_activated			( GtkWidget *menu_item, gpointer 
 GtkWidget *
 bitmap_popup_new( GtkAdjustment *adjustment,
 				 GdkPixbuf *pixbuf,
-				 guint frame_width,
-				 guint frame_height,
-				 guint frame_count )
+				 gint frame_width,
+				 gint frame_height,
+				 gint frame_count )
 {
 	bitmap_popup *self = g_malloc0 (sizeof(bitmap_popup));
 
@@ -97,7 +97,7 @@ void bitmap_popup_set_bg (GtkWidget *widget, GdkPixbuf *pixbuf)
 		g_object_unref (G_OBJECT (self->background));
 	}
 
-	self->background = pixbuf ? g_object_ref (G_OBJECT (pixbuf)) : NULL;
+	self->background = pixbuf ? GDK_PIXBUF (g_object_ref (G_OBJECT (pixbuf))) : NULL;
 
 	gtk_widget_queue_draw (widget);
 }
@@ -203,7 +203,7 @@ bitmap_popup_menuitem_activated (GtkWidget *menu_item, gpointer data)
 	gtk_adjustment_set_value (self->adjustment, lower + i);
 }
 
-void
+static void
 bitmap_popup_update (GtkWidget *widget)
 {
 	bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
@@ -211,26 +211,26 @@ bitmap_popup_update (GtkWidget *widget)
 	gdouble value = gtk_adjustment_get_value (self->adjustment);
 	gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 	gdouble upper = gtk_adjustment_get_upper (self->adjustment);
-	guint	frame = self->frame_count * ((value - lower) / (upper - lower));
+	gint	frame = (gint) ((self->frame_count - 1) * ((value - lower) / (upper - lower)));
 
 	self->current_frame = MIN (frame, (self->frame_count - 1));
 	
 	gtk_widget_queue_draw (widget);
 }
 
-void
+static void
 bitmap_popup_adjustment_changed			( GtkAdjustment *adjustment, gpointer data )
 {
 	bitmap_popup_update (data);
 }
 
-void
+static void
 bitmap_popup_adjustment_value_changed	( GtkAdjustment *adjustment, gpointer data )
 {
 	bitmap_popup_update (data);
 }
 
-void
+static void
 bitmap_popup_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 {
 	bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
@@ -241,7 +241,7 @@ bitmap_popup_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 		gtk_object_unref (GTK_OBJECT (self->adjustment) );
 	}
 	
-	self->adjustment = g_object_ref (GTK_OBJECT (adjustment) );
+	self->adjustment = GTK_ADJUSTMENT (g_object_ref (GTK_OBJECT (adjustment)));
 
 	gtk_signal_connect (GTK_OBJECT (adjustment), "changed",
 		(GtkSignalFunc) bitmap_popup_adjustment_changed,

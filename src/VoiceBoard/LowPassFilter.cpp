@@ -1,5 +1,5 @@
 /*
- *  LowPassFilter.cc
+ *  LowPassFilter.cpp
  *
  *  Copyright (c) 2001-2014 Nick Dowell
  *
@@ -109,7 +109,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			break;
 			
 		default:
-			assert(!"invalid FilterType");
+			assert(0 == "invalid FilterType");
 			return;
 	}
 
@@ -143,7 +143,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			break;
 
 		default:
-			assert(!"invalid FilterSlope");
+			assert(0 == "invalid FilterSlope");
 			break;
 	}
 }

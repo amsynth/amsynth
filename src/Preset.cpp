@@ -1,5 +1,5 @@
 /*
- *  Preset.cc
+ *  Preset.cpp
  *
  *  Copyright (c) 2001-2017 Nick Dowell
  *
@@ -43,7 +43,7 @@ using namespace std;
 #endif
 
 
-Parameter TimeParameter (const std::string name, Param id)
+static Parameter TimeParameter (const std::string name, Param id)
 {
 	return Parameter (name, id, 0, 0, 2.5f, 0, Parameter::PARAM_POWER, 3, 0.0005f, "s");
 }
@@ -67,7 +67,7 @@ Preset::Preset			(const std::string name)
 	mParameters.push_back (Parameter		("filter_cutoff",		kAmsynthParameter_FilterCutoff,		1.5, -0.5, 1.5, 0,	Parameter::PARAM_EXP, 16, 0));
     mParameters.push_back (Parameter		("osc2_detune",			kAmsynthParameter_Oscillator2Detune,		0, -1, 1, 0,		Parameter::PARAM_EXP, 1.25f, 0));
     mParameters.push_back (Parameter		("osc2_waveform",		kAmsynthParameter_Oscillator2Waveform,		2, 0, 4, 1));
-    mParameters.push_back (Parameter		("master_vol",			kAmsynthParameter_MasterVolume,			0.67, 0, 1, 0,		Parameter::PARAM_POWER, 2, 0));
+    mParameters.push_back (Parameter		("master_vol",			kAmsynthParameter_MasterVolume,			0.67f, 0, 1, 0,		Parameter::PARAM_POWER, 2, 0));
     mParameters.push_back (Parameter		("lfo_freq",			kAmsynthParameter_LFOFreq,			0, 0, 7.5, 0,		Parameter::PARAM_POWER, 2, 0,	"Hz"));
     mParameters.push_back (Parameter		("lfo_waveform",		kAmsynthParameter_LFOWaveform,		0, 0, 6, 1));
     mParameters.push_back (Parameter		("osc2_range",			kAmsynthParameter_Oscillator2Octave,		0, -3, 4, 1,		Parameter::PARAM_EXP, 2, 0));
@@ -134,7 +134,7 @@ Preset::getParameter(const std::string name)
 	name_map_t::iterator it = name_map.find(name);
 	if (it == name_map.end())
 		return nullparam;
-	return getParameter(it->second);
+	return getParameter((int) it->second);
 }
 
 void
@@ -277,9 +277,9 @@ int parameter_get_display (int parameter_index, float parameter_value, char *buf
 		case kAmsynthParameter_MasterVolume:
 			return snprintf(buffer, maxlen, "%+.1f dB", 20.0 * log10(real_value));
 		case kAmsynthParameter_OscillatorMixRingMod:
-			return snprintf(buffer, maxlen, "%d %%", (int)roundf(real_value * 100.0));
+			return snprintf(buffer, maxlen, "%d %%", (int)roundf(real_value * 100.f));
 		case kAmsynthParameter_FilterEnvAmount:
-			return snprintf(buffer, maxlen, "%+d %%", (int)roundf(real_value / 16.0 * 100.0));
+			return snprintf(buffer, maxlen, "%+d %%", (int)roundf(real_value / 16.f * 100.f));
 		case kAmsynthParameter_AmpEnvSustain:
 		case kAmsynthParameter_FilterResonance:
 		case kAmsynthParameter_FilterCutoff:
@@ -295,13 +295,14 @@ int parameter_get_display (int parameter_index, float parameter_value, char *buf
 		case kAmsynthParameter_FilterKeyTrackAmount:
 		case kAmsynthParameter_FilterKeyVelocityAmount:
 		case kAmsynthParameter_AmpVelocityAmount:
-			return snprintf(buffer, maxlen, "%d %%", (int)roundf(parameter.GetNormalisedValue() * 100.0));
+			return snprintf(buffer, maxlen, "%d %%", (int)roundf(parameter.GetNormalisedValue() * 100.f));
 		case kAmsynthParameter_FilterType: {
             const char **filter_type_names = parameter_get_value_strings(parameter_index);
             if (filter_type_names) {
                 return snprintf(buffer, maxlen, "%s", filter_type_names[(int)real_value]);
             } else {
-                return snprintf(buffer, maxlen, "");
+                strcpy(buffer, "");
+                return 0;
             }
         }
 	}
@@ -310,17 +311,17 @@ int parameter_get_display (int parameter_index, float parameter_value, char *buf
 
 const char **parameter_get_value_strings (int parameter_index)
 {
-    static const char **parameterStrings[kAmsynthParameterCount];
-    if (parameter_index < 0 || parameter_index >= kAmsynthParameterCount)
+    static std::vector<std::vector<const char *> > parameterStrings(kAmsynthParameterCount);
+    if (parameter_index < 0 || parameter_index >= (int)parameterStrings.size())
         return NULL;
 
-    const char **strings = parameterStrings[parameter_index];
-    if (!strings) {
+    std::vector<const char *> & strings = parameterStrings[parameter_index];
+    if (strings.empty()) {
         size_t i = 0, size = 0;
         switch (parameter_index) {
             case kAmsynthParameter_Oscillator1Waveform:
             case kAmsynthParameter_Oscillator2Waveform:
-                strings = (const char **)calloc((size = 6), sizeof(char *));
+                strings.resize(size = 6);
                 strings[i++] = _("sine");
                 strings[i++] = _("square / pulse");
                 strings[i++] = _("triangle / saw");
@@ -330,7 +331,7 @@ const char **parameter_get_value_strings (int parameter_index)
                 break;
 
             case kAmsynthParameter_LFOWaveform:
-                strings = (const char **)calloc((size = 8), sizeof(char *));
+                strings.resize(size = 8);
                 strings[i++] = _("sine");
                 strings[i++] = _("square");
                 strings[i++] = _("triangle");
@@ -342,7 +343,7 @@ const char **parameter_get_value_strings (int parameter_index)
                 break;
 
             case kAmsynthParameter_KeyboardMode:
-                strings = (const char **)calloc((size = 4), sizeof(char *));
+                strings.resize(size = 4);
                 strings[i++] = _("poly");
                 strings[i++] = _("mono");
                 strings[i++] = _("legato");
@@ -350,7 +351,7 @@ const char **parameter_get_value_strings (int parameter_index)
                 break;
 
             case kAmsynthParameter_FilterType:
-                strings = (const char **)calloc((size = 6), sizeof(char *));
+                strings.resize(size = 6);
                 strings[i++] = _("low pass");
                 strings[i++] = _("high pass");
                 strings[i++] = _("band pass");
@@ -360,14 +361,14 @@ const char **parameter_get_value_strings (int parameter_index)
                 break;
 
             case kAmsynthParameter_FilterSlope:
-                strings = (const char **)calloc((size = 3), sizeof(char *));
+                strings.resize(size = 3);
                 strings[i++] = _("12 dB / octave");
                 strings[i++] = _("24 dB / octave");
                 assert(i < size);
                 break;
 
             case kAmsynthParameter_LFOOscillatorSelect:
-                strings = (const char **)calloc((size = 4), sizeof(char *));
+                strings.resize(size = 4);
                 strings[i++] = _("osc 1+2");
                 strings[i++] = _("osc 1");
                 strings[i++] = _("osc 2");
@@ -375,7 +376,7 @@ const char **parameter_get_value_strings (int parameter_index)
                 break;
 
             case kAmsynthParameter_PortamentoMode:
-                strings = (const char **)calloc((size = 3), sizeof(char *));
+                strings.resize(size = 3);
                 strings[i++] = _("always");
                 strings[i++] = _("legato");
                 assert(i < size);
@@ -384,21 +385,22 @@ const char **parameter_get_value_strings (int parameter_index)
             default:
                 break;
         }
-        parameterStrings[parameter_index] = strings;
     }
 
-    return strings;
+    return &strings[0];
 }
 
-static bool s_ignoreParameter[kAmsynthParameterCount];
+static std::vector<bool> s_ignoreParameter(kAmsynthParameterCount);
 
 bool Preset::shouldIgnoreParameter(int parameter)
 {
+	assert(parameter >= 0 && parameter < (int)s_ignoreParameter.size());
 	return s_ignoreParameter[parameter];
 }
 
 void Preset::setShouldIgnoreParameter(int parameter, bool ignore)
 {
+	assert(parameter >= 0 && parameter < (int)s_ignoreParameter.size());
 	s_ignoreParameter[parameter] = ignore;
 }
 
@@ -428,6 +430,9 @@ void Preset::setIgnoredParameterNames(std::string names)
 
 	std::vector<std::string>::const_iterator name_it;
 	for (name_it = vstrings.begin(); name_it != vstrings.end(); ++name_it) {
-		setShouldIgnoreParameter(parameter_index_from_name(name_it->c_str()), true);
+		int index = parameter_index_from_name(name_it->c_str());
+		if (index != -1) {
+			setShouldIgnoreParameter(index, true);
+		}
 	}
 }

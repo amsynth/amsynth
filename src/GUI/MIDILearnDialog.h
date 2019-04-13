@@ -1,7 +1,7 @@
 /*
  *  MIDILearnDialog.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -36,15 +36,16 @@ public:
 
 	void run_modal(Param param_idx);
 
-private:
-
 	virtual void update();
 
-	void last_active_controller_changed();
+	static gboolean last_active_controller_changed(gpointer);
+
+private:
 
 	GtkWidget		*_dialog;
 	GtkWidget		*_paramNameEntry;
 	GtkWidget		*_combo;
+	GtkWidget		*_checkButton;
 
 	MidiController	*_midiController;
 	PresetController *_presetController;

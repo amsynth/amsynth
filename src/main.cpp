@@ -1,5 +1,5 @@
 /*
- *  main.cc
+ *  main.cpp
  *
  *  Copyright (c) 2001-2016 Nick Dowell
  *
@@ -31,6 +31,7 @@
 #include "drivers/OSSMidiDriver.h"
 #ifdef WITH_GUI
 #include "GUI/gui_main.h"
+#include "GUI/MainWindow.h"
 #endif
 #include "JackOutput.h"
 #include "lash.h"
@@ -39,6 +40,11 @@
 #include "Synthesizer.h"
 #include "VoiceAllocationUnit.h"
 #include "VoiceBoard/LowPassFilter.h"
+
+#ifdef WITH_NSM
+#include "nsm/NsmClient.h"
+#include "nsm/NsmHandler.h"
+#endif
 
 #if __APPLE__
 #include "drivers/CoreAudio.h"
@@ -74,7 +80,7 @@ using namespace std;
 Configuration & config = Configuration::get();
 
 #ifdef ENABLE_REALTIME
-void sched_realtime()
+static void sched_realtime()
 {
 #ifdef linux
 	struct sched_param sched = {0};
@@ -98,7 +104,7 @@ void sched_realtime()
 }
 #endif
 
-int fcopy (const char * dest, const char *source)
+static int fcopy (const char * dest, const char *source)
 {
 	FILE *in = fopen (source,"r");
 	if (in == NULL) {
@@ -123,14 +129,14 @@ int fcopy (const char * dest, const char *source)
 	return 0;
 }
 
-const char *build_path(const char *path, const char *suffix)
+static const char *build_path(const char *path, const char *suffix)
 {
 	char *result = NULL;
 	asprintf(&result, "%s/%s", path, suffix);
 	return result;
 }
 
-void install_default_files_if_reqd()
+static void install_default_files_if_reqd()
 {
 	const char * factory_config = build_path (PKGDATADIR, "rc");
 	const char * factory_bank = build_path (PKGDATADIR, "banks/amsynth_factory.bank");
@@ -170,7 +176,7 @@ static int gui_midi_pipe[2];
 
 ////////////////////////////////////////////////////////////////////////////////
 
-GenericOutput * open_audio()
+static GenericOutput * open_audio()
 {	
 #if	__APPLE__
 
@@ -255,7 +261,7 @@ static void open_midi()
 	}
 }
 
-void fatal_error(const std::string & msg)
+static void fatal_error(const std::string & msg)
 {
 	std::cerr << msg << "\n";
 #ifdef WITH_GUI
@@ -275,7 +281,7 @@ static void signal_handler(int signal)
 
 int main( int argc, char *argv[] )
 {
-	srand(time(NULL));
+	srand((unsigned) time(NULL));
 
 #ifdef ENABLE_REALTIME
 	sched_realtime();
@@ -392,11 +398,13 @@ int main( int argc, char *argv[] )
 		char *path = NULL;
 		if (asprintf(&path, "%s/.amsynth", getenv("HOME")) > 0) {
 			mkdir(path, 0000755);
-			free(path), path = NULL;
+			free(path);
+			path = NULL;
 		}
 		if (asprintf(&path, "%s/.amsynth/banks", getenv("HOME")) > 0) {
 			mkdir(path, 0000755);
-			free(path), path = NULL;
+			free(path);
+			path = NULL;
 		}
 	}
 
@@ -419,6 +427,12 @@ int main( int argc, char *argv[] )
 	amsynth_load_bank(config.current_bank_file.c_str());
 	amsynth_set_preset_number(initial_preset_no);
 
+#ifdef WITH_NSM
+	NsmClient nsmClient(argv[0]);
+	NsmHandler nsmHandler(&nsmClient);
+	nsmClient.Init(PACKAGE_NAME);
+#endif
+
 	if (config.current_tuning_file != "default")
 		amsynth_load_tuning_file(config.current_tuning_file.c_str());
 	
@@ -436,7 +450,7 @@ int main( int argc, char *argv[] )
 		amsynth_lash_init();
 
 	if (config.alsa_seq_client_id != 0) // alsa midi is active
-		amsynth_lash_set_alsa_client_id(config.alsa_seq_client_id);
+		amsynth_lash_set_alsa_client_id((unsigned char) config.alsa_seq_client_id);
 
 	if (!config.jack_client_name.empty())
 		amsynth_lash_set_jack_client_name(config.jack_client_name.c_str());
@@ -450,9 +464,8 @@ int main( int argc, char *argv[] )
 
 #ifdef WITH_GUI
 	if (!no_gui) {
-		gui_init(s_synthesizer, out);
+		main_window_show(s_synthesizer, out);
 		gui_kit_run(&amsynth_timer_callback);
-		gui_dealloc();
 	} else {
 #endif
 		printf(_("amsynth running in headless mode, press ctrl-c to exit\n"));
@@ -510,7 +523,7 @@ void amsynth_audio_callback(
 			if (bytes_read > 0) {
 				amsynth_midi_event_t event = {0};
 				event.offset_frames = num_frames - 1;
-				event.length = bytes_read;
+				event.length = (unsigned int) bytes_read;
 				event.buffer = buffer;
 				midi_in_merged.push_back(event);
 				buffer += bytes_read;
@@ -519,7 +532,7 @@ void amsynth_audio_callback(
 		}
 
 		if (midiDriver) {
-			int bytes_read = midiDriver->read(buffer, bufferSize);
+			int bytes_read = midiDriver->read(buffer, (unsigned) bufferSize);
 			if (bytes_read > 0) {
 				amsynth_midi_event_t event = {0};
 				event.offset_frames = num_frames - 1;
@@ -605,7 +618,7 @@ void ptest ()
 	
 	long total_samples = kTestSampleRate * kTimeSeconds;
 	long total_calls = total_samples / kTestBufSize;
-	long remain_samples = total_samples % kTestBufSize;
+	unsigned remain_samples = total_samples % kTestBufSize;
 	for (int i=0; i<total_calls; i++) {
 		voiceAllocationUnit->Process (buffer, buffer, kTestBufSize);
 	}

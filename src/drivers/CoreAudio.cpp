@@ -1,5 +1,5 @@
 /*
- *  CoreAudio.cc
+ *  CoreAudio.cpp
  *
  *  Copyright (c) 2001-2014 Nick Dowell
  *
@@ -36,7 +36,7 @@ class CoreAudioOutput : public GenericOutput
 {
 public:
 
-	CoreAudioOutput() : m_DeviceID(0), m_clientRef(NULL), m_MIDIBuffer(NULL), m_MIDIBufferWriteIndex(0), m_MIDIBufferReadIndex(0)
+	CoreAudioOutput() : m_DeviceID(0), m_clientRef(0), m_MIDIBuffer(NULL), m_MIDIBufferWriteIndex(0), m_MIDIBufferReadIndex(0)
 	{
 		UInt32 size; Boolean writable; OSStatus err;
 		
@@ -74,6 +74,8 @@ public:
         if (m_currInput) {
             MIDIPortConnectSource(m_inPort, m_currInput, NULL);
         }
+		
+		return 0;
 	}
 	
 	virtual bool Start()
@@ -111,7 +113,7 @@ public:
         
         if (m_currInput) {
             MIDIPortDisconnectSource(m_inPort, m_currInput);
-            m_currInput = NULL;
+            m_currInput = 0;
         }
 	}
     
@@ -167,13 +169,15 @@ public:
 
         std::vector<amsynth_midi_cc_t> midi_out;
         amsynth_audio_callback(outL, outR, numSampleFrames, stride, midi_events, midi_out);
+		
+		return noErr;
     }
 
     static void midiReadProc(const MIDIPacketList *pktlist, void *readProcRefCon, void *srcConnRefCon)
     {
         CoreAudioOutput *self = (CoreAudioOutput *)srcConnRefCon;
         
-        for (int i=0; i<pktlist->numPackets; i++) {
+        for (UInt32 i = 0; i < pktlist->numPackets; i++) {
             uint8_t *data = (unsigned char *)(pktlist->packet + i)->data;
             const UInt16 length = (pktlist->packet + i)->length;
             if (length > 3) {

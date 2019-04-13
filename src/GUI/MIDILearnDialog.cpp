@@ -1,7 +1,7 @@
 /*
  *  MIDILearnDialog.cpp
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2017 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -34,7 +34,7 @@ MIDILearnDialog::MIDILearnDialog(MidiController *midiController, PresetControlle
 ,	_midiController(midiController)
 ,	_presetController(presetController)
 {
-	_dialog = gtk_dialog_new_with_buttons(_("MIDI Learn"), parent, GTK_DIALOG_MODAL,
+	_dialog = gtk_dialog_new_with_buttons(_("MIDI Controller Assignment"), parent, GTK_DIALOG_MODAL,
 		GTK_STOCK_OK,     GTK_RESPONSE_ACCEPT,
 		GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
 		NULL);
@@ -48,11 +48,20 @@ MIDILearnDialog::MIDILearnDialog(MidiController *midiController, PresetControlle
 	for (gint i = 0; i < 128; i++)
 		gtk_combo_box_insert_text (GTK_COMBO_BOX (_combo), i + 1, c_controller_names[i]);
 
-	GtkWidget *table = gtk_table_new(2, 2, FALSE);
+	_checkButton = gtk_check_button_new_with_label(_("Select automatically"));
+	gtk_widget_set_tooltip_text(_checkButton, _("Automatically select MIDI Controller when a CC message is received"));
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(_checkButton), TRUE);
+
+	// Using a box to left-align checkbutton within the table cell
+	GtkWidget *box = gtk_hbox_new(FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(box), _checkButton, FALSE, FALSE, 0);
+
+	GtkWidget *table = gtk_table_new(3, 2, FALSE);
 	gtk_table_attach(GTK_TABLE(table), gtk_label_new(_("Synth Parameter:")), 0, 1, 0, 1, GTK_FILL, GTK_FILL, 5, 5);
-	gtk_table_attach(GTK_TABLE(table), _paramNameEntry,                   1, 2, 0, 1, GTK_FILL, GTK_FILL, 5, 5);
+	gtk_table_attach(GTK_TABLE(table), _paramNameEntry,                      1, 2, 0, 1, GTK_FILL, GTK_FILL, 5, 5);
 	gtk_table_attach(GTK_TABLE(table), gtk_label_new(_("MIDI Controller")),  0, 1, 1, 2, GTK_FILL, GTK_FILL, 5, 5);
-	gtk_table_attach(GTK_TABLE(table), _combo,                            1, 2, 1, 2, GTK_FILL, GTK_FILL, 5, 5);
+	gtk_table_attach(GTK_TABLE(table), _combo,                               1, 2, 1, 2, GTK_FILL, GTK_FILL, 5, 5);
+	gtk_table_attach(GTK_TABLE(table), box,                                  1, 2, 2, 3, GTK_FILL, GTK_FILL, 5, 5);
 
 	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(_dialog)->vbox), table, TRUE, TRUE, 0);
 
@@ -84,22 +93,16 @@ MIDILearnDialog::run_modal(Param param_idx)
 void
 MIDILearnDialog::update()
 {
-	gdk_threads_enter();
-	last_active_controller_changed();
-	gdk_threads_leave();
+	g_idle_add(MIDILearnDialog::last_active_controller_changed, this);
 }
 
-void
-MIDILearnDialog::last_active_controller_changed()
+gboolean
+MIDILearnDialog::last_active_controller_changed(gpointer data)
 {
-	int cc = (int)_midiController->getLastControllerParam().getValue();
-	gtk_combo_box_set_active (GTK_COMBO_BOX (_combo), cc + 1);
-}
-
-static gboolean on_output(GtkSpinButton *spin, gpointer)
-{
-	int cc = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spin)) - 1;
-	const gchar *text = cc < 0 ? _("None") : c_controller_names[cc];
-	gtk_entry_set_text(GTK_ENTRY(spin), text);
-	return TRUE;
+	MIDILearnDialog *dialog = (MIDILearnDialog *) data;
+	if (!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dialog->_checkButton)))
+		return G_SOURCE_REMOVE;
+	int cc = (int)dialog->_midiController->getLastControllerParam().getValue();
+	gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->_combo), cc + 1);
+	return G_SOURCE_REMOVE;
 }

@@ -1,5 +1,5 @@
 /*
- *  TuningMap.cc
+ *  TuningMap.cpp
  *
  *  Copyright (c) 2001-2012 Nick Dowell
  *
@@ -73,7 +73,7 @@ TuningMap::noteToPitch		(int note) const
 	assert(note >= 0 && note < 128);
 	assert(!mapping.empty());
 
-	int mapSize = mapping.size();
+	size_t mapSize = mapping.size();
 
 	int nRepeats = (note - zeroNote) / mapSize;
 	int mapIndex = (note - zeroNote) % mapSize;
@@ -88,7 +88,7 @@ TuningMap::noteToPitch		(int note) const
 
 	int scaleDegree = nRepeats * mapRepeatInc + mapping[mapIndex];
 
-	int scaleSize = scale.size();
+	size_t scaleSize = scale.size();
 
 	int nOctaves = scaleDegree / scaleSize;
 	int scaleIndex = scaleDegree % scaleSize;
@@ -105,7 +105,7 @@ TuningMap::noteToPitch		(int note) const
 }
 
 // Convert a single line of a Scala scale file to a frequency relative to 1/1.
-double
+static double
 parseScalaLine(const string & line)
 {
 	istringstream iss(line);

@@ -1,5 +1,5 @@
 /*
- *  gui_main.cc
+ *  gui_main.cpp
  *
  *  Copyright (c) 2001-2017 Nick Dowell
  *
@@ -19,9 +19,13 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "gui_main.h"
 
-#include "MainWindow.h"
+#include <gtk/gtk.h>
 
 
 static char **_argv = NULL;
@@ -30,28 +34,13 @@ void gui_kit_init(int *argc, char ***argv)
 {
 	_argv = g_strdupv(*argv);
 	gtk_init(argc, argv);
+	gtk_window_set_default_icon_name("amsynth");
 }
 
 void gui_kit_run(unsigned (*timer_callback)())
 {
 	g_timeout_add(250, (GSourceFunc)timer_callback, NULL);
 	gtk_main();
-}
-
-void gui_init(Synthesizer *synth, GenericOutput *out)
-{
-    gtk_window_set_default_icon_name("amsynth");
-
-	GtkWidget *window = main_window_new(synth, out);
-	gtk_widget_show_all(window);
-}
-
-void gui_dealloc()
-{
-//	if (gui) {
-//		delete gui;
-//		gui = NULL;
-//	}
 }
 
 void ShowModalErrorMessage(const std::string & msg, const std::string & secondaryText)

@@ -1,5 +1,5 @@
 /*
- *  MidiController.cc
+ *  MidiController.cpp
  *
  *  Copyright (c) 2001-2016 Nick Dowell
  *
@@ -40,7 +40,7 @@ MidiController::MidiController()
 {
 	presetController = 0;
 	Configuration & config = Configuration::get();
-	channel = config.midi_channel;
+	channel = (unsigned char) config.midi_channel;
 	loadControllerMap();
 }
 
@@ -173,18 +173,18 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 	}
 
 	switch (cc) {
-		case MIDI_CC_BANK_SELECT_LSB: {
+		case MIDI_CC_BANK_SELECT_MSB: {
 			presetController->selectBank(value);
 			presetController->selectPreset(presetController->getCurrPresetNumber());
 			break;
 		}
-		case MIDI_CC_BANK_SELECT_MSB:
+		case MIDI_CC_BANK_SELECT_LSB:
 			break;
 		case MIDI_CC_PAN_MSB: {
 			// http://www.midi.org/techspecs/rp36.php
 			// the effective range for CC#10 is modified to be 1 to 127, and values 0 and 1 both pan hard left
-			float scaled = (value < 1 ? 0 : value - 1) / 126.0;
-			_handler->HandleMidiPan(cos(M_PI_2 * scaled), sin(M_PI_2 * scaled));
+			float scaled = (value < 1 ? 0 : value - 1) / 126.f;
+			_handler->HandleMidiPan(cosf(M_PI_2 * scaled), sinf(M_PI_2 * scaled));
 		}
 			break;
 		case MIDI_CC_SUSTAIN_PEDAL:
@@ -224,7 +224,7 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 		case MIDI_CC_MONO_MODE_ON:
 		case MIDI_CC_POLY_MODE_ON:
 			_handler->HandleMidiAllNotesOff();
-		case MIDI_CC_MODULATION_WHEEL:
+		case MIDI_CC_MODULATION_WHEEL_MSB:
 		default:
 			break;
 	}

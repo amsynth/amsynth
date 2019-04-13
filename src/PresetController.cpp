@@ -1,5 +1,5 @@
 /*
- *  PresetController.cc
+ *  PresetController.cpp
  *
  *  Copyright (c) 2001-2012 Nick Dowell
  *
@@ -256,7 +256,8 @@ static bool is_amsynth_file(const char *filename)
 
 	char buffer[sizeof(amsynth_file_header)] = {0};
 	fread(buffer, sizeof(buffer), 1, file);
-	fclose(file), file = NULL;
+	fclose(file);
+	file = NULL;
 
 	if (memcmp(buffer, amsynth_file_header, sizeof(amsynth_file_header)) != 0)
 		return false;
@@ -279,7 +280,8 @@ static off_t file_read_contents(const char *filename, void **result)
 	void *buffer = calloc(length + 1, 1);
 	fseek(file, 0, SEEK_SET);
 	fread(buffer, length, 1, file);
-	fclose(file), file = NULL;
+	fclose(file);
+	file = NULL;
 	*result = buffer;
 	return length;
 }
@@ -370,7 +372,7 @@ PresetController::loadPresets		(const char *filename)
 
 	currentBankNo = -1;
 	const std::vector<BankInfo> &banks = getPresetBanks();
-	for (int i = 0; i < banks.size(); i++) {
+	for (int i = 0; i < (int) banks.size(); i++) {
 		if (banks[i].file_path == (std::string) filename) {
 			currentBankNo = i;
 			break;
@@ -388,7 +390,7 @@ PresetController::selectBank(int bankNumber)
 {
 	const std::vector<BankInfo> &banks = getPresetBanks();
 
-	if (bankNumber >= banks.size())
+	if (bankNumber >= (int) banks.size())
 		return;
 
 	if (currentBankNo == bankNumber)
@@ -441,12 +443,9 @@ static void scan_preset_banks(const std::string dir_path, bool read_only)
 
 	std::vector<std::string> filenames;
 
-	int return_code = 0;
-	struct dirent entry = {0};
-	struct dirent *result = NULL;
-
-	for (return_code = readdir_r(dir, &entry, &result); result != NULL && return_code == 0; return_code = readdir_r(dir, &entry, &result))
-		filenames.push_back(std::string(entry.d_name));
+	struct dirent *entry;
+	while ((entry = readdir(dir)))
+		filenames.push_back(std::string(entry->d_name));
 
 	closedir(dir);
 

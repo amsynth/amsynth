@@ -1,5 +1,5 @@
 /*
- *  VoiceAllocationUnit.cc
+ *  VoiceAllocationUnit.cpp
  *
  *  Copyright (c) 2001-2012 Nick Dowell
  *
@@ -81,6 +81,7 @@ VoiceAllocationUnit::SetSampleRate	(int rate)
 {
 	limiter->SetSampleRate (rate);
 	for (unsigned i=0; i<_voices.size(); ++i) _voices[i]->SetSampleRate (rate);
+    reverb->setrate(rate);
 }
 
 void
@@ -94,7 +95,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 	if (!tuningMap.inActiveRange(note))
 		return;
 
-	double pitch = noteToPitch(note);
+	float pitch = (float) noteToPitch(note);
 	if (pitch < 0) { // unmapped key
 		return;
 	}
@@ -120,7 +121,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 			unsigned count = 0;
 			for (int i=0; i<128; i++)
 				count = count + (active[i] ? 1 : 0);
-			if (count >= mMaxVoices) {
+			if (count >= (unsigned) mMaxVoices) {
 				int idx = -1;
 				// strategy 1) find the oldest voice in release phase
 				unsigned keyPress = _keyPressCounter + 1;
@@ -167,7 +168,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 	}
 	
 	if (_keyboardMode == KeyboardModeMono || _keyboardMode == KeyboardModeLegato) {
-		
+
 		int previousNote = -1;
 		unsigned keyPress = 0;
 		for (int i = 0; i < 128; i++) {
@@ -202,15 +203,14 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 
 	keyPressed[note] = false;
 
-	if (_keyboardMode == KeyboardModePoly) {
-		if (!sustain) {
-			_voices[note]->triggerOff();
-		}
-		_keyPresses[note] = 0;
-	}
-	
-	if (_keyboardMode == KeyboardModeMono || _keyboardMode == KeyboardModeLegato) {
+	if (sustain)
+		return;
 
+	if (_keyboardMode == KeyboardModePoly) {
+		_voices[note]->triggerOff();
+	}
+
+	if (_keyboardMode == KeyboardModeMono || _keyboardMode == KeyboardModeLegato) {
 		int currentNote = -1;
 		unsigned keyPress = 0;
 		for (int i = 0; i < 128; i++) {
@@ -223,8 +223,8 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 		_keyPresses[note] = 0;
 		
 		int nextNote = -1;
-		for (int i = 0, keyPress = 0; i < 128; i++) {
-			if (keyPress < _keyPresses[i]) {
+		for (unsigned i = 0, keyPress = 0; i < 128; i++) {
+			if (keyPress < _keyPresses[i] && (keyPressed[i] || sustain)) {
 				keyPress = _keyPresses[i];
 				nextNote = i;
 			}
@@ -241,7 +241,7 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 		VoiceBoard *voice = _voices[0];
 		
 		if (0 <= nextNote) {
-			voice->setFrequency(voice->getFrequency(), noteToPitch(nextNote), mPortamentoTime);
+			voice->setFrequency(voice->getFrequency(), (float) noteToPitch(nextNote), mPortamentoTime);
 			if (_keyboardMode == KeyboardModeMono)
 				voice->triggerOn();
 		} else {
@@ -278,10 +278,13 @@ VoiceAllocationUnit::HandleMidiAllNotesOff()
 void
 VoiceAllocationUnit::HandleMidiSustainPedal(uchar value)
 {
-	sustain = value ? 1 : 0;
-	if (sustain) return;
-	for(unsigned i=0; i<_voices.size(); i++) {
-		if (!keyPressed[i]) _voices[i]->triggerOff();
+	if ((sustain = (value > 0)))
+		return;
+
+	for (unsigned i = 0; i < _voices.size(); i++) {
+		if (!keyPressed[i] && _keyPresses[i] > 0) {
+			HandleMidiNoteOff(i, 0);
+		}
 	}
 }
 
@@ -348,7 +351,7 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_AmpDistortion:	distortion->SetCrunch (value);	break;
 	case kAmsynthParameter_PortamentoTime: 	mPortamentoTime = value; break;
 	case kAmsynthParameter_KeyboardMode:	setKeyboardMode((KeyboardMode)(int)value); break;
-	case kAmsynthParameter_PortamentoMode:	mPortamentoMode = value; break;
+	case kAmsynthParameter_PortamentoMode:	mPortamentoMode = (int) value; break;
 	default: for (unsigned i=0; i<_voices.size(); i++) _voices[i]->UpdateParameter (param, value); break;
 	}
 }

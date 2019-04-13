@@ -1,5 +1,5 @@
 /*
- *  Oscillator.cc
+ *  Oscillator.cpp
  *
  *  Copyright (c) 2001-2014 Nick Dowell
  *
@@ -46,9 +46,9 @@ static inline float ffmodf(float x, float y) {
 Oscillator::Oscillator()
 :	rads (0.0)
 ,	random (0)
-,	waveform (Waveform_Sine)
 ,	rate (44100)
 ,	random_count (0)
+,	waveform (Waveform_Sine)
 ,	mPolarity(1.0f)
 ,	mSyncEnabled(false)
 ,	mSyncRads(0)
@@ -199,7 +199,7 @@ static inline float randf()
 void 
 Oscillator::doRandom(float *buffer, int nFrames)
 {
-    register int period = (int) (rate / mFrequency.getFinalValue());
+    int period = (int) (rate / mFrequency.getFinalValue());
     for (int i = 0; i < nFrames; i++) {
 	if (random_count > period) {
 	    random_count = 0;

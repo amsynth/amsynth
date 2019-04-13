@@ -42,6 +42,8 @@ struct ISynthesizer
 {
     virtual int loadTuningKeymap(const char *filename) = 0;
     virtual int loadTuningScale(const char *filename) = 0;
+    
+    virtual ~ISynthesizer() {}
 };
 
 class Synthesizer : ISynthesizer
@@ -49,7 +51,7 @@ class Synthesizer : ISynthesizer
 public:
     
     Synthesizer();
-    ~Synthesizer();
+    virtual ~Synthesizer();
     
     void loadBank(const char *filename);
     void saveBank(const char *filename);
@@ -88,9 +90,9 @@ public:
 				 std::vector<amsynth_midi_cc_t> &midi_out,
 				 float *audio_l, float *audio_r, unsigned audio_stride = 1);
 
-    MidiController *getMidiController() DEPRECATED { return _midiController; };
-    PresetController *getPresetController() DEPRECATED { return _presetController; }
-    VoiceAllocationUnit *getVoiceAllocationUnit() DEPRECATED { return _voiceAllocationUnit; }
+    MidiController *getMidiController() { return _midiController; };
+    PresetController *getPresetController() { return _presetController; }
+    VoiceAllocationUnit *getVoiceAllocationUnit() { return _voiceAllocationUnit; }
     
 // private:
 

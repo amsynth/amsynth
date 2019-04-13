@@ -38,6 +38,7 @@
 #include "PresetControllerView.h"
 
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 
 
 static MIDILearnDialog *midiLearnDialog;
@@ -49,6 +50,10 @@ struct MainWindow : public UpdateListener
 			synthesizer(synthesizer),
 			presetController(synthesizer->getPresetController())
 	{
+		presetIsNotSaved = false;
+		mainThread = g_thread_self();
+		parameterUpdateQueue = g_async_queue_new();
+
 		window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 		gtk_window_set_title(GTK_WINDOW(window), PACKAGE_NAME);
 		gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
@@ -178,13 +183,13 @@ struct MainWindow : public UpdateListener
 				GTK_DIALOG_DESTROY_WITH_PARENT,
 				GTK_MESSAGE_WARNING,
 				GTK_BUTTONS_NONE,
-				_("<b>Save changes before closing?</b>"));
+				"<b>%s</b>", _("Save changes before closing?"));
 
 		gtk_dialog_add_button(GTK_DIALOG(dialog), _("Close _Without Saving"), GTK_RESPONSE_NO);
 		gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
 		gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_SAVE, GTK_RESPONSE_YES);
 
-		gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), _("If you don't save, changes to the current preset will be permanently lost."));
+		gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", _("If you don't save, changes to the current preset will be permanently lost."));
 
 		gint result = gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
@@ -202,31 +207,51 @@ struct MainWindow : public UpdateListener
 		return true;
 	}
 
+	typedef std::pair<int, float> ParameterUpdate;
+
 	virtual void update()
 	{
-		gdk_threads_enter();
-
-		updateTitle();
-		updateParameter((Param) -1, 0); // to update the '*' in window title
-		presetControllerView->update(); // note: PresetControllerView::update() is expensive
-
-		gdk_threads_leave();
+		if (g_thread_self() == mainThread) {
+			parameterDidChange(-1, NAN);
+		} else {
+			g_async_queue_push(parameterUpdateQueue, new ParameterUpdate(-1, NAN));
+			g_idle_add(MainWindow::parameterUpdateIdleCallback, this);
+		}
 	}
 
 	virtual void UpdateParameter(Param paramID, float paramValue)
 	{
-		gdk_threads_enter();
-
-		updateParameter(paramID, paramValue);
-
-		gdk_threads_leave();
+		if (g_thread_self() == mainThread) {
+			parameterDidChange(paramID, paramValue);
+		} else {
+			g_async_queue_push(parameterUpdateQueue, new ParameterUpdate((int) paramID, paramValue));
+			g_idle_add(MainWindow::parameterUpdateIdleCallback, this);
+		}
 	}
 
-	void updateParameter(Param paramID, float paramValue)
+	static gboolean parameterUpdateIdleCallback(gpointer data)
 	{
-		if (0 <= paramID && paramID < kAmsynthParameterCount) {
-			const Parameter &param = presetController->getCurrentPreset().getParameter(paramID);
-			gtk_adjustment_set_value (adjustments[paramID], param.getValue());
+		MainWindow *mainWindow = (MainWindow *) data;
+
+		ParameterUpdate *update;
+		while ((update = (ParameterUpdate *) g_async_queue_try_pop(mainWindow->parameterUpdateQueue))) {
+			mainWindow->parameterDidChange(update->first, update->second);
+			delete update;
+		}
+
+		return G_SOURCE_REMOVE;
+	}
+
+	void parameterDidChange(int parameter, float value)
+	{
+		if (parameter == -1) {
+			presetControllerView->update(); // note: PresetControllerView::update() is expensive
+			updateTitle();
+			return;
+		}
+		if (0 <= parameter && parameter < kAmsynthParameterCount) {
+			const Parameter &param = presetController->getCurrentPreset().getParameter(parameter);
+			gtk_adjustment_set_value (adjustments[parameter], param.getValue());
 		}
 		bool isModified = presetController->isCurrentPresetModified();
 		if (presetIsNotSaved != isModified) {
@@ -244,6 +269,9 @@ struct MainWindow : public UpdateListener
 	GtkAdjustment *adjustments[kAmsynthParameterCount];
 	GValue defaults[kAmsynthParameterCount];
 	bool presetIsNotSaved;
+
+	GThread *mainThread;
+	GAsyncQueue *parameterUpdateQueue;
 };
 
 
@@ -280,7 +308,7 @@ startup_check(gpointer data)
     return G_SOURCE_REMOVE;
 }
 
-GtkWidget *
+static GtkWidget *
 main_window_new(Synthesizer *synthesizer, GenericOutput *audio)
 {
 	MainWindow *mainWindow = new MainWindow(synthesizer, audio);
@@ -295,6 +323,12 @@ main_window_new(Synthesizer *synthesizer, GenericOutput *audio)
 	g_idle_add(startup_check, mainWindow);
 
 	return mainWindow->window;
+}
+
+void
+main_window_show(Synthesizer *synthesizer, GenericOutput *audio)
+{
+	gtk_widget_show_all(main_window_new(synthesizer, audio));
 }
 
 void

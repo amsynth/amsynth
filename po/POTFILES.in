@@ -7,7 +7,7 @@ src/GUI/editor_menus.cpp
 src/GUI/MainMenu.cpp
 src/GUI/MainWindow.cpp
 src/GUI/MIDILearnDialog.cpp
-src/GUI/PresetControllerView.cc
-src/main.cc
-src/Preset.cc
-src/PresetController.cc
+src/GUI/PresetControllerView.cpp
+src/main.cpp
+src/Preset.cpp
+src/PresetController.cpp

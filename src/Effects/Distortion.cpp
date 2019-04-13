@@ -1,5 +1,5 @@
 /*
- *  Distortion.cc
+ *  Distortion.cpp
  *
  *  Copyright (c) 2001-2012 Nick Dowell
  *
@@ -38,7 +38,7 @@ Distortion::SetCrunch	(float value)
 void
 Distortion::Process	(float *buffer, unsigned nframes)
 {
-	register float x, s;
+	float x, s;
 	if (crunch == 0) crunch = 0.01f;
 	
 	for (unsigned i=0; i<nframes; i++)

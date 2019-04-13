@@ -1,5 +1,5 @@
 /*
- *  ALSAmmapAudioDriver.cc
+ *  ALSAmmapAudioDriver.cpp
  *
  *  Copyright (c) 2001-2015 Nick Dowell, Karsten Wiese
  *
@@ -97,7 +97,7 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 {
 	Configuration & config = Configuration::get();
 
-	int i,p;
+	int i;
 	snd_pcm_sframes_t avail;
 	snd_pcm_uframes_t offset, lframes = frames / 2;
 	const snd_pcm_channel_area_t* areas;
@@ -134,7 +134,7 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 	}
 
 	audiobuf = (short int*)areas[ 0].addr + 2*offset;
-	p=0;
+
 	for( i=0; i<(frames); i++ )
 		*(audiobuf++) = (int)(32767*( 1.0 + buffer[i])) - 32767;
 

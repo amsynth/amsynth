@@ -42,7 +42,7 @@ Synthesizer::Synthesizer()
 	Configuration &config = Configuration::get();
 
 	_voiceAllocationUnit = new VoiceAllocationUnit;
-	_voiceAllocationUnit->SetSampleRate(_sampleRate);
+	_voiceAllocationUnit->SetSampleRate((int) _sampleRate);
 	_voiceAllocationUnit->SetMaxVoices(config.polyphony);
 	_voiceAllocationUnit->setPitchBendRangeSemitones(config.pitch_bend_range);
 	
@@ -174,7 +174,7 @@ void Synthesizer::getParameterDisplay(Param parameter, char *buffer, size_t maxL
 
 int Synthesizer::getPitchBendRangeSemitones()
 {
-	return _voiceAllocationUnit->getPitchBendRangeSemitones();
+	return (int) _voiceAllocationUnit->getPitchBendRangeSemitones();
 }
 
 void Synthesizer::setPitchBendRangeSemitones(int value)
@@ -222,7 +222,7 @@ void Synthesizer::process(unsigned int nframes,
 						  float *audio_l, float *audio_r, unsigned audio_stride)
 {
 	if (_sampleRate < 0) {
-		assert(!"sample rate has not been set");
+		assert(0 == "sample rate has not been set");
 		return;
 	}
 	std::vector<amsynth_midi_event_t>::const_iterator event = midi_in.begin();

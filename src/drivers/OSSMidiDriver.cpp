@@ -1,5 +1,5 @@
 /*
- *  OSSMidiDriver.cc
+ *  OSSMidiDriver.cpp
  *
  *  Copyright (c) 2001-2012 Nick Dowell
  *
@@ -90,7 +90,7 @@ int OSSMidiDriver::close()
 
 int OSSMidiDriver::read(unsigned char *bytes, unsigned maxBytes)
 {
-    return ::read(_fd, bytes, maxBytes);
+    return (int) ::read(_fd, bytes, maxBytes);
 }
 
 

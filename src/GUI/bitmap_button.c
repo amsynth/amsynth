@@ -91,7 +91,7 @@ void bitmap_button_set_bg (GtkWidget *widget, GdkPixbuf *pixbuf)
 		g_object_unref (G_OBJECT (self->background));
 	}
 
-	self->background = pixbuf ? g_object_ref (G_OBJECT (pixbuf)) : NULL;
+	self->background = pixbuf ? GDK_PIXBUF (g_object_ref (G_OBJECT (pixbuf))) : NULL;
 
 	gtk_widget_queue_draw (widget);
 }
@@ -151,7 +151,7 @@ bitmap_button_button_press ( GtkWidget *widget, GdkEventButton *event )
 	return FALSE;
 }
 
-void
+static void
 bitmap_button_update (GtkWidget *widget)
 {
 	bitmap_button *self = g_object_get_data (G_OBJECT (widget), bitmap_button_key); g_assert (self);
@@ -159,26 +159,26 @@ bitmap_button_update (GtkWidget *widget)
 	gdouble value = gtk_adjustment_get_value (self->adjustment);
 	gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 	gdouble upper = gtk_adjustment_get_upper (self->adjustment);
-	guint	frame = self->frame_count * ((value - lower) / (upper - lower));
+	guint	frame = (guint) (self->frame_count * ((value - lower) / (upper - lower)));
 
 	self->current_frame = MIN (frame, (self->frame_count - 1));
 	
 	gtk_widget_queue_draw (widget);
 }
 
-void
+static void
 bitmap_button_adjustment_changed			( GtkAdjustment *adjustment, gpointer data )
 {
 	bitmap_button_update (data);
 }
 
-void
+static void
 bitmap_button_adjustment_value_changed	( GtkAdjustment *adjustment, gpointer data )
 {
 	bitmap_button_update (data);
 }
 
-void
+static void
 bitmap_button_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 {
 	bitmap_button *self = g_object_get_data (G_OBJECT (widget), bitmap_button_key); g_assert (self);
@@ -189,7 +189,7 @@ bitmap_button_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 		gtk_object_unref (GTK_OBJECT (self->adjustment) );
 	}
 	
-	self->adjustment = g_object_ref (GTK_OBJECT (adjustment) );
+	self->adjustment = GTK_ADJUSTMENT (g_object_ref (GTK_OBJECT (adjustment)));
 
 	gtk_signal_connect (GTK_OBJECT (adjustment), "changed",
 		(GtkSignalFunc) bitmap_button_adjustment_changed,
