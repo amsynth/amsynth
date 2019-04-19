@@ -7,18 +7,67 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		045EC9D088C5D4DE27CFE377BD8B014D /* SoftLimiter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C5E7336136498E10AF2B876F6AA5159 /* SoftLimiter.cpp */; };
+		090AE60EA8085926DDD49FE882C3CDAF /* VoiceAllocationUnit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65BDD982B24AA24B8667513E28F79E89 /* VoiceAllocationUnit.cpp */; };
+		0A3FDAC6E8FC48BD10535F8B6E5EAD59 /* comb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE0E07173A123FBB6229F8F1AD672FC6 /* comb.cpp */; };
+		140A0F2527055D6084A3C33488C90756 /* Configuration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C67B37FFA7775E83AABEAB5E80B1C140 /* Configuration.cpp */; };
+		197FC75DF0B8BA7171985EAB73F11651 /* ADSR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C8536E404818C9811997940EBCD40EB /* ADSR.cpp */; };
 		1F7BF2E35D44C9B9DE6EEFB882B88F0F /* amjson.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EB4E436F8F55CCACE02BEF957C89478 /* amjson.cpp */; };
+		41BA6346D6AD390A1E1DD83C371A6A22 /* Oscillator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9EDFFE61B83A40758F31D83FBF35739 /* Oscillator.cpp */; };
+		4326CACF85C4B1D00C85DBFC9C6EB5AE /* Distortion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0242B0648D48B5F70FEEEAFDD1736665 /* Distortion.cpp */; };
+		48985C269D90BDB9FBD4993045B5F84C /* TuningMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E50080CD9DCDF8A7D98BB814F71BD7DC /* TuningMap.cpp */; };
+		531E82E664E8CF6B1319EBA84C83ED88 /* MidiController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9A99B11B33D149CC8869CF7D31604A2 /* MidiController.cpp */; };
+		60D87E632F912BA2F04393C7059BD640 /* Synthesizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B8A8BE5468816C6ABB07B74D1A80DC0 /* Synthesizer.cpp */; };
+		8553982A0D4915899E3315480CDBF03D /* revmodel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A715D6F54C39668DFB1B41E237A71001 /* revmodel.cpp */; };
 		8C363E8998CFF6991282AA103B028FF7 /* Preset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C70F430D7AD1C0EA9019B945B74806A /* Preset.cpp */; };
 		A5338DE749C8B09F483459604F55F8DF /* Parameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A98D2A8B8D585AFEFEA6BBB92922FFBF /* Parameter.cpp */; };
 		BFC0E41A150C4ABD798394E660ECBD7B /* PresetController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 616B0236BE168610B6AD3D0CA026D32E /* PresetController.cpp */; };
+		EB3439605BE3FA15682C6B4EB53BBB92 /* VoiceBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EA497A826681FA3E51860F6F407EBCC /* VoiceBoard.cpp */; };
+		EB954EED2A7696DA1E0732DE187F3461 /* allpass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC010FC40DCE25C7E4F30A8BB3E1A36 /* allpass.cpp */; };
+		F8954E7B2B1AFE2D074657A24EF418F0 /* LowPassFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0D787D860271691FF12D72108518524 /* LowPassFilter.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0242B0648D48B5F70FEEEAFDD1736665 /* Distortion.cpp */ = {isa = PBXFileReference; path = Distortion.cpp; sourceTree = "<group>"; };
+		03FEA0A2572AC0FAD3FBF098D0A89BA4 /* TuningMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TuningMap.h; sourceTree = "<group>"; };
+		070045B57F34285747B3B3F92C439651 /* Synth--.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Synth--.h"; sourceTree = "<group>"; };
+		09B9D53735BC17D53D3EAA478C5609D9 /* MidiController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MidiController.h; sourceTree = "<group>"; };
+		1789A378B2B52DFB5A61885A02E895A3 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
+		19AF5ED5B42035A26B9C5AA346410F15 /* PresetController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PresetController.h; sourceTree = "<group>"; };
+		1E95B133C72B4D3D673E13DB0C0EE3BA /* Oscillator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Oscillator.h; sourceTree = "<group>"; };
+		224729B5D2A38593448B274FF6A1186D /* SoftLimiter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoftLimiter.h; sourceTree = "<group>"; };
+		2AF8E5ACC20E267ACA20D96F17C37384 /* comb.hpp */ = {isa = PBXFileReference; path = comb.hpp; sourceTree = "<group>"; };
+		2EA497A826681FA3E51860F6F407EBCC /* VoiceBoard.cpp */ = {isa = PBXFileReference; path = VoiceBoard.cpp; sourceTree = "<group>"; };
+		3C5E7336136498E10AF2B876F6AA5159 /* SoftLimiter.cpp */ = {isa = PBXFileReference; path = SoftLimiter.cpp; sourceTree = "<group>"; };
+		5106F043EDF9B9AC0437BB5D660731F0 /* Distortion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Distortion.h; sourceTree = "<group>"; };
+		5C8536E404818C9811997940EBCD40EB /* ADSR.cpp */ = {isa = PBXFileReference; path = ADSR.cpp; sourceTree = "<group>"; };
 		616B0236BE168610B6AD3D0CA026D32E /* PresetController.cpp */ = {isa = PBXFileReference; path = PresetController.cpp; sourceTree = "<group>"; };
+		65BDD982B24AA24B8667513E28F79E89 /* VoiceAllocationUnit.cpp */ = {isa = PBXFileReference; path = VoiceAllocationUnit.cpp; sourceTree = "<group>"; };
 		6C70F430D7AD1C0EA9019B945B74806A /* Preset.cpp */ = {isa = PBXFileReference; path = Preset.cpp; sourceTree = "<group>"; };
+		799CDDFCB9358783519CEA574B1DFA40 /* Configuration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configuration.h; sourceTree = "<group>"; };
+		7B8A8BE5468816C6ABB07B74D1A80DC0 /* Synthesizer.cpp */ = {isa = PBXFileReference; path = Synthesizer.cpp; sourceTree = "<group>"; };
 		7EB4E436F8F55CCACE02BEF957C89478 /* amjson.cpp */ = {isa = PBXFileReference; path = amjson.cpp; sourceTree = "<group>"; };
+		7FC010FC40DCE25C7E4F30A8BB3E1A36 /* allpass.cpp */ = {isa = PBXFileReference; path = allpass.cpp; sourceTree = "<group>"; };
+		803733BCEE6945083B11F4961DD41116 /* UpdateListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UpdateListener.h; sourceTree = "<group>"; };
+		818104393A0B48ECA552090F059EE803 /* Parameter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Parameter.h; sourceTree = "<group>"; };
+		8252DC8CC8664C1451AED27594D761B3 /* allpass.hpp */ = {isa = PBXFileReference; path = allpass.hpp; sourceTree = "<group>"; };
+		9F1EA59A1D1C0E956D9A6CC62562CF59 /* LowPassFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LowPassFilter.h; sourceTree = "<group>"; };
+		9FD33AC794A47306835A8145948E3E5A /* revmodel.hpp */ = {isa = PBXFileReference; path = revmodel.hpp; sourceTree = "<group>"; };
+		A715D6F54C39668DFB1B41E237A71001 /* revmodel.cpp */ = {isa = PBXFileReference; path = revmodel.cpp; sourceTree = "<group>"; };
+		A86D8C63F83BADE743207BCC32F8587D /* VoiceAllocationUnit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoiceAllocationUnit.h; sourceTree = "<group>"; };
 		A98D2A8B8D585AFEFEA6BBB92922FFBF /* Parameter.cpp */ = {isa = PBXFileReference; path = Parameter.cpp; sourceTree = "<group>"; };
+		A9EDFFE61B83A40758F31D83FBF35739 /* Oscillator.cpp */ = {isa = PBXFileReference; path = Oscillator.cpp; sourceTree = "<group>"; };
+		ABCD163171731CE09117C6CB7453D3A1 /* Synthesizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synthesizer.h; sourceTree = "<group>"; };
+		AE0E07173A123FBB6229F8F1AD672FC6 /* comb.cpp */ = {isa = PBXFileReference; path = comb.cpp; sourceTree = "<group>"; };
+		B0D787D860271691FF12D72108518524 /* LowPassFilter.cpp */ = {isa = PBXFileReference; path = LowPassFilter.cpp; sourceTree = "<group>"; };
+		B618CE6674C21475F14B238C1CCF849D /* denormals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = denormals.h; sourceTree = "<group>"; };
+		C67B37FFA7775E83AABEAB5E80B1C140 /* Configuration.cpp */ = {isa = PBXFileReference; path = Configuration.cpp; sourceTree = "<group>"; };
+		C9A99B11B33D149CC8869CF7D31604A2 /* MidiController.cpp */ = {isa = PBXFileReference; path = MidiController.cpp; sourceTree = "<group>"; };
+		D5F720FEF7C2FC760ECF472E13A2D499 /* Preset.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Preset.h; sourceTree = "<group>"; };
+		E50080CD9DCDF8A7D98BB814F71BD7DC /* TuningMap.cpp */ = {isa = PBXFileReference; path = TuningMap.cpp; sourceTree = "<group>"; };
+		E50ED7AB94D300895B5BDE757D1485B1 /* VoiceBoard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoiceBoard.h; sourceTree = "<group>"; };
 		EF9347D1289140F575F9BE2484A4D5A6 /* amjson */ = {isa = PBXFileReference; includeInIndex = 0; path = amjson; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA724E32611AAFDE9DF3BA9C8FA92469 /* tuning.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tuning.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -33,18 +82,80 @@
 		2552B58FB58FD12384EA10796091A728 = {
 			isa = PBXGroup;
 			children = (
+				E30B081BFC0E34D6EACCA73AA27D4BB3 /* Effects */,
+				C17C93A560F4FEB0FB7ABE224F0DB7B5 /* freeverb */,
 				EF3BDB0796C47FAD0AB8D642D0315681 /* src */,
+				CCAAE8CA1AA1A31EDF70237980070D93 /* VoiceBoard */,
 				0A5D5341DC7D02F414BCD96B21D0FFF3 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		C17C93A560F4FEB0FB7ABE224F0DB7B5 /* freeverb */ = {
+			isa = PBXGroup;
+			children = (
+				7FC010FC40DCE25C7E4F30A8BB3E1A36 /* allpass.cpp */,
+				8252DC8CC8664C1451AED27594D761B3 /* allpass.hpp */,
+				AE0E07173A123FBB6229F8F1AD672FC6 /* comb.cpp */,
+				2AF8E5ACC20E267ACA20D96F17C37384 /* comb.hpp */,
+				B618CE6674C21475F14B238C1CCF849D /* denormals.h */,
+				A715D6F54C39668DFB1B41E237A71001 /* revmodel.cpp */,
+				9FD33AC794A47306835A8145948E3E5A /* revmodel.hpp */,
+				FA724E32611AAFDE9DF3BA9C8FA92469 /* tuning.h */,
+			);
+			name = freeverb;
+			path = src/freeverb;
+			sourceTree = "<group>";
+		};
+		CCAAE8CA1AA1A31EDF70237980070D93 /* VoiceBoard */ = {
+			isa = PBXGroup;
+			children = (
+				5C8536E404818C9811997940EBCD40EB /* ADSR.cpp */,
+				1789A378B2B52DFB5A61885A02E895A3 /* ADSR.h */,
+				B0D787D860271691FF12D72108518524 /* LowPassFilter.cpp */,
+				9F1EA59A1D1C0E956D9A6CC62562CF59 /* LowPassFilter.h */,
+				A9EDFFE61B83A40758F31D83FBF35739 /* Oscillator.cpp */,
+				1E95B133C72B4D3D673E13DB0C0EE3BA /* Oscillator.h */,
+				070045B57F34285747B3B3F92C439651 /* Synth--.h */,
+				2EA497A826681FA3E51860F6F407EBCC /* VoiceBoard.cpp */,
+				E50ED7AB94D300895B5BDE757D1485B1 /* VoiceBoard.h */,
+			);
+			name = VoiceBoard;
+			path = src/VoiceBoard;
+			sourceTree = "<group>";
+		};
+		E30B081BFC0E34D6EACCA73AA27D4BB3 /* Effects */ = {
+			isa = PBXGroup;
+			children = (
+				0242B0648D48B5F70FEEEAFDD1736665 /* Distortion.cpp */,
+				5106F043EDF9B9AC0437BB5D660731F0 /* Distortion.h */,
+				3C5E7336136498E10AF2B876F6AA5159 /* SoftLimiter.cpp */,
+				224729B5D2A38593448B274FF6A1186D /* SoftLimiter.h */,
+			);
+			name = Effects;
+			path = src/Effects;
 			sourceTree = "<group>";
 		};
 		EF3BDB0796C47FAD0AB8D642D0315681 /* src */ = {
 			isa = PBXGroup;
 			children = (
 				7EB4E436F8F55CCACE02BEF957C89478 /* amjson.cpp */,
+				C67B37FFA7775E83AABEAB5E80B1C140 /* Configuration.cpp */,
+				799CDDFCB9358783519CEA574B1DFA40 /* Configuration.h */,
+				C9A99B11B33D149CC8869CF7D31604A2 /* MidiController.cpp */,
+				09B9D53735BC17D53D3EAA478C5609D9 /* MidiController.h */,
 				A98D2A8B8D585AFEFEA6BBB92922FFBF /* Parameter.cpp */,
+				818104393A0B48ECA552090F059EE803 /* Parameter.h */,
 				6C70F430D7AD1C0EA9019B945B74806A /* Preset.cpp */,
+				D5F720FEF7C2FC760ECF472E13A2D499 /* Preset.h */,
 				616B0236BE168610B6AD3D0CA026D32E /* PresetController.cpp */,
+				19AF5ED5B42035A26B9C5AA346410F15 /* PresetController.h */,
+				7B8A8BE5468816C6ABB07B74D1A80DC0 /* Synthesizer.cpp */,
+				ABCD163171731CE09117C6CB7453D3A1 /* Synthesizer.h */,
+				E50080CD9DCDF8A7D98BB814F71BD7DC /* TuningMap.cpp */,
+				03FEA0A2572AC0FAD3FBF098D0A89BA4 /* TuningMap.h */,
+				803733BCEE6945083B11F4961DD41116 /* UpdateListener.h */,
+				65BDD982B24AA24B8667513E28F79E89 /* VoiceAllocationUnit.cpp */,
+				A86D8C63F83BADE743207BCC32F8587D /* VoiceAllocationUnit.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -96,10 +207,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				197FC75DF0B8BA7171985EAB73F11651 /* ADSR.cpp in Sources */,
+				140A0F2527055D6084A3C33488C90756 /* Configuration.cpp in Sources */,
+				4326CACF85C4B1D00C85DBFC9C6EB5AE /* Distortion.cpp in Sources */,
+				F8954E7B2B1AFE2D074657A24EF418F0 /* LowPassFilter.cpp in Sources */,
+				531E82E664E8CF6B1319EBA84C83ED88 /* MidiController.cpp in Sources */,
+				41BA6346D6AD390A1E1DD83C371A6A22 /* Oscillator.cpp in Sources */,
 				A5338DE749C8B09F483459604F55F8DF /* Parameter.cpp in Sources */,
 				8C363E8998CFF6991282AA103B028FF7 /* Preset.cpp in Sources */,
 				BFC0E41A150C4ABD798394E660ECBD7B /* PresetController.cpp in Sources */,
+				045EC9D088C5D4DE27CFE377BD8B014D /* SoftLimiter.cpp in Sources */,
+				60D87E632F912BA2F04393C7059BD640 /* Synthesizer.cpp in Sources */,
+				48985C269D90BDB9FBD4993045B5F84C /* TuningMap.cpp in Sources */,
+				090AE60EA8085926DDD49FE882C3CDAF /* VoiceAllocationUnit.cpp in Sources */,
+				EB3439605BE3FA15682C6B4EB53BBB92 /* VoiceBoard.cpp in Sources */,
+				EB954EED2A7696DA1E0732DE187F3461 /* allpass.cpp in Sources */,
 				1F7BF2E35D44C9B9DE6EEFB882B88F0F /* amjson.cpp in Sources */,
+				0A3FDAC6E8FC48BD10535F8B6E5EAD59 /* comb.cpp in Sources */,
+				8553982A0D4915899E3315480CDBF03D /* revmodel.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

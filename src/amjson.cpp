@@ -20,14 +20,18 @@
  */
 
 #include "json.hpp"
+#include "midi.h"
 #include "PresetController.h"
+#include "Synthesizer.h"
 
 #include <cassert>
 #include <cstdio>
 #include <dirent.h>
+#include <fcntl.h>
 #include <fstream>
 #include <iostream>
 #include <libgen.h>
+#include <unistd.h>
 
 static const char *osc_waveforms[] = {
     "sine",
@@ -219,9 +223,12 @@ static nlohmann::json to_json(Preset &preset) {
 }
 
 int main(int argc, const char * argv[]) {
-    PresetController presetController;
     auto banks = std::string(dirname(dirname((char *)__FILE__))) + "/data/banks";
     DIR *dir = opendir(banks.c_str());
+    
+    float *floatL = (float *)malloc(sizeof(float) * 44100);
+    float *floatR = (float *)malloc(sizeof(float) * 44100);
+    int16_t *shortBuffer = (int16_t *)malloc(sizeof(int16_t) * 44100 * 2);
 
     struct dirent *entry;
     while ((entry = readdir(dir))) {
@@ -231,16 +238,63 @@ int main(int argc, const char * argv[]) {
 
         std::ostringstream path;
         path << banks << "/" << entry->d_name;
-        int err = presetController.loadPresets(path.str().c_str());
-        assert(err == 0);
+        
+        Synthesizer synth;
+        synth.setSampleRate(44100);
+        synth.loadBank(path.str().c_str());
 
-        for (int i = 0; i < PresetController::kNumPresets; i ++) {
-            presetController.selectPreset(i);
+        for (int i = 0; i < PresetController::kNumPresets; i++) {
+            synth.setPresetNumber(i);
+            
+            // Output JSON
+            
             std::ostringstream namestream;
             namestream << "/tmp/" << entry->d_name << "_" << i << ".json";
             std::string outname = namestream.str();
             std::cout << "Writing " << outname << std::endl;
-            std::ofstream(outname, std::ios::out) << to_json(presetController.getCurrentPreset()).dump(2);
+            std::ofstream(outname, std::ios::out) << to_json(synth.getPresetController()->getCurrentPreset()).dump(2);
+            
+            // Generate audio sample
+            
+            std::vector<amsynth_midi_event_t> midiIn;
+            std::vector<amsynth_midi_cc_t> midiOut;
+            
+            unsigned char midi[4] = { MIDI_STATUS_NOTE_ON, 69, 127 };
+            amsynth_midi_event_t e = { 0, 3, midi };
+            midiIn.clear();
+            midiIn.push_back(e);
+
+            synth.process(44100, midiIn, midiOut, floatL, floatR);
+            
+            for (int j = 0; j < 44100; j++) {
+                shortBuffer[j * 2 + 0] = (int16_t)(floatL[j] * 32767.f);
+                shortBuffer[j * 2 + 1] = (int16_t)(floatR[j] * 32767.f);
+            }
+            
+            std::ostringstream wavnamestream;
+            wavnamestream << "/tmp/" << entry->d_name << "_" << i << ".wav";
+            std::cout << "Generating " << wavnamestream.str() << std::endl;
+            
+            int wav = open(wavnamestream.str().c_str(), O_RDWR | O_CREAT | O_TRUNC, 0664);
+            
+#define write_int(fd, value) do { int tmp = value; write(fd, &tmp, sizeof(tmp)); } while (0)
+#define write_short(fd, value) do { uint16_t tmp = value; write(fd, &tmp, sizeof(tmp)); } while (0)
+            
+            write(wav, "RIFF", 4);
+            write_int(wav, 18 + 176400);
+            write(wav, "WAVE", 4);
+            write(wav, "fmt ", 4);
+            write_int(wav, 16); // Should be 16 for PCM
+            write_short(wav, 1); // PCM = 1 (i.e. Linear quantization)
+            write_short(wav, 2); // Number of channels
+            write_int(wav, 44100); // Sample rate
+            write_int(wav, 176400); // SampleRate * NumChannels * BitsPerSample/8
+            write_short(wav, 4); // NumChannels * BitsPerSample/8
+            write_short(wav, 16); // Number of bits per sample
+            write(wav, "data", 4);
+            write_int(wav, 176400); // Number of bytes that follow
+            write(wav, shortBuffer, 176400);
+            close(wav);
         }
     }
     closedir(dir);

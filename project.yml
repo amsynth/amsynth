@@ -6,6 +6,41 @@ targets:
     platform: macOS
     sources:
       - path: src/amjson.cpp
+      - path: src/Configuration.cpp
+      - path: src/Configuration.h
+      - path: src/Effects/Distortion.cpp
+      - path: src/Effects/Distortion.h
+      - path: src/Effects/SoftLimiter.cpp
+      - path: src/Effects/SoftLimiter.h
+      - path: src/freeverb/allpass.cpp
+      - path: src/freeverb/allpass.hpp
+      - path: src/freeverb/comb.cpp
+      - path: src/freeverb/comb.hpp
+      - path: src/freeverb/denormals.h
+      - path: src/freeverb/revmodel.cpp
+      - path: src/freeverb/revmodel.hpp
+      - path: src/freeverb/tuning.h
+      - path: src/MidiController.cpp
+      - path: src/MidiController.h
       - path: src/Parameter.cpp
+      - path: src/Parameter.h
       - path: src/Preset.cpp
+      - path: src/Preset.h
       - path: src/PresetController.cpp
+      - path: src/PresetController.h
+      - path: src/Synthesizer.cpp
+      - path: src/Synthesizer.h
+      - path: src/TuningMap.cpp
+      - path: src/TuningMap.h
+      - path: src/UpdateListener.h
+      - path: src/VoiceAllocationUnit.cpp
+      - path: src/VoiceAllocationUnit.h
+      - path: src/VoiceBoard/ADSR.cpp
+      - path: src/VoiceBoard/ADSR.h
+      - path: src/VoiceBoard/LowPassFilter.cpp
+      - path: src/VoiceBoard/LowPassFilter.h
+      - path: src/VoiceBoard/Oscillator.cpp
+      - path: src/VoiceBoard/Oscillator.h
+      - path: src/VoiceBoard/Synth--.h
+      - path: src/VoiceBoard/VoiceBoard.cpp
+      - path: src/VoiceBoard/VoiceBoard.h
