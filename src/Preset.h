@@ -42,6 +42,9 @@ public:
 
 	const std::string& getName		() const { return mName; }
 	void			setName			(const std::string name) { mName = name; }
+
+	std::string     getCategory     () const { return mCategory; }
+	void            setCategory     (const std::string &category) { mCategory = category; }
 	
 	Parameter&		getParameter	(const std::string name);
 	Parameter&		getParameter	(const int no) { return mParameters[no]; };
@@ -65,6 +68,7 @@ public:
 
 private:
     std::string				mName;
+    std::string             mCategory;
 	std::vector<Parameter>	mParameters;
 	Parameter				nullparam;
 };

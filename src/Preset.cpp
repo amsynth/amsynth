@@ -105,6 +105,7 @@ Preset::operator =		(const Preset &rhs)
 		getParameter(i).setValue(rhs.getParameter(i).getValue());
     }
     setName(rhs.getName());
+    setCategory(rhs.getCategory());
     return *this;
 }
 
@@ -159,6 +160,9 @@ Preset::toString(std::stringstream &stream)
 	for (unsigned n = 0; n < ParameterCount(); n++) {
 		stream << "<parameter> " << getParameter(n).getName() << " " << getParameter(n).getValue() << std::endl;
 	}
+    if (!getCategory().empty()) {
+        stream << "<category> " << getCategory() << std::endl;
+    }
 }
 
 bool
@@ -197,6 +201,12 @@ Preset::fromString(const std::string &str)
 			if (name!="unused")
 				getParameter(name).setValue(Parameter::valueFromString(buffer));
 			stream >> buffer;
+		}
+
+		if (buffer == "<category>") {
+		    std::string category;
+		    stream >> category;
+		    setCategory(category);
 		}
 	};
 	return true;

@@ -206,30 +206,20 @@ PresetController::savePresets		(const char *filename)
   
 	file << "amSynth" << endl;
 	for (int i = 0; i < kNumPresets; i++) {
-		if (presets[i].getName()!="unused"){
-#ifdef _DEBUG
-			cout << "<PresetController::savePresets():- preset: name= "
-			<< presets[i].getName() << endl;
-#endif
+		if (presets[i].getName()!="unused") {
 			file << "<preset> " << "<name> " << presets[i].getName() << endl;
-			for (unsigned n = 0; n < presets[i].ParameterCount(); n++)
-			{
-#ifdef _DEBUG
-				cout << "PresetController::savePresets() :- parameter name="
-				<< presets[i].getParameter(n).getName() << " value= "
-				<< presets[i].getParameter(n).getValue() << endl;
-#endif
-				file << "<parameter> " 
+			for (unsigned n = 0; n < presets[i].ParameterCount(); n++) {
+				file << "<parameter> "
 				<< presets[i].getParameter(n).getName()
 				<< " " << presets[i].getParameter(n).getValue() << endl;
+			}
+            if (!presets[i].getCategory().empty()) {
+			    file << "<category> " << presets[i].getCategory() << endl;
 			}
 		}
 	}
 	file << "EOF" << endl;
 	file.close();
-#ifdef _DEBUG
-	cout << "<PresetController::savePresets() success" << endl;
-#endif
 
 	lastPresetsFileModifiedTime = mtime(filename);
 	bank_file = std::string(filename);
@@ -334,6 +324,12 @@ static bool readBankFile(const char *filename, Preset *presets)
 			if (strncmp(line_ptr, preset_prefix, sizeof(preset_prefix) - 1) == 0) {
 				presets[++preset_index] = Preset(std::string(line_ptr + sizeof(preset_prefix) - 1));
 			}
+
+			static char category_prefix[] = "<category> ";
+            if (strncmp(line_ptr, category_prefix, sizeof(category_prefix) - 1) == 0) {
+                std::string category = std::string(line_ptr + sizeof(category_prefix) - 1);
+                presets[preset_index].setCategory(category);
+            }
 
 			static char parameter_prefix[] = "<parameter> ";
 			if (strncmp(line_ptr, parameter_prefix, sizeof(parameter_prefix) - 1) == 0) {
