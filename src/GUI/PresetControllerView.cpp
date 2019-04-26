@@ -1,7 +1,7 @@
 /*
  *  PresetControllerView.cpp
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -46,9 +46,8 @@ static void snprintf_truncate(char *str, size_t size, const char *format, ...)
 class PresetControllerViewImpl : public PresetControllerView, public UpdateListener
 {
 public:
-	PresetControllerViewImpl();
+	PresetControllerViewImpl(PresetController *presetController);
 
-	virtual void setPresetController(PresetController *presetController);
 	virtual void update();
 	virtual unsigned char getAuditionNote();
 	virtual GtkWidget * getWidget() { return widget; }
@@ -97,8 +96,8 @@ static gboolean on_output(GtkSpinButton *spin, gpointer user_data)
 	return TRUE;
 }
 
-PresetControllerViewImpl::PresetControllerViewImpl()
-:	presetController(NULL)
+PresetControllerViewImpl::PresetControllerViewImpl(PresetController *presetController)
+:	presetController(presetController)
 ,	widget(NULL)
 ,	bank_combo(NULL)
 ,	combo(NULL)
@@ -145,12 +144,8 @@ PresetControllerViewImpl::PresetControllerViewImpl()
 	widget = button_with_image (GTK_STOCK_MEDIA_STOP, _("Panic"));
 	g_signal_connect (G_OBJECT (widget), "clicked", G_CALLBACK (&PresetControllerViewImpl::on_panic_clicked), this);
 	gtk_box_pack_start (hbox, widget, FALSE, FALSE, 0);
-}
 
-void PresetControllerViewImpl::setPresetController(PresetController *presetController)
-{
-    this->presetController = presetController;
-    update();
+	update();
 }
 
 void PresetControllerViewImpl::on_combo_changed (GtkWidget *widget, PresetControllerViewImpl *that)
@@ -269,7 +264,7 @@ unsigned char PresetControllerViewImpl::getAuditionNote()
 	return audition_note;
 }
 
-PresetControllerView * PresetControllerView::create()
+PresetControllerView * PresetControllerView::instantiate(PresetController *presetController)
 {
-	return new PresetControllerViewImpl();
+    return new PresetControllerViewImpl(presetController);
 }
