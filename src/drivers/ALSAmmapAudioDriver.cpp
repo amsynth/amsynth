@@ -1,7 +1,7 @@
 /*
  *  ALSAmmapAudioDriver.cpp
  *
- *  Copyright (c) 2001-2015 Nick Dowell, Karsten Wiese
+ *  Copyright (c) 2001-2019 Nick Dowell, Karsten Wiese
  *
  *  This file is part of amsynth.
  *
@@ -52,14 +52,10 @@ public:
 private:
     int 	xrun_recovery();
 
-    int		_dsp_handle;
     int		_rate;
     int		_channels;
-    int		_format;
-    unsigned char	*audiobuf;
     snd_pcm_t		*playback_handle;
     snd_pcm_hw_params_t	*hw_params;
-    snd_pcm_sw_params_t	*sw_params;
     int			err;
     unsigned		periods;
 };

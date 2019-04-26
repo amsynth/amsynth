@@ -1,7 +1,7 @@
 /*
  *  VoiceAllocationUnit.cpp
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -376,9 +376,3 @@ VoiceAllocationUnit::loadKeyMap		(const string & kbmFileName)
 	return tuningMap.loadKeyMap(kbmFileName);
 }
 
-void
-VoiceAllocationUnit::defaultTuning	()
-{
-	tuningMap.defaultScale();
-	tuningMap.defaultKeyMap();
-}

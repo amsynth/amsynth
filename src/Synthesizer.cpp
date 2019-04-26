@@ -1,7 +1,7 @@
 /*
  *  Synthesizer.cpp
  *
- *  Copyright (c) 2014-2016 Nick Dowell
+ *  Copyright (c) 2014-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -122,11 +122,6 @@ int Synthesizer::saveState(char **buffer)
 	return sprintf(*buffer, "%s", string.c_str());
 }
 
-const char *Synthesizer::getPresetName(int presetNumber)
-{
-	return _presetController->getPreset(presetNumber).getName().c_str();
-}
-
 int Synthesizer::getPresetNumber()
 {
 	return _presetController->getCurrPresetNumber();
@@ -170,11 +165,6 @@ void Synthesizer::getParameterLabel(Param parameter, char *buffer, size_t maxLen
 void Synthesizer::getParameterDisplay(Param parameter, char *buffer, size_t maxLen)
 {
 	strncpy(buffer, _presetController->getCurrentPreset().getParameter(parameter).GetStringValue().c_str(), maxLen);
-}
-
-int Synthesizer::getPitchBendRangeSemitones()
-{
-	return (int) _voiceAllocationUnit->getPitchBendRangeSemitones();
 }
 
 void Synthesizer::setPitchBendRangeSemitones(int value)
