@@ -1,7 +1,7 @@
 /*
  *  ALSAAudioDriver.cpp
  *
- *  Copyright (c) 2001-2015 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -112,7 +112,7 @@ ALSAAudioDriver::open()
 
 	_handle = pcm;
 	_channels = config.channels;
-	_buffer = (short *)malloc(kMaxWriteFrames * sizeof(short));
+	_buffer = (short *)malloc(kMaxWriteFrames * _channels * sizeof(short));
 
 	config.current_audio_driver = "ALSA";
 #ifdef ENABLE_REALTIME
