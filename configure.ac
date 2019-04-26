@@ -202,8 +202,6 @@ echo \| Build DSSI GUI........................................ : $with_dssi_gui
 echo \| Build LV2 plugin...................................... : $with_lv2
 echo \| Build VST plugin...................................... : $with_vst
 echo \|
-echo \| Use libsndfile for .wav output support................ : $with_sndfile
-echo \|
 echo \| Generate man pages using pandoc....................... : $with_pandoc
 echo
 echo configure complete. now type \'make\' to build $PACKAGE
