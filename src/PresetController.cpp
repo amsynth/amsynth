@@ -443,12 +443,12 @@ static void scan_preset_bank(const std::string dir_path, const std::string file_
 	if (!is_amsynth_file(file_path.c_str()))
 		return;
 
-	BankInfo bank_info;
+	s_banks.push_back(BankInfo());
+	BankInfo &bank_info = s_banks.back();
 	bank_info.name = bank_name;
 	bank_info.file_path = file_path;
 	bank_info.read_only = read_only;
 	readBankFile(file_path.c_str(), bank_info.presets);
-	s_banks.push_back(bank_info);
 
 	for (int i = 0; i < PRESETS_PER_BANK; i++) {
 		const Preset &preset = bank_info.presets[i];
