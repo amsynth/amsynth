@@ -1,7 +1,7 @@
 /*
  *  PresetController.cpp
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -26,7 +26,6 @@
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
-#include <string>
 #include <fstream>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -404,6 +403,24 @@ PresetController::selectBank(int bankNumber)
 
 static std::vector<BankInfo> s_banks;
 
+static PresetCategories s_categories;
+
+///////////////////////////////////
+
+const BankInfo& PresetInfo::getBank() const {
+	return s_banks[bank];
+}
+
+const std::string& PresetInfo::getName() const {
+	return s_banks[bank].presets[preset].getName();
+}
+
+static bool compare(const PresetInfo &lhs, const PresetInfo &rhs) {
+	return strcasecmp(lhs.getName().c_str(), rhs.getName().c_str()) < 0;
+}
+
+///////////////////////////////////
+
 static void scan_preset_bank(const std::string dir_path, const std::string file_name, bool read_only)
 {
 	std::string file_path = dir_path + std::string("/") + std::string(file_name);
@@ -428,6 +445,13 @@ static void scan_preset_bank(const std::string dir_path, const std::string file_
 	bank_info.read_only = read_only;
 	readBankFile(file_path.c_str(), bank_info.presets);
 	s_banks.push_back(bank_info);
+
+	for (int i = 0; i < PRESETS_PER_BANK; i++) {
+		const Preset &preset = bank_info.presets[i];
+		if (!preset.getName().empty()) {
+			s_categories[preset.getCategory()].push_back((PresetInfo){ s_banks.size() - 1, i });
+		}
+	}
 }
 
 static void scan_preset_banks(const std::string dir_path, bool read_only)
@@ -457,6 +481,7 @@ static std::string sFactoryBanksDirectory;
 static void scan_preset_banks()
 {
 	s_banks.clear();
+	s_categories.clear();
 	scan_preset_bank(std::string(getenv("HOME")), ".amSynth.presets", false);
 	scan_preset_banks(PresetController::getUserBanksDirectory(), false);
 #ifdef PKGDATADIR
@@ -465,6 +490,9 @@ static void scan_preset_banks()
 #endif
 	if (!sFactoryBanksDirectory.empty())
 		scan_preset_banks(sFactoryBanksDirectory, true);
+	for (PresetCategories::iterator it = s_categories.begin(); it != s_categories.end(); ++it) {
+		std::sort(it->second.begin(), it->second.end(), &compare);
+	}
 }
 
 const std::vector<BankInfo> &
@@ -473,6 +501,12 @@ PresetController::getPresetBanks()
 	if (s_banks.empty())
 		scan_preset_banks();
 	return s_banks;
+}
+
+const PresetCategories& PresetController::getPresetCategories() {
+	if (s_banks.empty())
+		scan_preset_banks();
+	return s_categories;
 }
 
 void PresetController::rescanPresetBanks()

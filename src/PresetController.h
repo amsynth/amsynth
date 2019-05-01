@@ -1,7 +1,7 @@
 /*
  *  PresetController.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -22,23 +22,36 @@
 #ifndef _PRESETCONTROLLER_H
 #define _PRESETCONTROLLER_H
 
+#include <map>
+#include <stack>
 #include <string>
 #include <vector>
-#include <stack>
 
 #include "Preset.h"
 #include "UpdateListener.h"
+
+#define PRESETS_PER_BANK 128
 
 struct BankInfo {
 	std::string name;
 	std::string file_path;
 	bool read_only;
-	Preset presets[128];
+	Preset presets[PRESETS_PER_BANK];
 };
+
+struct PresetInfo {
+	int bank;
+	int preset;
+
+	const BankInfo &getBank() const;
+	const std::string &getName() const;
+};
+
+typedef std::map<std::string, std::vector<PresetInfo> > PresetCategories;
 
 class PresetController {
 public:
-	enum { kNumPresets = 128 };
+	enum { kNumPresets = PRESETS_PER_BANK };
 
 			PresetController	();
 			~PresetController	();
@@ -89,6 +102,7 @@ public:
 	const std::string & getFilePath() { return bank_file; }
 
 	static const std::vector<BankInfo> & getPresetBanks();
+	static const PresetCategories &getPresetCategories();
 	static void rescanPresetBanks();
 
 	static void setFactoryBanksDirectory(std::string path);
