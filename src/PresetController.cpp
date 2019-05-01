@@ -212,8 +212,8 @@ PresetController::savePresets		(const char *filename)
 				<< presets[i].getParameter(n).getName()
 				<< " " << presets[i].getParameter(n).getValue() << endl;
 			}
-            if (!presets[i].getCategory().empty()) {
-			    file << "<category> " << presets[i].getCategory() << endl;
+			if (!presets[i].getCategory().empty()) {
+				file << "<category> " << presets[i].getCategory() << endl;
 			}
 		}
 	}
@@ -325,10 +325,10 @@ static bool readBankFile(const char *filename, Preset *presets)
 			}
 
 			static char category_prefix[] = "<category> ";
-            if (strncmp(line_ptr, category_prefix, sizeof(category_prefix) - 1) == 0) {
-                std::string category = std::string(line_ptr + sizeof(category_prefix) - 1);
-                presets[preset_index].setCategory(category);
-            }
+			if (strncmp(line_ptr, category_prefix, sizeof(category_prefix) - 1) == 0) {
+				std::string category = std::string(line_ptr + sizeof(category_prefix) - 1);
+				presets[preset_index].setCategory(category);
+			}
 
 			static char parameter_prefix[] = "<parameter> ";
 			if (strncmp(line_ptr, parameter_prefix, sizeof(parameter_prefix) - 1) == 0) {
