@@ -416,7 +416,11 @@ const std::string& PresetInfo::getName() const {
 }
 
 static bool compare(const PresetInfo &lhs, const PresetInfo &rhs) {
+#if _WIN32
+	return _stricmp(lhs.getName().c_str(), rhs.getName().c_str()) < 0;
+#else
 	return strcasecmp(lhs.getName().c_str(), rhs.getName().c_str()) < 0;
+#endif
 }
 
 ///////////////////////////////////
@@ -449,7 +453,8 @@ static void scan_preset_bank(const std::string dir_path, const std::string file_
 	for (int i = 0; i < PRESETS_PER_BANK; i++) {
 		const Preset &preset = bank_info.presets[i];
 		if (!preset.getName().empty()) {
-			s_categories[preset.getCategory()].push_back((PresetInfo){ s_banks.size() - 1, i });
+			PresetInfo presetInfo = { s_banks.size() - 1, i };
+			s_categories[preset.getCategory()].push_back(presetInfo);
 		}
 	}
 }
@@ -482,8 +487,11 @@ static void scan_preset_banks()
 {
 	s_banks.clear();
 	s_categories.clear();
-	scan_preset_bank(std::string(getenv("HOME")), ".amSynth.presets", false);
-	scan_preset_banks(PresetController::getUserBanksDirectory(), false);
+	const char *home = getenv("HOME");
+	if (home) {
+		scan_preset_bank(std::string(home), ".amSynth.presets", false);
+		scan_preset_banks(PresetController::getUserBanksDirectory(), false);
+	}
 #ifdef PKGDATADIR
 	if (sFactoryBanksDirectory.empty())
 		sFactoryBanksDirectory = std::string(PKGDATADIR "/banks");
