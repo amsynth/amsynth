@@ -36,6 +36,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Lead
 <preset> <name> Synth Strings 1
 <parameter> amp_attack 0.960411
 <parameter> amp_decay 0.02
@@ -73,6 +74,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Strings
 <preset> <name> Violin 1
 <parameter> amp_attack 0.391711
 <parameter> amp_decay 0.11
@@ -110,6 +112,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Strings
 <preset> <name> Sweet Bass
 <parameter> amp_attack 0.0591818
 <parameter> amp_decay 0.350065
@@ -147,6 +150,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Bass
 <preset> <name> Formant Synth Lead
 <parameter> amp_attack 0.465953
 <parameter> amp_decay 0.282384
@@ -184,6 +188,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Lead
 <preset> <name> Caves
 <parameter> amp_attack 1.67792
 <parameter> amp_decay 0.25158
@@ -221,6 +226,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> FX
 <preset> <name> Xylophone
 <parameter> amp_attack 0
 <parameter> amp_decay 0.529803
@@ -258,6 +264,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Keys
 <preset> <name> Electric Organ 1
 <parameter> amp_attack 0.17
 <parameter> amp_decay 0
@@ -295,6 +302,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Keys
 <preset> <name> Church Organ
 <parameter> amp_attack 0.17
 <parameter> amp_decay 0
@@ -332,6 +340,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Keys
 <preset> <name> Reed Organ
 <parameter> amp_attack 0.17
 <parameter> amp_decay 0
@@ -369,6 +378,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Keys
 <preset> <name> Sexy Boy
 <parameter> amp_attack 0.01
 <parameter> amp_decay 1.92115
@@ -406,6 +416,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Bass
 <preset> <name> Flangey Bass 1
 <parameter> amp_attack 0.148853
 <parameter> amp_decay 0.918287
@@ -443,6 +454,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Bass
 <preset> <name> My Friend
 <parameter> amp_attack 0.17
 <parameter> amp_decay 0
@@ -480,6 +492,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Keys
 <preset> <name> Lazy Moon Lead
 <parameter> amp_attack 0
 <parameter> amp_decay 0.64
@@ -517,6 +530,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Lead
 <preset> <name> BubbleBath
 <parameter> amp_attack 0.594498
 <parameter> amp_decay 0.377137
@@ -554,6 +568,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> FX
 <preset> <name> Cosmonic
 <parameter> amp_attack 1.18408
 <parameter> amp_decay 0.840999
@@ -591,6 +606,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> FX
 <preset> <name> Cosmonic 2
 <parameter> amp_attack 1.18408
 <parameter> amp_decay 0.840999
@@ -628,6 +644,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> FX
 <preset> <name> Deeck
 <parameter> amp_attack 0.252126
 <parameter> amp_decay 0.934375
@@ -665,6 +682,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> FX
 <preset> <name> Encounter
 <parameter> amp_attack 0.158258
 <parameter> amp_decay 0.693322
@@ -702,6 +720,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> FX
 <preset> <name> Glassic
 <parameter> amp_attack 0.161656
 <parameter> amp_decay 0
@@ -739,6 +758,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> FX
 <preset> <name> Periodic Junk
 <parameter> amp_attack 1.10748
 <parameter> amp_decay 1.3855
@@ -776,6 +796,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> FX
 <preset> <name> Soft Simple
 <parameter> amp_attack 1.15929
 <parameter> amp_decay 1.38035
@@ -813,6 +834,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Pad
 <preset> <name> Vibratio
 <parameter> amp_attack 0.158258
 <parameter> amp_decay 0.693322
@@ -850,6 +872,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Pad
 <preset> <name> Wave
 <parameter> amp_attack 0.752137
 <parameter> amp_decay 0.898853
@@ -887,6 +910,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> FX
 <preset> <name> Artic
 <parameter> amp_attack 0.576081
 <parameter> amp_decay 1.19447
@@ -924,6 +948,7 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Pad
 <preset> <name> Dirty Pulsating Bass
 <parameter> amp_attack 0.177835
 <parameter> amp_decay 0
@@ -961,4 +986,5 @@ amSynth
 <parameter> osc2_pitch 0
 <parameter> filter_type 0
 <parameter> filter_slope 1
+<category> Bass
 EOF
