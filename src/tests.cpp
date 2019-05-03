@@ -168,6 +168,11 @@ TEST(testOscillatorHighFrequency) {
     }
 }
 
+TEST(testPresetCategories) {
+    const PresetCategories &categories = PresetController::getPresetCategories();
+    assert(categories.size() > 1);
+}
+
 #define RUN_TEST(testFunction) do { printf("%s()... ", #testFunction); testFunction(); printf("OK\n"); } while (0)
 
 int main(int argc, const char * argv[])  {
@@ -176,5 +181,6 @@ int main(int argc, const char * argv[])  {
     RUN_TEST(testPresetValueStrings);
     RUN_TEST(testMidiAllNotesOff);
     RUN_TEST(testOscillatorHighFrequency);
+    RUN_TEST(testPresetCategories);
     return 0;
 }
