@@ -453,7 +453,7 @@ static void scan_preset_bank(const std::string dir_path, const std::string file_
 	for (int i = 0; i < PRESETS_PER_BANK; i++) {
 		const Preset &preset = bank_info.presets[i];
 		if (!preset.getName().empty()) {
-			PresetInfo presetInfo = { s_banks.size() - 1, i };
+			PresetInfo presetInfo = { (int)s_banks.size() - 1, i };
 			s_categories[preset.getCategory()].push_back(presetInfo);
 		}
 	}
