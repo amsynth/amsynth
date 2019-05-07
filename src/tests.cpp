@@ -31,6 +31,7 @@
 #include <cassert>
 #include <cstdio>
 #include <iostream>
+#include <libgen.h>
 
 #define TEST(name) static void name()
 
@@ -169,6 +170,8 @@ TEST(testOscillatorHighFrequency) {
 }
 
 TEST(testPresetCategories) {
+    std::string banks = std::string(dirname(dirname((char *)__FILE__))) + "/data/banks";
+    PresetController::setFactoryBanksDirectory(banks);
     const PresetCategories &categories = PresetController::getPresetCategories();
     assert(categories.size() > 1);
 }
