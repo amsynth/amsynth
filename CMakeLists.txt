@@ -20,6 +20,7 @@ add_compile_options(
         -DPACKAGE_URL="https://amsynth.github.io"
         -DPACKAGE_BUGREPORT="https://www.github.com/amsynth/amsynth/issues"
         -DPKGDATADIR="${PROJECT_SOURCE_DIR}/data"
+        -DTEST_DATA_DIR="${PROJECT_SOURCE_DIR}/data"
         -DWITH_OSS
 )
 

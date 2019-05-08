@@ -17,7 +17,8 @@
 #  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
-AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' -DPACKAGE_LOCALEDIR=\""$(datadir)/locale"\" @CPPFLAGS@ -fPIC -fvisibility=hidden
+AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' -DPACKAGE_LOCALEDIR=\""$(datadir)/locale"\" \
+	-DTEST_DATA_DIR=\""$(abs_top_srcdir)/data"\" @CPPFLAGS@ -fPIC -fvisibility=hidden
 
 # amsynth still maintains support for compilers that do not fully support the C++11 standard
 AM_CXXFLAGS = -std=c++98 @CXXFLAGS@
