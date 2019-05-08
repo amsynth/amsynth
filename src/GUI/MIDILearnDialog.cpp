@@ -1,7 +1,7 @@
 /*
  *  MIDILearnDialog.cpp
  *
- *  Copyright (c) 2001-2017 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -40,7 +40,7 @@ MIDILearnDialog::MIDILearnDialog(MidiController *midiController, PresetControlle
 		NULL);
 
 	_paramNameEntry = gtk_entry_new();
-	gtk_entry_set_editable(GTK_ENTRY(_paramNameEntry), FALSE);
+	gtk_editable_set_editable(GTK_EDITABLE(_paramNameEntry), FALSE);
 
 	_combo = gtk_combo_box_new_text();
 	gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (_combo), 4);

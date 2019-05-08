@@ -1,7 +1,7 @@
 /*
  *  MainMenu.cpp
  *
- *  Copyright(c) 2001-2017 Nick Dowell
+ *  Copyright(c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -323,11 +323,11 @@ struct PresetMenu
 		GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 		GtkBox *vbox = GTK_BOX(content);
 
-		gtk_box_pack_start_defaults(vbox, gtk_label_new(_("Enter new Preset Name:")));
+		gtk_box_pack_start(vbox, gtk_label_new(_("Enter new Preset Name:")), TRUE, 0, 0);
 
 		GtkWidget *entry = gtk_entry_new();
 		gtk_entry_set_text(GTK_ENTRY(entry), synthesizer->getPresetController()->getCurrentPreset().getName().c_str());
-		gtk_box_pack_start_defaults(vbox, entry);
+		gtk_box_pack_start(vbox, entry, TRUE, 0, 0);
 
 		gtk_widget_show_all(dialog);
 

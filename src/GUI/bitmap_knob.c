@@ -1,7 +1,7 @@
 /*
  *  bitmap_knob.c
  *
- *  Copyright (c) 2001-2017 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -84,15 +84,15 @@ bitmap_knob_new( GtkAdjustment *adjustment,
 	self->frame_height	= frame_height;
 	self->frame_count	= frame_count;
 
-	g_object_set_data_full (G_OBJECT (self->drawing_area), bitmap_knob_key, self, (GtkDestroyNotify) g_free);
+	g_object_set_data_full (G_OBJECT (self->drawing_area), bitmap_knob_key, self, (GDestroyNotify) g_free);
 	g_assert (g_object_get_data (G_OBJECT (self->drawing_area), bitmap_knob_key));
 	
 	g_signal_connect (G_OBJECT (self->drawing_area), "expose-event", G_CALLBACK (bitmap_knob_expose), NULL);
 	g_signal_connect (G_OBJECT (self->drawing_area), "button-press-event", G_CALLBACK (bitmap_knob_button_press), NULL);
 	g_signal_connect (G_OBJECT (self->drawing_area), "button-release-event", G_CALLBACK (bitmap_knob_button_release), NULL);
 	g_signal_connect (G_OBJECT (self->drawing_area), "motion-notify-event", G_CALLBACK (bitmap_knob_motion_notify), NULL);
-	
-	gtk_widget_set_usize (self->drawing_area, frame_width, frame_height);
+
+	gtk_widget_set_size_request (self->drawing_area, frame_width, frame_height);
 	
 	// set up event mask
 	gint event_mask = gtk_widget_get_events (self->drawing_area);
@@ -108,7 +108,7 @@ bitmap_knob_new( GtkAdjustment *adjustment,
 	self->tooltip_window = gtk_window_new (GTK_WINDOW_POPUP);
 	gtk_window_set_type_hint (GTK_WINDOW (self->tooltip_window), GDK_WINDOW_TYPE_HINT_TOOLTIP);
 	g_object_set_data_full (G_OBJECT(self->drawing_area), "bitmap_knob_tooltip_window",
-		self->tooltip_window, (GtkDestroyNotify) gtk_widget_destroy);
+		self->tooltip_window, (GDestroyNotify) gtk_widget_destroy);
 
 	static const guint tooltip_padding = 5;
 	GtkWidget *alignment = gtk_alignment_new (0.5, 0.5, 1.0, 1.0);
@@ -181,7 +181,7 @@ bitmap_knob_expose( GtkWidget *widget, GdkEventExpose *event )
 	
 	if (self->background) {
 		gdk_draw_pixbuf (
-			widget->window,
+			gtk_widget_get_window (widget),
 			NULL,	// gc
 			self->background,
 			0,	// src_x
@@ -202,7 +202,7 @@ bitmap_knob_expose( GtkWidget *widget, GdkEventExpose *event )
 		src_y = self->current_frame * self->frame_height;
 	
 	gdk_draw_pixbuf (
-		widget->window,
+		gtk_widget_get_window (widget),
 		NULL,	// gc
 		self->pixbuf,
 		src_x,
@@ -232,7 +232,7 @@ bitmap_knob_button_press ( GtkWidget *widget, GdkEventButton *event )
 	if (event->type == GDK_BUTTON_PRESS && event->button == 1)
 	{
 		gtk_widget_grab_focus(widget);
-    	gtk_grab_add(widget);
+		gtk_grab_add(widget);
 		g_signal_emit_by_name(self->adjustment, "start_atomic_value_change");
 		self->origin_val = gtk_adjustment_get_value (self->adjustment);
 		self->origin_y = event->y;
@@ -249,8 +249,8 @@ bitmap_knob_button_release ( GtkWidget *widget, GdkEventButton *event )
 	if (event->button == 1) {
 		bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 		gtk_widget_hide (self->tooltip_window);
-		if (GTK_WIDGET_HAS_GRAB(widget))
-        	gtk_grab_remove(widget);
+		if (gtk_widget_has_grab(widget))
+			gtk_grab_remove(widget);
 		return TRUE;
 	}
 	return FALSE;
@@ -259,8 +259,7 @@ bitmap_knob_button_release ( GtkWidget *widget, GdkEventButton *event )
 gboolean
 bitmap_knob_motion_notify ( GtkWidget *widget, GdkEventMotion *event )
 {
-	if (GTK_WIDGET_HAS_GRAB(widget))
-	{
+	if (gtk_widget_has_grab(widget)) {
 		bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 		gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 		gdouble upper = gtk_adjustment_get_upper (self->adjustment);
@@ -328,18 +327,18 @@ bitmap_knob_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 
 	if (self->adjustment)
 	{
-		gtk_signal_disconnect_by_data (GTK_OBJECT (self->adjustment), (gpointer) self);
-		gtk_object_unref (GTK_OBJECT (self->adjustment) );
+		g_signal_handlers_disconnect_by_data (GTK_OBJECT (self->adjustment), (gpointer) self);
+		g_object_unref (GTK_OBJECT (self->adjustment) );
 	}
 	
 	self->adjustment = GTK_ADJUSTMENT (g_object_ref (GTK_OBJECT (adjustment)));
 	
-	gtk_signal_connect (GTK_OBJECT (adjustment), "changed",
-		(GtkSignalFunc) bitmap_knob_adjustment_changed,
+	g_signal_connect (GTK_OBJECT (adjustment), "changed",
+		(GCallback) bitmap_knob_adjustment_changed,
 		(gpointer) widget );
 		
-	gtk_signal_connect (GTK_OBJECT (adjustment), "value_changed",
-		(GtkSignalFunc) bitmap_knob_adjustment_value_changed,
+	g_signal_connect (GTK_OBJECT (adjustment), "value_changed",
+		(GCallback) bitmap_knob_adjustment_value_changed,
 		(gpointer) widget );
 	
 	bitmap_knob_adjustment_changed (adjustment, widget);

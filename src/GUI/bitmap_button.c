@@ -1,7 +1,7 @@
 /*
  *  bitmap_button.c
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -64,14 +64,14 @@ bitmap_button_new( GtkAdjustment *adjustment,
 	self->frame_height	= frame_height;
 	self->frame_count	= frame_count;
 
-	g_object_set_data_full (G_OBJECT (self->drawing_area), bitmap_button_key, self, (GtkDestroyNotify) g_free);
+	g_object_set_data_full (G_OBJECT (self->drawing_area), bitmap_button_key, self, (GDestroyNotify) g_free);
 	g_assert (g_object_get_data (G_OBJECT (self->drawing_area), bitmap_button_key));
 
 	g_signal_connect (G_OBJECT (self->drawing_area), "expose-event", G_CALLBACK (bitmap_button_expose), NULL);
 
 	g_signal_connect (G_OBJECT (self->drawing_area), "button-press-event", G_CALLBACK (bitmap_button_button_press), NULL);
-	
-	gtk_widget_set_usize (self->drawing_area, frame_width, frame_height);
+
+	gtk_widget_set_size_request (self->drawing_area, frame_width, frame_height);
 	
 	// set up event mask
 	gint event_mask = gtk_widget_get_events (self->drawing_area);
@@ -105,7 +105,7 @@ bitmap_button_expose ( GtkWidget *widget, GdkEventExpose *event )
 
 	if (self->background) {
 		gdk_draw_pixbuf (
-			widget->window,
+			gtk_widget_get_window (widget),
 			NULL,	// gc
 			self->background,
 			0,	// src_x
@@ -119,7 +119,7 @@ bitmap_button_expose ( GtkWidget *widget, GdkEventExpose *event )
 	}
 	
 	gdk_draw_pixbuf (
-		widget->window,
+		gtk_widget_get_window (widget),
 		NULL,	// gc
 		self->pixbuf,
 		0,	// src_x
@@ -185,18 +185,18 @@ bitmap_button_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 
 	if (self->adjustment)
 	{
-		gtk_signal_disconnect_by_data (GTK_OBJECT (self->adjustment), (gpointer) self);
-		gtk_object_unref (GTK_OBJECT (self->adjustment) );
+		g_signal_handlers_disconnect_by_data (GTK_OBJECT (self->adjustment), (gpointer) self);
+		g_object_unref (GTK_OBJECT (self->adjustment) );
 	}
 	
 	self->adjustment = GTK_ADJUSTMENT (g_object_ref (GTK_OBJECT (adjustment)));
 
-	gtk_signal_connect (GTK_OBJECT (adjustment), "changed",
-		(GtkSignalFunc) bitmap_button_adjustment_changed,
+	g_signal_connect (GTK_OBJECT (adjustment), "changed",
+		(GCallback) bitmap_button_adjustment_changed,
 		(gpointer) widget );
 		
-	gtk_signal_connect (GTK_OBJECT (adjustment), "value_changed",
-		(GtkSignalFunc) bitmap_button_adjustment_value_changed,
+	g_signal_connect (GTK_OBJECT (adjustment), "value_changed",
+		(GCallback) bitmap_button_adjustment_value_changed,
 		(gpointer) widget );
 	
 	bitmap_button_adjustment_changed (adjustment, widget);
