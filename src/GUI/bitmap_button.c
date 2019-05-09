@@ -29,10 +29,10 @@ typedef struct {
 	GtkAdjustment *adjustment;
 	GdkPixbuf *pixbuf;
 	GdkPixbuf *background;
-	guint current_frame;
-	guint frame_width;
-	guint frame_height;
-	guint frame_count;
+	gint current_frame;
+	gint frame_width;
+	gint frame_height;
+	gint frame_count;
 
 } bitmap_button;
 
@@ -52,9 +52,9 @@ static void		bitmap_button_adjustment_value_changed	( GtkAdjustment *adjustment,
 GtkWidget *
 bitmap_button_new( GtkAdjustment *adjustment,
                  GdkPixbuf *pixbuf,
-                 guint frame_width,
-                 guint frame_height,
-                 guint frame_count )
+                 gint frame_width,
+                 gint frame_height,
+                 gint frame_count )
 {
 	bitmap_button *self = g_malloc0 (sizeof(bitmap_button));
 
@@ -103,33 +103,17 @@ bitmap_button_expose ( GtkWidget *widget, GdkEventExpose *event )
 {
 	bitmap_button *self = g_object_get_data (G_OBJECT (widget), bitmap_button_key); g_assert (self);
 
+	cairo_t *cr = gdk_cairo_create (event->window);
+
 	if (self->background) {
-		gdk_draw_pixbuf (
-			gtk_widget_get_window (widget),
-			NULL,	// gc
-			self->background,
-			0,	// src_x
-			0,	// src_y
-			0,	// dest_x
-			0,	// dest_y
-			gdk_pixbuf_get_width (self->background),
-			gdk_pixbuf_get_height (self->background),
-			GDK_RGB_DITHER_NONE, 0, 0
-		);	
+		gdk_cairo_set_source_pixbuf (cr, self->background, 0, 0);
+		cairo_paint (cr);
 	}
-	
-	gdk_draw_pixbuf (
-		gtk_widget_get_window (widget),
-		NULL,	// gc
-		self->pixbuf,
-		0,	// src_x
-		self->current_frame * self->frame_height,
-		0,	// dest_x
-		0,	// dest_y
-		self->frame_width,
-		self->frame_height,
-		GDK_RGB_DITHER_NONE, 0, 0
-	);
+
+	gdk_cairo_set_source_pixbuf (cr, self->pixbuf, 0, -self->current_frame * self->frame_height);
+	cairo_paint (cr);
+
+	cairo_destroy (cr);
 
 	return FALSE;
 }

@@ -179,41 +179,25 @@ bitmap_knob_expose( GtkWidget *widget, GdkEventExpose *event )
 {
 	bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
 	
+	cairo_t *cr = gdk_cairo_create (event->window);
+
 	if (self->background) {
-		gdk_draw_pixbuf (
-			gtk_widget_get_window (widget),
-			NULL,	// gc
-			self->background,
-			0,	// src_x
-			0,	// src_y
-			0,	// dest_x
-			0,	// dest_y
-			gdk_pixbuf_get_width (self->background),
-			gdk_pixbuf_get_height (self->background),
-			GDK_RGB_DITHER_NONE, 0, 0
-		);	
+		gdk_cairo_set_source_pixbuf (cr, self->background, 0, 0);
+		cairo_paint (cr);
 	}
 	
-	guint src_x = 0, src_y = 0;
+	gint src_x = 0, src_y = 0;
 	
 	if (gdk_pixbuf_get_height (self->pixbuf) == self->frame_height)
 		src_x = self->current_frame * self->frame_width;
 	else
 		src_y = self->current_frame * self->frame_height;
-	
-	gdk_draw_pixbuf (
-		gtk_widget_get_window (widget),
-		NULL,	// gc
-		self->pixbuf,
-		src_x,
-		src_y,
-		0,	// dest_x
-		0,	// dest_y
-		self->frame_width,
-		self->frame_height,
-		GDK_RGB_DITHER_NONE, 0, 0
-	);
-	
+
+	gdk_cairo_set_source_pixbuf (cr, self->pixbuf, -src_x, -src_y);
+	cairo_paint (cr);
+
+	cairo_destroy (cr);
+
 	return FALSE;
 }
 

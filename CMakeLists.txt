@@ -37,6 +37,7 @@ add_compile_options(
 add_compile_options(
         -DGTK_DISABLE_SINGLE_INCLUDES
         -DGTK_DISABLE_DEPRECATED
+        -DGDK_DISABLE_DEPRECATED
         -DGSEAL_ENABLE
 )
 
