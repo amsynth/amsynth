@@ -109,11 +109,11 @@ PresetControllerViewImpl::PresetControllerViewImpl()
 	this->widget = gtk_hbox_new (FALSE, 0);
 	GtkBox *hbox = GTK_BOX (this->widget);
 
-	bank_combo = gtk_combo_box_new_text ();
+	bank_combo = gtk_combo_box_text_new ();
 	g_signal_connect (G_OBJECT (bank_combo), "changed", G_CALLBACK (&PresetControllerViewImpl::on_combo_changed), this);
 	gtk_box_pack_start (hbox, bank_combo, FALSE, FALSE, 0);
 
-	combo = gtk_combo_box_new_text ();
+	combo = gtk_combo_box_text_new ();
 	gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (combo), 4);
 	g_signal_connect (G_OBJECT (combo), "changed", G_CALLBACK (&PresetControllerViewImpl::on_combo_changed), this);
 	g_signal_connect (G_OBJECT (combo), "notify::popup-shown", G_CALLBACK (&PresetControllerViewImpl::on_combo_popup_shown), this);
@@ -199,7 +199,7 @@ gboolean PresetControllerViewImpl::on_audition_key_press_event(GtkWidget *widget
     if (event->keyval == GDK_space || event->keyval == GDK_Return) {
         if (!that->audition_button_pressed) {
             that->audition_button_pressed = TRUE;
-            gtk_button_pressed(GTK_BUTTON(widget));
+            g_signal_emit_by_name (widget, "pressed", 0);
         }
         return TRUE;
     }
@@ -211,7 +211,7 @@ gboolean PresetControllerViewImpl::on_audition_key_release_event(GtkWidget *widg
     if (event->keyval == GDK_space || event->keyval == GDK_Return) {
         if (that->audition_button_pressed) {
             that->audition_button_pressed = FALSE;
-            gtk_button_released(GTK_BUTTON(widget));
+            g_signal_emit_by_name (widget, "released", 0);
         }
         return TRUE;
     }
@@ -236,7 +236,7 @@ void PresetControllerViewImpl::update()
 	gtk_list_store_clear (GTK_LIST_STORE (gtk_combo_box_get_model (GTK_COMBO_BOX (bank_combo))));
 	for (size_t i=0; i<banks.size(); i++) {
 		snprintf_truncate (text, sizeof(text), "[%s] %s", banks[i].read_only ? _("F") : _("U"), banks[i].name.c_str());
-		gtk_combo_box_insert_text (GTK_COMBO_BOX (bank_combo), (gint) i, text);
+		gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (bank_combo), (gint) i, text);
 	}
 
 	const std::string current_file_path = presetController->getFilePath();
@@ -253,7 +253,7 @@ void PresetControllerViewImpl::update()
 	
 	for (gint i = 0; i < PresetController::kNumPresets; i++) {
 		snprintf_truncate (text, sizeof(text), "%d: %s", i, presetController->getPreset(i).getName().c_str());
-		gtk_combo_box_insert_text (GTK_COMBO_BOX (combo), i, text);
+		gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (combo), i, text);
 	}
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), presetController->getCurrPresetNumber());
 
