@@ -88,7 +88,7 @@ private:
 
 class NullAudioOutput : public GenericOutput { public:
 	virtual	int  init  () { return -1; }
-	virtual	bool Start () { return -1; }
+	virtual	bool Start () { return false; }
 	virtual	void Stop  () {}
 };
 
