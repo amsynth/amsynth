@@ -62,20 +62,10 @@ static void free_resource_info(gpointer data)
 static gboolean
 editor_pane_expose_event_handler (GtkWidget *widget, gpointer data)
 {
-	GtkAllocation allocation;
-	gtk_widget_get_allocation (widget, &allocation);
-	gdk_draw_pixbuf(
-		gtk_widget_get_window (widget),
-		NULL,	// gc
-		editor_pane_bg,
-		0,	// src_x
-		0,	// src_y
-		allocation.x,
-		allocation.y,
-		gdk_pixbuf_get_width (editor_pane_bg),
-		gdk_pixbuf_get_height (editor_pane_bg),
-		GDK_RGB_DITHER_NONE, 0, 0
-	);
+	cairo_t *cr = gdk_cairo_create (gtk_widget_get_window (widget));
+	gdk_cairo_set_source_pixbuf (cr, editor_pane_bg, 0, 0);
+	cairo_paint (cr);
+	cairo_destroy (cr);
 	return FALSE;
 }
 
