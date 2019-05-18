@@ -27,6 +27,10 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#if defined _MSC_VER
+#include <direct.h>
+#endif
+
 filesystem& filesystem::get()
 {
     static filesystem singleton;
@@ -94,7 +98,11 @@ bool filesystem::copy(const std::string &from, const std::string &to)
 
 bool filesystem::create_dir(const std::string &path)
 {
+#if defined _MSC_VER
+    return _mkdir(path.c_str()) == 0;
+#elif defined __GNUC__
     return mkdir(path.c_str(), 0755) == 0;
+#endif
 }
 
 bool filesystem::exists(const std::string &path)
