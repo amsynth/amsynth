@@ -21,6 +21,8 @@
  
 #include "Configuration.h"
 
+#include "filesystem.h"
+
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
@@ -30,9 +32,7 @@ using namespace std;
 
 Configuration::Configuration()
 {
-#ifndef _WIN32
-	amsynthrc_fname = string(getenv("HOME")) + string("/.amSynthrc");
-#endif
+	amsynthrc_fname = filesystem::get().config;
 	sample_rate = midi_channel = active_voices = polyphony = xruns = 0;
 #ifdef ENABLE_REALTIME
 	realtime = 0;
@@ -56,10 +56,7 @@ Configuration::Defaults	()
 	polyphony = 10;
 	pitch_bend_range = 2;
 	jack_client_name_preference = "amsynth";
-#ifndef _WIN32
-	current_bank_file = string (getenv ("HOME")) +
-		string("/.amSynth.presets");
-#endif
+	current_bank_file = filesystem::get().default_bank;
 	current_tuning_file = "default";
 }
 

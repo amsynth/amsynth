@@ -30,6 +30,8 @@ libcore_sources = \
 	src/Configuration.cpp \
 	src/Configuration.h \
 	src/controls.h \
+	src/filesystem.cpp \
+	src/filesystem.h \
 	src/midi.h \
 	src/MidiController.cpp \
 	src/MidiController.h \

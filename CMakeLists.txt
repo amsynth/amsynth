@@ -95,6 +95,8 @@ add_library(amsynth_core STATIC
         src/Configuration.cpp
         src/Configuration.h
         src/controls.h
+        src/filesystem.cpp
+        src/filesystem.h
         src/gettext.h
         src/lash.c
         src/lash.h

@@ -104,66 +104,6 @@ static void sched_realtime()
 }
 #endif
 
-static int fcopy (const char * dest, const char *source)
-{
-	FILE *in = fopen (source,"r");
-	if (in == NULL) {
-		fprintf (stderr, _("error reading source file %s\n"), source);
-		return -1;
-	}
-	FILE *out = fopen (dest,"w");
-	if (out == NULL) {
-		fprintf (stderr, _("error creating destination file %s\n"), dest);
-		return -1;
-	}
-	fseek (in, 0, SEEK_END);
-	long size = ftell (in);
-	rewind (in);
-	char * tmp = (char *) malloc (size);
-	if (fread(tmp, 1, size, in) && 
-		fwrite(tmp, 1, size, out))
-		{}
-	free (tmp);
-	fclose (in);
-	fclose (out);
-	return 0;
-}
-
-static const char *build_path(const char *path, const char *suffix)
-{
-	char *result = NULL;
-	asprintf(&result, "%s/%s", path, suffix);
-	return result;
-}
-
-static void install_default_files_if_reqd()
-{
-	const char * factory_config = build_path (PKGDATADIR, "rc");
-	const char * factory_bank = build_path (PKGDATADIR, "banks/amsynth_factory.bank");
-
-	const char * user_config = build_path (getenv ("HOME"), ".amSynthrc");
-	const char * user_bank = build_path (getenv ("HOME"), ".amSynth.presets");
-	
-	struct stat st;
-	
-	if (stat (user_config, &st) == -1)
-	{
-		printf (_("installing configuration file to %s\n"), user_config);
-		fcopy (user_config, factory_config);
-	}
-	if (stat (user_bank, &st) == -1)
-	{
-		printf (_("installing default sound bank to %s\n"), user_bank);
-		fcopy (user_bank, factory_bank);
-	}
-
-	free((void *)factory_config);
-	free((void *)factory_bank);
-	
-	free((void *)user_config);
-	free((void *)user_bank);
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptest ();
@@ -393,22 +333,6 @@ int main( int argc, char *argv[] )
 	if (!no_gui)
 		gui_kit_init(&argc, &argv);
 #endif
-
-	/* all config files should eventually be migrated to the ~./amsynth directory */ {
-		char *path = NULL;
-		if (asprintf(&path, "%s/.amsynth", getenv("HOME")) > 0) {
-			mkdir(path, 0000755);
-			free(path);
-			path = NULL;
-		}
-		if (asprintf(&path, "%s/.amsynth/banks", getenv("HOME")) > 0) {
-			mkdir(path, 0000755);
-			free(path);
-			path = NULL;
-		}
-	}
-
-	install_default_files_if_reqd();
 
 	string amsynth_bank_file = config.current_bank_file;
 	// string amsynth_tuning_file = config.current_tuning_file;
