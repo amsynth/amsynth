@@ -223,10 +223,15 @@ void get_parameter_properties(int parameter_index, double *minimum, double *maxi
 
 /* this implements the C API in controls.h */
 
-static Preset _preset;
+static const Preset &_get_preset()
+{
+	static const Preset preset;
+	return preset;
+}
 
 const char *parameter_name_from_index (int param_index)
 {
+	const Preset &_preset = _get_preset();
 	if (param_index < 0 || param_index >= (int)_preset.ParameterCount())
 		return NULL;
 	static std::vector<std::string> names;
@@ -239,6 +244,7 @@ const char *parameter_name_from_index (int param_index)
 
 int parameter_index_from_name (const char *param_name)
 {
+	const Preset &_preset = _get_preset();
 	for (unsigned i=0; i<_preset.ParameterCount(); i++) {
 		if (std::string(param_name) == _preset.getParameter(i).getName()) {
 			return i;
@@ -249,6 +255,7 @@ int parameter_index_from_name (const char *param_name)
 
 int parameter_get_display (int parameter_index, float parameter_value, char *buffer, size_t maxlen)
 {
+	const Preset &_preset = _get_preset();
 	Parameter parameter = _preset.getParameter(parameter_index);
 	parameter.setValue(parameter_value);
 	float real_value = parameter.getControlValue();
@@ -406,6 +413,7 @@ void Preset::setShouldIgnoreParameter(int parameter, bool ignore)
 
 std::string Preset::getIgnoredParameterNames()
 {
+	const Preset &_preset = _get_preset();
 	std::string names;
 	for (int i = 0; i < kAmsynthParameterCount; i++) {
 		if (shouldIgnoreParameter(i)) {
