@@ -160,7 +160,7 @@ void PresetControllerViewImpl::on_combo_changed (GtkWidget *widget, PresetContro
 
 	if (widget == that->bank_combo) {
 		gint bank = gtk_combo_box_get_active (GTK_COMBO_BOX (that->bank_combo));
-		const std::vector<BankInfo> banks = PresetController::getPresetBanks();
+		const std::vector<BankInfo> &banks = PresetController::getPresetBanks();
 		that->presetController->loadPresets(banks[bank].file_path.c_str());
 	}
 
@@ -227,7 +227,7 @@ void PresetControllerViewImpl::update()
 {
 	inhibit_combo_callback = true;
 
-	const std::vector<BankInfo> banks = PresetController::getPresetBanks();
+	const std::vector<BankInfo> &banks = PresetController::getPresetBanks();
 
 	char text [48] = "";
 

@@ -109,7 +109,7 @@ presets_menu_new(GtkAdjustment **adjustments)
 
     GtkWidget *presets_menu = gtk_menu_new ();
 
-    const std::vector<BankInfo> banks = PresetController::getPresetBanks();
+    const std::vector<BankInfo> &banks = PresetController::getPresetBanks();
 
     for (size_t b=0; b<banks.size(); b++) {
         snprintf(text, sizeof(text), "[%s] %s", banks[b].read_only ? _("F") : _("U"), banks[b].name.c_str());
