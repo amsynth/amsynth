@@ -232,11 +232,13 @@ int main( int argc, char *argv[] )
 	setregid(getgid(), getgid());
 #endif
 
-#ifdef ENABLE_NLS
+#if ENABLE_NLS
 	setlocale(LC_ALL, "");
 	bindtextdomain(GETTEXT_PACKAGE, PACKAGE_LOCALEDIR);
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
+#else
+#warning text will not be localized because ENABLE_NLS not set
 #endif
 
 	int initial_preset_no = 0;

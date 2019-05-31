@@ -43,6 +43,14 @@ AC_LANG(C++)
 
 IT_PROG_INTLTOOL
 
+# Because IT_PROG_INTLTOOL does not set ENABLE_NLS
+# - https://bugs.launchpad.net/intltool/+bug/1217976
+# And we cannot (yet) use AM_GNU_GETTEXT
+# - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=724555
+# - https://wiki.gnome.org/MigratingFromIntltoolToGettext
+# What a mess :-(
+AS_IF([test "$USE_NLS" = "yes"], [AC_DEFINE([ENABLE_NLS], [1], [Enable gettext])])
+
 GETTEXT_PACKAGE=amsynth
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package])
