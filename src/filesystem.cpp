@@ -100,7 +100,7 @@ bool filesystem::create_dir(const std::string &path)
 {
 #if defined _MSC_VER
     return _mkdir(path.c_str()) == 0;
-#elif defined __GNUC__
+#else
     return mkdir(path.c_str(), 0755) == 0;
 #endif
 }

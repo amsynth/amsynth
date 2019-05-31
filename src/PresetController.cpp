@@ -23,7 +23,6 @@
 
 #include <algorithm>
 #include <iostream>
-#include <cassert>
 #include <cstdlib>
 #include <cstring>
 #include <string>
@@ -438,7 +437,6 @@ static void scan_preset_bank(const std::string dir_path, const std::string file_
 
 static void scan_preset_banks(const std::string dir_path, bool read_only)
 {
-	assert(!dir_path.empty());
 #if !_WIN32
 	DIR *dir = opendir(dir_path.c_str());
 	if (!dir)
