@@ -1,3 +1,20 @@
+amsynth unreleased
+
+  - amsynth user files (config, banks, etc.) now live in XDG-compliant directories
+    - $XDG_CONFIG_HOME (~/.config/amsynth)
+    - $XDG_DATA_HOME (~/.local/share/amsynth)
+
+
+amsynth 1.9.0 -- 2019-04-13
+
+  - Added support for NSM (Non Session Manager)
+  - Improved FreeBSD OSS audio support
+  - Sustain pedal can now be used in Mono and Legato modes
+  - JACK MIDI inputs are now automatically connected
+  - Fixed a crash in MIDI learn dialog when receiving CC messages
+  - Other minor bug fixes
+
+
 amsynth 1.8.0 -- 2017-06-25
 
   - controls can now be reset to their default value via a double-click
