@@ -266,6 +266,9 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 	gchar *skin_path = (gchar *)g_getenv ("AMSYNTH_SKIN");
 	if (skin_path == NULL) {
 		skin_path = g_build_filename (PKGDATADIR, "skins", "default", NULL);
+	} else {
+		// Copy the env var so that we don't segfault at free below
+		skin_path = g_strdup (skin_path);
 	}
 	
 	if (!g_file_test (skin_path, G_FILE_TEST_EXISTS)) {
