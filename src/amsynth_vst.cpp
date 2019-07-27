@@ -504,7 +504,11 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 	effect->numOutputs = 2;
 	effect->flags = effFlagsCanReplacing | effFlagsIsSynth | effFlagsProgramChunks;
 #ifdef WITH_GUI
-	effect->flags |= effFlagsHasEditor;
+	if (strcmp("REAPER", hostProductString) == 0) {
+		// amsynth's GTK GUI doesn't work in REAPER :-[
+	} else {
+		effect->flags |= effFlagsHasEditor;
+	}
 #endif
 	// Do no use the ->user pointer because ardour clobbers it
 	effect->ptr3 = new Plugin(audioMaster);
