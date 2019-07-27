@@ -1,7 +1,7 @@
 /*
  *  MIDILearnDialog.cpp
  *
- *  Copyright (c) 2001-2017 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -40,13 +40,13 @@ MIDILearnDialog::MIDILearnDialog(MidiController *midiController, PresetControlle
 		NULL);
 
 	_paramNameEntry = gtk_entry_new();
-	gtk_entry_set_editable(GTK_ENTRY(_paramNameEntry), FALSE);
+	gtk_editable_set_editable(GTK_EDITABLE(_paramNameEntry), FALSE);
 
-	_combo = gtk_combo_box_new_text();
+	_combo = gtk_combo_box_text_new();
 	gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (_combo), 4);
-	gtk_combo_box_insert_text (GTK_COMBO_BOX (_combo), 0, _("None"));
+	gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (_combo), 0, _("None"));
 	for (gint i = 0; i < 128; i++)
-		gtk_combo_box_insert_text (GTK_COMBO_BOX (_combo), i + 1, c_controller_names[i]);
+		gtk_combo_box_text_insert_text (GTK_COMBO_BOX_TEXT (_combo), i + 1, c_controller_names[i]);
 
 	_checkButton = gtk_check_button_new_with_label(_("Select automatically"));
 	gtk_widget_set_tooltip_text(_checkButton, _("Automatically select MIDI Controller when a CC message is received"));
@@ -63,7 +63,8 @@ MIDILearnDialog::MIDILearnDialog(MidiController *midiController, PresetControlle
 	gtk_table_attach(GTK_TABLE(table), _combo,                               1, 2, 1, 2, GTK_FILL, GTK_FILL, 5, 5);
 	gtk_table_attach(GTK_TABLE(table), box,                                  1, 2, 2, 3, GTK_FILL, GTK_FILL, 5, 5);
 
-	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(_dialog)->vbox), table, TRUE, TRUE, 0);
+	GtkWidget *content = gtk_dialog_get_content_area (GTK_DIALOG (_dialog));
+	gtk_box_pack_start(GTK_BOX(content), table, TRUE, TRUE, 0);
 
 	_midiController->getLastControllerParam().addUpdateListener(*this);
 }

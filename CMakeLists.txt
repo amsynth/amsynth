@@ -34,6 +34,13 @@ add_compile_options(
         -Werror
 )
 
+add_compile_options(
+        -DGTK_DISABLE_SINGLE_INCLUDES
+        -DGTK_DISABLE_DEPRECATED
+        -DGDK_DISABLE_DEPRECATED
+        -DGSEAL_ENABLE
+)
+
 pkg_check_modules(ALSA alsa)
 if (ALSA_FOUND)
     add_compile_options(-DWITH_ALSA)

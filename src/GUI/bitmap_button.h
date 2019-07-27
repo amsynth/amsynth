@@ -28,9 +28,9 @@ G_BEGIN_DECLS
 GtkWidget *bitmap_button_new (
 	GtkAdjustment *,
 	GdkPixbuf *,
-	guint frame_width,
-	guint frame_height,
-	guint frame_count
+	gint frame_width,
+	gint frame_height,
+	gint frame_count
 );
 
 void bitmap_button_set_bg (
