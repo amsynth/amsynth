@@ -1,7 +1,7 @@
 /*
  *  TuningMap.cpp
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -138,7 +138,6 @@ TuningMap::loadScale		(const string & filename)
 	ifstream file(filename.c_str());
 	string line;
 
-	string newScaleDesc;
 	bool gotDesc = false;
 	int scaleSize = -1;
 	vector<double> newScale;
@@ -155,7 +154,6 @@ TuningMap::loadScale		(const string & filename)
 
 		if (!gotDesc)
 		{
-			newScaleDesc = line;
 			gotDesc = true;
 		}
 		else if (scaleSize < 0)

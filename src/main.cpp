@@ -1,7 +1,7 @@
 /*
  *  main.cpp
  *
- *  Copyright (c) 2001-2016 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -253,7 +253,7 @@ int main( int argc, char *argv[] )
 		{ 0 }
 	};
 	
-	int opt = -1, longindex = -1;
+	int opt, longindex = -1;
 	while ((opt = getopt_long(argc, argv, "vhsdzxm:c:a:r:p:b:U:P:n:t:", longopts, &longindex)) != -1) {
 		switch (opt) {
             case 'v':

@@ -1,7 +1,7 @@
 /*
  *  PresetController.cpp
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -258,7 +258,6 @@ static bool is_amsynth_file(const char *filename)
 	char buffer[sizeof(amsynth_file_header)] = {0};
 	fread(buffer, sizeof(buffer), 1, file);
 	fclose(file);
-	file = NULL;
 
 	if (memcmp(buffer, amsynth_file_header, sizeof(amsynth_file_header)) != 0)
 		return false;
@@ -282,7 +281,6 @@ static off_t file_read_contents(const char *filename, void **result)
 	fseek(file, 0, SEEK_SET);
 	fread(buffer, length, 1, file);
 	fclose(file);
-	file = NULL;
 	*result = buffer;
 	return length;
 }
@@ -482,13 +480,6 @@ PresetController::getPresetBanks()
 void PresetController::rescanPresetBanks()
 {
 	scan_preset_banks();
-}
-
-void PresetController::setFactoryBanksDirectory(std::string path)
-{
-	sFactoryBanksDirectory = path;
-	if (!s_banks.empty())
-		scan_preset_banks();
 }
 
 std::string PresetController::getUserBanksDirectory()

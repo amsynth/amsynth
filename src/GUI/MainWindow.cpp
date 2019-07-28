@@ -1,7 +1,7 @@
 /*
  *  MainWindow.cpp
  *
- *  Copyright (c) 2001-2017 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -83,8 +83,7 @@ struct MainWindow : public UpdateListener
 
 		//
 
-		presetControllerView = PresetControllerView::create();
-		presetControllerView->setPresetController(presetController);
+		presetControllerView = PresetControllerView::instantiate(presetController);
 		gtk_box_pack_start(GTK_BOX(vbox), presetControllerView->getWidget(), FALSE, FALSE, 0);
 
 		//

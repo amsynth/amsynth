@@ -1,7 +1,7 @@
 /*
  *  Configuration.cpp
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -33,7 +33,7 @@ using namespace std;
 Configuration::Configuration()
 {
 	amsynthrc_fname = filesystem::get().config;
-	sample_rate = midi_channel = active_voices = polyphony = xruns = 0;
+	sample_rate = midi_channel = polyphony = xruns = 0;
 #ifdef ENABLE_REALTIME
 	realtime = 0;
 #endif

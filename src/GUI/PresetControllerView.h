@@ -1,7 +1,7 @@
 /*
  *  PresetControllerView.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -27,8 +27,7 @@
 class PresetController;
 
 class PresetControllerView { public:
-	static PresetControllerView * create();
-	virtual void setPresetController(PresetController *presetController) = 0;
+	static PresetControllerView * instantiate(PresetController *presetController);
     virtual void update() = 0;
     virtual unsigned char getAuditionNote() = 0;
 	virtual GtkWidget * getWidget() = 0;

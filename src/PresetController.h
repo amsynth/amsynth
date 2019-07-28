@@ -1,7 +1,7 @@
 /*
  *  PresetController.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -91,8 +91,7 @@ public:
 	static const std::vector<BankInfo> & getPresetBanks();
 	static void rescanPresetBanks();
 
-	static void setFactoryBanksDirectory(std::string path);
-	static std::string getUserBanksDirectory();
+    static std::string getUserBanksDirectory();
 
 	void	notify				() { if (updateListener) updateListener->update(); }
 
