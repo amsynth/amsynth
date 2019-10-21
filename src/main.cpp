@@ -428,13 +428,19 @@ void amsynth_midi_input(unsigned char status, unsigned char data1, unsigned char
 	write(gui_midi_pipe[1], buffer, sizeof(buffer));
 }
 
+void amsynth_osc_input(unsigned char *osc_message, int length)
+{
+	// TODO implement
+}
+
 static bool compare(const amsynth_midi_event_t &first, const amsynth_midi_event_t &second) {
 	return (first.offset_frames < second.offset_frames);
 }
 
-void amsynth_audio_callback(
+void amsynth_audio_callback2(
 		float *buffer_l, float *buffer_r, unsigned num_frames, int stride,
 		const std::vector<amsynth_midi_event_t> &midi_in,
+		const std::vector<amsynth_osc_event_t> &osc_in,
 		std::vector<amsynth_midi_cc_t> &midi_out)
 {
 	std::vector<amsynth_midi_event_t> midi_in_merged = midi_in;
@@ -472,7 +478,7 @@ void amsynth_audio_callback(
 	std::sort(midi_in_merged.begin(), midi_in_merged.end(), compare);
 
 	if (s_synthesizer) {
-		s_synthesizer->process(num_frames, midi_in_merged, midi_out, buffer_l, buffer_r, stride);
+		s_synthesizer->process(num_frames, midi_in_merged, osc_in, midi_out, buffer_l, buffer_r, stride);
 	}
 
 	if (midiDriver && !midi_out.empty()) {

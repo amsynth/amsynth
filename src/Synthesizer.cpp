@@ -32,6 +32,68 @@
 #include <cstdio>
 #include <cstring>
 
+#if ENABLE_OSC
+#include <rtosc/rtosc.h>
+#include <rtosc/ports.h>
+#include <rtosc/port-sugar.h>
+
+// The boilerplate macro will cast the void pointer in the callback to "rObject".
+#define rObject Synthesizer
+
+static rtosc::Ports ports = {
+    {"/amsynth/loadBank:s", rDoc("Load a bank file"), 0,
+        [](const char *m,rtosc::RtData &d){
+            ((Synthesizer *)d.obj)->loadBank(rtosc_argument(m,0).s);}},
+//    {"/amsynth/loadState:s", rDoc("Load the state from a string"), 0,
+//        [](const char *m,rtosc::RtData &d){
+//            ((Synthesizer *)d.obj)->loadState(rtosc_argument(m,0).s);}},
+    {"/amsynth/selectPreset:i", rDoc("Load a preset by its index"), 0,
+        [](const char *m,rtosc::RtData &d){
+            ((Synthesizer *)d.obj)->setPresetNumber(rtosc_argument(m,0).i);}},
+    {"/amsynth/loadTuningKeymap:s", rDoc("Load a keymap file"), 0,
+        [](const char *m,rtosc::RtData &d){
+            ((Synthesizer *)d.obj)->loadTuningKeymap(rtosc_argument(m,0).s);}},
+    {"/amsynth/loadTuningScale:s", rDoc("Load a scale file"), 0,
+        [](const char *m,rtosc::RtData &d){
+            ((Synthesizer *)d.obj)->loadTuningScale(rtosc_argument(m,0).s);}},
+
+    {"/amsynth/noteOn:if", rDoc("Turn a note on with velocity"), 0,
+        [](const char *m,rtosc::RtData &d){
+            ((Synthesizer *)d.obj)->_voiceAllocationUnit->HandleMidiNoteOn(rtosc_argument(m,0).i, rtosc_argument(m,1).f);}},
+    {"/amsynth/keyOn:iff", rDoc("Turn a key on with velocity and frequency"), 0,
+        [](const char *m,rtosc::RtData &d){
+            ((Synthesizer *)d.obj)->_voiceAllocationUnit->HandleNoteOn(rtosc_argument(m,0).i, rtosc_argument(m,1).f, rtosc_argument(m,2).f);}},
+    {"/amsynth/noteOff:if", rDoc("Turn a note off with velocity"), 0,
+        [](const char *m,rtosc::RtData &d){
+            ((Synthesizer *)d.obj)->_voiceAllocationUnit->HandleMidiNoteOff(rtosc_argument(m,0).i, rtosc_argument(m,1).f);}},
+    {"/amsynth/pitchWheel:i", rDoc("Set the pitch wheel"), 0,
+        [](const char *m,rtosc::RtData &d){
+            ((Synthesizer *)d.obj)->_voiceAllocationUnit->HandleMidiPitchWheel(rtosc_argument(m,0).f);}},
+    {"/amsynth/pitchBendRange:i", rDoc("Set the pitch bend range"), 0,
+        [](const char *m,rtosc::RtData &d){
+            ((Synthesizer *)d.obj)->_voiceAllocationUnit->setPitchBendRangeSemitones(rtosc_argument(m,0).i);}},
+	{"/amsynth/allSoundsOff", rDoc("Stop all sounds"), 0, rActionCb(_voiceAllocationUnit->HandleMidiAllSoundOff)},
+	{"/amsynth/allNotesOff", rDoc("Release all notes"), 0, rActionCb(_voiceAllocationUnit->HandleMidiAllNotesOff)},
+    {"/amsynth/sustainPedal:T", rDoc("Press the sustain pedal"), 0,
+        [](const char *m,rtosc::RtData &d){
+            ((Synthesizer *)d.obj)->_voiceAllocationUnit->HandleMidiSustainPedal(true);}},
+    {"/amsynth/sustainPedal:F", rDoc("Release the sustain pedal"), 0,
+        [](const char *m,rtosc::RtData &d){
+            ((Synthesizer *)d.obj)->_voiceAllocationUnit->HandleMidiSustainPedal(false);}},
+    {"/amsynth/maxVoices:i", rDoc("Set the maximum number of polyphonic voices"), 0,
+        [](const char *m,rtosc::RtData &d){
+            ((Synthesizer *)d.obj)->_voiceAllocationUnit->SetMaxVoices(rtosc_argument(m,0).i);}},
+    {"/amsynth/aftertouchVelocity:if", rDoc("Change the velocity of a pressed key"), 0,
+        [](const char *m,rtosc::RtData &d){
+            ((Synthesizer *)d.obj)->_voiceAllocationUnit->HandleAftertouchVelocity(rtosc_argument(m,0).i, rtosc_argument(m,1).f);}},
+    {"/amsynth/aftertouchPitch:if", rDoc("Change the pitch of a pressed key (absolute value)"), 0,
+        [](const char *m,rtosc::RtData &d){
+            ((Synthesizer *)d.obj)->_voiceAllocationUnit->HandleAftertouchPitch(rtosc_argument(m,0).i, rtosc_argument(m,1).f);}}
+};
+// end::ports[]
+#undef rObject
+
+#endif
 
 Synthesizer::Synthesizer()
 : _sampleRate(-1)
@@ -208,6 +270,7 @@ void Synthesizer::setSampleRate(int sampleRate)
 
 void Synthesizer::process(unsigned int nframes,
 						  const std::vector<amsynth_midi_event_t> &midi_in,
+						  const std::vector<amsynth_osc_event_t> &osc_in,
 						  std::vector<amsynth_midi_cc_t> &midi_out,
 						  float *audio_l, float *audio_r, unsigned audio_stride)
 {
@@ -215,6 +278,14 @@ void Synthesizer::process(unsigned int nframes,
 		assert(0 == "sample rate has not been set");
 		return;
 	}
+
+#if ENABLE_OSC
+	rtosc::RtData rtData = rtosc::RtData();
+	for (std::vector<amsynth_osc_event_t>::const_iterator event = osc_in.begin(); event != osc_in.end(); event++) {
+		ports.dispatch(event->buffer, rtData, true);
+	}
+#endif
+
 	std::vector<amsynth_midi_event_t>::const_iterator event = midi_in.begin();
 	unsigned frames_left_in_buffer = nframes, frame_index = 0;
 	while (frames_left_in_buffer) {

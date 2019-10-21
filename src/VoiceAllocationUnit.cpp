@@ -100,6 +100,15 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 		return;
 	}
 	
+	HandleNoteOn(note, velocity, pitch);
+}
+
+void
+VoiceAllocationUnit::HandleNoteOn(int key, float velocity, float pitch)
+{
+	assert (key >= 0);
+	assert (key < 128);
+
 	float portamentoTime = mPortamentoTime;
 	if (mPortamentoMode == PortamentoModeLegato) {
 		int count = 0;
@@ -113,7 +122,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 		}
 	}
 	
-	keyPressed[note] = true;
+	keyPressed[key] = true;
 	
 	if (_keyboardMode == KeyboardModePoly) {
 
@@ -150,21 +159,21 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 			}
 		}
 
-		_keyPresses[note] = (++_keyPressCounter);
+		_keyPresses[key] = (++_keyPressCounter);
 
 		if (mLastNoteFrequency > 0.0f) {
-			_voices[note]->setFrequency(mLastNoteFrequency, pitch, portamentoTime);
+			_voices[key]->setFrequency(mLastNoteFrequency, pitch, portamentoTime);
 		} else {
-			_voices[note]->setFrequency(pitch, pitch, 0);
+			_voices[key]->setFrequency(pitch, pitch, 0);
 		}
 
-		if (_voices[note]->isSilent())
-			_voices[note]->reset();
+		if (_voices[key]->isSilent())
+			_voices[key]->reset();
 		
-		_voices[note]->setVelocity(velocity);
-		_voices[note]->triggerOn();
+		_voices[key]->setVelocity(velocity);
+		_voices[key]->triggerOn();
 		
-		active[note] = true;
+		active[key] = true;
 	}
 	
 	if (_keyboardMode == KeyboardModeMono || _keyboardMode == KeyboardModeLegato) {
@@ -178,7 +187,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 			}
 		}
 
-		_keyPresses[note] = (++_keyPressCounter);
+		_keyPresses[key] = (++_keyPressCounter);
 		
 		VoiceBoard *voice = _voices[0];
 		
@@ -299,6 +308,19 @@ VoiceAllocationUnit::resetAllVoices()
 	}
 	_keyPressCounter = 0;
 	sustain = false;
+}
+
+void VoiceAllocationUnit::HandleAftertouchVelocity(int key, float velocity) {
+	assert (key >= 0);
+	assert (key < 128);
+	_voices[key]->setVelocity(0);
+	
+}
+
+void VoiceAllocationUnit::HandleAftertouchPitch(int key, float pitch) {
+	assert (key >= 0);
+	assert (key < 128);
+	_voices[key]->setFrequency(pitch, pitch, 0);
 }
 
 void

@@ -56,6 +56,7 @@ JackOutput::JackOutput()
 ,	r_port(NULL)
 ,	m_port(NULL)
 ,	m_port_out(NULL)
+,	osc_port(NULL)
 ,	client(NULL)
 #endif
 {
@@ -98,6 +99,11 @@ JackOutput::init()
 	/* create midi input port(s) */
 	m_port = jack_port_register(client, "midi_in", JACK_DEFAULT_MIDI_TYPE, JackPortIsInput, 0);
 	m_port_out = jack_port_register(client, "midi_out", JACK_DEFAULT_MIDI_TYPE, JackPortIsOutput, 0);
+#if ENABLE_OSC
+	// TODO switch to the new event API if available
+	// TODO add metadata to the port
+	osc_port = jack_port_register(client, "osc_in", JACK_DEFAULT_MIDI_TYPE, JackPortIsInput, 0);
+#endif
 #endif
 	
 #if HAVE_JACK_SESSION_H
@@ -135,11 +141,20 @@ static inline amsynth_midi_event_t amsynth_midi_event_make(jack_midi_event_t je)
 	return me;
 }
 
+static inline amsynth_osc_event_t amsynth_osc_event_make(jack_midi_event_t je) {
+	amsynth_osc_event_t oe;
+	oe.length = je.size;
+	oe.buffer = (char*) malloc(je.size);
+	memcpy(oe.buffer, je.buffer, je.size);
+	return oe;
+}
+
 int
 JackOutput::process (jack_nframes_t nframes, void *arg)
 {
 	JackOutput *self = (JackOutput *)arg;
 	std::vector<amsynth_midi_event_t> midi_events;
+	std::vector<amsynth_osc_event_t> osc_events;
 	float *lout = (jack_default_audio_sample_t *) jack_port_get_buffer(self->l_port, nframes);
 	float *rout = (jack_default_audio_sample_t *) jack_port_get_buffer(self->r_port, nframes);
 #if HAVE_JACK_MIDIPORT_H
@@ -153,9 +168,20 @@ JackOutput::process (jack_nframes_t nframes, void *arg)
 			midi_events.push_back(amsynth_midi_event_make(midi_event));
 		}
 	}
+#if ENABLE_OSC
+	if (self->osc_port) {
+		void *port_buf = jack_port_get_buffer(self->osc_port, nframes);
+		const jack_nframes_t event_count = jack_midi_get_event_count(port_buf);
+		for (jack_nframes_t i=0; i<event_count; i++) {
+			jack_midi_event_t osc_event;
+			jack_midi_event_get(&osc_event, port_buf, i);
+			osc_events.push_back(amsynth_osc_event_make(osc_event));
+		}
+	}
+#endif
 #endif
 	std::vector<amsynth_midi_cc_t> midi_out;
-	amsynth_audio_callback(lout, rout, nframes, 1, midi_events, midi_out);
+	amsynth_audio_callback2(lout, rout, nframes, 1, midi_events, osc_events, midi_out);
 #if HAVE_JACK_MIDIPORT_H
 	if (self->m_port_out) {
 		void *port_buffer = jack_port_get_buffer(self->m_port_out, nframes);
