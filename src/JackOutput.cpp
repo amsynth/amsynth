@@ -144,8 +144,7 @@ static inline amsynth_midi_event_t amsynth_midi_event_make(jack_midi_event_t je)
 static inline amsynth_osc_event_t amsynth_osc_event_make(jack_midi_event_t je) {
 	amsynth_osc_event_t oe;
 	oe.length = je.size;
-	oe.buffer = (char*) malloc(je.size);
-	memcpy(oe.buffer, je.buffer, je.size);
+	oe.buffer = (char*) je.buffer;
 	return oe;
 }
 

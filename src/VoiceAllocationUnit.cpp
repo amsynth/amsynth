@@ -104,10 +104,10 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 }
 
 void
-VoiceAllocationUnit::HandleNoteOn(int key, float velocity, float pitch)
+VoiceAllocationUnit::HandleNoteOn(int note, float velocity, float pitch)
 {
-	assert (key >= 0);
-	assert (key < 128);
+	assert (note >= 0);
+	assert (note < 128);
 
 	float portamentoTime = mPortamentoTime;
 	if (mPortamentoMode == PortamentoModeLegato) {
@@ -122,7 +122,7 @@ VoiceAllocationUnit::HandleNoteOn(int key, float velocity, float pitch)
 		}
 	}
 	
-	keyPressed[key] = true;
+	keyPressed[note] = true;
 	
 	if (_keyboardMode == KeyboardModePoly) {
 
@@ -159,21 +159,21 @@ VoiceAllocationUnit::HandleNoteOn(int key, float velocity, float pitch)
 			}
 		}
 
-		_keyPresses[key] = (++_keyPressCounter);
+		_keyPresses[note] = (++_keyPressCounter);
 
 		if (mLastNoteFrequency > 0.0f) {
-			_voices[key]->setFrequency(mLastNoteFrequency, pitch, portamentoTime);
+			_voices[note]->setFrequency(mLastNoteFrequency, pitch, portamentoTime);
 		} else {
-			_voices[key]->setFrequency(pitch, pitch, 0);
+			_voices[note]->setFrequency(pitch, pitch, 0);
 		}
 
-		if (_voices[key]->isSilent())
-			_voices[key]->reset();
+		if (_voices[note]->isSilent())
+			_voices[note]->reset();
 		
-		_voices[key]->setVelocity(velocity);
-		_voices[key]->triggerOn();
+		_voices[note]->setVelocity(velocity);
+		_voices[note]->triggerOn();
 		
-		active[key] = true;
+		active[note] = true;
 	}
 	
 	if (_keyboardMode == KeyboardModeMono || _keyboardMode == KeyboardModeLegato) {
@@ -187,7 +187,7 @@ VoiceAllocationUnit::HandleNoteOn(int key, float velocity, float pitch)
 			}
 		}
 
-		_keyPresses[key] = (++_keyPressCounter);
+		_keyPresses[note] = (++_keyPressCounter);
 		
 		VoiceBoard *voice = _voices[0];
 		
