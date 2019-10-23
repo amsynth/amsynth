@@ -32,7 +32,7 @@
 #include <cstdio>
 #include <cstring>
 
-#if ENABLE_OSC
+#ifdef WITH_RTOSC
 #include <rtosc/rtosc.h>
 #include <rtosc/ports.h>
 #include <rtosc/port-sugar.h>
@@ -279,7 +279,7 @@ void Synthesizer::process(unsigned int nframes,
 		return;
 	}
 
-#if ENABLE_OSC
+#ifdef WITH_RTOSC
 	rtosc::RtData rtData = rtosc::RtData();
 	for (std::vector<amsynth_osc_event_t>::const_iterator event = osc_in.begin(); event != osc_in.end(); event++) {
 		ports.dispatch(event->buffer, rtData, true);

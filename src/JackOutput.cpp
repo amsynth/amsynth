@@ -99,7 +99,7 @@ JackOutput::init()
 	/* create midi input port(s) */
 	m_port = jack_port_register(client, "midi_in", JACK_DEFAULT_MIDI_TYPE, JackPortIsInput, 0);
 	m_port_out = jack_port_register(client, "midi_out", JACK_DEFAULT_MIDI_TYPE, JackPortIsOutput, 0);
-#if ENABLE_OSC
+#ifdef WITH_RTOSC
 	// TODO switch to the new event API if available
 	// TODO add metadata to the port
 	osc_port = jack_port_register(client, "osc_in", JACK_DEFAULT_MIDI_TYPE, JackPortIsInput, 0);
@@ -167,7 +167,7 @@ JackOutput::process (jack_nframes_t nframes, void *arg)
 			midi_events.push_back(amsynth_midi_event_make(midi_event));
 		}
 	}
-#if ENABLE_OSC
+#ifdef WITH_RTOSC
 	if (self->osc_port) {
 		void *port_buf = jack_port_get_buffer(self->osc_port, nframes);
 		const jack_nframes_t event_count = jack_midi_get_event_count(port_buf);

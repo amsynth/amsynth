@@ -116,6 +116,12 @@ AS_IF([test "x$with_lash" != "xno"], [
         AC_DEFINE([WITH_LASH],, [Use this optional package])
         with_lash="yes"], [with_lash="no"])])
 
+AC_ARG_WITH([rtosc], [AS_HELP_STRING([--with-rtosc], [build support for rtosc])])
+AS_IF([test "x$with_rtosc" != "xno"], [
+    PKG_CHECK_MODULES([rtosc], [librtosc], [
+        AC_DEFINE([WITH_RTOSC],, [Use this optional package])
+        with_rtosc="yes"], [with_rtosc="no"])])
+
 AC_ARG_WITH([dssi], [AS_HELP_STRING([--with-dssi], [build DSSI plugin])])
 AS_IF([test "x$with_dssi" != "xno"], [
     PKG_CHECK_MODULES([DSSI], [dssi], [
