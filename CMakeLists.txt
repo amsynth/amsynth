@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(CMAKE_CXX_STANDARD 98)
+set(CMAKE_CXX_STANDARD 11)
 #set(CMAKE_VERBOSE_MAKEFILE true)
 
 find_package(PkgConfig REQUIRED)
@@ -8,6 +8,8 @@ find_package(PkgConfig REQUIRED)
 project(amsynth)
 
 SET(CMAKE_POSITION_INDEPENDENT_CODE True)
+SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/output)
+SET(LIBRARY_OUTPUT_PATH ${EXECUTABLE_OUTPUT_PATH})
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
@@ -31,7 +33,7 @@ add_compile_options(
 
 add_compile_options(
         -Wall
-        -Werror
+#        -Werror
 )
 
 add_compile_options(
@@ -67,6 +69,12 @@ pkg_check_modules(LIBLO liblo)
 if (LIBLO_FOUND)
     include_directories(${LIBLO_INCLUDE_DIRS})
 endif (LIBLO_FOUND)
+
+pkg_check_modules(RTOSC librtosc)
+if (RTOSC_FOUND)
+    add_compile_options(-DWITH_RTOSC)
+    include_directories(${RTOSC_INCLUDE_DIRS})
+endif (RTOSC_FOUND)
 
 #
 #
@@ -164,13 +172,13 @@ add_executable(amsynth
         src/GUI/MIDILearnDialog.h
         src/GUI/PresetControllerView.cpp
         src/GUI/PresetControllerView.h
-        src/nsm/DebugMessage.cpp
-        src/nsm/DebugMessage.h
-        src/nsm/nsm.h
-        src/nsm/NsmClient.cpp
-        src/nsm/NsmClient.h
-        src/nsm/NsmHandler.cpp
-        src/nsm/NsmHandler.h
+#        src/nsm/DebugMessage.cpp
+#        src/nsm/DebugMessage.h
+#        src/nsm/nsm.h
+#        src/nsm/NsmClient.cpp
+#        src/nsm/NsmClient.h
+#        src/nsm/NsmHandler.cpp
+#        src/nsm/NsmHandler.h
         src/AudioOutput.cpp
         src/AudioOutput.h
         src/JackOutput.cpp
@@ -184,13 +192,14 @@ add_executable(amsynth
 target_link_libraries(amsynth
         pthread
         amsynth_core
+        rtosc rtosc-cpp
+        ${RTOSC_LIBRARIES}
         ${ALSA_LIBRARIES}
         ${JACK_LIBRARIES}
         ${GTK_LIBRARIES}
         ${LASH_LIBRARIES}
         ${SNDFILE_LIBRARIES}
         ${LIBLO_LIBRARIES}
-        oscpack
         )
 
 #
@@ -222,6 +231,8 @@ target_link_libraries(amsynth_dssi_gtk
         amsynth_core
         ${GTK_LIBRARIES}
         ${LIBLO_LIBRARIES}
+        ${RTOSC_LIBRARIES}
+        rtosc rtosc-cpp
         )
 
 #
@@ -230,7 +241,8 @@ target_link_libraries(amsynth_dssi_gtk
 
 add_library(amsynth_lv2 MODULE src/amsynth_lv2.cpp)
 set_target_properties(amsynth_lv2 PROPERTIES PREFIX "")
-target_link_libraries(amsynth_lv2 amsynth_core)
+target_link_libraries(amsynth_lv2 amsynth_core
+${RTOSC_LIBRARIES})
 
 
 add_library(amsynth_lv2_gtk MODULE
@@ -250,7 +262,9 @@ add_library(amsynth_lv2_gtk MODULE
         src/amsynth_lv2_ui_gtk.cpp
         )
 set_target_properties(amsynth_lv2_gtk PROPERTIES PREFIX "")
-target_link_libraries(amsynth_lv2_gtk amsynth_core ${GTK_LIBRARIES})
+target_link_libraries(amsynth_lv2_gtk amsynth_core ${GTK_LIBRARIES}
+${RTOSC_LIBRARIES}
+rtosc rtosc-cpp)
 
 add_dependencies(amsynth_lv2 amsynth_lv2_gtk)
 
@@ -272,8 +286,12 @@ add_library(amsynth_vst MODULE
         )
 target_compile_options(amsynth_vst PUBLIC -DWITH_GUI)
 set_target_properties(amsynth_vst PROPERTIES PREFIX "")
-target_link_libraries(amsynth_vst amsynth_core ${GTK_LIBRARIES})
+target_link_libraries(amsynth_vst amsynth_core ${GTK_LIBRARIES}
+${RTOSC_LIBRARIES}
+rtosc rtosc-cpp)
 
 
 add_executable(amsynth_tests src/tests.cpp)
-target_link_libraries(amsynth_tests amsynth_core)
+target_link_libraries(amsynth_tests amsynth_core
+${RTOSC_LIBRARIES}
+rtosc rtosc-cpp)
