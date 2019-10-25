@@ -57,15 +57,20 @@ static rtosc::Ports ports = {
         [](const char *m,rtosc::RtData &d){
             ((Synthesizer *)d.obj)->loadTuningScale(rtosc_argument(m,0).s);}},
 
-    {"/amsynth/noteOn:if", rDoc("Turn a note on with velocity"), 0,
+    {"/amsynth/noteOn:if:iff", rDoc("Turn a note on with velocity"), 0,
         [](const char *m,rtosc::RtData &d){
-            ((Synthesizer *)d.obj)->_voiceAllocationUnit->HandleMidiNoteOn(rtosc_argument(m,0).i, rtosc_argument(m,1).f);}},
-    {"/amsynth/keyOn:iff", rDoc("Turn a key on with velocity and frequency"), 0,
-        [](const char *m,rtosc::RtData &d){
-            ((Synthesizer *)d.obj)->_voiceAllocationUnit->HandleNoteOn(rtosc_argument(m,0).i, rtosc_argument(m,1).f, rtosc_argument(m,2).f);}},
+			int note = rtosc_argument(m,0).i;
+			float vol = rtosc_argument(m,1).f;
+			if (rtosc_narguments(m) > 2)
+				/* Specify the frequency */
+	            ((Synthesizer *)d.obj)->_voiceAllocationUnit->HandleNoteOn(note, vol, rtosc_argument(m,2).f);
+			else
+				/* Get the actual frequency from a tuning table */
+	            ((Synthesizer *)d.obj)->_voiceAllocationUnit->HandleMidiNoteOn(note, vol);
+		}},
     {"/amsynth/noteOff:if", rDoc("Turn a note off with velocity"), 0,
         [](const char *m,rtosc::RtData &d){
-            ((Synthesizer *)d.obj)->_voiceAllocationUnit->HandleMidiNoteOff(rtosc_argument(m,0).i, rtosc_argument(m,1).f);}},
+			((Synthesizer *)d.obj)->_voiceAllocationUnit->HandleMidiNoteOff(rtosc_argument(m,0).i, rtosc_argument(m,1).f);}},
     {"/amsynth/pitchWheel:i", rDoc("Set the pitch wheel"), 0,
         [](const char *m,rtosc::RtData &d){
             ((Synthesizer *)d.obj)->_voiceAllocationUnit->HandleMidiPitchWheel(rtosc_argument(m,0).f);}},
@@ -280,9 +285,10 @@ void Synthesizer::process(unsigned int nframes,
 	}
 
 #ifdef WITH_RTOSC
-	rtosc::RtData rtData = rtosc::RtData();
 	for (std::vector<amsynth_osc_event_t>::const_iterator event = osc_in.begin(); event != osc_in.end(); event++) {
-		ports.dispatch(event->buffer, rtData, true);
+		rtosc::RtData rtData;
+		rtData.obj = this;
+		ports.dispatch(event->buffer, rtData);
 	}
 #endif
 

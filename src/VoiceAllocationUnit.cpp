@@ -313,8 +313,7 @@ VoiceAllocationUnit::resetAllVoices()
 void VoiceAllocationUnit::HandleAftertouchVelocity(int key, float velocity) {
 	assert (key >= 0);
 	assert (key < 128);
-	_voices[key]->setVelocity(0);
-	
+	_voices[key]->setVelocity(velocity);
 }
 
 void VoiceAllocationUnit::HandleAftertouchPitch(int key, float pitch) {
@@ -324,7 +323,7 @@ void VoiceAllocationUnit::HandleAftertouchPitch(int key, float pitch) {
 }
 
 void
-VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
+VoiceAllocationUnit::Process(float *l, float *r, unsigned nframes, int stride)
 {
 	assert(nframes <= VoiceBoard::kMaxProcessBufferSize);
 
