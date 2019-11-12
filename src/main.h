@@ -38,14 +38,27 @@ extern int  amsynth_get_preset_number();
 extern void amsynth_set_preset_number(int preset_no);
 
 extern void amsynth_midi_input(unsigned char status, unsigned char data1, unsigned char data2);
+extern void amsynth_osc_input(unsigned char *osc_message, int length);
 
 #ifdef __cplusplus
 
-extern void amsynth_audio_callback(
+extern void amsynth_audio_callback2(
         float *buffer_l, float *buffer_r, unsigned num_frames, int stride,
         const std::vector<amsynth_midi_event_t> &midi_in,
+        const std::vector<amsynth_osc_event_t> &osc_in,
         std::vector<amsynth_midi_cc_t> &midi_out);
 
+inline void amsynth_audio_callback(
+		float *buffer_l, float *buffer_r, unsigned num_frames, int stride,
+		const std::vector<amsynth_midi_event_t> &midi_in,
+		std::vector<amsynth_midi_cc_t> &midi_out)
+{
+	std::vector<amsynth_osc_event_t> osc_events;
+	amsynth_audio_callback2(
+		buffer_l, buffer_r, num_frames, stride,
+		midi_in, osc_events, midi_out
+	);
+}
 }
 #endif
 

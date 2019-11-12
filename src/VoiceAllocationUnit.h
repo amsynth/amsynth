@@ -55,6 +55,10 @@ public:
 	virtual void HandleMidiSustainPedal(uchar value);
 	virtual void HandleMidiPan(float left, float right) { mPanGainLeft = left; mPanGainRight = right; }
 
+	virtual void HandleNoteOn(int key, float velocity, float pitch);
+	virtual void HandleAftertouchVelocity(int key, float velocity);
+	virtual void HandleAftertouchPitch(int key, float pitch);
+
 	void	SetMaxVoices	(int voices) { mMaxVoices = voices; }
 	int		GetMaxVoices	() { return mMaxVoices; }
 

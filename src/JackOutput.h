@@ -52,7 +52,7 @@ public:
 private:
 	string	error_msg;
 #ifdef WITH_JACK
-	jack_port_t 	*l_port, *r_port, *m_port, *m_port_out;
+	jack_port_t 	*l_port, *r_port, *m_port, *m_port_out, *osc_port;
 	jack_client_t 	*client;
 #endif
 };

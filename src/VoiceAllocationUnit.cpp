@@ -100,6 +100,15 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 		return;
 	}
 	
+	HandleNoteOn(note, velocity, pitch);
+}
+
+void
+VoiceAllocationUnit::HandleNoteOn(int note, float velocity, float pitch)
+{
+	assert (note >= 0);
+	assert (note < 128);
+
 	float portamentoTime = mPortamentoTime;
 	if (mPortamentoMode == PortamentoModeLegato) {
 		int count = 0;
@@ -301,8 +310,20 @@ VoiceAllocationUnit::resetAllVoices()
 	sustain = false;
 }
 
+void VoiceAllocationUnit::HandleAftertouchVelocity(int key, float velocity) {
+	assert (key >= 0);
+	assert (key < 128);
+	_voices[key]->setVelocity(velocity);
+}
+
+void VoiceAllocationUnit::HandleAftertouchPitch(int key, float pitch) {
+	assert (key >= 0);
+	assert (key < 128);
+	_voices[key]->setFrequency(pitch, pitch, 0);
+}
+
 void
-VoiceAllocationUnit::Process		(float *l, float *r, unsigned nframes, int stride)
+VoiceAllocationUnit::Process(float *l, float *r, unsigned nframes, int stride)
 {
 	assert(nframes <= VoiceBoard::kMaxProcessBufferSize);
 

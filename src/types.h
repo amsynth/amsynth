@@ -34,6 +34,11 @@ struct amsynth_midi_event_t {
 	unsigned char *buffer;
 };
 
+struct amsynth_osc_event_t {
+	unsigned int length;
+	char *buffer;
+};
+
 struct amsynth_midi_cc_t {
 	unsigned char channel;
 	unsigned char cc;
