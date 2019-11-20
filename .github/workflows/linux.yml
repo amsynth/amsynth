@@ -20,4 +20,6 @@ jobs:
     - name: make distcheck
       run: make -j 2 distcheck
     - name: Coveralls
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       run: coveralls --gcov-options '\-lp' -e config.h -e include -e src/drivers -e src/GUI -e utils
