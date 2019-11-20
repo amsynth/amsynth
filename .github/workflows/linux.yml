@@ -16,14 +16,8 @@ jobs:
     - name: autogen
       run: ./autogen.sh
     - name: configure
-      run: ./configure
-    - name: make
-      run: make -j 2
+      run: ./configure CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage'
     - name: make distcheck
-      run: make distcheck
-    - name: configure (for testing)
-      run: ./configure --without-gui CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage'
-    - name: make check
-      run: make clean check
+      run: make -j 2 distcheck
     - name: Coveralls
       run: coveralls --gcov-options '\-lp' -e config.h -e include -e src/drivers -e src/GUI -e utils
