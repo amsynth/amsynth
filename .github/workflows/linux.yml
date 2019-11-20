@@ -12,7 +12,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt install autopoint dssi-dev intltool libasound-dev libgtk2.0-dev libjack-jackd2-dev liblash-compat-dev liblo-dev liboscpack-dev pandoc
-        sudo pip install --user cpp-coveralls
+        sudo pip install cpp-coveralls
     - name: autogen
       run: ./autogen.sh
     - name: configure
