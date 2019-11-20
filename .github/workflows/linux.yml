@@ -17,7 +17,13 @@ jobs:
       run: ./configure
     - name: make
       run: make -j 2
-    - name: make check
-      run: make check
     - name: make distcheck
       run: make distcheck
+    - name: configure (for testing)
+      run: ./configure --without-gui CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage'
+    - name: make check
+      run: make clean check
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
