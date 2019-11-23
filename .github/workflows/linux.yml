@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-16.04
     
     steps:
+    - name: Show environment
+      run: set
     - uses: actions/checkout@v1
     - name: Install Dependencies
       run: |
@@ -22,4 +24,7 @@ jobs:
     - name: Coveralls
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-      run: coveralls --gcov-options '\-lp' -e config.h -e include -e src/drivers -e src/GUI -e utils
+        TRAVIS_JOB_ID: ${{ github.sha }}
+      run: |
+        echo -e "service_name: github\n" > .coveralls.yml
+        coveralls --gcov-options '\-lp' -e config.h -e include -e src/drivers -e src/GUI -e utils
