@@ -10,14 +10,15 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Install Dependencies
-      run: |
-        sudo apt install autopoint dssi-dev intltool libasound-dev libgtk2.0-dev libjack-jackd2-dev liblash-compat-dev liblo-dev liboscpack-dev pandoc
+      run: sudo apt install autopoint dssi-dev intltool libasound-dev libgtk2.0-dev libjack-jackd2-dev liblash-compat-dev liblo-dev liboscpack-dev pandoc
     - name: autogen
       run: ./autogen.sh
     - name: configure
-      run: ./configure CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage'
+      run: ./configure
     - name: make distcheck
-      run: make -j 2 distcheck
+      run: |
+        DISTCHECK_CONFIGURE_FLAGS=" CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' --without-lv2 --without-dssi --without-vst" make -j 2 distcheck
+        gcov -lp $(find . -name '*.c' -o -name '*.cpp')
     - name: Codecov
       uses: codecov/codecov-action@v1.0.4
       with:
