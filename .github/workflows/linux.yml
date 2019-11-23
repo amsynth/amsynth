@@ -19,8 +19,6 @@ jobs:
     - name: make distcheck
       run: make -j 2 distcheck
     - name: Codecov
-      env:
-        CODECOV_TOKEN: f7bd75a9-026b-4157-9f6e-708d6149d979
-      run: |
-        for filename in `find . | egrep '\.cpp'`; do gcov -n -o . $filename > /dev/null; done
-        bash <(curl -s https://codecov.io/bash)
+      uses: codecov/codecov-action@v1.0.4
+      with:
+        token: f7bd75a9-026b-4157-9f6e-708d6149d979
