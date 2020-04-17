@@ -163,11 +163,16 @@ class SmoothedParam
 	
 public:
 	
-	SmoothedParam(float rawValue): _rawValue(rawValue) {}
+	SmoothedParam(float rawValue = 0.f): _rawValue(rawValue) {}
 	
 	void operator=(float rawValue)
 	{
 		_rawValue = rawValue;
+	}
+	
+	float getRawValue()
+	{
+		return _rawValue;
 	}
 	
 	inline float tick()
