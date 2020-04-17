@@ -134,4 +134,51 @@ struct IIRFilterFirstOrder
 	float _a0, _a1, _b1, _z;
 };
 
+#define NONCOPYABLE( class ) \
+	private:                 \
+		class(const class&); \
+		void operator=(const class &)
+
+class ParamSmoother
+{
+	NONCOPYABLE(ParamSmoother);
+	
+public:
+	
+	ParamSmoother(): _z(0.f) {}
+	
+	inline float processSample(float x)
+	{
+		return (_z += ((x - _z) * 0.005f));
+	}
+	
+private:
+	
+	float _z;
+};
+
+class SmoothedParam
+{
+	NONCOPYABLE(SmoothedParam);
+	
+public:
+	
+	SmoothedParam(float rawValue): _rawValue(rawValue) {}
+	
+	void operator=(float rawValue)
+	{
+		_rawValue = rawValue;
+	}
+	
+	inline float tick()
+	{
+		return _smoother.processSample(_rawValue);
+	}
+	
+private:
+	
+	float _rawValue;
+	ParamSmoother _smoother;
+};
+
 #endif
