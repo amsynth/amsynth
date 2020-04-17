@@ -39,6 +39,7 @@ filesystem& filesystem::get()
 
 filesystem::filesystem()
 {
+#ifdef PKGDATADIR
     const char *env_home = getenv("HOME");
     if (!env_home) {
         return;
@@ -83,6 +84,7 @@ filesystem::filesystem()
         !copy(PKGDATADIR "/banks/amsynth_factory.bank", default_bank)) {
         std::cerr << "Error: could not create " << default_bank << std::endl;
     }
+#endif
 }
 
 bool filesystem::copy(const std::string &from, const std::string &to)
