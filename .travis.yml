@@ -32,4 +32,5 @@ jobs:
       dist: trusty
       name: "Test (Ubuntu Trusty 14.04 / GCC 4.8.4)"
       compiler: gcc
-      script: ./autogen.sh && ./configure --without-gui CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' && make V=1 check && coveralls --gcov-options '\-lp' -e config.h -e include -e src/drivers -e src/GUI -e utils
+      script: ./autogen.sh && ./configure --without-gui CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' && make V=1 check
+        # && coveralls --gcov-options '\-lp' -e config.h -e include -e src/drivers -e src/GUI -e utils
