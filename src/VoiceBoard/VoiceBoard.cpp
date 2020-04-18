@@ -195,7 +195,7 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	//
 	for (int i=0; i<numSamples; i++) {
 		float osc1vol = (1.f - mOscMix.tick()) / 2.f;
-		float osc2vol = osc1vol - 1.f;
+		float osc2vol = (1.f - osc1vol);
 		float ringMod = mRingModAmt.tick();
 		osc1buf[i] =
 			osc1vol * osc1buf[i] +
