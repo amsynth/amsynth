@@ -1,7 +1,7 @@
 /*
  *  JackOutput.h
  *
- *  Copyright (c) 2001-2016 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -43,8 +43,6 @@ public:
 	void		Stop		();
 	
 	string		get_error_msg	( )		{ return error_msg; };
-	
-    static bool autoconnect;
 
 #ifdef WITH_JACK
 	static int process(jack_nframes_t nframes, void *arg);

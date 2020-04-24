@@ -1,7 +1,7 @@
 /*
  *  Configuration.h
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -119,6 +119,8 @@ public:
 	 */
 	std::string ignored_parameters;
 	
+	bool jack_autoconnect;
+
 	/* internal */
 	std::string	jack_client_name;
 	std::string	jack_client_name_preference;

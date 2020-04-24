@@ -1,7 +1,7 @@
 /*
  *  main.cpp
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -317,13 +317,16 @@ int main( int argc, char *argv[] )
 				break;
 			case 'U':
 				config.jack_session_uuid = optarg;
+				// don't auto connect ports if under jack session control...
+				// the jack session manager is responsible for restoring port connections
+				config.jack_autoconnect = false;
 				break;
 			case 'n':
 				config.jack_client_name_preference = optarg;
 				break;
 			case 0:
 				if (strcmp(longopts[longindex].name, "jack_autoconnect") == 0) {
-					JackOutput::autoconnect = !optarg || (strcmp(optarg, "true") == 0);
+					config.jack_autoconnect = !optarg || (strcmp(optarg, "true") == 0);
 				}
 				break;
 			default:

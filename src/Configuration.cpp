@@ -1,7 +1,7 @@
 /*
  *  Configuration.cpp
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -55,6 +55,7 @@ Configuration::Defaults	()
 	buffer_size = 128;
 	polyphony = 10;
 	pitch_bend_range = 2;
+	jack_autoconnect = true;
 	jack_client_name_preference = "amsynth";
 	current_bank_file = filesystem::get().default_bank;
 	current_tuning_file = "default";
@@ -108,6 +109,9 @@ Configuration::load	()
 		} else if (buffer == "ignored_parameters") {
 			file >> buffer;
 			ignored_parameters = buffer;
+		} else if (buffer == "jack_autoconnect") {
+			file >> buffer;
+			jack_autoconnect = (buffer == "true");
 		} else {
 			file >> buffer;
 		}
@@ -132,6 +136,7 @@ Configuration::save	()
 	fprintf (fout, "pitch_bend_range\t%d\n", pitch_bend_range);
 	fprintf (fout, "tuning_file\t%s\n", current_tuning_file.c_str());
 	fprintf (fout, "ignored_parameters\t%s\n", ignored_parameters.c_str());
+	fprintf (fout, "jack_autoconnect\t%s\n", jack_autoconnect ? "true" : "false");
 	fclose (fout);
 	return 0;
 }
