@@ -8,6 +8,7 @@ Comment[de]=Subtraktiver Softwaresynthesizer mit zwei Oszillatoren
 Comment[fr]=Synthétiseur logiciel soustractif à deux oscillateurs 
 Type=Application
 Categories=AudioVideo;Audio;X-Synthesis;
+Keywords=music;synthesiser;softsynth;midi;jack;realtime;standalone;
 Exec=@prefix@/bin/amsynth
 Icon=amsynth
 Terminal=false
