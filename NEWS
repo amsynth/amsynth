@@ -1,8 +1,11 @@
 amsynth unreleased
 
+  - Implemented smoothing / de-zippering to improve sound quality while adjusting parameters
   - amsynth user files (config, banks, etc.) now live in XDG-compliant directories
     - $XDG_CONFIG_HOME (~/.config/amsynth)
     - $XDG_DATA_HOME (~/.local/share/amsynth)
+  - Added `jack_autoconnect` configuration option
+  - Disabled VST GUI in REAPER
 
 
 amsynth 1.9.0 -- 2019-04-13
