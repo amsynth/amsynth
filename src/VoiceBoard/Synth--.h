@@ -152,6 +152,11 @@ public:
 		return (_z += ((x - _z) * 0.005f));
 	}
 	
+	inline void set(float z)
+	{
+		_z = z;
+	}
+	
 private:
 	
 	float _z;

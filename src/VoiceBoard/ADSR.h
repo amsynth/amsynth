@@ -22,6 +22,8 @@
 #ifndef _ADSR_H
 #define _ADSR_H
 
+#include "Synth--.h"
+
 class ADSR
 {
 public:
@@ -53,6 +55,7 @@ private:
 	float       m_attack;
 	float       m_decay;
 	float       m_sustain;
+	ParamSmoother m_sustain_smoother;
 	float       m_release;
 
 	float *     m_buffer;
