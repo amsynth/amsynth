@@ -1,7 +1,7 @@
 /*
  *  MainWindow.cpp
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -245,6 +245,7 @@ struct MainWindow : public UpdateListener
 	{
 		if (parameter == -1) {
 			presetControllerView->update(); // note: PresetControllerView::update() is expensive
+			presetIsNotSaved = presetController->isCurrentPresetModified();
 			updateTitle();
 			return;
 		}
