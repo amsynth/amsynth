@@ -1,7 +1,7 @@
 /*
- *  Distortion.h
+ *  filesystem.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -19,23 +19,33 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _DISTORTION_H
-#define _DISTORTION_H
+#ifndef AMSYNTH_FILESYSTEM_H
+#define AMSYNTH_FILESYSTEM_H
 
-#include "../VoiceBoard/Synth--.h"
+#include <string>
 
-/**
- * @brief A distortion (waveshaping) effect unit
- */
-class Distortion
+class filesystem
 {
 public:
-	Distortion();
 
-	void	SetCrunch		(float);
-	void	Process			(float *buffer, unsigned);
+    static filesystem& get();
+
+    std::string config;
+    std::string controllers;
+    std::string default_bank;
+    std::string user_banks;
+
 private:
-	SmoothedParam crunch;
+
+    filesystem();
+
+    bool copy(const std::string &from, const std::string &to);
+
+    bool create_dir(const std::string &path);
+
+    bool exists(const std::string &path);
+
+    bool move(const std::string &from, const std::string &to);
 };
 
-#endif
+#endif //AMSYNTH_FILESYSTEM_H

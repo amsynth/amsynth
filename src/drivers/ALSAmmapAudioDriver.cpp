@@ -1,7 +1,7 @@
 /*
  *  ALSAmmapAudioDriver.cpp
  *
- *  Copyright (c) 2001-2015 Nick Dowell, Karsten Wiese
+ *  Copyright (c) 2001-2019 Nick Dowell, Karsten Wiese
  *
  *  This file is part of amsynth.
  *
@@ -32,10 +32,7 @@
 #include "../Configuration.h"
 #include "AudioDriver.h"
 
-#define ALSA_PCM_OLD_HW_PARAMS_API
-#define ALSA_PCM_OLD_SW_PARAMS_API
 #include <alsa/asoundlib.h>
-
 #include <iostream>
 
 using namespace std;
@@ -52,14 +49,10 @@ public:
 private:
     int 	xrun_recovery();
 
-    int		_dsp_handle;
-    int		_rate;
+    unsigned int _rate;
     int		_channels;
-    int		_format;
-    unsigned char	*audiobuf;
     snd_pcm_t		*playback_handle;
     snd_pcm_hw_params_t	*hw_params;
-    snd_pcm_sw_params_t	*sw_params;
     int			err;
     unsigned		periods;
 };
@@ -179,13 +172,13 @@ ALSAmmapAudioDriver::open()
     snd_pcm_hw_params_any( playback_handle, hw_params );
     snd_pcm_hw_params_set_access( playback_handle, hw_params, SND_PCM_ACCESS_MMAP_INTERLEAVED/*SND_PCM_ACCESS_RW_INTERLEAVED*/ );
     snd_pcm_hw_params_set_format( playback_handle, hw_params, SND_PCM_FORMAT_S16_LE );
-    snd_pcm_hw_params_set_rate_near( playback_handle, hw_params, _rate, 0 );
+    snd_pcm_hw_params_set_rate_near( playback_handle, hw_params, &_rate, 0 );
     snd_pcm_hw_params_set_channels( playback_handle, hw_params, _channels );
 	snd_pcm_hw_params_set_periods( playback_handle, hw_params, 16, 0 );
 	snd_pcm_hw_params_set_period_size( playback_handle, hw_params, config.buffer_size, 0 );
     snd_pcm_hw_params( playback_handle, hw_params );
 	
-	config.sample_rate = snd_pcm_hw_params_get_rate( hw_params, 0 );
+	config.sample_rate = _rate;
 	config.current_audio_driver = "ALSA-MMAP";
 #ifdef ENABLE_REALTIME
 	config.current_audio_driver_wants_realtime = 1;

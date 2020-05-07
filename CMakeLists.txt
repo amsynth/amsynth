@@ -34,6 +34,13 @@ add_compile_options(
         -Werror
 )
 
+add_compile_options(
+        -DGTK_DISABLE_SINGLE_INCLUDES
+        -DGTK_DISABLE_DEPRECATED
+        -DGDK_DISABLE_DEPRECATED
+        -DGSEAL_ENABLE
+)
+
 pkg_check_modules(ALSA alsa)
 if (ALSA_FOUND)
     add_compile_options(-DWITH_ALSA)
@@ -60,11 +67,6 @@ pkg_check_modules(LIBLO liblo)
 if (LIBLO_FOUND)
     include_directories(${LIBLO_INCLUDE_DIRS})
 endif (LIBLO_FOUND)
-
-pkg_check_modules(SNDFILE sndfile)
-if (SNDFILE_FOUND)
-    add_compile_options(-Dwith_sndfile)
-endif(SNDFILE_FOUND)
 
 #
 #
@@ -95,6 +97,8 @@ add_library(amsynth_core STATIC
         src/Configuration.cpp
         src/Configuration.h
         src/controls.h
+        src/filesystem.cpp
+        src/filesystem.h
         src/gettext.h
         src/lash.c
         src/lash.h

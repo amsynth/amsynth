@@ -1,7 +1,7 @@
 /*
  *  Configuration.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -65,13 +65,9 @@ public:
 	int realtime;
 	int current_audio_driver_wants_realtime;
 #endif
-	/**
-	 * A count of the number of voices currently active and producing a signal
-	 */
-	int active_voices;
-	/**
-	 * The number of audio channels to be opened by the audio driver.
-	 */
+    /**
+     * The number of audio channels to be opened by the audio driver.
+     */
 	int channels;
 	/**
 	 * erm..
@@ -123,6 +119,8 @@ public:
 	 */
 	std::string ignored_parameters;
 	
+	bool jack_autoconnect;
+
 	/* internal */
 	std::string	jack_client_name;
 	std::string	jack_client_name_preference;

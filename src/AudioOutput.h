@@ -1,7 +1,7 @@
 /*
  *  AudioOutput.h
  *
- *  Copyright (c) 2001-2015 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -26,10 +26,6 @@
 #include "main.h"
 #include "types.h"
 
-#ifdef with_sndfile
-#include <sndfile.h>
-#endif
-
 #include <string>
 
 using std::string;
@@ -43,13 +39,7 @@ public:
 	virtual	int			init			() = 0;
 	
 	virtual	bool		Start 			() = 0;
-	virtual	void		Stop			() = 0;
-	
-	virtual	bool		canRecord	( )	{ return false; }
-	virtual	void		startRecording	( )			{;}
-	virtual	void		stopRecording	( )			{;};
-	virtual	void		setOutputFile	( string /*file*/ )	{}
-	virtual	string		getOutputFile	( ) { return ""; }
+	virtual	void		Stop			() = 0;;
 };
 
 class AudioOutput : public GenericOutput, public Thread
@@ -61,15 +51,6 @@ public:
 	bool	Start	();
 	void	Stop	();
 
-#ifdef with_sndfile
-	bool	canRecord	( )	{ return true; };
-#else
-	bool	canRecord	( )	{ return false; };
-#endif
-	void	startRecording	( );
-	void 	stopRecording	( );
-	void 	setOutputFile	( string file )	{ wavoutfile = file; };
-  	string 	getOutputFile	( )	{ return wavoutfile; };
 	int 	init			( );
 
 	void	ThreadAction	();
@@ -77,18 +58,13 @@ public:
 private:
   int channels;
   class AudioDriver *driver;
-  string wavoutfile;
   int recording;
   float	*buffer;
-#ifdef with_sndfile
-  SNDFILE *sndfile;
-  SF_INFO sf_info;
-#endif
 };
 
 class NullAudioOutput : public GenericOutput { public:
 	virtual	int  init  () { return -1; }
-	virtual	bool Start () { return -1; }
+	virtual	bool Start () { return false; }
 	virtual	void Stop  () {}
 };
 

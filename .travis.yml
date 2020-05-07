@@ -1,32 +1,36 @@
-sudo: required
-
 language: cpp
 
-compiler:
-  - gcc
-  - clang
+env:
+  global:
+    - MAKEFLAGS="-j 2"
+
+addons:
+  apt:
+    packages:
+      - autopoint
+      - dssi-dev
+      - intltool
+      - libasound-dev
+      - libgtk2.0-dev
+      - libjack-jackd2-dev
+      - liblash-compat-dev
+      - liblo-dev
+      - liboscpack-dev
+      - pandoc
 
 install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libgtk2.0-dev libjack-jackd2-dev libasound-dev liblash-compat-dev dssi-dev liblo-dev libsndfile-dev liboscpack-dev autopoint intltool pandoc
   - pip install --user cpp-coveralls
 
-script:
-  - ./autogen.sh
-  - ./configure
-  - make V=1 distcheck
-  - make clean
-  - ./configure --without-alsa
-  - make V=1 check
-  - make clean
-  - ./configure --without-jack
-  - make V=1 check
-  - make clean
-  - ./configure --without-gui
-  - make V=1 check
-  - make clean
-  - ./configure --without-gui --without-alsa --without-jack --without-dssi --without-lv2 --without-vst --prefix=$HOME/.local CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage'
-  - make V=1 check
-
-after_success:
-  - coveralls --gcov-options '\-lp' -e src/drivers -e src/GUI
+jobs:
+  include:
+    - os: linux
+      dist: precise
+      name: "Build (Ubuntu Precise 12.04 / GCC 4.6.3)"
+      compiler: gcc
+      script: ./autogen.sh && ./configure && make V=1 distcheck
+    - os: linux
+      dist: trusty
+      name: "Test (Ubuntu Trusty 14.04 / GCC 4.8.4)"
+      compiler: gcc
+      script: ./autogen.sh && ./configure --without-gui CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' && make V=1 check
+        # && coveralls --gcov-options '\-lp' -e config.h -e include -e src/drivers -e src/GUI -e utils

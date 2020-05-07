@@ -1,7 +1,7 @@
 /*
  *  JackOutput.cpp
  *
- *  Copyright (c) 2001-2016 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -46,8 +46,6 @@
 static void session_callback(jack_session_event_t *event, void *arg);
 #endif
 
-
-bool JackOutput::autoconnect = true;
 
 JackOutput::JackOutput()
 :	error_msg("")
@@ -112,12 +110,6 @@ JackOutput::init()
 	config.buffer_size = jack_get_buffer_size(client);
 	config.jack_client_name = std::string(jack_get_client_name(client));
 
-	// don't auto connect ports if under jack session control...
-	// the jack session manager is responsible for restoring port connections
-    if (!config.jack_session_uuid.empty()) {
-        autoconnect = false;
-    }
-
 	return 0;
 #endif
 	UNUSED_PARAM(config);
@@ -181,7 +173,7 @@ JackOutput::Start	()
 		std::cerr << "cannot activate JACK client\n";
 		return false;
 	}
-	if (autoconnect) {
+	if (Configuration::get().jack_autoconnect) {
 		const char **port_names = jack_get_ports(client, NULL, JACK_DEFAULT_AUDIO_TYPE, JackPortIsPhysical | JackPortIsInput);
 		if (port_names) {
 			jack_connect(client, jack_port_name(l_port), port_names[0]);

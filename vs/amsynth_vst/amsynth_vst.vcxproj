@@ -23,6 +23,7 @@
     <ClCompile Include="..\..\src\Configuration.cpp" />
     <ClCompile Include="..\..\src\Effects\Distortion.cpp" />
     <ClCompile Include="..\..\src\Effects\SoftLimiter.cpp" />
+    <ClCompile Include="..\..\src\filesystem.cpp" />
     <ClCompile Include="..\..\src\freeverb\allpass.cpp" />
     <ClCompile Include="..\..\src\freeverb\comb.cpp" />
     <ClCompile Include="..\..\src\freeverb\revmodel.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="..\..\src\controls.h" />
     <ClInclude Include="..\..\src\Effects\Distortion.h" />
     <ClInclude Include="..\..\src\Effects\SoftLimiter.h" />
+    <ClInclude Include="..\..\src\filesystem.h" />
     <ClInclude Include="..\..\src\freeverb\allpass.hpp" />
     <ClInclude Include="..\..\src\freeverb\comb.hpp" />
     <ClInclude Include="..\..\src\freeverb\denormals.h" />
@@ -150,7 +152,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;AMSYNTH_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PKGDATADIR="";_DEBUG;_WINDOWS;_USRDLL;AMSYNTH_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -186,7 +188,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;AMSYNTH_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PKGDATADIR="";NDEBUG;_WINDOWS;_USRDLL;AMSYNTH_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>

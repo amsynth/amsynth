@@ -1,7 +1,7 @@
 /*
  *  PresetController.cpp
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -23,7 +23,6 @@
 
 #include <algorithm>
 #include <iostream>
-#include <cassert>
 #include <cstdlib>
 #include <cstring>
 #include <string>
@@ -37,6 +36,8 @@
 #endif
 
 #include "gettext.h"
+#include "filesystem.h"
+
 #define _(string) gettext (string)
 
 using namespace std;
@@ -257,7 +258,6 @@ static bool is_amsynth_file(const char *filename)
 	char buffer[sizeof(amsynth_file_header)] = {0};
 	fread(buffer, sizeof(buffer), 1, file);
 	fclose(file);
-	file = NULL;
 
 	if (memcmp(buffer, amsynth_file_header, sizeof(amsynth_file_header)) != 0)
 		return false;
@@ -281,7 +281,6 @@ static off_t file_read_contents(const char *filename, void **result)
 	fseek(file, 0, SEEK_SET);
 	fread(buffer, length, 1, file);
 	fclose(file);
-	file = NULL;
 	*result = buffer;
 	return length;
 }
@@ -413,7 +412,7 @@ static void scan_preset_bank(const std::string dir_path, const std::string file_
 	std::string file_path = dir_path + std::string("/") + std::string(file_name);
 
 	std::string bank_name = std::string(file_name);
-	if (bank_name == std::string(".amSynth.presets")) {
+	if (bank_name == "default") {
 		bank_name = _("User bank");
 	} else {
 		std::string::size_type pos = bank_name.find_first_of(".");
@@ -461,7 +460,6 @@ static std::string sFactoryBanksDirectory;
 static void scan_preset_banks()
 {
 	s_banks.clear();
-	scan_preset_bank(std::string(getenv("HOME")), ".amSynth.presets", false);
 	scan_preset_banks(PresetController::getUserBanksDirectory(), false);
 #ifdef PKGDATADIR
 	if (sFactoryBanksDirectory.empty())
@@ -484,14 +482,7 @@ void PresetController::rescanPresetBanks()
 	scan_preset_banks();
 }
 
-void PresetController::setFactoryBanksDirectory(std::string path)
-{
-	sFactoryBanksDirectory = path;
-	if (!s_banks.empty())
-		scan_preset_banks();
-}
-
 std::string PresetController::getUserBanksDirectory()
 {
-	return std::string(getenv("HOME")) + std::string("/.amsynth/banks");
+	return filesystem::get().user_banks;
 }

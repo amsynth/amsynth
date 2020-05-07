@@ -22,6 +22,7 @@
 #include "MidiController.h"
 
 #include "Configuration.h"
+#include "filesystem.h"
 #include "midi.h"
 #include "VoiceBoard/Synth--.h"
 
@@ -256,9 +257,7 @@ MidiController::loadControllerMap()
 	return;
 #endif
 
-	std::string fname(getenv("HOME"));
-	fname += "/.amSynthControllersrc";
-	std::ifstream file(fname.c_str(), std::ios::out);
+	std::ifstream file(filesystem::get().controllers.c_str(), std::ios::out);
 	std::string name;
 	file >> name;
 	for (int cc = 0; cc < MAX_CC && file.good(); cc++, file >> name) {
@@ -275,9 +274,7 @@ MidiController::saveControllerMap()
 #if _WIN32
 	return;
 #endif
-	std::string fname(getenv("HOME"));
-	fname += "/.amSynthControllersrc";
-	std::ofstream file(fname.c_str(), std::ios::out);
+	std::ofstream file(filesystem::get().controllers.c_str(), std::ios::out);
 	if (file.bad())
 		return;
   	for (unsigned char cc = 0; cc < MAX_CC; cc++) {

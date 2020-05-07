@@ -29,12 +29,12 @@ There are currently several different ways to run amsynth:
 Preset bank management
 ----------------------
 
-The default user bank is located at ~/.amSynth.presets
+The default user bank is located at ~/.local/share/amsynth/banks/default
 
-amsynth now allows you to quickly access other preset banks that are stored in
+amsynth allows you to quickly access other preset banks that are stored in
 the following directories:
 
- * ~/.amsynth/banks
+ * ~/.local/share/amsynth/banks
  * /usr/share/amsynth/banks (read-only access)
 
 Any valid preset banks that are found in these directories will be show in the

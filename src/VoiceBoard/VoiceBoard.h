@@ -64,6 +64,8 @@ public:
 
 private:
 
+	ParamSmoother	mVolume;
+
 	Lerper			mFrequency;
 	bool			mFrequencyDirty;
 	float			mFrequencyStart;
@@ -85,9 +87,8 @@ private:
 	int			mFreqModDestination;
 	float			mOsc1PulseWidth;
 	float			mOsc2PulseWidth;
-	float			mOsc1Vol;
-	float			mOsc2Vol;
-	float			mRingModAmt;
+	SmoothedParam	mOscMix;
+	SmoothedParam	mRingModAmt;
 	float			mOsc2Octave;
 	float			mOsc2Detune;
 	float			mOsc2Pitch;
@@ -107,8 +108,8 @@ private:
 	
 	// amp section
 	IIRFilterFirstOrder _vcaFilter;
-	float			mAmpModAmount;
-	float			mAmpVelSens;
+	SmoothedParam	mAmpModAmount;
+	SmoothedParam	mAmpVelSens;
 	ADSR 			amp_env;
 
 	struct {

@@ -1,7 +1,7 @@
 /*
  *  VoiceAllocationUnit.h
  *
- *  Copyright (c) 2001-2017 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -58,7 +58,6 @@ public:
 	void	SetMaxVoices	(int voices) { mMaxVoices = voices; }
 	int		GetMaxVoices	() { return mMaxVoices; }
 
-	float	getPitchBendRangeSemitones() { return mPitchBendRangeSemitones; }
 	void	setPitchBendRangeSemitones(float range) { mPitchBendRangeSemitones = range; }
 	void	setKeyboardMode(KeyboardMode);
 
@@ -67,7 +66,6 @@ public:
 	double	noteToPitch		(int note) const;
 	int		loadScale		(const std::string & sclFileName);
 	int		loadKeyMap		(const std::string & kbmFileName);
-	void	defaultTuning	();
 
 // private:
 

@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <gdk/gdk.h>
 #include <gtk/gtk.h>
 #include <lo/lo.h>
 
@@ -74,6 +75,12 @@ char *tmpstr(const char *format, ...)
 void osc_error(int num, const char *msg, const char *path)
 {
     abort();
+}
+
+static gboolean osc_input_handler(GIOChannel *source, GIOCondition condition, gpointer data)
+{
+    lo_server_recv_noblock(_osc_server, 0);
+    return TRUE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -229,13 +236,13 @@ int main(int argc, char *argv[])
     lo_server_add_method(_osc_server, NULL, NULL, osc_fallback_handler, NULL);
     
     host_request_update();
-    
-    gdk_input_add(lo_server_get_socket_fd(_osc_server), GDK_INPUT_READ, (GdkInputFunction)lo_server_recv_noblock, _osc_server);
+
+    g_io_add_watch(g_io_channel_unix_new(lo_server_get_socket_fd(_osc_server)), G_IO_IN, osc_input_handler, NULL);
     
     _window = GTK_WINDOW(gtk_window_new(GTK_WINDOW_TOPLEVEL));
 
     gtk_window_set_title(_window, tmpstr("%s - %s", plug_name, identifier));
-	gtk_signal_connect(GTK_OBJECT(_window), "delete-event", on_window_deleted, NULL);
+    g_signal_connect(GTK_OBJECT(_window), "delete-event", on_window_deleted, NULL);
 
     size_t i; for (i=0; i<kAmsynthParameterCount; i++) {
         gdouble value = 0, lower = 0, upper = 0, step_increment = 0;

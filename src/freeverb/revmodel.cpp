@@ -108,8 +108,9 @@ revmodel::processreplace(float *inputL, float *inputR, float *outputL, float *ou
 		}
 
 		// Calculate output REPLACING anything already there
-		*outputL = outL*wet1 + outR*wet2 + *inputL*dry;
-		*outputR = outR*wet1 + outL*wet2 + *inputR*dry;
+		float d  = dry.tick(), w1 = wet1.tick(), w2 = wet2.tick();
+		*outputL = outL*w1 + outR*w2 + *inputL*d;
+		*outputR = outR*w1 + outL*w2 + *inputR*d;
 
 		// Increment sample pointers, allowing for interleave (if any)
 		inputL += skip;
@@ -145,8 +146,9 @@ revmodel::processreplace(float *inputM, float *outputL, float *outputR, long num
 		}
 
 		// Calculate output REPLACING anything already there
-		*outputL = outL*wet1 + outR*wet2 + *inputM*dry;
-		*outputR = outR*wet1 + outL*wet2 + *inputM*dry;
+		float d  = dry.tick(), w1 = wet1.tick(), w2 = wet2.tick();
+		*outputL = outL*w1 + outR*w2 + *inputM*d;
+		*outputR = outR*w1 + outL*w2 + *inputM*d;
 
 		// Increment sample pointers, allowing for interleave (if any)
 		inputM += stride_in;
@@ -179,8 +181,9 @@ void revmodel::processmix(float *inputL, float *inputR, float *outputL, float *o
 		}
 
 		// Calculate output MIXING with anything already there
-		*outputL += outL*wet1 + outR*wet2 + *inputL*dry;
-		*outputR += outR*wet1 + outL*wet2 + *inputR*dry;
+		float d  = dry.tick(), w1 = wet1.tick(), w2 = wet2.tick();
+		*outputL += outL*w1 + outR*w2 + *inputL*d;
+		*outputR += outR*w1 + outL*w2 + *inputR*d;
 
 		// Increment sample pointers, allowing for interleave (if any)
 		inputL += skip;
@@ -270,7 +273,7 @@ void revmodel::setdry(float value)
 
 float revmodel::getdry()
 {
-	return dry/scaledry;
+	return dry.getRawValue()/scaledry;
 }
 
 void revmodel::setwidth(float value)

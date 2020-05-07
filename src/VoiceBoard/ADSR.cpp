@@ -76,10 +76,18 @@ ADSR::getNFData(unsigned int frames)
 
 		const unsigned int count = MIN(frames, m_frames_left_in_state);
 
-		for (unsigned i = 0; i < count; i++) {
-			*buffer = m_value;
-			m_value += m_inc;
-			buffer++;
+		if (m_state == sustain) {
+			for (unsigned i = 0; i < count; i++) {
+				*buffer = m_value;
+				m_value = m_sustain_smoother.processSample(m_sustain);
+				buffer++;
+			}
+		} else {
+			for (unsigned i = 0; i < count; i++) {
+				*buffer = m_value;
+				m_value += m_inc;
+				buffer++;
+			}
 		}
 
 		m_frames_left_in_state -= count;
@@ -92,8 +100,8 @@ ADSR::getNFData(unsigned int frames)
 					m_inc = (m_sustain - m_value) / (float) m_frames_left_in_state;
 					break;
 				case decay:
+					m_sustain_smoother.set(m_value);
 					m_state = sustain;
-					m_value = m_sustain;
 					m_frames_left_in_state = UINT_MAX;
 					m_inc = 0;
 					break;

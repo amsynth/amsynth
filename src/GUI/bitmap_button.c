@@ -1,7 +1,7 @@
 /*
  *  bitmap_button.c
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -29,10 +29,10 @@ typedef struct {
 	GtkAdjustment *adjustment;
 	GdkPixbuf *pixbuf;
 	GdkPixbuf *background;
-	guint current_frame;
-	guint frame_width;
-	guint frame_height;
-	guint frame_count;
+	gint current_frame;
+	gint frame_width;
+	gint frame_height;
+	gint frame_count;
 
 } bitmap_button;
 
@@ -52,9 +52,9 @@ static void		bitmap_button_adjustment_value_changed	( GtkAdjustment *adjustment,
 GtkWidget *
 bitmap_button_new( GtkAdjustment *adjustment,
                  GdkPixbuf *pixbuf,
-                 guint frame_width,
-                 guint frame_height,
-                 guint frame_count )
+                 gint frame_width,
+                 gint frame_height,
+                 gint frame_count )
 {
 	bitmap_button *self = g_malloc0 (sizeof(bitmap_button));
 
@@ -64,14 +64,14 @@ bitmap_button_new( GtkAdjustment *adjustment,
 	self->frame_height	= frame_height;
 	self->frame_count	= frame_count;
 
-	g_object_set_data_full (G_OBJECT (self->drawing_area), bitmap_button_key, self, (GtkDestroyNotify) g_free);
+	g_object_set_data_full (G_OBJECT (self->drawing_area), bitmap_button_key, self, (GDestroyNotify) g_free);
 	g_assert (g_object_get_data (G_OBJECT (self->drawing_area), bitmap_button_key));
 
 	g_signal_connect (G_OBJECT (self->drawing_area), "expose-event", G_CALLBACK (bitmap_button_expose), NULL);
 
 	g_signal_connect (G_OBJECT (self->drawing_area), "button-press-event", G_CALLBACK (bitmap_button_button_press), NULL);
-	
-	gtk_widget_set_usize (self->drawing_area, frame_width, frame_height);
+
+	gtk_widget_set_size_request (self->drawing_area, frame_width, frame_height);
 	
 	// set up event mask
 	gint event_mask = gtk_widget_get_events (self->drawing_area);
@@ -103,33 +103,17 @@ bitmap_button_expose ( GtkWidget *widget, GdkEventExpose *event )
 {
 	bitmap_button *self = g_object_get_data (G_OBJECT (widget), bitmap_button_key); g_assert (self);
 
+	cairo_t *cr = gdk_cairo_create (event->window);
+
 	if (self->background) {
-		gdk_draw_pixbuf (
-			widget->window,
-			NULL,	// gc
-			self->background,
-			0,	// src_x
-			0,	// src_y
-			0,	// dest_x
-			0,	// dest_y
-			gdk_pixbuf_get_width (self->background),
-			gdk_pixbuf_get_height (self->background),
-			GDK_RGB_DITHER_NONE, 0, 0
-		);	
+		gdk_cairo_set_source_pixbuf (cr, self->background, 0, 0);
+		cairo_paint (cr);
 	}
-	
-	gdk_draw_pixbuf (
-		widget->window,
-		NULL,	// gc
-		self->pixbuf,
-		0,	// src_x
-		self->current_frame * self->frame_height,
-		0,	// dest_x
-		0,	// dest_y
-		self->frame_width,
-		self->frame_height,
-		GDK_RGB_DITHER_NONE, 0, 0
-	);
+
+	gdk_cairo_set_source_pixbuf (cr, self->pixbuf, 0, -self->current_frame * self->frame_height);
+	cairo_paint (cr);
+
+	cairo_destroy (cr);
 
 	return FALSE;
 }
@@ -185,18 +169,18 @@ bitmap_button_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 
 	if (self->adjustment)
 	{
-		gtk_signal_disconnect_by_data (GTK_OBJECT (self->adjustment), (gpointer) self);
-		gtk_object_unref (GTK_OBJECT (self->adjustment) );
+		g_signal_handlers_disconnect_by_data (GTK_OBJECT (self->adjustment), (gpointer) self);
+		g_object_unref (GTK_OBJECT (self->adjustment) );
 	}
 	
 	self->adjustment = GTK_ADJUSTMENT (g_object_ref (GTK_OBJECT (adjustment)));
 
-	gtk_signal_connect (GTK_OBJECT (adjustment), "changed",
-		(GtkSignalFunc) bitmap_button_adjustment_changed,
+	g_signal_connect (GTK_OBJECT (adjustment), "changed",
+		(GCallback) bitmap_button_adjustment_changed,
 		(gpointer) widget );
 		
-	gtk_signal_connect (GTK_OBJECT (adjustment), "value_changed",
-		(GtkSignalFunc) bitmap_button_adjustment_value_changed,
+	g_signal_connect (GTK_OBJECT (adjustment), "value_changed",
+		(GCallback) bitmap_button_adjustment_value_changed,
 		(gpointer) widget );
 	
 	bitmap_button_adjustment_changed (adjustment, widget);

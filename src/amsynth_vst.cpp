@@ -1,7 +1,7 @@
 /*
  *  amsynth_vst.cpp
  *
- *  Copyright (c) 2008-2016 Nick Dowell
+ *  Copyright (c) 2008-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -308,7 +308,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			// on some hosts (e.g. energyXT) creating the gdk window can fail unless we call gdk_display_sync
 			gdk_display_sync(gdk_display_get_default());
 
-			plugin->gdkParentWindow = gdk_window_foreign_new((GdkNativeWindow)(uintptr_t)ptr);
+			plugin->gdkParentWindow = gdk_x11_window_foreign_new_for_display(gdk_display_get_default(), (GdkNativeWindow)(uintptr_t)ptr); //gdk_window_foreign_new((GdkNativeWindow)(uintptr_t)ptr);
 			g_assert(plugin->gdkParentWindow);
 
 			// use gdk_window_reparent instead of XReparentWindow to avoid "GdkWindow unexpectedly destroyed" warnings
@@ -504,7 +504,11 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 	effect->numOutputs = 2;
 	effect->flags = effFlagsCanReplacing | effFlagsIsSynth | effFlagsProgramChunks;
 #ifdef WITH_GUI
-	effect->flags |= effFlagsHasEditor;
+	if (strcmp("REAPER", hostProductString) == 0) {
+		// amsynth's GTK GUI doesn't work in REAPER :-[
+	} else {
+		effect->flags |= effFlagsHasEditor;
+	}
 #endif
 	// Do no use the ->user pointer because ardour clobbers it
 	effect->ptr3 = new Plugin(audioMaster);

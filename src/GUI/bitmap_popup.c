@@ -1,7 +1,7 @@
 /*
  *  bitmap_popup.c
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -69,14 +69,14 @@ bitmap_popup_new( GtkAdjustment *adjustment,
 	self->frame_height	= frame_height;
 	self->frame_count	= frame_count;
 
-	g_object_set_data_full (G_OBJECT (self->drawing_area), bitmap_popup_key, self, (GtkDestroyNotify) g_free);
+	g_object_set_data_full (G_OBJECT (self->drawing_area), bitmap_popup_key, self, (GDestroyNotify) g_free);
 	g_assert (g_object_get_data (G_OBJECT (self->drawing_area), bitmap_popup_key));
 	
 	g_signal_connect (G_OBJECT (self->drawing_area), "expose-event", G_CALLBACK (bitmap_popup_expose), NULL);
 
 	g_signal_connect (G_OBJECT (self->drawing_area), "button-release-event", G_CALLBACK (bitmap_popup_button_release), NULL);
-	
-	gtk_widget_set_usize (self->drawing_area, frame_width, frame_height);
+
+	gtk_widget_set_size_request (self->drawing_area, frame_width, frame_height);
 	
 	// set up event mask
 	gint event_mask = gtk_widget_get_events (self->drawing_area);
@@ -121,10 +121,10 @@ void bitmap_popup_set_strings (GtkWidget *widget, const gchar **strings)
 		gchar *label = g_strstrip (g_strdup(strings[i - min]));
 		GtkWidget *menu_item = gtk_radio_menu_item_new_with_label (group, label);
 		group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (menu_item));
-		gtk_signal_connect (GTK_OBJECT (menu_item), "activate",
-			(GtkSignalFunc) bitmap_popup_menuitem_activated,
+		g_signal_connect (GTK_OBJECT (menu_item), "activate",
+			(GCallback) bitmap_popup_menuitem_activated,
 			(gpointer) self );
-		gtk_menu_append (self->menu, menu_item);
+		gtk_menu_shell_append (GTK_MENU_SHELL(self->menu), menu_item);
 		g_object_unref (G_OBJECT (menu_item));
 		g_free (label);
 	}
@@ -138,35 +138,19 @@ static gboolean
 bitmap_popup_expose( GtkWidget *widget, GdkEventExpose *event )
 {
 	bitmap_popup *self = g_object_get_data (G_OBJECT (widget), bitmap_popup_key);
-	
+
+	cairo_t *cr = gdk_cairo_create (event->window);
+
 	if (self->background) {
-		gdk_draw_pixbuf (
-			widget->window,
-			NULL,	// gc
-			self->background,
-			0,	// src_x
-			0,	// src_y
-			0,	// dest_x
-			0,	// dest_y
-			gdk_pixbuf_get_width (self->background),
-			gdk_pixbuf_get_height (self->background),
-			GDK_RGB_DITHER_NONE, 0, 0
-		);	
+		gdk_cairo_set_source_pixbuf (cr, self->background, 0, 0);
+		cairo_paint (cr);
 	}
-	
-	gdk_draw_pixbuf (
-		widget->window,
-		NULL,	// gc
-		self->pixbuf,
-		0,	// src_x
-		self->current_frame * self->frame_height,
-		0,	// dest_x
-		0,	// dest_y
-		self->frame_width,
-		self->frame_height,
-		GDK_RGB_DITHER_NONE, 0, 0
-	);
-	
+
+	gdk_cairo_set_source_pixbuf (cr, self->pixbuf, 0, -self->current_frame * self->frame_height);
+	cairo_paint (cr);
+
+	cairo_destroy (cr);
+
 	return FALSE;
 }
 
@@ -237,18 +221,18 @@ bitmap_popup_set_adjustment( GtkWidget *widget, GtkAdjustment *adjustment )
 
 	if (self->adjustment)
 	{
-		gtk_signal_disconnect_by_data (GTK_OBJECT (self->adjustment), (gpointer) self);
-		gtk_object_unref (GTK_OBJECT (self->adjustment) );
+		g_signal_handlers_disconnect_by_data (GTK_OBJECT (self->adjustment), (gpointer) self);
+		g_object_unref (GTK_OBJECT (self->adjustment) );
 	}
 	
 	self->adjustment = GTK_ADJUSTMENT (g_object_ref (GTK_OBJECT (adjustment)));
 
-	gtk_signal_connect (GTK_OBJECT (adjustment), "changed",
-		(GtkSignalFunc) bitmap_popup_adjustment_changed,
+	g_signal_connect (GTK_OBJECT (adjustment), "changed",
+		(GCallback) bitmap_popup_adjustment_changed,
 		(gpointer) widget );
 		
-	gtk_signal_connect (GTK_OBJECT (adjustment), "value_changed",
-		(GtkSignalFunc) bitmap_popup_adjustment_value_changed,
+	g_signal_connect (GTK_OBJECT (adjustment), "value_changed",
+		(GCallback) bitmap_popup_adjustment_value_changed,
 		(gpointer) widget );
 	
 	bitmap_popup_adjustment_changed (adjustment, widget);

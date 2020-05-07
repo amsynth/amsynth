@@ -1,6 +1,6 @@
 #  amsynth Makefile.am
 #
-#  Copyright (C) 2001-2015 Nick Dowell
+#  Copyright (C) 2001-2019 Nick Dowell
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -19,6 +19,9 @@
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
 AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' -DPACKAGE_LOCALEDIR=\""$(datadir)/locale"\" @CPPFLAGS@ -fPIC -fvisibility=hidden
 
+# https://developer.gnome.org/gtk3/stable/gtk-migrating-2-to-3.html#id-1.6.3.3
+AM_CPPFLAGS += -DGDK_DISABLE_DEPRECATED -DGSEAL_ENABLE -DGTK_DISABLE_DEPRECATED -DGTK_DISABLE_SINGLE_INCLUDES
+
 # amsynth still maintains support for compilers that do not fully support the C++11 standard
 AM_CXXFLAGS = -std=c++98 @CXXFLAGS@
 
@@ -30,6 +33,8 @@ libcore_sources = \
 	src/Configuration.cpp \
 	src/Configuration.h \
 	src/controls.h \
+	src/filesystem.cpp \
+	src/filesystem.h \
 	src/midi.h \
 	src/MidiController.cpp \
 	src/MidiController.h \
@@ -119,9 +124,9 @@ amsynth_SOURCES = \
 	src/main.h \
 	src/main.cpp
 
-amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @SNDFILE_CFLAGS@ @GTK_CFLAGS@
+amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @GTK_CFLAGS@
 
-amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @SNDFILE_LIBS@ @LIBS@
+amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @LIBS@
 
 if BUILD_GUI
 amsynth_SOURCES += $(libgui_sources) \
@@ -261,7 +266,9 @@ dist_amsynth_lv2_DATA = \
 	data/amsynth.lv2/BriansBank17.amSynth.bank.ttl \
 	data/amsynth.lv2/BriansBank18.amSynth.bank.ttl \
 	data/amsynth.lv2/BriansBank19.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank20.amSynth.bank.ttl
+	data/amsynth.lv2/BriansBank20.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank21.amSynth.bank.ttl \
+	data/amsynth.lv2/BriansBank22.amSynth.bank.ttl
 
 endif
 
@@ -362,7 +369,9 @@ dist_banks_DATA = \
 	data/banks/BriansBank17.amSynth.bank \
 	data/banks/BriansBank18.amSynth.bank \
 	data/banks/BriansBank19.amSynth.bank \
-	data/banks/BriansBank20.amSynth.bank
+	data/banks/BriansBank20.amSynth.bank \
+	data/banks/BriansBank21.amSynth.bank \
+	data/banks/BriansBank22.amSynth.bank
 
 
 #

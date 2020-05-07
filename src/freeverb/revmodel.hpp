@@ -10,6 +10,7 @@
 #include "comb.hpp"
 #include "allpass.hpp"
 #include "tuning.h"
+#include "../VoiceBoard/Synth--.h"
 
 class revmodel
 {
@@ -38,8 +39,8 @@ private:
     float   gain;
 	float   roomsize,roomsize1;
     float   damp,damp1;
-    float   wet,wet1,wet2;
- float   dry;
+    float   wet;
+    SmoothedParam dry, wet1, wet2;
    float   width;
  float   mode;
 

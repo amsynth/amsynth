@@ -1,7 +1,7 @@
 /*
  *  Synthesizer.cpp
  *
- *  Copyright (c) 2014-2017 Nick Dowell
+ *  Copyright (c) 2014-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -59,8 +59,6 @@ public:
     void loadState(char *buffer);
     int saveState(char **buffer);
 
-    const char *getPresetName(int presetNumber);
-
     int getPresetNumber();
     void setPresetNumber(int number);
 
@@ -74,8 +72,7 @@ public:
     void getParameterLabel(Param parameter, char *buffer, size_t maxLen);
     void getParameterDisplay(Param parameter, char *buffer, size_t maxLen);
 
-	int getPitchBendRangeSemitones();
-	void setPitchBendRangeSemitones(int value);
+    void setPitchBendRangeSemitones(int value);
 
 	int getMaxNumVoices();
 	void setMaxNumVoices(int value);
@@ -92,8 +89,7 @@ public:
 
     MidiController *getMidiController() { return _midiController; };
     PresetController *getPresetController() { return _presetController; }
-    VoiceAllocationUnit *getVoiceAllocationUnit() { return _voiceAllocationUnit; }
-    
+
 // private:
 
     double _sampleRate;

@@ -1,7 +1,7 @@
 /*
  *  ALSAAudioDriver.cpp
  *
- *  Copyright (c) 2001-2015 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -48,7 +48,7 @@ public:
 
 private:
 
-    void *_handle;
+    snd_pcm_t *_handle;
     short *_buffer;
     unsigned _channels;
 };
@@ -68,10 +68,9 @@ ALSAAudioDriver::write(float *buffer, int nsamples)
 		((unsigned char *)_buffer)[i * 2 + 1] = ((s16 >> 8) & 0xff);
 	}
 
-	snd_pcm_t *pcm = (snd_pcm_t *)_handle;
-	snd_pcm_sframes_t err = snd_pcm_writei(pcm, _buffer, nsamples / _channels);
+	snd_pcm_sframes_t err = snd_pcm_writei(_handle, _buffer, nsamples / _channels);
 	if (err < 0) {
-		err = snd_pcm_recover(pcm, err, 1);
+		err = snd_pcm_recover(_handle, err, 1);
 	}
 	if (err < 0) {
 		return -1;
@@ -112,7 +111,7 @@ ALSAAudioDriver::open()
 
 	_handle = pcm;
 	_channels = config.channels;
-	_buffer = (short *)malloc(kMaxWriteFrames * sizeof(short));
+	_buffer = (short *)malloc(kMaxWriteFrames * _channels * sizeof(short));
 
 	config.current_audio_driver = "ALSA";
 #ifdef ENABLE_REALTIME

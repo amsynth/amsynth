@@ -43,8 +43,7 @@ VoiceBoard::VoiceBoard()
 ,	mFreqModDestination(0)
 ,	mOsc1PulseWidth	(0.0)
 ,	mOsc2PulseWidth	(0.0)
-,	mOsc1Vol		(1.0)
-,	mOsc2Vol		(1.0)
+,	mOscMix			(0.0)
 ,	mRingModAmt		(0.0)
 ,	mOsc2Octave		(1.0)
 ,	mOsc2Detune		(1.0)
@@ -112,8 +111,7 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_FilterKeyVelocityAmount: mFilterVelSens = value; break;
 
 	case kAmsynthParameter_OscillatorMixRingMod:	mRingModAmt = value;		break;
-	case kAmsynthParameter_OscillatorMix:		mOsc1Vol = (1-value)/2.0f;
-				mOsc2Vol = (value+1)/2.0f;	break;
+	case kAmsynthParameter_OscillatorMix:			mOscMix = value;			break;
 	
 	case kAmsynthParameter_AmpEnvAttack:	amp_env.SetAttack (value);	break;
 	case kAmsynthParameter_AmpEnvDecay:		amp_env.SetDecay (value);	break;
@@ -195,13 +193,15 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	//
 	// Osc Mix
 	//
-	float osc1vol = mOsc1Vol * (1.f - mRingModAmt);
-	float osc2vol = mOsc2Vol * (1.f - mRingModAmt);
-	for (int i=0; i<numSamples; i++)
+	for (int i=0; i<numSamples; i++) {
+		float osc1vol = (1.f - mOscMix.tick()) / 2.f;
+		float osc2vol = (1.f - osc1vol);
+		float ringMod = mRingModAmt.tick();
 		osc1buf[i] =
 			osc1vol * osc1buf[i] +
 			osc2vol * osc2buf[i] +
-			mRingModAmt * osc1buf[i] * osc2buf[i];
+			ringMod * osc1buf[i] * osc2buf[i];
+	}
 
 	//
 	// VCF
@@ -213,15 +213,11 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	// 
 	float *ampenvbuf = amp_env.getNFData (numSamples);
 	for (int i=0; i<numSamples; i++) {
-		const float amplitude = ampenvbuf[i] * BLEND(1.f, mKeyVelocity, mAmpVelSens) *
-			( ((lfo1buf[i] * 0.5f) + 0.5f) * mAmpModAmount + 1 - mAmpModAmount);
-		osc1buf[i] = osc1buf[i] * _vcaFilter.processSample(amplitude);
+		float ampModAmount = mAmpModAmount.tick();
+		const float amplitude = ampenvbuf[i] * BLEND(1.f, mKeyVelocity, mAmpVelSens.tick()) *
+			( ((lfo1buf[i] * 0.5f) + 0.5f) * ampModAmount + 1 - ampModAmount);
+		buffer[i] += osc1buf[i] * _vcaFilter.processSample(amplitude * mVolume.processSample(vol));
 	}
-
-	//
-	// Copy, with overall volume
-	//
-	for (int i=0; i<numSamples; i++) buffer[i] += (osc1buf[i] * vol);
 }
 
 void

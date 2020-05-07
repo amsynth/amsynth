@@ -101,7 +101,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PKGDATADIR="";_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -135,7 +135,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PKGDATADIR="";_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -149,6 +149,7 @@
     <ClCompile Include="..\..\src\Configuration.cpp" />
     <ClCompile Include="..\..\src\Effects\Distortion.cpp" />
     <ClCompile Include="..\..\src\Effects\SoftLimiter.cpp" />
+    <ClCompile Include="..\..\src\filesystem.cpp" />
     <ClCompile Include="..\..\src\freeverb\allpass.cpp" />
     <ClCompile Include="..\..\src\freeverb\comb.cpp" />
     <ClCompile Include="..\..\src\freeverb\revmodel.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="..\..\src\controls.h" />
     <ClInclude Include="..\..\src\Effects\Distortion.h" />
     <ClInclude Include="..\..\src\Effects\SoftLimiter.h" />
+    <ClInclude Include="..\..\src\filesystem.h" />
     <ClInclude Include="..\..\src\freeverb\allpass.hpp" />
     <ClInclude Include="..\..\src\freeverb\comb.hpp" />
     <ClInclude Include="..\..\src\freeverb\denormals.h" />

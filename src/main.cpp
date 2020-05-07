@@ -1,7 +1,7 @@
 /*
  *  main.cpp
  *
- *  Copyright (c) 2001-2016 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -103,66 +103,6 @@ static void sched_realtime()
 #endif
 }
 #endif
-
-static int fcopy (const char * dest, const char *source)
-{
-	FILE *in = fopen (source,"r");
-	if (in == NULL) {
-		fprintf (stderr, _("error reading source file %s\n"), source);
-		return -1;
-	}
-	FILE *out = fopen (dest,"w");
-	if (out == NULL) {
-		fprintf (stderr, _("error creating destination file %s\n"), dest);
-		return -1;
-	}
-	fseek (in, 0, SEEK_END);
-	long size = ftell (in);
-	rewind (in);
-	char * tmp = (char *) malloc (size);
-	if (fread(tmp, 1, size, in) && 
-		fwrite(tmp, 1, size, out))
-		{}
-	free (tmp);
-	fclose (in);
-	fclose (out);
-	return 0;
-}
-
-static const char *build_path(const char *path, const char *suffix)
-{
-	char *result = NULL;
-	asprintf(&result, "%s/%s", path, suffix);
-	return result;
-}
-
-static void install_default_files_if_reqd()
-{
-	const char * factory_config = build_path (PKGDATADIR, "rc");
-	const char * factory_bank = build_path (PKGDATADIR, "banks/amsynth_factory.bank");
-
-	const char * user_config = build_path (getenv ("HOME"), ".amSynthrc");
-	const char * user_bank = build_path (getenv ("HOME"), ".amSynth.presets");
-	
-	struct stat st;
-	
-	if (stat (user_config, &st) == -1)
-	{
-		printf (_("installing configuration file to %s\n"), user_config);
-		fcopy (user_config, factory_config);
-	}
-	if (stat (user_bank, &st) == -1)
-	{
-		printf (_("installing default sound bank to %s\n"), user_bank);
-		fcopy (user_bank, factory_bank);
-	}
-
-	free((void *)factory_config);
-	free((void *)factory_bank);
-	
-	free((void *)user_config);
-	free((void *)user_bank);
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -292,11 +232,13 @@ int main( int argc, char *argv[] )
 	setregid(getgid(), getgid());
 #endif
 
-#ifdef ENABLE_NLS
+#if ENABLE_NLS
 	setlocale(LC_ALL, "");
 	bindtextdomain(GETTEXT_PACKAGE, PACKAGE_LOCALEDIR);
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
+#else
+#warning text will not be localized because ENABLE_NLS not set
 #endif
 
 	int initial_preset_no = 0;
@@ -311,7 +253,7 @@ int main( int argc, char *argv[] )
 		{ 0 }
 	};
 	
-	int opt = -1, longindex = -1;
+	int opt, longindex = -1;
 	while ((opt = getopt_long(argc, argv, "vhsdzxm:c:a:r:p:b:U:P:n:t:", longopts, &longindex)) != -1) {
 		switch (opt) {
             case 'v':
@@ -375,13 +317,16 @@ int main( int argc, char *argv[] )
 				break;
 			case 'U':
 				config.jack_session_uuid = optarg;
+				// don't auto connect ports if under jack session control...
+				// the jack session manager is responsible for restoring port connections
+				config.jack_autoconnect = false;
 				break;
 			case 'n':
 				config.jack_client_name_preference = optarg;
 				break;
 			case 0:
 				if (strcmp(longopts[longindex].name, "jack_autoconnect") == 0) {
-					JackOutput::autoconnect = !optarg || (strcmp(optarg, "true") == 0);
+					config.jack_autoconnect = !optarg || (strcmp(optarg, "true") == 0);
 				}
 				break;
 			default:
@@ -393,22 +338,6 @@ int main( int argc, char *argv[] )
 	if (!no_gui)
 		gui_kit_init(&argc, &argv);
 #endif
-
-	/* all config files should eventually be migrated to the ~./amsynth directory */ {
-		char *path = NULL;
-		if (asprintf(&path, "%s/.amsynth", getenv("HOME")) > 0) {
-			mkdir(path, 0000755);
-			free(path);
-			path = NULL;
-		}
-		if (asprintf(&path, "%s/.amsynth/banks", getenv("HOME")) > 0) {
-			mkdir(path, 0000755);
-			free(path);
-			path = NULL;
-		}
-	}
-
-	install_default_files_if_reqd();
 
 	string amsynth_bank_file = config.current_bank_file;
 	// string amsynth_tuning_file = config.current_tuning_file;

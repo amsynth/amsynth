@@ -1,7 +1,7 @@
 /*
  *  editor_pane.c
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2019 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -62,18 +62,10 @@ static void free_resource_info(gpointer data)
 static gboolean
 editor_pane_expose_event_handler (GtkWidget *widget, gpointer data)
 {
-	gdk_draw_pixbuf(
-		widget->window,
-		NULL,	// gc
-		editor_pane_bg,
-		0,	// src_x
-		0,	// src_y
-		widget->allocation.x,
-		widget->allocation.y,
-		gdk_pixbuf_get_width (editor_pane_bg),
-		gdk_pixbuf_get_height (editor_pane_bg),
-		GDK_RGB_DITHER_NONE, 0, 0
-	);
+	cairo_t *cr = gdk_cairo_create (gtk_widget_get_window (widget));
+	gdk_cairo_set_source_pixbuf (cr, editor_pane_bg, 0, 0);
+	cairo_paint (cr);
+	cairo_destroy (cr);
 	return FALSE;
 }
 
@@ -253,12 +245,12 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 	g_is_plugin = is_plugin;
 
 	GtkWidget *fixed = gtk_fixed_new ();
-	gtk_widget_set_usize (fixed, 400, 300);
+	gtk_widget_set_size_request (fixed, 400, 300);
 	
-	g_signal_connect (GTK_OBJECT (fixed), "expose-event", (GtkSignalFunc) editor_pane_expose_event_handler, (gpointer) NULL);
+	g_signal_connect (GTK_OBJECT (fixed), "expose-event", (GCallback) editor_pane_expose_event_handler, (gpointer) NULL);
 	
 #if ENABLE_LAYOUT_EDIT
-	g_signal_connect (GTK_OBJECT (fixed), "unrealize", (GtkSignalFunc) on_unrealize, (gpointer) NULL);
+	g_signal_connect (GTK_OBJECT (fixed), "unrealize", (GCallback) on_unrealize, (gpointer) NULL);
 #endif
 	
 	gsize i;
@@ -266,6 +258,9 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 	gchar *skin_path = (gchar *)g_getenv ("AMSYNTH_SKIN");
 	if (skin_path == NULL) {
 		skin_path = g_build_filename (PKGDATADIR, "skins", "default", NULL);
+	} else {
+		// Copy the env var so that we don't segfault at free below
+		skin_path = g_strdup (skin_path);
 	}
 	
 	if (!g_file_test (skin_path, G_FILE_TEST_EXISTS)) {
