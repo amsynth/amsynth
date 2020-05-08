@@ -88,6 +88,8 @@
     doap:name "amsynth" ;
     doap:maintainer [ foaf:name "Nick Dowell" ; ] ;
     doap:license <http://usefulinc.com/doap/licenses/gpl> ;
+    lv2:minorVersion 2 ;
+    lv2:microVersion 0 ;
     lv2:requiredFeature urid:map ,
         work:schedule ;
     lv2:optionalFeature lv2:hardRTCapable;
