@@ -5,7 +5,6 @@
 #include <sstream>
 #include <csignal>
 
-#include "DebugMessage.h"
 #include "../main.h"
 #include "nsm.h"
 #include "NsmClient.h"

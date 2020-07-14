@@ -15,7 +15,6 @@ addons:
       - libjack-jackd2-dev
       - liblash-compat-dev
       - liblo-dev
-      - liboscpack-dev
       - pandoc
 
 install:

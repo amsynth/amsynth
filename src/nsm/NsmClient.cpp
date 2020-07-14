@@ -1,4 +1,3 @@
-#include "DebugMessage.h"
 #include "../main.h"
 #include "nsm.h"
 #include "NsmClient.h"
@@ -15,10 +14,7 @@ static std::string to_string(int intValue) {
 
 NsmClient *NSMClient ;
 
-DebugMessage NsmClient::debugMessage ;
-
 void NsmClient::Debug (std::string message) {
-    debugMessage.SendMessage (message) ;
 }
 
 int NsmClient::openCallback (const char *path, const char *displayName, const char *clientId, char **outMsg, void *userData) {

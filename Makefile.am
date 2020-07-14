@@ -124,9 +124,9 @@ amsynth_SOURCES = \
 	src/main.h \
 	src/main.cpp
 
-amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @GTK_CFLAGS@
+amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @LIBLO_CFLAGS@ @GTK_CFLAGS@
 
-amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @LIBS@
+amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @LIBLO_LIBS@ @LIBS@
 
 if BUILD_GUI
 amsynth_SOURCES += $(libgui_sources) \
@@ -152,14 +152,11 @@ endif
 
 if BUILD_NSM
 amsynth_SOURCES += \
-	src/nsm/DebugMessage.cpp \
-	src/nsm/DebugMessage.h \
 	src/nsm/NsmClient.cpp \
 	src/nsm/NsmClient.h \
 	src/nsm/NsmHandler.cpp \
 	src/nsm/NsmHandler.h \
 	src/nsm/nsm.h
-amsynth_LDFLAGS = $(AM_LDFLAGS) -llo -loscpack
 endif
 
 #

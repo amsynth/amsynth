@@ -65,17 +65,6 @@ AC_CHECK_LIB(pthread, pthread_create, [], exit)
 
 AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])])
 
-AC_CHECK_HEADER([oscpack/ip/UdpSocket.h], [
-    AC_CHECK_HEADER([lo/lo.h], [
-        AC_CHECK_LIB([lo], [main], [
-            AC_MSG_RESULT([enabling NSM support])
-            AC_DEFINE([WITH_NSM], [], [Build NSM support])
-            with_nsm="yes"
-        ])
-    ])
-])
-AM_CONDITIONAL([BUILD_NSM], [test "x$with_nsm" == "xyes"])
-
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
 dnl Optional packages
@@ -115,6 +104,13 @@ AS_IF([test "x$with_lash" != "xno"], [
     PKG_CHECK_MODULES([LASH], [lash-1.0], [
         AC_DEFINE([WITH_LASH],, [Use this optional package])
         with_lash="yes"], [with_lash="no"])])
+
+AC_ARG_WITH([nsm], [AS_HELP_STRING([--with-nsm], [build support for Non Session Manager])])
+AS_IF([test "x$with_nsm" != "xno"], [
+    PKG_CHECK_MODULES([LIBLO], [liblo], [
+        AC_DEFINE([WITH_NSM],, [Build NSM support])
+        with_nsm="yes"], [with_nsm="no"])])
+AM_CONDITIONAL([BUILD_NSM], [test "x$with_nsm" == "xyes"])
 
 AC_ARG_WITH([dssi], [AS_HELP_STRING([--with-dssi], [build DSSI plugin])])
 AS_IF([test "x$with_dssi" != "xno"], [
@@ -188,7 +184,7 @@ dnl
 dnl
 
 echo
-echo -------------------------------------------------------- $PACKAGE $VERSION
+echo +------------------------------------------------------- $PACKAGE $VERSION
 echo \|
 AS_IF([test "x$with_gui" != "xno"], [
 echo \| GTK version........................................... : `pkg-config --modversion gtk+-2.0`
@@ -203,6 +199,7 @@ echo \| Build with JACK MIDI support.......................... : $ac_cv_header_j
 echo \| Build with JACK session support....................... : $ac_cv_header_jack_session_h
 ])
 echo \| Build with LASH support............................... : $with_lash
+echo \| Build with Non Session Manager support................ : $with_nsm
 echo \| Build DSSI plugin..................................... : $with_dssi
 AS_IF([test "x$with_dssi" != "xno"], [
 echo \| Build DSSI GUI........................................ : $with_dssi_gui
