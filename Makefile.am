@@ -266,7 +266,7 @@ dist_amsynth_lv2_DATA = \
 	data/amsynth.lv2/BriansBank20.amSynth.bank.ttl \
 	data/amsynth.lv2/BriansBank21.amSynth.bank.ttl \
 	data/amsynth.lv2/BriansBank22.amSynth.bank.ttl \
-	data/amsynth.lv2/PWsBank.amSynth.bank.ttl
+	data/amsynth.lv2/PatriksBank01.bank.ttl
 
 endif
 
@@ -370,7 +370,7 @@ dist_banks_DATA = \
 	data/banks/BriansBank20.amSynth.bank \
 	data/banks/BriansBank21.amSynth.bank \
 	data/banks/BriansBank22.amSynth.bank \
-	data/banks/PWsBank.bank
+	data/banks/PatriksBank01.bank
 
 
 #

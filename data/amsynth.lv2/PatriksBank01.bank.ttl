@@ -6,11 +6,11 @@
 @prefix state: <http://lv2plug.in/ns/ext/state#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_000_Rock_Piano>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_000_Rockin'_Piano>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 000: Rock Piano" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 000: Rockin' Piano" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.141667
@@ -37,7 +37,7 @@
         pset:value 0.000000
     ] , [
         lv2:symbol "filter_release" ;
-        pset:value 0.466667
+        pset:value 0.225000
     ] , [
         lv2:symbol "filter_resonance" ;
         pset:value 0.287767
@@ -55,7 +55,7 @@
         pset:value 2.000000
     ] , [
         lv2:symbol "master_vol" ;
-        pset:value 0.346457
+        pset:value 0.489790
     ] , [
         lv2:symbol "lfo_freq" ;
         pset:value 2.600000
@@ -136,11 +136,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_001_Hardend_Piano>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_001_Saturated_Piano>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 001: Hardend Piano" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 001: Saturated Piano" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -185,7 +185,7 @@
         pset:value 3.000000
     ] , [
         lv2:symbol "master_vol" ;
-        pset:value 0.670000
+        pset:value 0.256667
     ] , [
         lv2:symbol "lfo_freq" ;
         pset:value 2.300000
@@ -266,11 +266,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_002_Clean_EP>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_002_Ballad_EP>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 002: Clean EP" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 002: Ballad EP" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -396,11 +396,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_003_Dreamy_EP>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_003_Dreamy_EP>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 003: Dreamy EP" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 003: Dreamy EP" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -460,7 +460,7 @@
         pset:value -0.960000
     ] , [
         lv2:symbol "freq_mod_amount" ;
-        pset:value 0.428373
+        pset:value 0.243584
     ] , [
         lv2:symbol "filter_mod_amount" ;
         pset:value -1.000000
@@ -526,11 +526,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_004_Horns_EP>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_004_Horns_EP>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 004: Horns EP" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 004: Horns EP" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.075000
@@ -575,7 +575,7 @@
         pset:value 0.000000
     ] , [
         lv2:symbol "master_vol" ;
-        pset:value 0.314435
+        pset:value 0.265013
     ] , [
         lv2:symbol "lfo_freq" ;
         pset:value 1.725000
@@ -590,7 +590,7 @@
         pset:value 0.000000
     ] , [
         lv2:symbol "freq_mod_amount" ;
-        pset:value 0.218386
+        pset:value 0.121792
     ] , [
         lv2:symbol "filter_mod_amount" ;
         pset:value -1.000000
@@ -656,11 +656,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_005_Wow_EP>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_005_WOW!_EP>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 005: Wow EP" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 005: WOW! EP" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -705,7 +705,7 @@
         pset:value 2.000000
     ] , [
         lv2:symbol "master_vol" ;
-        pset:value 0.259843
+        pset:value 0.233176
     ] , [
         lv2:symbol "lfo_freq" ;
         pset:value 7.500000
@@ -786,11 +786,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_006_Dark_Rhodes>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_006_Cozy_Rhodes>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 006: Dark Rhodes" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 006: Cozy Rhodes" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -916,11 +916,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_007_Ring_Rhodes>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_007_RM_Rhodes>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 007: Ring Rhodes" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 007: RM Rhodes" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -1046,11 +1046,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_008_C-C-Clavi>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_008_C-C-Clavi>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 008: C-C-Clavi" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 008: C-C-Clavi" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -1176,11 +1176,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_009_Clavi_EP>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_009_Clavi_EPish>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 009: Clavi EP" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 009: Clavi EPish" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -1306,11 +1306,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_010_True_Wurili>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_010_Wurli_Emu>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 010: True Wurili" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 010: Wurli Emu" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -1436,11 +1436,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_011_Like_Wurli>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_011_Similar_2_W>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 011: Like Wurli" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 011: Similar 2 W" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -1566,11 +1566,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_012_Synthophone>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_012_Synthophone>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 012: Synthophone" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 012: Synthophone" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -1615,7 +1615,7 @@
         pset:value 2.000000
     ] , [
         lv2:symbol "master_vol" ;
-        pset:value 0.692913
+        pset:value 0.569580
     ] , [
         lv2:symbol "lfo_freq" ;
         pset:value 3.375000
@@ -1696,11 +1696,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_013_Steel_Drums>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_013_Island_of_Steel>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 013: Steel Drums" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 013: Island of Steel" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -1778,16 +1778,16 @@
         pset:value 0.803333
     ] , [
         lv2:symbol "reverb_roomsize" ;
-        pset:value 0.000000
+        pset:value 0.223334
     ] , [
         lv2:symbol "reverb_damp" ;
-        pset:value 0.000000
+        pset:value 1.000000
     ] , [
         lv2:symbol "reverb_wet" ;
-        pset:value 0.000000
+        pset:value 0.150000
     ] , [
         lv2:symbol "reverb_width" ;
-        pset:value 1.000000
+        pset:value 0.663334
     ] , [
         lv2:symbol "distortion_crunch" ;
         pset:value 0.000000
@@ -1826,11 +1826,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_014_Splashing_Mallets>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_014_Splashing_Mallets>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 014: Splashing Mallets" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 014: Splashing Mallets" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -1956,11 +1956,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_015_Metal_Cave>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_015_Junksynth_Bell>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 015: Metal Cave" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 015: Junksynth Bell" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.075000
@@ -2005,7 +2005,7 @@
         pset:value 0.000000
     ] , [
         lv2:symbol "master_vol" ;
-        pset:value 0.732283
+        pset:value 0.628950
     ] , [
         lv2:symbol "lfo_freq" ;
         pset:value 7.500000
@@ -2020,7 +2020,7 @@
         pset:value -0.700000
     ] , [
         lv2:symbol "freq_mod_amount" ;
-        pset:value 1.016330
+        pset:value 0.000000
     ] , [
         lv2:symbol "filter_mod_amount" ;
         pset:value -1.000000
@@ -2086,11 +2086,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_016_Big_Bell>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_016_Osc_Clockwork>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 016: Big Bell" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 016: Osc Clockwork" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -2150,7 +2150,7 @@
         pset:value 0.000000
     ] , [
         lv2:symbol "freq_mod_amount" ;
-        pset:value 0.117593
+        pset:value 0.146991
     ] , [
         lv2:symbol "filter_mod_amount" ;
         pset:value -1.000000
@@ -2168,16 +2168,16 @@
         pset:value 0.000000
     ] , [
         lv2:symbol "reverb_roomsize" ;
-        pset:value 0.000000
+        pset:value 0.970000
     ] , [
         lv2:symbol "reverb_damp" ;
-        pset:value 0.000000
+        pset:value 1.000000
     ] , [
         lv2:symbol "reverb_wet" ;
-        pset:value 0.000000
+        pset:value 0.496667
     ] , [
         lv2:symbol "reverb_width" ;
-        pset:value 1.000000
+        pset:value 0.750000
     ] , [
         lv2:symbol "distortion_crunch" ;
         pset:value 0.000000
@@ -2216,11 +2216,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_017_Glockenspiel>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_017_Glockenspiel_Tower>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 017: Glockenspiel" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 017: Glockenspiel Tower" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -2298,16 +2298,16 @@
         pset:value 0.346667
     ] , [
         lv2:symbol "reverb_roomsize" ;
-        pset:value 0.000000
+        pset:value 0.800000
     ] , [
         lv2:symbol "reverb_damp" ;
-        pset:value 0.000000
+        pset:value 0.823333
     ] , [
         lv2:symbol "reverb_wet" ;
-        pset:value 0.000000
+        pset:value 0.090000
     ] , [
         lv2:symbol "reverb_width" ;
-        pset:value 1.000000
+        pset:value 0.386667
     ] , [
         lv2:symbol "distortion_crunch" ;
         pset:value 0.000000
@@ -2346,11 +2346,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_018_Tubular_Pad>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_018_Tubular_Pad>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 018: Tubular Pad" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 018: Tubular Pad" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -2395,7 +2395,7 @@
         pset:value 2.000000
     ] , [
         lv2:symbol "master_vol" ;
-        pset:value 0.472441
+        pset:value 0.559108
     ] , [
         lv2:symbol "lfo_freq" ;
         pset:value 0.849999
@@ -2476,11 +2476,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_019_Orchestral_Organ>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_019_All_Pipes>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 019: Orchestral Organ" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 019: All Pipes" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.208333
@@ -2606,11 +2606,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_020_Bright_Organ>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_020_P._Organ>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 020: Bright Organ" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 020: P. Organ" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -2670,7 +2670,7 @@
         pset:value -0.726667
     ] , [
         lv2:symbol "freq_mod_amount" ;
-        pset:value 0.432573
+        pset:value 0.323380
     ] , [
         lv2:symbol "filter_mod_amount" ;
         pset:value -1.000000
@@ -2736,11 +2736,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_021_See_Through_Organ>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_021_See_Through_Organ>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 021: See Through Organ" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 021: See Through Organ" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -2785,7 +2785,7 @@
         pset:value 1.000000
     ] , [
         lv2:symbol "master_vol" ;
-        pset:value 0.456693
+        pset:value 0.396693
     ] , [
         lv2:symbol "lfo_freq" ;
         pset:value 2.500000
@@ -2866,11 +2866,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_022_Jazz_Organ>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_022_Soul'n_Jazz>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 022: Jazz Organ" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 022: Soul'n Jazz" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -2987,7 +2987,7 @@
         pset:value 1.000000
     ] , [
         lv2:symbol "filter_vel_sens" ;
-        pset:value 1.000000
+        pset:value 0.580000
     ] , [
         lv2:symbol "amp_vel_sens" ;
         pset:value 0.550000
@@ -2996,11 +2996,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_023_Oh_Happy_Day!>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_023_Happy_Day?>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 023: Oh Happy Day!" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 023: Happy Day?" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -3045,7 +3045,7 @@
         pset:value 0.000000
     ] , [
         lv2:symbol "master_vol" ;
-        pset:value 0.598425
+        pset:value 0.548425
     ] , [
         lv2:symbol "lfo_freq" ;
         pset:value 2.725000
@@ -3060,7 +3060,7 @@
         pset:value -1.000000
     ] , [
         lv2:symbol "freq_mod_amount" ;
-        pset:value 0.655158
+        pset:value 0.256182
     ] , [
         lv2:symbol "filter_mod_amount" ;
         pset:value -1.000000
@@ -3126,11 +3126,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_024_High_70's_Organ>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_024_70's_Dist_Org>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 024: High 70's Organ" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 024: 70's Dist Org" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.108333
@@ -3256,11 +3256,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_025_Pluck_Organ>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_025_Pluck_Organ>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 025: Pluck Organ" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 025: Pluck Organ" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.100000
@@ -3305,7 +3305,7 @@
         pset:value 0.000000
     ] , [
         lv2:symbol "master_vol" ;
-        pset:value 0.417323
+        pset:value 0.400656
     ] , [
         lv2:symbol "lfo_freq" ;
         pset:value 2.350000
@@ -3386,11 +3386,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_026_Steam_Organ>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_026_Breath_Organ>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 026: Steam Organ" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 026: Breath Organ" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -3450,7 +3450,7 @@
         pset:value -0.986666
     ] , [
         lv2:symbol "freq_mod_amount" ;
-        pset:value 1.259920
+        pset:value 0.000000
     ] , [
         lv2:symbol "filter_mod_amount" ;
         pset:value -0.773333
@@ -3516,11 +3516,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_027_Vox_Organ>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_027_Vox_Organ>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 027: Vox Organ" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 027: Vox Organ" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -3580,7 +3580,7 @@
         pset:value -0.200000
     ] , [
         lv2:symbol "freq_mod_amount" ;
-        pset:value 0.256184
+        pset:value 0.000000
     ] , [
         lv2:symbol "filter_mod_amount" ;
         pset:value -1.000000
@@ -3646,11 +3646,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_028_Razz_Organ>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_028_Rattle_Organ>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 028: Razz Organ" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 028: Rattle Organ" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -3776,11 +3776,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_029_Dripping_Organ>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_029_Dripping_Organ>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 029: Dripping Organ" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 029: Dripping Organ" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -3906,11 +3906,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_030_Flanged_Gtr>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_030_Flanged_EG>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 030: Flanged Gtr" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 030: Flanged EG" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -4036,11 +4036,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_031_Electric_Steel>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_031_Electric_Steel>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 031: Electric Steel" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 031: Electric Steel" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -4166,11 +4166,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_032_Muted_E-Gtr>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_032_Muted_EG>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 032: Muted E-Gtr" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 032: Muted EG" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -4296,11 +4296,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_033_2x_Banjo>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_033_2x_Banjo>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 033: 2x Banjo" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 033: 2x Banjo" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -4426,11 +4426,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_034_Dark'n_Funky>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_034_Dark'n_Funky>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 034: Dark'n Funky" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 034: Dark'n Funky" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -4556,11 +4556,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_035_Rock_Bass>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_035_Another_One_Bass>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 035: Rock Bass" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 035: Another One Bass" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.075000
@@ -4686,11 +4686,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_036_Slap_Bass>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_036_Slap_FF>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 036: Slap Bass" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 036: Slap FF" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -4816,11 +4816,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_037_Party_Bass>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_037_Party_Again_B.>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 037: Party Bass" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 037: Party Again B." ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -4946,11 +4946,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_038_Groovy_Bass>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_038_Scary_or_Groovy>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 038: Groovy Bass" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 038: Scary or Groovy" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -5076,11 +5076,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_039_WeeOO_Bass>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_039_WeeOO_Bass>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 039: WeeOO Bass" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 039: WeeOO Bass" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -5206,11 +5206,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_040_Droony_Bass>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_040_Drone_Pad/Bass>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 040: Droony Bass" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 040: Drone Pad/Bass" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -5336,11 +5336,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_041_Perc_Bass>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_041_Perc_Bass>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 041: Perc Bass" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 041: Perc Bass" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -5466,11 +5466,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_042_Viola_Lead>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_042_Viola_Phase>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 042: Viola Lead" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 042: Viola Phase" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.425000
@@ -5596,11 +5596,11 @@
         pset:value 1.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_043_Quartet>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_043_Str_Quartet>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 043: Quartet" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 043: Str Quartet" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.716667
@@ -5726,11 +5726,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_044_Orchestral_Pad>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_044_Orchestral_Pad>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 044: Orchestral Pad" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 044: Orchestral Pad" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.358333
@@ -5856,11 +5856,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_045_Sax_Lead>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_045_Sax-alike>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 045: Sax Lead" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 045: Sax-alike" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.183333
@@ -5986,14 +5986,14 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_046_Trombone_Lead>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_046_Trombone_Lead>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 046: Trombone Lead" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 046: Trombone Lead" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
-        pset:value 0.175000
+        pset:value 0.350000
     ] , [
         lv2:symbol "amp_decay" ;
         pset:value 0.266667
@@ -6008,7 +6008,7 @@
         pset:value 2.000000
     ] , [
         lv2:symbol "filter_attack" ;
-        pset:value 0.241667
+        pset:value 0.300000
     ] , [
         lv2:symbol "filter_decay" ;
         pset:value 0.416667
@@ -6017,10 +6017,10 @@
         pset:value 0.000000
     ] , [
         lv2:symbol "filter_release" ;
-        pset:value 0.300000
+        pset:value 0.116667
     ] , [
         lv2:symbol "filter_resonance" ;
-        pset:value 0.097000
+        pset:value 0.194000
     ] , [
         lv2:symbol "filter_env_amount" ;
         pset:value 6.933330
@@ -6068,16 +6068,16 @@
         pset:value 1.000000
     ] , [
         lv2:symbol "reverb_roomsize" ;
-        pset:value 0.000000
+        pset:value 0.183333
     ] , [
         lv2:symbol "reverb_damp" ;
         pset:value 0.000000
     ] , [
         lv2:symbol "reverb_wet" ;
-        pset:value 0.000000
+        pset:value 0.366667
     ] , [
         lv2:symbol "reverb_width" ;
-        pset:value 1.000000
+        pset:value 0.433334
     ] , [
         lv2:symbol "distortion_crunch" ;
         pset:value 0.024000
@@ -6116,11 +6116,11 @@
         pset:value 1.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_047_Soft_Brass>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_047_Softer_Brass>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 047: Soft Brass" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 047: Softer Brass" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -6180,7 +6180,7 @@
         pset:value 0.000000
     ] , [
         lv2:symbol "freq_mod_amount" ;
-        pset:value 0.197388
+        pset:value 0.000000
     ] , [
         lv2:symbol "filter_mod_amount" ;
         pset:value -1.000000
@@ -6246,11 +6246,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_048_Horror_Brass>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_048_Whistling_Brass>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 048: Horror Brass" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 048: Whistling Brass" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -6376,11 +6376,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_049_Hiss_Horns>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_049_Hiss_Horns>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 049: Hiss Horns" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 049: Hiss Horns" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.091667
@@ -6506,11 +6506,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_050_Modulate_Horns>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_050_WS_Horns>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 050: Modulate Horns" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 050: WS Horns" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.558333
@@ -6636,11 +6636,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_051_Flute_Lead>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_051_Transv_Flute>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 051: Flute Lead" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 051: Transv Flute" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.325000
@@ -6766,11 +6766,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_052_Flute_Pad>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_052_Flute_Group>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 052: Flute Pad" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 052: Flute Group" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.200000
@@ -6896,11 +6896,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_053_Moving_Reed>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_053_Turning_Reed>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 053: Moving Reed" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 053: Turning Reed" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.250000
@@ -6960,7 +6960,7 @@
         pset:value -0.866666
     ] , [
         lv2:symbol "freq_mod_amount" ;
-        pset:value 0.268783
+        pset:value 0.000000
     ] , [
         lv2:symbol "filter_mod_amount" ;
         pset:value -1.000000
@@ -7026,11 +7026,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_054_Metal_Bottle>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_054_Metal_Bottle>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 054: Metal Bottle" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 054: Metal Bottle" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.716667
@@ -7156,11 +7156,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_055_Rusty_Pipes>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_055_Rusty_Pipes>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 055: Rusty Pipes" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 055: Rusty Pipes" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.450000
@@ -7238,16 +7238,16 @@
         pset:value 1.000000
     ] , [
         lv2:symbol "reverb_roomsize" ;
-        pset:value 0.000000
+        pset:value 0.150000
     ] , [
         lv2:symbol "reverb_damp" ;
         pset:value 0.000000
     ] , [
         lv2:symbol "reverb_wet" ;
-        pset:value 0.000000
+        pset:value 0.636667
     ] , [
         lv2:symbol "reverb_width" ;
-        pset:value 1.000000
+        pset:value 0.113334
     ] , [
         lv2:symbol "distortion_crunch" ;
         pset:value 0.000000
@@ -7286,11 +7286,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_056_Conforting_Voices>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_056_Conforting_Voices>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 056: Conforting Voices" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 056: Conforting Voices" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.583333
@@ -7368,16 +7368,16 @@
         pset:value 0.153334
     ] , [
         lv2:symbol "reverb_roomsize" ;
-        pset:value 0.000000
+        pset:value 0.660000
     ] , [
         lv2:symbol "reverb_damp" ;
-        pset:value 0.000000
+        pset:value 0.643333
     ] , [
         lv2:symbol "reverb_wet" ;
-        pset:value 0.000000
+        pset:value 0.360000
     ] , [
         lv2:symbol "reverb_width" ;
-        pset:value 1.000000
+        pset:value 0.680000
     ] , [
         lv2:symbol "distortion_crunch" ;
         pset:value 0.045000
@@ -7416,11 +7416,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_057_Metalic_Vox>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_057_Metalic_Vox>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 057: Metalic Vox" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 057: Metalic Vox" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.891666
@@ -7501,13 +7501,13 @@
         pset:value 0.000000
     ] , [
         lv2:symbol "reverb_damp" ;
-        pset:value 0.000000
+        pset:value 1.000000
     ] , [
         lv2:symbol "reverb_wet" ;
-        pset:value 0.000000
+        pset:value 1.000000
     ] , [
         lv2:symbol "reverb_width" ;
-        pset:value 1.000000
+        pset:value 0.863333
     ] , [
         lv2:symbol "distortion_crunch" ;
         pset:value 0.000000
@@ -7546,11 +7546,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_058_Mourning_Pad>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_058_Mourning_Pad>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 058: Mourning Pad" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 058: Mourning Pad" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.750000
@@ -7628,16 +7628,16 @@
         pset:value 0.433334
     ] , [
         lv2:symbol "reverb_roomsize" ;
-        pset:value 0.000000
+        pset:value 0.833333
     ] , [
         lv2:symbol "reverb_damp" ;
-        pset:value 0.000000
+        pset:value 0.373333
     ] , [
         lv2:symbol "reverb_wet" ;
-        pset:value 0.000000
+        pset:value 0.186667
     ] , [
         lv2:symbol "reverb_width" ;
-        pset:value 1.000000
+        pset:value 0.660000
     ] , [
         lv2:symbol "distortion_crunch" ;
         pset:value 0.000000
@@ -7676,11 +7676,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_059_Lead_&_Bass>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_059_Lead_&_Bass>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 059: Lead & Bass" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 059: Lead & Bass" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.041667
@@ -7806,11 +7806,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_060_Harmoni_Lead>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_060_Harmonica_LD>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 060: Harmoni Lead" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 060: Harmonica LD" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.150000
@@ -7936,11 +7936,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_061_Leads_to_Ladder>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_061_Drilling_Lead>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 061: Leads to Ladder" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 061: Drilling Lead" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.130804
@@ -8066,11 +8066,11 @@
         pset:value 0.690891
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_062_Super_Cycle>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_062_S._Cycle>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 062: Super Cycle" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 062: S. Cycle" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.391667
@@ -8196,11 +8196,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_063_Overtone_Drone>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_063_OT_Drone>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 063: Overtone Drone" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 063: OT Drone" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -8326,141 +8326,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_064_Disturbans_Lead>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_064_Irritating_Lead>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 064: Disturbans Lead" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
-    lv2:port [
-        lv2:symbol "amp_attack" ;
-        pset:value 0.583333
-    ] , [
-        lv2:symbol "amp_decay" ;
-        pset:value 1.216670
-    ] , [
-        lv2:symbol "amp_sustain" ;
-        pset:value 0.280000
-    ] , [
-        lv2:symbol "amp_release" ;
-        pset:value 0.641667
-    ] , [
-        lv2:symbol "osc1_waveform" ;
-        pset:value 4.000000
-    ] , [
-        lv2:symbol "filter_attack" ;
-        pset:value 0.000000
-    ] , [
-        lv2:symbol "filter_decay" ;
-        pset:value 1.216670
-    ] , [
-        lv2:symbol "filter_sustain" ;
-        pset:value 0.000000
-    ] , [
-        lv2:symbol "filter_release" ;
-        pset:value 0.775000
-    ] , [
-        lv2:symbol "filter_resonance" ;
-        pset:value 0.000000
-    ] , [
-        lv2:symbol "filter_env_amount" ;
-        pset:value 16.000000
-    ] , [
-        lv2:symbol "filter_cutoff" ;
-        pset:value 0.133334
-    ] , [
-        lv2:symbol "osc2_detune" ;
-        pset:value 0.000000
-    ] , [
-        lv2:symbol "osc2_waveform" ;
-        pset:value 1.000000
-    ] , [
-        lv2:symbol "master_vol" ;
-        pset:value 0.362205
-    ] , [
-        lv2:symbol "lfo_freq" ;
-        pset:value 2.050000
-    ] , [
-        lv2:symbol "lfo_waveform" ;
-        pset:value 0.000000
-    ] , [
-        lv2:symbol "osc2_range" ;
-        pset:value 0.000000
-    ] , [
-        lv2:symbol "osc_mix" ;
-        pset:value 1.000000
-    ] , [
-        lv2:symbol "freq_mod_amount" ;
-        pset:value 0.243584
-    ] , [
-        lv2:symbol "filter_mod_amount" ;
-        pset:value -1.000000
-    ] , [
-        lv2:symbol "amp_mod_amount" ;
-        pset:value -1.000000
-    ] , [
-        lv2:symbol "osc_mix_mode" ;
-        pset:value 0.133334
-    ] , [
-        lv2:symbol "osc1_pulsewidth" ;
-        pset:value 1.000000
-    ] , [
-        lv2:symbol "osc2_pulsewidth" ;
-        pset:value 1.000000
-    ] , [
-        lv2:symbol "reverb_roomsize" ;
-        pset:value 0.873333
-    ] , [
-        lv2:symbol "reverb_damp" ;
-        pset:value 1.000000
-    ] , [
-        lv2:symbol "reverb_wet" ;
-        pset:value 0.336667
-    ] , [
-        lv2:symbol "reverb_width" ;
-        pset:value 0.833333
-    ] , [
-        lv2:symbol "distortion_crunch" ;
-        pset:value 0.000000
-    ] , [
-        lv2:symbol "osc2_sync" ;
-        pset:value 0.000000
-    ] , [
-        lv2:symbol "portamento_time" ;
-        pset:value 0.000000
-    ] , [
-        lv2:symbol "keyboard_mode" ;
-        pset:value 0.000000
-    ] , [
-        lv2:symbol "osc2_pitch" ;
-        pset:value 0.000000
-    ] , [
-        lv2:symbol "filter_type" ;
-        pset:value 3.000000
-    ] , [
-        lv2:symbol "filter_slope" ;
-        pset:value 1.000000
-    ] , [
-        lv2:symbol "freq_mod_osc" ;
-        pset:value 2.000000
-    ] , [
-        lv2:symbol "filter_kbd_track" ;
-        pset:value 1.000000
-    ] , [
-        lv2:symbol "filter_vel_sens" ;
-        pset:value 1.000000
-    ] , [
-        lv2:symbol "amp_vel_sens" ;
-        pset:value 1.000000
-    ] , [
-        lv2:symbol "portamento_mode" ;
-        pset:value 0.000000
-    ] .
-
-<http://code.google.com/p/amsynth/amsynth#PWsBank_065_Irritating_Lead>
-    a pset:Preset ;
-    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 065: Irritating Lead" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 064: Irritating Lead" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -8586,11 +8456,11 @@
         pset:value 1.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_066_Brawl_Lead>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_065_Brawl_Lead>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 066: Brawl Lead" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 065: Brawl Lead" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.358333
@@ -8716,11 +8586,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_067_Helicopter_Lead>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_066_Helicopter_Lead>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 067: Helicopter Lead" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 066: Helicopter Lead" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -8846,11 +8716,11 @@
         pset:value 1.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_068_Distorted_Lead>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_067_DistSAW_Lead>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 068: Distorted Lead" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 067: DistSAW Lead" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -8976,11 +8846,11 @@
         pset:value 1.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_069_Bubble_Bath_Lead>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_068_Bubble_Bath_Lead>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 069: Bubble Bath Lead" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 068: Bubble Bath Lead" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -9106,11 +8976,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_070_Feed_the_Lead>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_069_Feed_the_Lead>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 070: Feed the Lead" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 069: Feed the Lead" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -9236,11 +9106,11 @@
         pset:value 1.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_071_Jam!_Lead>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_070_Jam!_Lead>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 071: Jam! Lead" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 070: Jam! Lead" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -9366,11 +9236,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_072_Interference_Lead>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_071_Interference_Lead>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 072: Interference Lead" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 071: Interference Lead" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -9496,11 +9366,11 @@
         pset:value 1.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_073_RS_Lead>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_072_RS_Lead>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 073: RS Lead" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 072: RS Lead" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -9626,11 +9496,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_074_Bomb_sweep>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_073_Bomb_sweep>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 074: Bomb sweep" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 073: Bomb sweep" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -9756,11 +9626,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_075_Solitude_Pulse>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_074_Solitude_Pulse>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 075: Solitude Pulse" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 074: Solitude Pulse" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -9886,11 +9756,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_076_Perc_Pad>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_075_Perc_Pad>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 076: Perc Pad" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 075: Perc Pad" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -10016,11 +9886,141 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_077_Seashell_Pad>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_076_Burble_Pad>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 077: Seashell Pad" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 076: Burble Pad" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
+    lv2:port [
+        lv2:symbol "amp_attack" ;
+        pset:value 0.583333
+    ] , [
+        lv2:symbol "amp_decay" ;
+        pset:value 1.216670
+    ] , [
+        lv2:symbol "amp_sustain" ;
+        pset:value 0.280000
+    ] , [
+        lv2:symbol "amp_release" ;
+        pset:value 0.641667
+    ] , [
+        lv2:symbol "osc1_waveform" ;
+        pset:value 4.000000
+    ] , [
+        lv2:symbol "filter_attack" ;
+        pset:value 0.000000
+    ] , [
+        lv2:symbol "filter_decay" ;
+        pset:value 1.216670
+    ] , [
+        lv2:symbol "filter_sustain" ;
+        pset:value 0.000000
+    ] , [
+        lv2:symbol "filter_release" ;
+        pset:value 0.775000
+    ] , [
+        lv2:symbol "filter_resonance" ;
+        pset:value 0.000000
+    ] , [
+        lv2:symbol "filter_env_amount" ;
+        pset:value 16.000000
+    ] , [
+        lv2:symbol "filter_cutoff" ;
+        pset:value 0.133334
+    ] , [
+        lv2:symbol "osc2_detune" ;
+        pset:value 0.000000
+    ] , [
+        lv2:symbol "osc2_waveform" ;
+        pset:value 1.000000
+    ] , [
+        lv2:symbol "master_vol" ;
+        pset:value 0.362205
+    ] , [
+        lv2:symbol "lfo_freq" ;
+        pset:value 2.050000
+    ] , [
+        lv2:symbol "lfo_waveform" ;
+        pset:value 0.000000
+    ] , [
+        lv2:symbol "osc2_range" ;
+        pset:value 0.000000
+    ] , [
+        lv2:symbol "osc_mix" ;
+        pset:value 1.000000
+    ] , [
+        lv2:symbol "freq_mod_amount" ;
+        pset:value 0.243584
+    ] , [
+        lv2:symbol "filter_mod_amount" ;
+        pset:value -1.000000
+    ] , [
+        lv2:symbol "amp_mod_amount" ;
+        pset:value -1.000000
+    ] , [
+        lv2:symbol "osc_mix_mode" ;
+        pset:value 0.133334
+    ] , [
+        lv2:symbol "osc1_pulsewidth" ;
+        pset:value 1.000000
+    ] , [
+        lv2:symbol "osc2_pulsewidth" ;
+        pset:value 1.000000
+    ] , [
+        lv2:symbol "reverb_roomsize" ;
+        pset:value 0.873333
+    ] , [
+        lv2:symbol "reverb_damp" ;
+        pset:value 1.000000
+    ] , [
+        lv2:symbol "reverb_wet" ;
+        pset:value 0.336667
+    ] , [
+        lv2:symbol "reverb_width" ;
+        pset:value 0.833333
+    ] , [
+        lv2:symbol "distortion_crunch" ;
+        pset:value 0.000000
+    ] , [
+        lv2:symbol "osc2_sync" ;
+        pset:value 0.000000
+    ] , [
+        lv2:symbol "portamento_time" ;
+        pset:value 0.000000
+    ] , [
+        lv2:symbol "keyboard_mode" ;
+        pset:value 0.000000
+    ] , [
+        lv2:symbol "osc2_pitch" ;
+        pset:value 0.000000
+    ] , [
+        lv2:symbol "filter_type" ;
+        pset:value 3.000000
+    ] , [
+        lv2:symbol "filter_slope" ;
+        pset:value 1.000000
+    ] , [
+        lv2:symbol "freq_mod_osc" ;
+        pset:value 2.000000
+    ] , [
+        lv2:symbol "filter_kbd_track" ;
+        pset:value 1.000000
+    ] , [
+        lv2:symbol "filter_vel_sens" ;
+        pset:value 1.000000
+    ] , [
+        lv2:symbol "amp_vel_sens" ;
+        pset:value 1.000000
+    ] , [
+        lv2:symbol "portamento_mode" ;
+        pset:value 0.000000
+    ] .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_077_Seashell_Pad>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank01: 077: Seashell Pad" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.608333
@@ -10146,11 +10146,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_078_Wall_of_Pad>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_078_Wall_of_Pad>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 078: Wall of Pad" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 078: Wall of Pad" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -10276,11 +10276,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_079_Swirl_Pad>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_079_Swirl_Pad>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 079: Swirl Pad" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 079: Swirl Pad" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -10406,11 +10406,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_080_Thin_Hit_Pad>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_080_Thin_Hit_Pad>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 080: Thin Hit Pad" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 080: Thin Hit Pad" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -10536,11 +10536,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_081_Glitter_Pad>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_081_Lush_Osc>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 081: Glitter Pad" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 081: Lush Osc" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.576081
@@ -10666,11 +10666,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_082_Shifting_Pad>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_082_Shifting_Pad>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 082: Shifting Pad" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 082: Shifting Pad" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.866667
@@ -10796,11 +10796,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_083_Tchish_Pad>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_083_Tchish_Pad>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 083: Tchish Pad" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 083: Tchish Pad" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -10926,11 +10926,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_084_Clari_Pad>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_084_Clari_Pad>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 084: Clari Pad" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 084: Clari Pad" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.650000
@@ -11056,11 +11056,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_085_Notch_Bell_Pad>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_085_NS_Bell_Pad>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 085: Notch Bell Pad" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 085: NS Bell Pad" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -11186,11 +11186,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_086_Hanging_Pipes>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_086_Hanging_Pipes>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 086: Hanging Pipes" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 086: Hanging Pipes" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.158333
@@ -11316,11 +11316,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_087_Sleeping_Monster>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_087_Sleeping_Monster>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 087: Sleeping Monster" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 087: Sleeping Monster" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.700000
@@ -11446,11 +11446,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_088_Hu-Stack>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_088_Hu-Stack>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 088: Hu-Stack" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 088: Hu-Stack" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -11576,11 +11576,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_089_Metalic_Oh>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_089_Metalic_Oh>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 089: Metalic Oh" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 089: Metalic Oh" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -11706,11 +11706,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_090_Saw_Sweeeeep>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_090_Saw_Sweeeeep>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 090: Saw Sweeeeep" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 090: Saw Sweeeeep" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 1.250000
@@ -11836,11 +11836,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_091_Slow_Seq>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_091_Slow_Seq>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 091: Slow Seq" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 091: Slow Seq" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.316667
@@ -11966,11 +11966,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_092_Wave_Sequensish>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_092_Wave_Sequensish>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 092: Wave Sequensish" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 092: Wave Sequensish" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.850000
@@ -12096,11 +12096,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_093_S&H>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_093_S&H_Solo>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 093: S&H" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 093: S&H Solo" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.641667
@@ -12226,11 +12226,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_094_Sitar_Rezo>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_094_Sitar_Rezo>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 094: Sitar Rezo" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 094: Sitar Rezo" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -12356,11 +12356,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_095_Tri_Pluck>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_095_Tri_Pluck>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 095: Tri Pluck" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 095: Tri Pluck" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -12486,11 +12486,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_096_Broken_Bells>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_096_Broken_Bells>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 096: Broken Bells" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 096: Broken Bells" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -12616,11 +12616,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_097_Toms_And_Percs>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_097_Toms_And_Percs>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 097: Toms And Percs" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 097: Toms And Percs" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.100000
@@ -12746,11 +12746,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_098_Light_Kick>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_098_Light_Kick>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 098: Light Kick" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 098: Light Kick" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.133333
@@ -12768,7 +12768,7 @@
         pset:value 3.000000
     ] , [
         lv2:symbol "filter_attack" ;
-        pset:value 0.000000
+        pset:value 0.125000
     ] , [
         lv2:symbol "filter_decay" ;
         pset:value 0.166667
@@ -12780,7 +12780,7 @@
         pset:value 0.300000
     ] , [
         lv2:symbol "filter_resonance" ;
-        pset:value 0.000000
+        pset:value 0.329800
     ] , [
         lv2:symbol "filter_env_amount" ;
         pset:value 16.000000
@@ -12795,7 +12795,7 @@
         pset:value 0.000000
     ] , [
         lv2:symbol "master_vol" ;
-        pset:value 0.858268
+        pset:value 1.000000
     ] , [
         lv2:symbol "lfo_freq" ;
         pset:value 0.000000
@@ -12876,11 +12876,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_099_White_Snare>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_099_White_Snare>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 099: White Snare" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 099: White Snare" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -13006,11 +13006,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_100_Sandclap>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_100_Sandclap>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 100: Sandclap" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 100: Sandclap" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -13136,11 +13136,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_101_Hi_(Nearly)_Hat>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_101_Hi_(Nearly)_Hat>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 101: Hi (Nearly) Hat" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 101: Hi (Nearly) Hat" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.041667
@@ -13266,11 +13266,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_102_O_Hi_(Nearly)_Hat>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_102_O_Hi_(Nearly)_Hat>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 102: O Hi (Nearly) Hat" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 102: O Hi (Nearly) Hat" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -13396,11 +13396,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_103_White_Crash>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_103_White_Crash>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 103: White Crash" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 103: White Crash" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.016667
@@ -13526,11 +13526,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_104_Puppy_Bark>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_104_Puppy_Bark>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 104: Puppy Bark" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 104: Puppy Bark" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -13656,11 +13656,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_105_Shh_Ha!>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_105_Shh_Ha!>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 105: Shh Ha!" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 105: Shh Ha!" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.641667
@@ -13786,11 +13786,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_106_70's_VG_Drum>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_106_70's_VG_Drum>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 106: 70's VG Drum" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 106: 70's VG Drum" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -13916,11 +13916,11 @@
         pset:value 1.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_107_Flooding_Alarm>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_107_Flooding_Alarm>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 107: Flooding Alarm" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 107: Flooding Alarm" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.748273
@@ -14046,11 +14046,11 @@
         pset:value 0.902905
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_108_Shhh_Lalalalal>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_108_Shhh_Lalalalal>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 108: Shhh Lalalalal" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 108: Shhh Lalalalal" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 1.710330
@@ -14176,11 +14176,11 @@
         pset:value 0.691496
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_109_Church_over_radio>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_109_Outside_Church>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 109: Church over radio" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 109: Outside Church" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.774965
@@ -14306,11 +14306,11 @@
         pset:value 0.835471
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_110_Overdriven_Motor>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_110_Passing_Motor>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 110: Overdriven Motor" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 110: Passing Motor" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 1.734440
@@ -14436,11 +14436,11 @@
         pset:value 0.888256
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_111_Drilling>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_111_Water_Drilling>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 111: Drilling" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 111: Water Drilling" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.225406
@@ -14566,11 +14566,11 @@
         pset:value 0.085797
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_112_Factory_Robot>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_112_Factory_Robot>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 112: Factory Robot" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 112: Factory Robot" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.766969
@@ -14696,11 +14696,11 @@
         pset:value 0.423131
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_113_Going_Gone>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_113_Going_Gone>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 113: Going Gone" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 113: Going Gone" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.237564
@@ -14826,11 +14826,11 @@
         pset:value 0.073752
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_114_Windy_Day>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_114_Windy_Day>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 114: Windy Day" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 114: Windy Day" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.737026
@@ -14956,11 +14956,11 @@
         pset:value 0.651293
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_115_Close_Creepy>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_115_Close_Creepy>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 115: Close Creepy" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 115: Close Creepy" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.283333
@@ -15086,11 +15086,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_116_Pulse_Ascending>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_116_Pulse_Ascending>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 116: Pulse Ascending" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 116: Pulse Ascending" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -15216,11 +15216,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_117_Helicopter_Hit>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_117_Helicopter_Hit>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 117: Helicopter Hit" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 117: Helicopter Hit" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -15346,11 +15346,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_118_Tornado>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_118_Tornado>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 118: Tornado" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 118: Tornado" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.483334
@@ -15476,11 +15476,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_119_Drag_Race>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_119_Drag_Race>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 119: Drag Race" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 119: Drag Race" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.866666
@@ -15606,11 +15606,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_120_Urban_Siren>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_120_Urban_Siren>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 120: Urban Siren" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 120: Urban Siren" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -15736,11 +15736,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_121_Sprinkler_Alarm>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_121_Sprinkler_Alarm>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 121: Sprinkler Alarm" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 121: Sprinkler Alarm" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.000000
@@ -15866,11 +15866,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_122_Random_Lightning>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_122_Random_Lightning>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 122: Random Lightning" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 122: Random Lightning" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.075000
@@ -15996,11 +15996,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_123_Boiling_over>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_123_Boiling_over>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 123: Boiling over" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 123: Boiling over" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 1.343380
@@ -16126,11 +16126,11 @@
         pset:value 0.518850
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_124_Dentist_in_your_head>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_124_Dentist_in_your_head>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 124: Dentist in your head" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 124: Dentist in your head" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 1.383760
@@ -16256,11 +16256,11 @@
         pset:value 0.895801
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_125_Storm_is_Coming>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_125_EQ_is_Coming>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 125: Storm is Coming" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 125: EQ is Coming" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 2.329850
@@ -16386,11 +16386,11 @@
         pset:value 0.600952
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_126_Electric_Discharges>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_126_Electric_Discharges>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 126: Electric Discharges" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 126: Electric Discharges" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.466668
@@ -16516,11 +16516,11 @@
         pset:value 0.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PWsBank_127_Open_the_gate>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank01_127_Open_the_gate>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PWsBank: 127: Open the gate" ;
-    pset:bank <http://code.google.com/p/amsynth/amsynth#PWsBank> ;
+    rdfs:label "PatriksBank01: 127: Open the gate" ;
+    pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank01> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
         pset:value 0.016476
