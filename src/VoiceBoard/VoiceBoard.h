@@ -102,8 +102,8 @@ private:
 	float			mFilterKbdTrack;
 	float			mFilterVelSens;
 	SynthFilter 	filter;
-	SynthFilter::FilterType mFilterType;
-	SynthFilter::FilterSlope mFilterSlope;
+	SynthFilter::Type mFilterType;
+	SynthFilter::Slope mFilterSlope;
 	ADSR 			filter_env;
 	
 	// amp section

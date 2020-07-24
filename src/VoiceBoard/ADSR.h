@@ -27,7 +27,13 @@
 class ADSR
 {
 public:
-	enum ADSRState { attack, decay, sustain, release, off };
+	enum class State {
+		kAttack,
+		kDecay,
+		kSustain,
+		kRelease,
+		kOff
+	};
 
 	ADSR	(float *buffer);
 	
@@ -35,7 +41,7 @@ public:
 
 	void	SetAttack	(float value) { m_attack = value; }
 	void	SetDecay	(float value) { m_decay = value; }
-	void	SetSustain	(float value) { m_sustain = value; if (m_state == sustain) m_value = value; }
+	void	SetSustain	(float value) { m_sustain = value; if (m_state == State::kSustain) m_value = value; }
 	void	SetRelease	(float value) { m_release = value; }
 	
 	float * getNFData	(unsigned int frames);
@@ -43,7 +49,7 @@ public:
 	void	triggerOn	();
 	void	triggerOff	();
 
-	int		getState	() { return (m_state == off) ? 0 : 1; };
+	int		getState	() { return (m_state == State::kOff) ? 0 : 1; };
 
 	/**
 	 * puts the envelope directly into the off (ADSR_OFF) state, without
@@ -60,7 +66,7 @@ private:
 
 	float *     m_buffer;
 	float       m_sample_rate;
-	ADSRState   m_state;
+	State       m_state;
 
 	float       m_value;
 	float       m_inc;

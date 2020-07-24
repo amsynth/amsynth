@@ -61,7 +61,15 @@ VoiceBoard::VoiceBoard()
 {
 }
 
-enum { sine, square, triangle, noise, randomize, sawtooth_up, sawtooth_down };
+enum class LFOWaveform {
+	kSine,
+	kSquare,
+	kTriangle,
+	kNoise,
+	kRandomize,
+	kSawtoothUp,
+	kSawtoothDown
+};
 
 void
 VoiceBoard::UpdateParameter	(Param param, float value)
@@ -71,14 +79,14 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_LFOToAmp:	mAmpModAmount = (value+1.0f)/2.0f;break;
 	case kAmsynthParameter_LFOFreq:		mLFO1Freq = value; 		break;
 	case kAmsynthParameter_LFOWaveform: {
-		switch ((int)value) {
-			case sine:          mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Sine);   break;
-			case square:        mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Pulse);  break;
-			case triangle:      mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Saw);    break;
-			case noise:         mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Noise);  break;
-			case randomize:     mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Random); break;
-			case sawtooth_up:   mLFOPulseWidth = 1.0; lfo1.SetWaveform(Oscillator::Waveform_Saw);    lfo1.setPolarity(+1.0); break;
-			case sawtooth_down: mLFOPulseWidth = 1.0; lfo1.SetWaveform(Oscillator::Waveform_Saw);    lfo1.setPolarity(-1.0); break;
+		switch ((LFOWaveform)(int)value) {
+			case LFOWaveform::kSine:         mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform::kSine);   break;
+			case LFOWaveform::kSquare:       mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform::kPulse);  break;
+			case LFOWaveform::kTriangle:     mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform::kSaw);    break;
+			case LFOWaveform::kNoise:        mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform::kNoise);  break;
+			case LFOWaveform::kRandomize:    mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform::kRandom); break;
+			case LFOWaveform::kSawtoothUp:   mLFOPulseWidth = 1.0; lfo1.SetWaveform(Oscillator::Waveform::kSaw);    lfo1.setPolarity(+1.0); break;
+			case LFOWaveform::kSawtoothDown: mLFOPulseWidth = 1.0; lfo1.SetWaveform(Oscillator::Waveform::kSaw);    lfo1.setPolarity(-1.0); break;
 			default: assert(0 == "invalid LFO waveform"); break;
 		}
 		break;
@@ -105,8 +113,8 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_FilterEnvDecay:	filter_env.SetDecay (value);	break;
 	case kAmsynthParameter_FilterEnvSustain:	filter_env.SetSustain (value);	break;
 	case kAmsynthParameter_FilterEnvRelease:	filter_env.SetRelease (value);	break;
-	case kAmsynthParameter_FilterType: mFilterType = (SynthFilter::FilterType) (int)value; break;
-	case kAmsynthParameter_FilterSlope: mFilterSlope = (SynthFilter::FilterSlope) (int)value; break;
+	case kAmsynthParameter_FilterType: mFilterType = (SynthFilter::Type) (int)value; break;
+	case kAmsynthParameter_FilterSlope: mFilterSlope = (SynthFilter::Slope) (int)value; break;
 	case kAmsynthParameter_FilterKeyTrackAmount: mFilterKbdTrack = value; break;
 	case kAmsynthParameter_FilterKeyVelocityAmount: mFilterVelSens = value; break;
 
@@ -184,7 +192,7 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	bool osc2sync = mOsc2Sync;
 	// previous implementation of sync had a bug causing it to only work when osc1 was set to sine or saw
 	// we need to recreate that behaviour here to ensure old presets still sound the same.
-	osc2sync &= (osc1.GetWaveform() == Oscillator::Waveform_Sine || osc1.GetWaveform() == Oscillator::Waveform_Saw);
+	osc2sync &= (osc1.GetWaveform() == Oscillator::Waveform::kSine || osc1.GetWaveform() == Oscillator::Waveform::kSaw);
 	osc2.setSyncEnabled(osc2sync);
 
 	osc1.ProcessSamples (osc1buf, numSamples, osc1freq, osc1pw);
@@ -230,7 +238,7 @@ VoiceBoard::SetSampleRate	(int rate)
 	filter.SetSampleRate (rate);
 	filter_env.SetSampleRate (rate);
 	amp_env.SetSampleRate (rate);
-	_vcaFilter.setCoefficients(rate, kVCALowPassFreq, IIRFilterFirstOrder::LowPass);
+	_vcaFilter.setCoefficients(rate, kVCALowPassFreq, IIRFilterFirstOrder::Mode::kLowPass);
 }
 
 bool 

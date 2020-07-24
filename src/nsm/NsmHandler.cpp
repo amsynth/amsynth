@@ -12,7 +12,7 @@
 
 
 NsmHandler::NsmHandler( NsmClient *nsmClient) {
-    loadStatus = Ok ;
+    loadStatus = LoadStatus::kOk ;
     nsmActive = false ;
     setNsmClient (nsmClient) ;
     SetFilePaths ("NotSet") ;
@@ -94,11 +94,11 @@ void NsmHandler::NsmOpen (std::string Name, std::string DisplayName, std::string
         amsynth_load_bank(BankPath.c_str());
 
         nsmClient->setOpenResult (ERR_OK) ;
-        loadStatus = Ok ;
+        loadStatus = LoadStatus::kOk ;
     }
     else {
         nsmClient->setOpenResult (ERR_OK) ;
-        loadStatus = NoSuchFile ;
+        loadStatus = LoadStatus::kNoSuchFile ;
     }
 
     std::ifstream presetStream (PresetPath.c_str()) ;
@@ -109,11 +109,11 @@ void NsmHandler::NsmOpen (std::string Name, std::string DisplayName, std::string
         amsynth_set_preset_number(preset_number);
 
         nsmClient->setOpenResult (ERR_OK) ;
-        loadStatus = Ok ;
+        loadStatus = LoadStatus::kOk ;
     }
     else {
         nsmClient->setOpenResult (ERR_OK) ;
-        loadStatus = NoSuchFile ;
+        loadStatus = LoadStatus::kNoSuchFile ;
     }
 }
 
@@ -125,7 +125,7 @@ void NsmHandler::NsmSaveCallback (void *This) {
 
 void NsmHandler::NsmSave (void) {
     Debug ("NsmHandler::NsmSave()\n") ;
-    if (loadStatus != Error) {
+    if (loadStatus != LoadStatus::kError) {
         SaveAll () ;
         nsmClient->setSaveResult (ERR_OK) ;
     }

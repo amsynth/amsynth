@@ -33,12 +33,12 @@
 class Oscillator
 {
 public:
-	enum Waveform { 
-		Waveform_Sine,
-		Waveform_Pulse,
-		Waveform_Saw,
-		Waveform_Noise,
-		Waveform_Random
+	enum class Waveform { 
+		kSine,
+		kPulse,
+		kSaw,
+		kNoise,
+		kRandom
 	};
 
 	Oscillator	();

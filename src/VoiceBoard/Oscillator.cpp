@@ -48,7 +48,7 @@ Oscillator::Oscillator()
 ,	random (0)
 ,	rate (44100)
 ,	random_count (0)
-,	waveform (Waveform_Sine)
+,	waveform (Waveform::kSine)
 ,	mPolarity(1.0f)
 ,	mSyncEnabled(false)
 ,	mSyncRads(0)
@@ -81,11 +81,11 @@ Oscillator::ProcessSamples	(float *buffer, int nFrames, float freq_hz, float pw,
 	mSyncFrequency = sync_freq;
 	
 	switch (waveform) {
-	case Waveform_Sine:     doSine      (buffer, nFrames); break;
-	case Waveform_Pulse:    doSquare    (buffer, nFrames); break;
-	case Waveform_Saw:      doSaw       (buffer, nFrames); break;
-	case Waveform_Noise:    doNoise     (buffer, nFrames); break;
-	case Waveform_Random:   doRandom    (buffer, nFrames); break;
+	case Waveform::kSine:     doSine      (buffer, nFrames); break;
+	case Waveform::kPulse:    doSquare    (buffer, nFrames); break;
+	case Waveform::kSaw:      doSaw       (buffer, nFrames); break;
+	case Waveform::kNoise:    doNoise     (buffer, nFrames); break;
+	case Waveform::kRandom:   doRandom    (buffer, nFrames); break;
 	}
 }
 

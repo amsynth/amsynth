@@ -39,9 +39,9 @@ SynthFilter::reset()
 }
 
 void
-SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float res, FilterType type, FilterSlope slope)
+SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float res, Type type, Slope slope)
 {
-	if (type == FilterTypeBypass) {
+	if (type == Type::kBypass) {
 		return;
 	}
 	
@@ -59,7 +59,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 	double a0, a1, a2, b1, b2;
 
 	switch (type) {
-		case FilterTypeLowPass:
+		case Type::kLowPass:
 			//
 			// Bilinear transformation of H(s) = 1 / (s^2 + s/Q + 1)
 			// See "Digital Audio Signal Processing" by Udo Zölzer
@@ -71,7 +71,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			b2 = (1.0 - rk + k2) / bh;
 			break;
 
-		case FilterTypeHighPass:
+		case Type::kHighPass:
 			//
 			// Bilinear transformation of H(s) = s^2 / (s^2 + s/Q + 1)
 			// See "Digital Audio Signal Processing" by Udo Zölzer
@@ -83,7 +83,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			b2 = (1.0 - rk + k2) / bh;
 			break;
 		
-		case FilterTypeBandPass:
+		case Type::kBandPass:
 			//
 			// Bilinear transformation of H(s) = (s/Q) / (s^2 + s/Q + 1)
 			// See "Digital Audio Signal Processing" by Udo Zölzer
@@ -95,7 +95,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			b2 = (1.0 - rk + k2) / bh;
 			break;
 			
-		case FilterTypeBandStop:
+		case Type::kBandStop:
 			//
 			// "Digital Audio Signal Processing" by Udo Zölzer does not provide z-transform
 			// coefficients for the bandstop filter, so these were derived by studying
@@ -114,7 +114,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 	}
 
 	switch (slope) {
-		case FilterSlope12:
+		case Slope::k12:
 			for (int i=0; i<numSamples; i++) { double y, x = buffer[i];
 
 				y  =      (a0 * x) + d1;
@@ -125,7 +125,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			}
 			break;
 
-		case FilterSlope24:
+		case Slope::k24:
 			for (int i=0; i<numSamples; i++) { double y, x = buffer[i];
 
 				y  =      (a0 * x) + d1;

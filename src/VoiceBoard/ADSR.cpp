@@ -34,7 +34,7 @@ ADSR::ADSR(float * buffer)
 ,	m_release(0)
 ,	m_buffer(buffer)
 ,	m_sample_rate(44100)
-,	m_state(off)
+,	m_state(State::kOff)
 ,	m_value(0)
 ,	m_inc(0)
 ,	m_frames_left_in_state(UINT_MAX)
@@ -44,7 +44,7 @@ ADSR::ADSR(float * buffer)
 void
 ADSR::triggerOn()
 {
-	m_state = attack;
+	m_state = State::kAttack;
 	m_frames_left_in_state = (int) (m_attack * m_sample_rate);
 	const float target = m_decay <= kMinimumTime ? m_sustain : 1.0;
 	m_inc = (target - m_value) / (float) m_frames_left_in_state;
@@ -53,7 +53,7 @@ ADSR::triggerOn()
 void 
 ADSR::triggerOff()
 {
-	m_state = release;
+	m_state = State::kRelease;
 	m_frames_left_in_state = (int) (m_release * m_sample_rate);
 	m_inc = (0.f - m_value) / (float) m_frames_left_in_state;
 }
@@ -61,7 +61,7 @@ ADSR::triggerOff()
 void
 ADSR::reset()
 {
-	m_state = off;
+	m_state = State::kOff;
 	m_value = 0;
 	m_inc = 0;
 	m_frames_left_in_state = UINT_MAX;
@@ -76,7 +76,7 @@ ADSR::getNFData(unsigned int frames)
 
 		const unsigned int count = MIN(frames, m_frames_left_in_state);
 
-		if (m_state == sustain) {
+		if (m_state == State::kSustain) {
 			for (unsigned i = 0; i < count; i++) {
 				*buffer = m_value;
 				m_value = m_sustain_smoother.processSample(m_sustain);
@@ -94,22 +94,22 @@ ADSR::getNFData(unsigned int frames)
 
 		if (m_frames_left_in_state == 0) {
 			switch (m_state) {
-				case attack:
-					m_state = decay;
+				case State::kAttack:
+					m_state = State::kDecay;
 					m_frames_left_in_state = (int) (m_decay * m_sample_rate);
 					m_inc = (m_sustain - m_value) / (float) m_frames_left_in_state;
 					break;
-				case decay:
+				case State::kDecay:
 					m_sustain_smoother.set(m_value);
-					m_state = sustain;
+					m_state = State::kSustain;
 					m_frames_left_in_state = UINT_MAX;
 					m_inc = 0;
 					break;
-				case sustain:
+				case State::kSustain:
 					m_frames_left_in_state = UINT_MAX;
 					break;
 				default:
-					m_state = off;
+					m_state = State::kOff;
 					m_value = 0;
 					m_frames_left_in_state = UINT_MAX;
 					m_inc = 0;

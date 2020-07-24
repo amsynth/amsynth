@@ -26,18 +26,17 @@ class SynthFilter
 {
 public:
 
-	enum FilterType {
-		FilterTypeLowPass,
-		FilterTypeHighPass,
-		FilterTypeBandPass,
-		FilterTypeBandStop,
-		FilterTypeBypass,
-		FilterTypeCount
+	enum class Type {
+		kLowPass,
+		kHighPass,
+		kBandPass,
+		kBandStop,
+		kBypass
 	};
 
-	enum FilterSlope {
-		FilterSlope12,
-		FilterSlope24,
+	enum class Slope {
+		k12,
+		k24,
 	};
 
 	SynthFilter();
@@ -46,7 +45,7 @@ public:
 
 	void reset();
 
-	void ProcessSamples(float *, int, float cutoff, float res, FilterType type, FilterSlope slope);
+	void ProcessSamples(float *, int, float cutoff, float res, Type type, Slope slope);
 
 private:
 

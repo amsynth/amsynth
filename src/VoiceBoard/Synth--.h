@@ -88,10 +88,10 @@ private:
 
 struct IIRFilterFirstOrder
 {
-	enum Mode
+	enum class Mode
 	{
-		LowPass,
-		HighPass,
+		kLowPass,
+		kHighPass,
 	};
 	
 	IIRFilterFirstOrder()
@@ -107,7 +107,7 @@ struct IIRFilterFirstOrder
 		fc = cutoffFreq / sampleRate;
 		fc = MIN(fc, 0.5f);
 		x = powf(M_E, -M_PI_2 * fc);
-		if (LowPass == mode) {
+		if (mode == Mode::kLowPass) {
 			_a0 = 1.0f - x;
 			_a1 = 0.0f;
 			_b1 = x;

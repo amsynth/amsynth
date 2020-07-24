@@ -87,8 +87,8 @@ Preset::Preset			(const std::string name)
 	mParameters.push_back (Parameter		("portamento_time",		kAmsynthParameter_PortamentoTime, 0.0f, 0.0f, 1.0f));
 	mParameters.push_back (Parameter		("keyboard_mode",		kAmsynthParameter_KeyboardMode, KeyboardModePoly, 0, KeyboardModeLegato, 1));
 	mParameters.push_back (Parameter		("osc2_pitch",			kAmsynthParameter_Oscillator2Pitch, 0, -12, +12, 1));
-	mParameters.push_back (Parameter		("filter_type",         kAmsynthParameter_FilterType, SynthFilter::FilterTypeLowPass, SynthFilter::FilterTypeLowPass, SynthFilter::FilterTypeCount - 1, 1));
-	mParameters.push_back (Parameter		("filter_slope",        kAmsynthParameter_FilterSlope, SynthFilter::FilterSlope24, SynthFilter::FilterSlope12, SynthFilter::FilterSlope24, 1));
+	mParameters.push_back (Parameter		("filter_type",         kAmsynthParameter_FilterType, (int)SynthFilter::Type::kLowPass, (int)SynthFilter::Type::kLowPass, (int)SynthFilter::Type::kBypass, 1));
+	mParameters.push_back (Parameter		("filter_slope",        kAmsynthParameter_FilterSlope, (int)SynthFilter::Slope::k24, (int)SynthFilter::Slope::k12, (int)SynthFilter::Slope::k24, 1));
 	mParameters.push_back (Parameter		("freq_mod_osc",		kAmsynthParameter_LFOOscillatorSelect, 0, 0, 2, 1));
 	mParameters.push_back (Parameter		("filter_kbd_track",    kAmsynthParameter_FilterKeyTrackAmount, 1));
 	mParameters.push_back (Parameter		("filter_vel_sens",		kAmsynthParameter_FilterKeyVelocityAmount, 1));
