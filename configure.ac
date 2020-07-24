@@ -40,7 +40,7 @@ AC_PROG_INSTALL
 LT_INIT
 
 AC_LANG(C++)
-AX_CXX_COMPILE_STDCXX([11], [noext], [mandatory])
+AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
 
 IT_PROG_INTLTOOL
 
