@@ -29,7 +29,7 @@ class AudioDriver
 {
 public:
 
-	enum { kMaxWriteFrames = 512 };
+	static constexpr int kMaxWriteFrames = 512;
 
     virtual ~AudioDriver () { close(); }
 

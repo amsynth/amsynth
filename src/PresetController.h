@@ -38,7 +38,8 @@ struct BankInfo {
 
 class PresetController {
 public:
-	enum { kNumPresets = 128 };
+
+	static constexpr int kNumPresets = 128;
 
 			PresetController	();
 			~PresetController	();

@@ -39,9 +39,7 @@ class VoiceBoard
 {
 public:
 
-	enum {
-		kMaxProcessBufferSize = 64,
-	};
+	static constexpr int kMaxProcessBufferSize = 64;
 
 	VoiceBoard();
 
