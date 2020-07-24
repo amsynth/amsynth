@@ -24,11 +24,6 @@ install:
 jobs:
   include:
     - os: linux
-      dist: precise
-      name: "Build (Ubuntu Precise 12.04 / GCC 4.6.3)"
-      compiler: gcc
-      script: ./autogen.sh && ./configure && make V=1 distcheck
-    - os: linux
       dist: trusty
       name: "Test (Ubuntu Trusty 14.04 / GCC 4.8.4)"
       compiler: gcc
