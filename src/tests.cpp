@@ -148,11 +148,11 @@ static size_t count(const char **strings) {
 }
 
 TEST(testPresetValueStrings) {
-    assert(count(parameter_get_value_strings(kAmsynthParameter_Oscillator1Waveform)) == Oscillator::Waveform_Random + 1);
-    assert(count(parameter_get_value_strings(kAmsynthParameter_Oscillator2Waveform)) == Oscillator::Waveform_Random + 1);
+    assert(count(parameter_get_value_strings(kAmsynthParameter_Oscillator1Waveform)) == (int)Oscillator::Waveform::kRandom + 1);
+    assert(count(parameter_get_value_strings(kAmsynthParameter_Oscillator2Waveform)) == (int)Oscillator::Waveform::kRandom + 1);
     assert(count(parameter_get_value_strings(kAmsynthParameter_KeyboardMode)) == KeyboardModeLegato + 1);
-    assert(count(parameter_get_value_strings(kAmsynthParameter_FilterType)) == SynthFilter::FilterTypeCount);
-    assert(count(parameter_get_value_strings(kAmsynthParameter_FilterSlope)) == SynthFilter::FilterSlope12 + 2);
+    assert(count(parameter_get_value_strings(kAmsynthParameter_FilterType)) == (int)SynthFilter::Type::kBypass + 1);
+    assert(count(parameter_get_value_strings(kAmsynthParameter_FilterSlope)) == (int)SynthFilter::Slope::k12 + 2);
     assert(count(parameter_get_value_strings(kAmsynthParameter_LFOOscillatorSelect)) == 3);
     assert(count(parameter_get_value_strings(kAmsynthParameter_PortamentoMode)) == PortamentoModeLegato + 1);
 }
@@ -162,7 +162,7 @@ TEST(testOscillatorHighFrequency) {
     
     Oscillator osc;
     osc.SetSampleRate(44100);
-    for (int waveform = Oscillator::Waveform_Sine; waveform <= Oscillator::Waveform_Random; waveform++) {
+    for (int waveform = (int)Oscillator::Waveform::kSine; waveform <= (int)Oscillator::Waveform::kRandom; waveform++) {
         osc.SetWaveform((Oscillator::Waveform)waveform);
         osc.ProcessSamples(buffer, VoiceBoard::kMaxProcessBufferSize, 99999, 0.5f);
     }
