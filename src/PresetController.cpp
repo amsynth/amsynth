@@ -1,7 +1,7 @@
 /*
  *  PresetController.cpp
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -450,8 +450,8 @@ static void scan_preset_banks(const std::string dir_path, bool read_only)
 
 	std::sort(filenames.begin(), filenames.end());
 
-	for (std::vector<std::string>::iterator it = filenames.begin(); it != filenames.end(); ++it)
-		scan_preset_bank(dir_path, *it, read_only);
+	for (auto &filename : filenames)
+		scan_preset_bank(dir_path, filename, read_only);
 #endif
 }
 

@@ -1,7 +1,7 @@
 /*
  *  editor_menus.cpp
  *
- *  Copyright (c) 2001-2017 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -109,10 +109,8 @@ presets_menu_new(GtkAdjustment **adjustments)
 
     GtkWidget *presets_menu = gtk_menu_new ();
 
-    const std::vector<BankInfo> &banks = PresetController::getPresetBanks();
-
-    for (size_t b=0; b<banks.size(); b++) {
-        snprintf(text, sizeof(text), "[%s] %s", banks[b].read_only ? _("F") : _("U"), banks[b].name.c_str());
+    for (auto &bank : PresetController::getPresetBanks()) {
+        snprintf(text, sizeof(text), "[%s] %s", bank.read_only ? _("F") : _("U"), bank.name.c_str());
         GtkWidget *bank_item = gtk_menu_item_new_with_label(text);
         gtk_menu_shell_append(GTK_MENU_SHELL(presets_menu), bank_item);
 
@@ -120,12 +118,12 @@ presets_menu_new(GtkAdjustment **adjustments)
         gtk_menu_item_set_submenu(GTK_MENU_ITEM(bank_item), bank_menu);
 
         PresetController presetController;
-        presetController.loadPresets(banks[b].file_path.c_str());
+        presetController.loadPresets(bank.file_path.c_str());
         for (gint i = 0; i < PresetController::kNumPresets; i++) {
             snprintf(text, sizeof(text), "%d: %s", i, presetController.getPreset(i).getName().c_str());
             GtkWidget *preset_item = gtk_menu_item_new_with_label(text);
             g_signal_connect(preset_item, "activate", G_CALLBACK(preset_menu_item_activated), adjustments);
-            g_object_set_data_full(G_OBJECT(preset_item), "bank", g_strdup(banks[b].file_path.c_str()), g_free);
+            g_object_set_data_full(G_OBJECT(preset_item), "bank", g_strdup(bank.file_path.c_str()), g_free);
             g_object_set_data_full(G_OBJECT(preset_item), "preset", (void *)(size_t)i, NULL);
             gtk_menu_shell_append(GTK_MENU_SHELL(bank_menu), preset_item);
         }
