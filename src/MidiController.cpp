@@ -1,7 +1,7 @@
 /*
  *  MidiController.cpp
  *
- *  Copyright (c) 2001-2016 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -169,7 +169,7 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 
 	int paramId = _cc_to_param_map[cc];
 	if (paramId >= 0) {
-		presetController->getCurrentPreset().getParameter(paramId).SetNormalisedValue(value / 127.0f);
+		presetController->getCurrentPreset().getParameter(paramId).setNormalisedValue(value / 127.0f);
 		return; // MIDI CCs mapped by the user take precedence over default behaviour
 	}
 
@@ -329,7 +329,7 @@ MidiController::generateMidiOutput(std::vector<amsynth_midi_cc_t> &output)
 		int cc = _param_to_cc_map[paramId];
 		if (0 <= cc && cc < MAX_CC) {
 			Parameter &parameter = presetController->getCurrentPreset().getParameter(paramId);
-			unsigned char value = (unsigned char) roundf(parameter.GetNormalisedValue() * 127.0f);
+			unsigned char value = (unsigned char) roundf(parameter.getNormalisedValue() * 127.0f);
 			if (_midi_cc_vals[cc] != value) {
 				_midi_cc_vals[cc] = value;
 				amsynth_midi_cc_t out = { channel, (unsigned char)cc, value };

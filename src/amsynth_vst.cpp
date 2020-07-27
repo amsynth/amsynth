@@ -1,7 +1,7 @@
 /*
  *  amsynth_vst.cpp
  *
- *  Copyright (c) 2008-2019 Nick Dowell
+ *  Copyright (c) 2008-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -115,7 +115,7 @@ static void on_adjustment_value_changed(GtkAdjustment *adjustment, AEffect *effe
 			param.setValue(value);
 			plugin->synthesizer->setParameterValue((Param)i, value);
 			if (plugin->audioMaster && !strstr(hostProductString, "Qtractor")) {
-				plugin->audioMaster(effect, audioMasterAutomate, i, 0, 0, param.GetNormalisedValue());
+				plugin->audioMaster(effect, audioMasterAutomate, i, 0, 0, param.getNormalisedValue());
 			}
 		}
 	}

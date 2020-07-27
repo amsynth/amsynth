@@ -139,7 +139,7 @@ float Synthesizer::getParameterValue(Param parameter)
 
 float Synthesizer::getNormalizedParameterValue(Param parameter)
 {
-	return _presetController->getCurrentPreset().getParameter(parameter).GetNormalisedValue();
+	return _presetController->getCurrentPreset().getParameter(parameter).getNormalisedValue();
 }
 
 void Synthesizer::setParameterValue(Param parameter, float value)
@@ -149,7 +149,7 @@ void Synthesizer::setParameterValue(Param parameter, float value)
 
 void Synthesizer::setNormalizedParameterValue(Param parameter, float value)
 {
-	_presetController->getCurrentPreset().getParameter(parameter).SetNormalisedValue(value);
+	_presetController->getCurrentPreset().getParameter(parameter).setNormalisedValue(value);
 }
 
 void Synthesizer::getParameterName(Param parameter, char *buffer, size_t maxLen)
@@ -164,7 +164,7 @@ void Synthesizer::getParameterLabel(Param parameter, char *buffer, size_t maxLen
 
 void Synthesizer::getParameterDisplay(Param parameter, char *buffer, size_t maxLen)
 {
-	strncpy(buffer, _presetController->getCurrentPreset().getParameter(parameter).GetStringValue().c_str(), maxLen);
+	strncpy(buffer, _presetController->getCurrentPreset().getParameter(parameter).getStringValue().c_str(), maxLen);
 }
 
 void Synthesizer::setPitchBendRangeSemitones(int value)
