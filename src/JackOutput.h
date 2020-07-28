@@ -26,11 +26,13 @@
 #include "config.h"
 #endif
 
+#include "AudioOutput.h"
+
+#include <string>
+
 #ifdef WITH_JACK
 #include <jack/jack.h>
 #endif
-
-#include "AudioOutput.h"
 
 class JackOutput : public GenericOutput {
 
@@ -42,13 +44,13 @@ public:
 	bool		Start		();
 	void		Stop		();
 	
-	string		get_error_msg	( )		{ return error_msg; };
+	std::string	get_error_msg	( )		{ return error_msg; };
 
 #ifdef WITH_JACK
 	static int process(jack_nframes_t nframes, void *arg);
 #endif
 private:
-	string	error_msg;
+	std::string		error_msg;
 #ifdef WITH_JACK
 	jack_port_t 	*l_port, *r_port, *m_port, *m_port_out;
 	jack_client_t 	*client;

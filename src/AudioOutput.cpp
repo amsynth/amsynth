@@ -1,7 +1,7 @@
 /*
  *  AudioOutput.cpp
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -27,16 +27,17 @@
 #include "drivers/ALSAmmapAudioDriver.h"
 #include "drivers/OSSAudioDriver.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 
 static AudioDriver * open_driver();
 
 
 AudioOutput::AudioOutput()
-:	driver(0)
-,	recording(0)
-,	buffer(0)
+:	channels(0)
+,	driver(nullptr)
+,	buffer(nullptr)
+,	shouldStop(false)
 {
 }
 
@@ -64,19 +65,18 @@ AudioOutput::Start ()
 	if (!(driver = open_driver())) {
 		return false;
 	}
-	if (Thread::Run() != 0) {
-		driver->close();
-		driver = NULL;
-		return false;
-	}
+	shouldStop = false;
+	thread = std::thread(&AudioOutput::ThreadAction, this);
 	return true;
 }
 
 void
 AudioOutput::Stop ()
 {
-	Thread::Stop();
-	Thread::Join();
+	shouldStop = true;
+	if (thread.joinable()) {
+		thread.join();
+	}
 
 	if (driver) {
 		driver->close();
@@ -90,7 +90,7 @@ AudioOutput::ThreadAction	()
 {
 	Configuration & config = Configuration::get();
 	int bufsize = config.buffer_size;
-	while (!ShouldStop ()) {
+	while (!shouldStop) {
 		std::vector<amsynth_midi_event_t> midi_in;
 		std::vector<amsynth_midi_cc_t> midi_out;
 		amsynth_audio_callback(buffer+bufsize*2, buffer+bufsize*3, bufsize, 1, midi_in, midi_out);
@@ -101,7 +101,7 @@ AudioOutput::ThreadAction	()
 		}
 
 		if (driver->write(buffer, bufsize * channels) < 0) {
-			Stop();
+			break;
 		}
 	}
 }

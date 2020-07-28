@@ -57,6 +57,7 @@
 #include <unistd.h>
 #include <string>
 #include <climits>
+#include <csignal>
 #include <cstring>
 #include <stdlib.h>
 #include <sys/time.h>

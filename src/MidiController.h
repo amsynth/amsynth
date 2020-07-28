@@ -1,7 +1,7 @@
 /*
  *  MidiController.h
  *
- *  Copyright (c) 2001-2016 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -24,7 +24,6 @@
 
 #include "PresetController.h"
 #include "Parameter.h"
-#include "Thread.h"
 #include "types.h"
 
 

@@ -1,7 +1,7 @@
 /*
  *  AudioOutput.h
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -22,13 +22,10 @@
 #ifndef _AUDIO_OUTPUT_H
 #define _AUDIO_OUTPUT_H
 
-#include "Thread.h"
 #include "main.h"
 #include "types.h"
 
-#include <string>
-
-using std::string;
+#include <thread>
 
 
 class GenericOutput
@@ -42,7 +39,7 @@ public:
 	virtual	void		Stop			() = 0;;
 };
 
-class AudioOutput : public GenericOutput, public Thread
+class AudioOutput : public GenericOutput
 {
 public:
 	AudioOutput();
@@ -58,8 +55,9 @@ public:
 private:
   int channels;
   class AudioDriver *driver;
-  int recording;
   float	*buffer;
+  bool shouldStop;
+  std::thread thread;
 };
 
 class NullAudioOutput : public GenericOutput { public:

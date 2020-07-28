@@ -41,7 +41,6 @@ libcore_sources = \
 	src/Preset.h \
 	src/PresetController.cpp \
 	src/PresetController.h \
-	src/Thread.h \
 	src/types.h \
 	src/UpdateListener.h
 

@@ -62,7 +62,6 @@ dnl Required libraries & packages
 dnl
 
 AC_CHECK_LIB(m, sin, , exit)
-AC_CHECK_LIB(pthread, pthread_create, [], exit)
 
 AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])])
 
