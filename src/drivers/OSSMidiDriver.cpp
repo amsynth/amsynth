@@ -35,7 +35,7 @@ class OSSMidiDriver : public MidiDriver
 {
 public:
 	OSSMidiDriver();
-  	virtual ~OSSMidiDriver();
+  	~OSSMidiDriver() override;
 	
 	int open() override;
 	int close() override;

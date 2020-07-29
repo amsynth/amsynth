@@ -41,7 +41,7 @@ using namespace std;
 class ALSAmmapAudioDriver : public AudioDriver {
 public:
     ALSAmmapAudioDriver();
-    virtual	~ALSAmmapAudioDriver();
+    ~ALSAmmapAudioDriver() override;
     int	open() override;
     void close() override;
     int	write(float *buffer, int frames) override;

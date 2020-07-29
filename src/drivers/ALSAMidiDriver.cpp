@@ -37,7 +37,7 @@ class ALSAMidiDriver : public MidiDriver
 {
 public:
 	ALSAMidiDriver(const char *client_name);
-	virtual ~ALSAMidiDriver		( );
+	~ALSAMidiDriver( ) override;
     int read(unsigned char *buffer, unsigned maxBytes) override;
     int write_cc(unsigned int channel, unsigned int param, unsigned int value) override;
     int open() override;
