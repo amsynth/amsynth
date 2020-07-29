@@ -99,13 +99,13 @@ struct SynthesizerStub : ISynthesizer
 {
 	SynthesizerStub(lv2_ui *ui_): ui(ui_) {}
 
-	virtual int loadTuningKeymap(const char *filename)
+	int loadTuningKeymap(const char *filename) override
 	{
 		send(ui->uris.amsynth_kbm_file, filename ?: "");
 		return 0;
 	}
 
-	virtual int loadTuningScale(const char *filename)
+	int loadTuningScale(const char *filename) override
 	{
 		send(ui->uris.amsynth_scl_file, filename ?: "");
 		return 0;

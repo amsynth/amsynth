@@ -42,18 +42,18 @@ public:
 			VoiceAllocationUnit		();
 	virtual	~VoiceAllocationUnit	();
 
-	void	UpdateParameter		(Param, float);
+	void	UpdateParameter		(Param, float) override;
 
 	void	SetSampleRate		(int);
 	
-	virtual void HandleMidiNoteOn(int note, float velocity);
-	virtual void HandleMidiNoteOff(int note, float velocity);
-	virtual void HandleMidiPitchWheel(float value);
-	virtual void HandleMidiPitchWheelSensitivity(uchar semitones);
-	virtual void HandleMidiAllSoundOff();
-	virtual void HandleMidiAllNotesOff();
-	virtual void HandleMidiSustainPedal(uchar value);
-	virtual void HandleMidiPan(float left, float right) { mPanGainLeft = left; mPanGainRight = right; }
+	void	HandleMidiNoteOn(int note, float velocity) override;
+	void	HandleMidiNoteOff(int note, float velocity) override;
+	void	HandleMidiPitchWheel(float value) override;
+	void	HandleMidiPitchWheelSensitivity(uchar semitones) override;
+	void	HandleMidiAllSoundOff() override;
+	void	HandleMidiAllNotesOff() override;
+	void	HandleMidiSustainPedal(uchar value) override;
+	void	HandleMidiPan(float left, float right) override { mPanGainLeft = left; mPanGainRight = right; }
 
 	void	SetMaxVoices	(int voices) { mMaxVoices = voices; }
 	int		GetMaxVoices	() { return mMaxVoices; }

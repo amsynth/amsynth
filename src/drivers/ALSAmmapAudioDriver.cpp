@@ -42,9 +42,9 @@ class ALSAmmapAudioDriver : public AudioDriver {
 public:
     ALSAmmapAudioDriver();
     virtual	~ALSAmmapAudioDriver();
-    int	open();
-    void close();
-    int	write(float *buffer, int frames);
+    int	open() override;
+    void close() override;
+    int	write(float *buffer, int frames) override;
 
 private:
     int 	xrun_recovery();

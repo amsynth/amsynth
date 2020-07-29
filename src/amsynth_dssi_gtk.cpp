@@ -195,12 +195,12 @@ void on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
 
 struct SynthesizerStub : ISynthesizer
 {
-	virtual int loadTuningKeymap(const char *filename)
+	int loadTuningKeymap(const char *filename) override
 	{
 		return host_configure(PROP_KBM_FILE, filename);
 	}
 
-	virtual int loadTuningScale(const char *filename)
+	int loadTuningScale(const char *filename) override
 	{
 		return host_configure(PROP_SCL_FILE, filename);
 	}

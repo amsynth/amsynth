@@ -42,9 +42,9 @@ public:
 
     ALSAAudioDriver() : _handle(0), _buffer(0), _channels(0) {}
 
-    virtual int open();
-    virtual void close();
-    virtual int write(float *buffer, int frames);
+    int open() override;
+    void close() override;
+    int write(float *buffer, int nsamples) override;
 
 private:
 

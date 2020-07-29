@@ -40,9 +40,9 @@ public:
 
 	JackOutput();
 	
-	int			init		(); // returns 0 on success
-	bool		Start		();
-	void		Stop		();
+	int			init		() override; // returns 0 on success
+	bool		Start		() override;
+	void		Stop		() override;
 	
 	std::string	get_error_msg	( )		{ return error_msg; };
 

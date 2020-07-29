@@ -44,9 +44,9 @@ class OSSAudioDriver : public AudioDriver
   public:
     OSSAudioDriver() : _fd(-1), _outputBuffer(0), _outputBufferFrames(0) {}
 
-    int open();
-    void close();
-    int write(float *buffer, int frames);
+    int open() override;
+    void close() override;
+    int write(float *buffer, int frames) override;
 
   private:
     int _fd;

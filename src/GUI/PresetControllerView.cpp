@@ -48,9 +48,9 @@ class PresetControllerViewImpl : public PresetControllerView, public UpdateListe
 public:
 	PresetControllerViewImpl(PresetController *presetController);
 
-	virtual void update();
-	virtual unsigned char getAuditionNote();
-	virtual GtkWidget * getWidget() { return widget; }
+	void update() override;
+	unsigned char getAuditionNote() override;
+	GtkWidget * getWidget() override { return widget; }
 
 private:
 

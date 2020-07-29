@@ -45,10 +45,10 @@ public:
 	AudioOutput();
 	virtual ~AudioOutput();
 
-	bool	Start	();
-	void	Stop	();
+	bool	Start	() override;
+	void	Stop	() override;
 
-	int 	init			( );
+	int 	init	() override;
 
 	void	ThreadAction	();
 
@@ -61,9 +61,9 @@ private:
 };
 
 class NullAudioOutput : public GenericOutput { public:
-	virtual	int  init  () { return -1; }
-	virtual	bool Start () { return false; }
-	virtual	void Stop  () {}
+	int  init  () override { return -1; }
+	bool Start () override { return false; }
+	void Stop  () override {}
 };
 
 #endif				// _AUDIO_OUTPUT_H

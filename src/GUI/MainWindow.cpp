@@ -209,7 +209,7 @@ struct MainWindow : public UpdateListener
 
 	typedef std::pair<int, float> ParameterUpdate;
 
-	virtual void update()
+	void update() override
 	{
 		if (g_thread_self() == mainThread) {
 			parameterDidChange(-1, NAN);
@@ -219,7 +219,7 @@ struct MainWindow : public UpdateListener
 		}
 	}
 
-	virtual void UpdateParameter(Param paramID, float paramValue)
+	void UpdateParameter(Param paramID, float paramValue) override
 	{
 		if (g_thread_self() == mainThread) {
 			parameterDidChange(paramID, paramValue);

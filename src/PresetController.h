@@ -123,11 +123,11 @@ private:
 					:param(nParam),
 					value(nValue) {}
 
-			void initiateUndo( PresetController *presetController ) {
+			void initiateUndo(PresetController *presetController) override {
 				presetController->undoChange(this);
 			}
 
-			void initiateRedo( PresetController *presetController ) {
+			void initiateRedo(PresetController *presetController) override {
 				presetController->redoChange(this);
 			}
 	};
@@ -140,11 +140,11 @@ private:
 				preset = nPreset; // Uses operator override.
 			}
 
-			void initiateUndo( PresetController *presetController ) {
+			void initiateUndo(PresetController *presetController) override {
 				presetController->undoChange(this);
 			}
 
-			void initiateRedo( PresetController *presetController ) {
+			void initiateRedo(PresetController *presetController) override {
 				presetController->redoChange(this);
 			}
 	};

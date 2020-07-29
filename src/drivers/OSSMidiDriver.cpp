@@ -37,11 +37,11 @@ public:
 	OSSMidiDriver();
   	virtual ~OSSMidiDriver();
 	
-	int open();
-	int close();
+	int open() override;
+	int close() override;
 	
-	int read(unsigned char *bytes, unsigned maxBytes);
-	int write_cc(unsigned int channel, unsigned int param, unsigned int value);
+	int read(unsigned char *bytes, unsigned maxBytes) override;
+	int write_cc(unsigned int channel, unsigned int param, unsigned int value) override;
 	
 private:
 		int _fd;

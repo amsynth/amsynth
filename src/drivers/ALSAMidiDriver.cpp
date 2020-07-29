@@ -38,10 +38,10 @@ class ALSAMidiDriver : public MidiDriver
 public:
 	ALSAMidiDriver(const char *client_name);
 	virtual ~ALSAMidiDriver		( );
-    virtual int read(unsigned char *buffer, unsigned maxBytes);
-    virtual int write_cc(unsigned int channel, unsigned int param, unsigned int value);
-    virtual int open();
-    virtual int close();
+    int read(unsigned char *buffer, unsigned maxBytes) override;
+    int write_cc(unsigned int channel, unsigned int param, unsigned int value) override;
+    int open() override;
+    int close() override;
 private:
 	const char		*client_name;
 	snd_seq_t		*seq_handle;
