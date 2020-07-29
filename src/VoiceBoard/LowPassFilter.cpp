@@ -109,7 +109,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			break;
 			
 		default:
-			assert(0 == "invalid FilterType");
+			assert(nullptr == "invalid FilterType");
 			return;
 	}
 
@@ -143,7 +143,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			break;
 
 		default:
-			assert(0 == "invalid FilterSlope");
+			assert(nullptr == "invalid FilterSlope");
 			break;
 	}
 }

@@ -74,7 +74,7 @@ void NsmClient::setHandlerActiveCallback (void *handlerThis, HandlerActiveCallba
     handlerActiveCallback = callback ;
 }
                                                           
-NsmClient::NsmClient (std::string programName) : nsm(0) {
+NsmClient::NsmClient (std::string programName) : nsm(nullptr) {
     NSMClient = this ;
     this->programName = programName ;
 
@@ -105,7 +105,7 @@ void NsmClient::Init (std::string programLabel) {
         }
         else {
             nsm_free( nsm ) ;
-            nsm = 0 ;
+            nsm = nullptr ;
         }
 
         Debug ("NsmClient: Registered Callbacks\n") ;
@@ -116,7 +116,7 @@ void NsmClient::Init (std::string programLabel) {
 
 NsmClient::~NsmClient (void) {
     Debug ("NsmClient: Destructor()\n") ;
-    if (nsm != 0) {
+    if (nsm != nullptr) {
         nsm_thread_stop (nsm) ;
         nsm_free( nsm ) ;
     }

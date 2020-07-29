@@ -81,7 +81,7 @@ AudioOutput::Stop ()
 	if (driver) {
 		driver->close();
 		delete driver;
-		driver = NULL;
+		driver = nullptr;
 	}
 }
 
@@ -110,25 +110,25 @@ static AudioDriver * open_driver(AudioDriver *driver)
 {
 	Configuration & config = Configuration::get();
 	if (!driver) {
-		return NULL;
+		return nullptr;
 	}
 	if (driver->open() != 0) {
 		delete driver;
-		return NULL;
+		return nullptr;
 	}
 	void *buffer = calloc(AudioDriver::kMaxWriteFrames, config.channels * sizeof(float));
 	int written = driver->write((float *)buffer, AudioDriver::kMaxWriteFrames);
 	free(buffer);
 	if (written != 0) {
 		delete driver;
-		return NULL;
+		return nullptr;
 	}
 	return driver;
 }
 
 static AudioDriver * open_driver()
 {
-	AudioDriver *driver = NULL;
+	AudioDriver *driver = nullptr;
 	Configuration & config = Configuration::get();
 
 	if (config.audio_driver == "alsa-mmap" || config.audio_driver == "auto") {
@@ -149,5 +149,5 @@ static AudioDriver * open_driver()
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }

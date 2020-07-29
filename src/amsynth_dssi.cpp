@@ -44,9 +44,9 @@
 #define TRACE_ARGS( ... ) (void)0
 #endif
 
-static LADSPA_Descriptor *	s_ladspaDescriptor = NULL;
-static DSSI_Descriptor *	s_dssiDescriptor   = NULL;
-static PresetController *	s_presetController = NULL;
+static LADSPA_Descriptor *	s_ladspaDescriptor = nullptr;
+static DSSI_Descriptor *	s_dssiDescriptor   = nullptr;
+static PresetController *	s_presetController = nullptr;
 static unsigned long 		s_lastBankGet = ULONG_MAX;
 
 #define MIDI_BUFFER_SIZE 4096
@@ -79,7 +79,7 @@ const DSSI_Descriptor *dssi_descriptor (unsigned long index)
     switch (index)
     {
     case 0: return s_dssiDescriptor;
-    default: return NULL;
+    default: return nullptr;
     }
 }
 
@@ -115,15 +115,15 @@ static char * configure(LADSPA_Handle Instance, const char *Key, const char *Val
 
 	if (strcmp(Key, PROP_KBM_FILE) == 0) {
 		synthesizer->loadTuningKeymap(Value);
-		return NULL;
+		return nullptr;
 	}
 
 	if (strcmp(Key, PROP_SCL_FILE) == 0) {
 		synthesizer->loadTuningScale(Value);
-		return NULL;
+		return nullptr;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 //////////////////// Program handling //////////////////////////////////////////
@@ -148,7 +148,7 @@ static const DSSI_Program_Descriptor *get_program(LADSPA_Handle Instance, unsign
 		return &descriptor;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 static void select_program(LADSPA_Handle Instance, unsigned long Bank, unsigned long Index)
@@ -247,7 +247,7 @@ static void run_synth (LADSPA_Handle instance, unsigned long sample_count, snd_s
 
 static void run (LADSPA_Handle instance, unsigned long sample_count)
 {
-    run_synth (instance, sample_count, NULL, 0);
+    run_synth (instance, sample_count, nullptr, 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -333,13 +333,13 @@ void __attribute__ ((constructor)) my_init ()
 		s_ladspaDescriptor->instantiate = instantiate;
 		s_ladspaDescriptor->cleanup = cleanup;
 
-		s_ladspaDescriptor->activate = NULL;
-		s_ladspaDescriptor->deactivate = NULL;
+		s_ladspaDescriptor->activate = nullptr;
+		s_ladspaDescriptor->deactivate = nullptr;
 
 		s_ladspaDescriptor->connect_port = connect_port;
 		s_ladspaDescriptor->run = run;
-		s_ladspaDescriptor->run_adding = NULL;
-		s_ladspaDescriptor->set_run_adding_gain = NULL;
+		s_ladspaDescriptor->run_adding = nullptr;
+		s_ladspaDescriptor->set_run_adding_gain = nullptr;
     }
 
 	/* DSSI descriptor */
@@ -350,12 +350,12 @@ void __attribute__ ((constructor)) my_init ()
 		s_dssiDescriptor->LADSPA_Plugin				= s_ladspaDescriptor;
 		s_dssiDescriptor->configure					= configure;
 		s_dssiDescriptor->get_program 					= get_program;
-		s_dssiDescriptor->get_midi_controller_for_port	= NULL;
+		s_dssiDescriptor->get_midi_controller_for_port	= nullptr;
 		s_dssiDescriptor->select_program 				= select_program;
 		s_dssiDescriptor->run_synth 					= run_synth;
-		s_dssiDescriptor->run_synth_adding 			= NULL;
-		s_dssiDescriptor->run_multiple_synths 			= NULL;
-		s_dssiDescriptor->run_multiple_synths_adding	= NULL;
+		s_dssiDescriptor->run_synth_adding 				= nullptr;
+		s_dssiDescriptor->run_multiple_synths 			= nullptr;
+		s_dssiDescriptor->run_multiple_synths_adding	= nullptr;
     }
 }
 

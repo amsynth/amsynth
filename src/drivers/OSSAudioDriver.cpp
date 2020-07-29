@@ -42,7 +42,7 @@
 class OSSAudioDriver : public AudioDriver
 {
   public:
-    OSSAudioDriver() : _fd(-1), _outputBuffer(0), _outputBufferFrames(0) {}
+    OSSAudioDriver() : _fd(-1), _outputBuffer(nullptr), _outputBufferFrames(0) {}
 
     int open() override;
     void close() override;
@@ -165,7 +165,7 @@ void OSSAudioDriver::close()
        _fd = -1;
     }
     free(_outputBuffer);
-    _outputBuffer = NULL;
+    _outputBuffer = nullptr;
     _outputBufferFrames = 0;
 }
 

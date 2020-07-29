@@ -169,7 +169,7 @@ static MidiDriver *opened_midi_driver(MidiDriver *driver)
 {
 	if (driver && driver->open() != 0) {
 		delete driver;
-		return NULL;
+		return nullptr;
 	}
 	return driver;
 }
@@ -222,7 +222,7 @@ static void signal_handler(int signal)
 
 int main( int argc, char *argv[] )
 {
-	srand((unsigned) time(NULL));
+	srand((unsigned) time(nullptr));
 
 #ifdef ENABLE_REALTIME
 	sched_realtime();
@@ -247,11 +247,11 @@ int main( int argc, char *argv[] )
 	// needs to be called before our own command line parsing code
 	amsynth_lash_process_args(&argc, &argv);
 	
-	bool no_gui = (getenv("AMSYNTH_NO_GUI") != NULL);
+	bool no_gui = (getenv("AMSYNTH_NO_GUI") != nullptr);
 
 	static struct option longopts[] = {
-		{ "jack_autoconnect", optional_argument, NULL, 0 },
-		{ 0 }
+		{ "jack_autoconnect", optional_argument, nullptr, 0 },
+		{ nullptr }
 	};
 	
 	int opt, longindex = -1;

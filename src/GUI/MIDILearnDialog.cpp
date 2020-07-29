@@ -30,7 +30,7 @@
 
 
 MIDILearnDialog::MIDILearnDialog(MidiController *midiController, PresetController *presetController, GtkWindow *parent)
-:	_dialog(NULL)
+:	_dialog(nullptr)
 ,	_midiController(midiController)
 ,	_presetController(presetController)
 {

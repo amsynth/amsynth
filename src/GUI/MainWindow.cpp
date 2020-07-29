@@ -303,7 +303,7 @@ startup_check(gpointer data)
 	}
 
 	if (bad_config) {
-		config_dialog_run(NULL);
+		config_dialog_run(nullptr);
 	}
 
     return G_SOURCE_REMOVE;

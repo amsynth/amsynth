@@ -35,11 +35,11 @@
 
 MidiController::MidiController()
 :	last_active_controller ("last_active_cc", (Param) -1, 0, 0, MAX_CC, 1)
-,	_handler(NULL)
+,	_handler(nullptr)
 ,	_rpn_msb(0xff)
 ,	_rpn_lsb(0xff)
 {
-	presetController = 0;
+	presetController = nullptr;
 	Configuration & config = Configuration::get();
 	channel = (unsigned char) config.midi_channel;
 	loadControllerMap();

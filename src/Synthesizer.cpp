@@ -35,9 +35,9 @@
 
 Synthesizer::Synthesizer()
 : _sampleRate(-1)
-, _midiController(0)
-, _presetController(0)
-, _voiceAllocationUnit(0)
+, _midiController(nullptr)
+, _presetController(nullptr)
+, _voiceAllocationUnit(nullptr)
 {
 	Configuration &config = Configuration::get();
 
@@ -212,7 +212,7 @@ void Synthesizer::process(unsigned int nframes,
 						  float *audio_l, float *audio_r, unsigned audio_stride)
 {
 	if (_sampleRate < 0) {
-		assert(0 == "sample rate has not been set");
+		assert(nullptr == "sample rate has not been set");
 		return;
 	}
 	std::vector<amsynth_midi_event_t>::const_iterator event = midi_in.begin();

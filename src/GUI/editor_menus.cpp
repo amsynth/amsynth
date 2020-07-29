@@ -124,7 +124,7 @@ presets_menu_new(GtkAdjustment **adjustments)
             GtkWidget *preset_item = gtk_menu_item_new_with_label(text);
             g_signal_connect(preset_item, "activate", G_CALLBACK(preset_menu_item_activated), adjustments);
             g_object_set_data_full(G_OBJECT(preset_item), "bank", g_strdup(bank.file_path.c_str()), g_free);
-            g_object_set_data_full(G_OBJECT(preset_item), "preset", (void *)(size_t)i, NULL);
+            g_object_set_data_full(G_OBJECT(preset_item), "preset", (void *)(size_t)i, nullptr);
             gtk_menu_shell_append(GTK_MENU_SHELL(bank_menu), preset_item);
         }
     }
@@ -238,6 +238,6 @@ static void tuning_menu_open_kbm(GtkWidget *widget, Synthesizer *synth)
 
 static void tuning_menu_reset(GtkWidget *widget, Synthesizer *synth)
 {
-    synth->loadTuningKeymap(NULL);
-    synth->loadTuningScale(NULL);
+    synth->loadTuningKeymap(nullptr);
+    synth->loadTuningScale(nullptr);
 }

@@ -238,7 +238,7 @@ const char *parameter_name_from_index (int param_index)
 {
 	const Preset &_preset = _get_preset();
 	if (param_index < 0 || param_index >= (int)_preset.ParameterCount())
-		return NULL;
+		return nullptr;
 	static std::vector<std::string> names;
 	if (names.empty())
 		names.resize(_preset.ParameterCount());
@@ -325,7 +325,7 @@ const char **parameter_get_value_strings (int parameter_index)
 {
     static std::vector<std::vector<const char *> > parameterStrings(kAmsynthParameterCount);
     if (parameter_index < 0 || parameter_index >= (int)parameterStrings.size())
-        return NULL;
+        return nullptr;
 
     std::vector<const char *> & strings = parameterStrings[parameter_index];
     if (strings.empty()) {

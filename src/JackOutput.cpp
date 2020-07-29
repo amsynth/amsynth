@@ -50,11 +50,11 @@ static void session_callback(jack_session_event_t *event, void *arg);
 JackOutput::JackOutput()
 :	error_msg("")
 #ifdef WITH_JACK
-,	l_port(NULL)
-,	r_port(NULL)
-,	m_port(NULL)
-,	m_port_out(NULL)
-,	client(NULL)
+,	l_port(nullptr)
+,	r_port(nullptr)
+,	m_port(nullptr)
+,	m_port_out(nullptr)
+,	client(nullptr)
 #endif
 {
 }
@@ -68,7 +68,7 @@ JackOutput::init()
 	if (client) // already initialised
 		return 0;
 
-	l_port = r_port = m_port = 0;
+	l_port = r_port = m_port = nullptr;
 
 	jack_status_t status = (jack_status_t)0;
 
@@ -174,14 +174,14 @@ JackOutput::Start	()
 		return false;
 	}
 	if (Configuration::get().jack_autoconnect) {
-		const char **port_names = jack_get_ports(client, NULL, JACK_DEFAULT_AUDIO_TYPE, JackPortIsPhysical | JackPortIsInput);
+		const char **port_names = jack_get_ports(client, nullptr, JACK_DEFAULT_AUDIO_TYPE, JackPortIsPhysical | JackPortIsInput);
 		if (port_names) {
 			jack_connect(client, jack_port_name(l_port), port_names[0]);
 			jack_connect(client, jack_port_name(r_port), port_names[1]);
 			jack_free(port_names);
 		}
 
-		port_names = jack_get_ports(client, NULL, JACK_DEFAULT_MIDI_TYPE, JackPortIsPhysical | JackPortIsOutput);
+		port_names = jack_get_ports(client, nullptr, JACK_DEFAULT_MIDI_TYPE, JackPortIsPhysical | JackPortIsOutput);
 		if (port_names) {
 			for (int i = 0; port_names[i]; i++) { const char *port = port_names[i];
 				jack_connect(client, port, jack_port_name(m_port));
@@ -202,7 +202,7 @@ JackOutput::Stop()
 	if (!client) return;
 	jack_deactivate(client);
 	jack_client_close(client);
-	client = 0;
+	client = nullptr;
 #endif
 }
 

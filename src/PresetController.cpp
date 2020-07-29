@@ -45,7 +45,7 @@ using namespace std;
 
 PresetController::PresetController	()
 :	bank_file ("")
-,	updateListener (0)
+,	updateListener (nullptr)
 ,	nullpreset ("null preset")
 ,	currentBankNo (-1)
 ,	currentPresetNo (-1)
@@ -200,7 +200,7 @@ static long int mtime(const char *filename)
 int 
 PresetController::savePresets		(const char *filename)
 {
-	if (filename == NULL)
+	if (filename == nullptr)
 		filename = bank_file.c_str();
 
 	ofstream file( filename, ios::out );
@@ -267,7 +267,7 @@ static bool is_amsynth_file(const char *filename)
 
 static off_t file_read_contents(const char *filename, void **result)
 {
-	*result = NULL;
+	*result = nullptr;
 	FILE *file = fopen(filename, "r");
 	if (!file)
 		return 0;
@@ -310,7 +310,7 @@ static float float_from_string(const char *s)
 
 static bool readBankFile(const char *filename, Preset *presets)
 {
-	void *buffer = NULL;
+	void *buffer = nullptr;
 	off_t buffer_length = file_read_contents(filename, &buffer);
 	if (!buffer)
 		return false;
@@ -359,7 +359,7 @@ static bool readBankFile(const char *filename, Preset *presets)
 int
 PresetController::loadPresets		(const char *filename)
 {
-	if (filename == NULL)
+	if (filename == nullptr)
 		filename = bank_file.c_str();
 
 	long int fileModifiedTime = mtime(filename);
