@@ -25,18 +25,18 @@
 #include <algorithm>
 #include <cmath>
 
-#ifdef M_E
-#undef M_E
-#endif
-#define M_E		2.7182818284590452354F
-
-#ifdef M_PI_2
-#undef M_PI_2
-#endif
-#define M_PI_2	1.57079632679489661923F
-
-#define TWO_PI 6.28318530717958647692F
-#define PI     3.14159265358979323846F
+namespace m {
+	// The mathematical constant e
+	static const float e = 2.7182818284590452354F;
+	// The mathematical constant pi
+	static const float pi = 3.14159265358979323846F;
+	// The mathematical constant pi * 2
+	static const float twoPi = 6.28318530717958647692F;
+	// The mathematical constant pi / 2
+	static const float halfPi = 1.57079632679489661923F;
+	// A quiet NaN (“not a number”)
+	static const float nan = std::nanf("");
+}
 
 class Lerper
 {
@@ -92,7 +92,7 @@ struct IIRFilterFirstOrder
 	
 	void setCoefficients(float sampleRate, float cutoffFreq, Mode mode)
 	{
-		float x = powf(M_E, -M_PI_2 * std::min(cutoffFreq / sampleRate, 0.5F));
+		float x = powf(m::e, -m::halfPi * std::min(cutoffFreq / sampleRate, 0.5F));
 		if (mode == Mode::kLowPass) {
 			_a0 = 1.0F - x;
 			_a1 = 0.0F;

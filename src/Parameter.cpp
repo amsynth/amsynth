@@ -20,6 +20,7 @@
  */
 
 #include "Parameter.h"
+#include "src/VoiceBoard/Synth--.h"
 
 #include <algorithm>
 #include <cassert>
@@ -32,11 +33,11 @@ Parameter::Parameter(const std::string &name, Param id, float value, float min, 
 ,	_label		(label)
 ,	_law		(law)
 ,	_default	(value)
-,	_value		(NAN)
+,	_value		(m::nan)
 ,	_min		(min)
 ,	_max		(max)
 ,	_step		(inc)
-,	_controlValue(NAN)
+,	_controlValue(m::nan)
 ,	_base		(base)
 ,	_offset		(offset)
 {
@@ -97,7 +98,7 @@ Parameter::valueFromString(const std::string &str)
 	std::istringstream istr(str);
 	static std::locale locale = std::locale("C");
 	istr.imbue(locale);
-	float value = NAN;
+	float value = m::nan;
 	istr >> value;
 	return value;
 }

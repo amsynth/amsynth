@@ -20,7 +20,7 @@
  */
 
 #include "LowPassFilter.h"
-#include "Synth--.h"		// for PI and TWO_PI
+#include "Synth--.h"
 
 #include <algorithm>
 #include <cassert>
@@ -45,7 +45,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 	const double w = (cutoff / rate); // cutoff freq [ 0 <= w <= 0.5 ]
 	const double r = std::max(0.001, 2.0 * (1.0 - res)); // r is 1/Q (sqrt(2) for a butterworth response)
 
-	const double k = tan(w * PI);
+	const double k = tan(w * m::pi);
 	const double k2 = k * k;
 	const double rk = r * k;
 	const double bh = 1.0 + rk + k2;

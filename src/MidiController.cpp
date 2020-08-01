@@ -179,7 +179,7 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 			// http://www.midi.org/techspecs/rp36.php
 			// the effective range for CC#10 is modified to be 1 to 127, and values 0 and 1 both pan hard left
 			float scaled = (value < 1 ? 0 : value - 1) / 126.f;
-			_handler->HandleMidiPan(cosf(M_PI_2 * scaled), sinf(M_PI_2 * scaled));
+			_handler->HandleMidiPan(cosf(m::halfPi * scaled), sinf(m::halfPi * scaled));
 		}
 			break;
 		case MIDI_CC_SUSTAIN_PEDAL:
