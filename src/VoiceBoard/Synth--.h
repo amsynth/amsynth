@@ -75,11 +75,11 @@ public:
 	
 private:
 
-	float _start{0.F};
-	float _final{0.F};
-	float _inc{0.F};
-	unsigned int _steps{0};
-	unsigned int _i{0};
+	float _start = 0;
+	float _final = 0;
+	float _inc = 0;
+	unsigned int _steps = 0;
+	unsigned int _i = 0;
 };
 
 struct IIRFilterFirstOrder
@@ -118,10 +118,10 @@ struct IIRFilterFirstOrder
 		}
 	}
 	
-	float _a0{0.F};
-	float _a1{0.F};
-	float _b1{0.F};
-	float _z{0.F};
+	float _a0 = 0;
+	float _a1 = 0;
+	float _b1 = 0;
+	float _z = 0;
 };
 
 class ParamSmoother
@@ -139,7 +139,7 @@ public:
 	}
 	
 private:
-	float _z{0.F};
+	float _z = 0;
 };
 
 class SmoothedParam
