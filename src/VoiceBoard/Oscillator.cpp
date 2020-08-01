@@ -21,10 +21,11 @@
 
 #include "Oscillator.h"
 
+#include <algorithm>
 #include <cassert>
+#include <climits>
 #include <cmath>
 #include <cstdlib>
-#include <limits.h>
 
 #define ALIAS_REDUCTION
 
@@ -62,7 +63,7 @@ void
 Oscillator::ProcessSamples	(float *buffer, int nFrames, float freq_hz, float pw, float sync_freq)
 {
 	float maxFreq = rate / 2.f;
-	mFrequency.configure(mFrequency.getFinalValue(), MIN(freq_hz, maxFreq), nFrames);
+	mFrequency.configure(mFrequency.getFinalValue(), std::min(freq_hz, maxFreq), nFrames);
 	mPulseWidth = pw;
 	mSyncFrequency = sync_freq;
 	
@@ -90,7 +91,7 @@ Oscillator::doSquare(float *buffer, int nFrames)
 {
 	const float radsper = twopi_rate * mFrequency.getFinalValue();
 	const float pwscale = radsper < 0.3f ? 1.0f : 1.0f - ((radsper - 0.3f) / 2); assert(pwscale <= 1.0f); // reduces aliasing at high freq
-	const float pwrads = PI + pwscale * PI * MIN(mPulseWidth, 0.9f);
+	const float pwrads = PI + pwscale * PI * std::min(mPulseWidth, 0.9f);
 
 	float lrads = rads;
 

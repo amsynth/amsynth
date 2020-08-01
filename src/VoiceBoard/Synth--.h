@@ -38,10 +38,6 @@
 #define TWO_PI 6.28318530717958647692F
 #define PI     3.14159265358979323846F
 
-#ifndef MIN
-#define MIN(a,b) std::min(a, b)
-#endif
-
 class Lerper
 {
 public:
@@ -68,7 +64,7 @@ public:
 	inline float nextValue()
 	{
 		float y = getValue();
-		_i = MIN(_i + 1, _steps);
+		_i = std::min(_i + 1, _steps);
 		return y;
 	}
 
