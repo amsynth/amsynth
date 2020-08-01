@@ -20,7 +20,8 @@
  */
 
 #include "Parameter.h"
-#include "src/VoiceBoard/Synth--.h"
+
+#include "VoiceBoard/Synth--.h"
 
 #include <algorithm>
 #include <cassert>
