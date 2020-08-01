@@ -24,6 +24,7 @@
 #include "Configuration.h"
 #include "filesystem.h"
 #include "midi.h"
+#include "VoiceBoard/Synth--.h"
 
 #include <assert.h>
 #include <cmath>
