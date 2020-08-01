@@ -34,7 +34,6 @@
 class OSSMidiDriver : public MidiDriver
 {
 public:
-	OSSMidiDriver();
   	~OSSMidiDriver() override;
 	
 	int open() override;
@@ -44,14 +43,9 @@ public:
 	int write_cc(unsigned int channel, unsigned int param, unsigned int value) override;
 	
 private:
-		int _fd;
+	int _fd = -1;
 };
 
-
-OSSMidiDriver::OSSMidiDriver()
-:	_fd(-1)
-{
-}
 
 OSSMidiDriver::~OSSMidiDriver()
 {

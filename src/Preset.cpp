@@ -51,7 +51,6 @@ static Parameter TimeParameter (const std::string name, Param id)
 
 Preset::Preset			(const std::string name)
 :	mName (name)
-,	nullparam ("null", kAmsynthParameterCount)
 {
 	//										name					id					def min max inc		ControlType			base offset label
 	mParameters.push_back (TimeParameter	("amp_attack",			kAmsynthParameter_AmpEnvAttack));

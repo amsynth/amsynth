@@ -1,7 +1,7 @@
 /*
  *  LowPassFilter.cpp
  *
- *  Copyright (c) 2001-2014 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -25,12 +25,6 @@
 #include <algorithm>
 #include <cassert>
 #include <math.h>
-
-SynthFilter::SynthFilter() :
-	rate (4100.0)
-,	nyquist (22050.0)
-{
-}
 
 void
 SynthFilter::reset()

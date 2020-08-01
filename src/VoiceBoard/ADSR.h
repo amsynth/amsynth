@@ -1,7 +1,7 @@
 /*
  *  ADSR.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -24,6 +24,8 @@
 
 #include "Synth--.h"
 
+#include <climits>
+
 class ADSR
 {
 public:
@@ -35,8 +37,6 @@ public:
 		kOff
 	};
 
-	ADSR	(float *buffer);
-	
 	void	SetSampleRate	(int value) { m_sample_rate = value; }
 
 	void	SetAttack	(float value) { m_attack = value; }
@@ -44,7 +44,7 @@ public:
 	void	SetSustain	(float value) { m_sustain = value; if (m_state == State::kSustain) m_value = value; }
 	void	SetRelease	(float value) { m_release = value; }
 	
-	float * getNFData	(unsigned int frames);
+	void	process		(float *buffer, unsigned frames);
 	
 	void	triggerOn	();
 	void	triggerOff	();
@@ -58,19 +58,18 @@ public:
 	void reset();
 
 private:
-	float       m_attack;
-	float       m_decay;
-	float       m_sustain;
-	ParamSmoother m_sustain_smoother;
-	float       m_release;
+	float			m_attack = 0;
+	float			m_decay = 0;
+	float			m_sustain = 1;
+	ParamSmoother	m_sustain_smoother;
+	float			m_release = 0;
 
-	float *     m_buffer;
-	float       m_sample_rate;
-	State       m_state;
+	float			m_sample_rate = 44100;
+	State			m_state = State::kOff;
 
-	float       m_value;
-	float       m_inc;
-	unsigned	m_frames_left_in_state;
+	float			m_value = 0.0F;
+	float			m_inc = 0.0F;
+	unsigned		m_frames_left_in_state = UINT_MAX;
 };
 
 #endif				//_ADSR_H

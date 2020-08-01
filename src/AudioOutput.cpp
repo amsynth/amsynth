@@ -33,14 +33,6 @@
 static AudioDriver * open_driver();
 
 
-AudioOutput::AudioOutput()
-:	channels(0)
-,	driver(nullptr)
-,	buffer(nullptr)
-,	shouldStop(false)
-{
-}
-
 AudioOutput::~AudioOutput()
 {
 	Stop();

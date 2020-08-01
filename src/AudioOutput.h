@@ -42,7 +42,6 @@ public:
 class AudioOutput : public GenericOutput
 {
 public:
-	AudioOutput();
 	virtual ~AudioOutput();
 
 	bool	Start	() override;
@@ -53,11 +52,11 @@ public:
 	void	ThreadAction	();
 
 private:
-  int channels;
-  class AudioDriver *driver;
-  float	*buffer;
-  bool shouldStop;
-  std::thread thread;
+	int channels = 0;
+	class AudioDriver *driver = nullptr;
+	float *buffer = nullptr;
+	bool shouldStop = false;
+	std::thread thread;
 };
 
 class NullAudioOutput : public GenericOutput { public:

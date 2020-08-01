@@ -30,12 +30,10 @@
 class Distortion
 {
 public:
-	Distortion();
-
 	void	SetCrunch		(float);
 	void	Process			(float *buffer, unsigned);
 private:
-	SmoothedParam crunch;
+	SmoothedParam crunch{1};
 };
 
 #endif

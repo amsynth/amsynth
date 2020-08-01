@@ -42,16 +42,14 @@
 class OSSAudioDriver : public AudioDriver
 {
   public:
-    OSSAudioDriver() : _fd(-1), _outputBuffer(nullptr), _outputBufferFrames(0) {}
-
     int open() override;
     void close() override;
     int write(float *buffer, int frames) override;
 
   private:
-    int _fd;
-    unsigned char *_outputBuffer;
-    unsigned int _outputBufferFrames;
+    int _fd = -1;
+    unsigned char *_outputBuffer = nullptr;
+    unsigned int _outputBufferFrames = 0;
 };
 
 #define ON_ERROR do { \

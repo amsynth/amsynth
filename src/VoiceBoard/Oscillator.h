@@ -1,7 +1,7 @@
 /*
  *  Oscillator.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -41,8 +41,6 @@ public:
 		kRandom
 	};
 
-	Oscillator	();
-
 	void	SetSampleRate	(int rateIn);
 	
 	void	ProcessSamples		(float*, int, float freq_hz, float pw, float sync_freq = 0);
@@ -56,18 +54,21 @@ public:
 	void	setPolarity (float polarity); // +1 or -1
 
 private:
-    float rads, twopi_rate, random;
-	double d; // for the low-pass filter
-    int rate, random_count;
+    float rads = 0;
+	float twopi_rate = 0;
+	float random = 0;
+	double d = 0; // for the low-pass filter
+    int rate = 44100;
+	int random_count = 0;
 
-	Waveform waveform;
+	Waveform waveform = Waveform::kSine;
 	Lerper	mFrequency;
-	float	mPulseWidth;
-	float	mPolarity;
+	float	mPulseWidth = 0;
+	float	mPolarity = 1;
 	
-	float	mSyncFrequency;
-	bool	mSyncEnabled;
-	double	mSyncRads;
+	float	mSyncFrequency = 0;
+	bool	mSyncEnabled = false;
+	double	mSyncRads = 0;
 	
     void doSine(float*, int nFrames);
     void doSquare(float*, int nFrames);

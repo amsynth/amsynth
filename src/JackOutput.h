@@ -38,8 +38,6 @@ class JackOutput : public GenericOutput {
 
 public:
 
-	JackOutput();
-	
 	int			init		() override; // returns 0 on success
 	bool		Start		() override;
 	void		Stop		() override;
@@ -52,8 +50,11 @@ public:
 private:
 	std::string		error_msg;
 #ifdef WITH_JACK
-	jack_port_t 	*l_port, *r_port, *m_port, *m_port_out;
-	jack_client_t 	*client;
+	jack_port_t 	*l_port = nullptr;
+	jack_port_t 	*r_port = nullptr;
+	jack_port_t 	*m_port = nullptr;
+	jack_port_t 	*m_port_out = nullptr;
+	jack_client_t 	*client = nullptr;
 #endif
 };
 

@@ -43,21 +43,6 @@
 using namespace std;
 
 
-PresetController::PresetController	()
-:	bank_file ("")
-,	updateListener (nullptr)
-,	nullpreset ("null preset")
-,	currentBankNo (-1)
-,	currentPresetNo (-1)
-,	lastPresetsFileModifiedTime (0)
-{
-}
-
-PresetController::~PresetController	()
-{
-	clearChangeBuffers();
-}
-
 int
 PresetController::selectPreset		(const int presetNo)
 {

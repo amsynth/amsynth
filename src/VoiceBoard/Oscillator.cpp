@@ -1,7 +1,7 @@
 /*
  *  Oscillator.cpp
  *
- *  Copyright (c) 2001-2014 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -40,18 +40,6 @@ static inline float ffmodf(float x, float y) {
 			__osc_rads__ = 0; \
 		} \
 	}
-
-Oscillator::Oscillator()
-:	rads (0.0)
-,	random (0)
-,	rate (44100)
-,	random_count (0)
-,	waveform (Waveform::kSine)
-,	mPolarity(1.0f)
-,	mSyncEnabled(false)
-,	mSyncRads(0)
-{
-}
 
 void Oscillator::SetWaveform	(Waveform w)			{ waveform = w; }
 void Oscillator::reset			()						{ rads = 0.0; }

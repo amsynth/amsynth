@@ -1,7 +1,7 @@
 /*
  *  VoiceBoard.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -41,8 +41,6 @@ public:
 
 	static constexpr int kMaxProcessBufferSize = 64;
 
-	VoiceBoard();
-
 	bool	isSilent		();
 	void	triggerOn		();
 	void	triggerOff		();
@@ -65,50 +63,50 @@ private:
 	ParamSmoother	mVolume;
 
 	Lerper			mFrequency;
-	bool			mFrequencyDirty;
-	float			mFrequencyStart;
-	float			mFrequencyTarget;
-	float			mFrequencyTime;
+	bool			mFrequencyDirty = false;
+	float			mFrequencyStart = 0;
+	float			mFrequencyTarget = 0;
+	float			mFrequencyTime = 0;
 
-	float			mSampleRate;
-	float			mKeyVelocity;
-	float			mPitchBend;
+	float			mSampleRate = 44100;
+	float			mKeyVelocity = 1;
+	float			mPitchBend = 1;
 	
 	// modulation section
 	Oscillator 		lfo1;
-	float			mLFO1Freq;
-	float			mLFOPulseWidth;
+	float			mLFO1Freq = 0;
+	float			mLFOPulseWidth = 0;
 	
 	// oscillator section
 	Oscillator 		osc1, osc2;
-	float			mFreqModAmount;
-	int			mFreqModDestination;
-	float			mOsc1PulseWidth;
-	float			mOsc2PulseWidth;
+	float			mFreqModAmount = 0;
+	int				mFreqModDestination = 0;
+	float			mOsc1PulseWidth = 0;
+	float			mOsc2PulseWidth = 0;
 	SmoothedParam	mOscMix;
 	SmoothedParam	mRingModAmt;
-	float			mOsc2Octave;
-	float			mOsc2Detune;
-	float			mOsc2Pitch;
-	bool			mOsc2Sync;
+	float			mOsc2Octave = 1;
+	float			mOsc2Detune = 1;
+	float			mOsc2Pitch = 0;
+	bool			mOsc2Sync = false;
 	
 	// filter section
-	float			mFilterEnvAmt,
-				mFilterModAmt,
-				mFilterCutoff,
-				mFilterRes;
-	float			mFilterKbdTrack;
-	float			mFilterVelSens;
+	float			mFilterEnvAmt = 0;
+	float			mFilterModAmt = 0;
+	float			mFilterCutoff = 16;
+	float			mFilterRes = 0;
+	float			mFilterKbdTrack = 0;
+	float			mFilterVelSens = 0;
 	SynthFilter 	filter;
 	SynthFilter::Type mFilterType;
 	SynthFilter::Slope mFilterSlope;
-	ADSR 			filter_env;
+	ADSR 			mFilterADSR;
 	
 	// amp section
 	IIRFilterFirstOrder _vcaFilter;
 	SmoothedParam	mAmpModAmount;
 	SmoothedParam	mAmpVelSens;
-	ADSR 			amp_env;
+	ADSR 			mAmpADSR;
 
 	struct {
 		float osc_1[kMaxProcessBufferSize];

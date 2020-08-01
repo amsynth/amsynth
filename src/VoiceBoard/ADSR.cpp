@@ -1,7 +1,7 @@
 /*
  *  ADSR.cpp
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -21,23 +21,9 @@
 
 #include "ADSR.h"
 
-#include <climits>
+#include <algorithm>
 
 static const float kMinimumTime = 0.0005f;
-
-ADSR::ADSR(float * buffer)
-:	m_attack(0)
-,	m_decay(0)
-,	m_sustain(1)
-,	m_release(0)
-,	m_buffer(buffer)
-,	m_sample_rate(44100)
-,	m_state(State::kOff)
-,	m_value(0)
-,	m_inc(0)
-,	m_frames_left_in_state(UINT_MAX)
-{
-}
 
 void
 ADSR::triggerOn()
@@ -65,14 +51,12 @@ ADSR::reset()
 	m_frames_left_in_state = UINT_MAX;
 }
 
-float *
-ADSR::getNFData(unsigned int frames)
+void
+ADSR::process(float *buffer, unsigned frames)
 {
-	float *buffer = m_buffer;
-
 	while (frames) {
 
-		const unsigned int count = MIN(frames, m_frames_left_in_state);
+		const unsigned int count = std::min(frames, m_frames_left_in_state);
 
 		if (m_state == State::kSustain) {
 			for (unsigned i = 0; i < count; i++) {
@@ -117,6 +101,4 @@ ADSR::getNFData(unsigned int frames)
 
 		frames -= count;
 	}
-
-	return m_buffer;
 }

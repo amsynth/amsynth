@@ -40,17 +40,15 @@ class ALSAAudioDriver : public AudioDriver
 {
 public:
 
-    ALSAAudioDriver() : _handle(nullptr), _buffer(nullptr), _channels(0) {}
-
     int open() override;
     void close() override;
     int write(float *buffer, int nsamples) override;
 
 private:
 
-    snd_pcm_t *_handle;
-    short *_buffer;
-    unsigned _channels;
+    snd_pcm_t *_handle = nullptr;
+    short *_buffer = nullptr;
+    unsigned _channels = 0;
 };
 
 

@@ -47,18 +47,6 @@ static void session_callback(jack_session_event_t *event, void *arg);
 #endif
 
 
-JackOutput::JackOutput()
-:	error_msg("")
-#ifdef WITH_JACK
-,	l_port(nullptr)
-,	r_port(nullptr)
-,	m_port(nullptr)
-,	m_port_out(nullptr)
-,	client(nullptr)
-#endif
-{
-}
-
 int
 JackOutput::init()
 {
