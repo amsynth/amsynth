@@ -21,8 +21,6 @@
 
 #include "Oscillator.h"
 
-#include "Synth--.h"
-
 #include <cassert>
 #include <cmath>
 #include <cstdlib>

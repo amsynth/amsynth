@@ -21,8 +21,6 @@
 
 #include "ADSR.h"
 
-#include "Synth--.h"
-
 #include <climits>
 
 static const float kMinimumTime = 0.0005f;
