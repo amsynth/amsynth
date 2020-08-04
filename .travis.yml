@@ -24,8 +24,8 @@ install:
 jobs:
   include:
     - os: linux
-      dist: trusty
-      name: "Test (Ubuntu Trusty 14.04 / GCC 4.8.4)"
+      dist: xenial
+      name: "Test (Ubuntu Xenial 16.04 / GCC 5.4.0)"
       compiler: gcc
       script: ./autogen.sh && ./configure --without-gui CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' && make V=1 check
         # && coveralls --gcov-options '\-lp' -e config.h -e include -e src/drivers -e src/GUI -e utils
