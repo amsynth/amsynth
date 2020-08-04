@@ -22,11 +22,6 @@
 #include "Distortion.h"
 #include <math.h>
 
-Distortion::Distortion()
-:   crunch(1)
-{
-}
-
 void 
 Distortion::SetCrunch	(float value)
 {

@@ -1,7 +1,7 @@
 /*
  *  amsynth_vst.cpp
  *
- *  Copyright (c) 2008-2019 Nick Dowell
+ *  Copyright (c) 2008-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -76,9 +76,9 @@ struct Plugin
 		synthesizer = new Synthesizer;
 		midiBuffer = (unsigned char *)malloc(4096);
 #ifdef WITH_GUI
-		gdkParentWindow = 0;
-		gtkWindow = 0;
-		editorWidget = 0;
+		gdkParentWindow = nullptr;
+		gtkWindow = nullptr;
+		editorWidget = nullptr;
 #endif
 	}
 
@@ -115,7 +115,7 @@ static void on_adjustment_value_changed(GtkAdjustment *adjustment, AEffect *effe
 			param.setValue(value);
 			plugin->synthesizer->setParameterValue((Param)i, value);
 			if (plugin->audioMaster && !strstr(hostProductString, "Qtractor")) {
-				plugin->audioMaster(effect, audioMasterAutomate, i, 0, 0, param.GetNormalisedValue());
+				plugin->audioMaster(effect, audioMasterAutomate, i, 0, nullptr, param.getNormalisedValue());
 			}
 		}
 	}
@@ -148,14 +148,14 @@ static void setEventProc(Display *display, Window window)
 
 	static char *ptr;
 	if (!ptr) {
-		ptr = (char *)mmap(0,
+		ptr = (char *)mmap(nullptr,
 						   PAGE_SIZE,
 						   PROT_READ | PROT_WRITE | PROT_EXEC,
 						   MAP_ANONYMOUS | MAP_PRIVATE | MAP_32BIT,
 						   0, 0);
 		if (ptr == MAP_FAILED) {
 			perror("mmap");
-			ptr = 0;
+			ptr = nullptr;
 			return;
 		} else {
 			memcpy(ptr, kJumpInstructions, sizeof(kJumpInstructions));
@@ -282,7 +282,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 				gtk_init(&argc, &argv);
 				gdk_event_handler_set(&gdk_event_handler, NULL, NULL);
 #else
-				gtk_init(NULL, NULL);
+				gtk_init(nullptr, nullptr);
 #endif
 				initialized = true;
 			}
@@ -290,7 +290,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			if (!plugin->editorWidget) {
 				for (int i = 0; i < kAmsynthParameterCount; i++) {
 					gdouble lower = 0, upper = 0, step_increment = 0;
-					get_parameter_properties(i, &lower, &upper, NULL, &step_increment);
+					get_parameter_properties(i, &lower, &upper, nullptr, &step_increment);
 					gdouble value = plugin->synthesizer->getParameterValue((Param)i);
 					plugin->adjustments[i] = (GtkAdjustment *)gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);
 					g_object_ref_sink(plugin->adjustments[i]); // assumes ownership of the floating reference
@@ -331,15 +331,15 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 					gdk_window_hide(gtk_widget_get_window(plugin->gtkWindow));
 				}
 				gtk_widget_destroy(plugin->gtkWindow);
-				plugin->gtkWindow = 0;
+				plugin->gtkWindow = nullptr;
 			}
 
 			for (int i = 0; i < kAmsynthParameterCount; i++) {
-				plugin->adjustments[i] = 0;
+				plugin->adjustments[i] = nullptr;
 			}
 
-			plugin->gdkParentWindow = 0;
-			plugin->editorWidget = 0;
+			plugin->gdkParentWindow = nullptr;
+			plugin->editorWidget = nullptr;
 
 			gdk_display_sync(gdk_display_get_default());
 
@@ -490,7 +490,7 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 	}
 #endif
 	if (audioMaster) {
-		audioMaster(NULL, audioMasterGetProductString, 0, 0, hostProductString, 0.0f);
+		audioMaster(nullptr, audioMasterGetProductString, 0, 0, hostProductString, 0.0f);
 	}
 	AEffect *effect = (AEffect *)calloc(1, sizeof(AEffect));
 	effect->magic = kEffectMagic;

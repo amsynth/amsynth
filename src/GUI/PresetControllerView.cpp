@@ -48,9 +48,9 @@ class PresetControllerViewImpl : public PresetControllerView, public UpdateListe
 public:
 	PresetControllerViewImpl(PresetController *presetController);
 
-	virtual void update();
-	virtual unsigned char getAuditionNote();
-	virtual GtkWidget * getWidget() { return widget; }
+	void update() override;
+	unsigned char getAuditionNote() override;
+	GtkWidget * getWidget() override { return widget; }
 
 private:
 
@@ -98,10 +98,10 @@ static gboolean on_output(GtkSpinButton *spin, gpointer user_data)
 
 PresetControllerViewImpl::PresetControllerViewImpl(PresetController *presetController)
 :	presetController(presetController)
-,	widget(NULL)
-,	bank_combo(NULL)
-,	combo(NULL)
-,	audition_spin(NULL)
+,	widget(nullptr)
+,	bank_combo(nullptr)
+,	combo(nullptr)
+,	audition_spin(nullptr)
 ,	audition_note(0)
 ,	inhibit_combo_callback(false)
 {
@@ -124,7 +124,7 @@ PresetControllerViewImpl::PresetControllerViewImpl(PresetController *presetContr
 
 	gtk_box_pack_start (hbox, gtk_label_new ("  "), FALSE, FALSE, 0);
 
-	GtkWidget *widget = NULL;
+	GtkWidget *widget = nullptr;
 
 	widget = button_with_image (GTK_STOCK_MEDIA_PLAY, _("Audition"));
 	g_signal_connect (G_OBJECT (widget), "pressed", G_CALLBACK (&PresetControllerViewImpl::on_audition_pressed), this);

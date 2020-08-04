@@ -22,9 +22,6 @@ AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' -DPACKAGE_
 # https://developer.gnome.org/gtk3/stable/gtk-migrating-2-to-3.html#id-1.6.3.3
 AM_CPPFLAGS += -DGDK_DISABLE_DEPRECATED -DGSEAL_ENABLE -DGTK_DISABLE_DEPRECATED -DGTK_DISABLE_SINGLE_INCLUDES
 
-# amsynth still maintains support for compilers that do not fully support the C++11 standard
-AM_CXXFLAGS = -std=c++98 @CXXFLAGS@
-
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = po
@@ -44,7 +41,6 @@ libcore_sources = \
 	src/Preset.h \
 	src/PresetController.cpp \
 	src/PresetController.h \
-	src/Thread.h \
 	src/types.h \
 	src/UpdateListener.h
 

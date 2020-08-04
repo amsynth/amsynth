@@ -22,32 +22,26 @@
 #ifndef _SYNTH_MM_H
 #define _SYNTH_MM_H
 
+#include <algorithm>
 #include <cmath>
 
-#ifdef M_E
-#undef M_E
-#endif
-#define M_E		2.7182818284590452354f
-
-#ifdef M_PI_2
-#undef M_PI_2
-#endif
-#define M_PI_2	1.57079632679489661923f
-
-#define TWO_PI 6.28318530717958647692f
-#define PI     3.14159265358979323846f
-
-#ifndef MIN
-#define MIN(a,b) (((a) < (b)) ? (a) : (b))
-#endif
+namespace m {
+	// The mathematical constant e
+	static const float e = 2.7182818284590452354F;
+	// The mathematical constant pi
+	static const float pi = 3.14159265358979323846F;
+	// The mathematical constant pi * 2
+	static const float twoPi = 6.28318530717958647692F;
+	// The mathematical constant pi / 2
+	static const float halfPi = 1.57079632679489661923F;
+	// A quiet NaN (“not a number”)
+	static const float nan = std::nanf("");
+}
 
 class Lerper
 {
-
 public:
 
-	Lerper(): _start(0), _final(0), _inc(0), _steps(0), _i(0) {}
-	
 	void configure(float startValue, float finalValue, unsigned int numSteps)
 	{
 		_start = startValue;
@@ -56,7 +50,7 @@ public:
 		if (0 < _steps) {
 			_inc = (_final - _start) / (float)_steps;
 		} else {
-			_inc = 0.0f;
+			_inc = 0.0F;
 			_start = finalValue;
 		}
 		_i = 0;
@@ -64,13 +58,13 @@ public:
 
 	inline float getValue() const
 	{
-		return _start + _i * (float)_inc;
+		return _start + _inc * static_cast<float>(_i);
 	}
 	
 	inline float nextValue()
 	{
 		float y = getValue();
-		_i = MIN(_i + 1, _steps);
+		_i = std::min(_i + 1, _steps);
 		return y;
 	}
 
@@ -81,39 +75,31 @@ public:
 	
 private:
 
-	float _start, _final, _inc;
-	unsigned int _steps, _i;
-
+	float _start = 0;
+	float _final = 0;
+	float _inc = 0;
+	unsigned int _steps = 0;
+	unsigned int _i = 0;
 };
 
 struct IIRFilterFirstOrder
 {
-	enum Mode
+	enum class Mode
 	{
-		LowPass,
-		HighPass,
+		kLowPass,
+		kHighPass,
 	};
-	
-	IIRFilterFirstOrder()
-		:	_a0(0.0f)
-		,	_a1(0.0f)
-		,	_b1(0.0f)
-		,	_z(0.0f)
-	{}
 	
 	void setCoefficients(float sampleRate, float cutoffFreq, Mode mode)
 	{
-		float fc, x;
-		fc = cutoffFreq / sampleRate;
-		fc = MIN(fc, 0.5f);
-		x = powf(M_E, -M_PI_2 * fc);
-		if (LowPass == mode) {
-			_a0 = 1.0f - x;
-			_a1 = 0.0f;
+		float x = powf(m::e, -m::halfPi * std::min(cutoffFreq / sampleRate, 0.5F));
+		if (mode == Mode::kLowPass) {
+			_a0 = 1.0F - x;
+			_a1 = 0.0F;
 			_b1 = x;
 		} else {
-			_a0 =  (1 + x) / 2.0f;
-			_a1 = -(1 + x) / 2.0f;
+			_a0 =  (1 + x) / 2.0F;
+			_a1 = -(1 + x) / 2.0F;
 			_b1 = x;
 		}
 	}
@@ -127,29 +113,24 @@ struct IIRFilterFirstOrder
 	
 	void processBuffer(float *samples, unsigned numSamples)
 	{
-		for (unsigned i=0; i<numSamples; i++)
+		for (unsigned i=0; i<numSamples; i++) {
 			samples[i] = processSample(samples[i]);
+		}
 	}
 	
-	float _a0, _a1, _b1, _z;
+	float _a0 = 0;
+	float _a1 = 0;
+	float _b1 = 0;
+	float _z = 0;
 };
-
-#define NONCOPYABLE( class ) \
-	private:                 \
-		class(const class&); \
-		void operator=(const class &)
 
 class ParamSmoother
 {
-	NONCOPYABLE(ParamSmoother);
-	
 public:
-	
-	ParamSmoother(): _z(0.f) {}
 	
 	inline float processSample(float x)
 	{
-		return (_z += ((x - _z) * 0.005f));
+		return (_z += ((x - _z) * 0.005F));
 	}
 	
 	inline void set(float z)
@@ -158,21 +139,26 @@ public:
 	}
 	
 private:
-	
-	float _z;
+	float _z = 0;
 };
 
 class SmoothedParam
 {
-	NONCOPYABLE(SmoothedParam);
-	
 public:
 	
-	SmoothedParam(float rawValue = 0.f): _rawValue(rawValue) {}
+	SmoothedParam(float rawValue = 0.F): _rawValue(rawValue) {}
+	~SmoothedParam() = default;
 	
-	void operator=(float rawValue)
+	SmoothedParam(const SmoothedParam&) = delete;
+	SmoothedParam& operator=(const SmoothedParam&) = delete;
+	
+	SmoothedParam(SmoothedParam&&) = delete;
+	SmoothedParam& operator=(SmoothedParam&&) = delete;
+	
+	SmoothedParam& operator=(float rawValue)
 	{
 		_rawValue = rawValue;
+		return *this;
 	}
 	
 	float getRawValue()

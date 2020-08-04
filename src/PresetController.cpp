@@ -1,7 +1,7 @@
 /*
  *  PresetController.cpp
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -42,21 +42,6 @@
 
 using namespace std;
 
-
-PresetController::PresetController	()
-:	bank_file ("")
-,	updateListener (0)
-,	nullpreset ("null preset")
-,	currentBankNo (-1)
-,	currentPresetNo (-1)
-,	lastPresetsFileModifiedTime (0)
-{
-}
-
-PresetController::~PresetController	()
-{
-	clearChangeBuffers();
-}
 
 int
 PresetController::selectPreset		(const int presetNo)
@@ -200,7 +185,7 @@ static long int mtime(const char *filename)
 int 
 PresetController::savePresets		(const char *filename)
 {
-	if (filename == NULL)
+	if (filename == nullptr)
 		filename = bank_file.c_str();
 
 	ofstream file( filename, ios::out );
@@ -267,7 +252,7 @@ static bool is_amsynth_file(const char *filename)
 
 static off_t file_read_contents(const char *filename, void **result)
 {
-	*result = NULL;
+	*result = nullptr;
 	FILE *file = fopen(filename, "r");
 	if (!file)
 		return 0;
@@ -310,7 +295,7 @@ static float float_from_string(const char *s)
 
 static bool readBankFile(const char *filename, Preset *presets)
 {
-	void *buffer = NULL;
+	void *buffer = nullptr;
 	off_t buffer_length = file_read_contents(filename, &buffer);
 	if (!buffer)
 		return false;
@@ -359,7 +344,7 @@ static bool readBankFile(const char *filename, Preset *presets)
 int
 PresetController::loadPresets		(const char *filename)
 {
-	if (filename == NULL)
+	if (filename == nullptr)
 		filename = bank_file.c_str();
 
 	long int fileModifiedTime = mtime(filename);
@@ -450,8 +435,8 @@ static void scan_preset_banks(const std::string dir_path, bool read_only)
 
 	std::sort(filenames.begin(), filenames.end());
 
-	for (std::vector<std::string>::iterator it = filenames.begin(); it != filenames.end(); ++it)
-		scan_preset_bank(dir_path, *it, read_only);
+	for (auto &filename : filenames)
+		scan_preset_bank(dir_path, filename, read_only);
 #endif
 }
 

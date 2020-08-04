@@ -37,6 +37,7 @@
 #include "MIDILearnDialog.h"
 #include "PresetControllerView.h"
 
+#include <cmath>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
@@ -103,7 +104,7 @@ struct MainWindow : public UpdateListener
 			g_value_init(&defaults[i], G_TYPE_FLOAT);
 			g_value_set_float(&defaults[i], parameter.getDefault());
 			g_object_set_data(G_OBJECT(adjustments[i]), "default-value", &defaults[i]);
-			parameter.addUpdateListener(*this);
+			parameter.addUpdateListener(this);
 		}
 
 		GtkWidget *editor = editor_pane_new(synthesizer, adjustments, FALSE);
@@ -138,7 +139,7 @@ struct MainWindow : public UpdateListener
 	{
 		gdouble value = gtk_adjustment_get_value(adjustment);
 		Parameter *parameter = (Parameter *) g_object_get_data(G_OBJECT(adjustment), "Parameter");
-		mainWindow->presetController->pushParamChange(parameter->GetId(), (float) value);
+		mainWindow->presetController->pushParamChange(parameter->getId(), (float) value);
 	}
 
 	static void on_adjustment_value_changed(GtkAdjustment *adjustment, MainWindow *mainWindow)
@@ -208,7 +209,7 @@ struct MainWindow : public UpdateListener
 
 	typedef std::pair<int, float> ParameterUpdate;
 
-	virtual void update()
+	void update() override
 	{
 		if (g_thread_self() == mainThread) {
 			parameterDidChange(-1, NAN);
@@ -218,7 +219,7 @@ struct MainWindow : public UpdateListener
 		}
 	}
 
-	virtual void UpdateParameter(Param paramID, float paramValue)
+	void UpdateParameter(Param paramID, float paramValue) override
 	{
 		if (g_thread_self() == mainThread) {
 			parameterDidChange(paramID, paramValue);
@@ -302,7 +303,7 @@ startup_check(gpointer data)
 	}
 
 	if (bad_config) {
-		config_dialog_run(NULL);
+		config_dialog_run(nullptr);
 	}
 
     return G_SOURCE_REMOVE;

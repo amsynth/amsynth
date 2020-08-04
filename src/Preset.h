@@ -66,7 +66,7 @@ public:
 private:
     std::string				mName;
 	std::vector<Parameter>	mParameters;
-	Parameter				nullparam;
+	Parameter				nullparam{"null"};
 };
 
 #endif
