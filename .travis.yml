@@ -24,6 +24,11 @@ install:
 jobs:
   include:
     - os: linux
+      dist: trusty
+      name: "Build (Ubuntu Trusty 14.04 / GCC 4.8.4)"
+      compiler: gcc
+      script: ./autogen.sh && ./configure && make V=1 distcheck
+    - os: linux
       dist: xenial
       name: "Test (Ubuntu Xenial 16.04 / GCC 5.4.0)"
       compiler: gcc
