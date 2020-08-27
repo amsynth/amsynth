@@ -1,3 +1,8 @@
+amsynth 1.11.0 -- UNRELEASED
+
+  - Implemented rudimentary UI scaling for HiDPI displays
+
+
 amsynth 1.10.0 -- 2020-05-07
 
   - Implemented smoothing / de-zippering to improve sound quality while adjusting parameters
