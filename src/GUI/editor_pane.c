@@ -228,6 +228,17 @@ button_release_event (GtkWidget *widget, GdkEventButton *event, GtkWidget *prese
 #define KEY_CONTROL_PARAM_NAME	"param_name"
 #define KEY_CONTROL_PARAM_NUM	"param_num"
 
+static int get_scaling_factor ()
+{
+	GSettings *settings = g_settings_new ("org.gnome.desktop.interface");
+	int scaling_factor = g_settings_get_uint (settings, "scaling-factor");
+	g_object_ref_sink (settings);
+	if (scaling_factor > 0) {
+		return scaling_factor;
+	}
+	return 1;
+}
+
 GtkWidget *
 editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plugin)
 {
@@ -250,12 +261,7 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 
 	g_is_plugin = is_plugin;
 
-	GSettings *settings = g_settings_new ("org.gnome.desktop.interface");
-	int gnome_scaling_factor = g_settings_get_uint (settings, "scaling-factor");
-	if (gnome_scaling_factor > 0) {
-		editor_scaling_factor = gnome_scaling_factor;
-	}
-	g_object_ref_sink (settings);
+	editor_scaling_factor = get_scaling_factor ();
 
 	GtkWidget *fixed = gtk_fixed_new ();
 	gtk_widget_set_size_request (fixed, 400, 300);
