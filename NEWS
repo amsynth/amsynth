@@ -1,6 +1,6 @@
 amsynth 1.11.0 -- UNRELEASED
 
-  - Implemented rudimentary UI scaling for HiDPI displays
+  - Implemented UI upscaling for background and controls on HiDPI displays
 
 
 amsynth 1.10.0 -- 2020-05-07
