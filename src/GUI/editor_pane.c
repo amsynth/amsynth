@@ -39,6 +39,8 @@
 
 static GdkPixbuf *editor_pane_bg = NULL;
 
+static int editor_scaling_factor = 1;
+
 ////////////////////////////////////////////////////////////////////////////////
 
 typedef struct
@@ -63,7 +65,11 @@ static gboolean
 editor_pane_expose_event_handler (GtkWidget *widget, gpointer data)
 {
 	cairo_t *cr = gdk_cairo_create (gtk_widget_get_window (widget));
+	cairo_scale (cr, editor_scaling_factor, editor_scaling_factor);
 	gdk_cairo_set_source_pixbuf (cr, editor_pane_bg, 0, 0);
+	// CAIRO_EXTEND_NONE results in a ugly border when upscaling
+	cairo_pattern_t *pattern = cairo_get_source (cr);
+	cairo_pattern_set_extend (pattern, CAIRO_EXTEND_PAD);
 	cairo_paint (cr);
 	cairo_destroy (cr);
 	return FALSE;
@@ -222,6 +228,17 @@ button_release_event (GtkWidget *widget, GdkEventButton *event, GtkWidget *prese
 #define KEY_CONTROL_PARAM_NAME	"param_name"
 #define KEY_CONTROL_PARAM_NUM	"param_num"
 
+static int get_scaling_factor ()
+{
+	GSettings *settings = g_settings_new ("org.gnome.desktop.interface");
+	int scaling_factor = g_settings_get_uint (settings, "scaling-factor");
+	g_object_ref_sink (settings);
+	if (scaling_factor > 0) {
+		return scaling_factor;
+	}
+	return 1;
+}
+
 GtkWidget *
 editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plugin)
 {
@@ -243,6 +260,8 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 	}
 
 	g_is_plugin = is_plugin;
+
+	editor_scaling_factor = get_scaling_factor ();
 
 	GtkWidget *fixed = gtk_fixed_new ();
 	gtk_widget_set_size_request (fixed, 400, 300);
@@ -309,7 +328,9 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 			g_free (bg_name);
 			g_free (path);
 			
-			gtk_widget_set_size_request (fixed, gdk_pixbuf_get_width (editor_pane_bg), gdk_pixbuf_get_height (editor_pane_bg));
+			gint width = gdk_pixbuf_get_width (editor_pane_bg) * editor_scaling_factor;
+			gint height = gdk_pixbuf_get_height (editor_pane_bg) * editor_scaling_factor;
+			gtk_widget_set_size_request (fixed, width, height);
 		}
 		
 		//// Load resources
@@ -378,25 +399,25 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 			
 			if (g_strcmp0 (KEY_CONTROL_TYPE_KNOB, type) == 0)
 			{
-				widget = bitmap_knob_new (adj, res->pixbuf, res->fr_width, res->fr_height, res->fr_count);
+				widget = bitmap_knob_new (adj, res->pixbuf, res->fr_width, res->fr_height, res->fr_count, editor_scaling_factor);
 				bitmap_knob_set_bg (widget, subpixpuf);
 				bitmap_knob_set_parameter_index (widget, i);
 			}
 			else if (g_strcmp0 (KEY_CONTROL_TYPE_BUTTON, type) == 0)
 			{
-				widget = bitmap_button_new (adj, res->pixbuf, res->fr_width, res->fr_height, res->fr_count);
+				widget = bitmap_button_new (adj, res->pixbuf, res->fr_width, res->fr_height, res->fr_count, editor_scaling_factor);
 				bitmap_button_set_bg (widget, subpixpuf);
 			}
 			else if (g_strcmp0 (KEY_CONTROL_TYPE_POPUP, type) == 0)
 			{
 				const char **value_strings = parameter_get_value_strings((int) i);
-				widget = bitmap_popup_new (adj, res->pixbuf, res->fr_width, res->fr_height, res->fr_count);
+				widget = bitmap_popup_new (adj, res->pixbuf, res->fr_width, res->fr_height, res->fr_count, editor_scaling_factor);
 				bitmap_popup_set_strings (widget, value_strings);
 				bitmap_popup_set_bg (widget, subpixpuf);
 			}
 			
 			g_signal_connect_after(G_OBJECT(widget), "button-press-event", G_CALLBACK (on_control_press), GINT_TO_POINTER(i));
-			gtk_fixed_put (GTK_FIXED (fixed), widget, pos_x, pos_y);
+			gtk_fixed_put (GTK_FIXED (fixed), widget, pos_x * editor_scaling_factor, pos_y * editor_scaling_factor);
 			
 #if ENABLE_LAYOUT_EDIT
 			gtk_buildable_set_name (GTK_BUILDABLE (widget), control_name);

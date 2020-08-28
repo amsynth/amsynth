@@ -35,6 +35,7 @@ typedef struct {
 	gint frame_width;
 	gint frame_height;
 	gint frame_count;
+	gint scaling_factor;
 	
 	GtkWidget *menu;
 
@@ -59,7 +60,8 @@ bitmap_popup_new( GtkAdjustment *adjustment,
 				 GdkPixbuf *pixbuf,
 				 gint frame_width,
 				 gint frame_height,
-				 gint frame_count )
+				 gint frame_count,
+				 gint scaling_factor)
 {
 	bitmap_popup *self = g_malloc0 (sizeof(bitmap_popup));
 
@@ -68,6 +70,7 @@ bitmap_popup_new( GtkAdjustment *adjustment,
 	self->frame_width	= frame_width;
 	self->frame_height	= frame_height;
 	self->frame_count	= frame_count;
+	self->scaling_factor = scaling_factor;
 
 	g_object_set_data_full (G_OBJECT (self->drawing_area), bitmap_popup_key, self, (GDestroyNotify) g_free);
 	g_assert (g_object_get_data (G_OBJECT (self->drawing_area), bitmap_popup_key));
@@ -76,7 +79,7 @@ bitmap_popup_new( GtkAdjustment *adjustment,
 
 	g_signal_connect (G_OBJECT (self->drawing_area), "button-release-event", G_CALLBACK (bitmap_popup_button_release), NULL);
 
-	gtk_widget_set_size_request (self->drawing_area, frame_width, frame_height);
+	gtk_widget_set_size_request (self->drawing_area, frame_width * scaling_factor, frame_height * scaling_factor);
 	
 	// set up event mask
 	gint event_mask = gtk_widget_get_events (self->drawing_area);
@@ -141,8 +144,13 @@ bitmap_popup_expose( GtkWidget *widget, GdkEventExpose *event )
 
 	cairo_t *cr = gdk_cairo_create (event->window);
 
+	cairo_scale (cr, self->scaling_factor, self->scaling_factor);
+
 	if (self->background) {
 		gdk_cairo_set_source_pixbuf (cr, self->background, 0, 0);
+		// CAIRO_EXTEND_NONE results in a ugly border when upscaling
+		cairo_pattern_t *pattern = cairo_get_source (cr);
+		cairo_pattern_set_extend (pattern, CAIRO_EXTEND_PAD);
 		cairo_paint (cr);
 	}
 

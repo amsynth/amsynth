@@ -30,7 +30,8 @@ GtkWidget *bitmap_button_new (
 	GdkPixbuf *,
 	gint frame_width,
 	gint frame_height,
-	gint frame_count
+	gint frame_count,
+	gint scaling_factor
 );
 
 void bitmap_button_set_bg (
