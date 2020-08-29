@@ -176,7 +176,7 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 		case MIDI_CC_BANK_SELECT_LSB:
 			break;
 		case MIDI_CC_PAN_MSB: {
-			// http://www.midi.org/techspecs/rp36.php
+			// https://web.archive.org/web/20160115024014/http://www.midi.org/techspecs/rp36.php
 			// the effective range for CC#10 is modified to be 1 to 127, and values 0 and 1 both pan hard left
 			float scaled = (value < 1 ? 0 : value - 1) / 126.f;
 			_handler->HandleMidiPan(cosf(m::halfPi * scaled), sinf(m::halfPi * scaled));
@@ -205,7 +205,7 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 				_handler->HandleMidiAllSoundOff();
 			break;
 		case MIDI_CC_RESET_ALL_CONTROLLERS:
-			// http://www.midi.org/techspecs/rp15.php
+			// https://web.archive.org/web/20160105110518/http://www.midi.org/techspecs/rp15.php
 			_handler->HandleMidiPitchWheel(0);
 			break;
 		case MIDI_CC_LOCAL_CONTROL:
