@@ -445,13 +445,16 @@ static std::string sFactoryBanksDirectory;
 static void scan_preset_banks()
 {
 	s_banks.clear();
-	scan_preset_banks(PresetController::getUserBanksDirectory(), false);
+	auto userBanksDirectory = PresetController::getUserBanksDirectory();
+	scan_preset_banks(userBanksDirectory, false);
 #ifdef PKGDATADIR
 	if (sFactoryBanksDirectory.empty())
 		sFactoryBanksDirectory = std::string(PKGDATADIR "/banks");
 #endif
-	if (!sFactoryBanksDirectory.empty())
+	// sFactoryBanksDirectory == userBanksDirectory if the build is configured with a --prefix=$HOME/.local
+	if (!sFactoryBanksDirectory.empty() && sFactoryBanksDirectory != userBanksDirectory ) {
 		scan_preset_banks(sFactoryBanksDirectory, true);
+	}
 }
 
 const std::vector<BankInfo> &
