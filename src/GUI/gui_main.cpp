@@ -28,7 +28,7 @@
 #include <gtk/gtk.h>
 
 
-static char **_argv = NULL;
+static char **_argv = nullptr;
 
 void gui_kit_init(int *argc, char ***argv)
 {
@@ -39,14 +39,14 @@ void gui_kit_init(int *argc, char ***argv)
 
 void gui_kit_run(unsigned (*timer_callback)())
 {
-	g_timeout_add(250, (GSourceFunc)timer_callback, NULL);
+	g_timeout_add(250, (GSourceFunc)timer_callback, nullptr);
 	gtk_main();
 }
 
 void ShowModalErrorMessage(const std::string & msg, const std::string & secondaryText)
 {
 	GtkWidget *dialog = gtk_message_dialog_new(
-			NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+			nullptr, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
 			"%s", msg.c_str());
 
 	if (secondaryText.size())
@@ -66,7 +66,7 @@ void spawn_new_instance()
 	static char exe_path[4096] = "";
 	readlink("/proc/self/exe", exe_path, sizeof(exe_path));
 	_argv[0] = exe_path;
-	g_spawn_async(NULL, _argv, NULL, (GSpawnFlags)0, NULL, NULL, NULL, NULL);
+	g_spawn_async(nullptr, _argv, nullptr, (GSpawnFlags)0, nullptr, nullptr, nullptr, nullptr);
 }
 
 #endif

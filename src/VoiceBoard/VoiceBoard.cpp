@@ -1,7 +1,7 @@
 /*
  *  VoiceBoard.cpp
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -31,37 +31,15 @@ const float kVCALowPassFreq = 4000.0f;
 
 const float kKeyTrackBaseFreq = 261.626f; // Middle C
 
-VoiceBoard::VoiceBoard()
-:	mFrequencyDirty (false)
-,	mFrequencyStart (0.0)
-,	mFrequencyTarget(0.0)
-,	mFrequencyTime	(0.0)
-,	mKeyVelocity	(1.0)
-,	mPitchBend		(1.0)
-,	mLFO1Freq		(0.0)
-,	mFreqModAmount	(0.0)
-,	mFreqModDestination(0)
-,	mOsc1PulseWidth	(0.0)
-,	mOsc2PulseWidth	(0.0)
-,	mOscMix			(0.0)
-,	mRingModAmt		(0.0)
-,	mOsc2Octave		(1.0)
-,	mOsc2Detune		(1.0)
-,	mOsc2Sync		(false)
-,	mFilterEnvAmt	(0.0)
-,	mFilterModAmt	(0.0)
-,	mFilterCutoff	(16.0)
-,	mFilterRes		(0.0)
-,	mFilterKbdTrack (0.0)
-,	mFilterVelSens	(0.0)
-,	filter_env		(mProcessBuffers.filter_env)
-,	mAmpModAmount	(0.0)
-,	mAmpVelSens		(1.0)
-,	amp_env			(mProcessBuffers.amp_env)
-{
-}
-
-enum { sine, square, triangle, noise, randomize, sawtooth_up, sawtooth_down };
+enum class LFOWaveform {
+	kSine,
+	kSquare,
+	kTriangle,
+	kNoise,
+	kRandomize,
+	kSawtoothUp,
+	kSawtoothDown
+};
 
 void
 VoiceBoard::UpdateParameter	(Param param, float value)
@@ -71,15 +49,15 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_LFOToAmp:	mAmpModAmount = (value+1.0f)/2.0f;break;
 	case kAmsynthParameter_LFOFreq:		mLFO1Freq = value; 		break;
 	case kAmsynthParameter_LFOWaveform: {
-		switch ((int)value) {
-			case sine:          mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Sine);   break;
-			case square:        mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Pulse);  break;
-			case triangle:      mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Saw);    break;
-			case noise:         mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Noise);  break;
-			case randomize:     mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform_Random); break;
-			case sawtooth_up:   mLFOPulseWidth = 1.0; lfo1.SetWaveform(Oscillator::Waveform_Saw);    lfo1.setPolarity(+1.0); break;
-			case sawtooth_down: mLFOPulseWidth = 1.0; lfo1.SetWaveform(Oscillator::Waveform_Saw);    lfo1.setPolarity(-1.0); break;
-			default: assert(0 == "invalid LFO waveform"); break;
+		switch ((LFOWaveform)(int)value) {
+			case LFOWaveform::kSine:         mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform::kSine);   break;
+			case LFOWaveform::kSquare:       mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform::kPulse);  break;
+			case LFOWaveform::kTriangle:     mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform::kSaw);    break;
+			case LFOWaveform::kNoise:        mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform::kNoise);  break;
+			case LFOWaveform::kRandomize:    mLFOPulseWidth = 0.0; lfo1.SetWaveform(Oscillator::Waveform::kRandom); break;
+			case LFOWaveform::kSawtoothUp:   mLFOPulseWidth = 1.0; lfo1.SetWaveform(Oscillator::Waveform::kSaw);    lfo1.setPolarity(+1.0); break;
+			case LFOWaveform::kSawtoothDown: mLFOPulseWidth = 1.0; lfo1.SetWaveform(Oscillator::Waveform::kSaw);    lfo1.setPolarity(-1.0); break;
+			default: assert(nullptr == "invalid LFO waveform"); break;
 		}
 		break;
 	}
@@ -101,22 +79,22 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_FilterEnvAmount:	mFilterEnvAmt = value;		break;
 	case kAmsynthParameter_FilterCutoff:	mFilterCutoff = value;		break;
 	case kAmsynthParameter_FilterResonance:	mFilterRes = value;		break;
-	case kAmsynthParameter_FilterEnvAttack:	filter_env.SetAttack (value);	break;
-	case kAmsynthParameter_FilterEnvDecay:	filter_env.SetDecay (value);	break;
-	case kAmsynthParameter_FilterEnvSustain:	filter_env.SetSustain (value);	break;
-	case kAmsynthParameter_FilterEnvRelease:	filter_env.SetRelease (value);	break;
-	case kAmsynthParameter_FilterType: mFilterType = (SynthFilter::FilterType) (int)value; break;
-	case kAmsynthParameter_FilterSlope: mFilterSlope = (SynthFilter::FilterSlope) (int)value; break;
+	case kAmsynthParameter_FilterEnvAttack:	mFilterADSR.SetAttack (value);	break;
+	case kAmsynthParameter_FilterEnvDecay:	mFilterADSR.SetDecay (value);	break;
+	case kAmsynthParameter_FilterEnvSustain:	mFilterADSR.SetSustain (value);	break;
+	case kAmsynthParameter_FilterEnvRelease:	mFilterADSR.SetRelease (value);	break;
+	case kAmsynthParameter_FilterType: mFilterType = (SynthFilter::Type) (int)value; break;
+	case kAmsynthParameter_FilterSlope: mFilterSlope = (SynthFilter::Slope) (int)value; break;
 	case kAmsynthParameter_FilterKeyTrackAmount: mFilterKbdTrack = value; break;
 	case kAmsynthParameter_FilterKeyVelocityAmount: mFilterVelSens = value; break;
 
 	case kAmsynthParameter_OscillatorMixRingMod:	mRingModAmt = value;		break;
 	case kAmsynthParameter_OscillatorMix:			mOscMix = value;			break;
 	
-	case kAmsynthParameter_AmpEnvAttack:	amp_env.SetAttack (value);	break;
-	case kAmsynthParameter_AmpEnvDecay:		amp_env.SetDecay (value);	break;
-	case kAmsynthParameter_AmpEnvSustain:	amp_env.SetSustain (value);	break;
-	case kAmsynthParameter_AmpEnvRelease:	amp_env.SetRelease (value);	break;
+	case kAmsynthParameter_AmpEnvAttack:			mAmpADSR.SetAttack(value);	break;
+	case kAmsynthParameter_AmpEnvDecay:				mAmpADSR.SetDecay(value);	break;
+	case kAmsynthParameter_AmpEnvSustain:			mAmpADSR.SetSustain(value);	break;
+	case kAmsynthParameter_AmpEnvRelease:			mAmpADSR.SetRelease(value);	break;
 	case kAmsynthParameter_AmpVelocityAmount: mAmpVelSens = value; break;
 		
 	default: break;
@@ -162,7 +140,8 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	}
 	float osc2pw = mOsc2PulseWidth;
 
-	float env_f = filter_env.getNFData(numSamples)[numSamples - 1];
+	mFilterADSR.process(mProcessBuffers.filter_env, numSamples);
+	float env_f = mProcessBuffers.filter_env[numSamples - 1];
 	float cutoff_base = BLEND(kKeyTrackBaseFreq, frequency, mFilterKbdTrack);
 	float cutoff_vel_mult = BLEND(1.f, mKeyVelocity, mFilterVelSens);
 	float cutoff_lfo_mult = (lfo1buf[0] * 0.5f + 0.5f) * mFilterModAmt + 1 - mFilterModAmt;
@@ -184,7 +163,7 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	bool osc2sync = mOsc2Sync;
 	// previous implementation of sync had a bug causing it to only work when osc1 was set to sine or saw
 	// we need to recreate that behaviour here to ensure old presets still sound the same.
-	osc2sync &= (osc1.GetWaveform() == Oscillator::Waveform_Sine || osc1.GetWaveform() == Oscillator::Waveform_Saw);
+	osc2sync &= (osc1.GetWaveform() == Oscillator::Waveform::kSine || osc1.GetWaveform() == Oscillator::Waveform::kSaw);
 	osc2.setSyncEnabled(osc2sync);
 
 	osc1.ProcessSamples (osc1buf, numSamples, osc1freq, osc1pw);
@@ -194,9 +173,10 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	// Osc Mix
 	//
 	for (int i=0; i<numSamples; i++) {
-		float osc1vol = (1.f - mOscMix.tick()) / 2.f;
-		float osc2vol = (1.f - osc1vol);
 		float ringMod = mRingModAmt.tick();
+		float oscMix = mOscMix.tick();
+		float osc1vol = (1.F - ringMod) * (1.F - oscMix) / 2.F;
+		float osc2vol = (1.F - ringMod) * (1.F + oscMix) / 2.F;
 		osc1buf[i] =
 			osc1vol * osc1buf[i] +
 			osc2vol * osc2buf[i] +
@@ -211,7 +191,8 @@ VoiceBoard::ProcessSamplesMix	(float *buffer, int numSamples, float vol)
 	//
 	// VCA
 	// 
-	float *ampenvbuf = amp_env.getNFData (numSamples);
+	float *ampenvbuf = mProcessBuffers.amp_env;
+	mAmpADSR.process(ampenvbuf, numSamples);
 	for (int i=0; i<numSamples; i++) {
 		float ampModAmount = mAmpModAmount.tick();
 		const float amplitude = ampenvbuf[i] * BLEND(1.f, mKeyVelocity, mAmpVelSens.tick()) *
@@ -228,36 +209,36 @@ VoiceBoard::SetSampleRate	(int rate)
 	osc1.SetSampleRate (rate);
 	osc2.SetSampleRate (rate);
 	filter.SetSampleRate (rate);
-	filter_env.SetSampleRate (rate);
-	amp_env.SetSampleRate (rate);
-	_vcaFilter.setCoefficients(rate, kVCALowPassFreq, IIRFilterFirstOrder::LowPass);
+	mFilterADSR.SetSampleRate(rate);
+	mAmpADSR.SetSampleRate(rate);
+	_vcaFilter.setCoefficients(rate, kVCALowPassFreq, IIRFilterFirstOrder::Mode::kLowPass);
 }
 
 bool 
 VoiceBoard::isSilent()
 {
-	return amp_env.getState() == 0 && _vcaFilter._z < 0.0000001;
+	return mAmpADSR.getState() == 0 && _vcaFilter._z < 0.0000001;
 }
 
 void 
 VoiceBoard::triggerOn()
 {
-	amp_env.triggerOn();
-	filter_env.triggerOn();
+	mAmpADSR.triggerOn();
+	mFilterADSR.triggerOn();
 }
 
 void 
 VoiceBoard::triggerOff()
 {
-	amp_env.triggerOff();
-	filter_env.triggerOff();
+	mAmpADSR.triggerOff();
+	mFilterADSR.triggerOff();
 }
 
 void
 VoiceBoard::reset()
 {
-	amp_env.reset();
-	filter_env.reset();
+	mAmpADSR.reset();
+	mFilterADSR.reset();
 	osc1.reset();
 	osc2.reset();
 	filter.reset();

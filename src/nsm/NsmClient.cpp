@@ -1,4 +1,3 @@
-#include "DebugMessage.h"
 #include "../main.h"
 #include "nsm.h"
 #include "NsmClient.h"
@@ -15,10 +14,7 @@ static std::string to_string(int intValue) {
 
 NsmClient *NSMClient ;
 
-DebugMessage NsmClient::debugMessage ;
-
 void NsmClient::Debug (std::string message) {
-    debugMessage.SendMessage (message) ;
 }
 
 int NsmClient::openCallback (const char *path, const char *displayName, const char *clientId, char **outMsg, void *userData) {
@@ -78,7 +74,7 @@ void NsmClient::setHandlerActiveCallback (void *handlerThis, HandlerActiveCallba
     handlerActiveCallback = callback ;
 }
                                                           
-NsmClient::NsmClient (std::string programName) : nsm(0) {
+NsmClient::NsmClient (std::string programName) : nsm(nullptr) {
     NSMClient = this ;
     this->programName = programName ;
 
@@ -109,7 +105,7 @@ void NsmClient::Init (std::string programLabel) {
         }
         else {
             nsm_free( nsm ) ;
-            nsm = 0 ;
+            nsm = nullptr ;
         }
 
         Debug ("NsmClient: Registered Callbacks\n") ;
@@ -120,7 +116,7 @@ void NsmClient::Init (std::string programLabel) {
 
 NsmClient::~NsmClient (void) {
     Debug ("NsmClient: Destructor()\n") ;
-    if (nsm != 0) {
+    if (nsm != nullptr) {
         nsm_thread_stop (nsm) ;
         nsm_free( nsm ) ;
     }

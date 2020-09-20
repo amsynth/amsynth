@@ -1,7 +1,7 @@
 /*
  *  Parameter.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -22,11 +22,10 @@
 #ifndef _PARAMETER_H
 #define _PARAMETER_H
 
-#include <string>
-#include <vector>
-#include <sstream>
-#include <cmath>
 #include "UpdateListener.h"
+
+#include <set>
+#include <string>
 
 /**
  * @brief a Parameter holds a particular value for a slider, selector switch 
@@ -37,55 +36,47 @@
  *
  * This object also easily enables non-linear relationships between the controls
  * (eg interface ParameterViews) and their effect on synthesis parameters. See
- * setType() for details.
+ * Parameter::Law for details.
  */
 
 class Parameter {
 public:
-	enum ControlType
-	{
-		PARAM_DIRECT,	// controlValue = offset + base * value
-		PARAM_EXP,		// controlValue = offset + base ^ value
-		PARAM_POWER		// controlValue = offset + value ^ base
+
+	enum class Law {
+		kLinear,		// offset + base * value
+		kExponential,	// offset + base ^ value
+		kPower			// offset + value ^ base
 	};
 
-					Parameter		(const std::string name = "unused", Param id = kAmsynthParameterCount,
+					Parameter		(const std::string &name = "unused", Param id = kAmsynthParameterCount,
 									 float value = 0.0, float min = 0.0, float max = 1.0, float inc = 0.0,
-									 ControlType = PARAM_DIRECT, float base = 1.0, float offset = 0.0,
-									 const std::string label = "");
+									 Law law = Law::kLinear, float base = 1.0, float offset = 0.0,
+									 const std::string &label = "");
 
 	// The raw value of this parameter. Objects in the signal generation 
 	// path should not use this method, but getControlValue() instead.
 	float			getValue		() const { return _value; }
 	void			setValue		(float value);
 
-	static float	valueFromString	(const std::string &str) {
-		float value = 0.0f;
-		// atof() and friends are affected by currently configured locale,
-		// which can change the decimal point character.
-		std::istringstream istr(str);
-		static std::locale c_locale = std::locale("C");
-		istr.imbue(c_locale); // be absolutely sure of the locale
-		istr >> value;
-		return value;
-	}
+	static float	valueFromString	(const std::string &str);
 
-	float			GetNormalisedValue	() const { return (getValue()-getMin())/(getMax()-getMin()); }
-	void			SetNormalisedValue	(float val) { setValue (val*(getMax()-getMin())+getMin()); }
+	float			getNormalisedValue	() const { return (getValue()-getMin())/(getMax()-getMin()); }
+	void			setNormalisedValue	(float val) { setValue (val*(getMax()-getMin())+getMin()); }
 
 	// The control value for this parameter.
 	// The control value is what the synthesis will use to get its values.
 	inline float	getControlValue	() const { return _controlValue; }
 
-	const std::string GetStringValue	() const { std::ostringstream o; o << _controlValue; return o.str(); }
+	const std::string getStringValue	() const;
 
 	const std::string getName			() const { return _name; }
-	Param			GetId			() const { return mParamId; }
+
+	Param			getId				() const { return _paramId; }
 
 	// UpdateListeners (eg one or more ParameterViews - part of the GUI) are 
 	// notified and updated when this Parameter changes.
-	void			addUpdateListener (UpdateListener& ul);
-	void			removeUpdateListener (UpdateListener& ul);
+	void			addUpdateListener (UpdateListener *ul);
+	void			removeUpdateListener (UpdateListener *ul);
 
 	float			getDefault		() const { return _default; }
 
@@ -99,17 +90,17 @@ public:
 	int				getSteps		() const { return _step > 0.f ? (int) ((_max - _min) / _step) : 0; }
 
 	// Set this parameter to a random value (in it's allowable range)
-	void			random_val		();
+	void			randomise		();
 
 	// The label assocaited with this Parameter. (e.g. "seconds")
 	const std::string getLabel		() const { return _label; }
 
 private:
-	Param							mParamId;
+	Param							_paramId;
 	std::string						_name, _label;
-	int								_controlMode;
+	Law								_law;
 	float							_default, _value, _min, _max, _step, _controlValue, _base, _offset;
-	std::vector<UpdateListener*>	_updateListeners;
+	std::set<UpdateListener *>		_listeners;
 };
 
 #endif

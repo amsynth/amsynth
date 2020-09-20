@@ -77,8 +77,8 @@ public:
 	int getMaxNumVoices();
 	void setMaxNumVoices(int value);
 
-	virtual int loadTuningKeymap(const char *filename);
-	virtual int loadTuningScale(const char *filename);
+	int loadTuningKeymap(const char *filename) override;
+	int loadTuningScale(const char *filename) override;
 
 	void setSampleRate(int sampleRate);
 

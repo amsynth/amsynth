@@ -112,7 +112,7 @@ void config_dialog_run(GtkWindow *parent)
 		config.audio_driver = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(audio_combo));
 		config.oss_audio_device = gtk_entry_get_text(GTK_ENTRY(oss_audio_entry));
 		config.alsa_audio_device = gtk_entry_get_text(GTK_ENTRY(alsa_audio_entry));
-		config.sample_rate = (int) strtol(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(sample_rate_combo)), NULL, 0);
+		config.sample_rate = (int) strtol(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(sample_rate_combo)), nullptr, 0);
 		config.jack_autoconnect = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(jack_autoconnect));
 		config.save();
 	}

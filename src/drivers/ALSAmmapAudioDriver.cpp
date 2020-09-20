@@ -41,10 +41,10 @@ using namespace std;
 class ALSAmmapAudioDriver : public AudioDriver {
 public:
     ALSAmmapAudioDriver();
-    virtual	~ALSAmmapAudioDriver();
-    int	open();
-    void close();
-    int	write(float *buffer, int frames);
+    ~ALSAmmapAudioDriver() override;
+    int	open() override;
+    void close() override;
+    int	write(float *buffer, int frames) override;
 
 private:
     int 	xrun_recovery();
@@ -159,7 +159,7 @@ ALSAmmapAudioDriver::open()
 {
 	Configuration & config = Configuration::get();
 
-	if (playback_handle != NULL) return 0;
+	if (playback_handle != nullptr) return 0;
 	
 	_channels = config.channels;
 	_rate = config.sample_rate;
@@ -172,7 +172,7 @@ ALSAmmapAudioDriver::open()
     snd_pcm_hw_params_any( playback_handle, hw_params );
     snd_pcm_hw_params_set_access( playback_handle, hw_params, SND_PCM_ACCESS_MMAP_INTERLEAVED/*SND_PCM_ACCESS_RW_INTERLEAVED*/ );
     snd_pcm_hw_params_set_format( playback_handle, hw_params, SND_PCM_FORMAT_S16_LE );
-    snd_pcm_hw_params_set_rate_near( playback_handle, hw_params, &_rate, 0 );
+    snd_pcm_hw_params_set_rate_near( playback_handle, hw_params, &_rate, nullptr );
     snd_pcm_hw_params_set_channels( playback_handle, hw_params, _channels );
 	snd_pcm_hw_params_set_periods( playback_handle, hw_params, 16, 0 );
 	snd_pcm_hw_params_set_period_size( playback_handle, hw_params, config.buffer_size, 0 );
@@ -190,13 +190,13 @@ ALSAmmapAudioDriver::open()
 
 void ALSAmmapAudioDriver::close()
 {
-	if (playback_handle != NULL) snd_pcm_close (playback_handle);
-	playback_handle = NULL;
+	if (playback_handle != nullptr) snd_pcm_close (playback_handle);
+	playback_handle = nullptr;
 }
 
 ALSAmmapAudioDriver::ALSAmmapAudioDriver()
 {
-	playback_handle = NULL;
+	playback_handle = nullptr;
 }
 
 ALSAmmapAudioDriver::~ALSAmmapAudioDriver()

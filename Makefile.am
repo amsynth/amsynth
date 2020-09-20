@@ -22,9 +22,6 @@ AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' -DPACKAGE_
 # https://developer.gnome.org/gtk3/stable/gtk-migrating-2-to-3.html#id-1.6.3.3
 AM_CPPFLAGS += -DGDK_DISABLE_DEPRECATED -DGSEAL_ENABLE -DGTK_DISABLE_DEPRECATED -DGTK_DISABLE_SINGLE_INCLUDES
 
-# amsynth still maintains support for compilers that do not fully support the C++11 standard
-AM_CXXFLAGS = -std=c++98 @CXXFLAGS@
-
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = po
@@ -44,7 +41,6 @@ libcore_sources = \
 	src/Preset.h \
 	src/PresetController.cpp \
 	src/PresetController.h \
-	src/Thread.h \
 	src/types.h \
 	src/UpdateListener.h
 
@@ -124,9 +120,9 @@ amsynth_SOURCES = \
 	src/main.h \
 	src/main.cpp
 
-amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @GTK_CFLAGS@
+amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @LIBLO_CFLAGS@ @GTK_CFLAGS@
 
-amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @LIBS@
+amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @LIBLO_LIBS@ @LIBS@
 
 if BUILD_GUI
 amsynth_SOURCES += $(libgui_sources) \
@@ -152,14 +148,11 @@ endif
 
 if BUILD_NSM
 amsynth_SOURCES += \
-	src/nsm/DebugMessage.cpp \
-	src/nsm/DebugMessage.h \
 	src/nsm/NsmClient.cpp \
 	src/nsm/NsmClient.h \
 	src/nsm/NsmHandler.cpp \
 	src/nsm/NsmHandler.h \
 	src/nsm/nsm.h
-amsynth_LDFLAGS = $(AM_LDFLAGS) -llo -loscpack
 endif
 
 #
@@ -268,7 +261,8 @@ dist_amsynth_lv2_DATA = \
 	data/amsynth.lv2/BriansBank19.amSynth.bank.ttl \
 	data/amsynth.lv2/BriansBank20.amSynth.bank.ttl \
 	data/amsynth.lv2/BriansBank21.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank22.amSynth.bank.ttl
+	data/amsynth.lv2/BriansBank22.amSynth.bank.ttl \
+	data/amsynth.lv2/PatriksBank01.bank.ttl
 
 endif
 
@@ -371,7 +365,8 @@ dist_banks_DATA = \
 	data/banks/BriansBank19.amSynth.bank \
 	data/banks/BriansBank20.amSynth.bank \
 	data/banks/BriansBank21.amSynth.bank \
-	data/banks/BriansBank22.amSynth.bank
+	data/banks/BriansBank22.amSynth.bank \
+	data/banks/PatriksBank01.bank
 
 
 #

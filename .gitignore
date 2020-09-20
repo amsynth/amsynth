@@ -60,9 +60,3 @@ test-suite.log
 /data/*metainfo.xml
 man/amsynth.1
 man/*/amsynth.1
-
-# CLion
-.idea/dictionaries
-.idea/workspace.xml
-cmake-build-*
-

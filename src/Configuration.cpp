@@ -124,7 +124,7 @@ Configuration::load	()
 int
 Configuration::save	()
 {
-	FILE *fout = fopen (amsynthrc_fname.c_str(), "w"); if (NULL == fout) return -1;
+	FILE *fout = fopen (amsynthrc_fname.c_str(), "w"); if (nullptr == fout) return -1;
 	fprintf (fout, "midi_driver\t%s\n", midi_driver.c_str());
 	fprintf (fout, "oss_midi_device\t%s\n", oss_midi_device.c_str());
 	fprintf (fout, "midi_channel\t%d\n", midi_channel);

@@ -30,6 +30,7 @@
 
 #define SENSITIVITY_STEP     40 // Pixels required to step up to next value
 #define SENSITIVITY_NORMAL  300 // Pixels required to travel full range
+#define SENSITIVITY_SCROLL   10 // Number of scroll wheel clicks to travel full range
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -48,6 +49,7 @@ typedef struct {
 	gint frame_width;
 	gint frame_height;
 	gint frame_count;
+	gint scaling_factor;
 	
 	gdouble origin_y;
 	gdouble origin_val;
@@ -62,6 +64,7 @@ static gboolean bitmap_knob_expose			( GtkWidget *wigdet, GdkEventExpose *event 
 static gboolean bitmap_knob_button_press	( GtkWidget *wigdet, GdkEventButton *event );
 static gboolean bitmap_knob_button_release	( GtkWidget *wigdet, GdkEventButton *event );
 static gboolean bitmap_knob_motion_notify	( GtkWidget *wigdet, GdkEventMotion *event );
+static gboolean bitmap_knob_scroll		( GtkWidget *wigdet, GdkEventScroll *event );
 
 static void		bitmap_knob_set_adjustment				( GtkWidget *widget, GtkAdjustment *adjustment );
 static void		bitmap_knob_adjustment_changed			( GtkAdjustment *adjustment, gpointer data );
@@ -74,7 +77,8 @@ bitmap_knob_new( GtkAdjustment *adjustment,
                  GdkPixbuf *pixbuf,
                  gint frame_width,
                  gint frame_height,
-                 gint frame_count )
+                 gint frame_count,
+				 gint scaling_factor)
 {
 	bitmap_knob *self = g_malloc0 (sizeof(bitmap_knob));
 
@@ -83,6 +87,7 @@ bitmap_knob_new( GtkAdjustment *adjustment,
 	self->frame_width	= frame_width;
 	self->frame_height	= frame_height;
 	self->frame_count	= frame_count;
+	self->scaling_factor = scaling_factor;
 
 	g_object_set_data_full (G_OBJECT (self->drawing_area), bitmap_knob_key, self, (GDestroyNotify) g_free);
 	g_assert (g_object_get_data (G_OBJECT (self->drawing_area), bitmap_knob_key));
@@ -91,14 +96,16 @@ bitmap_knob_new( GtkAdjustment *adjustment,
 	g_signal_connect (G_OBJECT (self->drawing_area), "button-press-event", G_CALLBACK (bitmap_knob_button_press), NULL);
 	g_signal_connect (G_OBJECT (self->drawing_area), "button-release-event", G_CALLBACK (bitmap_knob_button_release), NULL);
 	g_signal_connect (G_OBJECT (self->drawing_area), "motion-notify-event", G_CALLBACK (bitmap_knob_motion_notify), NULL);
+	g_signal_connect (G_OBJECT (self->drawing_area), "scroll-event", G_CALLBACK (bitmap_knob_scroll), NULL);
 
-	gtk_widget_set_size_request (self->drawing_area, frame_width, frame_height);
+	gtk_widget_set_size_request (self->drawing_area, frame_width * scaling_factor, frame_height * scaling_factor);
 	
 	// set up event mask
 	gint event_mask = gtk_widget_get_events (self->drawing_area);
 	event_mask |= GDK_BUTTON_PRESS_MASK;
 	event_mask |= GDK_BUTTON_RELEASE_MASK;
 	event_mask |= GDK_BUTTON1_MOTION_MASK;
+	event_mask |= GDK_SCROLL_MASK;
 	gtk_widget_set_events (self->drawing_area, event_mask);
 	
 	bitmap_knob_set_adjustment (self->drawing_area, adjustment);
@@ -164,8 +171,12 @@ static void tooltip_show (bitmap_knob *self)
 	gint tooltip_height = 0;
 	gdk_window_get_geometry (gtk_widget_get_window (self->tooltip_window), NULL, NULL, NULL, &tooltip_height, NULL);
 
-	gint tooltip_x = widget_x + self->frame_width + 4;
-	gint tooltop_y = widget_y + (self->frame_height - tooltip_height) / 2;
+	gint width = 0;
+	gint height = 0;
+	gtk_widget_get_size_request (self->drawing_area, &width, &height);
+
+	gint tooltip_x = widget_x + width + 4;
+	gint tooltop_y = widget_y + (height - tooltip_height) / 2;
 
 	gtk_window_move (GTK_WINDOW (self->tooltip_window), tooltip_x, tooltop_y);
 
@@ -181,8 +192,13 @@ bitmap_knob_expose( GtkWidget *widget, GdkEventExpose *event )
 	
 	cairo_t *cr = gdk_cairo_create (event->window);
 
+	cairo_scale (cr, self->scaling_factor, self->scaling_factor);
+
 	if (self->background) {
 		gdk_cairo_set_source_pixbuf (cr, self->background, 0, 0);
+		// CAIRO_EXTEND_NONE results in a ugly border when upscaling
+		cairo_pattern_t *pattern = cairo_get_source (cr);
+		cairo_pattern_set_extend (pattern, CAIRO_EXTEND_PAD);
 		cairo_paint (cr);
 	}
 	
@@ -271,6 +287,34 @@ bitmap_knob_motion_notify ( GtkWidget *widget, GdkEventMotion *event )
 		}
 		return TRUE;
 	}
+	return FALSE;
+}
+
+gboolean
+bitmap_knob_scroll ( GtkWidget *widget, GdkEventScroll *event )
+{
+	bitmap_knob *self = g_object_get_data (G_OBJECT (widget), bitmap_knob_key);
+
+	int increment = 0;	// assume neither UP nor DOWN
+	if (event->direction == GDK_SCROLL_UP) {
+		increment = 1;
+	}
+	if (event->direction == GDK_SCROLL_DOWN) {
+		increment = -1;
+	}
+
+	if (increment) {
+		gdouble lower = gtk_adjustment_get_lower (self->adjustment);
+		gdouble upper = gtk_adjustment_get_upper (self->adjustment);
+		gdouble step  = gtk_adjustment_get_step_increment (self->adjustment);
+		gdouble value = gtk_adjustment_get_value (self->adjustment);
+		gdouble range = upper - lower;
+		gdouble newval = value + range * increment / (double)SENSITIVITY_SCROLL;
+		gtk_adjustment_set_value (self->adjustment, CLAMP (newval, lower, upper));
+		tooltip_update (self);
+		return TRUE;
+	}
+
 	return FALSE;
 }
 

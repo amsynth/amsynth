@@ -1,7 +1,7 @@
 /*
  *  LowPassFilter.cpp
  *
- *  Copyright (c) 2001-2014 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -20,17 +20,11 @@
  */
 
 #include "LowPassFilter.h"
-#include "Synth--.h"		// for PI and TWO_PI
+#include "Synth--.h"
 
 #include <algorithm>
 #include <cassert>
 #include <math.h>
-
-SynthFilter::SynthFilter() :
-	rate (4100.0)
-,	nyquist (22050.0)
-{
-}
 
 void
 SynthFilter::reset()
@@ -39,9 +33,9 @@ SynthFilter::reset()
 }
 
 void
-SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float res, FilterType type, FilterSlope slope)
+SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float res, Type type, Slope slope)
 {
-	if (type == FilterTypeBypass) {
+	if (type == Type::kBypass) {
 		return;
 	}
 	
@@ -51,7 +45,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 	const double w = (cutoff / rate); // cutoff freq [ 0 <= w <= 0.5 ]
 	const double r = std::max(0.001, 2.0 * (1.0 - res)); // r is 1/Q (sqrt(2) for a butterworth response)
 
-	const double k = tan(w * PI);
+	const double k = tan(w * m::pi);
 	const double k2 = k * k;
 	const double rk = r * k;
 	const double bh = 1.0 + rk + k2;
@@ -59,7 +53,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 	double a0, a1, a2, b1, b2;
 
 	switch (type) {
-		case FilterTypeLowPass:
+		case Type::kLowPass:
 			//
 			// Bilinear transformation of H(s) = 1 / (s^2 + s/Q + 1)
 			// See "Digital Audio Signal Processing" by Udo Zölzer
@@ -71,7 +65,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			b2 = (1.0 - rk + k2) / bh;
 			break;
 
-		case FilterTypeHighPass:
+		case Type::kHighPass:
 			//
 			// Bilinear transformation of H(s) = s^2 / (s^2 + s/Q + 1)
 			// See "Digital Audio Signal Processing" by Udo Zölzer
@@ -83,7 +77,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			b2 = (1.0 - rk + k2) / bh;
 			break;
 		
-		case FilterTypeBandPass:
+		case Type::kBandPass:
 			//
 			// Bilinear transformation of H(s) = (s/Q) / (s^2 + s/Q + 1)
 			// See "Digital Audio Signal Processing" by Udo Zölzer
@@ -95,7 +89,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			b2 = (1.0 - rk + k2) / bh;
 			break;
 			
-		case FilterTypeBandStop:
+		case Type::kBandStop:
 			//
 			// "Digital Audio Signal Processing" by Udo Zölzer does not provide z-transform
 			// coefficients for the bandstop filter, so these were derived by studying
@@ -109,12 +103,12 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			break;
 			
 		default:
-			assert(0 == "invalid FilterType");
+			assert(nullptr == "invalid FilterType");
 			return;
 	}
 
 	switch (slope) {
-		case FilterSlope12:
+		case Slope::k12:
 			for (int i=0; i<numSamples; i++) { double y, x = buffer[i];
 
 				y  =      (a0 * x) + d1;
@@ -125,7 +119,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			}
 			break;
 
-		case FilterSlope24:
+		case Slope::k24:
 			for (int i=0; i<numSamples; i++) { double y, x = buffer[i];
 
 				y  =      (a0 * x) + d1;
@@ -143,7 +137,7 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			break;
 
 		default:
-			assert(0 == "invalid FilterSlope");
+			assert(nullptr == "invalid FilterSlope");
 			break;
 	}
 }

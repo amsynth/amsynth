@@ -43,7 +43,7 @@
 #endif
 
 struct amsynth_wrapper {
-	amsynth_wrapper() : schedule(0), control_port(0), out_l(0), out_r(0) {}
+	amsynth_wrapper() : schedule(nullptr), control_port(nullptr), out_l(nullptr), out_r(nullptr) {}
 
 	Synthesizer synth;
 
@@ -86,7 +86,7 @@ lv2_instantiate(const struct _LV2_Descriptor *descriptor, double sample_rate, co
 
 	amsynth_wrapper *a = new amsynth_wrapper;
 
-	LV2_URID_Map *urid_map = NULL;
+	LV2_URID_Map *urid_map = nullptr;
 	const char *missing = lv2_features_query(
 			features,
 			LV2_URID__map,        &urid_map,      true,
@@ -94,7 +94,7 @@ lv2_instantiate(const struct _LV2_Descriptor *descriptor, double sample_rate, co
 			NULL);
 	if (missing) {
 		free(a);
-		return NULL;
+		return nullptr;
 	}
 
 	a->synth.setSampleRate((int)sample_rate);
@@ -180,7 +180,7 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 
 	for (unsigned i=0; i<kAmsynthParameterCount; i++) {
 		const float *host_value = a->param_ports[i];
-		if (host_value != NULL) {
+		if (host_value != nullptr) {
 			if (a->synth.getParameterValue((Param)i) != *host_value) {
 				a->synth.setParameterValue((Param)i, *host_value);
 			}
@@ -253,8 +253,8 @@ work(LV2_Handle                  instance,
 
 	const LV2_Atom_Object *obj = (const LV2_Atom_Object *) data;
 	if (obj->body.otype == a->uris.patch_Set) {
-		const LV2_Atom *property = NULL;
-		const LV2_Atom *value = NULL;
+		const LV2_Atom *property = nullptr;
+		const LV2_Atom *value = nullptr;
 		lv2_atom_object_get(obj,
 							a->uris.patch_property, &property,
 							a->uris.patch_value, &value,
@@ -286,11 +286,11 @@ lv2_extension_data(const char *uri)
 	}
 
 	if (strcmp(uri, LV2_WORKER__interface) == 0) {
-		static const LV2_Worker_Interface worker = { work, work_response, NULL };
+		static const LV2_Worker_Interface worker = { work, work_response, nullptr };
 		return &worker;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 static const LV2_Descriptor amsynth1_descriptor = {
@@ -314,6 +314,6 @@ lv2_descriptor(uint32_t index)
 	case 0:
 		return &amsynth1_descriptor;
 	default:
-		return NULL;
+		return nullptr;
 	}
 }

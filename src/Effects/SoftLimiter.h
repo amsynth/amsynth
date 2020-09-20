@@ -28,7 +28,6 @@ public:
 	void	SetSampleRate	(int rate);
 	void	Process	(float *l, float *r, unsigned, int stride=1);
   private:
-    float *buffer;
 	double xpeak, attack, release, thresh;
 };
 
