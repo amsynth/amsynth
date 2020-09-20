@@ -1,8 +1,10 @@
 amsynth 1.11.0 -- UNRELEASED
 
+  - Added mouse wheel support for controls
   - Implemented UI upscaling for background and controls on HiDPI displays
   - Fixed a regression in 1.10.0 that changed the sound of patches using ring modulation
   - Fixed LV2 lint error caused by missing minorVersion and microVersion
+  - Removed dependency on oscpack for Non Session Manager support
 
 
 amsynth 1.10.0 -- 2020-05-07
