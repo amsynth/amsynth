@@ -463,6 +463,9 @@ struct ConfigMenu
 
 	static void midiChannelChange(GtkWidget *widget, Synthesizer *synthesizer)
 	{
+		if (!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget))) {
+			return;
+		}
 		GtkWidget *menu = gtk_widget_get_parent(widget);
 		GList *list = gtk_container_get_children(GTK_CONTAINER(menu));
 		int index = g_list_index(list, widget);
@@ -477,6 +480,9 @@ struct ConfigMenu
 
 	static void polyphonyChange(GtkWidget *widget, Synthesizer *synthesizer)
 	{
+		if (!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget))) {
+			return;
+		}
 		GtkWidget *menu = gtk_widget_get_parent(widget);
 		GList *list = gtk_container_get_children(GTK_CONTAINER(menu));
 		int index = g_list_index(list, widget);
@@ -492,6 +498,9 @@ struct ConfigMenu
 
 	static void pitchBendRangeChange(GtkWidget *widget, Synthesizer *synthesizer)
 	{
+		if (!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget))) {
+			return;
+		}
 		GtkWidget *menu = gtk_widget_get_parent(widget);
 		GList *list = gtk_container_get_children(GTK_CONTAINER(menu));
 		int index = g_list_index(list, widget);
