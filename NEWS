@@ -1,4 +1,9 @@
-amsynth 1.11.0 -- UNRELEASED
+amsynth next release
+
+  - Fixed a bug that caused MIDI channel and polyphony settings from the command line or
+    configuration file to be ignored.
+
+amsynth 1.11.0 -- 2020-09-20
 
   - Added mouse wheel support for controls
   - Implemented UI upscaling for background and controls on HiDPI displays
