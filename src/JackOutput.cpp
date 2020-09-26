@@ -142,7 +142,9 @@ JackOutput::process (jack_nframes_t nframes, void *arg)
 		jack_midi_clear_buffer(port_buffer);
 		std::vector<amsynth_midi_cc_t>::const_iterator out_it;
 		for (out_it = midi_out.begin(); out_it != midi_out.end(); ++out_it) {
-			jack_midi_data_t data[] = { MIDI_STATUS_CONTROLLER, out_it->cc, out_it->value};
+			jack_midi_data_t data[] = {
+				(unsigned char) (MIDI_STATUS_CONTROLLER | (out_it->channel & 0x0f)),
+				out_it->cc, out_it->value };
 			jack_midi_event_write(port_buffer, 0, data, 3);
 		}
 	}
