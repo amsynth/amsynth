@@ -308,14 +308,6 @@ MidiController::setControllerForParameter(Param paramId, int cc)
 }
 
 void
-MidiController::set_midi_channel	( int ch )
-{
-	Configuration & config = Configuration::get();
-	if (ch)	_handler->HandleMidiAllSoundOff();
-	config.midi_channel = ch;
-}
-
-void
 MidiController::generateMidiOutput(std::vector<amsynth_midi_cc_t> &output)
 {
 	unsigned char outputChannel = std::max(0, Configuration::get().midi_channel - 1);

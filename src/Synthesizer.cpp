@@ -182,6 +182,21 @@ void Synthesizer::setMaxNumVoices(int value)
 	_voiceAllocationUnit->SetMaxVoices(value);
 }
 
+unsigned char Synthesizer::getMidiChannel()
+{
+	return Configuration::get().midi_channel;
+}
+
+void Synthesizer::setMidiChannel(unsigned char channel)
+{
+	Configuration::get().midi_channel = channel;
+	if (channel != kMidiChannel_Any) {
+		// A reset is required when switching to a new channel since we will
+		// not receive the note off events for currently held notes.
+		needsResetAllVoices_ = true;
+	}
+}
+
 int Synthesizer::loadTuningKeymap(const char *filename)
 {
 	if (filename && strlen(filename))
@@ -214,6 +229,10 @@ void Synthesizer::process(unsigned int nframes,
 	if (_sampleRate < 0) {
 		assert(nullptr == "sample rate has not been set");
 		return;
+	}
+	if (needsResetAllVoices_) {
+		needsResetAllVoices_ = false;
+		_voiceAllocationUnit->resetAllVoices();
 	}
 	std::vector<amsynth_midi_event_t>::const_iterator event = midi_in.begin();
 	unsigned frames_left_in_buffer = nframes, frame_index = 0;

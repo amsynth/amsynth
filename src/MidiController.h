@@ -64,9 +64,6 @@ public:
 
 	Parameter & getLastControllerParam() { return last_active_controller; };
 
-	int		get_midi_channel	() { return channel; }
-	void	set_midi_channel	( int ch );
-
 	void 	generateMidiOutput	(std::vector<amsynth_midi_cc_t> &);
 
 private:

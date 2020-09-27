@@ -406,7 +406,7 @@ struct ConfigMenu
 
 		GtkWidget *channelMenu = gtk_menu_new();
 		{
-			const int currentValue = synthesizer->getMidiController()->get_midi_channel();
+			const int currentValue = synthesizer->getMidiChannel();
 
 			GSList *group = nullptr;
 			for (int i = 0; i <= 16; i++) {
@@ -472,9 +472,9 @@ struct ConfigMenu
 		g_list_free(list);
 
 		int newValue = index;
-		int currentValue = synthesizer->getMidiController()->get_midi_channel();
+		int currentValue = synthesizer->getMidiChannel();
 		if (currentValue != newValue) {
-			synthesizer->getMidiController()->set_midi_channel(newValue);
+			synthesizer->setMidiChannel(newValue);
 		}
 	}
 
