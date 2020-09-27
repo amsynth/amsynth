@@ -35,7 +35,6 @@
 
 MidiController::MidiController()
 {
-	channel = (unsigned char) Configuration::get().midi_channel;
 	loadControllerMap();
 }
 
@@ -319,6 +318,8 @@ MidiController::set_midi_channel	( int ch )
 void
 MidiController::generateMidiOutput(std::vector<amsynth_midi_cc_t> &output)
 {
+	unsigned char outputChannel = std::max(0, Configuration::get().midi_channel - 1);
+	
 	for (int paramId = 0; paramId < kAmsynthParameterCount; paramId++) {
 		int cc = _param_to_cc_map[paramId];
 		if (0 <= cc && cc < MAX_CC) {
@@ -326,7 +327,7 @@ MidiController::generateMidiOutput(std::vector<amsynth_midi_cc_t> &output)
 			unsigned char value = (unsigned char) roundf(parameter.getNormalisedValue() * 127.0f);
 			if (_midi_cc_vals[cc] != value) {
 				_midi_cc_vals[cc] = value;
-				amsynth_midi_cc_t out = { channel, (unsigned char)cc, value };
+				amsynth_midi_cc_t out = { outputChannel, (unsigned char)cc, value };
 				output.push_back(out);
 			}
 		}
