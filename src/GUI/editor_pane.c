@@ -230,6 +230,14 @@ button_release_event (GtkWidget *widget, GdkEventButton *event, GtkWidget *prese
 
 static int get_scaling_factor ()
 {
+	const gchar *gdk_scale = g_getenv("GDK_SCALE");
+	if (gdk_scale != NULL) {
+		int scale = atoi(gdk_scale);
+		if (scale > 0) {
+			return scale;
+		}
+	}
+	
 	GSettings *settings = g_settings_new ("org.gnome.desktop.interface");
 	int scaling_factor = g_settings_get_uint (settings, "scaling-factor");
 	g_object_ref_sink (settings);
