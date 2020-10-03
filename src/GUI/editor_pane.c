@@ -248,7 +248,7 @@ static int get_scaling_factor ()
 }
 
 GtkWidget *
-editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plugin)
+editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plugin, int scaling_factor)
 {
 	static int initialised;
 	if (!initialised) {
@@ -269,7 +269,11 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 
 	g_is_plugin = is_plugin;
 
-	editor_scaling_factor = get_scaling_factor ();
+	if (scaling_factor > 0) {
+		editor_scaling_factor = scaling_factor;
+	} else {
+		editor_scaling_factor = get_scaling_factor ();
+	}
 
 	GtkWidget *fixed = gtk_fixed_new ();
 	gtk_widget_set_size_request (fixed, 400, 300);

@@ -297,7 +297,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 					g_object_ref_sink(plugin->adjustments[i]); // assumes ownership of the floating reference
 					g_signal_connect(plugin->adjustments[i], "value-changed", G_CALLBACK(on_adjustment_value_changed), effect);
 				}
-				plugin->editorWidget = editor_pane_new(plugin->synthesizer, plugin->adjustments, TRUE);
+				plugin->editorWidget = editor_pane_new(plugin->synthesizer, plugin->adjustments, TRUE, 0);
 				g_object_ref_sink(plugin->editorWidget);
 			}
 
