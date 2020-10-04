@@ -248,9 +248,11 @@ int main( int argc, char *argv[] )
 	amsynth_lash_process_args(&argc, &argv);
 	
 	bool no_gui = (getenv("AMSYNTH_NO_GUI") != nullptr);
+	int gui_scale_factor = 0;
 
 	static struct option longopts[] = {
 		{ "jack_autoconnect", optional_argument, nullptr, 0 },
+		{ "force-device-scale-factor", required_argument, nullptr, 0 },
 		{ nullptr }
 	};
 	
@@ -329,6 +331,9 @@ int main( int argc, char *argv[] )
 				if (strcmp(longopts[longindex].name, "jack_autoconnect") == 0) {
 					config.jack_autoconnect = !optarg || (strcmp(optarg, "true") == 0);
 				}
+				if (strcmp(longopts[longindex].name, "force-device-scale-factor") == 0) {
+					gui_scale_factor = atoi(optarg);
+				}
 				break;
 			default:
 				break;
@@ -394,7 +399,7 @@ int main( int argc, char *argv[] )
 
 #ifdef WITH_GUI
 	if (!no_gui) {
-		main_window_show(s_synthesizer, out);
+		main_window_show(s_synthesizer, out, gui_scale_factor);
 		gui_kit_run(&amsynth_timer_callback);
 	} else {
 #endif

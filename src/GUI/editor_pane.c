@@ -29,6 +29,11 @@
 #include "bitmap_popup.h"
 #include "editor_menus.h"
 
+#include <gdk/gdkx.h>
+#include <string.h>
+#include <X11/Xlib.h>
+#include <X11/Xmd.h>
+
 //#define ENABLE_LAYOUT_EDIT 1
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -228,19 +233,95 @@ button_release_event (GtkWidget *widget, GdkEventButton *event, GtkWidget *prese
 #define KEY_CONTROL_PARAM_NAME	"param_name"
 #define KEY_CONTROL_PARAM_NUM	"param_num"
 
+static int get_xsettings_gdk_window_scaling_factor ()
+{
+	// GTK doesn't expose an API to its XSettingsClient, so we have to use the X11 APIs
+	
+	Display *display = GDK_DISPLAY_XDISPLAY (gdk_display_get_default ());
+	if (display == NULL) {
+		return 0;
+	}
+	
+	Atom selection_atom = XInternAtom (display, "_XSETTINGS_S0", False);
+	Atom xsettings_atom = XInternAtom (display, "_XSETTINGS_SETTINGS", False);
+	
+	Window window = XGetSelectionOwner (display, selection_atom);
+	if (window == None) {
+		return 0;
+	}
+	
+	Atom type = None;
+	int format = 0;
+	unsigned long n_items = 0;
+	unsigned long bytes_after = 0;
+	unsigned char *data = NULL;
+	
+	int result = XGetWindowProperty (display, window,
+		xsettings_atom, 0, LONG_MAX, False, xsettings_atom,
+		&type, &format, &n_items, &bytes_after, &data);
+
+	if (result != Success || type == None) {
+		return 0;
+	}
+	
+	int value = 0;
+	if (type == xsettings_atom && format == 8) {
+		char byte_order = *data; 
+		unsigned int myint = 0x01020304;
+		char local_byte_order = (*(char *)&myint == 1) ? MSBFirst : LSBFirst;
+		for (int i = 16; i < n_items - 32; i += 4) {
+			if (strcmp(data + i, "Gdk/WindowScalingFactor") == 0) {
+				// name is followed by 1 byte of padding and a 4-byte serial number
+				int x = *(int *)(data + i + 28);
+				if (byte_order == local_byte_order) {
+					value = x;
+				} else {
+					value = (x << 24) | ((x & 0xff00) << 8) | ((x & 0xff0000) >> 8) | (x >> 24);
+				}
+				break;
+			}
+		}
+	} else {
+		fprintf (stderr, "Invalid type or format for XSETTINGS property\n");
+	}
+	
+	XFree (data);
+	
+	return value;
+}
+
 static int get_scaling_factor ()
 {
+	const gchar *gdk_scale = g_getenv("GDK_SCALE");
+	if (gdk_scale != NULL) {
+		int scale = atoi(gdk_scale);
+		if (scale > 0) {
+			return scale;
+		}
+	}
+	
+	// XSETTINGS appears to be the most reliable way to get the current scaling factor
+	// when tested on a Pop!_OS 20.04 LTS system -- GNOME 3.36.3 on X11.
+	// The GSettings property does not seem to be updated when selecting a new Scale
+	// value in the GNOME Control Center.
+	
+	int gdk_window_scaling_factor = get_xsettings_gdk_window_scaling_factor ();
+	if (gdk_window_scaling_factor > 0) {
+		return gdk_window_scaling_factor;
+	}
+	
 	GSettings *settings = g_settings_new ("org.gnome.desktop.interface");
 	int scaling_factor = g_settings_get_uint (settings, "scaling-factor");
 	g_object_ref_sink (settings);
 	if (scaling_factor > 0) {
 		return scaling_factor;
 	}
+	
 	return 1;
 }
 
 GtkWidget *
-editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plugin)
+editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plugin, int scaling_factor)
 {
 	static int initialised;
 	if (!initialised) {
@@ -261,7 +342,11 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 
 	g_is_plugin = is_plugin;
 
-	editor_scaling_factor = get_scaling_factor ();
+	if (scaling_factor > 0) {
+		editor_scaling_factor = scaling_factor;
+	} else {
+		editor_scaling_factor = get_scaling_factor ();
+	}
 
 	GtkWidget *fixed = gtk_fixed_new ();
 	gtk_widget_set_size_request (fixed, 400, 300);

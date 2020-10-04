@@ -23,6 +23,6 @@
 #define _MAINWINDOW_H
 
 void
-main_window_show(class Synthesizer *, class GenericOutput *);
+main_window_show(class Synthesizer *, class GenericOutput *, int scaling_factor);
 
 #endif

@@ -47,7 +47,7 @@ static MIDILearnDialog *midiLearnDialog;
 
 struct MainWindow : public UpdateListener
 {
-	MainWindow(Synthesizer *synthesizer, GenericOutput *audio) :
+	MainWindow(Synthesizer *synthesizer, GenericOutput *audio, int scaling_factor) :
 			synthesizer(synthesizer),
 			presetController(synthesizer->getPresetController())
 	{
@@ -107,7 +107,7 @@ struct MainWindow : public UpdateListener
 			parameter.addUpdateListener(this);
 		}
 
-		GtkWidget *editor = editor_pane_new(synthesizer, adjustments, FALSE);
+		GtkWidget *editor = editor_pane_new(synthesizer, adjustments, FALSE, scaling_factor);
 		gtk_box_pack_start(GTK_BOX(vbox), editor, FALSE, FALSE, 0);
 
 		//
@@ -310,9 +310,9 @@ startup_check(gpointer data)
 }
 
 static GtkWidget *
-main_window_new(Synthesizer *synthesizer, GenericOutput *audio)
+main_window_new(Synthesizer *synthesizer, GenericOutput *audio, int scaling_factor)
 {
-	MainWindow *mainWindow = new MainWindow(synthesizer, audio);
+	MainWindow *mainWindow = new MainWindow(synthesizer, audio, scaling_factor);
 	g_signal_connect(G_OBJECT(mainWindow->window), "delete-event", G_CALLBACK(delete_event), mainWindow);
 	g_signal_connect(G_OBJECT(mainWindow->window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
@@ -327,9 +327,9 @@ main_window_new(Synthesizer *synthesizer, GenericOutput *audio)
 }
 
 void
-main_window_show(Synthesizer *synthesizer, GenericOutput *audio)
+main_window_show(Synthesizer *synthesizer, GenericOutput *audio, int scaling_factor)
 {
-	gtk_widget_show_all(main_window_new(synthesizer, audio));
+	gtk_widget_show_all(main_window_new(synthesizer, audio, scaling_factor));
 }
 
 void
