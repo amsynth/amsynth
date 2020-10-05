@@ -285,6 +285,9 @@ int main( int argc, char *argv[] )
 				     << _("	-n <name>   specify the JACK client name to use") << endl
 				     << _("	--jack_autoconnect[=<true|false>]") << endl
 				     << _("	            automatically connect jack audio ports to hardware I/O ports. (Default: true)") << endl
+					 << endl
+					 << _("	--force-device-scale-factor <scale>") << endl
+					 << _("	            override the default scaling factor for the control panel") << endl
 				     << endl;
 
 				return 0;
