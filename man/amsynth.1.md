@@ -1,6 +1,6 @@
 % AMSYNTH(1) amsynth VERSION | User Commands
 %
-% January 2017
+% October 2020
 
 NAME
 ====
@@ -15,7 +15,7 @@ SYNOPSIS
 DESCRIPTION
 ===========
 
-amsynth is an easy-to-use software synth with a classic subtractive synthesizer topology.
+**amsynth** is an easy-to-use software synth with a classic subtractive synthesizer topology.
 
 OPTIONS
 =======
@@ -75,17 +75,13 @@ OPTIONS
 FILES
 =====
 
-`$HOME/.amSynthrc`
+`$XDG_CONFIG_HOME/amsynth/config`
 
 :   Configuration for amsynth.
 
-`$HOME/.amsynth/*`
+`$XDG_DATA_HOME/amsynth/banks/*`
 
-:   Banks and others.
-
-`$HOME/.amSynth.presets`
-
-:   Presets.
+:   User preset banks.
 
 ENVIRONMENT
 ===========
