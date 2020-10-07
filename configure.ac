@@ -62,6 +62,10 @@ dnl
 
 AC_CHECK_LIB(m, sin, , exit)
 
+dnl Although amsynth does not use pthread directly, it seems to be necessary to link
+dnl against it with GCC 10.x
+AC_CHECK_LIB(pthread, pthread_create, [], exit)
+
 AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])])
 
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
