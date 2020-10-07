@@ -39,13 +39,13 @@
 
 #define MAX_PATH 160
 
-static GtkWindow *_window = NULL;
-static GtkAdjustment *_adjustments[kAmsynthParameterCount] = {0};
+static GtkWindow *_window = nullptr;
+static GtkAdjustment *_adjustments[kAmsynthParameterCount] = {nullptr};
 static gboolean _dont_send_control_changes = FALSE;
 
-static char *_osc_path = NULL;
-lo_server _osc_server = NULL;
-lo_address _osc_host_addr = NULL;
+static char *_osc_path = nullptr;
+lo_server _osc_server = nullptr;
+lo_address _osc_host_addr = nullptr;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -57,11 +57,11 @@ lo_address _osc_host_addr = NULL;
 //
 char *tmpstr(const char *format, ...)
 {
-    static char *string = NULL;
+    static char *string = nullptr;
     
     if (string) {
         free(string);
-        string = NULL;
+        string = nullptr;
     }
     
     va_list args;
@@ -176,7 +176,7 @@ int host_gui_exiting()
 
 void on_window_deleted()
 {
-    _window = NULL;
+    _window = nullptr;
     host_gui_exiting();
     gtk_main_quit();
 }
@@ -195,12 +195,12 @@ void on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
 
 struct SynthesizerStub : ISynthesizer
 {
-	virtual int loadTuningKeymap(const char *filename)
+	int loadTuningKeymap(const char *filename) override
 	{
 		return host_configure(PROP_KBM_FILE, filename);
 	}
 
-	virtual int loadTuningScale(const char *filename)
+	int loadTuningScale(const char *filename) override
 	{
 		return host_configure(PROP_SCL_FILE, filename);
 	}
@@ -226,18 +226,18 @@ int main(int argc, char *argv[])
     _osc_path = lo_url_get_path(host_url);
     _osc_host_addr = lo_address_new_from_url(host_url);
     
-    _osc_server = lo_server_new(NULL, osc_error);
-    lo_server_add_method(_osc_server, tmpstr("/%s/control",     _osc_path), "if", osc_control_handler,     NULL);
-    lo_server_add_method(_osc_server, tmpstr("/%s/sample-rate", _osc_path), "i",  osc_samplerate_handler,  NULL);
-    lo_server_add_method(_osc_server, tmpstr("/%s/program",     _osc_path), "ii", osc_program_handler,     NULL);
-    lo_server_add_method(_osc_server, tmpstr("/%s/show",        _osc_path), NULL, osc_show_handler,        NULL);
-    lo_server_add_method(_osc_server, tmpstr("/%s/hide",        _osc_path), NULL, osc_hide_handler,        NULL);
-    lo_server_add_method(_osc_server, tmpstr("/%s/quit",        _osc_path), NULL, osc_quit_handler,        NULL);
-    lo_server_add_method(_osc_server, NULL, NULL, osc_fallback_handler, NULL);
+    _osc_server = lo_server_new(nullptr, osc_error);
+    lo_server_add_method(_osc_server, tmpstr("/%s/control",     _osc_path), "if",    osc_control_handler,     nullptr);
+    lo_server_add_method(_osc_server, tmpstr("/%s/sample-rate", _osc_path), "i",     osc_samplerate_handler,  nullptr);
+    lo_server_add_method(_osc_server, tmpstr("/%s/program",     _osc_path), "ii",    osc_program_handler,     nullptr);
+    lo_server_add_method(_osc_server, tmpstr("/%s/show",        _osc_path), nullptr, osc_show_handler,        nullptr);
+    lo_server_add_method(_osc_server, tmpstr("/%s/hide",        _osc_path), nullptr, osc_hide_handler,        nullptr);
+    lo_server_add_method(_osc_server, tmpstr("/%s/quit",        _osc_path), nullptr, osc_quit_handler,        nullptr);
+    lo_server_add_method(_osc_server, nullptr, nullptr, osc_fallback_handler, nullptr);
     
     host_request_update();
 
-    g_io_add_watch(g_io_channel_unix_new(lo_server_get_socket_fd(_osc_server)), G_IO_IN, osc_input_handler, NULL);
+    g_io_add_watch(g_io_channel_unix_new(lo_server_get_socket_fd(_osc_server)), G_IO_IN, osc_input_handler, nullptr);
     
     _window = GTK_WINDOW(gtk_window_new(GTK_WINDOW_TOPLEVEL));
 
@@ -251,7 +251,7 @@ int main(int argc, char *argv[])
         g_signal_connect(_adjustments[i], "value-changed", (GCallback)&on_adjustment_value_changed, (gpointer)i);
     }
 
-    GtkWidget *editor = editor_pane_new(new SynthesizerStub, _adjustments, TRUE);
+    GtkWidget *editor = editor_pane_new(new SynthesizerStub, _adjustments, TRUE, 0);
     gtk_container_add(GTK_CONTAINER(_window), editor);
     gtk_widget_show_all(GTK_WIDGET(editor));
     

@@ -1,7 +1,7 @@
 /*
  *  ADSR.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -22,26 +22,34 @@
 #ifndef _ADSR_H
 #define _ADSR_H
 
+#include "Synth--.h"
+
+#include <climits>
+
 class ADSR
 {
 public:
-	enum ADSRState { attack, decay, sustain, release, off };
+	enum class State {
+		kAttack,
+		kDecay,
+		kSustain,
+		kRelease,
+		kOff
+	};
 
-	ADSR	(float *buffer);
-	
 	void	SetSampleRate	(int value) { m_sample_rate = value; }
 
 	void	SetAttack	(float value) { m_attack = value; }
 	void	SetDecay	(float value) { m_decay = value; }
-	void	SetSustain	(float value) { m_sustain = value; if (m_state == sustain) m_value = value; }
+	void	SetSustain	(float value) { m_sustain = value; if (m_state == State::kSustain) m_value = value; }
 	void	SetRelease	(float value) { m_release = value; }
 	
-	float * getNFData	(unsigned int frames);
+	void	process		(float *buffer, unsigned frames);
 	
 	void	triggerOn	();
 	void	triggerOff	();
 
-	int		getState	() { return (m_state == off) ? 0 : 1; };
+	int		getState	() { return (m_state == State::kOff) ? 0 : 1; };
 
 	/**
 	 * puts the envelope directly into the off (ADSR_OFF) state, without
@@ -50,18 +58,18 @@ public:
 	void reset();
 
 private:
-	float       m_attack;
-	float       m_decay;
-	float       m_sustain;
-	float       m_release;
+	float			m_attack = 0;
+	float			m_decay = 0;
+	float			m_sustain = 1;
+	ParamSmoother	m_sustain_smoother;
+	float			m_release = 0;
 
-	float *     m_buffer;
-	float       m_sample_rate;
-	ADSRState   m_state;
+	float			m_sample_rate = 44100;
+	State			m_state = State::kOff;
 
-	float       m_value;
-	float       m_inc;
-	unsigned	m_frames_left_in_state;
+	float			m_value = 0.0F;
+	float			m_inc = 0.0F;
+	unsigned		m_frames_left_in_state = UINT_MAX;
 };
 
 #endif				//_ADSR_H

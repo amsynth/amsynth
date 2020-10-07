@@ -38,10 +38,10 @@ struct BankInfo {
 
 class PresetController {
 public:
-	enum { kNumPresets = 128 };
 
-			PresetController	();
-			~PresetController	();
+	static constexpr int kNumPresets = 128;
+
+	~PresetController	() { clearChangeBuffers(); }
 	
 	/* Selects a Preset and makes it current, updating everything as necessary.
 	 * If the requested preset does not exist, then the request is ignored, and
@@ -97,14 +97,14 @@ public:
 
 private:
 	std::string		bank_file;
-	UpdateListener*	updateListener;
+	UpdateListener*	updateListener = nullptr;
 	Preset			presets[kNumPresets];
 	Preset 			currentPreset;
 	Preset			blankPreset;
-	Preset 			nullpreset;
-	int				currentBankNo;
-	int 			currentPresetNo;
-	long int 		lastPresetsFileModifiedTime;
+	Preset 			nullpreset{"null preset"};
+	int				currentBankNo = -1;
+	int 			currentPresetNo = -1;
+	long int 		lastPresetsFileModifiedTime = 0;
 
 	class ChangeData {
 		public:
@@ -122,11 +122,11 @@ private:
 					:param(nParam),
 					value(nValue) {}
 
-			void initiateUndo( PresetController *presetController ) {
+			void initiateUndo(PresetController *presetController) override {
 				presetController->undoChange(this);
 			}
 
-			void initiateRedo( PresetController *presetController ) {
+			void initiateRedo(PresetController *presetController) override {
 				presetController->redoChange(this);
 			}
 	};
@@ -139,11 +139,11 @@ private:
 				preset = nPreset; // Uses operator override.
 			}
 
-			void initiateUndo( PresetController *presetController ) {
+			void initiateUndo(PresetController *presetController) override {
 				presetController->undoChange(this);
 			}
 
-			void initiateRedo( PresetController *presetController ) {
+			void initiateRedo(PresetController *presetController) override {
 				presetController->redoChange(this);
 			}
 	};

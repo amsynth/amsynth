@@ -1,7 +1,7 @@
 /*
  *  MidiController.cpp
  *
- *  Copyright (c) 2001-2016 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -34,14 +34,7 @@
 
 
 MidiController::MidiController()
-:	last_active_controller ("last_active_cc", (Param) -1, 0, 0, MAX_CC, 1)
-,	_handler(NULL)
-,	_rpn_msb(0xff)
-,	_rpn_lsb(0xff)
 {
-	presetController = 0;
-	Configuration & config = Configuration::get();
-	channel = (unsigned char) config.midi_channel;
 	loadControllerMap();
 }
 
@@ -169,7 +162,7 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 
 	int paramId = _cc_to_param_map[cc];
 	if (paramId >= 0) {
-		presetController->getCurrentPreset().getParameter(paramId).SetNormalisedValue(value / 127.0f);
+		presetController->getCurrentPreset().getParameter(paramId).setNormalisedValue(value / 127.0f);
 		return; // MIDI CCs mapped by the user take precedence over default behaviour
 	}
 
@@ -182,10 +175,10 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 		case MIDI_CC_BANK_SELECT_LSB:
 			break;
 		case MIDI_CC_PAN_MSB: {
-			// http://www.midi.org/techspecs/rp36.php
+			// https://web.archive.org/web/20160115024014/http://www.midi.org/techspecs/rp36.php
 			// the effective range for CC#10 is modified to be 1 to 127, and values 0 and 1 both pan hard left
 			float scaled = (value < 1 ? 0 : value - 1) / 126.f;
-			_handler->HandleMidiPan(cosf(M_PI_2 * scaled), sinf(M_PI_2 * scaled));
+			_handler->HandleMidiPan(cosf(m::halfPi * scaled), sinf(m::halfPi * scaled));
 		}
 			break;
 		case MIDI_CC_SUSTAIN_PEDAL:
@@ -211,7 +204,7 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 				_handler->HandleMidiAllSoundOff();
 			break;
 		case MIDI_CC_RESET_ALL_CONTROLLERS:
-			// http://www.midi.org/techspecs/rp15.php
+			// https://web.archive.org/web/20160105110518/http://www.midi.org/techspecs/rp15.php
 			_handler->HandleMidiPitchWheel(0);
 			break;
 		case MIDI_CC_LOCAL_CONTROL:
@@ -315,24 +308,18 @@ MidiController::setControllerForParameter(Param paramId, int cc)
 }
 
 void
-MidiController::set_midi_channel	( int ch )
-{
-	Configuration & config = Configuration::get();
-	if (ch)	_handler->HandleMidiAllSoundOff();
-	config.midi_channel = ch;
-}
-
-void
 MidiController::generateMidiOutput(std::vector<amsynth_midi_cc_t> &output)
 {
+	unsigned char outputChannel = std::max(0, Configuration::get().midi_channel - 1);
+	
 	for (int paramId = 0; paramId < kAmsynthParameterCount; paramId++) {
 		int cc = _param_to_cc_map[paramId];
 		if (0 <= cc && cc < MAX_CC) {
 			Parameter &parameter = presetController->getCurrentPreset().getParameter(paramId);
-			unsigned char value = (unsigned char) roundf(parameter.GetNormalisedValue() * 127.0f);
+			unsigned char value = (unsigned char) roundf(parameter.getNormalisedValue() * 127.0f);
 			if (_midi_cc_vals[cc] != value) {
 				_midi_cc_vals[cc] = value;
-				amsynth_midi_cc_t out = { channel, (unsigned char)cc, value };
+				amsynth_midi_cc_t out = { outputChannel, (unsigned char)cc, value };
 				output.push_back(out);
 			}
 		}

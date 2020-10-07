@@ -1,7 +1,7 @@
 /*
  *  MainMenu.cpp
  *
- *  Copyright(c) 2001-2019 Nick Dowell
+ *  Copyright(c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -132,7 +132,7 @@ struct FileMenu
 		gtk_menu_set_accel_group(GTK_MENU(menu), accelGroup);
 
 #if defined(__linux)
-		add_menu_item(menu, accelGroup, SHIFT CTRL "N", _("New Instance"), G_CALLBACK(FileMenu::newInstance), NULL);
+		add_menu_item(menu, accelGroup, SHIFT CTRL "N", _("New Instance"), G_CALLBACK(FileMenu::newInstance), nullptr);
 		add_separator(menu);
 #endif
 
@@ -160,7 +160,7 @@ struct FileMenu
 	static void openBank(GtkWidget *widget, Synthesizer *synthesizer)
 	{
 		Configuration & config = Configuration::get();
-		std::string filename = file_dialog(NULL, _("Open Bank"), false, NULL, NULL, NULL);
+		std::string filename = file_dialog(nullptr, _("Open Bank"), false, nullptr, nullptr, nullptr);
 		if (!filename.empty()) {
 			synthesizer->getPresetController()->savePresets(config.current_bank_file.c_str());
 			config.current_bank_file = filename;
@@ -171,7 +171,7 @@ struct FileMenu
 	static void saveBankAs(GtkWidget *widget, Synthesizer *synthesizer)
 	{
 		GtkWidget *chooser = gtk_file_chooser_dialog_new(
-				_("Save Bank"), NULL,
+				_("Save Bank"), nullptr,
 				GTK_FILE_CHOOSER_ACTION_SAVE,
 				GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 				GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
@@ -195,7 +195,7 @@ struct FileMenu
 
 	static void openScaleFile(GtkWidget *widget, Synthesizer *synthesizer)
 	{
-		std::string filename = file_dialog(NULL, _("Open Scala (.scl) alternate tuning file"), false, _("Scala scale files"), "*.[Ss][Cc][Ll]", NULL);
+		std::string filename = file_dialog(nullptr, _("Open Scala (.scl) alternate tuning file"), false, _("Scala scale files"), "*.[Ss][Cc][Ll]", nullptr);
 		if (!filename.empty()) {
 			int error = synthesizer->loadTuningScale(filename.c_str());
 			if (error) {
@@ -208,7 +208,7 @@ struct FileMenu
 
 	static void openKeyboardMap(GtkWidget *widget, Synthesizer *synthesizer)
 	{
-		std::string filename = file_dialog(NULL, _("Open alternate keyboard map (Scala .kbm format)"), false, _("Scala keyboard map files"), "*.[Kk][Bb][Mm]", NULL);
+		std::string filename = file_dialog(nullptr, _("Open alternate keyboard map (Scala .kbm format)"), false, _("Scala keyboard map files"), "*.[Kk][Bb][Mm]", nullptr);
 		if (!filename.empty()) {
 			int error = synthesizer->loadTuningKeymap(filename.c_str());
 			if (error) {
@@ -222,7 +222,7 @@ struct FileMenu
 	static void resetTuning(GtkWidget *widget, Synthesizer *synthesizer)
 	{
 		GtkWidget *dialog = gtk_message_dialog_new(
-				NULL,
+				nullptr,
 				GTK_DIALOG_MODAL,
 				GTK_MESSAGE_QUESTION,
 				GTK_BUTTONS_YES_NO,
@@ -234,8 +234,8 @@ struct FileMenu
 
 		gint result = gtk_dialog_run(GTK_DIALOG(dialog));
 		if (result == GTK_RESPONSE_YES) {
-			synthesizer->loadTuningKeymap(NULL);
-			synthesizer->loadTuningScale(NULL);
+			synthesizer->loadTuningKeymap(nullptr);
+			synthesizer->loadTuningScale(nullptr);
 		}
 
 		gtk_widget_destroy(dialog);
@@ -315,7 +315,7 @@ struct PresetMenu
 	static void rename(GtkWidget *widget, Synthesizer *synthesizer)
 	{
 		GtkWidget *dialog = gtk_dialog_new_with_buttons(
-				_("Rename Preset"), NULL, GTK_DIALOG_MODAL,
+				_("Rename Preset"), nullptr, GTK_DIALOG_MODAL,
 				GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 				GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 				NULL);
@@ -345,7 +345,7 @@ struct PresetMenu
 	static void clear(GtkWidget *widget, Synthesizer *synthesizer)
 	{
 		GtkWidget *dialog = gtk_message_dialog_new(
-				NULL,
+				nullptr,
 				GTK_DIALOG_MODAL,
 				GTK_MESSAGE_QUESTION,
 				GTK_BUTTONS_YES_NO,
@@ -380,7 +380,7 @@ struct PresetMenu
 
 	static void importPreset(GtkWidget *widget, Synthesizer *synthesizer)
 	{
-		std::string filename = file_dialog(NULL, _("Import Preset"), false, _("amsynth 1.x files"), "*.amSynthPreset", NULL);
+		std::string filename = file_dialog(nullptr, _("Import Preset"), false, _("amsynth 1.x files"), "*.amSynthPreset", nullptr);
 		if (!filename.empty()) {
 			synthesizer->getPresetController()->importPreset(filename);
 		}
@@ -389,7 +389,7 @@ struct PresetMenu
 	static void exportPreset(GtkWidget *widget, Synthesizer *synthesizer)
 	{
 		std::string filename = synthesizer->getPresetController()->getCurrentPreset().getName() + ".amSynthPreset";
-		filename = file_dialog(NULL, _("Export Preset"), true, NULL, NULL, filename.c_str());
+		filename = file_dialog(nullptr, _("Export Preset"), true, nullptr, nullptr, filename.c_str());
 		if (!filename.empty()) {
 			synthesizer->getPresetController()->exportPreset(filename);
 		}
@@ -406,9 +406,9 @@ struct ConfigMenu
 
 		GtkWidget *channelMenu = gtk_menu_new();
 		{
-			const int currentValue = synthesizer->getMidiController()->get_midi_channel();
+			const int currentValue = synthesizer->getMidiChannel();
 
-			GSList *group = NULL;
+			GSList *group = nullptr;
 			for (int i = 0; i <= 16; i++) {
 				std::ostringstream name; i ? name << i : name << _("All");
 				GtkWidget *item = gtk_radio_menu_item_new_with_label(group, name.str().c_str());
@@ -418,7 +418,7 @@ struct ConfigMenu
 				gtk_menu_shell_append(GTK_MENU_SHELL(channelMenu), item);
 			}
 		}
-		add_menu_item(menu, NULL, ACCEL_NONE, _("MIDI Channel"), channelMenu);
+		add_menu_item(menu, nullptr, ACCEL_NONE, _("MIDI Channel"), channelMenu);
 
 		//
 
@@ -426,7 +426,7 @@ struct ConfigMenu
 		{
 			const int currentValue = synthesizer->getMaxNumVoices();
 
-			GSList *group = NULL;
+			GSList *group = nullptr;
 			for (int i = 0; i <= 16; i++) {
 				std::ostringstream name; i ? name << i : name << _("Unlimited");
 				GtkWidget *item = gtk_radio_menu_item_new_with_label(group, name.str().c_str());
@@ -436,7 +436,7 @@ struct ConfigMenu
 				gtk_menu_shell_append(GTK_MENU_SHELL(polyphonyMenu), item);
 			}
 		}
-		add_menu_item(menu, NULL, ACCEL_NONE, _("Max. Polyphony"), polyphonyMenu);
+		add_menu_item(menu, nullptr, ACCEL_NONE, _("Max. Polyphony"), polyphonyMenu);
 
 		//
 
@@ -444,7 +444,7 @@ struct ConfigMenu
 		{
 			const int currentValue = Configuration::get().pitch_bend_range;
 
-			GSList *group = NULL;
+			GSList *group = nullptr;
 			for (int i = 1; i <= 24; i++) {
 				std::ostringstream name; name << i; name << _(" Semitones");
 				GtkWidget *item = gtk_radio_menu_item_new_with_label(group, name.str().c_str());
@@ -454,29 +454,35 @@ struct ConfigMenu
 				gtk_menu_shell_append(GTK_MENU_SHELL(pitchBendRange), item);
 			}
 		}
-		add_menu_item(menu, NULL, ACCEL_NONE, _("Pitch Bend Range"), pitchBendRange);
+		add_menu_item(menu, nullptr, ACCEL_NONE, _("Pitch Bend Range"), pitchBendRange);
 
-		add_menu_item(menu, NULL, ACCEL_NONE, _("Audio & MIDI..."), G_CALLBACK(ConfigMenu::showConfigDialog), NULL);
+		add_menu_item(menu, nullptr, ACCEL_NONE, _("Audio & MIDI..."), G_CALLBACK(ConfigMenu::showConfigDialog), nullptr);
 
 		return menu;
 	}
 
 	static void midiChannelChange(GtkWidget *widget, Synthesizer *synthesizer)
 	{
+		if (!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget))) {
+			return;
+		}
 		GtkWidget *menu = gtk_widget_get_parent(widget);
 		GList *list = gtk_container_get_children(GTK_CONTAINER(menu));
 		int index = g_list_index(list, widget);
 		g_list_free(list);
 
 		int newValue = index;
-		int currentValue = synthesizer->getMidiController()->get_midi_channel();
+		int currentValue = synthesizer->getMidiChannel();
 		if (currentValue != newValue) {
-			synthesizer->getMidiController()->set_midi_channel(newValue);
+			synthesizer->setMidiChannel(newValue);
 		}
 	}
 
 	static void polyphonyChange(GtkWidget *widget, Synthesizer *synthesizer)
 	{
+		if (!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget))) {
+			return;
+		}
 		GtkWidget *menu = gtk_widget_get_parent(widget);
 		GList *list = gtk_container_get_children(GTK_CONTAINER(menu));
 		int index = g_list_index(list, widget);
@@ -492,6 +498,9 @@ struct ConfigMenu
 
 	static void pitchBendRangeChange(GtkWidget *widget, Synthesizer *synthesizer)
 	{
+		if (!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget))) {
+			return;
+		}
 		GtkWidget *menu = gtk_widget_get_parent(widget);
 		GList *list = gtk_container_get_children(GTK_CONTAINER(menu));
 		int index = g_list_index(list, widget);
@@ -507,7 +516,7 @@ struct ConfigMenu
 
 	static void showConfigDialog(GtkWidget *widget, gpointer data)
 	{
-		config_dialog_run(NULL);
+		config_dialog_run(nullptr);
 	}
 };
 
@@ -526,14 +535,14 @@ struct UtilsMenu
 			// @translators: This is an application name and its abbreviation
 			add_item(keyboards, _("Virtual Keyboard (vkeybd)"),
 					 alsaMIDI && commandExists("vkeybd"),
-					 G_CALLBACK(UtilsMenu::vkeybd), NULL);
+					 G_CALLBACK(UtilsMenu::vkeybd), nullptr);
 
 			// @translators: This is an application name and its abbreviation
 			add_item(keyboards, _("Virtual MIDI Piano Keyboard (VMPK)"),
 					 commandExists("vmpk"),
 					 G_CALLBACK(UtilsMenu::runCommand), (gpointer) "vmpk");
 		}
-		add_menu_item(menu, NULL, ACCEL_NONE, _("Virtual Keyboards"), keyboards);
+		add_menu_item(menu, nullptr, ACCEL_NONE, _("Virtual Keyboards"), keyboards);
 
 		//
 
@@ -551,7 +560,7 @@ struct UtilsMenu
 					 alsaMIDI && commandExists("patchage"),
 					 G_CALLBACK(UtilsMenu::runCommand), (gpointer) "patchage --no-jack");
 		}
-		add_menu_item(menu, NULL, ACCEL_NONE, _("MIDI (ALSA) connections"), alsaMenu);
+		add_menu_item(menu, nullptr, ACCEL_NONE, _("MIDI (ALSA) connections"), alsaMenu);
 
 		//
 
@@ -571,14 +580,14 @@ struct UtilsMenu
 					 jackAudio && commandExists("patchage"),
 					 G_CALLBACK(UtilsMenu::runCommand), (gpointer) "patchage --no-alsa");
 		}
-		add_menu_item(menu, NULL, ACCEL_NONE, _("Audio (JACK) connections"), jackMenu);
+		add_menu_item(menu, nullptr, ACCEL_NONE, _("Audio (JACK) connections"), jackMenu);
 
 		return menu;
 	}
 
 	static void add_item(GtkWidget *menu, const gchar *label, bool enable, GCallback callback, gpointer callbackData)
 	{
-		GtkWidget *item = add_menu_item(menu, NULL, ACCEL_NONE, label, callback, callbackData);
+		GtkWidget *item = add_menu_item(menu, nullptr, ACCEL_NONE, label, callback, callbackData);
 		gtk_widget_set_sensitive(item, enable);
 	}
 
@@ -598,11 +607,11 @@ struct UtilsMenu
 
 	static bool commandExists(const char *command)
 	{
-		gchar *argv[] = { (gchar *)"/usr/bin/which", (gchar *)command, NULL };
+		gchar *argv[] = { (gchar *)"/usr/bin/which", (gchar *)command, nullptr };
 		gint exit_status = 0;
-		if (g_spawn_sync(NULL, argv, NULL,
+		if (g_spawn_sync(nullptr, argv, nullptr,
 						 (GSpawnFlags)(G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL),
-						 NULL, NULL, NULL, NULL, &exit_status, NULL))
+						 nullptr, nullptr, nullptr, nullptr, &exit_status, nullptr))
 			return exit_status == 0;
 		return false;
 	}
@@ -642,7 +651,7 @@ struct HelpMenu
 				"Martin Tarenskeen",
 				"Adrian Knoth",
 				"Samuli Suominen",
-				NULL
+				nullptr
 		};
 		std::string version = VERSION;
 		gtk_show_about_dialog(
@@ -654,14 +663,14 @@ struct HelpMenu
 				"translator-credits", "Olivier Humbert - French\nGeorg Krause - German\nPeter Körner - German",
 				"comments", _("Analog Modelling SYNTHesizer"),
 				"website", PACKAGE_URL,
-				"copyright", _("Copyright © 2002 - 2017 Nick Dowell and contributors"),
+				"copyright", _("Copyright © 2002 - 2020 Nick Dowell and contributors"),
 				NULL);
 	}
 
 	static void openUri(GtkWidget *widget, const char *uri)
 	{
-		GError *error = NULL;
-		if (!g_app_info_launch_default_for_uri(uri, NULL, &error)) {
+		GError *error = nullptr;
+		if (!g_app_info_launch_default_for_uri(uri, nullptr, &error)) {
 			ShowModalErrorMessage(_("Could not show link"));
 		}
 	}

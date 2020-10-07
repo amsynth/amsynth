@@ -1,7 +1,7 @@
 /*
  *  JackOutput.cpp
  *
- *  Copyright (c) 2001-2016 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -47,20 +47,6 @@ static void session_callback(jack_session_event_t *event, void *arg);
 #endif
 
 
-bool JackOutput::autoconnect = true;
-
-JackOutput::JackOutput()
-:	error_msg("")
-#ifdef WITH_JACK
-,	l_port(NULL)
-,	r_port(NULL)
-,	m_port(NULL)
-,	m_port_out(NULL)
-,	client(NULL)
-#endif
-{
-}
-
 int
 JackOutput::init()
 {
@@ -70,7 +56,7 @@ JackOutput::init()
 	if (client) // already initialised
 		return 0;
 
-	l_port = r_port = m_port = 0;
+	l_port = r_port = m_port = nullptr;
 
 	jack_status_t status = (jack_status_t)0;
 
@@ -111,12 +97,6 @@ JackOutput::init()
 	config.sample_rate = jack_get_sample_rate(client);
 	config.buffer_size = jack_get_buffer_size(client);
 	config.jack_client_name = std::string(jack_get_client_name(client));
-
-	// don't auto connect ports if under jack session control...
-	// the jack session manager is responsible for restoring port connections
-    if (!config.jack_session_uuid.empty()) {
-        autoconnect = false;
-    }
 
 	return 0;
 #endif
@@ -162,7 +142,9 @@ JackOutput::process (jack_nframes_t nframes, void *arg)
 		jack_midi_clear_buffer(port_buffer);
 		std::vector<amsynth_midi_cc_t>::const_iterator out_it;
 		for (out_it = midi_out.begin(); out_it != midi_out.end(); ++out_it) {
-			jack_midi_data_t data[] = { MIDI_STATUS_CONTROLLER, out_it->cc, out_it->value};
+			jack_midi_data_t data[] = {
+				(unsigned char) (MIDI_STATUS_CONTROLLER | (out_it->channel & 0x0f)),
+				out_it->cc, out_it->value };
 			jack_midi_event_write(port_buffer, 0, data, 3);
 		}
 	}
@@ -181,15 +163,15 @@ JackOutput::Start	()
 		std::cerr << "cannot activate JACK client\n";
 		return false;
 	}
-	if (autoconnect) {
-		const char **port_names = jack_get_ports(client, NULL, JACK_DEFAULT_AUDIO_TYPE, JackPortIsPhysical | JackPortIsInput);
+	if (Configuration::get().jack_autoconnect) {
+		const char **port_names = jack_get_ports(client, nullptr, JACK_DEFAULT_AUDIO_TYPE, JackPortIsPhysical | JackPortIsInput);
 		if (port_names) {
 			jack_connect(client, jack_port_name(l_port), port_names[0]);
 			jack_connect(client, jack_port_name(r_port), port_names[1]);
 			jack_free(port_names);
 		}
 
-		port_names = jack_get_ports(client, NULL, JACK_DEFAULT_MIDI_TYPE, JackPortIsPhysical | JackPortIsOutput);
+		port_names = jack_get_ports(client, nullptr, JACK_DEFAULT_MIDI_TYPE, JackPortIsPhysical | JackPortIsOutput);
 		if (port_names) {
 			for (int i = 0; port_names[i]; i++) { const char *port = port_names[i];
 				jack_connect(client, port, jack_port_name(m_port));
@@ -210,7 +192,7 @@ JackOutput::Stop()
 	if (!client) return;
 	jack_deactivate(client);
 	jack_client_close(client);
-	client = 0;
+	client = nullptr;
 #endif
 }
 

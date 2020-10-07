@@ -35,9 +35,9 @@
 
 Synthesizer::Synthesizer()
 : _sampleRate(-1)
-, _midiController(0)
-, _presetController(0)
-, _voiceAllocationUnit(0)
+, _midiController(nullptr)
+, _presetController(nullptr)
+, _voiceAllocationUnit(nullptr)
 {
 	Configuration &config = Configuration::get();
 
@@ -139,7 +139,7 @@ float Synthesizer::getParameterValue(Param parameter)
 
 float Synthesizer::getNormalizedParameterValue(Param parameter)
 {
-	return _presetController->getCurrentPreset().getParameter(parameter).GetNormalisedValue();
+	return _presetController->getCurrentPreset().getParameter(parameter).getNormalisedValue();
 }
 
 void Synthesizer::setParameterValue(Param parameter, float value)
@@ -149,7 +149,7 @@ void Synthesizer::setParameterValue(Param parameter, float value)
 
 void Synthesizer::setNormalizedParameterValue(Param parameter, float value)
 {
-	_presetController->getCurrentPreset().getParameter(parameter).SetNormalisedValue(value);
+	_presetController->getCurrentPreset().getParameter(parameter).setNormalisedValue(value);
 }
 
 void Synthesizer::getParameterName(Param parameter, char *buffer, size_t maxLen)
@@ -164,7 +164,7 @@ void Synthesizer::getParameterLabel(Param parameter, char *buffer, size_t maxLen
 
 void Synthesizer::getParameterDisplay(Param parameter, char *buffer, size_t maxLen)
 {
-	strncpy(buffer, _presetController->getCurrentPreset().getParameter(parameter).GetStringValue().c_str(), maxLen);
+	strncpy(buffer, _presetController->getCurrentPreset().getParameter(parameter).getStringValue().c_str(), maxLen);
 }
 
 void Synthesizer::setPitchBendRangeSemitones(int value)
@@ -180,6 +180,21 @@ int Synthesizer::getMaxNumVoices()
 void Synthesizer::setMaxNumVoices(int value)
 {
 	_voiceAllocationUnit->SetMaxVoices(value);
+}
+
+unsigned char Synthesizer::getMidiChannel()
+{
+	return Configuration::get().midi_channel;
+}
+
+void Synthesizer::setMidiChannel(unsigned char channel)
+{
+	Configuration::get().midi_channel = channel;
+	if (channel != kMidiChannel_Any) {
+		// A reset is required when switching to a new channel since we will
+		// not receive the note off events for currently held notes.
+		needsResetAllVoices_ = true;
+	}
 }
 
 int Synthesizer::loadTuningKeymap(const char *filename)
@@ -212,8 +227,12 @@ void Synthesizer::process(unsigned int nframes,
 						  float *audio_l, float *audio_r, unsigned audio_stride)
 {
 	if (_sampleRate < 0) {
-		assert(0 == "sample rate has not been set");
+		assert(nullptr == "sample rate has not been set");
 		return;
+	}
+	if (needsResetAllVoices_) {
+		needsResetAllVoices_ = false;
+		_voiceAllocationUnit->resetAllVoices();
 	}
 	std::vector<amsynth_midi_event_t>::const_iterator event = midi_in.begin();
 	unsigned frames_left_in_buffer = nframes, frame_index = 0;

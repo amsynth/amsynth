@@ -1,7 +1,7 @@
 /*
  *  JackOutput.h
  *
- *  Copyright (c) 2001-2016 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -26,34 +26,35 @@
 #include "config.h"
 #endif
 
+#include "AudioOutput.h"
+
+#include <string>
+
 #ifdef WITH_JACK
 #include <jack/jack.h>
 #endif
-
-#include "AudioOutput.h"
 
 class JackOutput : public GenericOutput {
 
 public:
 
-	JackOutput();
+	int			init		() override; // returns 0 on success
+	bool		Start		() override;
+	void		Stop		() override;
 	
-	int			init		(); // returns 0 on success
-	bool		Start		();
-	void		Stop		();
-	
-	string		get_error_msg	( )		{ return error_msg; };
-	
-    static bool autoconnect;
+	std::string	get_error_msg	( )		{ return error_msg; };
 
 #ifdef WITH_JACK
 	static int process(jack_nframes_t nframes, void *arg);
 #endif
 private:
-	string	error_msg;
+	std::string		error_msg;
 #ifdef WITH_JACK
-	jack_port_t 	*l_port, *r_port, *m_port, *m_port_out;
-	jack_client_t 	*client;
+	jack_port_t 	*l_port = nullptr;
+	jack_port_t 	*r_port = nullptr;
+	jack_port_t 	*m_port = nullptr;
+	jack_port_t 	*m_port_out = nullptr;
+	jack_client_t 	*client = nullptr;
 #endif
 };
 

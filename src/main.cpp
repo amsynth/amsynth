@@ -1,7 +1,7 @@
 /*
  *  main.cpp
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -57,6 +57,7 @@
 #include <unistd.h>
 #include <string>
 #include <climits>
+#include <csignal>
 #include <cstring>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -168,7 +169,7 @@ static MidiDriver *opened_midi_driver(MidiDriver *driver)
 {
 	if (driver && driver->open() != 0) {
 		delete driver;
-		return NULL;
+		return nullptr;
 	}
 	return driver;
 }
@@ -221,7 +222,7 @@ static void signal_handler(int signal)
 
 int main( int argc, char *argv[] )
 {
-	srand((unsigned) time(NULL));
+	srand((unsigned) time(nullptr));
 
 #ifdef ENABLE_REALTIME
 	sched_realtime();
@@ -246,11 +247,13 @@ int main( int argc, char *argv[] )
 	// needs to be called before our own command line parsing code
 	amsynth_lash_process_args(&argc, &argv);
 	
-	bool no_gui = (getenv("AMSYNTH_NO_GUI") != NULL);
+	bool no_gui = (getenv("AMSYNTH_NO_GUI") != nullptr);
+	int gui_scale_factor = 0;
 
 	static struct option longopts[] = {
-		{ "jack_autoconnect", optional_argument, NULL, 0 },
-		{ 0 }
+		{ "jack_autoconnect", optional_argument, nullptr, 0 },
+		{ "force-device-scale-factor", required_argument, nullptr, 0 },
+		{ nullptr }
 	};
 	
 	int opt, longindex = -1;
@@ -282,6 +285,9 @@ int main( int argc, char *argv[] )
 				     << _("	-n <name>   specify the JACK client name to use") << endl
 				     << _("	--jack_autoconnect[=<true|false>]") << endl
 				     << _("	            automatically connect jack audio ports to hardware I/O ports. (Default: true)") << endl
+					 << endl
+					 << _("	--force-device-scale-factor <scale>") << endl
+					 << _("	            override the default scaling factor for the control panel") << endl
 				     << endl;
 
 				return 0;
@@ -317,13 +323,19 @@ int main( int argc, char *argv[] )
 				break;
 			case 'U':
 				config.jack_session_uuid = optarg;
+				// don't auto connect ports if under jack session control...
+				// the jack session manager is responsible for restoring port connections
+				config.jack_autoconnect = false;
 				break;
 			case 'n':
 				config.jack_client_name_preference = optarg;
 				break;
 			case 0:
 				if (strcmp(longopts[longindex].name, "jack_autoconnect") == 0) {
-					JackOutput::autoconnect = !optarg || (strcmp(optarg, "true") == 0);
+					config.jack_autoconnect = !optarg || (strcmp(optarg, "true") == 0);
+				}
+				if (strcmp(longopts[longindex].name, "force-device-scale-factor") == 0) {
+					gui_scale_factor = atoi(optarg);
 				}
 				break;
 			default:
@@ -390,7 +402,7 @@ int main( int argc, char *argv[] )
 
 #ifdef WITH_GUI
 	if (!no_gui) {
-		main_window_show(s_synthesizer, out);
+		main_window_show(s_synthesizer, out, gui_scale_factor);
 		gui_kit_run(&amsynth_timer_callback);
 	} else {
 #endif

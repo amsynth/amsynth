@@ -1,6 +1,6 @@
 % AMSYNTH(1) amsynth VERSION | Dienstprogramme für Benutzer
 %
-% Januar 2017
+% Oktober 2020
 
 NAME
 ====
@@ -70,20 +70,18 @@ Die folgenden Optionen setzen diejenigen aus der Konfigurationsdatei (\$HOME/.am
 
 :   legt die automatische Verbindung von JACK-Audio-Ports mit Hardware-I/O-Ports fest. (Standard: true)
 
+`--force-device-scale-factor` \<scale\>
+
 DATEIEN
 =======
 
-`$HOME/.amSynthrc`
+`$XDG_CONFIG_HOME/amsynth/config`
 
 :   amsynth-Konfiguration.
 
-`$HOME/.amsynth/*`
+`$XDG_DATA_HOME/amsynth/banks/*`
 
-:   Banks und Weiteres.
-
-`$HOME/.amSynth.presets`
-
-:   Presets.
+:   Banks und Presets.
 
 UMGEBUNG
 ========
@@ -95,6 +93,8 @@ UMGEBUNG
 `AMSYNTH_SKIN`
 
 :   Gibt das Verzeichnis an, aus dem amsynth seinen Skin laden soll.
+
+`GDK_SCALE`
 
 BUGS & FEATURE REQUESTS
 =======================

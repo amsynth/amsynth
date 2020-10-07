@@ -36,7 +36,7 @@ public:
 
 	void run_modal(Param param_idx);
 
-	virtual void update();
+	void update() override;
 
 	static gboolean last_active_controller_changed(gpointer);
 

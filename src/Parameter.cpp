@@ -1,7 +1,7 @@
 /*
  *  Parameter.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -21,20 +21,24 @@
 
 #include "Parameter.h"
 
+#include "VoiceBoard/Synth--.h"
+
 #include <algorithm>
 #include <cassert>
+#include <cmath>
+#include <sstream>
 
-Parameter::Parameter	(std::string name, Param id, float value, float min, float max, float inc, ControlType type, float base, float offset, std::string label)
-:	mParamId	(id)
+Parameter::Parameter(const std::string &name, Param id, float value, float min, float max, float inc, Law law, float base, float offset, const std::string &label)
+:	_paramId	(id)
 ,	_name		(name)
 ,	_label		(label)
-,	_controlMode	(type)
+,	_law		(law)
 ,	_default	(value)
-,	_value		(NAN)
+,	_value		(m::nan)
 ,	_min		(min)
 ,	_max		(max)
 ,	_step		(inc)
-,	_controlValue(NAN)
+,	_controlValue(m::nan)
 ,	_base		(base)
 ,	_offset		(offset)
 {
@@ -43,18 +47,16 @@ Parameter::Parameter	(std::string name, Param id, float value, float min, float 
 }
 
 void
-Parameter::addUpdateListener	(UpdateListener& ul)
+Parameter::addUpdateListener(UpdateListener *listener)
 {
-	for (unsigned i=0; i<_updateListeners.size(); i++) if (_updateListeners[i] == &ul) return;
-	_updateListeners.push_back (&ul);
-	_updateListeners.back()->UpdateParameter (mParamId, _controlValue);
+	_listeners.insert(listener);
+	listener->UpdateParameter(_paramId, _controlValue);
 }
 
 void
-Parameter::removeUpdateListener( UpdateListener & ul )
+Parameter::removeUpdateListener(UpdateListener *listener)
 {
-	for (unsigned i=0; i<_updateListeners.size(); i++)
-		if (_updateListeners[i] == &ul) _updateListeners.erase(_updateListeners.begin()+i);
+	_listeners.erase(listener);
 }
 
 void
@@ -72,25 +74,46 @@ Parameter::setValue(float value)
 
 	_value = newValue;
 
-	switch (_controlMode) {
-		case PARAM_DIRECT:
+	switch (_law) {
+		case Law::kLinear:
 			_controlValue = _offset + _base * _value;
 			break;
-		case PARAM_EXP:
+		case Law::kExponential:
 			_controlValue = _offset + ::pow( (float)_base, _value );
 			break;
-		case PARAM_POWER:
+		case Law::kPower:
 			_controlValue = _offset + ::pow( _value, (float)_base );
 			break;
 	}
 
-	for (unsigned i=0; i<_updateListeners.size(); i++) {
-		_updateListeners[i]->UpdateParameter (mParamId, _controlValue);
+	for (auto &listener : _listeners) {
+		listener->UpdateParameter(_paramId, _controlValue);
 	}
 }
 
+float
+Parameter::valueFromString(const std::string &str)
+{
+	// atof() and friends are affected by currently configured locale,
+	// which can change the decimal point character.
+	std::istringstream istr(str);
+	static std::locale locale = std::locale("C");
+	istr.imbue(locale);
+	float value = m::nan;
+	istr >> value;
+	return value;
+}
+
+const std::string
+Parameter::getStringValue() const
+{
+	std::ostringstream stream;
+	stream << _controlValue;
+	return stream.str();
+}
+
 void
-Parameter::random_val()
+Parameter::randomise()
 {
 	setValue( ((rand()/(float)RAND_MAX) * (getMax()-getMin()) + getMin()) );
 }

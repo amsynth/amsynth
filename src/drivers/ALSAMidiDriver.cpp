@@ -37,11 +37,11 @@ class ALSAMidiDriver : public MidiDriver
 {
 public:
 	ALSAMidiDriver(const char *client_name);
-	virtual ~ALSAMidiDriver		( );
-    virtual int read(unsigned char *buffer, unsigned maxBytes);
-    virtual int write_cc(unsigned int channel, unsigned int param, unsigned int value);
-    virtual int open();
-    virtual int close();
+	~ALSAMidiDriver( ) override;
+    int read(unsigned char *buffer, unsigned maxBytes) override;
+    int write_cc(unsigned int channel, unsigned int param, unsigned int value) override;
+    int open() override;
+    int close() override;
 private:
 	const char		*client_name;
 	snd_seq_t		*seq_handle;
@@ -54,12 +54,12 @@ private:
 int
 ALSAMidiDriver::read(unsigned char *buffer, unsigned maxBytes)
 {
-	if (seq_handle == NULL) {
+	if (seq_handle == nullptr) {
 		return 0;
 	}
 	unsigned char *ptr = buffer;
 	while (1) {
-		snd_seq_event_t *ev = NULL;
+		snd_seq_event_t *ev = nullptr;
 		int res = snd_seq_event_input(seq_handle, &ev);
 		if (res < 0)
 			break;
@@ -73,7 +73,7 @@ ALSAMidiDriver::read(unsigned char *buffer, unsigned maxBytes)
 int
 ALSAMidiDriver::write_cc(unsigned int channel, unsigned int param, unsigned int value)
 {
-	if (seq_handle == NULL) {
+	if (seq_handle == nullptr) {
 		return 0;
 	}
       int ret=0;
@@ -101,7 +101,7 @@ ALSAMidiDriver::write_cc(unsigned int channel, unsigned int param, unsigned int 
 int ALSAMidiDriver::close()
 {
 	if (seq_handle) snd_seq_close (seq_handle);
-	seq_handle = NULL;
+	seq_handle = nullptr;
 	return 0;
 }
 
@@ -116,7 +116,7 @@ int ALSAMidiDriver::open()
 		return -1;
 	}
 
-	if (seq_handle == NULL) {
+	if (seq_handle == nullptr) {
 		cerr << "error: snd_seq_open() claimed to succeed but seq_handle is NULL.\n";
 		return -1;
 	}
@@ -154,7 +154,7 @@ int ALSAMidiDriver::open()
 ALSAMidiDriver::ALSAMidiDriver(const char *client_name)
 :	client_name(client_name)
 {
-	seq_handle = NULL;
+	seq_handle = nullptr;
 	memset( &pollfd_in, 0, sizeof(pollfd_in) );
 	if( snd_midi_event_new( 32, &seq_midi_parser ) )
 		cout << "Error creating MIDI event parser\n";

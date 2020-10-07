@@ -1,6 +1,6 @@
 % AMSYNTH(1) amsynth VERSION | Commandes utilisateur
 %
-% Janvier 2017
+% Octobre 2020
 
 NOM
 ===
@@ -70,20 +70,18 @@ Les options suivantes écrasent celles du fichier de configuration (\$HOME/.amSy
 
 :   connecter automatiquement les ports audio JACK aux ports d'entrée/sortie matériels. (défaut : true)
 
+`--force-device-scale-factor` \<scale\>
+
 FICHIERS
 ========
 
-`$HOME/.amSynthrc`
+`$XDG_CONFIG_HOME/amsynth/config`
 
 :   Configuration pour amsynth.
 
-`$HOME/.amsynth/*`
+`$XDG_DATA_HOME/amsynth/banks/*`
 
-:   Banques et autres.
-
-`$HOME/.amSynth.presets`
-
-:   Pré-réglages.
+:   Banques et Pré-réglages.
 
 ENVIRONNEMENT
 =============
@@ -95,6 +93,8 @@ ENVIRONNEMENT
 `AMSYNTH_SKIN`
 
 :   Spécifie le répertoire depuis lequel amsynth devrait charger son habillage.
+
+`GDK_SCALE`
 
 BOGUES & DEMANDE DE FONCTIONNALITÉS
 ===================================

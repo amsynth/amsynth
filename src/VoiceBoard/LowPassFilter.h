@@ -1,7 +1,7 @@
 /*
  *  LowPassFilter.h
  *
- *  Copyright (c) 2001-2014 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -26,33 +26,33 @@ class SynthFilter
 {
 public:
 
-	enum FilterType {
-		FilterTypeLowPass,
-		FilterTypeHighPass,
-		FilterTypeBandPass,
-		FilterTypeBandStop,
-		FilterTypeBypass,
-		FilterTypeCount
+	enum class Type {
+		kLowPass,
+		kHighPass,
+		kBandPass,
+		kBandStop,
+		kBypass
 	};
 
-	enum FilterSlope {
-		FilterSlope12,
-		FilterSlope24,
+	enum class Slope {
+		k12,
+		k24,
 	};
-
-	SynthFilter();
 
 	void SetSampleRate(int rateIn) { rate = (float)rateIn; nyquist = rate / 2.0f; }
 
 	void reset();
 
-	void ProcessSamples(float *, int, float cutoff, float res, FilterType type, FilterSlope slope);
+	void ProcessSamples(float *, int, float cutoff, float res, Type type, Slope slope);
 
 private:
 
-	float rate;
-	float nyquist;
-	double d1, d2, d3, d4;
+	float rate = 44100;
+	float nyquist = 22050.0;
+	double d1 = 0;
+	double d2 = 0;
+	double d3 = 0;
+	double d4 = 0;
 };
 
 #endif

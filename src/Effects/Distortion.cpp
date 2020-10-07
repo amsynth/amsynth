@@ -22,13 +22,6 @@
 #include "Distortion.h"
 #include <math.h>
 
-Distortion::Distortion()
-{
-    drive = 1;
-    crunch = 1 / 4;
-	done = 0;
-}
-
 void 
 Distortion::SetCrunch	(float value)
 {
@@ -39,14 +32,13 @@ void
 Distortion::Process	(float *buffer, unsigned nframes)
 {
 	float x, s;
-	if (crunch == 0) crunch = 0.01f;
-	
 	for (unsigned i=0; i<nframes; i++)
 	{
-		x = buffer[i]*drive;
+		x = buffer[i];
 		if(x<0) s=-1; else s=1;
 		x*=s;
-		x = pow (x, crunch);
+		float c = crunch.tick();
+		x = pow (x, c < 0.01f ? 0.01f : c);
 		buffer[i] = x*s;
 	}
 }

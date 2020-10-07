@@ -2,7 +2,6 @@
 #define __NsmClient__
 
 #include <string>
-#include "DebugMessage.h"
 
 typedef void * nsm_client_t ;
 typedef void (*HandlerOpenCallback) (void *HandlerThis, std::string Name, std::string DisplayName, std::string ClientId) ;
@@ -15,7 +14,6 @@ public:
     static int openCallback (const char* name, const char* displayName, const char* clientId, char** outMsg, void* userData) ;
     static int saveCallback (char** outMsg, void* userData) ;
     static void activeCallback (int isActive, void* userData) ;
-    static DebugMessage debugMessage ;
 
     NsmClient (std::string programName) ;
     ~NsmClient (void) ;

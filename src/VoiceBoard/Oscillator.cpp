@@ -1,7 +1,7 @@
 /*
  *  Oscillator.cpp
  *
- *  Copyright (c) 2001-2014 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -21,12 +21,11 @@
 
 #include "Oscillator.h"
 
-#include "Synth--.h"
-
+#include <algorithm>
 #include <cassert>
+#include <climits>
 #include <cmath>
 #include <cstdlib>
-#include <limits.h>
 
 #define ALIAS_REDUCTION
 
@@ -37,23 +36,11 @@ static inline float ffmodf(float x, float y) {
 #define DO_OSC_SYNC(__osc_rads__) \
 	if (mSyncEnabled) { \
 		mSyncRads = mSyncRads + twopi_rate * mSyncFrequency; \
-		if (mSyncRads >= TWO_PI) { \
-			mSyncRads -= TWO_PI; \
+		if (mSyncRads >= m::twoPi) { \
+			mSyncRads -= m::twoPi; \
 			__osc_rads__ = 0; \
 		} \
 	}
-
-Oscillator::Oscillator()
-:	rads (0.0)
-,	random (0)
-,	rate (44100)
-,	random_count (0)
-,	waveform (Waveform_Sine)
-,	mPolarity(1.0f)
-,	mSyncEnabled(false)
-,	mSyncRads(0)
-{
-}
 
 void Oscillator::SetWaveform	(Waveform w)			{ waveform = w; }
 void Oscillator::reset			()						{ rads = 0.0; }
@@ -62,7 +49,7 @@ void
 Oscillator::SetSampleRate(int rateIn)
 {
 	rate = rateIn;
-	twopi_rate = (float) TWO_PI / rate;
+	twopi_rate = m::twoPi / rate;
 }
 
 void
@@ -76,16 +63,16 @@ void
 Oscillator::ProcessSamples	(float *buffer, int nFrames, float freq_hz, float pw, float sync_freq)
 {
 	float maxFreq = rate / 2.f;
-	mFrequency.configure(mFrequency.getFinalValue(), MIN(freq_hz, maxFreq), nFrames);
+	mFrequency.configure(mFrequency.getFinalValue(), std::min(freq_hz, maxFreq), nFrames);
 	mPulseWidth = pw;
 	mSyncFrequency = sync_freq;
 	
 	switch (waveform) {
-	case Waveform_Sine:     doSine      (buffer, nFrames); break;
-	case Waveform_Pulse:    doSquare    (buffer, nFrames); break;
-	case Waveform_Saw:      doSaw       (buffer, nFrames); break;
-	case Waveform_Noise:    doNoise     (buffer, nFrames); break;
-	case Waveform_Random:   doRandom    (buffer, nFrames); break;
+	case Waveform::kSine:     doSine      (buffer, nFrames); break;
+	case Waveform::kPulse:    doSquare    (buffer, nFrames); break;
+	case Waveform::kSaw:      doSaw       (buffer, nFrames); break;
+	case Waveform::kNoise:    doNoise     (buffer, nFrames); break;
+	case Waveform::kRandom:   doRandom    (buffer, nFrames); break;
 	}
 }
 
@@ -96,7 +83,7 @@ Oscillator::doSine(float *buffer, int nFrames)
 		DO_OSC_SYNC(rads);
 		buffer[i] = sinf(rads += twopi_rate * mFrequency.nextValue());
 	}
-	rads = ffmodf((float)rads, (float)TWO_PI);			// overflows are bad!
+	rads = ffmodf(rads, m::twoPi);			// overflows are bad!
 }
 
 void 
@@ -104,7 +91,7 @@ Oscillator::doSquare(float *buffer, int nFrames)
 {
 	const float radsper = twopi_rate * mFrequency.getFinalValue();
 	const float pwscale = radsper < 0.3f ? 1.0f : 1.0f - ((radsper - 0.3f) / 2); assert(pwscale <= 1.0f); // reduces aliasing at high freq
-	const float pwrads = PI + pwscale * PI * MIN(mPulseWidth, 0.9f);
+	const float pwrads = m::pi + pwscale * m::pi * std::min(mPulseWidth, 0.9f);
 
 	float lrads = rads;
 
@@ -119,9 +106,9 @@ Oscillator::doSquare(float *buffer, int nFrames)
 		// aliasing is reduced by computing accurate values at crossing points (rather than always forcing -1.0 or 1.0.)
 		// cpu performance is surprisingly good on x86 (better than saw or sine wave), probably due to its sophisticated branch prediction.
 		//
-		if (nrads >= TWO_PI) // transition from -1 --> 1
+		if (nrads >= m::twoPi) // transition from -1 --> 1
 		{
-			nrads -= TWO_PI;
+			nrads -= m::twoPi;
 			float amt = nrads / radinc; assert(amt <= 1.001f);
 			y = (2.0f * amt) - 1.0f;
 		}
@@ -140,16 +127,16 @@ Oscillator::doSquare(float *buffer, int nFrames)
 		}
 
 		buffer[i] = y;
-		lrads = nrads; assert(lrads < TWO_PI);
+		lrads = nrads; assert(lrads < m::twoPi);
 	}
 	rads = lrads;
 }
 
 static inline float saw(float rads, float shape)
 {
-    rads = ffmodf((float)rads, (float)TWO_PI);
+    rads = ffmodf(rads, m::twoPi);
 
-    float t = rads / (float)TWO_PI;
+    float t = rads / m::twoPi;
     float a = (shape + 1.0f) / 2.0f;
 
     if (t < a / 2)
@@ -178,7 +165,7 @@ Oscillator::doSaw(float *buffer, int nFrames)
 		DO_OSC_SYNC(rads);
 		buffer[i] = saw(rads += (twopi_rate * mFrequency.nextValue()), mPulseWidth) * mPolarity;
 	}
-    rads = ffmodf((float)rads, (float)TWO_PI);
+    rads = ffmodf(rads, m::twoPi);
 
 #ifdef ALIAS_REDUCTION
 	mPulseWidth = requestedPW;

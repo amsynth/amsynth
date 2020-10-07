@@ -1,7 +1,7 @@
 /*
  *  amsynth_vst.cpp
  *
- *  Copyright (c) 2008-2019 Nick Dowell
+ *  Copyright (c) 2008-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -23,6 +23,7 @@
 #include "config.h"
 #endif
 
+#include "midi.h"
 #include "Preset.h"
 #include "Synthesizer.h"
 
@@ -76,9 +77,9 @@ struct Plugin
 		synthesizer = new Synthesizer;
 		midiBuffer = (unsigned char *)malloc(4096);
 #ifdef WITH_GUI
-		gdkParentWindow = 0;
-		gtkWindow = 0;
-		editorWidget = 0;
+		gdkParentWindow = nullptr;
+		gtkWindow = nullptr;
+		editorWidget = nullptr;
 #endif
 	}
 
@@ -115,7 +116,7 @@ static void on_adjustment_value_changed(GtkAdjustment *adjustment, AEffect *effe
 			param.setValue(value);
 			plugin->synthesizer->setParameterValue((Param)i, value);
 			if (plugin->audioMaster && !strstr(hostProductString, "Qtractor")) {
-				plugin->audioMaster(effect, audioMasterAutomate, i, 0, 0, param.GetNormalisedValue());
+				plugin->audioMaster(effect, audioMasterAutomate, i, 0, nullptr, param.getNormalisedValue());
 			}
 		}
 	}
@@ -148,14 +149,14 @@ static void setEventProc(Display *display, Window window)
 
 	static char *ptr;
 	if (!ptr) {
-		ptr = (char *)mmap(0,
+		ptr = (char *)mmap(nullptr,
 						   PAGE_SIZE,
 						   PROT_READ | PROT_WRITE | PROT_EXEC,
 						   MAP_ANONYMOUS | MAP_PRIVATE | MAP_32BIT,
 						   0, 0);
 		if (ptr == MAP_FAILED) {
 			perror("mmap");
-			ptr = 0;
+			ptr = nullptr;
 			return;
 		} else {
 			memcpy(ptr, kJumpInstructions, sizeof(kJumpInstructions));
@@ -282,7 +283,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 				gtk_init(&argc, &argv);
 				gdk_event_handler_set(&gdk_event_handler, NULL, NULL);
 #else
-				gtk_init(NULL, NULL);
+				gtk_init(nullptr, nullptr);
 #endif
 				initialized = true;
 			}
@@ -290,13 +291,13 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			if (!plugin->editorWidget) {
 				for (int i = 0; i < kAmsynthParameterCount; i++) {
 					gdouble lower = 0, upper = 0, step_increment = 0;
-					get_parameter_properties(i, &lower, &upper, NULL, &step_increment);
+					get_parameter_properties(i, &lower, &upper, nullptr, &step_increment);
 					gdouble value = plugin->synthesizer->getParameterValue((Param)i);
 					plugin->adjustments[i] = (GtkAdjustment *)gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);
 					g_object_ref_sink(plugin->adjustments[i]); // assumes ownership of the floating reference
 					g_signal_connect(plugin->adjustments[i], "value-changed", G_CALLBACK(on_adjustment_value_changed), effect);
 				}
-				plugin->editorWidget = editor_pane_new(plugin->synthesizer, plugin->adjustments, TRUE);
+				plugin->editorWidget = editor_pane_new(plugin->synthesizer, plugin->adjustments, TRUE, 0);
 				g_object_ref_sink(plugin->editorWidget);
 			}
 
@@ -331,15 +332,15 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 					gdk_window_hide(gtk_widget_get_window(plugin->gtkWindow));
 				}
 				gtk_widget_destroy(plugin->gtkWindow);
-				plugin->gtkWindow = 0;
+				plugin->gtkWindow = nullptr;
 			}
 
 			for (int i = 0; i < kAmsynthParameterCount; i++) {
-				plugin->adjustments[i] = 0;
+				plugin->adjustments[i] = nullptr;
 			}
 
-			plugin->gdkParentWindow = 0;
-			plugin->editorWidget = 0;
+			plugin->gdkParentWindow = nullptr;
+			plugin->editorWidget = nullptr;
 
 			gdk_display_sync(gdk_display_get_default());
 
@@ -373,17 +374,34 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 				if (event->type != kVstMidiType) {
 					continue;
 				}
-
-				memcpy(buffer, event->midiData, event->byteSize);
+				
+				int msgLength = 0;
+				unsigned char statusByte = event->midiData[0];
+				if (statusByte < MIDI_STATUS_NOTE_OFF) {
+					continue; // Not a status byte
+				}
+				if (statusByte >= 0xF0) {
+					continue; // Ignore system messages
+				}
+				switch (statusByte & 0xF0) {
+				case MIDI_STATUS_PROGRAM_CHANGE:
+				case MIDI_STATUS_CHANNEL_PRESSURE:
+					msgLength = 2;
+					break;
+				default:
+					msgLength = 3;
+				}
+				
+				memcpy(buffer, event->midiData, msgLength);
 
 				amsynth_midi_event_t midi_event;
 				memset(&midi_event, 0, sizeof(midi_event));
 				midi_event.offset_frames = event->deltaFrames;
 				midi_event.buffer = buffer;
-				midi_event.length = event->byteSize;
+				midi_event.length = msgLength;
 				plugin->midiEvents.push_back(midi_event);
 
-				buffer += event->byteSize;
+				buffer += msgLength;
 
 				assert(buffer < plugin->midiBuffer + 4096);
 			}
@@ -490,7 +508,7 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 	}
 #endif
 	if (audioMaster) {
-		audioMaster(NULL, audioMasterGetProductString, 0, 0, hostProductString, 0.0f);
+		audioMaster(nullptr, audioMasterGetProductString, 0, 0, hostProductString, 0.0f);
 	}
 	AEffect *effect = (AEffect *)calloc(1, sizeof(AEffect));
 	effect->magic = kEffectMagic;

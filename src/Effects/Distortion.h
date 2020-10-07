@@ -22,19 +22,18 @@
 #ifndef _DISTORTION_H
 #define _DISTORTION_H
 
+#include "../VoiceBoard/Synth--.h"
+
 /**
  * @brief A distortion (waveshaping) effect unit
  */
 class Distortion
 {
 public:
-	Distortion();
-
 	void	SetCrunch		(float);
 	void	Process			(float *buffer, unsigned);
 private:
-	float drive, crunch;
-	int done;
+	SmoothedParam crunch{1};
 };
 
 #endif

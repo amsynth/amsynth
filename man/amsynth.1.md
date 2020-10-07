@@ -1,6 +1,6 @@
 % AMSYNTH(1) amsynth VERSION | User Commands
 %
-% January 2017
+% October 2020
 
 NAME
 ====
@@ -15,12 +15,10 @@ SYNOPSIS
 DESCRIPTION
 ===========
 
-amsynth is an easy-to-use software synth with a classic subtractive synthesizer topology.
+**amsynth** is an easy-to-use software synth with a classic subtractive synthesizer topology.
 
 OPTIONS
 =======
-
-The following options override those in the config file (\$HOME/.amSynthrc).
 
 `-h`
 
@@ -66,24 +64,24 @@ The following options override those in the config file (\$HOME/.amSynthrc).
 
 :   specify the JACK client name to use
 
-`--jack_autoconnect[=<true|false>]`
+`--jack_autoconnect` \<true|false\>
 
 :   automatically connect jack audio ports to hardware I/O ports. (Default: true)
+
+`--force-device-scale-factor` \<scale\>
+
+:   set the scaling factor to use for the control panel
 
 FILES
 =====
 
-`$HOME/.amSynthrc`
+`$XDG_CONFIG_HOME/amsynth/config`
 
 :   Configuration for amsynth.
 
-`$HOME/.amsynth/*`
+`$XDG_DATA_HOME/amsynth/banks/*`
 
-:   Banks and others.
-
-`$HOME/.amSynth.presets`
-
-:   Presets.
+:   User preset banks.
 
 ENVIRONMENT
 ===========
@@ -95,6 +93,10 @@ ENVIRONMENT
 `AMSYNTH_SKIN`
 
 :   Specifies the directory from which amsynth should load its skin.
+
+`GDK_SCALE`
+
+:   Specifies the scaling factor to use for the control panel.
 
 BUGS & FEATURE REQUESTS
 =======================

@@ -1,7 +1,7 @@
 /*
  *  AudioOutput.cpp
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -27,18 +27,11 @@
 #include "drivers/ALSAmmapAudioDriver.h"
 #include "drivers/OSSAudioDriver.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 
 static AudioDriver * open_driver();
 
-
-AudioOutput::AudioOutput()
-:	driver(0)
-,	recording(0)
-,	buffer(0)
-{
-}
 
 AudioOutput::~AudioOutput()
 {
@@ -64,24 +57,23 @@ AudioOutput::Start ()
 	if (!(driver = open_driver())) {
 		return false;
 	}
-	if (Thread::Run() != 0) {
-		driver->close();
-		driver = NULL;
-		return false;
-	}
+	shouldStop = false;
+	thread = std::thread(&AudioOutput::ThreadAction, this);
 	return true;
 }
 
 void
 AudioOutput::Stop ()
 {
-	Thread::Stop();
-	Thread::Join();
+	shouldStop = true;
+	if (thread.joinable()) {
+		thread.join();
+	}
 
 	if (driver) {
 		driver->close();
 		delete driver;
-		driver = NULL;
+		driver = nullptr;
 	}
 }
 
@@ -90,7 +82,7 @@ AudioOutput::ThreadAction	()
 {
 	Configuration & config = Configuration::get();
 	int bufsize = config.buffer_size;
-	while (!ShouldStop ()) {
+	while (!shouldStop) {
 		std::vector<amsynth_midi_event_t> midi_in;
 		std::vector<amsynth_midi_cc_t> midi_out;
 		amsynth_audio_callback(buffer+bufsize*2, buffer+bufsize*3, bufsize, 1, midi_in, midi_out);
@@ -101,7 +93,7 @@ AudioOutput::ThreadAction	()
 		}
 
 		if (driver->write(buffer, bufsize * channels) < 0) {
-			Stop();
+			break;
 		}
 	}
 }
@@ -110,25 +102,25 @@ static AudioDriver * open_driver(AudioDriver *driver)
 {
 	Configuration & config = Configuration::get();
 	if (!driver) {
-		return NULL;
+		return nullptr;
 	}
 	if (driver->open() != 0) {
 		delete driver;
-		return NULL;
+		return nullptr;
 	}
 	void *buffer = calloc(AudioDriver::kMaxWriteFrames, config.channels * sizeof(float));
 	int written = driver->write((float *)buffer, AudioDriver::kMaxWriteFrames);
 	free(buffer);
 	if (written != 0) {
 		delete driver;
-		return NULL;
+		return nullptr;
 	}
 	return driver;
 }
 
 static AudioDriver * open_driver()
 {
-	AudioDriver *driver = NULL;
+	AudioDriver *driver = nullptr;
 	Configuration & config = Configuration::get();
 
 	if (config.audio_driver == "alsa-mmap" || config.audio_driver == "auto") {
@@ -149,5 +141,5 @@ static AudioDriver * open_driver()
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }

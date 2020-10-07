@@ -1,7 +1,7 @@
 /*
  *  MIDILearnDialog.cpp
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -30,7 +30,7 @@
 
 
 MIDILearnDialog::MIDILearnDialog(MidiController *midiController, PresetController *presetController, GtkWindow *parent)
-:	_dialog(NULL)
+:	_dialog(nullptr)
 ,	_midiController(midiController)
 ,	_presetController(presetController)
 {
@@ -66,12 +66,12 @@ MIDILearnDialog::MIDILearnDialog(MidiController *midiController, PresetControlle
 	GtkWidget *content = gtk_dialog_get_content_area (GTK_DIALOG (_dialog));
 	gtk_box_pack_start(GTK_BOX(content), table, TRUE, TRUE, 0);
 
-	_midiController->getLastControllerParam().addUpdateListener(*this);
+	_midiController->getLastControllerParam().addUpdateListener(this);
 }
 
 MIDILearnDialog::~MIDILearnDialog()
 {
-	_midiController->getLastControllerParam().removeUpdateListener(*this);
+	_midiController->getLastControllerParam().removeUpdateListener(this);
 }
 
 void

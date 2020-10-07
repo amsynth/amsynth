@@ -40,17 +40,15 @@ class ALSAAudioDriver : public AudioDriver
 {
 public:
 
-    ALSAAudioDriver() : _handle(0), _buffer(0), _channels(0) {}
-
-    virtual int open();
-    virtual void close();
-    virtual int write(float *buffer, int frames);
+    int open() override;
+    void close() override;
+    int write(float *buffer, int nsamples) override;
 
 private:
 
-    snd_pcm_t *_handle;
-    short *_buffer;
-    unsigned _channels;
+    snd_pcm_t *_handle = nullptr;
+    short *_buffer = nullptr;
+    unsigned _channels = 0;
 };
 
 
@@ -83,7 +81,7 @@ ALSAAudioDriver::open()
 {
 	Configuration & config = Configuration::get();
 	
-	if (_handle != NULL) {
+	if (_handle != nullptr) {
 		return 0;
 	}
 
@@ -96,7 +94,7 @@ ALSAAudioDriver::open()
 
 	int err = 0;
 
-	snd_pcm_t *pcm = NULL;
+	snd_pcm_t *pcm = nullptr;
 	ALSA_CALL(snd_pcm_open(&pcm, config.alsa_audio_device.c_str(), SND_PCM_STREAM_PLAYBACK, 0));
 
 	unsigned int latency = 10 * 1000;
@@ -123,13 +121,13 @@ ALSAAudioDriver::open()
 
 void ALSAAudioDriver::close()
 {
-	if (_handle != NULL) {
+	if (_handle != nullptr) {
 		snd_pcm_close((snd_pcm_t *)_handle);
-		_handle = NULL;
+		_handle = nullptr;
 	}
 
 	free(_buffer);
-	_buffer = NULL;
+	_buffer = nullptr;
 }
 
 #endif

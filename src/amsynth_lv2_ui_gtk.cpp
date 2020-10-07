@@ -99,13 +99,13 @@ struct SynthesizerStub : ISynthesizer
 {
 	SynthesizerStub(lv2_ui *ui_): ui(ui_) {}
 
-	virtual int loadTuningKeymap(const char *filename)
+	int loadTuningKeymap(const char *filename) override
 	{
 		send(ui->uris.amsynth_kbm_file, filename ?: "");
 		return 0;
 	}
 
-	virtual int loadTuningScale(const char *filename)
+	int loadTuningScale(const char *filename) override
 	{
 		send(ui->uris.amsynth_scl_file, filename ?: "");
 		return 0;
@@ -155,7 +155,7 @@ lv2_ui_instantiate(const struct _LV2UI_Descriptor* descriptor,
 			NULL);
 	if (missing) {
 		free(ui);
-		return NULL;
+		return nullptr;
 	}
 
 	ui->uris.atom_Float         = ui->map->map(ui->map->handle, LV2_ATOM__Float);
@@ -185,12 +185,12 @@ lv2_ui_instantiate(const struct _LV2UI_Descriptor* descriptor,
 		g_signal_connect(ui->_adjustments[i], "value-changed", (GCallback)&on_adjustment_value_changed, ui);
 	}
 
-	ui->_widget = editor_pane_new(new SynthesizerStub(ui), ui->_adjustments, TRUE);
+	ui->_widget = editor_pane_new(new SynthesizerStub(ui), ui->_adjustments, TRUE, 0);
 
 	*widget = ui->_widget;
 
 #if CALL_LV2UI_WRITE_FUNCTION_ON_IDLE
-    ui->_timeout_id = g_timeout_add_full(G_PRIORITY_LOW, 1000/60, (GSourceFunc)&lv2_ui_on_idle, ui, NULL);
+    ui->_timeout_id = g_timeout_add_full(G_PRIORITY_LOW, 1000/60, (GSourceFunc)&lv2_ui_on_idle, ui, nullptr);
 #endif
 
 	return ui;
@@ -266,7 +266,7 @@ LV2UI_Descriptor descriptor = {
 	&lv2_ui_instantiate,
 	&lv2_ui_cleanup,
 	&lv2_ui_port_event,
-	0
+	nullptr
 };
 
 LV2_SYMBOL_EXPORT
@@ -276,7 +276,7 @@ lv2ui_descriptor(uint32_t index)
 	if (index == 0) {
 		return &descriptor;
 	}
-	return 0;
+	return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

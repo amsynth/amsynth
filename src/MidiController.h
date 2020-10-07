@@ -1,7 +1,7 @@
 /*
  *  MidiController.h
  *
- *  Copyright (c) 2001-2016 Nick Dowell
+ *  Copyright (c) 2001-2020 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -24,7 +24,6 @@
 
 #include "PresetController.h"
 #include "Parameter.h"
-#include "Thread.h"
 #include "types.h"
 
 
@@ -65,9 +64,6 @@ public:
 
 	Parameter & getLastControllerParam() { return last_active_controller; };
 
-	int		get_midi_channel	() { return channel; }
-	void	set_midi_channel	( int ch );
-
 	void 	generateMidiOutput	(std::vector<amsynth_midi_cc_t> &);
 
 private:
@@ -78,12 +74,13 @@ private:
 
     void saveControllerMap();
 
-    PresetController *presetController;
+    PresetController *presetController = nullptr;
     unsigned char status, data, channel;
-	Parameter last_active_controller;
+	Parameter last_active_controller{"last_active_cc", (Param) -1, 0, 0, MAX_CC, 1};
 	unsigned char _midi_cc_vals[MAX_CC];
-	MidiEventHandler* _handler;
-	unsigned char _rpn_msb, _rpn_lsb;
+	MidiEventHandler* _handler = nullptr;
+	unsigned char _rpn_msb = 0xff;
+	unsigned char _rpn_lsb = 0xff;
 
 	int _cc_to_param_map[MAX_CC];
 	int _param_to_cc_map[kAmsynthParameterCount];
