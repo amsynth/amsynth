@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Install Dependencies
-      run: sudo apt install autopoint dssi-dev intltool libasound-dev libgtk2.0-dev libjack-jackd2-dev liblo-dev pandoc
+      run: sudo apt install autoconf-archive autopoint dssi-dev intltool libasound-dev libgtk2.0-dev libjack-jackd2-dev liblo-dev pandoc
     - name: autogen
       run: ./autogen.sh
     - name: configure
