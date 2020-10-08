@@ -51,6 +51,9 @@ public:
 	// returns the preset currently being edited
 	Preset&	getCurrentPreset	() { return currentPreset; }
 	
+	// This bypasses 
+	void	setCurrentPreset	(const Preset &preset) { currentPreset = preset; }
+	
 	// access presets in the memory bank
 	Preset&	getPreset			(int preset) { return presets[preset]; }
 
