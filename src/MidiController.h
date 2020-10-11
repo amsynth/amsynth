@@ -66,6 +66,8 @@ public:
 
 	void 	generateMidiOutput	(std::vector<amsynth_midi_cc_t> &);
 
+	unsigned char assignedChannel = 0; // 0 denotes any channel
+
 private:
 	void dispatch_note(unsigned char ch,
 		       unsigned char note, unsigned char vel);
