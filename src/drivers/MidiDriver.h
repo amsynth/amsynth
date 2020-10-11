@@ -22,8 +22,6 @@
 #ifndef _MIDI_DRIVER_H
 #define _MIDI_DRIVER_H
 
-#include "../Configuration.h"
-
 class MidiDriver
 {
 public:
