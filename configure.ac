@@ -113,7 +113,7 @@ AS_IF([test "x$with_nsm" != "xno"], [
     PKG_CHECK_MODULES([LIBLO], [liblo], [
         AC_DEFINE([WITH_NSM],, [Build NSM support])
         with_nsm="yes"], [with_nsm="no"])])
-AM_CONDITIONAL([BUILD_NSM], [test "x$with_nsm" == "xyes"])
+AM_CONDITIONAL([BUILD_NSM], [test "x$with_nsm" = "xyes"])
 
 AC_ARG_WITH([dssi], [AS_HELP_STRING([--with-dssi], [build DSSI plugin])])
 AS_IF([test "x$with_dssi" != "xno"], [
@@ -122,7 +122,7 @@ AS_IF([test "x$with_dssi" != "xno"], [
         PKG_CHECK_MODULES([LIBLO], [liblo], [], [with_dssi_gui="no"])
     with_dssi="yes"], [with_dssi="no"])])
 AM_CONDITIONAL([BUILD_DSSI], [test "x$with_dssi" != "xno"])
-AM_CONDITIONAL([BUILD_DSSI_GUI], [test "x$with_dssi_gui" == "xyes"])
+AM_CONDITIONAL([BUILD_DSSI_GUI], [test "x$with_dssi_gui" = "xyes"])
 
 AC_ARG_WITH([lv2], [AS_HELP_STRING([--with-lv2], [build support for LV2])])
 AS_IF([test "x$with_lv2" != "xno"], [
