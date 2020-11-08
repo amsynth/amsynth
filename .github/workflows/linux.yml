@@ -23,9 +23,9 @@ jobs:
       run: ./configure
     - name: make distcheck
       run: make -j 2 distcheck
-    - name: Test
+    - name: make check
       run: |
-        ./configure CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' --without-lv2 --without-dssi --without-vst
+        ./configure CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' --without-lv2 --without-dssi --without-vst --without-gui
         make -j 2 check
         gcov -lp $(find . -name '*.c' -o -name '*.cpp')
     - name: Codecov
