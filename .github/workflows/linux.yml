@@ -32,3 +32,7 @@ jobs:
       uses: codecov/codecov-action@v1.0.4
       with:
         token: f7bd75a9-026b-4157-9f6e-708d6149d979
+    - uses: actions/upload-artifact@v2
+      with:
+        name: tarball
+        path: amsynth-*.tar.gz
