@@ -23,6 +23,8 @@
 
 #ifdef WITH_ALSA
 
+#include "../Configuration.h"
+
 #define ALSA_PCM_OLD_HW_PARAMS_API
 #define ALSA_PCM_OLD_SW_PARAMS_API
 #include <alsa/asoundlib.h>
@@ -167,5 +169,5 @@ ALSAMidiDriver::~ALSAMidiDriver()
 
 MidiDriver* CreateAlsaMidiDriver(const char *client_name) { return new ALSAMidiDriver(client_name); }
 #else
-MidiDriver* CreateAlsaMidiDriver(const char *client_name) { return NULL; }
+MidiDriver* CreateAlsaMidiDriver(const char *client_name) { return nullptr; }
 #endif

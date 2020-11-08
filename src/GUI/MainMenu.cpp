@@ -474,6 +474,8 @@ struct ConfigMenu
 		int newValue = index;
 		int currentValue = synthesizer->getMidiChannel();
 		if (currentValue != newValue) {
+			Configuration::get().midi_channel = newValue;
+			Configuration::get().save();
 			synthesizer->setMidiChannel(newValue);
 		}
 	}

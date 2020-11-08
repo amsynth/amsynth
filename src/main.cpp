@@ -359,8 +359,17 @@ int main( int argc, char *argv[] )
 	// errors now detected & reported in the GUI
 	out->init();
 
+	Preset::setIgnoredParameterNames(config.ignored_parameters);
+
 	s_synthesizer = new Synthesizer();
 	s_synthesizer->setSampleRate(config.sample_rate);
+	s_synthesizer->setMaxNumVoices(config.polyphony);
+	s_synthesizer->setMidiChannel(config.midi_channel);
+	s_synthesizer->setPitchBendRangeSemitones(config.pitch_bend_range);
+	if (config.current_tuning_file != "default") {
+		s_synthesizer->loadTuningScale(config.current_tuning_file.c_str());
+	}
+	s_synthesizer->loadBank(config.current_bank_file.c_str());
 	
 	amsynth_load_bank(config.current_bank_file.c_str());
 	amsynth_set_preset_number(initial_preset_no);

@@ -21,7 +21,6 @@
 
 #include "MidiController.h"
 
-#include "Configuration.h"
 #include "filesystem.h"
 #include "midi.h"
 #include "VoiceBoard/Synth--.h"
@@ -41,8 +40,6 @@ MidiController::MidiController()
 void
 MidiController::HandleMidiData(const unsigned char* bytes, unsigned numBytes)
 {
-	Configuration & config = Configuration::get();
-
     for (unsigned i=0; i<numBytes; i++)
 	{
 		const unsigned char byte = bytes[i];
@@ -57,7 +54,7 @@ MidiController::HandleMidiData(const unsigned char* bytes, unsigned numBytes)
 		}
 		// now we have at least one data byte
 
-		bool ignore = config.midi_channel && ((int) channel != config.midi_channel - 1);
+		bool ignore = (assignedChannel > 0) && ((int) channel != assignedChannel - 1);
 
 		switch (status & 0xf0)
 		{
@@ -310,7 +307,7 @@ MidiController::setControllerForParameter(Param paramId, int cc)
 void
 MidiController::generateMidiOutput(std::vector<amsynth_midi_cc_t> &output)
 {
-	unsigned char outputChannel = std::max(0, Configuration::get().midi_channel - 1);
+	unsigned char outputChannel = std::max(0, assignedChannel - 1);
 	
 	for (int paramId = 0; paramId < kAmsynthParameterCount; paramId++) {
 		int cc = _param_to_cc_map[paramId];
