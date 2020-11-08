@@ -11,9 +11,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Install required dependencies
+    - name: apt update
+      run: sudo apt update
+    - name: apt install
       run: sudo apt install autoconf-archive autopoint dssi-dev intltool libasound-dev libgtk2.0-dev libjack-jackd2-dev liblo-dev pandoc
-    - name: Install optional dependencies
+    - name: apt install (optional)
       run: sudo apt install liblash-compat-dev || echo ignoring failure
     - name: autogen
       run: ./autogen.sh
