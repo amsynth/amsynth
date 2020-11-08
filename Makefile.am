@@ -122,7 +122,7 @@ amsynth_SOURCES = \
 
 amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @LIBLO_CFLAGS@ @GTK_CFLAGS@
 
-amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @LIBLO_LIBS@ @LIBS@
+amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @LIBLO_LIBS@ @LIBS@ -lX11
 
 if BUILD_GUI
 amsynth_SOURCES += $(libgui_sources) \
@@ -184,7 +184,7 @@ if BUILD_DSSI_GUI
 noinst_PROGRAMS = amsynth_dssi_gtk
 amsynth_dssi_gtk_SOURCES = src/amsynth_dssi_gtk.cpp $(libcore_sources) $(libgui_sources)
 amsynth_dssi_gtk_CPPFLAGS = $(AM_CPPFLAGS) @DSSI_CFLAGS@ @GTK_CFLAGS@ @LIBLO_CFLAGS@
-amsynth_dssi_gtk_LDADD = @DSSI_LIBS@ @GTK_LIBS@ @LIBLO_LIBS@ -lstdc++
+amsynth_dssi_gtk_LDADD = @DSSI_LIBS@ @GTK_LIBS@ @LIBLO_LIBS@ -lstdc++ -lX11
 
 endif
 
@@ -262,7 +262,9 @@ dist_amsynth_lv2_DATA = \
 	data/amsynth.lv2/BriansBank20.amSynth.bank.ttl \
 	data/amsynth.lv2/BriansBank21.amSynth.bank.ttl \
 	data/amsynth.lv2/BriansBank22.amSynth.bank.ttl \
-	data/amsynth.lv2/PatriksBank01.bank.ttl
+	data/amsynth.lv2/PatriksBank01.bank.ttl \
+	data/amsynth.lv2/PatriksBank02.bank.ttl \
+	data/amsynth.lv2/PatriksBank03.bank.ttl
 
 endif
 
@@ -366,7 +368,9 @@ dist_banks_DATA = \
 	data/banks/BriansBank20.amSynth.bank \
 	data/banks/BriansBank21.amSynth.bank \
 	data/banks/BriansBank22.amSynth.bank \
-	data/banks/PatriksBank01.bank
+	data/banks/PatriksBank01.bank \
+	data/banks/PatriksBank02.bank \
+	data/banks/PatriksBank03.bank
 
 
 #

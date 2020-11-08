@@ -1,9 +1,9 @@
-#	~/.amSynthrc - configuration file for amSynth
-#						http://amsynthe.sourceforge.net
-#							(C) '01-'09 Nick Dowell
+#
+# ~/.config/amsynth/config - Configuration file for amsynth
+#
 
 #
-#	MIDI Input Configuration
+#	MIDI Configuration
 #
 
 # select MIDI driver to use [ auto / alsa / oss ]
@@ -18,7 +18,8 @@ midi_driver 		auto
 oss_midi_device		/dev/midi
 
 # MIDI channel to listen for events on. MIDI channels are numbered 1-16,
-# setting MIDI channel to 0 will listen on all channels
+# setting midi_channel to 0 means listen on all channels. MIDI output is
+# sent on this channel (or channel 1 if midi_channel is 0.)
 
 midi_channel		0
 

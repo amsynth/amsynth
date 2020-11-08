@@ -77,6 +77,10 @@ public:
 	int getMaxNumVoices();
 	void setMaxNumVoices(int value);
 
+	static constexpr unsigned char kMidiChannel_Any = 0;
+	unsigned char getMidiChannel();
+	void setMidiChannel(unsigned char);
+
 	int loadTuningKeymap(const char *filename) override;
 	int loadTuningScale(const char *filename) override;
 
@@ -96,6 +100,10 @@ public:
     MidiController *_midiController;
     PresetController *_presetController;
     VoiceAllocationUnit *_voiceAllocationUnit;
+	
+private:
+
+	bool needsResetAllVoices_ = false;
 };
 
 #endif /* defined(__amsynth__Synthesizer__) */

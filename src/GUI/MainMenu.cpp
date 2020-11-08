@@ -406,7 +406,7 @@ struct ConfigMenu
 
 		GtkWidget *channelMenu = gtk_menu_new();
 		{
-			const int currentValue = synthesizer->getMidiController()->get_midi_channel();
+			const int currentValue = synthesizer->getMidiChannel();
 
 			GSList *group = nullptr;
 			for (int i = 0; i <= 16; i++) {
@@ -463,20 +463,28 @@ struct ConfigMenu
 
 	static void midiChannelChange(GtkWidget *widget, Synthesizer *synthesizer)
 	{
+		if (!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget))) {
+			return;
+		}
 		GtkWidget *menu = gtk_widget_get_parent(widget);
 		GList *list = gtk_container_get_children(GTK_CONTAINER(menu));
 		int index = g_list_index(list, widget);
 		g_list_free(list);
 
 		int newValue = index;
-		int currentValue = synthesizer->getMidiController()->get_midi_channel();
+		int currentValue = synthesizer->getMidiChannel();
 		if (currentValue != newValue) {
-			synthesizer->getMidiController()->set_midi_channel(newValue);
+			Configuration::get().midi_channel = newValue;
+			Configuration::get().save();
+			synthesizer->setMidiChannel(newValue);
 		}
 	}
 
 	static void polyphonyChange(GtkWidget *widget, Synthesizer *synthesizer)
 	{
+		if (!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget))) {
+			return;
+		}
 		GtkWidget *menu = gtk_widget_get_parent(widget);
 		GList *list = gtk_container_get_children(GTK_CONTAINER(menu));
 		int index = g_list_index(list, widget);
@@ -492,6 +500,9 @@ struct ConfigMenu
 
 	static void pitchBendRangeChange(GtkWidget *widget, Synthesizer *synthesizer)
 	{
+		if (!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget))) {
+			return;
+		}
 		GtkWidget *menu = gtk_widget_get_parent(widget);
 		GList *list = gtk_container_get_children(GTK_CONTAINER(menu));
 		int index = g_list_index(list, widget);

@@ -101,6 +101,10 @@ void amsynth_lash_set_alsa_client_id(unsigned char id)
 
 void amsynth_lash_poll_events()
 {
+	if (!lash_client) {
+		return;
+	}
+
 	int quit = 0;
 	lash_event_t *event = NULL;
 

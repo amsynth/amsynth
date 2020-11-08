@@ -248,9 +248,11 @@ int main( int argc, char *argv[] )
 	amsynth_lash_process_args(&argc, &argv);
 	
 	bool no_gui = (getenv("AMSYNTH_NO_GUI") != nullptr);
+	int gui_scale_factor = 0;
 
 	static struct option longopts[] = {
 		{ "jack_autoconnect", optional_argument, nullptr, 0 },
+		{ "force-device-scale-factor", required_argument, nullptr, 0 },
 		{ nullptr }
 	};
 	
@@ -283,6 +285,9 @@ int main( int argc, char *argv[] )
 				     << _("	-n <name>   specify the JACK client name to use") << endl
 				     << _("	--jack_autoconnect[=<true|false>]") << endl
 				     << _("	            automatically connect jack audio ports to hardware I/O ports. (Default: true)") << endl
+					 << endl
+					 << _("	--force-device-scale-factor <scale>") << endl
+					 << _("	            override the default scaling factor for the control panel") << endl
 				     << endl;
 
 				return 0;
@@ -329,6 +334,9 @@ int main( int argc, char *argv[] )
 				if (strcmp(longopts[longindex].name, "jack_autoconnect") == 0) {
 					config.jack_autoconnect = !optarg || (strcmp(optarg, "true") == 0);
 				}
+				if (strcmp(longopts[longindex].name, "force-device-scale-factor") == 0) {
+					gui_scale_factor = atoi(optarg);
+				}
 				break;
 			default:
 				break;
@@ -351,8 +359,17 @@ int main( int argc, char *argv[] )
 	// errors now detected & reported in the GUI
 	out->init();
 
+	Preset::setIgnoredParameterNames(config.ignored_parameters);
+
 	s_synthesizer = new Synthesizer();
 	s_synthesizer->setSampleRate(config.sample_rate);
+	s_synthesizer->setMaxNumVoices(config.polyphony);
+	s_synthesizer->setMidiChannel(config.midi_channel);
+	s_synthesizer->setPitchBendRangeSemitones(config.pitch_bend_range);
+	if (config.current_tuning_file != "default") {
+		s_synthesizer->loadTuningScale(config.current_tuning_file.c_str());
+	}
+	s_synthesizer->loadBank(config.current_bank_file.c_str());
 	
 	amsynth_load_bank(config.current_bank_file.c_str());
 	amsynth_set_preset_number(initial_preset_no);
@@ -394,7 +411,7 @@ int main( int argc, char *argv[] )
 
 #ifdef WITH_GUI
 	if (!no_gui) {
-		main_window_show(s_synthesizer, out);
+		main_window_show(s_synthesizer, out, gui_scale_factor);
 		gui_kit_run(&amsynth_timer_callback);
 	} else {
 #endif

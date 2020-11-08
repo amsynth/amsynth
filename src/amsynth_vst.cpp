@@ -23,7 +23,9 @@
 #include "config.h"
 #endif
 
+#include "midi.h"
 #include "Preset.h"
+#include "PresetController.h"
 #include "Synthesizer.h"
 
 #include <cassert>
@@ -68,6 +70,8 @@ static char hostProductString[64] = "";
 static FILE *logFile;
 #endif
 
+constexpr size_t kPresetsPerBank = sizeof(BankInfo::presets) / sizeof(BankInfo::presets[0]);
+
 struct Plugin
 {
 	Plugin(audioMasterCallback master)
@@ -92,6 +96,8 @@ struct Plugin
 	Synthesizer *synthesizer;
 	unsigned char *midiBuffer;
 	std::vector<amsynth_midi_event_t> midiEvents;
+	int programNumber = 0;
+	std::string presetName;
 #ifdef WITH_GUI
 	GdkWindow *gdkParentWindow;
 	GtkWidget *gtkWindow;
@@ -238,10 +244,21 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			free(effect);
 			return 0;
 
-		case effSetProgram:
+		case effSetProgram: {
+			auto &bank = PresetController::getPresetBanks().at(val / kPresetsPerBank);
+			auto &preset = bank.presets[val % kPresetsPerBank];
+			plugin->presetName = preset.getName();
+			plugin->programNumber = val;
+			plugin->synthesizer->_presetController->setCurrentPreset(preset);
+			return 1;
+		}
+
 		case effGetProgram:
+			return plugin->programNumber;
+
 		case effGetProgramName:
-			return 0;
+			strncpy((char *)ptr, plugin->presetName.c_str(), 24);
+			return 1;
 
 		case effGetParamLabel:
 			plugin->synthesizer->getParameterLabel((Param)index, (char *)ptr, 32);
@@ -296,7 +313,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 					g_object_ref_sink(plugin->adjustments[i]); // assumes ownership of the floating reference
 					g_signal_connect(plugin->adjustments[i], "value-changed", G_CALLBACK(on_adjustment_value_changed), effect);
 				}
-				plugin->editorWidget = editor_pane_new(plugin->synthesizer, plugin->adjustments, TRUE);
+				plugin->editorWidget = editor_pane_new(plugin->synthesizer, plugin->adjustments, TRUE, 0);
 				g_object_ref_sink(plugin->editorWidget);
 			}
 
@@ -373,17 +390,34 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 				if (event->type != kVstMidiType) {
 					continue;
 				}
-
-				memcpy(buffer, event->midiData, event->byteSize);
+				
+				int msgLength = 0;
+				unsigned char statusByte = event->midiData[0];
+				if (statusByte < MIDI_STATUS_NOTE_OFF) {
+					continue; // Not a status byte
+				}
+				if (statusByte >= 0xF0) {
+					continue; // Ignore system messages
+				}
+				switch (statusByte & 0xF0) {
+				case MIDI_STATUS_PROGRAM_CHANGE:
+				case MIDI_STATUS_CHANNEL_PRESSURE:
+					msgLength = 2;
+					break;
+				default:
+					msgLength = 3;
+				}
+				
+				memcpy(buffer, event->midiData, msgLength);
 
 				amsynth_midi_event_t midi_event;
 				memset(&midi_event, 0, sizeof(midi_event));
 				midi_event.offset_frames = event->deltaFrames;
 				midi_event.buffer = buffer;
-				midi_event.length = event->byteSize;
+				midi_event.length = msgLength;
 				plugin->midiEvents.push_back(midi_event);
 
-				buffer += event->byteSize;
+				buffer += msgLength;
 
 				assert(buffer < plugin->midiBuffer + 4096);
 			}
@@ -476,6 +510,11 @@ static float getParameter(AEffect *effect, int i)
 	return plugin->synthesizer->getNormalizedParameterValue((Param) i);
 }
 
+static int getNumPrograms()
+{
+	return PresetController::getPresetBanks().size() * kPresetsPerBank;
+}
+
 extern "C"
 #if _WIN32
 __declspec(dllexport)
@@ -498,7 +537,7 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 	effect->process = process;
 	effect->setParameter = setParameter;
 	effect->getParameter = getParameter;
-	effect->numPrograms = 0;
+	effect->numPrograms = getNumPrograms();
 	effect->numParams = kAmsynthParameterCount;
 	effect->numInputs = 0;
 	effect->numOutputs = 2;

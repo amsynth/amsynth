@@ -29,7 +29,7 @@
 G_BEGIN_DECLS
 
 GtkWidget *
-editor_pane_new(void *synthesizer, GtkAdjustment **adjustments, gboolean is_plugin);
+editor_pane_new(void *synthesizer, GtkAdjustment **adjustments, gboolean is_plugin, int scaling_factor);
 
 void modal_midi_learn(Param param_index);
 

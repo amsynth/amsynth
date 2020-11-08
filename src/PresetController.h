@@ -51,6 +51,10 @@ public:
 	// returns the preset currently being edited
 	Preset&	getCurrentPreset	() { return currentPreset; }
 	
+	// Assign a new preset without changing `currentPresetNo` - useful if not
+	// using the standard bank management mechanism.
+	void	setCurrentPreset	(const Preset &preset) { currentPreset = preset; }
+	
 	// access presets in the memory bank
 	Preset&	getPreset			(int preset) { return presets[preset]; }
 

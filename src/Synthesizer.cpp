@@ -21,7 +21,6 @@
 
 #include "Synthesizer.h"
 
-#include "Configuration.h"
 #include "MidiController.h"
 #include "PresetController.h"
 #include "VoiceAllocationUnit.h"
@@ -39,20 +38,10 @@ Synthesizer::Synthesizer()
 , _presetController(nullptr)
 , _voiceAllocationUnit(nullptr)
 {
-	Configuration &config = Configuration::get();
-
 	_voiceAllocationUnit = new VoiceAllocationUnit;
 	_voiceAllocationUnit->SetSampleRate((int) _sampleRate);
-	_voiceAllocationUnit->SetMaxVoices(config.polyphony);
-	_voiceAllocationUnit->setPitchBendRangeSemitones(config.pitch_bend_range);
-	
-	if (config.current_tuning_file != "default")
-		_voiceAllocationUnit->loadScale(config.current_tuning_file.c_str());
 
-	Preset::setIgnoredParameterNames(config.ignored_parameters);
 	_presetController = new PresetController;
-	_presetController->loadPresets(config.current_bank_file.c_str());
-	_presetController->selectPreset(0);
 	_presetController->getCurrentPreset().AddListenerToAll(_voiceAllocationUnit);
 	
 	_midiController = new MidiController();
@@ -182,6 +171,21 @@ void Synthesizer::setMaxNumVoices(int value)
 	_voiceAllocationUnit->SetMaxVoices(value);
 }
 
+unsigned char Synthesizer::getMidiChannel()
+{
+	return _midiController->assignedChannel;
+}
+
+void Synthesizer::setMidiChannel(unsigned char channel)
+{
+	_midiController->assignedChannel = channel;
+	if (channel != kMidiChannel_Any) {
+		// A reset is required when switching to a new channel since we will
+		// not receive the note off events for currently held notes.
+		needsResetAllVoices_ = true;
+	}
+}
+
 int Synthesizer::loadTuningKeymap(const char *filename)
 {
 	if (filename && strlen(filename))
@@ -214,6 +218,10 @@ void Synthesizer::process(unsigned int nframes,
 	if (_sampleRate < 0) {
 		assert(nullptr == "sample rate has not been set");
 		return;
+	}
+	if (needsResetAllVoices_) {
+		needsResetAllVoices_ = false;
+		_voiceAllocationUnit->resetAllVoices();
 	}
 	std::vector<amsynth_midi_event_t>::const_iterator event = midi_in.begin();
 	unsigned frames_left_in_buffer = nframes, frame_index = 0;

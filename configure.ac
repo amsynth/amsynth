@@ -19,7 +19,7 @@ dnl  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 dnl
 
 AC_COPYRIGHT([Copyright (C) 2001-2020 Nick Dowell])
-AC_INIT([amsynth], [1.11.0], [https://github.com/amsynth/amsynth/issues], [amsynth], [https://amsynth.github.io])
+AC_INIT([amsynth], [1.12.0], [https://github.com/amsynth/amsynth/issues], [amsynth], [https://amsynth.github.io])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -33,8 +33,7 @@ AS_IF([test "x$CXXFLAGS" = "x"], [CXXFLAGS="$CFLAGS"])
 user_CFLAGS="$CFLAGS"
 user_CXXFLAGS="$CXXFLAGS"
 
-AC_PROG_CC
-AM_PROG_CC_C_O
+AC_PROG_CC_C99
 AC_PROG_CXX
 AC_PROG_INSTALL
 LT_INIT
@@ -62,6 +61,10 @@ dnl Required libraries & packages
 dnl
 
 AC_CHECK_LIB(m, sin, , exit)
+
+dnl Although amsynth does not use pthread directly, it seems to be necessary to link
+dnl against it with GCC 10.x
+AC_CHECK_LIB(pthread, pthread_create, [], exit)
 
 AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])])
 
@@ -110,7 +113,7 @@ AS_IF([test "x$with_nsm" != "xno"], [
     PKG_CHECK_MODULES([LIBLO], [liblo], [
         AC_DEFINE([WITH_NSM],, [Build NSM support])
         with_nsm="yes"], [with_nsm="no"])])
-AM_CONDITIONAL([BUILD_NSM], [test "x$with_nsm" == "xyes"])
+AM_CONDITIONAL([BUILD_NSM], [test "x$with_nsm" = "xyes"])
 
 AC_ARG_WITH([dssi], [AS_HELP_STRING([--with-dssi], [build DSSI plugin])])
 AS_IF([test "x$with_dssi" != "xno"], [
@@ -119,7 +122,7 @@ AS_IF([test "x$with_dssi" != "xno"], [
         PKG_CHECK_MODULES([LIBLO], [liblo], [], [with_dssi_gui="no"])
     with_dssi="yes"], [with_dssi="no"])])
 AM_CONDITIONAL([BUILD_DSSI], [test "x$with_dssi" != "xno"])
-AM_CONDITIONAL([BUILD_DSSI_GUI], [test "x$with_dssi_gui" == "xyes"])
+AM_CONDITIONAL([BUILD_DSSI_GUI], [test "x$with_dssi_gui" = "xyes"])
 
 AC_ARG_WITH([lv2], [AS_HELP_STRING([--with-lv2], [build support for LV2])])
 AS_IF([test "x$with_lv2" != "xno"], [
