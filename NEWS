@@ -1,8 +1,13 @@
-amsynth next release
+amsynth 1.12.0 -- 2020-11-08
 
+  - Improved HiDPI autodetection and added --force-device-scale-factor command line option
+  - Presets are now available to be loaded in VST hosts using the generic GUI (e.g. REAPER)
   - Fixed a bug that caused MIDI channel and polyphony settings from the command line or
     configuration file to be ignored.
   - Fixed a bug that caused MIDI channel setting to be ignored when sending MIDI over JACK
+  - Fixed a MIDI parsing bug in the VST plugin that caused stuck notes in REAPER
+  - Fixed a crash when compiled with LASH support but without a LASH server running
+
 
 amsynth 1.11.0 -- 2020-09-20
 
