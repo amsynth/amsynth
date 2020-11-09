@@ -18681,10 +18681,10 @@
     rdfs:label "PatriksBank02: 045: Lullaby Voice" ;
     rdfs:seeAlso <PatriksBank02.bank.ttl> .
 
-<http://code.google.com/p/amsynth/amsynth#PatriksBank02_046_"A"_voices>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank02_046_A_voices>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PatriksBank02: 046: "A" voices" ;
+    rdfs:label 'PatriksBank02: 046: "A" voices' ;
     rdfs:seeAlso <PatriksBank02.bank.ttl> .
 
 <http://code.google.com/p/amsynth/amsynth#PatriksBank02_047_Brass_Section>
