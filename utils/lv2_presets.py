@@ -54,8 +54,8 @@ def lv2_bank_write(filepath, bank_name, presets):
 ''' % (bank_uri, bank_name))
 
 		for i, preset in enumerate(presets):
-			preset_uri = bank_name + '_%03d_' % i + re.sub(r'\s', '_', preset['name'])
-			label = '%s: %03d: %s' % (bank_name, i, preset['name'])
+			preset_uri = bank_name + '_%03d_' % i + re.sub(r'[\s"]', '_', preset['name'])
+			label = '%s: %03d: %s' % (bank_name, i, preset['name'].replace('"', r'\"'))
 			# When banks are more widely supported, we should switch to this:
 			#label = '%03d: %s' % (i, preset['name'])
 			print(lv2_preset_header.format(preset_uri=preset_uri, label=label))

@@ -5986,10 +5986,10 @@
         pset:value 1.000000
     ] .
 
-<http://code.google.com/p/amsynth/amsynth#PatriksBank02_046_A_voices>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank02_046__A__voices>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label 'PatriksBank02: 046: "A" voices' ;
+    rdfs:label "PatriksBank02: 046: \"A\" voices" ;
     pset:bank <http://code.google.com/p/amsynth/amsynth#PatriksBank02> ;
     lv2:port [
         lv2:symbol "amp_attack" ;
