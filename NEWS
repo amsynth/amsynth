@@ -1,3 +1,8 @@
+amsynth 1.12.1 -- 2020-11-14
+
+  - Fixed LV2 manifest format error
+
+
 amsynth 1.12.0 -- 2020-11-08
 
   - Improved HiDPI autodetection and added --force-device-scale-factor command line option
