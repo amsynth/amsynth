@@ -19,7 +19,7 @@ dnl  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 dnl
 
 AC_COPYRIGHT([Copyright (C) 2001-2020 Nick Dowell])
-AC_INIT([amsynth], [1.12.0], [https://github.com/amsynth/amsynth/issues], [amsynth], [https://amsynth.github.io])
+AC_INIT([amsynth], [1.12.1], [https://github.com/amsynth/amsynth/issues], [amsynth], [https://amsynth.github.io])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
