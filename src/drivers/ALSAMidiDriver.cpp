@@ -19,6 +19,10 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "ALSAMidiDriver.h"
 
 #ifdef WITH_ALSA
