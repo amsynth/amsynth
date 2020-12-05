@@ -83,7 +83,7 @@ NsmClient::NsmClient (std::string programName) : nsm(nullptr) {
     activeResult = -1 ;
 }
 
-void NsmClient::Init (std::string programLabel) {
+bool NsmClient::Init (std::string programLabel) {
     Debug ("NsmClient: Constructor()\n") ;
 
     const char *nsm_url = getenv("NSM_URL") ;
@@ -109,7 +109,10 @@ void NsmClient::Init (std::string programLabel) {
         }
 
         Debug ("NsmClient: Registered Callbacks\n") ;
+        return true;
     }
+
+    return false;
 }
 
 

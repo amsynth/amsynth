@@ -115,6 +115,8 @@ static unsigned char *midiBuffer;
 static const size_t midiBufferSize = 4096;
 static int gui_midi_pipe[2];
 
+bool g_nsm;
+
 ////////////////////////////////////////////////////////////////////////////////
 
 static GenericOutput * open_audio()
@@ -377,7 +379,7 @@ int main( int argc, char *argv[] )
 #ifdef WITH_NSM
 	NsmClient nsmClient(argv[0]);
 	NsmHandler nsmHandler(&nsmClient);
-	nsmClient.Init(PACKAGE_NAME);
+	g_nsm = nsmClient.Init(PACKAGE_NAME);
 #endif
 
 	if (config.current_tuning_file != "default")

@@ -20,7 +20,7 @@ public:
     int open (const char* name, const char* displayName, const char* clientId) ;
     int save (void) ;
     void active (bool isActive) ;
-    void Init (std::string programLabel) ;
+    bool Init (std::string programLabel) ;
     void Debug (std::string message) ;
     void setOpenResult (int result) ;
     void setSaveResult (int result) ;

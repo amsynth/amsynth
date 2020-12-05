@@ -34,6 +34,7 @@
 
 #include <glib/gi18n.h>
 
+extern bool g_nsm;
 
 ////
 
@@ -137,7 +138,9 @@ struct FileMenu
 #endif
 
 		add_menu_item(menu, accelGroup,       CTRL "O", _("_Open Bank..."), G_CALLBACK(FileMenu::openBank), synthesizer);
+		GtkWidget *saveAs =
 		add_menu_item(menu, accelGroup, SHIFT CTRL "S", _("_Save Bank As..."), G_CALLBACK(FileMenu::saveBankAs), synthesizer);
+		gtk_widget_set_sensitive (saveAs, g_nsm ? 0 : 1);
 		add_separator(menu);
 
 		add_menu_item(menu, accelGroup, ACCEL_NONE, _("Open Alternate Tuning File..."), G_CALLBACK(FileMenu::openScaleFile), synthesizer);
