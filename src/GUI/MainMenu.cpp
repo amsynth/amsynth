@@ -137,10 +137,14 @@ struct FileMenu
 		add_separator(menu);
 #endif
 
+		GtkWidget *menuItem =
 		add_menu_item(menu, accelGroup,       CTRL "O", _("_Open Bank..."), G_CALLBACK(FileMenu::openBank), synthesizer);
-		GtkWidget *saveAs =
+		// https://linuxaudio.github.io/new-session-manager/api/index.html#_open
+		gtk_widget_set_sensitive (menuItem, g_nsm ? 0 : 1);
+		menuItem =
 		add_menu_item(menu, accelGroup, SHIFT CTRL "S", _("_Save Bank As..."), G_CALLBACK(FileMenu::saveBankAs), synthesizer);
-		gtk_widget_set_sensitive (saveAs, g_nsm ? 0 : 1);
+		// https://linuxaudio.github.io/new-session-manager/api/index.html#_save_as
+		gtk_widget_set_sensitive (menuItem, g_nsm ? 0 : 1);
 		add_separator(menu);
 
 		add_menu_item(menu, accelGroup, ACCEL_NONE, _("Open Alternate Tuning File..."), G_CALLBACK(FileMenu::openScaleFile), synthesizer);
