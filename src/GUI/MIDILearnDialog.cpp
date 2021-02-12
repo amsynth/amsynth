@@ -23,10 +23,10 @@
 
 #include "../MidiController.h"
 #include "../PresetController.h"
-#include "controllers.h"
 
 #include <cassert>
 #include <glib/gi18n.h>
+#include <seq24/controllers.h>
 
 
 MIDILearnDialog::MIDILearnDialog(MidiController *midiController, PresetController *presetController, GtkWindow *parent)

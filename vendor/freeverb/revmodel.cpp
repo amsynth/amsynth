@@ -10,6 +10,9 @@
 
 revmodel::revmodel()
 :	mode(initialmode)
+,	dryz(initialdry)
+,	wet1z(0.F)
+,	wet2z(0.F)
 {
     setrate(44100);
 
@@ -107,8 +110,12 @@ revmodel::processreplace(float *inputL, float *inputR, float *outputL, float *ou
 			outR = allpassR[i].process(outR);
 		}
 
+		// De-zipper
+		float d = (dryz += ((dry - dryz) * 0.005F));
+		float w1 = (wet1z += ((wet1 - wet1z) * 0.005F));
+		float w2 = (wet2z += ((wet2 - wet2z) * 0.005F));
+
 		// Calculate output REPLACING anything already there
-		float d  = dry.tick(), w1 = wet1.tick(), w2 = wet2.tick();
 		*outputL = outL*w1 + outR*w2 + *inputL*d;
 		*outputR = outR*w1 + outL*w2 + *inputR*d;
 
@@ -145,8 +152,12 @@ revmodel::processreplace(float *inputM, float *outputL, float *outputR, long num
 			outR = allpassR[i].process(outR);
 		}
 
+		// De-zipper
+		float d = (dryz += ((dry - dryz) * 0.005F));
+		float w1 = (wet1z += ((wet1 - wet1z) * 0.005F));
+		float w2 = (wet2z += ((wet2 - wet2z) * 0.005F));
+
 		// Calculate output REPLACING anything already there
-		float d  = dry.tick(), w1 = wet1.tick(), w2 = wet2.tick();
 		*outputL = outL*w1 + outR*w2 + *inputM*d;
 		*outputR = outR*w1 + outL*w2 + *inputM*d;
 
@@ -180,8 +191,12 @@ void revmodel::processmix(float *inputL, float *inputR, float *outputL, float *o
 			outR = allpassR[i].process(outR);
 		}
 
+		// De-zipper
+		float d = (dryz += ((dry - dryz) * 0.005F));
+		float w1 = (wet1z += ((wet1 - wet1z) * 0.005F));
+		float w2 = (wet2z += ((wet2 - wet2z) * 0.005F));
+
 		// Calculate output MIXING with anything already there
-		float d  = dry.tick(), w1 = wet1.tick(), w2 = wet2.tick();
 		*outputL += outL*w1 + outR*w2 + *inputL*d;
 		*outputR += outR*w1 + outL*w2 + *inputR*d;
 
@@ -273,7 +288,7 @@ void revmodel::setdry(float value)
 
 float revmodel::getdry()
 {
-	return dry.getRawValue()/scaledry;
+	return dry/scaledry;
 }
 
 void revmodel::setwidth(float value)
