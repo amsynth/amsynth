@@ -199,36 +199,7 @@ if BUILD_LV2
 
 amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
 noinst_LTLIBRARIES += amsynth_lv2.la
-amsynth_lv2_la_SOURCES = src/amsynth_lv2.cpp src/amsynth_lv2.h $(libcore_sources) $(libdsp_sources) \
-	vendor/lv2/lv2plug.in/ns/lv2core/lv2.h \
-	vendor/lv2/lv2plug.in/ns/lv2core/lv2_util.h \
-	vendor/lv2/lv2plug.in/ns/ext/time/time.h \
-	vendor/lv2/lv2plug.in/ns/ext/state/state.h \
-	vendor/lv2/lv2plug.in/ns/ext/uri-map/uri-map.h \
-	vendor/lv2/lv2plug.in/ns/ext/parameters/parameters.h \
-	vendor/lv2/lv2plug.in/ns/ext/midi/midi.h \
-	vendor/lv2/lv2plug.in/ns/ext/patch/patch.h \
-	vendor/lv2/lv2plug.in/ns/ext/event/event.h \
-	vendor/lv2/lv2plug.in/ns/ext/event/event-helpers.h \
-	vendor/lv2/lv2plug.in/ns/ext/options/options.h \
-	vendor/lv2/lv2plug.in/ns/ext/atom/atom.h \
-	vendor/lv2/lv2plug.in/ns/ext/atom/util.h \
-	vendor/lv2/lv2plug.in/ns/ext/atom/forge.h \
-	vendor/lv2/lv2plug.in/ns/ext/port-props/port-props.h \
-	vendor/lv2/lv2plug.in/ns/ext/log/log.h \
-	vendor/lv2/lv2plug.in/ns/ext/log/logger.h \
-	vendor/lv2/lv2plug.in/ns/ext/morph/morph.h \
-	vendor/lv2/lv2plug.in/ns/ext/worker/worker.h \
-	vendor/lv2/lv2plug.in/ns/ext/resize-port/resize-port.h \
-	vendor/lv2/lv2plug.in/ns/ext/presets/presets.h \
-	vendor/lv2/lv2plug.in/ns/ext/urid/urid.h \
-	vendor/lv2/lv2plug.in/ns/ext/buf-size/buf-size.h \
-	vendor/lv2/lv2plug.in/ns/ext/data-access/data-access.h \
-	vendor/lv2/lv2plug.in/ns/ext/port-groups/port-groups.h \
-	vendor/lv2/lv2plug.in/ns/ext/instance-access/instance-access.h \
-	vendor/lv2/lv2plug.in/ns/ext/dynmanifest/dynmanifest.h \
-	vendor/lv2/lv2plug.in/ns/extensions/ui/ui.h \
-	vendor/lv2/lv2plug.in/ns/extensions/units/units.h
+amsynth_lv2_la_SOURCES = src/amsynth_lv2.cpp src/amsynth_lv2.h $(libcore_sources) $(libdsp_sources)
 amsynth_lv2_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@
 amsynth_lv2_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2_descriptor" -disable-static
 

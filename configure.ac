@@ -126,7 +126,7 @@ AM_CONDITIONAL([BUILD_DSSI_GUI], [test "x$with_dssi_gui" = "xyes"])
 
 AC_ARG_WITH([lv2], [AS_HELP_STRING([--with-lv2], [build support for LV2])])
 AS_IF([test "x$with_lv2" != "xno"], [
-    PKG_CHECK_MODULES([LV2], [[gtk+-2.0 >= 2.20.0]], [with_lv2="yes"], [with_lv2="no"])])
+    PKG_CHECK_MODULES([LV2], [[lv2, gtk+-2.0 >= 2.20.0]], [with_lv2="yes"], [with_lv2="no"])])
 AM_CONDITIONAL([BUILD_LV2], [test "x$with_lv2" != "xno"])
 
 AC_ARG_WITH([vst], [AS_HELP_STRING([--with-vst], [build VST plug-in] [default=yes])], [], [with_vst=yes])

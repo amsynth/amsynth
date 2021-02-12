@@ -1,7 +1,7 @@
 /*
  *  amsynth_lv2.cpp
  *
- *  Copyright (c) 2001-2017 Nick Dowell
+ *  Copyright (c) 2001-2021 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -23,14 +23,6 @@
 
 #include "Preset.h"
 #include "Synthesizer.h"
-
-#include "lv2/lv2plug.in/ns/ext/atom/atom.h"
-#include "lv2/lv2plug.in/ns/ext/atom/forge.h"
-#include "lv2/lv2plug.in/ns/ext/midi/midi.h"
-#include "lv2/lv2plug.in/ns/ext/patch/patch.h"
-#include "lv2/lv2plug.in/ns/ext/state/state.h"
-#include "lv2/lv2plug.in/ns/ext/worker/worker.h"
-#include "lv2/lv2plug.in/ns/lv2core/lv2_util.h"
 
 #include <cstdio>
 #include <map>
