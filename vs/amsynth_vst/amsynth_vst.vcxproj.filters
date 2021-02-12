@@ -54,13 +54,13 @@
     <ClCompile Include="..\..\src\VoiceBoard\VoiceBoard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\freeverb\allpass.cpp">
+    <ClCompile Include="..\..\vendor\freeverb\allpass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\freeverb\comb.cpp">
+    <ClCompile Include="..\..\vendor\freeverb\comb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\freeverb\revmodel.cpp">
+    <ClCompile Include="..\..\vendor\freeverb\revmodel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Effects\Distortion.cpp">
@@ -128,19 +128,19 @@
     <ClInclude Include="..\..\src\VoiceBoard\VoiceBoard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\freeverb\allpass.hpp">
+    <ClInclude Include="..\..\vendor\freeverb\allpass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\freeverb\comb.hpp">
+    <ClInclude Include="..\..\vendor\freeverb\comb.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\freeverb\denormals.h">
+    <ClInclude Include="..\..\vendor\freeverb\denormals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\freeverb\revmodel.hpp">
+    <ClInclude Include="..\..\vendor\freeverb\revmodel.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\freeverb\tuning.h">
+    <ClInclude Include="..\..\vendor\freeverb\tuning.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Effects\Distortion.h">
