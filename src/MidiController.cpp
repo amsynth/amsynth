@@ -1,7 +1,7 @@
 /*
  *  MidiController.cpp
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2021 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -96,7 +96,7 @@ MidiController::HandleMidiData(const unsigned char* bytes, unsigned numBytes)
 			break;
 
 		case MIDI_STATUS_PROGRAM_CHANGE:
-			if (!ignore && presetController->getCurrPresetNumber() != byte) {
+			if (!ignore) {
 				if (_handler) _handler->HandleMidiAllSoundOff();
 				presetController->selectPreset((int) byte);
 			}
@@ -164,12 +164,8 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 	}
 
 	switch (cc) {
-		case MIDI_CC_BANK_SELECT_MSB: {
-			presetController->selectBank(value);
-			presetController->selectPreset(presetController->getCurrPresetNumber());
-			break;
-		}
 		case MIDI_CC_BANK_SELECT_LSB:
+			presetController->selectBank(value);
 			break;
 		case MIDI_CC_PAN_MSB: {
 			// https://web.archive.org/web/20160115024014/http://www.midi.org/techspecs/rp36.php
