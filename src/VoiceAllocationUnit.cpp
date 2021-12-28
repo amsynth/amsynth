@@ -1,7 +1,7 @@
 /*
  *  VoiceAllocationUnit.cpp
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2021 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -162,7 +162,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 			_voices[note]->reset();
 		
 		_voices[note]->setVelocity(velocity);
-		_voices[note]->triggerOn();
+		_voices[note]->triggerOn(true);
 		
 		active[note] = true;
 	}
@@ -186,7 +186,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 		voice->setFrequency(voice->getFrequency(), pitch, portamentoTime);
 		
 		if (_keyboardMode == KeyboardModeMono || previousNote == -1)
-			voice->triggerOn();
+			voice->triggerOn(!active[0]);
 		
 		active[0] = true;
 	}
@@ -243,7 +243,7 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 		if (0 <= nextNote) {
 			voice->setFrequency(voice->getFrequency(), (float) noteToPitch(nextNote), mPortamentoTime);
 			if (_keyboardMode == KeyboardModeMono)
-				voice->triggerOn();
+				voice->triggerOn(false);
 		} else {
 			voice->triggerOff();
 		}

@@ -1,7 +1,7 @@
 /*
  *  VoiceBoard.h
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2021 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -42,7 +42,7 @@ public:
 	static constexpr int kMaxProcessBufferSize = 64;
 
 	bool	isSilent		();
-	void	triggerOn		();
+	void	triggerOn		(bool reset);
 	void	triggerOff		();
 	void	setVelocity		(float velocity);
 	

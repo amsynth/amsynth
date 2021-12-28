@@ -1,7 +1,7 @@
 /*
  *  Synth--.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2021 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -164,6 +164,11 @@ public:
 	float getRawValue()
 	{
 		return _rawValue;
+	}
+
+	void reset()
+	{
+		_smoother.set(_rawValue);
 	}
 	
 	inline float tick()

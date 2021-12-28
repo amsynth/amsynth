@@ -1,6 +1,7 @@
 amsynth TBD
 
   - Added PatriksBank04 and PatriksBank05.
+  - Fixed click when playing a note for the first time - issue #196
   - Stopped vendoring lv2 headers; install lv2-dev (or similar) via your package manager.
 
 
