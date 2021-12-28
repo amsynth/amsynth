@@ -61,7 +61,7 @@ private:
 	float			m_attack = 0;
 	float			m_decay = 0;
 	float			m_sustain = 1;
-	ParamSmoother	m_sustain_smoother;
+	ParamSmoother	m_sustain_smoother{1.f};
 	float			m_release = 0;
 
 	float			m_sample_rate = 44100;
