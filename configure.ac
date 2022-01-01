@@ -18,12 +18,12 @@ dnl  along with this program; if not, write to the Free Software
 dnl  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 dnl
 
-AC_COPYRIGHT([Copyright (C) 2001-2020 Nick Dowell])
-AC_INIT([amsynth], [1.12.2], [https://github.com/amsynth/amsynth/issues], [amsynth], [https://amsynth.github.io])
+AC_COPYRIGHT([Copyright (C) 2001-2022 Nick Dowell])
+AC_INIT([amsynth], [1.12.3], [https://github.com/amsynth/amsynth/issues], [amsynth], [https://amsynth.github.io])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE([subdir-objects])
+AM_INIT_AUTOMAKE([-Wno-portability subdir-objects])
 AM_SILENT_RULES([yes])
 
 # make CXXFLAGS inherit from CFLAGS unless CXXFLAGS were specified
@@ -126,7 +126,7 @@ AM_CONDITIONAL([BUILD_DSSI_GUI], [test "x$with_dssi_gui" = "xyes"])
 
 AC_ARG_WITH([lv2], [AS_HELP_STRING([--with-lv2], [build support for LV2])])
 AS_IF([test "x$with_lv2" != "xno"], [
-    PKG_CHECK_MODULES([LV2], [[gtk+-2.0 >= 2.20.0]], [with_lv2="yes"], [with_lv2="no"])])
+    PKG_CHECK_MODULES([LV2], [[lv2, gtk+-2.0 >= 2.20.0]], [with_lv2="yes"], [with_lv2="no"])])
 AM_CONDITIONAL([BUILD_LV2], [test "x$with_lv2" != "xno"])
 
 AC_ARG_WITH([vst], [AS_HELP_STRING([--with-vst], [build VST plug-in] [default=yes])], [], [with_vst=yes])

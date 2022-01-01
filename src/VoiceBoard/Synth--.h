@@ -1,7 +1,7 @@
 /*
  *  Synth--.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2021 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -127,6 +127,7 @@ struct IIRFilterFirstOrder
 class ParamSmoother
 {
 public:
+	ParamSmoother(float z): _z(z) {}
 	
 	inline float processSample(float x)
 	{
@@ -139,14 +140,14 @@ public:
 	}
 	
 private:
-	float _z = 0;
+	float _z;
 };
 
 class SmoothedParam
 {
 public:
 	
-	SmoothedParam(float rawValue = 0.F): _rawValue(rawValue) {}
+	SmoothedParam(float rawValue = 0.f): _rawValue(rawValue), _smoother(rawValue) {}
 	~SmoothedParam() = default;
 	
 	SmoothedParam(const SmoothedParam&) = delete;
@@ -164,6 +165,11 @@ public:
 	float getRawValue()
 	{
 		return _rawValue;
+	}
+
+	void reset()
+	{
+		_smoother.set(_rawValue);
 	}
 	
 	inline float tick()

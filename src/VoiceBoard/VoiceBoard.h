@@ -1,7 +1,7 @@
 /*
  *  VoiceBoard.h
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2021 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -42,7 +42,7 @@ public:
 	static constexpr int kMaxProcessBufferSize = 64;
 
 	bool	isSilent		();
-	void	triggerOn		();
+	void	triggerOn		(bool reset);
 	void	triggerOff		();
 	void	setVelocity		(float velocity);
 	
@@ -60,7 +60,7 @@ public:
 
 private:
 
-	ParamSmoother	mVolume;
+	ParamSmoother	mVolume{0.f};
 
 	Lerper			mFrequency;
 	bool			mFrequencyDirty = false;
@@ -83,8 +83,8 @@ private:
 	int				mFreqModDestination = 0;
 	float			mOsc1PulseWidth = 0;
 	float			mOsc2PulseWidth = 0;
-	SmoothedParam	mOscMix;
-	SmoothedParam	mRingModAmt;
+	SmoothedParam	mOscMix{0.f};
+	SmoothedParam	mRingModAmt{0.f};
 	float			mOsc2Octave = 1;
 	float			mOsc2Detune = 1;
 	float			mOsc2Pitch = 0;
@@ -104,8 +104,8 @@ private:
 	
 	// amp section
 	IIRFilterFirstOrder _vcaFilter;
-	SmoothedParam	mAmpModAmount;
-	SmoothedParam	mAmpVelSens;
+	SmoothedParam	mAmpModAmount{-1.f};
+	SmoothedParam	mAmpVelSens{1.f};
 	ADSR 			mAmpADSR;
 
 	struct {

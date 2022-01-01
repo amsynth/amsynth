@@ -19,6 +19,8 @@
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
 AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' -DPACKAGE_LOCALEDIR=\""$(datadir)/locale"\" @CPPFLAGS@ -fPIC -fvisibility=hidden
 
+AM_CPPFLAGS += -I"$(top_srcdir)/vendor"
+
 # https://developer.gnome.org/gtk3/stable/gtk-migrating-2-to-3.html#id-1.6.3.3
 AM_CPPFLAGS += -DGDK_DISABLE_DEPRECATED -DGSEAL_ENABLE -DGTK_DISABLE_DEPRECATED -DGTK_DISABLE_SINGLE_INCLUDES
 
@@ -49,14 +51,6 @@ libdsp_sources = \
 	src/Effects/Distortion.h \
 	src/Effects/SoftLimiter.cpp \
 	src/Effects/SoftLimiter.h \
-	src/freeverb/allpass.cpp \
-	src/freeverb/allpass.hpp \
-	src/freeverb/comb.cpp \
-	src/freeverb/comb.hpp \
-	src/freeverb/denormals.h \
-	src/freeverb/revmodel.cpp \
-	src/freeverb/revmodel.hpp \
-	src/freeverb/tuning.h \
 	src/Synthesizer.cpp \
 	src/Synthesizer.h \
 	src/TuningMap.cpp \
@@ -71,7 +65,15 @@ libdsp_sources = \
 	src/VoiceBoard/Oscillator.h \
 	src/VoiceBoard/Synth--.h \
 	src/VoiceBoard/VoiceBoard.cpp \
-	src/VoiceBoard/VoiceBoard.h
+	src/VoiceBoard/VoiceBoard.h \
+	vendor/freeverb/allpass.cpp \
+	vendor/freeverb/allpass.hpp \
+	vendor/freeverb/comb.cpp \
+	vendor/freeverb/comb.hpp \
+	vendor/freeverb/denormals.h \
+	vendor/freeverb/revmodel.cpp \
+	vendor/freeverb/revmodel.hpp \
+	vendor/freeverb/tuning.h
 
 libgui_sources = \
 	src/GUI/bitmap_button.c \
@@ -80,13 +82,13 @@ libgui_sources = \
 	src/GUI/bitmap_knob.h \
 	src/GUI/bitmap_popup.c \
 	src/GUI/bitmap_popup.h \
-	src/GUI/controllers.h \
 	src/GUI/editor_menus.cpp \
 	src/GUI/editor_menus.h \
 	src/GUI/editor_pane.c \
 	src/GUI/editor_pane.h \
 	src/GUI/gui_main.cpp \
-	src/GUI/gui_main.h
+	src/GUI/gui_main.h \
+	vendor/seq24/controllers.h
 
 
 #
@@ -152,7 +154,7 @@ amsynth_SOURCES += \
 	src/nsm/NsmClient.h \
 	src/nsm/NsmHandler.cpp \
 	src/nsm/NsmHandler.h \
-	src/nsm/nsm.h
+	vendor/nsm/nsm.h
 endif
 
 #
@@ -197,74 +199,17 @@ if BUILD_LV2
 
 amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
 noinst_LTLIBRARIES += amsynth_lv2.la
-amsynth_lv2_la_SOURCES = src/amsynth_lv2.cpp src/amsynth_lv2.h $(libcore_sources) $(libdsp_sources) \
-	include/lv2/lv2plug.in/ns/lv2core/lv2.h \
-	include/lv2/lv2plug.in/ns/lv2core/lv2_util.h \
-	include/lv2/lv2plug.in/ns/ext/time/time.h \
-	include/lv2/lv2plug.in/ns/ext/state/state.h \
-	include/lv2/lv2plug.in/ns/ext/uri-map/uri-map.h \
-	include/lv2/lv2plug.in/ns/ext/parameters/parameters.h \
-	include/lv2/lv2plug.in/ns/ext/midi/midi.h \
-	include/lv2/lv2plug.in/ns/ext/patch/patch.h \
-	include/lv2/lv2plug.in/ns/ext/event/event.h \
-	include/lv2/lv2plug.in/ns/ext/event/event-helpers.h \
-	include/lv2/lv2plug.in/ns/ext/options/options.h \
-	include/lv2/lv2plug.in/ns/ext/atom/atom.h \
-	include/lv2/lv2plug.in/ns/ext/atom/util.h \
-	include/lv2/lv2plug.in/ns/ext/atom/forge.h \
-	include/lv2/lv2plug.in/ns/ext/port-props/port-props.h \
-	include/lv2/lv2plug.in/ns/ext/log/log.h \
-	include/lv2/lv2plug.in/ns/ext/log/logger.h \
-	include/lv2/lv2plug.in/ns/ext/morph/morph.h \
-	include/lv2/lv2plug.in/ns/ext/worker/worker.h \
-	include/lv2/lv2plug.in/ns/ext/resize-port/resize-port.h \
-	include/lv2/lv2plug.in/ns/ext/presets/presets.h \
-	include/lv2/lv2plug.in/ns/ext/urid/urid.h \
-	include/lv2/lv2plug.in/ns/ext/buf-size/buf-size.h \
-	include/lv2/lv2plug.in/ns/ext/data-access/data-access.h \
-	include/lv2/lv2plug.in/ns/ext/port-groups/port-groups.h \
-	include/lv2/lv2plug.in/ns/ext/instance-access/instance-access.h \
-	include/lv2/lv2plug.in/ns/ext/dynmanifest/dynmanifest.h \
-	include/lv2/lv2plug.in/ns/extensions/ui/ui.h \
-	include/lv2/lv2plug.in/ns/extensions/units/units.h
-amsynth_lv2_la_CPPFLAGS = $(AM_CPPFLAGS) -I"$(top_srcdir)/include" @LV2_CFLAGS@
+amsynth_lv2_la_SOURCES = src/amsynth_lv2.cpp src/amsynth_lv2.h $(libcore_sources) $(libdsp_sources)
+amsynth_lv2_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@
 amsynth_lv2_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2_descriptor" -disable-static
 
 noinst_LTLIBRARIES += amsynth_lv2_gtk.la
 amsynth_lv2_gtk_la_SOURCES = src/amsynth_lv2_ui_gtk.cpp $(libcore_sources) $(libgui_sources)
-amsynth_lv2_gtk_la_CPPFLAGS = $(AM_CPPFLAGS) -I"$(top_srcdir)/include" @LV2_CFLAGS@
+amsynth_lv2_gtk_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@
 amsynth_lv2_gtk_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2ui_descriptor" -disable-static
 amsynth_lv2_gtk_la_LIBADD = @LV2_LIBS@
 
-dist_amsynth_lv2_DATA = \
-	data/amsynth.lv2/manifest.ttl \
-	data/amsynth.lv2/amsynth.ttl \
-	data/amsynth.lv2/amsynth_factory.bank.ttl \
-	data/amsynth.lv2/BriansBank01.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank02.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank03.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank04.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank05.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank06.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank07.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank08.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank09.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank10.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank11.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank12.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank13.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank14.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank15.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank16.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank17.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank18.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank19.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank20.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank21.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank22.amSynth.bank.ttl \
-	data/amsynth.lv2/PatriksBank01.bank.ttl \
-	data/amsynth.lv2/PatriksBank02.bank.ttl \
-	data/amsynth.lv2/PatriksBank03.bank.ttl
+dist_amsynth_lv2_DATA = $(wildcard data/amsynth.lv2/*.ttl)
 
 endif
 
@@ -277,13 +222,12 @@ if BUILD_VST
 
 vstdir=$(libdir)/vst
 noinst_LTLIBRARIES += amsynth_vst.la
-amsynth_vst_la_SOURCES = src/amsynth_vst.cpp $(libcore_sources) $(libdsp_sources) include/vestige/aeffectx.h
-amsynth_vst_la_CPPFLAGS = $(AM_CPPFLAGS) -I"$(top_srcdir)/include"
+amsynth_vst_la_SOURCES = src/amsynth_vst.cpp $(libcore_sources) $(libdsp_sources) vendor/vestige/aeffectx.h
 amsynth_vst_la_LDFLAGS = -rpath $(vstdir) -avoid-version -module -export-symbols-regex "VSTPluginMain|main"
 
 if BUILD_GUI
 amsynth_vst_la_SOURCES += $(libgui_sources)
-amsynth_vst_la_CPPFLAGS += @GTK_CFLAGS@
+amsynth_vst_la_CPPFLAGS = $(AM_CPPFLAGS) @GTK_CFLAGS@
 amsynth_vst_la_LIBADD = @GTK_LIBS@
 endif
 
@@ -344,33 +288,7 @@ dist_skinsdefault_DATA = \
 	data/skins/default/waveform_pics.png
 
 banksdir = $(pkgdatadir)/banks
-dist_banks_DATA = \
-	data/banks/amsynth_factory.bank \
-	data/banks/BriansBank01.amSynth.bank \
-	data/banks/BriansBank02.amSynth.bank \
-	data/banks/BriansBank03.amSynth.bank \
-	data/banks/BriansBank04.amSynth.bank \
-	data/banks/BriansBank05.amSynth.bank \
-	data/banks/BriansBank06.amSynth.bank \
-	data/banks/BriansBank07.amSynth.bank \
-	data/banks/BriansBank08.amSynth.bank \
-	data/banks/BriansBank09.amSynth.bank \
-	data/banks/BriansBank10.amSynth.bank \
-	data/banks/BriansBank11.amSynth.bank \
-	data/banks/BriansBank12.amSynth.bank \
-	data/banks/BriansBank13.amSynth.bank \
-	data/banks/BriansBank14.amSynth.bank \
-	data/banks/BriansBank15.amSynth.bank \
-	data/banks/BriansBank16.amSynth.bank \
-	data/banks/BriansBank17.amSynth.bank \
-	data/banks/BriansBank18.amSynth.bank \
-	data/banks/BriansBank19.amSynth.bank \
-	data/banks/BriansBank20.amSynth.bank \
-	data/banks/BriansBank21.amSynth.bank \
-	data/banks/BriansBank22.amSynth.bank \
-	data/banks/PatriksBank01.bank \
-	data/banks/PatriksBank02.bank \
-	data/banks/PatriksBank03.bank
+dist_banks_DATA = $(wildcard data/banks/*.bank)
 
 
 #

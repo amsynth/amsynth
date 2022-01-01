@@ -7,14 +7,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
+        os: [ubuntu-18.04, ubuntu-20.04]
 
     steps:
     - uses: actions/checkout@v1
     - name: apt update
       run: sudo apt update
     - name: apt install
-      run: sudo apt install autoconf-archive autopoint dssi-dev intltool libasound-dev libgtk2.0-dev libjack-jackd2-dev liblo-dev pandoc
+      run: sudo apt install autoconf-archive autopoint dssi-dev intltool libasound-dev libgtk2.0-dev libjack-jackd2-dev liblo-dev lv2-dev pandoc
     - name: apt install (optional)
       run: sudo apt install liblash-compat-dev || echo ignoring failure
     - name: autogen

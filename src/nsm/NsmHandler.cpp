@@ -1,14 +1,15 @@
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <iostream>
-#include <sstream>
-#include <csignal>
+#include "NsmHandler.h"
 
 #include "../main.h"
-#include "nsm.h"
 #include "NsmClient.h"
-#include "NsmHandler.h"
+
+#include <csignal>
+#include <iostream>
+#include <nsm/nsm.h>
+#include <sstream>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 
 NsmHandler::NsmHandler( NsmClient *nsmClient) {

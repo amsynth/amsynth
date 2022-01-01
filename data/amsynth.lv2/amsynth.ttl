@@ -19945,6 +19945,1550 @@
     rdfs:label "PatriksBank03: 127: Wind Turbin" ;
     rdfs:seeAlso <PatriksBank03.bank.ttl> .
 
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04>
+    a pset:Bank ;
+    rdfs:label "PatriksBank04" .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_000_Open_Piano>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 000: Open Piano" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_001_Arranger_Piano>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 001: Arranger Piano" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_002_U_Rhod>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 002: U Rhod" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_003_Ampsim_EP>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 003: Ampsim EP" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_004_RM_Rhod_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 004: RM Rhod 2" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_005_Bonk_EP>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 005: Bonk EP" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_006_Psychedelic_EP>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 006: Psychedelic EP" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_007_Piez_EP>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 007: Piez EP" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_008_M_Clavinett>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 008: M Clavinett" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_009_Maxi_Hapsi>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 009: Maxi Hapsi" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_010_Digi_Bell_1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 010: Digi Bell 1" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_011_Digi_Bell_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 011: Digi Bell 2" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_012_Digi_Bell_3>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 012: Digi Bell 3" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_013_Digi_Bell_4>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 013: Digi Bell 4" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_014_Digi_Bell_5>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 014: Digi Bell 5" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_015_Digi_Chime>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 015: Digi Chime" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_016_Star_Bells>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 016: Star Bells" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_017_Filter_Bells>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 017: Filter Bells" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_018_Kalimba_Drive>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 018: Kalimba Drive" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_019_Interference_Drops>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 019: Interference Drops" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_020_Ship_Bells>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 020: Ship Bells" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_021_Digi_Organ_1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 021: Digi Organ 1" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_022_Digi_Organ_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 022: Digi Organ 2" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_023_Digi_Organ_3>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 023: Digi Organ 3" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_024_Digi_Organ_4>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 024: Digi Organ 4" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_025_Stomp_Organ>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 025: Stomp Organ" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_026_Sub_Organ>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 026: Sub Organ" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_027_Wood_Seasons>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 027: Wood Seasons" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_028_Bell->Organ>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 028: Bell->Organ" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_029_Steel_Phase>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 029: Steel Phase" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_030_Flangy_Guitar>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 030: Flangy Guitar" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_031_5-S__Bass>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 031: 5-S  Bass" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_032_Thumbin_Bass>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 032: Thumbin Bass" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_033_Raw_Bass>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 033: Raw Bass" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_034_Pillow_Bass>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 034: Pillow Bass" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_035_Motor_Bass>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 035: Motor Bass" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_036_Rezo_Bass>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 036: Rezo Bass" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_037_String_in_the_Wind>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 037: String in the Wind" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_038_Synth_Cello>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 038: Synth Cello" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_039_Woo_Pad>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 039: Woo Pad" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_040_Hum_Mmm>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 040: Hum Mmm" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_041_Doh!>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 041: Doh!" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_042_Hum_hum>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 042: Hum hum" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_043_Horn_Sweep>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 043: Horn Sweep" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_044_Noise_Horns>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 044: Noise Horns" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_045_Tuba_Bass>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 045: Tuba Bass" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_046_Reed_Orchestra>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 046: Reed Orchestra" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_047_ADD_Reed>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 047: ADD Reed" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_048_Accordian_Gates>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 048: Accordian Gates" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_049_Plucky_Accordian>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 049: Plucky Accordian" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_050_Harmonica_Stacks>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 050: Harmonica Stacks" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_051_Digi_Lead_1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 051: Digi Lead 1" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_052_Digi_Lead_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 052: Digi Lead 2" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_053_Digi_Lead_3>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 053: Digi Lead 3" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_054_OA_lead>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 054: OA lead" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_055_Record_Lead>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 055: Record Lead" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_056_Saxed_Lead>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 056: Saxed Lead" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_057_Screem_Lead>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 057: Screem Lead" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_058_Joe's_Lead>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 058: Joe's Lead" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_059_Temple_Lead>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 059: Temple Lead" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_060_Metalic_Whistle>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 060: Metalic Whistle" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_061_For_Arps>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 061: For Arps" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_062_Submod_Rezo>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 062: Submod Rezo" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_063_Swarm_warmth>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 063: Swarm warmth" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_064_Digi_Pad_1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 064: Digi Pad 1" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_065_Diffuse_Pad>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 065: Diffuse Pad" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_066_Xting_Pad>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 066: Xting Pad" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_067_Emotional_Pad>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 067: Emotional Pad" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_068_Blow_Pad>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 068: Blow Pad" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_069_Seastar_Pad>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 069: Seastar Pad" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_070_Rezo_Swell>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 070: Rezo Swell" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_071_Chromatic_Peace>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 071: Chromatic Peace" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_072_Chromatic_Sadness>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 072: Chromatic Sadness" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_073_Phase_ACC>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 073: Phase ACC" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_074_Cloudy_Octave>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 074: Cloudy Octave" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_075_Polluted_Triangle>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 075: Polluted Triangle" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_076_Squares:ia>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 076: Squares:ia" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_077_Digi_Stack_1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 077: Digi Stack 1" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_078_Digi_Stack_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 078: Digi Stack 2" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_079_Digi_Stack_3>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 079: Digi Stack 3" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_080_Hu-Stack_4>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 080: Hu-Stack 4" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_081_Hu-Stack_5>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 081: Hu-Stack 5" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_082_Hu-Stack_6>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 082: Hu-Stack 6" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_083_Mattress_Wall>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 083: Mattress Wall" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_084_Fast_WOW!>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 084: Fast WOW!" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_085_Island_Stack>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 085: Island Stack" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_086_Reed_Stack>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 086: Reed Stack" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_087_Gritty_Stack>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 087: Gritty Stack" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_088_Funky_Sparks>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 088: Funky Sparks" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_089_Re-Stack>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 089: Re-Stack" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_090_Energetic_Stack>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 090: Energetic Stack" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_091_Vel_Hirez>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 091: Vel Hirez" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_092_Portasquare_live>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 092: Portasquare live" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_093_Shipwreck_Blues>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 093: Shipwreck Blues" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_094_5e1l_1e2d>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 094: 5e1l 1e2d" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_095_Throw'n_Up?>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 095: Throw'n Up?" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_096_AY_Pluck>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 096: AY Pluck" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_097_Electric_Pluck>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 097: Electric Pluck" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_098_7th_Happiness>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 098: 7th Happiness" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_099_Log_Drum>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 099: Log Drum" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_100_Marmor_Hit>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 100: Marmor Hit" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_101_RD_Percussion_1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 101: RD Percussion 1" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_102_RD_Percussion_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 102: RD Percussion 2" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_103_Flute_Bell>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 103: Flute Bell" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_104_Mondo_-3>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 104: Mondo -3" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_105_Compressed_Blend>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 105: Compressed Blend" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_106_Filter_Blow>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 106: Filter Blow" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_107_Cloud_Harp>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 107: Cloud Harp" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_108_Shelter_Sine>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 108: Shelter Sine" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_109_Mod_Voice>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 109: Mod Voice" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_110_Wow_Crush>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 110: Wow Crush" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_111_Mondo_Seq>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 111: Mondo Seq" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_112_Blow_Beat>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 112: Blow Beat" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_113_Event_Expectations>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 113: Event Expectations" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_114_Screem_Seq>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 114: Screem Seq" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_115_Overtone_Journey>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 115: Overtone Journey" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_116_Running_Mind>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 116: Running Mind" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_117_Sensitive_Saws>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 117: Sensitive Saws" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_118_Frog_Groove>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 118: Frog Groove" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_119_Artic_Sunrise>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 119: Artic Sunrise" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_120_Slow_Bursts>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 120: Slow Bursts" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_121_Notch_Distortion>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 121: Notch Distortion" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_122_Wahwah!>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 122: Wahwah!" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_123_Sending_Off>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 123: Sending Off" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_124_Ghostly_Screem>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 124: Ghostly Screem" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_125_Pending_FX>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 125: Pending FX" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_126_Rezo_Helicopter>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 126: Rezo Helicopter" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_127_Wind_of_Fire>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank04: 127: Wind of Fire" ;
+    rdfs:seeAlso <PatriksBank04.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05>
+    a pset:Bank ;
+    rdfs:label "PatriksBank05" .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_000_Expressive_Piano_1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 000: Expressive Piano 1" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_001_Expressive_Piano_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 001: Expressive Piano 2" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_002_Cold_Piano>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 002: Cold Piano" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_003_Star_EP>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 003: Star EP" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_004_Square_EP>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 004: Square EP" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_005_Folded_EP>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 005: Folded EP" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_006_Rh_Clav>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 006: Rh Clav" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_007_DF_Clavinet>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 007: DF Clavinet" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_008_Xylophone_Y>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 008: Xylophone Y" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_009_Smoke_Marimba>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 009: Smoke Marimba" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_010_Digi_Bell_6>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 010: Digi Bell 6" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_011_Clock_w_Sustain>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 011: Clock w Sustain" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_012_Bell5>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 012: Bell5" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_013_Romance_Bells>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 013: Romance Bells" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_014_Clock_Stack>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 014: Clock Stack" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_015_Soft_Pipes>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 015: Soft Pipes" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_016_Jazzy_Organ>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 016: Jazzy Organ" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_017_Digi_Organ_5>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 017: Digi Organ 5" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_018_Squabb_Organ>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 018: Squabb Organ" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_019_Rythm_E-Guitar>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 019: Rythm E-Guitar" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_020_Synth_Gtr>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 020: Synth Gtr" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_021_EG_Pad>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 021: EG Pad" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_022_Bubble_Bass_1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 022: Bubble Bass 1" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_023_Bubble_Bass_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 023: Bubble Bass 2" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_024_Goa_Kickbass>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 024: Goa Kickbass" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_025_Rezo_Bass_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 025: Rezo Bass 2" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_026_Messy_Bass>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 026: Messy Bass" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_027_Fragile_Choir_1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 027: Fragile Choir 1" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_028_Fragile_Choir_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 028: Fragile Choir 2" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_029_Muffled_Cry>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 029: Muffled Cry" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_030_Synth_B-Brass>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 030: Synth B-Brass" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_031_R-Horns>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 031: R-Horns" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_032_Noise_Horns>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 032: Noise Horns" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_033_Urban_Flute>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 033: Urban Flute" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_034_Autumn_Opus>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 034: Autumn Opus" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_035_Light_Reed>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 035: Light Reed" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_036_Hugs_of_Reed>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 036: Hugs of Reed" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_037_Reed_Detune>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 037: Reed Detune" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_038_Clari_Swell>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 038: Clari Swell" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_039_Vario_Clario>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 039: Vario Clario" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_040_Funeral_Pipes>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 040: Funeral Pipes" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_041_Doh_Pipe>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 041: Doh Pipe" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_042_Pipe_Pluck>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 042: Pipe Pluck" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_043_Digi_Lead_4>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 043: Digi Lead 4" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_044_Digi_Lead_5>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 044: Digi Lead 5" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_045_v--_Lead>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 045: v-- Lead" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_046_Fat_Rezo>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 046: Fat Rezo" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_047_Techno_Whistle>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 047: Techno Whistle" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_048_Asia_Lead_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 048: Asia Lead 2" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_049_Croon_Lead>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 049: Croon Lead" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_050_HF_Lead>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 050: HF Lead" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_051_Lost_Cathedral>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 051: Lost Cathedral" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_052_SN_Lead>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 052: SN Lead" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_053_Fast_Ana>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 053: Fast Ana" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_054_Leviating_STACK>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 054: Leviating STACK" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_055_Stack4Chords>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 055: Stack4Chords" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_056_Digi_Stack_4>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 056: Digi Stack 4" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_057_Digi_Stack_5>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 057: Digi Stack 5" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_058_Digi_Stack_6>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 058: Digi Stack 6" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_059_IRL_Drive>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 059: IRL Drive" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_060_Sublime_Drive>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 060: Sublime Drive" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_061_Aftermath_Pad>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 061: Aftermath Pad" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_062_Tinting_Pad>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 062: Tinting Pad" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_063_Alluring_Pad>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 063: Alluring Pad" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_064_HardSynced_Pad>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 064: HardSynced Pad" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_065_Woo_Pad>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 065: Woo Pad" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_066_Cracking_Pad>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 066: Cracking Pad" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_067_Aliasing_Pad>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 067: Aliasing Pad" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_068_Digi_Pad_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 068: Digi Pad 2" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_069_Digital_Swell_1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 069: Digital Swell 1" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_070_Digital_Swell_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 070: Digital Swell 2" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_071_Barren_Landscape>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 071: Barren Landscape" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_072_Mood_Singin>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 072: Mood Singin" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_073_Gnome's_Stack>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 073: Gnome's Stack" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_074_Pending_Hit>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 074: Pending Hit" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_075_Rezo_Boost_1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 075: Rezo Boost 1" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_076_Rezo_Boost_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 076: Rezo Boost 2" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_077_Sine_Dist>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 077: Sine Dist" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_078_D#1:nics_Stack>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 078: D#1:nics Stack" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_079_Delibr_False>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 079: Delibr False" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_080_Titan_Stack>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 080: Titan Stack" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_081_Silky_Detune>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 081: Silky Detune" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_082_R-Release_Stack>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 082: R-Release Stack" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_083__Hideaway_Stack>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 083:  Hideaway Stack" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_084_Factory_Plucks>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 084: Factory Plucks" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_085_Canned_Pluck>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 085: Canned Pluck" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_086_Chewing_Stack>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 086: Chewing Stack" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_087_Cheezy_Chips>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 087: Cheezy Chips" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_088_Robot_Scat>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 088: Robot Scat" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_089_Sine_Chrunches>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 089: Sine Chrunches" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_090_Blue_Plucks>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 090: Blue Plucks" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_091_Duo_Hit>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 091: Duo Hit" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_092_Digi_Pluck_1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 092: Digi Pluck 1" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_093_Pulled_Glass>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 093: Pulled Glass" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_094_Wowaa!>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 094: Wowaa!" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_095_Spellcasting>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 095: Spellcasting" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_096_Follow_Me>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 096: Follow Me" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_097_Rezo_Harp>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 097: Rezo Harp" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_098_Techno_Chromatic>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 098: Techno Chromatic" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_099_Chimmer_Attack>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 099: Chimmer Attack" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_100_Iron_Dust>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 100: Iron Dust" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_101_Chill_Chirping>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 101: Chill Chirping" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_102_Hold4Plucks>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 102: Hold4Plucks" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_103_Vel_Hirez>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 103: Vel Hirez" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_104_J-Sound_1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 104: J-Sound 1" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_105_J-Sound_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 105: J-Sound 2" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_106_J-Sound_3>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 106: J-Sound 3" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_107_Rezo_Drops>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 107: Rezo Drops" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_108_Sunset_Rings>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 108: Sunset Rings" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_109_Sunrise_Rings>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 109: Sunrise Rings" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_110_Rezo_Waves>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 110: Rezo Waves" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_111_Lullaby_Seq>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 111: Lullaby Seq" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_112_Digi_Chant>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 112: Digi Chant" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_113_Magnetic_Pulse>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 113: Magnetic Pulse" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_114_Pluck_Sequence_1>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 114: Pluck Sequence 1" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_115_Pluck_Sequence_2>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 115: Pluck Sequence 2" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_116_Clicks_Seq>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 116: Clicks Seq" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_117_Native's_Valley>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 117: Native's Valley" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_118_Sitar_Stacks>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 118: Sitar Stacks" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_119_RD_Percusion_3>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 119: RD Percusion 3" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_120_Rezo_Toms>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 120: Rezo Toms" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_121_Nagging_Kick>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 121: Nagging Kick" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_122_Chrome_Drum>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 122: Chrome Drum" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_123_From_the_Wall>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 123: From the Wall" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_124_Pizza_Pulse>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 124: Pizza Pulse" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_125_Acid_Drops>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 125: Acid Drops" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_126_Popping_Jump>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 126: Popping Jump" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_127_Road_Noise>
+    a pset:Preset ;
+    lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
+    rdfs:label "PatriksBank05: 127: Road Noise" ;
+    rdfs:seeAlso <PatriksBank05.bank.ttl> .
+
 <http://code.google.com/p/amsynth/amsynth#amsynth_factory>
     a pset:Bank ;
     rdfs:label "amsynth_factory" .

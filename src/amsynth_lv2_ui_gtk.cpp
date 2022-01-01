@@ -1,7 +1,7 @@
 /*
  *  amsynth_lv2_ui_gtk.c
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2021 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -27,13 +27,6 @@
 #include "GUI/editor_pane.h"
 #include "Preset.h"
 #include "Synthesizer.h"
-
-#include "lv2/lv2plug.in/ns/ext/atom/atom.h"
-#include "lv2/lv2plug.in/ns/ext/atom/forge.h"
-#include "lv2/lv2plug.in/ns/ext/midi/midi.h"
-#include "lv2/lv2plug.in/ns/ext/patch/patch.h"
-#include "lv2/lv2plug.in/ns/extensions/ui/ui.h"
-#include "lv2/lv2plug.in/ns/lv2core/lv2_util.h"
 
 // works around an issue in qtractor version <= 0.5.6
 // http://sourceforge.net/p/qtractor/tickets/19/
@@ -139,7 +132,7 @@ struct SynthesizerStub : ISynthesizer
 ////////////////////////////////////////////////////////////////////////////////
 
 static LV2UI_Handle
-lv2_ui_instantiate(const struct _LV2UI_Descriptor* descriptor,
+lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 				   const char*                     plugin_uri,
 				   const char*                     bundle_path,
 				   LV2UI_Write_Function            write_function,

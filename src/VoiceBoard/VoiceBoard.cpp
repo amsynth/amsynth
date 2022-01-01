@@ -1,7 +1,7 @@
 /*
  *  VoiceBoard.cpp
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2021 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -221,8 +221,14 @@ VoiceBoard::isSilent()
 }
 
 void 
-VoiceBoard::triggerOn()
+VoiceBoard::triggerOn(bool reset)
 {
+	if (reset) {
+		mOscMix.reset();
+		mRingModAmt.reset();
+		mAmpModAmount.reset();
+		mAmpVelSens.reset();
+	}
 	mAmpADSR.triggerOn();
 	mFilterADSR.triggerOn();
 }

@@ -1,7 +1,8 @@
-#include "../main.h"
-#include "nsm.h"
 #include "NsmClient.h"
 
+#include "../main.h"
+
+#include <nsm/nsm.h>
 #include <sstream>
 
 
