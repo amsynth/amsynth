@@ -1,4 +1,4 @@
-amsynth TBD
+amsynth 1.12.3 -- 2022-01-01
 
   - Added PatriksBank04 and PatriksBank05.
   - Fixed click when playing a note for the first time - issue #196
