@@ -21339,10 +21339,10 @@
     rdfs:label "PatriksBank05: 102: Hold4Plucks" ;
     rdfs:seeAlso <PatriksBank05.bank.ttl> .
 
-<http://code.google.com/p/amsynth/amsynth#PatriksBank05_103_Vel_Hirez>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank05_103_Octi_Echo>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
-    rdfs:label "PatriksBank05: 103: Vel Hirez" ;
+    rdfs:label "PatriksBank05: 103: Octi Echo" ;
     rdfs:seeAlso <PatriksBank05.bank.ttl> .
 
 <http://code.google.com/p/amsynth/amsynth#PatriksBank05_104_J-Sound_1>
