@@ -20117,7 +20117,7 @@
     rdfs:label "PatriksBank04: 027: Wood Seasons" ;
     rdfs:seeAlso <PatriksBank04.bank.ttl> .
 
-<http://code.google.com/p/amsynth/amsynth#PatriksBank04_028_Bell->Organ>
+<http://code.google.com/p/amsynth/amsynth#PatriksBank04_028_Bell-_Organ>
     a pset:Preset ;
     lv2:appliesTo <http://code.google.com/p/amsynth/amsynth> ;
     rdfs:label "PatriksBank04: 028: Bell->Organ" ;

@@ -1,3 +1,8 @@
+amsynth TBD
+
+  - Fixed lv2 .ttl syntax error
+
+
 amsynth 1.12.3 -- 2022-01-01
 
   - Added PatriksBank04 and PatriksBank05.
