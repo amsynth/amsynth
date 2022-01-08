@@ -14,7 +14,7 @@ jobs:
     - name: apt update
       run: sudo apt update
     - name: apt install
-      run: sudo apt install autoconf-archive autopoint dssi-dev intltool libasound-dev libgtk2.0-dev libjack-jackd2-dev liblo-dev lv2-dev pandoc
+      run: sudo apt install autoconf-archive autopoint dssi-dev intltool libasound-dev libgtk2.0-dev libjack-jackd2-dev liblilv-0-0 liblo-dev lv2-dev pandoc
     - name: apt install (optional)
       run: sudo apt install liblash-compat-dev || echo ignoring failure
     - name: autogen
@@ -23,6 +23,10 @@ jobs:
       run: ./configure
     - name: make distcheck
       run: make -j 2 distcheck
+    - name: make install
+      run: sudo make install
+    - name: lv2lint
+      run: ./utils/lv2lint.sh
     - name: make check
       run: |
         ./configure CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' --without-lv2 --without-dssi --without-vst --without-gui
