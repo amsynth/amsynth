@@ -1,4 +1,4 @@
-amsynth TBD
+amsynth 1.12.4 -- 2022-01-08
 
   - Fixed lv2 .ttl syntax error
 
