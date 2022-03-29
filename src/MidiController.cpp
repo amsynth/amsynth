@@ -1,7 +1,7 @@
 /*
  *  MidiController.cpp
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -160,6 +160,8 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 	int paramId = _cc_to_param_map[cc];
 	if (paramId >= 0) {
 		presetController->getCurrentPreset().getParameter(paramId).setNormalisedValue(value / 127.0f);
+		// Store the canonical MIDI CC representation to avoid unnecessary output
+		_midi_cc_vals[cc] = presetController->getCurrentPreset().getParameter(paramId).getNormalisedValue() * 127.f;
 		return; // MIDI CCs mapped by the user take precedence over default behaviour
 	}
 
