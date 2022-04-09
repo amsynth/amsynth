@@ -1,7 +1,7 @@
 /*
  *  Parameter.h
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -24,6 +24,7 @@
 
 #include "UpdateListener.h"
 
+#include <cmath>
 #include <set>
 #include <string>
 
@@ -62,6 +63,9 @@ public:
 
 	float			getNormalisedValue	() const { return (getValue()-getMin())/(getMax()-getMin()); }
 	void			setNormalisedValue	(float val) { setValue (val*(getMax()-getMin())+getMin()); }
+
+	unsigned char	getMidiValue		() const { return (unsigned char) roundf(getNormalisedValue() * 127.f); }
+	void			setMidiValue		(unsigned char value) { setNormalisedValue(value / 127.f); }
 
 	// The control value for this parameter.
 	// The control value is what the synthesis will use to get its values.
