@@ -49,7 +49,8 @@ struct MainWindow : public UpdateListener
 {
 	MainWindow(Synthesizer *synthesizer, GenericOutput *audio, int scaling_factor) :
 			synthesizer(synthesizer),
-			presetController(synthesizer->getPresetController())
+			presetController(synthesizer->getPresetController()),
+			ignoreAdjustmentValueChanges(false)
 	{
 		presetIsNotSaved = false;
 		mainThread = g_thread_self();
@@ -144,6 +145,9 @@ struct MainWindow : public UpdateListener
 
 	static void on_adjustment_value_changed(GtkAdjustment *adjustment, MainWindow *mainWindow)
 	{
+		if (mainWindow->ignoreAdjustmentValueChanges) {
+			return;
+		}
 		gdouble value = gtk_adjustment_get_value(adjustment);
 		Parameter *parameter = (Parameter *) g_object_get_data(G_OBJECT(adjustment), "Parameter");
 		parameter->setValue((float) value);
@@ -252,7 +256,9 @@ struct MainWindow : public UpdateListener
 		}
 		if (0 <= parameter && parameter < kAmsynthParameterCount) {
 			const Parameter &param = presetController->getCurrentPreset().getParameter(parameter);
+			ignoreAdjustmentValueChanges = true;
 			gtk_adjustment_set_value (adjustments[parameter], param.getValue());
+			ignoreAdjustmentValueChanges = false;
 		}
 		bool isModified = presetController->isCurrentPresetModified();
 		if (presetIsNotSaved != isModified) {
@@ -273,6 +279,7 @@ struct MainWindow : public UpdateListener
 
 	GThread *mainThread;
 	GAsyncQueue *parameterUpdateQueue;
+	bool ignoreAdjustmentValueChanges;
 };
 
 
