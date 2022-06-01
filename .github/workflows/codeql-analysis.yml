@@ -35,7 +35,9 @@ jobs:
       #   languages: go, javascript, csharp, python, cpp, java
 
     - name: Install build dependencies
-      run: sudo apt install autoconf-archive autopoint dssi-dev intltool libasound-dev libgtk2.0-dev libjack-jackd2-dev liblo-dev pandoc
+      run: |
+        sudo apt update
+        sudo apt install autoconf-archive autopoint dssi-dev intltool libasound-dev libgtk2.0-dev libjack-jackd2-dev liblo-dev pandoc
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
