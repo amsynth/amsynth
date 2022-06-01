@@ -1,7 +1,7 @@
 /*
  *  tests.cpp
  *
- *  Copyright (c) 2016-2017 Nick Dowell
+ *  Copyright (c) 2016-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -74,6 +74,39 @@ TEST(testMidiOutput) {
     synth->process(32, midiIn, midiOut, &audioBuffer[0], &audioBuffer[32]);
     assert(midiOut.size() == 1 || 0 == "midi output should be generated when a parameter is changed");
     assert(midiOut[0].value == 0 || 0 == "midi output value is incorrect");
+
+    delete synth;
+}
+
+TEST(testMidiOutput_OnOff) {
+    Synthesizer *synth = new Synthesizer();
+    MidiController *midiController = synth->getMidiController();
+    midiController->setControllerForParameter(kAmsynthParameter_Oscillator2Sync, 2);
+    synth->setNormalizedParameterValue(kAmsynthParameter_Oscillator2Sync, 0);
+    std::vector<amsynth_midi_cc_t> midiOut;
+    midiController->generateMidiOutput(midiOut);
+    midiOut.clear();
+
+    unsigned char data[3] = { MIDI_STATUS_CONTROLLER, 2, 0 };
+
+    data[2] = 10; // off ~> 0 (not emitted)
+    midiController->HandleMidiData(data, 3);
+    midiController->generateMidiOutput(midiOut);
+    assert(midiOut.empty());
+
+    data[2] = 100; // on ~> 127 (not emitted)
+    midiController->HandleMidiData(data, 3);
+    midiController->generateMidiOutput(midiOut);
+    assert(midiOut.empty());
+
+    data[2] = 42; // off ~> 0 (not emitted)
+    midiController->HandleMidiData(data, 3);
+    midiController->generateMidiOutput(midiOut);
+    assert(midiOut.empty());
+
+    synth->setNormalizedParameterValue(kAmsynthParameter_Oscillator2Sync, 1);
+    midiController->generateMidiOutput(midiOut);
+    assert(midiOut[0].value == 127);
 
     delete synth;
 }
@@ -172,6 +205,7 @@ TEST(testOscillatorHighFrequency) {
 
 int main(int argc, const char * argv[])  {
     RUN_TEST(testMidiOutput);
+    RUN_TEST(testMidiOutput_OnOff);
     RUN_TEST(testPresetIgnoredParameters);
     RUN_TEST(testPresetValueStrings);
     RUN_TEST(testMidiAllNotesOff);
