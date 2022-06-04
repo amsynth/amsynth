@@ -21,9 +21,6 @@
 
 #include "MIDILearnDialog.h"
 
-#include "../MidiController.h"
-#include "../PresetController.h"
-
 #include <cassert>
 #include <glib/gi18n.h>
 #include <seq24/controllers.h>
@@ -65,13 +62,6 @@ MIDILearnDialog::MIDILearnDialog(MidiController *midiController, PresetControlle
 
 	GtkWidget *content = gtk_dialog_get_content_area (GTK_DIALOG (_dialog));
 	gtk_box_pack_start(GTK_BOX(content), table, TRUE, TRUE, 0);
-
-	_midiController->getLastControllerParam().addUpdateListener(this);
-}
-
-MIDILearnDialog::~MIDILearnDialog()
-{
-	_midiController->getLastControllerParam().removeUpdateListener(this);
 }
 
 void
@@ -82,7 +72,9 @@ MIDILearnDialog::run_modal(Param param_idx)
 	gtk_combo_box_set_active (GTK_COMBO_BOX (_combo), cc + 1);
 
 	gtk_widget_show_all(_dialog);
+	const guint source = g_idle_add(MIDILearnDialog::idle, this);
 	const gint response = gtk_dialog_run(GTK_DIALOG(_dialog));
+	g_source_remove(source);
 	gtk_widget_hide(_dialog);
 	
 	if (response == GTK_RESPONSE_ACCEPT) {
@@ -91,19 +83,15 @@ MIDILearnDialog::run_modal(Param param_idx)
 	}
 }
 
-void
-MIDILearnDialog::update()
-{
-	g_idle_add(MIDILearnDialog::last_active_controller_changed, this);
-}
-
 gboolean
-MIDILearnDialog::last_active_controller_changed(gpointer data)
+MIDILearnDialog::idle(gpointer data)
 {
 	MIDILearnDialog *dialog = (MIDILearnDialog *) data;
-	if (!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dialog->_checkButton)))
-		return G_SOURCE_REMOVE;
-	int cc = (int)dialog->_midiController->getLastControllerParam().getValue();
-	gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->_combo), cc + 1);
-	return G_SOURCE_REMOVE;
+	int lastActiveController = dialog->_midiController->getLastActiveController();
+	if (lastActiveController >= 0) {
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dialog->_checkButton))) {
+			gtk_combo_box_set_active(GTK_COMBO_BOX(dialog->_combo), lastActiveController + 1);
+		}
+	}
+	return G_SOURCE_CONTINUE;
 }

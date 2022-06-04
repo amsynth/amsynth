@@ -150,8 +150,7 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 {
 	_midi_cc_vals[cc] = value;
 
-	if (last_active_controller.getValue() != cc)
-		last_active_controller.setValue(cc);
+	_lastActiveController = cc;
 
 	if (!_handler || !presetController)
 		return;
@@ -322,4 +321,12 @@ MidiController::generateMidiOutput(std::vector<amsynth_midi_cc_t> &output)
 			}
 		}
 	}
+}
+
+int
+MidiController::getLastActiveController()
+{
+	int value = _lastActiveController;
+	_lastActiveController = -1;
+	return value;
 }
