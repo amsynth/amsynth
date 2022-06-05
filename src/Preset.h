@@ -22,8 +22,6 @@
 #ifndef _PRESET_H
 #define _PRESET_H
 
-#ifdef __cplusplus
-
 #include "Parameter.h"
 
 #include <sstream>
@@ -70,16 +68,3 @@ private:
 };
 
 #endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void get_parameter_properties(int parameter_index, double *minimum, double *maximum, double *default_value, double *step_size);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
-

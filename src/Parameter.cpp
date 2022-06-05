@@ -23,8 +23,13 @@
 
 #include "VoiceBoard/Synth--.h"
 
+#include "gettext.h"
+#define _(string) gettext (string)
+
 #include <cassert>
 #include <sstream>
+#include <cstring>
+#include <vector>
 
 #if defined _MSC_VER // does not support Designated Initializers
 #define SPEC(id, name, def, min, max, step, law, base, offset, label)        { name, def, min, max,  step, law, base, offset, label }
@@ -76,6 +81,20 @@ static const ParameterSpec ParameterSpecs[] = { //                            de
 	SPEC(kAmsynthParameter_PortamentoMode,          "portamento_mode",       0.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
 };
 
+static float getControlValue(const ParameterSpec &spec, float value)
+{
+	switch (spec.law) {
+		case kParameterLaw_Linear:
+			return spec.offset + spec.base * value;
+		case kParameterLaw_Exponential:
+			return spec.offset + ::pow((float)spec.base, value);
+		case kParameterLaw_Power:
+			return spec.offset + ::pow(value, (float)spec.base);
+		default:
+			abort();
+	}
+}
+
 Parameter::Parameter(Param paramId)
 :	_paramId	(paramId)
 ,	_spec		(ParameterSpecs[paramId])
@@ -121,16 +140,7 @@ Parameter::setValue(float value)
 float
 Parameter::getControlValue() const
 {
-	switch (_spec.law) {
-		case kParameterLaw_Linear:
-			return _spec.offset + _spec.base * _value;
-		case kParameterLaw_Exponential:
-			return _spec.offset + ::pow((float)_spec.base, _value);
-		case kParameterLaw_Power:
-			return _spec.offset + ::pow(_value, (float)_spec.base);
-		default:
-			abort();
-	}
+	return ::getControlValue(_spec, _value);
 }
 
 float
@@ -158,4 +168,183 @@ void
 Parameter::randomise()
 {
 	setValue( ((rand()/(float)RAND_MAX) * (getMax()-getMin()) + getMin()) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void get_parameter_properties(int parameter_index, double *minimum, double *maximum, double *default_value, double *step_size)
+{
+	const ParameterSpec &spec = ParameterSpecs[parameter_index];
+	if (minimum) {
+		*minimum = spec.min;
+	}
+	if (maximum) {
+		*maximum = spec.max;
+	}
+	if (default_value) {
+		*default_value = spec.def;
+	}
+	if (step_size) {
+		*step_size = spec.step;
+	}
+}
+
+const char *parameter_name_from_index(int param_index)
+{
+	if (param_index < 0 || param_index >= (int)kAmsynthParameterCount)
+		return nullptr;
+	return ParameterSpecs[param_index].name;
+}
+
+int parameter_index_from_name(const char *name)
+{
+	for (int i = 0; i < kAmsynthParameterCount; i++) {
+		if (!strcmp(ParameterSpecs[i].name, name)) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+int parameter_get_display(int param_index, float value, char *buffer, size_t maxlen)
+{
+	const ParameterSpec &spec = ParameterSpecs[param_index];
+	const float cv = getControlValue(spec, value);
+	const float normalised = (value - spec.min) / (spec.max - spec.min);
+	
+	switch (param_index) {
+		case kAmsynthParameter_AmpEnvAttack:
+		case kAmsynthParameter_AmpEnvDecay:
+		case kAmsynthParameter_AmpEnvRelease:
+		case kAmsynthParameter_FilterEnvAttack:
+		case kAmsynthParameter_FilterEnvDecay:
+		case kAmsynthParameter_FilterEnvRelease:
+		case kAmsynthParameter_PortamentoTime:
+			if (cv < 1.0) {
+				return snprintf(buffer, maxlen, "%.0f ms", cv * 1000);
+			} else {
+				return snprintf(buffer, maxlen, "%.1f s", cv);
+			}
+		case kAmsynthParameter_LFOFreq:
+			return snprintf(buffer, maxlen, "%.1f Hz", cv);
+		case kAmsynthParameter_Oscillator2Detune:
+			return snprintf(buffer, maxlen, "%+.1f Cents", 1200.0 * log2(cv));
+		case kAmsynthParameter_Oscillator2Pitch:
+			return snprintf(buffer, maxlen, "%+.0f Semitone%s", cv, fabsf(cv) < 2 ? "" : "s");
+		case kAmsynthParameter_Oscillator2Octave:
+			return snprintf(buffer, maxlen, "%+.0f Octave%s", value, fabsf(value) < 2 ? "" : "s");
+		case kAmsynthParameter_MasterVolume:
+			return snprintf(buffer, maxlen, "%+.1f dB", 20.0 * log10(cv));
+		case kAmsynthParameter_OscillatorMixRingMod:
+			return snprintf(buffer, maxlen, "%d %%", (int)roundf(cv * 100.f));
+		case kAmsynthParameter_FilterEnvAmount:
+			return snprintf(buffer, maxlen, "%+d %%", (int)roundf(cv / 16.f * 100.f));
+		case kAmsynthParameter_AmpEnvSustain:
+		case kAmsynthParameter_FilterResonance:
+		case kAmsynthParameter_FilterCutoff:
+		case kAmsynthParameter_FilterEnvSustain:
+		case kAmsynthParameter_LFOToOscillators:
+		case kAmsynthParameter_LFOToFilterCutoff:
+		case kAmsynthParameter_LFOToAmp:
+		case kAmsynthParameter_ReverbRoomsize:
+		case kAmsynthParameter_ReverbDamp:
+		case kAmsynthParameter_ReverbWet:
+		case kAmsynthParameter_ReverbWidth:
+		case kAmsynthParameter_AmpDistortion:
+		case kAmsynthParameter_FilterKeyTrackAmount:
+		case kAmsynthParameter_FilterKeyVelocityAmount:
+		case kAmsynthParameter_AmpVelocityAmount:
+			return snprintf(buffer, maxlen, "%d %%", (int)roundf(normalised * 100.f));
+		case kAmsynthParameter_FilterType: {
+			const char **filter_type_names = parameter_get_value_strings(param_index);
+			if (filter_type_names) {
+				return snprintf(buffer, maxlen, "%s", filter_type_names[(int)cv]);
+			} else {
+				strcpy(buffer, "");
+				return 0;
+			}
+		}
+	}
+	return 0;
+}
+
+const char **parameter_get_value_strings(int param_index)
+{
+	static std::vector<std::vector<const char *> > parameterStrings(kAmsynthParameterCount);
+	if (param_index < 0 || param_index >= (int)parameterStrings.size())
+		return nullptr;
+
+	std::vector<const char *> & strings = parameterStrings[param_index];
+	if (strings.empty()) {
+		size_t i = 0, size = 0;
+		switch (param_index) {
+			case kAmsynthParameter_Oscillator1Waveform:
+			case kAmsynthParameter_Oscillator2Waveform:
+				strings.resize(size = 6);
+				strings[i++] = _("sine");
+				strings[i++] = _("square / pulse");
+				strings[i++] = _("triangle / saw");
+				strings[i++] = _("white noise");
+				strings[i++] = _("noise + sample & hold");
+				assert(i < size);
+				break;
+
+			case kAmsynthParameter_LFOWaveform:
+				strings.resize(size = 8);
+				strings[i++] = _("sine");
+				strings[i++] = _("square");
+				strings[i++] = _("triangle");
+				strings[i++] = _("noise");
+				strings[i++] = _("noise + sample & hold");
+				strings[i++] = _("sawtooth (up)");
+				strings[i++] = _("sawtooth (down)");
+				assert(i < size);
+				break;
+
+			case kAmsynthParameter_KeyboardMode:
+				strings.resize(size = 4);
+				strings[i++] = _("poly");
+				strings[i++] = _("mono");
+				strings[i++] = _("legato");
+				assert(i < size);
+				break;
+
+			case kAmsynthParameter_FilterType:
+				strings.resize(size = 6);
+				strings[i++] = _("low pass");
+				strings[i++] = _("high pass");
+				strings[i++] = _("band pass");
+				strings[i++] = _("notch");
+				strings[i++] = _("bypass");
+				assert(i < size);
+				break;
+
+			case kAmsynthParameter_FilterSlope:
+				strings.resize(size = 3);
+				strings[i++] = _("12 dB / octave");
+				strings[i++] = _("24 dB / octave");
+				assert(i < size);
+				break;
+
+			case kAmsynthParameter_LFOOscillatorSelect:
+				strings.resize(size = 4);
+				strings[i++] = _("osc 1+2");
+				strings[i++] = _("osc 1");
+				strings[i++] = _("osc 2");
+				assert(i < size);
+				break;
+
+			case kAmsynthParameter_PortamentoMode:
+				strings.resize(size = 3);
+				strings[i++] = _("always");
+				strings[i++] = _("legato");
+				assert(i < size);
+				break;
+
+			default:
+				break;
+		}
+	}
+
+	return &strings[0];
 }
