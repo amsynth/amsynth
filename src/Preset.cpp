@@ -129,7 +129,7 @@ Preset::toString(std::stringstream &stream)
 {
 	stream << "amSynth1.0preset" << std::endl;
 	stream << "<preset> " << "<name> " << getName() << std::endl;
-	for (unsigned n = 0; n < ParameterCount(); n++) {
+	for (int n = 0; n < kAmsynthParameterCount; n++) {
 		stream << "<parameter> " << getParameter(n).getName() << " " << getParameter(n).getValue() << std::endl;
 	}
 }
@@ -205,11 +205,11 @@ static const Preset &_get_preset()
 const char *parameter_name_from_index (int param_index)
 {
 	const Preset &_preset = _get_preset();
-	if (param_index < 0 || param_index >= (int)_preset.ParameterCount())
+	if (param_index < 0 || param_index >= (int)kAmsynthParameterCount)
 		return nullptr;
 	static std::vector<std::string> names;
 	if (names.empty())
-		names.resize(_preset.ParameterCount());
+		names.resize(kAmsynthParameterCount);
 	if (names[param_index].empty())
 		names[param_index] = _preset.getParameter(param_index).getName();
 	return names[param_index].c_str();
@@ -218,7 +218,7 @@ const char *parameter_name_from_index (int param_index)
 int parameter_index_from_name (const char *param_name)
 {
 	const Preset &_preset = _get_preset();
-	for (unsigned i=0; i<_preset.ParameterCount(); i++) {
+	for (int i = 0; i < kAmsynthParameterCount; i++) {
 		if (std::string(param_name) == _preset.getParameter(i).getName()) {
 			return i;
 		}

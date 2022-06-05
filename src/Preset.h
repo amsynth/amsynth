@@ -50,8 +50,6 @@ public:
 	Parameter&		getParameter	(const int no) { return mParameters[no]; };
 	const Parameter& getParameter	(const int no) const { return mParameters[no]; };
 	
-	size_t			ParameterCount	() const { return kAmsynthParameterCount; }
-	
     void			randomise		();
     
     void			AddListenerToAll(UpdateListener*);
