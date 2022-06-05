@@ -1,7 +1,7 @@
 /*
  *  Preset.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -28,14 +28,17 @@
 
 #include <sstream>
 #include <string>
-#include <vector>
 
 
 class Preset
 {
 public:
 	Preset(const std::string name = "");
-					
+
+	Preset(const Preset& other);
+
+	~Preset();
+
 	Preset&			operator =		(const Preset& p);
 	
 	bool			isEqual			(const Preset &);
@@ -47,7 +50,7 @@ public:
 	Parameter&		getParameter	(const int no) { return mParameters[no]; };
 	const Parameter& getParameter	(const int no) const { return mParameters[no]; };
 	
-	size_t			ParameterCount	() const { return mParameters.size(); }
+	size_t			ParameterCount	() const { return kAmsynthParameterCount; }
 	
     void			randomise		();
     
@@ -65,8 +68,7 @@ public:
 
 private:
     std::string				mName;
-	std::vector<Parameter>	mParameters;
-	Parameter				nullparam{"null"};
+	Parameter				*mParameters;
 };
 
 #endif

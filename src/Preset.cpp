@@ -1,7 +1,7 @@
 /*
  *  Preset.cpp
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -30,10 +30,11 @@
 
 #include <cassert>
 #include <cmath>
-#include <cstdlib>
 #include <cstdio>
-#include <map>
+#include <cstdlib>
 #include <iterator>
+#include <map>
+#include <vector>
 
 #include "gettext.h"
 #define _(string) gettext (string)
@@ -44,62 +45,31 @@ using namespace std;
 #endif
 
 
-static Parameter TimeParameter (const std::string name, Param id)
+Preset::Preset(const std::string name) : mName (name)
 {
-    return Parameter (name, id, 0, 0, 2.5f, 0, Parameter::Law::kPower, 3, 0.0005f, "s");
+	mParameters = (Parameter *)malloc(kAmsynthParameterCount * sizeof(Parameter));
+	for (int i = 0; i < kAmsynthParameterCount; i++) {
+		new (&mParameters[i]) Parameter((Param) i);
+	}
 }
 
-Preset::Preset			(const std::string name)
-:	mName (name)
+Preset::Preset(const Preset& other) : mName(other.mName)
 {
-	//										name					id					def min max inc		ControlType			base offset label
-	mParameters.push_back (TimeParameter	("amp_attack",			kAmsynthParameter_AmpEnvAttack));
-	mParameters.push_back (TimeParameter	("amp_decay",			kAmsynthParameter_AmpEnvDecay));
-    mParameters.push_back (Parameter		("amp_sustain",			kAmsynthParameter_AmpEnvSustain,		1));
-    mParameters.push_back (TimeParameter	("amp_release",			kAmsynthParameter_AmpEnvRelease));
-    mParameters.push_back (Parameter		("osc1_waveform",		kAmsynthParameter_Oscillator1Waveform,		2, 0, 4, 1));
-    mParameters.push_back (TimeParameter	("filter_attack",		kAmsynthParameter_FilterEnvAttack));
-    mParameters.push_back (TimeParameter	("filter_decay",		kAmsynthParameter_FilterEnvDecay));
-    mParameters.push_back (Parameter		("filter_sustain",		kAmsynthParameter_FilterEnvSustain,		1));
-    mParameters.push_back (TimeParameter	("filter_release",		kAmsynthParameter_FilterEnvRelease));
-    mParameters.push_back (Parameter		("filter_resonance",	kAmsynthParameter_FilterResonance,	0, 0, 0.97f));
-	mParameters.push_back (Parameter		("filter_env_amount",	kAmsynthParameter_FilterEnvAmount,	0, -16, 16));
-    mParameters.push_back (Parameter		("filter_cutoff",		kAmsynthParameter_FilterCutoff,		1.5, -0.5, 1.5, 0, Parameter::Law::kExponential, 16, 0));
-    mParameters.push_back (Parameter		("osc2_detune",			kAmsynthParameter_Oscillator2Detune,		0, -1, 1, 0, Parameter::Law::kExponential, 1.25f, 0));
-    mParameters.push_back (Parameter		("osc2_waveform",		kAmsynthParameter_Oscillator2Waveform,		2, 0, 4, 1));
-    mParameters.push_back (Parameter		("master_vol",			kAmsynthParameter_MasterVolume,			0.67f, 0, 1, 0, Parameter::Law::kPower, 2, 0));
-    mParameters.push_back (Parameter		("lfo_freq",			kAmsynthParameter_LFOFreq,			0, 0, 7.5, 0, Parameter::Law::kPower, 2, 0,	"Hz"));
-    mParameters.push_back (Parameter		("lfo_waveform",		kAmsynthParameter_LFOWaveform,		0, 0, 6, 1));
-    mParameters.push_back (Parameter		("osc2_range",			kAmsynthParameter_Oscillator2Octave,		0, -3, 4, 1, Parameter::Law::kExponential, 2, 0));
-	mParameters.push_back (Parameter		("osc_mix",				kAmsynthParameter_OscillatorMix,			0, -1, 1));
-    mParameters.push_back (Parameter		("freq_mod_amount",		kAmsynthParameter_LFOToOscillators,		0, 0, 1.25992105f, 0, Parameter::Law::kPower, 3, -1));
-	mParameters.push_back (Parameter		("filter_mod_amount",	kAmsynthParameter_LFOToFilterCutoff,	-1, -1, 1));
-	mParameters.push_back (Parameter		("amp_mod_amount",		kAmsynthParameter_LFOToAmp,		-1, -1, 1));
-	mParameters.push_back (Parameter		("osc_mix_mode",		kAmsynthParameter_OscillatorMixRingMod,		0, 0, 1, 0));
-	mParameters.push_back (Parameter		("osc1_pulsewidth",		kAmsynthParameter_Oscillator1Pulsewidth,	1));
-	mParameters.push_back (Parameter		("osc2_pulsewidth",		kAmsynthParameter_Oscillator2Pulsewidth,	1));
-	mParameters.push_back (Parameter		("reverb_roomsize",		kAmsynthParameter_ReverbRoomsize));
-	mParameters.push_back (Parameter		("reverb_damp",			kAmsynthParameter_ReverbDamp));
-	mParameters.push_back (Parameter		("reverb_wet",			kAmsynthParameter_ReverbWet));
-	mParameters.push_back (Parameter		("reverb_width",		kAmsynthParameter_ReverbWidth,		1));
-	mParameters.push_back (Parameter		("distortion_crunch",	kAmsynthParameter_AmpDistortion,	0, 0, 0.9f));
-	mParameters.push_back (Parameter		("osc2_sync",			kAmsynthParameter_Oscillator2Sync,			0, 0, 1, 1));
-	mParameters.push_back (Parameter		("portamento_time",		kAmsynthParameter_PortamentoTime, 0.0f, 0.0f, 1.0f));
-	mParameters.push_back (Parameter		("keyboard_mode",		kAmsynthParameter_KeyboardMode, KeyboardModePoly, 0, KeyboardModeLegato, 1));
-	mParameters.push_back (Parameter		("osc2_pitch",			kAmsynthParameter_Oscillator2Pitch, 0, -12, +12, 1));
-	mParameters.push_back (Parameter		("filter_type",         kAmsynthParameter_FilterType, (int)SynthFilter::Type::kLowPass, (int)SynthFilter::Type::kLowPass, (int)SynthFilter::Type::kBypass, 1));
-	mParameters.push_back (Parameter		("filter_slope",        kAmsynthParameter_FilterSlope, (int)SynthFilter::Slope::k24, (int)SynthFilter::Slope::k12, (int)SynthFilter::Slope::k24, 1));
-	mParameters.push_back (Parameter		("freq_mod_osc",		kAmsynthParameter_LFOOscillatorSelect, 0, 0, 2, 1));
-	mParameters.push_back (Parameter		("filter_kbd_track",    kAmsynthParameter_FilterKeyTrackAmount, 1));
-	mParameters.push_back (Parameter		("filter_vel_sens",		kAmsynthParameter_FilterKeyVelocityAmount, 1));
-	mParameters.push_back (Parameter		("amp_vel_sens",		kAmsynthParameter_AmpVelocityAmount, 1));
-	mParameters.push_back (Parameter		("portamento_mode",		kAmsynthParameter_PortamentoMode, PortamentoModeAlways));
+	mParameters = (Parameter *)malloc(kAmsynthParameterCount * sizeof(Parameter));
+	for (int i = 0; i < kAmsynthParameterCount; i++) {
+		new (&mParameters[i]) Parameter(other.mParameters[i]);
+	}
+}
+
+Preset::~Preset()
+{
+	free(mParameters);
 }
 
 Preset&
 Preset::operator =		(const Preset &rhs)
 {
-    for (unsigned i=0; i<rhs.ParameterCount(); i++) {
+    for (int i = 0; i < kAmsynthParameterCount; i++) {
 		if (shouldIgnoreParameter(i))
 			continue;
 		getParameter(i).setValue(rhs.getParameter(i).getValue());
@@ -111,7 +81,7 @@ Preset::operator =		(const Preset &rhs)
 bool
 Preset::isEqual(const Preset &rhs)
 {
-	for (unsigned i = 0; i < mParameters.size(); i++) {
+	for (int i = 0; i < kAmsynthParameterCount; i++) {
 		if (shouldIgnoreParameter(i))
 			continue;
 		if (getParameter(i).getValue() != rhs.getParameter(i).getValue()) {
@@ -124,25 +94,24 @@ Preset::isEqual(const Preset &rhs)
 Parameter & 
 Preset::getParameter(const std::string name)
 {
-	typedef std::map<std::string, size_t> name_map_t;
+	typedef std::map<std::string, int> name_map_t;
 	static name_map_t name_map;
 	if (name_map.empty()) {
-		for (size_t i = 0; i < mParameters.size(); i++) {
-			name_map[mParameters[i].getName()] = i;
+		for (int i = 0; i < kAmsynthParameterCount; i++) {
+			name_map[getParameter(i).getName()] = i;
 		}
 	}
 	name_map_t::iterator it = name_map.find(name);
-	if (it == name_map.end())
-		return nullparam;
+	assert(it != name_map.end());
 	return getParameter((int) it->second);
 }
 
 void
 Preset::randomise()
 {
-	for (auto &parameter : mParameters) {
-		if (parameter.getId() != kAmsynthParameter_MasterVolume) {
-			parameter.randomise();
+	for (int i = 0; i < kAmsynthParameterCount; i++) {
+		if (i != kAmsynthParameter_MasterVolume) {
+			getParameter(i).randomise();
 		}
 	}
 }
@@ -150,8 +119,8 @@ Preset::randomise()
 void
 Preset::AddListenerToAll	(UpdateListener* ul)
 {
-	for (auto &parameter : mParameters) {
-		parameter.addUpdateListener(ul);
+	for (int i = 0; i < kAmsynthParameterCount; i++) {
+		getParameter(i).addUpdateListener(ul);
 	}
 }
 

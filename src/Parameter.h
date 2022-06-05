@@ -28,6 +28,24 @@
 #include <set>
 #include <string>
 
+enum ParameterLaw {
+	kParameterLaw_Linear,		// offset + base * value
+	kParameterLaw_Exponential,	// offset + base ^ value
+	kParameterLaw_Power			// offset + value ^ base
+};
+
+struct ParameterSpec {
+	const char name[20];
+	float def;
+	float min;
+	float max;
+	float step;
+	ParameterLaw law;
+	float base;
+	float offset;
+	const char label[4];
+};
+
 /**
  * @brief a Parameter holds a particular value for a slider, selector switch 
  * etc..
@@ -43,19 +61,8 @@
 class Parameter {
 public:
 
-	enum class Law {
-		kLinear,		// offset + base * value
-		kExponential,	// offset + base ^ value
-		kPower			// offset + value ^ base
-	};
+	Parameter(Param paramId);
 
-					Parameter		(const std::string &name = "unused", Param id = kAmsynthParameterCount,
-									 float value = 0.0, float min = 0.0, float max = 1.0, float inc = 0.0,
-									 Law law = Law::kLinear, float base = 1.0, float offset = 0.0,
-									 const std::string &label = "");
-
-	// The raw value of this parameter. Objects in the signal generation 
-	// path should not use this method, but getControlValue() instead.
 	float			getValue		() const { return _value; }
 	void			setValue		(float value);
 
@@ -69,11 +76,11 @@ public:
 
 	// The control value for this parameter.
 	// The control value is what the synthesis will use to get its values.
-	inline float	getControlValue	() const { return _controlValue; }
+	float			getControlValue		() const;
 
 	const std::string getStringValue	() const;
 
-	const std::string getName			() const { return _name; }
+	const std::string getName			() const { return _spec.name; }
 
 	Param			getId				() const { return _paramId; }
 
@@ -82,28 +89,27 @@ public:
 	void			addUpdateListener (UpdateListener *ul);
 	void			removeUpdateListener (UpdateListener *ul);
 
-	float			getDefault		() const { return _default; }
+	float			getDefault		() const { return _spec.def; }
 
 	// min/max values apply for calls to setValue() not ControlValue
-	float			getMin			() const { return _min; }
-	float			getMax			() const { return _max; }
+	float			getMin			() const { return _spec.min; }
+	float			getMax			() const { return _spec.max; }
 
 	// @return the increment value
-	float			getStep			() const { return _step; }
+	float			getStep			() const { return _spec.step; }
 	// @returns The number of discrete steps allowable in this Parameter.
-	int				getSteps		() const { return _step > 0.f ? (int) ((_max - _min) / _step) : 0; }
+	int				getSteps		() const { return _spec.step > 0.f ? (int) ((_spec.max - _spec.min) / _spec.step) : 0; }
 
 	// Set this parameter to a random value (in it's allowable range)
 	void			randomise		();
 
 	// The label assocaited with this Parameter. (e.g. "seconds")
-	const std::string getLabel		() const { return _label; }
+	const std::string getLabel		() const { return _spec.label; }
 
-private:
+// private:
 	Param							_paramId;
-	std::string						_name, _label;
-	Law								_law;
-	float							_default, _value, _min, _max, _step, _controlValue, _base, _offset;
+	const ParameterSpec &			_spec;
+	float							_value;
 	std::set<UpdateListener *>		_listeners;
 };
 
