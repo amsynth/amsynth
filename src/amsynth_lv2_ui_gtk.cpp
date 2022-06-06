@@ -178,7 +178,7 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 		g_signal_connect(ui->_adjustments[i], "value-changed", (GCallback)&on_adjustment_value_changed, ui);
 	}
 
-	ui->_widget = editor_pane_new(new SynthesizerStub(ui), ui->_adjustments, TRUE, 0);
+	ui->_widget = editor_pane_new(new SynthesizerStub(ui), ui->_adjustments, TRUE, DEFAULT_SCALING);
 
 	*widget = ui->_widget;
 
