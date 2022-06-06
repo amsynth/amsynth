@@ -198,7 +198,7 @@ PresetController::savePresets		(const char *filename)
 			<< presets[i].getName() << endl;
 #endif
 			file << "<preset> " << "<name> " << presets[i].getName() << endl;
-			for (unsigned n = 0; n < presets[i].ParameterCount(); n++)
+			for (int n = 0; n < kAmsynthParameterCount; n++)
 			{
 #ifdef _DEBUG
 				cout << "PresetController::savePresets() :- parameter name="

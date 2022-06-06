@@ -1,7 +1,7 @@
 /*
  *  Parameter.h
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -23,34 +23,89 @@
 
 #include "VoiceBoard/Synth--.h"
 
-#include <algorithm>
-#include <cassert>
-#include <cmath>
-#include <sstream>
+#include "gettext.h"
+#define _(string) gettext (string)
 
-Parameter::Parameter(const std::string &name, Param id, float value, float min, float max, float inc, Law law, float base, float offset, const std::string &label)
-:	_paramId	(id)
-,	_name		(name)
-,	_label		(label)
-,	_law		(law)
-,	_default	(value)
-,	_value		(m::nan)
-,	_min		(min)
-,	_max		(max)
-,	_step		(inc)
-,	_controlValue(m::nan)
-,	_base		(base)
-,	_offset		(offset)
+#include <cassert>
+#include <sstream>
+#include <cstring>
+#include <vector>
+
+#if defined _MSC_VER // does not support Designated Initializers
+#define SPEC(id, name, def, min, max, step, law, base, offset, label)        { name, def, min, max,  step, law, base, offset, label }
+#else
+#define SPEC(id, name, def, min, max, step, law, base, offset, label) [id] = { name, def, min, max,  step, law, base, offset, label }
+#endif
+
+static const ParameterSpec ParameterSpecs[] = { //                            def,    min,    max,  step,       law,                         base,  offset,     label
+	SPEC(kAmsynthParameter_AmpEnvAttack,            "amp_attack",            0.0f,   0.0f,   2.5f,  0.0f,       kParameterLaw_Power,         3.0f,  0.0005f,    "s"  ),
+	SPEC(kAmsynthParameter_AmpEnvDecay,             "amp_decay",             0.0f,   0.0f,   2.5f,  0.0f,       kParameterLaw_Power,         3.0f,  0.0005f,    "s"  ),
+	SPEC(kAmsynthParameter_AmpEnvSustain,           "amp_sustain",           1.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_AmpEnvRelease,           "amp_release",           0.0f,   0.0f,   2.5f,  0.0f,       kParameterLaw_Power,         3.0f,  0.0005f,    "s"  ),
+	SPEC(kAmsynthParameter_Oscillator1Waveform,     "osc1_waveform",         2.0f,   0.0f,   4.0f,  1.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_FilterEnvAttack,         "filter_attack",         0.0f,   0.0f,   2.5f,  0.0f,       kParameterLaw_Power,         3.0f,  0.0005f,    "s"  ),
+	SPEC(kAmsynthParameter_FilterEnvDecay,          "filter_decay",          0.0f,   0.0f,   2.5f,  0.0f,       kParameterLaw_Power,         3.0f,  0.0005f,    "s"  ),
+	SPEC(kAmsynthParameter_FilterEnvSustain,        "filter_sustain",        1.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_FilterEnvRelease,        "filter_release",        0.0f,   0.0f,   2.5f,  0.0f,       kParameterLaw_Power,         3.0f,  0.0005f,    "s"  ),
+	SPEC(kAmsynthParameter_FilterResonance,         "filter_resonance",      0.0f,   0.0f,   0.97f, 0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_FilterEnvAmount,         "filter_env_amount",     0.0f, -16.0f,  16.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_FilterCutoff,            "filter_cutoff",         1.5f,  -0.5f,   1.5f,  0.0f,       kParameterLaw_Exponential,  16.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_Oscillator2Detune,       "osc2_detune",           0.0f,  -1.0f,   1.0f,  0.0f,       kParameterLaw_Exponential,   1.25f, 0.0f,       ""   ),
+	SPEC(kAmsynthParameter_Oscillator2Waveform,     "osc2_waveform",         2.0f,   0.0f,   4.0f,  1.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_MasterVolume,            "master_vol",            0.67f,  0.0f,   1.0f,  0.0f,       kParameterLaw_Power,         2.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_LFOFreq,                 "lfo_freq",              0.0f,   0.0f,   7.5f,  0.0f,       kParameterLaw_Power,         2.0f,  0.0f,       "Hz" ),
+	SPEC(kAmsynthParameter_LFOWaveform,             "lfo_waveform",          0.0f,   0.0f,   6.0f,  1.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_Oscillator2Octave,       "osc2_range",            0.0f,  -3.0f,   4.0f,  1.0f,       kParameterLaw_Exponential,   2.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_OscillatorMix,           "osc_mix",               0.0f,  -1.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_LFOToOscillators,        "freq_mod_amount",       0.0f,   0.0f, 1.25992105f, 0.0f,   kParameterLaw_Power,         3.0f, -1.0f,       ""   ),
+	SPEC(kAmsynthParameter_LFOToFilterCutoff,       "filter_mod_amount",    -1.0f,  -1.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_LFOToAmp,                "amp_mod_amount",       -1.0f,  -1.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_OscillatorMixRingMod,    "osc_mix_mode",          0.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_Oscillator1Pulsewidth,   "osc1_pulsewidth",       1.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_Oscillator2Pulsewidth,   "osc2_pulsewidth",       1.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_ReverbRoomsize,          "reverb_roomsize",       0.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_ReverbDamp,              "reverb_damp",           0.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_ReverbWet,               "reverb_wet",            0.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_ReverbWidth,             "reverb_width",          1.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_AmpDistortion,           "distortion_crunch",     0.0f,   0.0f,   0.9f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_Oscillator2Sync,         "osc2_sync",             0.0f,   0.0f,   1.0f,  1.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_PortamentoTime,          "portamento_time",       0.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_KeyboardMode,            "keyboard_mode",         0.0f,   0.0f,   2.0f,  1.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_Oscillator2Pitch,        "osc2_pitch",            0.0f, -12.0f,  12.0f,  1.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_FilterType,              "filter_type",           0.0f,   0.0f,   4.0f,  1.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_FilterSlope,             "filter_slope",          1.0f,   0.0f,   1.0f,  1.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_LFOOscillatorSelect,     "freq_mod_osc",          0.0f,   0.0f,   2.0f,  1.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_FilterKeyTrackAmount,    "filter_kbd_track",      1.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_FilterKeyVelocityAmount, "filter_vel_sens",       1.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_AmpVelocityAmount,       "amp_vel_sens",          1.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_PortamentoMode,          "portamento_mode",       0.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+};
+
+static float getControlValue(const ParameterSpec &spec, float value)
 {
-	assert(min < max);
-	setValue (value);
+	switch (spec.law) {
+		case kParameterLaw_Linear:
+			return spec.offset + spec.base * value;
+		case kParameterLaw_Exponential:
+			return spec.offset + ::pow((float)spec.base, value);
+		case kParameterLaw_Power:
+			return spec.offset + ::pow(value, (float)spec.base);
+		default:
+			abort();
+	}
 }
+
+Parameter::Parameter(Param paramId)
+:	_paramId	(paramId)
+,	_spec		(ParameterSpecs[paramId])
+,	_value		(_spec.def)
+{}
 
 void
 Parameter::addUpdateListener(UpdateListener *listener)
 {
 	_listeners.insert(listener);
-	listener->UpdateParameter(_paramId, _controlValue);
+	listener->UpdateParameter(_paramId, getControlValue());
 }
 
 void
@@ -62,11 +117,13 @@ Parameter::removeUpdateListener(UpdateListener *listener)
 void
 Parameter::setValue(float value)
 {
-	float newValue = std::min(std::max(value, _min), _max);
+	if (value == _value) return;
+	
+	float newValue = std::min(std::max(value, _spec.min), _spec.max);
 
-	if (_step > 0.f) {
-		newValue = _min + roundf((newValue - _min) / _step) * _step;
-		assert(::fmodf(newValue - _min, _step) == 0);
+	if (_spec.step > 0.f) {
+		newValue = _spec.min + roundf((newValue - _spec.min) / _spec.step) * _spec.step;
+		assert(::fmodf(newValue - _spec.min, _spec.step) == 0);
 	}
 
 	if (_value == newValue) // warning: -ffast-math causes this comparison to fail
@@ -74,21 +131,16 @@ Parameter::setValue(float value)
 
 	_value = newValue;
 
-	switch (_law) {
-		case Law::kLinear:
-			_controlValue = _offset + _base * _value;
-			break;
-		case Law::kExponential:
-			_controlValue = _offset + ::pow( (float)_base, _value );
-			break;
-		case Law::kPower:
-			_controlValue = _offset + ::pow( _value, (float)_base );
-			break;
-	}
-
+	float cv = getControlValue();
 	for (auto &listener : _listeners) {
-		listener->UpdateParameter(_paramId, _controlValue);
+		listener->UpdateParameter(_paramId, cv);
 	}
+}
+
+float
+Parameter::getControlValue() const
+{
+	return ::getControlValue(_spec, _value);
 }
 
 float
@@ -108,7 +160,7 @@ const std::string
 Parameter::getStringValue() const
 {
 	std::ostringstream stream;
-	stream << _controlValue;
+	stream << getControlValue();
 	return stream.str();
 }
 
@@ -116,4 +168,183 @@ void
 Parameter::randomise()
 {
 	setValue( ((rand()/(float)RAND_MAX) * (getMax()-getMin()) + getMin()) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void get_parameter_properties(int parameter_index, double *minimum, double *maximum, double *default_value, double *step_size)
+{
+	const ParameterSpec &spec = ParameterSpecs[parameter_index];
+	if (minimum) {
+		*minimum = spec.min;
+	}
+	if (maximum) {
+		*maximum = spec.max;
+	}
+	if (default_value) {
+		*default_value = spec.def;
+	}
+	if (step_size) {
+		*step_size = spec.step;
+	}
+}
+
+const char *parameter_name_from_index(int param_index)
+{
+	if (param_index < 0 || param_index >= (int)kAmsynthParameterCount)
+		return nullptr;
+	return ParameterSpecs[param_index].name;
+}
+
+int parameter_index_from_name(const char *name)
+{
+	for (int i = 0; i < kAmsynthParameterCount; i++) {
+		if (!strcmp(ParameterSpecs[i].name, name)) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+int parameter_get_display(int param_index, float value, char *buffer, size_t maxlen)
+{
+	const ParameterSpec &spec = ParameterSpecs[param_index];
+	const float cv = getControlValue(spec, value);
+	const float normalised = (value - spec.min) / (spec.max - spec.min);
+	
+	switch (param_index) {
+		case kAmsynthParameter_AmpEnvAttack:
+		case kAmsynthParameter_AmpEnvDecay:
+		case kAmsynthParameter_AmpEnvRelease:
+		case kAmsynthParameter_FilterEnvAttack:
+		case kAmsynthParameter_FilterEnvDecay:
+		case kAmsynthParameter_FilterEnvRelease:
+		case kAmsynthParameter_PortamentoTime:
+			if (cv < 1.0) {
+				return snprintf(buffer, maxlen, "%.0f ms", cv * 1000);
+			} else {
+				return snprintf(buffer, maxlen, "%.1f s", cv);
+			}
+		case kAmsynthParameter_LFOFreq:
+			return snprintf(buffer, maxlen, "%.1f Hz", cv);
+		case kAmsynthParameter_Oscillator2Detune:
+			return snprintf(buffer, maxlen, "%+.1f Cents", 1200.0 * log2(cv));
+		case kAmsynthParameter_Oscillator2Pitch:
+			return snprintf(buffer, maxlen, "%+.0f Semitone%s", cv, fabsf(cv) < 2 ? "" : "s");
+		case kAmsynthParameter_Oscillator2Octave:
+			return snprintf(buffer, maxlen, "%+.0f Octave%s", value, fabsf(value) < 2 ? "" : "s");
+		case kAmsynthParameter_MasterVolume:
+			return snprintf(buffer, maxlen, "%+.1f dB", 20.0 * log10(cv));
+		case kAmsynthParameter_OscillatorMixRingMod:
+			return snprintf(buffer, maxlen, "%d %%", (int)roundf(cv * 100.f));
+		case kAmsynthParameter_FilterEnvAmount:
+			return snprintf(buffer, maxlen, "%+d %%", (int)roundf(cv / 16.f * 100.f));
+		case kAmsynthParameter_AmpEnvSustain:
+		case kAmsynthParameter_FilterResonance:
+		case kAmsynthParameter_FilterCutoff:
+		case kAmsynthParameter_FilterEnvSustain:
+		case kAmsynthParameter_LFOToOscillators:
+		case kAmsynthParameter_LFOToFilterCutoff:
+		case kAmsynthParameter_LFOToAmp:
+		case kAmsynthParameter_ReverbRoomsize:
+		case kAmsynthParameter_ReverbDamp:
+		case kAmsynthParameter_ReverbWet:
+		case kAmsynthParameter_ReverbWidth:
+		case kAmsynthParameter_AmpDistortion:
+		case kAmsynthParameter_FilterKeyTrackAmount:
+		case kAmsynthParameter_FilterKeyVelocityAmount:
+		case kAmsynthParameter_AmpVelocityAmount:
+			return snprintf(buffer, maxlen, "%d %%", (int)roundf(normalised * 100.f));
+		case kAmsynthParameter_FilterType: {
+			const char **filter_type_names = parameter_get_value_strings(param_index);
+			if (filter_type_names) {
+				return snprintf(buffer, maxlen, "%s", filter_type_names[(int)cv]);
+			} else {
+				strcpy(buffer, "");
+				return 0;
+			}
+		}
+	}
+	return 0;
+}
+
+const char **parameter_get_value_strings(int param_index)
+{
+	static std::vector<std::vector<const char *> > parameterStrings(kAmsynthParameterCount);
+	if (param_index < 0 || param_index >= (int)parameterStrings.size())
+		return nullptr;
+
+	std::vector<const char *> & strings = parameterStrings[param_index];
+	if (strings.empty()) {
+		size_t i = 0, size = 0;
+		switch (param_index) {
+			case kAmsynthParameter_Oscillator1Waveform:
+			case kAmsynthParameter_Oscillator2Waveform:
+				strings.resize(size = 6);
+				strings[i++] = _("sine");
+				strings[i++] = _("square / pulse");
+				strings[i++] = _("triangle / saw");
+				strings[i++] = _("white noise");
+				strings[i++] = _("noise + sample & hold");
+				assert(i < size);
+				break;
+
+			case kAmsynthParameter_LFOWaveform:
+				strings.resize(size = 8);
+				strings[i++] = _("sine");
+				strings[i++] = _("square");
+				strings[i++] = _("triangle");
+				strings[i++] = _("noise");
+				strings[i++] = _("noise + sample & hold");
+				strings[i++] = _("sawtooth (up)");
+				strings[i++] = _("sawtooth (down)");
+				assert(i < size);
+				break;
+
+			case kAmsynthParameter_KeyboardMode:
+				strings.resize(size = 4);
+				strings[i++] = _("poly");
+				strings[i++] = _("mono");
+				strings[i++] = _("legato");
+				assert(i < size);
+				break;
+
+			case kAmsynthParameter_FilterType:
+				strings.resize(size = 6);
+				strings[i++] = _("low pass");
+				strings[i++] = _("high pass");
+				strings[i++] = _("band pass");
+				strings[i++] = _("notch");
+				strings[i++] = _("bypass");
+				assert(i < size);
+				break;
+
+			case kAmsynthParameter_FilterSlope:
+				strings.resize(size = 3);
+				strings[i++] = _("12 dB / octave");
+				strings[i++] = _("24 dB / octave");
+				assert(i < size);
+				break;
+
+			case kAmsynthParameter_LFOOscillatorSelect:
+				strings.resize(size = 4);
+				strings[i++] = _("osc 1+2");
+				strings[i++] = _("osc 1");
+				strings[i++] = _("osc 2");
+				assert(i < size);
+				break;
+
+			case kAmsynthParameter_PortamentoMode:
+				strings.resize(size = 3);
+				strings[i++] = _("always");
+				strings[i++] = _("legato");
+				assert(i < size);
+				break;
+
+			default:
+				break;
+		}
+	}
+
+	return &strings[0];
 }
