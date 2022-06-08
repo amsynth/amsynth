@@ -392,25 +392,32 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 				if (event->type != kVstMidiType) {
 					continue;
 				}
-				
+
+				unsigned char *msgData = (unsigned char *)event->midiData;
+
 				int msgLength = 0;
-				unsigned char statusByte = event->midiData[0];
-				if (statusByte < MIDI_STATUS_NOTE_OFF) {
-					continue; // Not a status byte
-				}
-				if (statusByte >= 0xF0) {
-					continue; // Ignore system messages
-				}
-				switch (statusByte & 0xF0) {
+				switch (msgData[0] & 0xF0) {
+				case MIDI_STATUS_NOTE_OFF:
+				case MIDI_STATUS_NOTE_ON:
+				case MIDI_STATUS_NOTE_PRESSURE:
+				case MIDI_STATUS_CONTROLLER:
+					msgLength = 3;
+					break;
 				case MIDI_STATUS_PROGRAM_CHANGE:
 				case MIDI_STATUS_CHANNEL_PRESSURE:
 					msgLength = 2;
 					break;
-				default:
+				case MIDI_STATUS_PITCH_WHEEL:
 					msgLength = 3;
+					break;
+				case 0xF0: // System message
+				case 0: // Not a status byte - bad data from host
+					continue; // Ignore
+				default:
+					abort(); // Programming error
 				}
 				
-				memcpy(buffer, event->midiData, msgLength);
+				memcpy(buffer, msgData, msgLength);
 
 				amsynth_midi_event_t midi_event;
 				memset(&midi_event, 0, sizeof(midi_event));
