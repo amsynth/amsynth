@@ -282,9 +282,11 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 
 #ifdef WITH_GUI
 		case effEditGetRect: {
-			static ERect rect = {0, 0, 400, 600};
-			ERect **er = (ERect **)ptr;
-			*er = &rect;
+			static ERect rect;
+			int scale = default_scaling_factor();
+			rect.bottom = 400 * scale;
+			rect.right = 600 * scale;
+			*(ERect **)ptr = &rect;
 			return 1;
 		}
 		case effEditOpen: {
@@ -313,7 +315,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 					g_object_ref_sink(plugin->adjustments[i]); // assumes ownership of the floating reference
 					g_signal_connect(plugin->adjustments[i], "value-changed", G_CALLBACK(on_adjustment_value_changed), effect);
 				}
-				plugin->editorWidget = editor_pane_new(plugin->synthesizer, plugin->adjustments, TRUE, 0);
+				plugin->editorWidget = editor_pane_new(plugin->synthesizer, plugin->adjustments, TRUE, DEFAULT_SCALING);
 				g_object_ref_sink(plugin->editorWidget);
 			}
 

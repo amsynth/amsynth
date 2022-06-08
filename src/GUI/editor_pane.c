@@ -290,7 +290,7 @@ static int get_xsettings_gdk_window_scaling_factor ()
 	return value;
 }
 
-static int get_scaling_factor ()
+int default_scaling_factor ()
 {
 	const gchar *gdk_scale = g_getenv("GDK_SCALE");
 	if (gdk_scale != NULL) {
@@ -342,10 +342,10 @@ editor_pane_new (void *synthesizer, GtkAdjustment **adjustments, gboolean is_plu
 
 	g_is_plugin = is_plugin;
 
-	if (scaling_factor > 0) {
+	if (scaling_factor != DEFAULT_SCALING) {
 		editor_scaling_factor = scaling_factor;
 	} else {
-		editor_scaling_factor = get_scaling_factor ();
+		editor_scaling_factor = default_scaling_factor ();
 	}
 
 	GtkWidget *fixed = gtk_fixed_new ();
