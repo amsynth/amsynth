@@ -64,6 +64,8 @@ struct ERect
 	short right;
 };
 
+#define MIDI_BUFFER_SIZE 4096
+
 static char hostProductString[64] = "";
 
 #if DEBUG
@@ -78,7 +80,7 @@ struct Plugin
 	{
 		audioMaster = master;
 		synthesizer = new Synthesizer;
-		midiBuffer = (unsigned char *)malloc(4096);
+		midiBuffer = (unsigned char *)malloc(MIDI_BUFFER_SIZE);
 #ifdef WITH_GUI
 		gdkParentWindow = nullptr;
 		gtkWindow = nullptr;
@@ -382,10 +384,9 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 		case effProcessEvents: {
 			VstEvents *events = (VstEvents *)ptr;
 
-			assert(plugin->midiEvents.empty());
-
-			memset(plugin->midiBuffer, 0, 4096);
-			unsigned char *buffer = plugin->midiBuffer;
+			plugin->midiEvents.clear();
+			memset(plugin->midiBuffer, 0, MIDI_BUFFER_SIZE);
+			size_t bytesCopied = 0;
 			
 			for (int32_t i=0; i<events->numEvents; i++) {
 				VstMidiEvent *event = (VstMidiEvent *)events->events[i];
@@ -401,34 +402,31 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 				case MIDI_STATUS_NOTE_ON:
 				case MIDI_STATUS_NOTE_PRESSURE:
 				case MIDI_STATUS_CONTROLLER:
+				case MIDI_STATUS_PITCH_WHEEL:
 					msgLength = 3;
 					break;
 				case MIDI_STATUS_PROGRAM_CHANGE:
 				case MIDI_STATUS_CHANNEL_PRESSURE:
 					msgLength = 2;
 					break;
-				case MIDI_STATUS_PITCH_WHEEL:
-					msgLength = 3;
-					break;
 				case 0xF0: // System message
-				case 0: // Not a status byte - bad data from host
 					continue; // Ignore
 				default:
-					abort(); // Programming error
+					fprintf(stderr, "amsynth: bad status byte: %02x\n", msgData[0]);
+					continue; // Ignore
 				}
-				
-				memcpy(buffer, msgData, msgLength);
+
+				if (bytesCopied + msgLength > MIDI_BUFFER_SIZE) {
+					fprintf(stderr, "amsynth: midi buffer overflow\n");
+					break;
+				}
 
 				amsynth_midi_event_t midi_event;
-				memset(&midi_event, 0, sizeof(midi_event));
 				midi_event.offset_frames = event->deltaFrames;
-				midi_event.buffer = buffer;
 				midi_event.length = msgLength;
+				midi_event.buffer = (unsigned char *)memcpy(plugin->midiBuffer + bytesCopied, msgData, msgLength);
 				plugin->midiEvents.push_back(midi_event);
-
-				buffer += msgLength;
-
-				assert(buffer < plugin->midiBuffer + 4096);
+				bytesCopied += msgLength;
 			}
 			
 			return 1;

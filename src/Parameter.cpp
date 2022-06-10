@@ -91,7 +91,7 @@ static float getControlValue(const ParameterSpec &spec, float value)
 		case kParameterLaw_Power:
 			return spec.offset + ::pow(value, (float)spec.base);
 		default:
-			abort();
+			assert(!"Invalid ParameterLaw");
 	}
 }
 

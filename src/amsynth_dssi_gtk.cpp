@@ -74,7 +74,7 @@ char *tmpstr(const char *format, ...)
 
 void osc_error(int num, const char *msg, const char *path)
 {
-    abort();
+    fprintf(stderr, "OSC error (num = %d msg = '%s' path = '%s')\n", num, msg, path);
 }
 
 static gboolean osc_input_handler(GIOChannel *source, GIOCondition condition, gpointer data)
