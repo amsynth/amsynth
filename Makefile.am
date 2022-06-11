@@ -351,6 +351,10 @@ endif
 if BUILD_VST
 	rm  -f $(DESTDIR)$(vstdir)/amsynth_vst.so
 endif
+# Workaround for
+# ERROR: files left in build directory after distclean:
+# ./po/.intltool-merge-cache.lock
+	-rm ./po/.intltool-merge-cache.lock
 
 #
 #
