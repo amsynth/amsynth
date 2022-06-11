@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04, ubuntu-20.04]
+        os: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
 
     steps:
     - uses: actions/checkout@v1
@@ -34,6 +34,8 @@ jobs:
         gcov -lp $(find . -name '*.c' -o -name '*.cpp')
     - name: Codecov
       uses: codecov/codecov-action@v1.0.4
+      with:
+         token: f7bd75a9-026b-4157-9f6e-708d6149d979
     - uses: actions/upload-artifact@v2
       with:
         name: tarball
