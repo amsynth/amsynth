@@ -33,9 +33,7 @@ jobs:
         make -j 2 check
         gcov -lp $(find . -name '*.c' -o -name '*.cpp')
     - name: Codecov
-      uses: codecov/codecov-action@v1.0.4
-      with:
-         token: f7bd75a9-026b-4157-9f6e-708d6149d979
+      uses: codecov/codecov-action@v2
     - uses: actions/upload-artifact@v2
       with:
         name: tarball
