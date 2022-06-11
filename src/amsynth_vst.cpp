@@ -74,18 +74,13 @@ static FILE *logFile;
 
 constexpr size_t kPresetsPerBank = sizeof(BankInfo::presets) / sizeof(BankInfo::presets[0]);
 
-struct Plugin
+struct Plugin : public UpdateListener
 {
 	Plugin(audioMasterCallback master)
 	{
 		audioMaster = master;
 		synthesizer = new Synthesizer;
 		midiBuffer = (unsigned char *)malloc(MIDI_BUFFER_SIZE);
-#ifdef WITH_GUI
-		gdkParentWindow = nullptr;
-		gtkWindow = nullptr;
-		editorWidget = nullptr;
-#endif
 	}
 
 	~Plugin()
@@ -100,11 +95,48 @@ struct Plugin
 	std::vector<amsynth_midi_event_t> midiEvents;
 	int programNumber = 0;
 	std::string presetName;
+
 #ifdef WITH_GUI
-	GdkWindow *gdkParentWindow;
-	GtkWidget *gtkWindow;
-	GtkWidget *editorWidget;
-	GtkAdjustment *adjustments[kAmsynthParameterCount];
+	typedef std::pair<Param, float> ParameterUpdate;
+
+	void UpdateParameter(Param paramID, float paramValue) override
+	{
+		if (g_thread_self() == mainThread) {
+			updateEditorParameter(paramID, paramValue);
+		} else {
+			g_async_queue_push(parameterUpdateQueue, new ParameterUpdate(paramID, paramValue));
+			g_idle_add(Plugin::idleCallback, this);
+		}
+	}
+
+	static gboolean idleCallback(gpointer data)
+	{
+		Plugin *plugin = (Plugin *)data;
+		ParameterUpdate *update;
+		while ((update = (ParameterUpdate *)g_async_queue_try_pop(plugin->parameterUpdateQueue))) {
+			plugin->updateEditorParameter(update->first, update->second);
+			delete update;
+		}
+		return G_SOURCE_REMOVE;
+	}
+
+	void updateEditorParameter(int parameter, float value)
+	{
+		if (0 <= parameter && parameter < kAmsynthParameterCount) {
+			gdouble value = synthesizer->getParameterValue((Param)parameter);
+			ignoreAdjustmentValueChanges = true;
+			gtk_adjustment_set_value(adjustments[parameter], value);
+			ignoreAdjustmentValueChanges = false;
+		}
+	}
+
+	GdkWindow *gdkParentWindow = nullptr;
+	GtkWidget *gtkWindow = nullptr;
+	GtkWidget *editorWidget = nullptr;
+	GThread *mainThread = nullptr;
+	GAsyncQueue *parameterUpdateQueue = nullptr;
+	bool ignoreAdjustmentValueChanges = false;
+	GtkAdjustment *adjustments[kAmsynthParameterCount] = {0};
 #endif
 };
 
@@ -113,6 +145,9 @@ struct Plugin
 static void on_adjustment_value_changed(GtkAdjustment *adjustment, AEffect *effect)
 {
 	Plugin *plugin = (Plugin *)effect->ptr3;
+	if (plugin->ignoreAdjustmentValueChanges) {
+		return;
+	}
 
 	static Preset dummyPreset;
 
@@ -309,6 +344,8 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			}
 
 			if (!plugin->editorWidget) {
+				plugin->mainThread = g_thread_self();
+				plugin->parameterUpdateQueue = g_async_queue_new();
 				for (int i = 0; i < kAmsynthParameterCount; i++) {
 					gdouble lower = 0, upper = 0, step_increment = 0;
 					get_parameter_properties(i, &lower, &upper, nullptr, &step_increment);
@@ -316,6 +353,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 					plugin->adjustments[i] = (GtkAdjustment *)gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);
 					g_object_ref_sink(plugin->adjustments[i]); // assumes ownership of the floating reference
 					g_signal_connect(plugin->adjustments[i], "value-changed", G_CALLBACK(on_adjustment_value_changed), effect);
+					plugin->synthesizer->getPresetController()->getCurrentPreset().getParameter((Param)i).addUpdateListener(plugin);
 				}
 				plugin->editorWidget = editor_pane_new(plugin->synthesizer, plugin->adjustments, TRUE, DEFAULT_SCALING);
 				g_object_ref_sink(plugin->editorWidget);
@@ -347,6 +385,10 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			return 1;
 		}
 		case effEditClose: {
+			for (int i = 0; i < kAmsynthParameterCount; i++) {
+				plugin->synthesizer->getPresetController()->getCurrentPreset().getParameter((Param)i).removeUpdateListener(plugin);
+			}
+
 			if (plugin->gtkWindow) {
 				if (gtk_widget_get_window(plugin->gtkWindow)) {
 					gdk_window_hide(gtk_widget_get_window(plugin->gtkWindow));
@@ -359,6 +401,8 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 				plugin->adjustments[i] = nullptr;
 			}
 
+			g_async_queue_unref(plugin->parameterUpdateQueue);
+			plugin->parameterUpdateQueue = nullptr;
 			plugin->gdkParentWindow = nullptr;
 			plugin->editorWidget = nullptr;
 
