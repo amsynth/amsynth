@@ -21,7 +21,7 @@ jobs:
       run: ./autogen.sh
     - name: configure
       run: ./configure
-    - name: make distcheck
+    - name: make distcheck CPPFLAGS='-Werror'
       run: make -j 2 distcheck
     - name: make install
       run: sudo make install

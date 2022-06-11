@@ -1,7 +1,7 @@
 /*
  *  bitmap_button.c
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -33,7 +33,7 @@ typedef struct {
 	gint frame_width;
 	gint frame_height;
 	gint frame_count;
-	gint scaling_factor
+	gint scaling_factor;
 
 } bitmap_button;
 
