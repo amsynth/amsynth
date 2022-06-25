@@ -1,7 +1,7 @@
 /*
  *  editor_pane.c
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -34,7 +34,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xmd.h>
 
-//#define ENABLE_LAYOUT_EDIT 1
+#define ENABLE_LAYOUT_EDIT 0
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -103,7 +103,7 @@ extract_skin (char *skin_file)
 		return NULL;
 	}
 	
-	gchar *unzip_bin = "/usr/bin/unzip";
+	const char *unzip_bin = "/usr/bin/unzip";
 	gchar *command = g_strdup_printf("%s -qq -o -j \"%s\" -d %s", unzip_bin, skin_file, tempdir);
 	GError *error = NULL;
 	gint exit_status = 0;
@@ -233,7 +233,7 @@ button_release_event (GtkWidget *widget, GdkEventButton *event, GtkWidget *prese
 #define KEY_CONTROL_PARAM_NAME	"param_name"
 #define KEY_CONTROL_PARAM_NUM	"param_num"
 
-static int get_xsettings_gdk_window_scaling_factor ()
+static int get_xsettings_gdk_window_scaling_factor (void)
 {
 	// GTK doesn't expose an API to its XSettingsClient, so we have to use the X11 APIs
 	
@@ -267,16 +267,20 @@ static int get_xsettings_gdk_window_scaling_factor ()
 	int value = 0;
 	if (type == xsettings_atom && format == 8) {
 		char byte_order = *data; 
-		unsigned int myint = 0x01020304;
-		char local_byte_order = (*(char *)&myint == 1) ? MSBFirst : LSBFirst;
-		for (int i = 16; i < n_items - 32; i += 4) {
-			if (strcmp(data + i, "Gdk/WindowScalingFactor") == 0) {
+		for (unsigned long i = 16; i < n_items - 32; i += 4) {
+			if (!strcmp ((const char *)data + i, "Gdk/WindowScalingFactor")) {
 				// name is followed by 1 byte of padding and a 4-byte serial number
-				int x = *(int *)(data + i + 28);
-				if (byte_order == local_byte_order) {
-					value = x;
-				} else {
-					value = (x << 24) | ((x & 0xff00) << 8) | ((x & 0xff0000) >> 8) | (x >> 24);
+				unsigned char *x = data + i + 28;
+				switch (byte_order) {
+				case LSBFirst:
+					value = (x[0] << 0) | (x[1] << 8) | (x[2] << 16) | (x[3] << 24);
+					break;
+				case MSBFirst:
+					value = (x[3] << 0) | (x[2] << 8) | (x[1] << 16) | (x[0] << 24);
+					break;
+				default:
+					fprintf (stderr, "Invalid byte_order: %d\n", byte_order);
+					break;
 				}
 				break;
 			}
@@ -290,7 +294,7 @@ static int get_xsettings_gdk_window_scaling_factor ()
 	return value;
 }
 
-int default_scaling_factor ()
+int default_scaling_factor (void)
 {
 	const gchar *gdk_scale = g_getenv("GDK_SCALE");
 	if (gdk_scale != NULL) {

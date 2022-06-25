@@ -1,7 +1,7 @@
 /*
  *  MIDILearnDialog.cpp
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -26,10 +26,9 @@
 #include <seq24/controllers.h>
 
 
-MIDILearnDialog::MIDILearnDialog(MidiController *midiController, PresetController *presetController, GtkWindow *parent)
+MIDILearnDialog::MIDILearnDialog(MidiController *midiController, GtkWindow *parent)
 :	_dialog(nullptr)
 ,	_midiController(midiController)
-,	_presetController(presetController)
 {
 	_dialog = gtk_dialog_new_with_buttons(_("MIDI Controller Assignment"), parent, GTK_DIALOG_MODAL,
 		GTK_STOCK_OK,     GTK_RESPONSE_ACCEPT,

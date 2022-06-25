@@ -1,7 +1,7 @@
 /*
  *  PresetController.h
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -30,6 +30,8 @@
 #include "UpdateListener.h"
 
 struct BankInfo {
+	~BankInfo();
+
 	std::string name;
 	std::string file_path;
 	bool read_only;
@@ -41,7 +43,8 @@ public:
 
 	static constexpr int kNumPresets = 128;
 
-	~PresetController	() { clearChangeBuffers(); }
+	PresetController();
+	~PresetController();
 	
 	/* Selects a Preset and makes it current, updating everything as necessary.
 	 * If the requested preset does not exist, then the request is ignored, and

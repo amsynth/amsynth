@@ -1,7 +1,7 @@
 /*
  *  gui_main.cpp
  *
- *  Copyright (c) 2001-2017 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -37,7 +37,7 @@ void gui_kit_init(int *argc, char ***argv)
 	gtk_window_set_default_icon_name("amsynth");
 }
 
-void gui_kit_run(unsigned (*timer_callback)())
+void gui_kit_run(unsigned (*timer_callback)(void *))
 {
 	g_timeout_add(250, (GSourceFunc)timer_callback, nullptr);
 	gtk_main();
@@ -64,7 +64,10 @@ void ShowModalErrorMessage(const std::string & msg, const std::string & secondar
 void spawn_new_instance()
 {
 	static char exe_path[4096] = "";
-	readlink("/proc/self/exe", exe_path, sizeof(exe_path));
+	if (readlink("/proc/self/exe", exe_path, sizeof(exe_path)) == -1) {
+		perror("readlink /proc/self/exe");
+		return;
+	}
 	_argv[0] = exe_path;
 	g_spawn_async(nullptr, _argv, nullptr, (GSpawnFlags)0, nullptr, nullptr, nullptr, nullptr);
 }

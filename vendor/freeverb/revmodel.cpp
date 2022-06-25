@@ -9,10 +9,10 @@
 #include "revmodel.hpp"
 
 revmodel::revmodel()
-:	mode(initialmode)
-,	dryz(initialdry)
+:	dryz(initialdry)
 ,	wet1z(0.F)
 ,	wet2z(0.F)
+,	mode(initialmode)
 {
     setrate(44100);
 

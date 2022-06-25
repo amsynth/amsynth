@@ -1,7 +1,7 @@
 /*
  *  MainWindow.cpp
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -47,10 +47,11 @@ static MIDILearnDialog *midiLearnDialog;
 
 struct MainWindow : public UpdateListener
 {
-	MainWindow(Synthesizer *synthesizer, GenericOutput *audio, int scaling_factor) :
-			synthesizer(synthesizer),
-			presetController(synthesizer->getPresetController()),
-			ignoreAdjustmentValueChanges(false)
+	MainWindow(Synthesizer *synthesizer_, GenericOutput *audio_, int scaling_factor)
+	:	synthesizer(synthesizer_)
+	,	presetController(synthesizer->getPresetController())
+	,	audio(audio_)
+	,	ignoreAdjustmentValueChanges(false)
 	{
 		presetIsNotSaved = false;
 		mainThread = g_thread_self();
@@ -325,7 +326,6 @@ main_window_new(Synthesizer *synthesizer, GenericOutput *audio, int scaling_fact
 
 	midiLearnDialog = new MIDILearnDialog(
 			synthesizer->getMidiController(),
-			synthesizer->getPresetController(),
 			GTK_WINDOW(mainWindow->window));
 
 	g_idle_add(startup_check, mainWindow);

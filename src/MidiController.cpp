@@ -120,11 +120,7 @@ MidiController::HandleMidiData(const unsigned char* bytes, unsigned numBytes)
 			break;
 	
 		default:
-#ifdef _DEBUG
-			std::cout << "<MidiController> unknown status :" << std::hex <<
-			(int) status << "for data byte: " << std::hex << (int) byte <<
-			std::endl;
-#endif
+			fprintf(stderr, "amsynth: invalid status byte: %02x data byte: %02x\n", status, byte);
 			break;
 		}
     }
@@ -243,7 +239,7 @@ MidiController::loadControllerMap()
 {
 	clearControllerMap();
 
-#if _WIN32
+#ifdef _WIN32
 	return;
 #endif
 
@@ -261,7 +257,7 @@ MidiController::loadControllerMap()
 void
 MidiController::saveControllerMap()
 {
-#if _WIN32
+#ifdef _WIN32
 	return;
 #endif
 	std::ofstream file(filesystem::get().controllers.c_str(), std::ios::out);

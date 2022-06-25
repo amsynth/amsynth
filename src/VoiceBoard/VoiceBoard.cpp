@@ -1,7 +1,7 @@
 /*
  *  VoiceBoard.cpp
  *
- *  Copyright (c) 2001-2021 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -97,7 +97,19 @@ VoiceBoard::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_AmpEnvRelease:			mAmpADSR.SetRelease(value);	break;
 	case kAmsynthParameter_AmpVelocityAmount: mAmpVelSens = value; break;
 		
-	default: break;
+	case kAmsynthParameter_MasterVolume:
+	case kAmsynthParameter_ReverbRoomsize:
+	case kAmsynthParameter_ReverbDamp:
+	case kAmsynthParameter_ReverbWet:
+	case kAmsynthParameter_ReverbWidth:
+	case kAmsynthParameter_AmpDistortion:
+	case kAmsynthParameter_PortamentoTime:
+	case kAmsynthParameter_KeyboardMode:
+	case kAmsynthParameter_PortamentoMode:
+		break;
+	case kAmsynthParameterCount:
+	default:
+		assert(nullptr == "Invalid parameter");
 	}
 }
 

@@ -33,7 +33,7 @@ G_BEGIN_DECLS
 GtkWidget *
 editor_pane_new(void *synthesizer, GtkAdjustment **adjustments, gboolean is_plugin, int scaling_factor);
 
-int default_scaling_factor();
+int default_scaling_factor(void);
 
 void modal_midi_learn(Param param_index);
 

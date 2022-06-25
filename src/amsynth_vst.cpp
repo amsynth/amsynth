@@ -1,7 +1,7 @@
 /*
  *  amsynth_vst.cpp
  *
- *  Copyright (c) 2008-2020 Nick Dowell
+ *  Copyright (c) 2008-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -68,7 +68,7 @@ struct ERect
 
 static char hostProductString[64] = "";
 
-#if DEBUG
+#if defined(DEBUG) && DEBUG
 static FILE *logFile;
 #endif
 
@@ -120,7 +120,7 @@ struct Plugin : public UpdateListener
 		return G_SOURCE_REMOVE;
 	}
 
-	void updateEditorParameter(int parameter, float value)
+	void updateEditorParameter(int parameter, float paramValue)
 	{
 		if (0 <= parameter && parameter < kAmsynthParameterCount) {
 			gdouble value = synthesizer->getParameterValue((Param)parameter);
@@ -184,10 +184,7 @@ static void setEventProc(Display *display, Window window)
 	// based on mach_override
 	static const unsigned char kJumpInstructions[] = {
 			0xFF, 0x25, 0x00, 0x00, 0x00, 0x00,
-			0x00, 0x00, 0x00, 0x00,
-			0x00, 0x00, 0x00, 0x00
 	};
-	static const int kJumpAddress = 6;
 
 	static char *ptr;
 	if (!ptr) {
@@ -202,8 +199,7 @@ static void setEventProc(Display *display, Window window)
 			return;
 		} else {
 			memcpy(ptr, kJumpInstructions, sizeof(kJumpInstructions));
-			*((uint64_t *)(ptr + kJumpAddress)) = (uint64_t)(&XEventProc);
-			msync(ptr, sizeof(kJumpInstructions), MS_INVALIDATE);
+			memcpy(ptr + sizeof(kJumpInstructions), (const void *)&XEventProc, sizeof(&XEventProc));
 		}
 	}
 
@@ -217,7 +213,7 @@ static void setEventProc(Display *display, Window window)
 #endif
 }
 
-#if DEBUG
+#if defined(DEBUG) && DEBUG
 static void gdk_event_handler(GdkEvent *event, gpointer	data)
 {
 	static const char *names[] = {
@@ -264,6 +260,25 @@ static void gdk_event_handler(GdkEvent *event, gpointer	data)
 	gtk_main_do_event(event);
 }
 #endif // DEBUG
+
+static void init_gtk()
+{
+	static bool initialized = false;
+	if (!initialized) {
+#if defined(DEBUG) && DEBUG
+		int argc = 2;
+		char arg1[32] = "/dev/null";
+		char arg2[32] = "--g-fatal-warnings";
+		char *args[] = { arg1, arg2 };
+		char **argv = args;
+		gtk_init(&argc, &argv);
+		gdk_event_handler_set(&gdk_event_handler, NULL, NULL);
+#else
+		gtk_init(nullptr, nullptr);
+#endif
+		initialized = true;
+	}
+}
 
 #endif // WITH_GUI
 
@@ -320,6 +335,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 #ifdef WITH_GUI
 		case effEditGetRect: {
 			static ERect rect;
+			init_gtk();
 			int scale = default_scaling_factor();
 			rect.bottom = 400 * scale;
 			rect.right = 600 * scale;
@@ -327,21 +343,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			return 1;
 		}
 		case effEditOpen: {
-			static bool initialized = false;
-			if (!initialized) {
-#if DEBUG
-				int argc = 2;
-				char arg1[32] = "/dev/null";
-				char arg2[32] = "--g-fatal-warnings";
-				char *args[] = { arg1, arg2 };
-				char **argv = args;
-				gtk_init(&argc, &argv);
-				gdk_event_handler_set(&gdk_event_handler, NULL, NULL);
-#else
-				gtk_init(nullptr, nullptr);
-#endif
-				initialized = true;
-			}
+			init_gtk();
 
 			if (!plugin->editorWidget) {
 				plugin->mainThread = g_thread_self();
@@ -433,7 +435,10 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			size_t bytesCopied = 0;
 			
 			for (int32_t i=0; i<events->numEvents; i++) {
-				VstMidiEvent *event = (VstMidiEvent *)events->events[i];
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-align"
+				auto event = (const VstMidiEvent *)events->events[i];
+#pragma GCC diagnostic pop
 				if (event->type != kVstMidiType) {
 					continue;
 				}
@@ -502,7 +507,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 				strcmp("receiveVstSysexEvent", (char *)ptr) == 0 ||
 				strcmp("sendVstMidiEvent", (char *)ptr) == 0 ||
 				false) return 0;
-#if DEBUG
+#if defined(DEBUG) && DEBUG
 			fprintf(logFile, "[amsynth_vst] unhandled canDo: %s\n", (char *)ptr);
 			fflush(logFile);
 #endif
@@ -525,7 +530,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			return 0;
 
 		default:
-#if DEBUG
+#if defined(DEBUG) && DEBUG
 			fprintf(logFile, "[amsynth_vst] unhandled VST opcode: %d\n", opcode);
 			fflush(logFile);
 #endif
@@ -566,15 +571,16 @@ static int getNumPrograms()
 	return PresetController::getPresetBanks().size() * kPresetsPerBank;
 }
 
-extern "C"
-#if _WIN32
-__declspec(dllexport)
-#else
-__attribute__((visibility("default")))
-#endif
+#ifdef _WIN32
+extern "C" __declspec(dllexport)
 AEffect * VSTPluginMain(audioMasterCallback audioMaster)
+#else
+extern "C" __attribute__ ((visibility("default")))
+AEffect * VSTPluginMain(audioMasterCallback audioMaster);
+AEffect * VSTPluginMain(audioMasterCallback audioMaster)
+#endif
 {
-#if DEBUG
+#if defined(DEBUG) && DEBUG
 	if (!logFile) {
 		logFile = fopen("/tmp/amsynth.log", "a");
 	}
@@ -607,7 +613,7 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 	return effect;
 }
 
-#if _WIN32
+#ifdef _WIN32
 
 __declspec(dllexport)
 extern "C" AEffect * MAIN(audioMasterCallback audioMaster)

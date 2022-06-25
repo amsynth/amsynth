@@ -1,7 +1,7 @@
 /*
  *  Oscillator.cpp
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -73,6 +73,7 @@ Oscillator::ProcessSamples	(float *buffer, int nFrames, float freq_hz, float pw,
 	case Waveform::kSaw:      doSaw       (buffer, nFrames); break;
 	case Waveform::kNoise:    doNoise     (buffer, nFrames); break;
 	case Waveform::kRandom:   doRandom    (buffer, nFrames); break;
+	default: assert(nullptr == "invalid waveform");
 	}
 }
 
