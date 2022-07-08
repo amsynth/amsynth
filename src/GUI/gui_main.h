@@ -1,7 +1,7 @@
 /*
  *  gui_main.h
  *
- *  Copyright (c) 2001-2017 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -23,7 +23,7 @@
 
 void gui_kit_init(int *argc, char ***argv);
 
-void gui_kit_run(unsigned (*timer_callback)());
+void gui_kit_run(unsigned (*timer_callback)(void *));
 
 void ShowModalErrorMessage(const std::string & msg, const std::string & secondaryText = "");
 

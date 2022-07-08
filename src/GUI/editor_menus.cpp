@@ -1,7 +1,7 @@
 /*
  *  editor_menus.cpp
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -60,7 +60,7 @@ static void
 override_item_toggled(GtkCheckMenuItem *item, gpointer user_data)
 {
     Preset::setShouldIgnoreParameter((int)(long)user_data, gtk_check_menu_item_get_active (item) == TRUE);
-    Configuration config = Configuration::get();
+    Configuration &config = Configuration::get();
     config.ignored_parameters = Preset::getIgnoredParameterNames();
     config.save();
     return;

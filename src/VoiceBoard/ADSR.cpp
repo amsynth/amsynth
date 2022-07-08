@@ -1,7 +1,7 @@
 /*
  *  ADSR.cpp
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -22,6 +22,7 @@
 #include "ADSR.h"
 
 #include <algorithm>
+#include <cassert>
 
 static const float kMinimumTime = 0.0005f;
 
@@ -90,12 +91,15 @@ ADSR::process(float *buffer, unsigned frames)
 				case State::kSustain:
 					m_frames_left_in_state = UINT_MAX;
 					break;
-				default:
+				case State::kRelease:
+				case State::kOff:
 					m_state = State::kOff;
 					m_value = 0;
 					m_frames_left_in_state = UINT_MAX;
 					m_inc = 0;
 					break;
+				default:
+					assert(nullptr == "invalid state");
 			}
 		}
 

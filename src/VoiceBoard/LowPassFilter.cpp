@@ -1,7 +1,7 @@
 /*
  *  LowPassFilter.cpp
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -101,7 +101,10 @@ SynthFilter::ProcessSamples(float *buffer, int numSamples, float cutoff, float r
 			b1 =  a1;
 			b2 = (1.0 - rk + k2) / bh;
 			break;
-			
+
+		case Type::kBypass:
+			return;
+
 		default:
 			assert(nullptr == "invalid FilterType");
 			return;

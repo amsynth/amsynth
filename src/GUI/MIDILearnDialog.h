@@ -1,7 +1,7 @@
 /*
  *  MIDILearnDialog.h
  *
- *  Copyright (c) 2001-2017 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -20,7 +20,6 @@
  */
 
 #include "../MidiController.h"
-#include "../PresetController.h"
 
 #include <gtk/gtk.h>
 
@@ -28,7 +27,7 @@ class MIDILearnDialog
 {
 public:
 
-	MIDILearnDialog(MidiController *midiController, PresetController *presetController, GtkWindow *parent);
+	MIDILearnDialog(MidiController *midiController, GtkWindow *parent);
 
 	void run_modal(Param param_idx);
 
@@ -42,5 +41,4 @@ private:
 	GtkWidget		*_checkButton;
 
 	MidiController	*_midiController;
-	PresetController *_presetController;
 };

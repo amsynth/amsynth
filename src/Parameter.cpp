@@ -23,6 +23,10 @@
 
 #include "VoiceBoard/Synth--.h"
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "gettext.h"
 #define _(string) gettext (string)
 
@@ -31,10 +35,10 @@
 #include <cstring>
 #include <vector>
 
-#if defined _MSC_VER // does not support Designated Initializers
-#define SPEC(id, name, def, min, max, step, law, base, offset, label)        { name, def, min, max,  step, law, base, offset, label }
-#else
+#if defined(__GNUC__) && !defined(__clang__) // GNU supports Designated Initializers in C++
 #define SPEC(id, name, def, min, max, step, law, base, offset, label) [id] = { name, def, min, max,  step, law, base, offset, label }
+#else
+#define SPEC(id, name, def, min, max, step, law, base, offset, label)        { name, def, min, max,  step, law, base, offset, label }
 #endif
 
 static const ParameterSpec ParameterSpecs[] = { //                            def,    min,    max,  step,       law,                         base,  offset,     label
@@ -212,7 +216,7 @@ int parameter_get_display(int param_index, float value, char *buffer, size_t max
 	const float cv = getControlValue(spec, value);
 	const float normalised = (value - spec.min) / (spec.max - spec.min);
 	
-	switch (param_index) {
+	switch ((Param)param_index) {
 		case kAmsynthParameter_AmpEnvAttack:
 		case kAmsynthParameter_AmpEnvDecay:
 		case kAmsynthParameter_AmpEnvRelease:
@@ -257,15 +261,25 @@ int parameter_get_display(int param_index, float value, char *buffer, size_t max
 			return snprintf(buffer, maxlen, "%d %%", (int)roundf(normalised * 100.f));
 		case kAmsynthParameter_FilterType: {
 			const char **filter_type_names = parameter_get_value_strings(param_index);
-			if (filter_type_names) {
-				return snprintf(buffer, maxlen, "%s", filter_type_names[(int)cv]);
-			} else {
-				strcpy(buffer, "");
-				return 0;
-			}
+			return filter_type_names ? snprintf(buffer, maxlen, "%s", filter_type_names[(int)cv]) : 0;
 		}
+		case kAmsynthParameter_Oscillator1Waveform:
+		case kAmsynthParameter_Oscillator2Waveform:
+		case kAmsynthParameter_LFOWaveform:
+		case kAmsynthParameter_OscillatorMix:
+		case kAmsynthParameter_Oscillator1Pulsewidth:
+		case kAmsynthParameter_Oscillator2Pulsewidth:
+		case kAmsynthParameter_Oscillator2Sync:
+		case kAmsynthParameter_KeyboardMode:
+		case kAmsynthParameter_FilterSlope:
+		case kAmsynthParameter_LFOOscillatorSelect:
+		case kAmsynthParameter_PortamentoMode:
+			return 0;
+		case kAmsynthParameterCount:
+		default:
+			fprintf(stderr, "amsynth: parameter_get_display: out of bounds parameter index %d\n", param_index);
+			return 0;
 	}
-	return 0;
 }
 
 const char **parameter_get_value_strings(int param_index)

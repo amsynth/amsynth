@@ -1,7 +1,7 @@
 /*
  *  amsynth_lv2.h
  *
- *  Copyright (c) 2001-2021 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -115,7 +115,7 @@ lv2_features_data(const LV2_Feature*const* features,
 
    @return NULL on success, otherwise the URI of this missing feature.
 */
-static inline const char*
+static const char*
 lv2_features_query(const LV2_Feature* const* features, ...)
 {
 	va_list args;

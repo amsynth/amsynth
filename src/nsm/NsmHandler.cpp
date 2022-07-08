@@ -12,10 +12,10 @@
 #include <sys/wait.h>
 
 
-NsmHandler::NsmHandler( NsmClient *nsmClient) {
+NsmHandler::NsmHandler(NsmClient *client) {
     loadStatus = LoadStatus::kOk ;
     nsmActive = false ;
-    setNsmClient (nsmClient) ;
+    setNsmClient (client) ;
     SetFilePaths ("NotSet") ;
 }
 

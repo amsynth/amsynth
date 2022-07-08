@@ -1,7 +1,7 @@
 /*
  *  PresetControllerView.cpp
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -33,6 +33,10 @@
 #include <string>
 #include <vector>
 
+#ifdef __GNUC__
+static void snprintf_truncate(char *str, size_t size, const char *format, ...) __attribute__ ((format(printf, 3, 4)));
+#endif
+
 static void snprintf_truncate(char *str, size_t size, const char *format, ...)
 {
 	va_list va_args;
@@ -50,7 +54,7 @@ public:
 
 	void update() override;
 	unsigned char getAuditionNote() override;
-	GtkWidget * getWidget() override { return widget; }
+	GtkWidget * getWidget() override { return widget_; }
 
 private:
 
@@ -65,7 +69,7 @@ private:
     static gboolean on_audition_key_release_event (GtkWidget *widget, GdkEventKey *event, PresetControllerViewImpl *);
 
     PresetController *presetController;
-	GtkWidget *widget;
+	GtkWidget *widget_;
 	GtkWidget *bank_combo;
 	GtkWidget *combo;
 	GtkWidget *save_button;
@@ -96,17 +100,17 @@ static gboolean on_output(GtkSpinButton *spin, gpointer user_data)
 	return TRUE;
 }
 
-PresetControllerViewImpl::PresetControllerViewImpl(PresetController *presetController)
-:	presetController(presetController)
-,	widget(nullptr)
+PresetControllerViewImpl::PresetControllerViewImpl(PresetController *presetController_)
+:	presetController(presetController_)
+,	widget_(nullptr)
 ,	bank_combo(nullptr)
 ,	combo(nullptr)
 ,	audition_spin(nullptr)
 ,	audition_note(0)
 ,	inhibit_combo_callback(false)
 {
-	this->widget = gtk_hbox_new (FALSE, 0);
-	GtkBox *hbox = GTK_BOX (this->widget);
+	widget_ = gtk_hbox_new (FALSE, 0);
+	GtkBox *hbox = GTK_BOX (widget_);
 
 	bank_combo = gtk_combo_box_text_new ();
 	g_signal_connect (G_OBJECT (bank_combo), "changed", G_CALLBACK (&PresetControllerViewImpl::on_combo_changed), this);

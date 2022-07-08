@@ -1,7 +1,7 @@
 /*
  *  VoiceAllocationUnit.cpp
  *
- *  Copyright (c) 2001-2021 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -223,9 +223,9 @@ VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 		_keyPresses[note] = 0;
 		
 		int nextNote = -1;
-		for (unsigned i = 0, keyPress = 0; i < 128; i++) {
-			if (keyPress < _keyPresses[i] && (keyPressed[i] || sustain)) {
-				keyPress = _keyPresses[i];
+		for (unsigned i = 0, tmp = 0; i < 128; i++) {
+			if (tmp < _keyPresses[i] && (keyPressed[i] || sustain)) {
+				tmp = _keyPresses[i];
 				nextNote = i;
 			}
 		}
@@ -352,7 +352,47 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 	case kAmsynthParameter_PortamentoTime: 	mPortamentoTime = value; break;
 	case kAmsynthParameter_KeyboardMode:	setKeyboardMode((KeyboardMode)(int)value); break;
 	case kAmsynthParameter_PortamentoMode:	mPortamentoMode = (int) value; break;
-	default: for (unsigned i=0; i<_voices.size(); i++) _voices[i]->UpdateParameter (param, value); break;
+
+	case kAmsynthParameter_AmpEnvAttack:
+	case kAmsynthParameter_AmpEnvDecay:
+	case kAmsynthParameter_AmpEnvSustain:
+	case kAmsynthParameter_AmpEnvRelease:
+	case kAmsynthParameter_Oscillator1Waveform:
+	case kAmsynthParameter_FilterEnvAttack:
+	case kAmsynthParameter_FilterEnvDecay:
+	case kAmsynthParameter_FilterEnvSustain:
+	case kAmsynthParameter_FilterEnvRelease:
+	case kAmsynthParameter_FilterResonance:
+	case kAmsynthParameter_FilterEnvAmount:
+	case kAmsynthParameter_FilterCutoff:
+	case kAmsynthParameter_Oscillator2Detune:
+	case kAmsynthParameter_Oscillator2Waveform:
+	case kAmsynthParameter_LFOFreq:
+	case kAmsynthParameter_LFOWaveform:
+	case kAmsynthParameter_Oscillator2Octave:
+	case kAmsynthParameter_OscillatorMix:
+	case kAmsynthParameter_LFOToOscillators:
+	case kAmsynthParameter_LFOToFilterCutoff:
+	case kAmsynthParameter_LFOToAmp:
+	case kAmsynthParameter_OscillatorMixRingMod:
+	case kAmsynthParameter_Oscillator1Pulsewidth:
+	case kAmsynthParameter_Oscillator2Pulsewidth:
+	case kAmsynthParameter_Oscillator2Sync:
+	case kAmsynthParameter_Oscillator2Pitch:
+	case kAmsynthParameter_FilterType:
+	case kAmsynthParameter_FilterSlope:
+	case kAmsynthParameter_LFOOscillatorSelect:
+	case kAmsynthParameter_FilterKeyTrackAmount:
+	case kAmsynthParameter_FilterKeyVelocityAmount:
+	case kAmsynthParameter_AmpVelocityAmount:
+		for (unsigned i=0; i<_voices.size(); i++) {
+			_voices[i]->UpdateParameter (param, value);
+		}
+		break;
+
+	case kAmsynthParameterCount:
+	default:
+		assert(nullptr == "Invalid parameter");
 	}
 }
 

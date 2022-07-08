@@ -75,9 +75,9 @@ void NsmClient::setHandlerActiveCallback (void *handlerThis, HandlerActiveCallba
     handlerActiveCallback = callback ;
 }
                                                           
-NsmClient::NsmClient (std::string programName) : nsm(nullptr) {
+NsmClient::NsmClient (std::string programName_) : nsm(nullptr) {
     NSMClient = this ;
-    this->programName = programName ;
+    programName = programName_ ;
 
     openResult = -1 ;
     saveResult = -1 ;

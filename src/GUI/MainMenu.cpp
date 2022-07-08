@@ -1,7 +1,7 @@
 /*
  *  MainMenu.cpp
  *
- *  Copyright(c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -604,7 +604,9 @@ struct UtilsMenu
 	static void runCommand(GtkWidget *widget, const char *command)
 	{
 		std::string cmd = std::string(command) + std::string(" &");
-		system(cmd.c_str());
+		if (system(cmd.c_str()) == -1) {
+			perror("system");
+		}
 	}
 
 	static bool commandExists(const char *command)
@@ -665,7 +667,7 @@ struct HelpMenu
 				"translator-credits", "Olivier Humbert - French\nGeorg Krause - German\nPeter Körner - German",
 				"comments", _("Analog Modelling SYNTHesizer"),
 				"website", PACKAGE_URL,
-				"copyright", _("Copyright © 2002 - 2020 Nick Dowell and contributors"),
+				"copyright", _("Copyright © 2002 - 2022 Nick Dowell and contributors"),
 				NULL);
 	}
 

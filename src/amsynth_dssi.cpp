@@ -1,7 +1,7 @@
 /*
  *  amsynth_dssi.cpp
  *
- *  Copyright (c) 2001-2017 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -73,7 +73,7 @@ typedef struct _amsynth_wrapper {
  *   available.  Each non-NULL return is the DSSI_Descriptor
  *   of a distinct plugin type.
  */
-__attribute__((visibility("default")))
+__attribute__ ((visibility("default")))
 const DSSI_Descriptor *dssi_descriptor (unsigned long index)
 {
     switch (index)
@@ -257,7 +257,7 @@ static void run (LADSPA_Handle instance, unsigned long sample_count)
  * http://www.tldp.org/HOWTO/Program-Library-HOWTO/miscellaneous.html#INIT-AND-CLEANUP
  */
 
-void __attribute__ ((constructor)) my_init ()
+static void __attribute__ ((constructor)) my_init ()
 {
 	s_presetController = new PresetController;
     const char **port_names;
@@ -359,7 +359,7 @@ void __attribute__ ((constructor)) my_init ()
     }
 }
 
-void __attribute__ ((destructor)) my_fini ()
+static void __attribute__ ((destructor)) my_fini ()
 {
     if (s_ladspaDescriptor)
 	{

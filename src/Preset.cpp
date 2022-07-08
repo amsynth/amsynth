@@ -36,11 +36,6 @@
 #include "gettext.h"
 #define _(string) gettext (string)
 
-#ifdef _DEBUG
-#include <iostream>
-using namespace std;
-#endif
-
 
 Preset::Preset(const std::string name) : mName (name)
 {
