@@ -172,7 +172,8 @@ AM_CONDITIONAL([ENABLE_REALTIME], [test x$enable_realtime != x])
 
 AM_CONDITIONAL([DARWIN], [test "$(uname -s)" = "Darwin"])
 
-AX_COMPILER_FLAGS([AM_CFLAGS], [AM_LDFLAGS], [yes])
+m4_ifdef([AX_COMPILER_FLAGS],
+         [AX_COMPILER_FLAGS([AM_CFLAGS], [AM_LDFLAGS], [yes])])
 
 AC_CONFIG_FILES([
     Makefile
