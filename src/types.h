@@ -1,7 +1,7 @@
 /*
  *  types.h
  *
- *  Copyright (c) 2014-2016 Nick Dowell
+ *  Copyright (c) 2014-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -22,10 +22,10 @@
 #ifndef __amsynth__types__
 #define __amsynth__types__
 
-#if _WIN32
+#ifdef _WIN32
 #define DEPRECATED
 #else
-#define DEPRECATED __attribute__((deprecated))
+#define DEPRECATED __attribute__ ((deprecated))
 #endif
 
 struct amsynth_midi_event_t {

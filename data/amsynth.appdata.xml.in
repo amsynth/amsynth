@@ -5,9 +5,9 @@
   <_name>Analog Modelling SYNTHesizer</_name>
   <project_license>GPL-2.0+</project_license>
   <_summary>Analog modelling (a.k.a virtual analog) software synthesizer</_summary>
-  <url type="homepage">http://amsynth.github.io/</url>
+  <url type="homepage">https://github.com/amsynth/amsynth</url>
   <description>
-    <_p>Amsynth is an analog modelling (a.k.a virtual analog) software synthesizer.
+    <_p>amsynth is an analog modelling (a.k.a virtual analog) software synthesizer.
 It mimics the operation of early analog subtractive synthesizers with
 classic oscillator waveforms, envelopes, filter, modulation and effects.
 The aim is to make it easy to create and modify sounds.</_p>

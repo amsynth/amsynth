@@ -1,7 +1,7 @@
 /*
  *  main.cpp
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -46,7 +46,7 @@
 #include "nsm/NsmHandler.h"
 #endif
 
-#if __APPLE__
+#if defined(__APPLE__) && __APPLE__
 #include "drivers/CoreAudio.h"
 #endif
 
@@ -71,12 +71,6 @@
 
 using namespace std;
 
-#ifdef _DEBUG
-#define DEBUGMSG( ... ) fprintf( stderr, __VA_ARGS__ )
-#else
-#define DEBUGMSG( ... )
-#endif
-
 
 Configuration & config = Configuration::get();
 
@@ -86,15 +80,10 @@ static void sched_realtime()
 #ifdef linux
 	struct sched_param sched = {0};
 	sched.sched_priority = 50;
-	int foo = sched_setscheduler(0, SCHED_FIFO, &sched);
-	sched_getparam(0, &sched);
-
-	if (foo) {
-		DEBUGMSG(_("Failed to set SCHED_FIFO\n"));
+	if (sched_setscheduler(0, SCHED_FIFO, &sched) == -1) {
+		perror("sched_setscheduler");
 		config.realtime = 0;
-	}
-	else {
-		DEBUGMSG("Set SCHED_FIFO\n");
+	} else {
 		config.realtime = 1;
 	}
 #elif defined(__APPLE__)
@@ -119,7 +108,7 @@ static int gui_midi_pipe[2];
 
 static GenericOutput * open_audio()
 {	
-#if	__APPLE__
+#if defined(__APPLE__) && __APPLE__
 
 	if (config.audio_driver == "jack" ||
 		config.audio_driver == "JACK" ){
@@ -202,6 +191,8 @@ static void open_midi()
 	}
 }
 
+static void fatal_error(const std::string & msg) __attribute__ ((noreturn));
+
 static void fatal_error(const std::string & msg)
 {
 	std::cerr << msg << "\n";
@@ -211,7 +202,7 @@ static void fatal_error(const std::string & msg)
 	exit(1);
 }
 
-unsigned amsynth_timer_callback();
+static unsigned amsynth_timer_callback(void *);
 
 static int signal_received = 0;
 
@@ -434,7 +425,7 @@ int main( int argc, char *argv[] )
 }
 
 unsigned
-amsynth_timer_callback()
+amsynth_timer_callback(void *unused)
 {
 	amsynth_lash_poll_events();
 	return 1;
@@ -446,7 +437,9 @@ void amsynth_midi_input(unsigned char status, unsigned char data1, unsigned char
 	if (config.midi_channel > 1) {
 		buffer[0] |= ((config.midi_channel - 1) & 0x0f);
 	}
-	write(gui_midi_pipe[1], buffer, sizeof(buffer));
+	if (write(gui_midi_pipe[1], buffer, sizeof(buffer)) == -1) {
+		perror("write(gui_midi_pipe)");
+	}
 }
 
 static bool compare(const amsynth_midi_event_t &first, const amsynth_midi_event_t &second) {

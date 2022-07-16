@@ -19,26 +19,30 @@ dnl  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 dnl
 
 AC_COPYRIGHT([Copyright (C) 2001-2022 Nick Dowell])
-AC_INIT([amsynth], [1.12.4], [https://github.com/amsynth/amsynth/issues], [amsynth], [https://amsynth.github.io])
+
+AC_INIT([amsynth], [1.13.0],
+        [https://github.com/amsynth/amsynth/issues],
+        [amsynth],
+        [https://github.com/amsynth/amsynth])
+
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE([-Wno-portability subdir-objects])
+
+AM_INIT_AUTOMAKE([-Wall -Wno-portability check-news foreign subdir-objects])
 AM_SILENT_RULES([yes])
 
 # make CXXFLAGS inherit from CFLAGS unless CXXFLAGS were specified
-AS_IF([test "x$CXXFLAGS" = "x"], [CXXFLAGS="$CFLAGS"])
+AS_IF([test "x$CXXFLAGS" = x && test "x$CFLAGS" != x],
+      [echo "setting CXXFLAGS to CFLAGS: $CFLAGS" ; CXXFLAGS="$CFLAGS"])
 
-# capture user-supplied compiler flags before AC_PROG_CC clobbers them
-user_CFLAGS="$CFLAGS"
-user_CXXFLAGS="$CXXFLAGS"
-
-AC_PROG_CC_C99
+AC_PROG_CC
+# Autoconf 2.70 deprecates AC_PROG_CC_C99
+m4_version_prereq([2.70], [:], [AC_PROG_CC_C99])
 AC_PROG_CXX
 AC_PROG_INSTALL
 LT_INIT
 
-AC_LANG(C++)
 AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
 
 IT_PROG_INTLTOOL
@@ -167,6 +171,9 @@ AC_ARG_ENABLE([realtime], [AS_HELP_STRING([--enable-realtime],
 AM_CONDITIONAL([ENABLE_REALTIME], [test x$enable_realtime != x])
 
 AM_CONDITIONAL([DARWIN], [test "$(uname -s)" = "Darwin"])
+
+m4_ifdef([AX_COMPILER_FLAGS],
+         [AX_COMPILER_FLAGS([AM_CFLAGS], [AM_LDFLAGS], [yes])])
 
 AC_CONFIG_FILES([
     Makefile

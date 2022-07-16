@@ -85,7 +85,7 @@ lv2_instantiate(const LV2_Descriptor *descriptor, double sample_rate, const char
 			LV2_WORKER__schedule, &a->schedule,   true,
 			NULL);
 	if (missing) {
-		free(a);
+		delete a;
 		return nullptr;
 	}
 

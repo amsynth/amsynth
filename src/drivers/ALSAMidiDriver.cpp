@@ -1,7 +1,7 @@
 /*
  *  ALSAMidiDriver.cpp
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -95,9 +95,6 @@ ALSAMidiDriver::write_cc(unsigned int channel, unsigned int param, unsigned int 
         ev.data.control.param = param;
         ev.data.control.value = value;
         ret=snd_seq_event_output_direct(seq_handle, &ev);
-#if _DEBUG
-      cout << "param = " << param << " value = " << value << " ret = " << ret << endl;
-#endif
       if (ret < 0 ) cout << snd_strerror(ret) << endl;        
       return ret;
 }
@@ -157,8 +154,8 @@ int ALSAMidiDriver::open()
 	return 0;
 }
 
-ALSAMidiDriver::ALSAMidiDriver(const char *client_name)
-:	client_name(client_name)
+ALSAMidiDriver::ALSAMidiDriver(const char *name)
+:	client_name(name)
 {
 	seq_handle = nullptr;
 	memset( &pollfd_in, 0, sizeof(pollfd_in) );

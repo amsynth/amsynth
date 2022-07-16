@@ -1,7 +1,7 @@
 /*
  *  lash.c
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -167,8 +167,8 @@ void amsynth_lash_poll_events()
 #else
 
 void amsynth_lash_process_args(int *argc, char ***argv) {}
-void amsynth_lash_init() {}
-void amsynth_lash_poll_events() {}
+void amsynth_lash_init(void) {}
+void amsynth_lash_poll_events(void) {}
 void amsynth_lash_set_jack_client_name(const char *name) {}
 void amsynth_lash_set_alsa_client_id(unsigned char id) {}
 

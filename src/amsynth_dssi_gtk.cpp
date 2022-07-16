@@ -1,7 +1,7 @@
 /*
  *  amsynth_dssi_gtk.cpp
  *
- *  Copyright (c) 2001-2017 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -55,7 +55,11 @@ lo_address _osc_host_addr = nullptr;
 // so be sure to copy the result if you need to use it beyond that!
 // not at all thread safe, and probably a bad idea...!
 //
-char *tmpstr(const char *format, ...)
+#ifdef __GNUC__
+static char *tmpstr(const char *format, ...) __attribute__ ((format(printf, 1, 2)));
+#endif
+
+static char *tmpstr(const char *format, ...)
 {
     static char *string = nullptr;
     
@@ -66,15 +70,19 @@ char *tmpstr(const char *format, ...)
     
     va_list args;
     va_start(args, format);
-    vasprintf(&string, format, args);
+    int res = vasprintf(&string, format, args);
     va_end(args);
     
+    if (res == -1) {
+       return nullptr;
+    }
+
     return string;
 }
 
-void osc_error(int num, const char *msg, const char *path)
+static void osc_error(int num, const char *msg, const char *path)
 {
-    abort();
+    fprintf(stderr, "OSC error (num = %d msg = '%s' path = '%s')\n", num, msg, path);
 }
 
 static gboolean osc_input_handler(GIOChannel *source, GIOCondition condition, gpointer data)
@@ -88,7 +96,7 @@ static gboolean osc_input_handler(GIOChannel *source, GIOCondition condition, gp
 // handle message sent by plugin host
 //
 
-int osc_control_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_control_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
 {
     assert(types[0] == 'i');
     assert(types[1] == 'f');
@@ -102,38 +110,38 @@ int osc_control_handler(const char *path, const char *types, lo_arg **argv, int 
     return 0;
 }
 
-int osc_samplerate_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_samplerate_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
 {
     assert(types[0] == 'i');
     return 0;
 }
 
-int osc_program_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_program_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
 {
     assert(types[0] == 'i');
     assert(types[1] == 'i');
     return 0;
 }
 
-int osc_show_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_show_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
 {
     gtk_window_present(_window);
     return 0;
 }
 
-int osc_hide_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_hide_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
 {
     gtk_widget_hide(GTK_WIDGET(_window));
     return 0;
 }
 
-int osc_quit_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_quit_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
 {
     gtk_main_quit();
     return 0;
 }
 
-int osc_fallback_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_fallback_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
 {
     fprintf(stderr, "unhandled OSC message (path = '%s' types = '%s')\n", path, types);
     return 1;
@@ -144,7 +152,7 @@ int osc_fallback_handler(const char *path, const char *types, lo_arg **argv, int
 // Messages sent to the plugin host
 //
 
-int host_request_update()
+static int host_request_update()
 {
     char value[MAX_PATH] = "";
     char *url = lo_server_get_url(_osc_server);
@@ -154,19 +162,19 @@ int host_request_update()
     return err;
 }
 
-int host_set_control(int control, float value)
+static int host_set_control(int control, float value)
 {
     int err = lo_send(_osc_host_addr, tmpstr("%s/control", _osc_path), "if", control, value);
     return err;
 }
 
-int host_configure(const char *key, const char *value)
+static int host_configure(const char *key, const char *value)
 {
     int err = lo_send(_osc_host_addr, tmpstr("%s/configure", _osc_path), "ss", key, value);
     return err;
 }
 
-int host_gui_exiting()
+static int host_gui_exiting()
 {
     int err = lo_send(_osc_host_addr, tmpstr("%s/exiting", _osc_path), "");
     return err;
@@ -174,14 +182,14 @@ int host_gui_exiting()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void on_window_deleted()
+static void on_window_deleted()
 {
     _window = nullptr;
     host_gui_exiting();
     gtk_main_quit();
 }
 
-void on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
+static void on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
 {
     if (_dont_send_control_changes)
         return;
@@ -251,7 +259,7 @@ int main(int argc, char *argv[])
         g_signal_connect(_adjustments[i], "value-changed", (GCallback)&on_adjustment_value_changed, (gpointer)i);
     }
 
-    GtkWidget *editor = editor_pane_new(new SynthesizerStub, _adjustments, TRUE, 0);
+    GtkWidget *editor = editor_pane_new(new SynthesizerStub, _adjustments, TRUE, DEFAULT_SCALING);
     gtk_container_add(GTK_CONTAINER(_window), editor);
     gtk_widget_show_all(GTK_WIDGET(editor));
     

@@ -1,7 +1,7 @@
 /*
  *  PresetController.cpp
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -21,6 +21,10 @@
 
 #include "PresetController.h"
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <algorithm>
 #include <iostream>
 #include <cstdlib>
@@ -30,7 +34,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#if !_WIN32
+#ifndef _WIN32
 #include <dirent.h>
 #include <unistd.h>
 #endif
@@ -42,6 +46,14 @@
 
 using namespace std;
 
+
+PresetController::PresetController()
+{
+}
+
+PresetController::~PresetController()
+{
+}
 
 int
 PresetController::selectPreset		(const int presetNo)
@@ -193,18 +205,9 @@ PresetController::savePresets		(const char *filename)
 	file << "amSynth" << endl;
 	for (int i = 0; i < kNumPresets; i++) {
 		if (presets[i].getName()!="unused"){
-#ifdef _DEBUG
-			cout << "<PresetController::savePresets():- preset: name= "
-			<< presets[i].getName() << endl;
-#endif
 			file << "<preset> " << "<name> " << presets[i].getName() << endl;
-			for (unsigned n = 0; n < presets[i].ParameterCount(); n++)
+			for (int n = 0; n < kAmsynthParameterCount; n++)
 			{
-#ifdef _DEBUG
-				cout << "PresetController::savePresets() :- parameter name="
-				<< presets[i].getParameter(n).getName() << " value= "
-				<< presets[i].getParameter(n).getValue() << endl;
-#endif
 				file << "<parameter> " 
 				<< presets[i].getParameter(n).getName()
 				<< " " << presets[i].getParameter(n).getValue() << endl;
@@ -213,9 +216,6 @@ PresetController::savePresets		(const char *filename)
 	}
 	file << "EOF" << endl;
 	file.close();
-#ifdef _DEBUG
-	cout << "<PresetController::savePresets() success" << endl;
-#endif
 
 	lastPresetsFileModifiedTime = mtime(filename);
 	bank_file = std::string(filename);
@@ -223,26 +223,22 @@ PresetController::savePresets		(const char *filename)
 	return 0;
 }
 
+BankInfo::~BankInfo() {}
+
 static const char amsynth_file_header[] = { 'a', 'm', 'S', 'y', 'n', 't', 'h', '\n' };
 
 static bool is_amsynth_file(const char *filename)
 {
-	struct stat st = {0};
-	if (stat(filename, &st) < 0)
-		return false;
-
-#if !_WIN32
-	if (!S_ISREG(st.st_mode))
-		return false;
-#endif
-
 	FILE *file = fopen(filename, "r");
 	if (!file)
 		return false;
 
 	char buffer[sizeof(amsynth_file_header)] = {0};
-	fread(buffer, sizeof(buffer), 1, file);
+	size_t count = fread(buffer, sizeof(buffer), 1, file);
 	fclose(file);
+
+	if (count != 1)
+		return false;
 
 	if (memcmp(buffer, amsynth_file_header, sizeof(amsynth_file_header)) != 0)
 		return false;
@@ -257,14 +253,17 @@ static off_t file_read_contents(const char *filename, void **result)
 	if (!file)
 		return 0;
 	fseek(file, 0, SEEK_END);
-#if _WIN32
+#ifdef _WIN32
 	long length = ftell(file);
 #else
 	off_t length = ftello(file);
 #endif
 	void *buffer = calloc(length + 1, 1);
 	fseek(file, 0, SEEK_SET);
-	fread(buffer, length, 1, file);
+	if (fread(buffer, length, 1, file) != 1) {
+		fprintf(stderr, "Error reading %s\n", filename);
+		return 0;
+	}
 	fclose(file);
 	*result = buffer;
 	return length;
@@ -420,7 +419,7 @@ static void scan_preset_bank(const std::string dir_path, const std::string file_
 
 static void scan_preset_banks(const std::string dir_path, bool read_only)
 {
-#if !_WIN32
+#ifndef _WIN32
 	DIR *dir = opendir(dir_path.c_str());
 	if (!dir)
 		return;

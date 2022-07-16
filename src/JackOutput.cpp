@@ -1,7 +1,7 @@
 /*
  *  JackOutput.cpp
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -30,6 +30,8 @@
 
 #ifdef HAVE_JACK_SESSION_H
 #include <jack/session.h>
+// JACK-Session is now deprecated; support will be removed in a future release
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
 #include <iostream>
@@ -203,38 +205,29 @@ static void session_callback(jack_session_event_t *event, void *arg)
 	char filename[1024]; snprintf(filename, sizeof(filename),
 		"%s%s.amsynth.bank", event->session_dir, event->client_uuid);
 
-#if DEBUG
-	printf("%s() : saving bank to %s\n", __FUNCTION__, filename);
-#endif
-	
 	amsynth_save_bank(filename);
 
 	char exe_path[4096] = "";
-	readlink("/proc/self/exe", exe_path, sizeof(exe_path));
+	if (readlink("/proc/self/exe", exe_path, sizeof(exe_path)) == -1) {
+		perror("readlink /proc/self/exe");
+		strcpy(exe_path, "amsynth");
+	}
 
 	// construct a command line that the session manager can use to re-launch the synth
-	asprintf(&event->command_line,
+	if (asprintf(&event->command_line,
 		"%s -b \"${SESSION_DIR}%s.amsynth.bank\" -P %d -U %s",
-		exe_path, event->client_uuid, amsynth_get_preset_number(), event->client_uuid);
+		exe_path, event->client_uuid, amsynth_get_preset_number(), event->client_uuid) == -1) {
+		event->flags = JackSessionSaveError;
+		perror("asprintf");
+	}
 
-#if DEBUG
-	printf("%s() : jack_session command_line = %s\n", __FUNCTION__, event->command_line);
-#endif
-	
 	jack_session_reply( (jack_client_t *)arg, event );
 	
-	switch (event->type)
-	{
-	case JackSessionSave:
-		break;
-	case JackSessionSaveAndQuit:
-		exit(0);
-		break;
-	case JackSessionSaveTemplate:
-		break;
-	}
-	
 	jack_session_event_free (event);
+
+	if (event->type == JackSessionSaveAndQuit) {
+		exit(0);
+	}
 }
 
 #endif

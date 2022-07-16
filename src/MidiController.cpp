@@ -1,7 +1,7 @@
 /*
  *  MidiController.cpp
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -26,7 +26,6 @@
 #include "VoiceBoard/Synth--.h"
 
 #include <assert.h>
-#include <cmath>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -121,11 +120,7 @@ MidiController::HandleMidiData(const unsigned char* bytes, unsigned numBytes)
 			break;
 	
 		default:
-#ifdef _DEBUG
-			std::cout << "<MidiController> unknown status :" << std::hex <<
-			(int) status << "for data byte: " << std::hex << (int) byte <<
-			std::endl;
-#endif
+			fprintf(stderr, "amsynth: invalid status byte: %02x data byte: %02x\n", status, byte);
 			break;
 		}
     }
@@ -151,15 +146,16 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 {
 	_midi_cc_vals[cc] = value;
 
-	if (last_active_controller.getValue() != cc)
-		last_active_controller.setValue(cc);
+	_lastActiveController = cc;
 
 	if (!_handler || !presetController)
 		return;
 
 	int paramId = _cc_to_param_map[cc];
 	if (paramId >= 0) {
-		presetController->getCurrentPreset().getParameter(paramId).setNormalisedValue(value / 127.0f);
+		presetController->getCurrentPreset().getParameter(paramId).setMidiValue(value);
+		// Store the canonical MIDI CC representation to avoid unnecessary output #202
+		_midi_cc_vals[cc] = presetController->getCurrentPreset().getParameter(paramId).getMidiValue();
 		return; // MIDI CCs mapped by the user take precedence over default behaviour
 	}
 
@@ -243,7 +239,7 @@ MidiController::loadControllerMap()
 {
 	clearControllerMap();
 
-#if _WIN32
+#ifdef _WIN32
 	return;
 #endif
 
@@ -261,7 +257,7 @@ MidiController::loadControllerMap()
 void
 MidiController::saveControllerMap()
 {
-#if _WIN32
+#ifdef _WIN32
 	return;
 #endif
 	std::ofstream file(filesystem::get().controllers.c_str(), std::ios::out);
@@ -313,7 +309,7 @@ MidiController::generateMidiOutput(std::vector<amsynth_midi_cc_t> &output)
 		int cc = _param_to_cc_map[paramId];
 		if (0 <= cc && cc < MAX_CC) {
 			Parameter &parameter = presetController->getCurrentPreset().getParameter(paramId);
-			unsigned char value = (unsigned char) roundf(parameter.getNormalisedValue() * 127.0f);
+			unsigned char value = parameter.getMidiValue();
 			if (_midi_cc_vals[cc] != value) {
 				_midi_cc_vals[cc] = value;
 				amsynth_midi_cc_t out = { outputChannel, (unsigned char)cc, value };
@@ -321,4 +317,12 @@ MidiController::generateMidiOutput(std::vector<amsynth_midi_cc_t> &output)
 			}
 		}
 	}
+}
+
+int
+MidiController::getLastActiveController()
+{
+	int value = _lastActiveController;
+	_lastActiveController = -1;
+	return value;
 }

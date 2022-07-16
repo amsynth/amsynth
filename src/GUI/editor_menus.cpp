@@ -1,7 +1,7 @@
 /*
  *  editor_menus.cpp
  *
- *  Copyright (c) 2001-2020 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -60,7 +60,7 @@ static void
 override_item_toggled(GtkCheckMenuItem *item, gpointer user_data)
 {
     Preset::setShouldIgnoreParameter((int)(long)user_data, gtk_check_menu_item_get_active (item) == TRUE);
-    Configuration config = Configuration::get();
+    Configuration &config = Configuration::get();
     config.ignored_parameters = Preset::getIgnoredParameterNames();
     config.save();
     return;
@@ -154,22 +154,23 @@ add_menu_item(GtkWidget *menu, const gchar *label, GtkWidget *submenu)
 GtkWidget *
 editor_menu_new(void *synth, GtkAdjustment **adjustments)
 {
-    GtkWidget *presets_menu = presets_menu_new(adjustments);
-    if (!synth)
-        return presets_menu;
-    
     GtkWidget *menu = gtk_menu_new();
-    
-    add_menu_item(menu, _("Preset"), presets_menu);
-    
-    GtkWidget *item = gtk_menu_item_new_with_label(_("Tuning"));
+
     GtkWidget *submenu = gtk_menu_new();
     add_menu_item(submenu, _("Open Alternate Tuning File..."),          G_CALLBACK(tuning_menu_open_scl), synth);
     add_menu_item(submenu, _("Open Alternate Keyboard Map..."),         G_CALLBACK(tuning_menu_open_kbm), synth);
     add_menu_item(submenu, _("Reset All Tuning Settings to Default"),   G_CALLBACK(tuning_menu_reset),    synth);
-    gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-    
+    add_menu_item(menu, _("File"), submenu);
+
+    submenu = gtk_menu_new();
+    add_menu_item(menu, _("Preset"), presets_menu_new(adjustments));
+
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
+
+    GtkWidget *version = gtk_menu_item_new_with_label("v" PACKAGE_VERSION);
+    gtk_widget_set_sensitive(version, FALSE);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), version);
+
     gtk_widget_show_all(menu);
     return menu;
 }

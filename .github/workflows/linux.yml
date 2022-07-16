@@ -4,38 +4,53 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-${{ matrix.release }}
     strategy:
       matrix:
-        os: [ubuntu-18.04, ubuntu-20.04]
-
+        include:
+          - release: 18.04
+            cc: clang-9
+            cxx: clang++-9
+          - release: 18.04
+            cc: gcc-7
+            cxx: g++-7
+          # - release: 20.04
+          #   cc: clang-10
+          #   cxx: clang-10
+          - release: 20.04
+            cc: gcc-9
+            cxx: g++-9
+          - release: 22.04
+            cc: clang-14
+            cxx: clang++-14
+          - release: 22.04
+            cc: gcc-11
+            cxx: g++-11
+    env:
+      CC: ${{ matrix.cc }}
+      CXX: ${{ matrix.cxx }}
     steps:
     - uses: actions/checkout@v1
-    - name: apt update
-      run: sudo apt update
-    - name: apt install
-      run: sudo apt install autoconf-archive autopoint dssi-dev intltool libasound-dev libgtk2.0-dev libjack-jackd2-dev liblilv-0-0 liblo-dev lv2-dev pandoc
-    - name: apt install (optional)
-      run: sudo apt install liblash-compat-dev || echo ignoring failure
-    - name: autogen
-      run: ./autogen.sh
-    - name: configure
-      run: ./configure
-    - name: make distcheck
-      run: make -j 2 distcheck
-    - name: make install
-      run: sudo make install
-    - name: lv2lint
-      run: ./utils/lv2lint.sh
-    - name: make check
+    - name: Install build dependencies
       run: |
-        ./configure CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' --without-lv2 --without-dssi --without-vst --without-gui
+        sudo apt update
+        sudo apt install autoconf-archive autopoint dssi-dev intltool libasound-dev libgtk2.0-dev libjack-jackd2-dev liblilv-0-0 liblo-dev lv2-dev pandoc
+    - run: ./autogen.sh
+    - run: ./configure --enable-compile-warnings=error --without-lash
+    - run: make -j 2
+    - run: make -j 2 distcheck
+    - name: Run make install
+      run: sudo make install
+    - run: ./utils/lv2lint.sh
+    - name: Run make check
+      run: |
+        ./configure CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' --without-lv2 --without-dssi --without-vst --without-gui --without-lash
         make -j 2 check
-        gcov -lp $(find . -name '*.c' -o -name '*.cpp')
-    - name: Codecov
-      uses: codecov/codecov-action@v1.0.4
-      with:
-        token: f7bd75a9-026b-4157-9f6e-708d6149d979
+    - name: Run gcov
+      run: gcov -lp $(find . -name '*.c' -o -name '*.cpp')
+      if: matrix.cc == 'gcc-11'
+    - uses: codecov/codecov-action@v2
+      if: matrix.cc == 'gcc-11'
     - uses: actions/upload-artifact@v2
       with:
         name: tarball

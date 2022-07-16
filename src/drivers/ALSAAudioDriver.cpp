@@ -1,7 +1,7 @@
 /*
  *  ALSAAudioDriver.cpp
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -100,7 +100,7 @@ ALSAAudioDriver::open()
 	unsigned int latency = 10 * 1000;
 	ALSA_CALL(snd_pcm_set_params(pcm, SND_PCM_FORMAT_S16_LE, SND_PCM_ACCESS_RW_INTERLEAVED, config.channels, config.sample_rate, 0, latency));
 
-#if DEBUG
+#if defined(DEBUG) && DEBUG
 	snd_pcm_uframes_t period_size = 0;
 	snd_pcm_uframes_t buffer_size = 0;
 	ALSA_CALL(snd_pcm_get_params(pcm, &buffer_size, &period_size));

@@ -1,7 +1,7 @@
 /*
  *  amsynth_vst.cpp
  *
- *  Copyright (c) 2008-2020 Nick Dowell
+ *  Copyright (c) 2008-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -64,26 +64,23 @@ struct ERect
 	short right;
 };
 
+#define MIDI_BUFFER_SIZE 4096
+
 static char hostProductString[64] = "";
 
-#if DEBUG
+#if defined(DEBUG) && DEBUG
 static FILE *logFile;
 #endif
 
 constexpr size_t kPresetsPerBank = sizeof(BankInfo::presets) / sizeof(BankInfo::presets[0]);
 
-struct Plugin
+struct Plugin : public UpdateListener
 {
 	Plugin(audioMasterCallback master)
 	{
 		audioMaster = master;
 		synthesizer = new Synthesizer;
-		midiBuffer = (unsigned char *)malloc(4096);
-#ifdef WITH_GUI
-		gdkParentWindow = nullptr;
-		gtkWindow = nullptr;
-		editorWidget = nullptr;
-#endif
+		midiBuffer = (unsigned char *)malloc(MIDI_BUFFER_SIZE);
 	}
 
 	~Plugin()
@@ -98,11 +95,48 @@ struct Plugin
 	std::vector<amsynth_midi_event_t> midiEvents;
 	int programNumber = 0;
 	std::string presetName;
+
 #ifdef WITH_GUI
-	GdkWindow *gdkParentWindow;
-	GtkWidget *gtkWindow;
-	GtkWidget *editorWidget;
-	GtkAdjustment *adjustments[kAmsynthParameterCount];
+	typedef std::pair<Param, float> ParameterUpdate;
+
+	void UpdateParameter(Param paramID, float paramValue) override
+	{
+		if (g_thread_self() == mainThread) {
+			updateEditorParameter(paramID, paramValue);
+		} else {
+			g_async_queue_push(parameterUpdateQueue, new ParameterUpdate(paramID, paramValue));
+			g_idle_add(Plugin::idleCallback, this);
+		}
+	}
+
+	static gboolean idleCallback(gpointer data)
+	{
+		Plugin *plugin = (Plugin *)data;
+		ParameterUpdate *update;
+		while ((update = (ParameterUpdate *)g_async_queue_try_pop(plugin->parameterUpdateQueue))) {
+			plugin->updateEditorParameter(update->first, update->second);
+			delete update;
+		}
+		return G_SOURCE_REMOVE;
+	}
+
+	void updateEditorParameter(int parameter, float paramValue)
+	{
+		if (0 <= parameter && parameter < kAmsynthParameterCount) {
+			gdouble value = synthesizer->getParameterValue((Param)parameter);
+			ignoreAdjustmentValueChanges = true;
+			gtk_adjustment_set_value(adjustments[parameter], value);
+			ignoreAdjustmentValueChanges = false;
+		}
+	}
+
+	GdkWindow *gdkParentWindow = nullptr;
+	GtkWidget *gtkWindow = nullptr;
+	GtkWidget *editorWidget = nullptr;
+	GThread *mainThread = nullptr;
+	GAsyncQueue *parameterUpdateQueue = nullptr;
+	bool ignoreAdjustmentValueChanges = false;
+	GtkAdjustment *adjustments[kAmsynthParameterCount] = {0};
 #endif
 };
 
@@ -111,6 +145,9 @@ struct Plugin
 static void on_adjustment_value_changed(GtkAdjustment *adjustment, AEffect *effect)
 {
 	Plugin *plugin = (Plugin *)effect->ptr3;
+	if (plugin->ignoreAdjustmentValueChanges) {
+		return;
+	}
 
 	static Preset dummyPreset;
 
@@ -147,10 +184,7 @@ static void setEventProc(Display *display, Window window)
 	// based on mach_override
 	static const unsigned char kJumpInstructions[] = {
 			0xFF, 0x25, 0x00, 0x00, 0x00, 0x00,
-			0x00, 0x00, 0x00, 0x00,
-			0x00, 0x00, 0x00, 0x00
 	};
-	static const int kJumpAddress = 6;
 
 	static char *ptr;
 	if (!ptr) {
@@ -165,8 +199,7 @@ static void setEventProc(Display *display, Window window)
 			return;
 		} else {
 			memcpy(ptr, kJumpInstructions, sizeof(kJumpInstructions));
-			*((uint64_t *)(ptr + kJumpAddress)) = (uint64_t)(&XEventProc);
-			msync(ptr, sizeof(kJumpInstructions), MS_INVALIDATE);
+			memcpy(ptr + sizeof(kJumpInstructions), (const void *)&XEventProc, sizeof(&XEventProc));
 		}
 	}
 
@@ -180,7 +213,7 @@ static void setEventProc(Display *display, Window window)
 #endif
 }
 
-#if DEBUG
+#if defined(DEBUG) && DEBUG
 static void gdk_event_handler(GdkEvent *event, gpointer	data)
 {
 	static const char *names[] = {
@@ -227,6 +260,25 @@ static void gdk_event_handler(GdkEvent *event, gpointer	data)
 	gtk_main_do_event(event);
 }
 #endif // DEBUG
+
+static void init_gtk()
+{
+	static bool initialized = false;
+	if (!initialized) {
+#if defined(DEBUG) && DEBUG
+		int argc = 2;
+		char arg1[32] = "/dev/null";
+		char arg2[32] = "--g-fatal-warnings";
+		char *args[] = { arg1, arg2 };
+		char **argv = args;
+		gtk_init(&argc, &argv);
+		gdk_event_handler_set(&gdk_event_handler, NULL, NULL);
+#else
+		gtk_init(nullptr, nullptr);
+#endif
+		initialized = true;
+	}
+}
 
 #endif // WITH_GUI
 
@@ -282,29 +334,20 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 
 #ifdef WITH_GUI
 		case effEditGetRect: {
-			static ERect rect = {0, 0, 400, 600};
-			ERect **er = (ERect **)ptr;
-			*er = &rect;
+			static ERect rect;
+			init_gtk();
+			int scale = default_scaling_factor();
+			rect.bottom = 400 * scale;
+			rect.right = 600 * scale;
+			*(ERect **)ptr = &rect;
 			return 1;
 		}
 		case effEditOpen: {
-			static bool initialized = false;
-			if (!initialized) {
-#if DEBUG
-				int argc = 2;
-				char arg1[32] = "/dev/null";
-				char arg2[32] = "--g-fatal-warnings";
-				char *args[] = { arg1, arg2 };
-				char **argv = args;
-				gtk_init(&argc, &argv);
-				gdk_event_handler_set(&gdk_event_handler, NULL, NULL);
-#else
-				gtk_init(nullptr, nullptr);
-#endif
-				initialized = true;
-			}
+			init_gtk();
 
 			if (!plugin->editorWidget) {
+				plugin->mainThread = g_thread_self();
+				plugin->parameterUpdateQueue = g_async_queue_new();
 				for (int i = 0; i < kAmsynthParameterCount; i++) {
 					gdouble lower = 0, upper = 0, step_increment = 0;
 					get_parameter_properties(i, &lower, &upper, nullptr, &step_increment);
@@ -312,8 +355,9 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 					plugin->adjustments[i] = (GtkAdjustment *)gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);
 					g_object_ref_sink(plugin->adjustments[i]); // assumes ownership of the floating reference
 					g_signal_connect(plugin->adjustments[i], "value-changed", G_CALLBACK(on_adjustment_value_changed), effect);
+					plugin->synthesizer->getPresetController()->getCurrentPreset().getParameter((Param)i).addUpdateListener(plugin);
 				}
-				plugin->editorWidget = editor_pane_new(plugin->synthesizer, plugin->adjustments, TRUE, 0);
+				plugin->editorWidget = editor_pane_new(plugin->synthesizer, plugin->adjustments, TRUE, DEFAULT_SCALING);
 				g_object_ref_sink(plugin->editorWidget);
 			}
 
@@ -343,6 +387,10 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			return 1;
 		}
 		case effEditClose: {
+			for (int i = 0; i < kAmsynthParameterCount; i++) {
+				plugin->synthesizer->getPresetController()->getCurrentPreset().getParameter((Param)i).removeUpdateListener(plugin);
+			}
+
 			if (plugin->gtkWindow) {
 				if (gtk_widget_get_window(plugin->gtkWindow)) {
 					gdk_window_hide(gtk_widget_get_window(plugin->gtkWindow));
@@ -355,6 +403,8 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 				plugin->adjustments[i] = nullptr;
 			}
 
+			g_async_queue_unref(plugin->parameterUpdateQueue);
+			plugin->parameterUpdateQueue = nullptr;
 			plugin->gdkParentWindow = nullptr;
 			plugin->editorWidget = nullptr;
 
@@ -380,46 +430,52 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 		case effProcessEvents: {
 			VstEvents *events = (VstEvents *)ptr;
 
-			assert(plugin->midiEvents.empty());
-
-			memset(plugin->midiBuffer, 0, 4096);
-			unsigned char *buffer = plugin->midiBuffer;
+			plugin->midiEvents.clear();
+			memset(plugin->midiBuffer, 0, MIDI_BUFFER_SIZE);
+			size_t bytesCopied = 0;
 			
 			for (int32_t i=0; i<events->numEvents; i++) {
-				VstMidiEvent *event = (VstMidiEvent *)events->events[i];
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-align"
+				auto event = (const VstMidiEvent *)events->events[i];
+#pragma GCC diagnostic pop
 				if (event->type != kVstMidiType) {
 					continue;
 				}
-				
+
+				unsigned char *msgData = (unsigned char *)event->midiData;
+
 				int msgLength = 0;
-				unsigned char statusByte = event->midiData[0];
-				if (statusByte < MIDI_STATUS_NOTE_OFF) {
-					continue; // Not a status byte
-				}
-				if (statusByte >= 0xF0) {
-					continue; // Ignore system messages
-				}
-				switch (statusByte & 0xF0) {
+				switch (msgData[0] & 0xF0) {
+				case MIDI_STATUS_NOTE_OFF:
+				case MIDI_STATUS_NOTE_ON:
+				case MIDI_STATUS_NOTE_PRESSURE:
+				case MIDI_STATUS_CONTROLLER:
+				case MIDI_STATUS_PITCH_WHEEL:
+					msgLength = 3;
+					break;
 				case MIDI_STATUS_PROGRAM_CHANGE:
 				case MIDI_STATUS_CHANNEL_PRESSURE:
 					msgLength = 2;
 					break;
+				case 0xF0: // System message
+					continue; // Ignore
 				default:
-					msgLength = 3;
+					fprintf(stderr, "amsynth: bad status byte: %02x\n", msgData[0]);
+					continue; // Ignore
 				}
-				
-				memcpy(buffer, event->midiData, msgLength);
+
+				if (bytesCopied + msgLength > MIDI_BUFFER_SIZE) {
+					fprintf(stderr, "amsynth: midi buffer overflow\n");
+					break;
+				}
 
 				amsynth_midi_event_t midi_event;
-				memset(&midi_event, 0, sizeof(midi_event));
 				midi_event.offset_frames = event->deltaFrames;
-				midi_event.buffer = buffer;
 				midi_event.length = msgLength;
+				midi_event.buffer = (unsigned char *)memcpy(plugin->midiBuffer + bytesCopied, msgData, msgLength);
 				plugin->midiEvents.push_back(midi_event);
-
-				buffer += msgLength;
-
-				assert(buffer < plugin->midiBuffer + 4096);
+				bytesCopied += msgLength;
 			}
 			
 			return 1;
@@ -451,7 +507,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 				strcmp("receiveVstSysexEvent", (char *)ptr) == 0 ||
 				strcmp("sendVstMidiEvent", (char *)ptr) == 0 ||
 				false) return 0;
-#if DEBUG
+#if defined(DEBUG) && DEBUG
 			fprintf(logFile, "[amsynth_vst] unhandled canDo: %s\n", (char *)ptr);
 			fflush(logFile);
 #endif
@@ -474,7 +530,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			return 0;
 
 		default:
-#if DEBUG
+#if defined(DEBUG) && DEBUG
 			fprintf(logFile, "[amsynth_vst] unhandled VST opcode: %d\n", opcode);
 			fflush(logFile);
 #endif
@@ -515,15 +571,16 @@ static int getNumPrograms()
 	return PresetController::getPresetBanks().size() * kPresetsPerBank;
 }
 
-extern "C"
-#if _WIN32
-__declspec(dllexport)
-#else
-__attribute__((visibility("default")))
-#endif
+#ifdef _WIN32
+extern "C" __declspec(dllexport)
 AEffect * VSTPluginMain(audioMasterCallback audioMaster)
+#else
+extern "C" __attribute__ ((visibility("default")))
+AEffect * VSTPluginMain(audioMasterCallback audioMaster);
+AEffect * VSTPluginMain(audioMasterCallback audioMaster)
+#endif
 {
-#if DEBUG
+#if defined(DEBUG) && DEBUG
 	if (!logFile) {
 		logFile = fopen("/tmp/amsynth.log", "a");
 	}
@@ -556,7 +613,7 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 	return effect;
 }
 
-#if _WIN32
+#ifdef _WIN32
 
 __declspec(dllexport)
 extern "C" AEffect * MAIN(audioMasterCallback audioMaster)

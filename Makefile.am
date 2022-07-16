@@ -1,6 +1,6 @@
 #  amsynth Makefile.am
 #
-#  Copyright (C) 2001-2019 Nick Dowell
+#  Copyright (C) 2001-2022 Nick Dowell
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,11 @@ AM_CPPFLAGS += -I"$(top_srcdir)/vendor"
 
 # https://developer.gnome.org/gtk3/stable/gtk-migrating-2-to-3.html#id-1.6.3.3
 AM_CPPFLAGS += -DGDK_DISABLE_DEPRECATED -DGSEAL_ENABLE -DGTK_DISABLE_DEPRECATED -DGTK_DISABLE_SINGLE_INCLUDES
+
+AM_CFLAGS = -Wno-declaration-after-statement
+AM_CFLAGS += -Wno-strict-prototypes
+
+AM_CXXFLAGS = $(WARN_CXXFLAGS)
 
 ACLOCAL_AMFLAGS = -I m4
 
@@ -351,6 +356,10 @@ endif
 if BUILD_VST
 	rm  -f $(DESTDIR)$(vstdir)/amsynth_vst.so
 endif
+# Workaround for
+# ERROR: files left in build directory after distclean:
+# ./po/.intltool-merge-cache.lock
+	-rm ./po/.intltool-merge-cache.lock
 
 #
 #

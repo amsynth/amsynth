@@ -1,7 +1,7 @@
 /*
  *  MIDILearnDialog.h
  *
- *  Copyright (c) 2001-2017 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -19,26 +19,19 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../UpdateListener.h"
+#include "../MidiController.h"
 
 #include <gtk/gtk.h>
 
-
-class MidiController;
-class PresetController;
-
-class MIDILearnDialog : public UpdateListener
+class MIDILearnDialog
 {
 public:
 
-	MIDILearnDialog(MidiController *midiController, PresetController *presetController, GtkWindow *parent);
-	~MIDILearnDialog();
+	MIDILearnDialog(MidiController *midiController, GtkWindow *parent);
 
 	void run_modal(Param param_idx);
 
-	void update() override;
-
-	static gboolean last_active_controller_changed(gpointer);
+	static gboolean idle(gpointer);
 
 private:
 
@@ -48,5 +41,4 @@ private:
 	GtkWidget		*_checkButton;
 
 	MidiController	*_midiController;
-	PresetController *_presetController;
 };

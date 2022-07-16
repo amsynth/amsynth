@@ -1,7 +1,7 @@
 /*
  *  bitmap_button.c
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -33,7 +33,7 @@ typedef struct {
 	gint frame_width;
 	gint frame_height;
 	gint frame_count;
-	gint scaling_factor
+	gint scaling_factor;
 
 } bitmap_button;
 
@@ -151,7 +151,7 @@ bitmap_button_update (GtkWidget *widget)
 	gdouble value = gtk_adjustment_get_value (self->adjustment);
 	gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 	gdouble upper = gtk_adjustment_get_upper (self->adjustment);
-	guint	frame = (guint) (self->frame_count * ((value - lower) / (upper - lower)));
+	gint	frame = (gint) (self->frame_count * ((value - lower) / (upper - lower)));
 
 	self->current_frame = MIN (frame, (self->frame_count - 1));
 	

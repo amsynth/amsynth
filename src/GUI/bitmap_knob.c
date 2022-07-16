@@ -1,7 +1,7 @@
 /*
  *  bitmap_knob.c
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -225,7 +225,7 @@ bitmap_knob_button_press ( GtkWidget *widget, GdkEventButton *event )
 	if (event->type == GDK_2BUTTON_PRESS) {
 		GValue *value = g_object_get_data (G_OBJECT(self->adjustment), "default-value");
 		float defaultValue = g_value_get_float(value);
-		gtk_adjustment_set_value (self->adjustment, defaultValue);
+		gtk_adjustment_set_value (self->adjustment, (gdouble)defaultValue);
 		return TRUE;
 	}
 
@@ -306,7 +306,6 @@ bitmap_knob_scroll ( GtkWidget *widget, GdkEventScroll *event )
 	if (increment) {
 		gdouble lower = gtk_adjustment_get_lower (self->adjustment);
 		gdouble upper = gtk_adjustment_get_upper (self->adjustment);
-		gdouble step  = gtk_adjustment_get_step_increment (self->adjustment);
 		gdouble value = gtk_adjustment_get_value (self->adjustment);
 		gdouble range = upper - lower;
 		gdouble newval = value + range * increment / (double)SENSITIVITY_SCROLL;

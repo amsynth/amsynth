@@ -1,3 +1,11 @@
+amsynth 1.13.0 -- 2022-07-16
+
+  - Fixed intermittent unexpected MIDI output in response to MIDI CC input.
+  - Fixed VST plugin UI updates in response to host parameter changes.
+  - Added HiDPI scaling support to VST plugin UI.
+  - Added version info to plugin pop-up menu.
+
+
 amsynth 1.12.4 -- 2022-01-08
 
   - Fixed lv2 .ttl syntax error

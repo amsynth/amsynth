@@ -1,7 +1,7 @@
 /*
  *  controls.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -103,6 +103,8 @@ typedef enum {
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+void get_parameter_properties(int parameter_index, double *minimum, double *maximum, double *default_value, double *step_size);
 
 const char *parameter_name_from_index (int param_index);
 int parameter_index_from_name (const char *param_name);

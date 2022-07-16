@@ -57,7 +57,6 @@ private:
     float rads = 0;
 	float twopi_rate = 0;
 	float random = 0;
-	double d = 0; // for the low-pass filter
     int rate = 44100;
 	int random_count = 0;
 

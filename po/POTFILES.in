@@ -9,5 +9,5 @@ src/GUI/MainWindow.cpp
 src/GUI/MIDILearnDialog.cpp
 src/GUI/PresetControllerView.cpp
 src/main.cpp
-src/Preset.cpp
+src/Parameter.cpp
 src/PresetController.cpp
