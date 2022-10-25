@@ -32,6 +32,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+#include <memory>
 
 #include <vestige/aeffectx.h>
 
@@ -48,12 +49,14 @@
 #define effFlagsProgramChunks   (1 << 5)
 
 #ifdef WITH_GUI
-#include "GUI/editor_pane.h"
-#include <gdk/gdkx.h>
-#if __x86_64__
-#include <sys/mman.h>
-#include <sys/user.h>
-#endif
+#define JUCE_GUI_BASICS_INCLUDE_XHEADERS 1
+#include <juce_core/juce_core.h>
+#include <juce_data_structures/juce_data_structures.h>
+#include <juce_events/juce_events.h>
+#include <juce_graphics/juce_graphics.h>
+#include <juce_gui_basics/juce_gui_basics.h>
+// Must be included after juce_core
+#include <juce_audio_plugin_client/utility/juce_LinuxMessageThread.h>
 #endif
 
 struct ERect
@@ -73,6 +76,43 @@ static FILE *logFile;
 #endif
 
 constexpr size_t kPresetsPerBank = sizeof(BankInfo::presets) / sizeof(BankInfo::presets[0]);
+
+#ifdef WITH_GUI
+
+extern "C" void modal_midi_learn(Param param_index) {}
+
+struct Editor : public juce::Component
+{
+	Editor()
+	{
+		setSize(600, 400);
+		slider.setOpaque(true);
+		slider.setSize(100, 100);
+		addAndMakeVisible(slider);
+		setOpaque(true);
+	}
+
+	void attachToHost(void *hostWindow)
+	{
+		setVisible(false);
+		addToDesktop(0, hostWindow);
+		auto display = juce::XWindowSystem::getInstance()->getDisplay();
+		juce::X11Symbols::getInstance()->xReparentWindow(display,
+			(::Window)getWindowHandle(),
+			(::Window)hostWindow,
+			0, 0);
+		juce::X11Symbols::getInstance()->xFlush(display);
+		setVisible(true);
+	}
+
+	juce::Slider slider{
+		juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag,
+		juce::Slider::TextEntryBoxPosition::TextBoxBelow};
+
+	juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostEventLoop;
+};
+
+#endif // WITH_GUI
 
 struct Plugin : public UpdateListener
 {
@@ -101,186 +141,14 @@ struct Plugin : public UpdateListener
 
 	void UpdateParameter(Param paramID, float paramValue) override
 	{
-		if (g_thread_self() == mainThread) {
-			updateEditorParameter(paramID, paramValue);
-		} else {
-			g_async_queue_push(parameterUpdateQueue, new ParameterUpdate(paramID, paramValue));
-			g_idle_add(Plugin::idleCallback, this);
-		}
+		// TODO: Update Editor
 	}
 
-	static gboolean idleCallback(gpointer data)
-	{
-		Plugin *plugin = (Plugin *)data;
-		ParameterUpdate *update;
-		while ((update = (ParameterUpdate *)g_async_queue_try_pop(plugin->parameterUpdateQueue))) {
-			plugin->updateEditorParameter(update->first, update->second);
-			delete update;
-		}
-		return G_SOURCE_REMOVE;
-	}
-
-	void updateEditorParameter(int parameter, float paramValue)
-	{
-		if (0 <= parameter && parameter < kAmsynthParameterCount) {
-			gdouble value = synthesizer->getParameterValue((Param)parameter);
-			ignoreAdjustmentValueChanges = true;
-			gtk_adjustment_set_value(adjustments[parameter], value);
-			ignoreAdjustmentValueChanges = false;
-		}
-	}
-
-	GdkWindow *gdkParentWindow = nullptr;
-	GtkWidget *gtkWindow = nullptr;
-	GtkWidget *editorWidget = nullptr;
-	GThread *mainThread = nullptr;
-	GAsyncQueue *parameterUpdateQueue = nullptr;
-	bool ignoreAdjustmentValueChanges = false;
-	GtkAdjustment *adjustments[kAmsynthParameterCount] = {0};
+	juce::ScopedJuceInitialiser_GUI libraryInitialiser;
+	juce::SharedResourcePointer<juce::MessageThread> messageThread;
+	std::unique_ptr<Editor> editor;
 #endif
 };
-
-#ifdef WITH_GUI
-
-static void on_adjustment_value_changed(GtkAdjustment *adjustment, AEffect *effect)
-{
-	Plugin *plugin = (Plugin *)effect->ptr3;
-	if (plugin->ignoreAdjustmentValueChanges) {
-		return;
-	}
-
-	static Preset dummyPreset;
-
-	for (int i = 0; i < kAmsynthParameterCount; i++) {
-		if (adjustment == plugin->adjustments[i]) {
-			float value = gtk_adjustment_get_value(adjustment);
-			Parameter &param = dummyPreset.getParameter(i);
-			param.setValue(value);
-			plugin->synthesizer->setParameterValue((Param)i, value);
-			if (plugin->audioMaster && !strstr(hostProductString, "Qtractor")) {
-				plugin->audioMaster(effect, audioMasterAutomate, i, 0, nullptr, param.getNormalisedValue());
-			}
-		}
-	}
-}
-
-void modal_midi_learn(Param param_index) {}
-
-static void XEventProc(XEvent *xevent)
-{
-	xevent->xany.display = GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
-	XPutBackEvent(xevent->xany.display, xevent);
-	gtk_main_iteration();
-}
-
-static void setEventProc(Display *display, Window window)
-{
-#if __x86_64__
-	//
-	// JUCE calls XGetWindowProperty with long_length = 1 which means it only fetches the lower 32 bits of the address.
-	// Therefore we need to ensure we return an address in the lower 32-bits of address space.
-	//
-
-	// based on mach_override
-	static const unsigned char kJumpInstructions[] = {
-			0xFF, 0x25, 0x00, 0x00, 0x00, 0x00,
-	};
-
-	static char *ptr;
-	if (!ptr) {
-		ptr = (char *)mmap(nullptr,
-						   PAGE_SIZE,
-						   PROT_READ | PROT_WRITE | PROT_EXEC,
-						   MAP_ANONYMOUS | MAP_PRIVATE | MAP_32BIT,
-						   0, 0);
-		if (ptr == MAP_FAILED) {
-			perror("mmap");
-			ptr = nullptr;
-			return;
-		} else {
-			memcpy(ptr, kJumpInstructions, sizeof(kJumpInstructions));
-			memcpy(ptr + sizeof(kJumpInstructions), (const void *)&XEventProc, sizeof(&XEventProc));
-		}
-	}
-
-	long temp[2] = {(long)ptr, 0};
-	Atom atom = XInternAtom(display, "_XEventProc", false);
-	XChangeProperty(display, window, atom, atom, 32, PropModeReplace, (unsigned char *)temp, 2);
-#else
-	long temp[1] = {(long)(void *)(&XEventProc)};
-	Atom atom = XInternAtom(display, "_XEventProc", false);
-	XChangeProperty(display, window, atom, atom, 32, PropModeReplace, (unsigned char *)temp, 1);
-#endif
-}
-
-#if defined(DEBUG) && DEBUG
-static void gdk_event_handler(GdkEvent *event, gpointer	data)
-{
-	static const char *names[] = {
-			"GDK_DELETE",
-			"GDK_DESTROY",
-			"GDK_EXPOSE",
-			"GDK_MOTION_NOTIFY",
-			"GDK_BUTTON_PRESS",
-			"GDK_2BUTTON_PRESS",
-			"GDK_3BUTTON_PRESS",
-			"GDK_BUTTON_RELEASE",
-			"GDK_KEY_PRESS",
-			"GDK_KEY_RELEASE",
-			"GDK_ENTER_NOTIFY",
-			"GDK_LEAVE_NOTIFY",
-			"GDK_FOCUS_CHANGE",
-			"GDK_CONFIGURE",
-			"GDK_MAP",
-			"GDK_UNMAP",
-			"GDK_PROPERTY_NOTIFY",
-			"GDK_SELECTION_CLEAR",
-			"GDK_SELECTION_REQUEST",
-			"GDK_SELECTION_NOTIFY",
-			"GDK_PROXIMITY_IN",
-			"GDK_PROXIMITY_OUT",
-			"GDK_DRAG_ENTER",
-			"GDK_DRAG_LEAVE",
-			"GDK_DRAG_MOTION",
-			"GDK_DRAG_STATUS",
-			"GDK_DROP_START",
-			"GDK_DROP_FINISHED",
-			"GDK_CLIENT_EVENT",
-			"GDK_VISIBILITY_NOTIFY",
-			"GDK_NO_EXPOSE",
-			"GDK_SCROLL",
-			"GDK_WINDOW_STATE",
-			"GDK_SETTING",
-			"GDK_OWNER_CHANGE",
-			"GDK_GRAB_BROKEN",
-			"GDK_DAMAGE"
-	};
-	fprintf(stderr, "%22s window = %p send_event = %d\n",
-			names[event->any.type], event->any.window, event->any.send_event);
-	gtk_main_do_event(event);
-}
-#endif // DEBUG
-
-static void init_gtk()
-{
-	static bool initialized = false;
-	if (!initialized) {
-#if defined(DEBUG) && DEBUG
-		int argc = 2;
-		char arg1[32] = "/dev/null";
-		char arg2[32] = "--g-fatal-warnings";
-		char *args[] = { arg1, arg2 };
-		char **argv = args;
-		gtk_init(&argc, &argv);
-		gdk_event_handler_set(&gdk_event_handler, NULL, NULL);
-#else
-		gtk_init(nullptr, nullptr);
-#endif
-		initialized = true;
-	}
-}
-
-#endif // WITH_GUI
 
 static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val, void *ptr, float f)
 {
@@ -335,87 +203,29 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 #ifdef WITH_GUI
 		case effEditGetRect: {
 			static ERect rect;
-			init_gtk();
-			int scale = default_scaling_factor();
+			auto scale = 1;
 			rect.bottom = 400 * scale;
 			rect.right = 600 * scale;
 			*(ERect **)ptr = &rect;
 			return 1;
 		}
+
 		case effEditOpen: {
-			init_gtk();
-
-			if (!plugin->editorWidget) {
-				plugin->mainThread = g_thread_self();
-				plugin->parameterUpdateQueue = g_async_queue_new();
-				for (int i = 0; i < kAmsynthParameterCount; i++) {
-					gdouble lower = 0, upper = 0, step_increment = 0;
-					get_parameter_properties(i, &lower, &upper, nullptr, &step_increment);
-					gdouble value = plugin->synthesizer->getParameterValue((Param)i);
-					plugin->adjustments[i] = (GtkAdjustment *)gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);
-					g_object_ref_sink(plugin->adjustments[i]); // assumes ownership of the floating reference
-					g_signal_connect(plugin->adjustments[i], "value-changed", G_CALLBACK(on_adjustment_value_changed), effect);
-					plugin->synthesizer->getPresetController()->getCurrentPreset().getParameter((Param)i).addUpdateListener(plugin);
-				}
-				plugin->editorWidget = editor_pane_new(plugin->synthesizer, plugin->adjustments, TRUE, DEFAULT_SCALING);
-				g_object_ref_sink(plugin->editorWidget);
-			}
-
-			plugin->gtkWindow = gtk_window_new(GTK_WINDOW_POPUP);
-
-			// don't show the widget yet, to avoid visible moving of the window
-			gtk_widget_realize(plugin->gtkWindow); g_assert(gtk_widget_get_realized(plugin->gtkWindow));
-
-			// on some hosts (e.g. energyXT) creating the gdk window can fail unless we call gdk_display_sync
-			gdk_display_sync(gdk_display_get_default());
-
-			plugin->gdkParentWindow = gdk_x11_window_foreign_new_for_display(gdk_display_get_default(), (GdkNativeWindow)(uintptr_t)ptr); //gdk_window_foreign_new((GdkNativeWindow)(uintptr_t)ptr);
-			g_assert(plugin->gdkParentWindow);
-
-			// use gdk_window_reparent instead of XReparentWindow to avoid "GdkWindow unexpectedly destroyed" warnings
-			gdk_window_reparent(gtk_widget_get_window(plugin->gtkWindow), plugin->gdkParentWindow, 0, 0);
-
-			Display *xdisplay = GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
-			Window xwindow = GDK_WINDOW_XWINDOW(gtk_widget_get_window(plugin->gtkWindow));
-			setEventProc(xdisplay, xwindow);
-
-			gtk_container_add(GTK_CONTAINER(plugin->gtkWindow), plugin->editorWidget);
-			gtk_widget_show_all(plugin->gtkWindow);
-
-			gdk_display_sync(gdk_display_get_default());
-
+			juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
+			plugin->editor = std::make_unique<Editor>();
+			plugin->editor->attachToHost(ptr);
 			return 1;
 		}
+
 		case effEditClose: {
-			for (int i = 0; i < kAmsynthParameterCount; i++) {
-				plugin->synthesizer->getPresetController()->getCurrentPreset().getParameter((Param)i).removeUpdateListener(plugin);
-			}
-
-			if (plugin->gtkWindow) {
-				if (gtk_widget_get_window(plugin->gtkWindow)) {
-					gdk_window_hide(gtk_widget_get_window(plugin->gtkWindow));
-				}
-				gtk_widget_destroy(plugin->gtkWindow);
-				plugin->gtkWindow = nullptr;
-			}
-
-			for (int i = 0; i < kAmsynthParameterCount; i++) {
-				plugin->adjustments[i] = nullptr;
-			}
-
-			g_async_queue_unref(plugin->parameterUpdateQueue);
-			plugin->parameterUpdateQueue = nullptr;
-			plugin->gdkParentWindow = nullptr;
-			plugin->editorWidget = nullptr;
-
-			gdk_display_sync(gdk_display_get_default());
-
+			juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
+			plugin->editor.reset();
 			return 0;
 		}
+
 		case effEditIdle: {
-			while (gtk_events_pending()) {
-				gtk_main_iteration();
-			}
+			juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
+			hostDrivenEventLoop->processPendingEvents();
 			return 0;
 		}
 #endif
@@ -603,11 +413,7 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 	effect->numOutputs = 2;
 	effect->flags = effFlagsCanReplacing | effFlagsIsSynth | effFlagsProgramChunks;
 #ifdef WITH_GUI
-	if (strcmp("REAPER", hostProductString) == 0) {
-		// amsynth's GTK GUI doesn't work in REAPER :-[
-	} else {
-		effect->flags |= effFlagsHasEditor;
-	}
+	effect->flags |= effFlagsHasEditor;
 #endif
 	// Do no use the ->user pointer because ardour clobbers it
 	effect->ptr3 = new Plugin(audioMaster);

@@ -43,7 +43,7 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 LT_INIT
 
-AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
+AX_CXX_COMPILE_STDCXX_14([noext], [mandatory])
 
 IT_PROG_INTLTOOL
 
@@ -171,9 +171,6 @@ AC_ARG_ENABLE([realtime], [AS_HELP_STRING([--enable-realtime],
 AM_CONDITIONAL([ENABLE_REALTIME], [test x$enable_realtime != x])
 
 AM_CONDITIONAL([DARWIN], [test "$(uname -s)" = "Darwin"])
-
-m4_ifdef([AX_COMPILER_FLAGS],
-         [AX_COMPILER_FLAGS([AM_CFLAGS], [AM_LDFLAGS], [yes])])
 
 AC_CONFIG_FILES([
     Makefile

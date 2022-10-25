@@ -218,6 +218,26 @@ dist_amsynth_lv2_DATA = $(wildcard data/amsynth.lv2/*.ttl)
 
 endif
 
+if BUILD_GUI
+noinst_LTLIBRARIES += libjuce.la
+libjuce_la_CPPFLAGS = @GTK_CFLAGS@ \
+	-I$(HOME)/JUCE/modules \
+	-DJUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1 \
+	-DJUCE_MODULE_AVAILABLE_juce_core=1 \
+	-DJUCE_MODULE_AVAILABLE_juce_data_structures=1 \
+	-DJUCE_MODULE_AVAILABLE_juce_events=1 \
+	-DJUCE_MODULE_AVAILABLE_juce_graphics=1 \
+	-DJUCE_MODULE_AVAILABLE_juce_gui_basics=1 \
+	-DJUCE_STRICT_REFCOUNTEDPOINTER=1 \
+	-DPNG_NO_CONFIG_H=1
+libjuce_la_SOURCES = \
+	$(HOME)/JUCE/modules/juce_core/juce_core.cpp \
+	$(HOME)/JUCE/modules/juce_data_structures/juce_data_structures.cpp \
+	$(HOME)/JUCE/modules/juce_events/juce_events.cpp \
+	$(HOME)/JUCE/modules/juce_graphics/juce_graphics.cpp \
+	$(HOME)/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp
+libjuce_la_LIBADD = -lcurl
+endif
 
 #
 # VST
@@ -232,8 +252,8 @@ amsynth_vst_la_LDFLAGS = -rpath $(vstdir) -avoid-version -module -export-symbols
 
 if BUILD_GUI
 amsynth_vst_la_SOURCES += $(libgui_sources)
-amsynth_vst_la_CPPFLAGS = $(AM_CPPFLAGS) @GTK_CFLAGS@
-amsynth_vst_la_LIBADD = @GTK_LIBS@
+amsynth_vst_la_CPPFLAGS = $(AM_CPPFLAGS) @GTK_CFLAGS@ $(libjuce_la_CPPFLAGS)
+amsynth_vst_la_LIBADD = @GTK_LIBS@ libjuce.la
 endif
 
 endif
