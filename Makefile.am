@@ -128,8 +128,10 @@ amsynth_SOURCES = \
 	src/main.cpp
 
 amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @LIBLO_CFLAGS@ @GTK_CFLAGS@
+amsynth_CPPFLAGS += $(libjuce_la_CPPFLAGS)
 
 amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @LIBLO_LIBS@ @LIBS@ -lX11
+amsynth_LDADD += libjuce.la
 
 if BUILD_GUI
 amsynth_SOURCES += $(libgui_sources) \
@@ -222,6 +224,8 @@ if BUILD_GUI
 noinst_LTLIBRARIES += libjuce.la
 libjuce_la_CPPFLAGS = @GTK_CFLAGS@ \
 	-I$(HOME)/JUCE/modules \
+	-DJUCE_INCLUDE_PNGLIB_CODE=1 \
+	-DJUCE_INCLUDE_JPEGLIB_CODE=1 \
 	-DJUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1 \
 	-DJUCE_MODULE_AVAILABLE_juce_core=1 \
 	-DJUCE_MODULE_AVAILABLE_juce_data_structures=1 \
@@ -229,14 +233,17 @@ libjuce_la_CPPFLAGS = @GTK_CFLAGS@ \
 	-DJUCE_MODULE_AVAILABLE_juce_graphics=1 \
 	-DJUCE_MODULE_AVAILABLE_juce_gui_basics=1 \
 	-DJUCE_STRICT_REFCOUNTEDPOINTER=1 \
-	-DPNG_NO_CONFIG_H=1
+	-DPNG_NO_CONFIG_H=1 \
+	-DPKGDATADIR='"$(pkgdatadir)"'
 libjuce_la_SOURCES = \
 	$(HOME)/JUCE/modules/juce_core/juce_core.cpp \
 	$(HOME)/JUCE/modules/juce_data_structures/juce_data_structures.cpp \
 	$(HOME)/JUCE/modules/juce_events/juce_events.cpp \
 	$(HOME)/JUCE/modules/juce_graphics/juce_graphics.cpp \
-	$(HOME)/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp
-libjuce_la_LIBADD = -lcurl
+	$(HOME)/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp \
+	src/GUI/ControlPanel.cpp \
+	src/GUI/ControlPanel.h
+libjuce_la_LIBADD = -lcurl -ldl -lpng -lz
 endif
 
 #

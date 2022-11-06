@@ -23,6 +23,8 @@
 #include "config.h"
 #endif
 
+#define JUCE_GUI_BASICS_INCLUDE_XHEADERS 1
+
 #include "MainWindow.h"
 
 #include "../AudioOutput.h"
@@ -31,6 +33,7 @@
 #include "../Synthesizer.h"
 
 #include "ConfigDialog.h"
+#include "ControlPanel.h"
 #include "editor_pane.h"
 #include "gui_main.h"
 #include "MainMenu.h"
@@ -41,9 +44,15 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include <juce_core/juce_core.h>
+#include <juce_events/juce_events.h>
+#include <juce_gui_basics/juce_gui_basics.h>
+// Must be included after juce_core
+#include <juce_audio_plugin_client/utility/juce_LinuxMessageThread.h>
+#include <cassert>
+
 
 static MIDILearnDialog *midiLearnDialog;
-
 
 struct MainWindow : public UpdateListener
 {
@@ -65,6 +74,7 @@ struct MainWindow : public UpdateListener
 		gtk_window_add_accel_group(GTK_WINDOW(window), accelGroup);
 
 		GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
+		gtk_container_add(GTK_CONTAINER(window), vbox);
 
 		//
 
@@ -109,8 +119,29 @@ struct MainWindow : public UpdateListener
 			parameter.addUpdateListener(this);
 		}
 
-		GtkWidget *editor = editor_pane_new(synthesizer, adjustments, FALSE, scaling_factor);
-		gtk_box_pack_start(GTK_BOX(vbox), editor, FALSE, FALSE, 0);
+		auto embed = gtk_socket_new();
+		gtk_widget_set_size_request(embed, 600, 400);
+		gtk_box_pack_start(GTK_BOX(vbox), embed, FALSE, FALSE, 0);
+		gtk_widget_realize(embed);
+		gtk_widget_show(embed);
+
+		auto hostWindow = (void *)(uintptr_t)gtk_socket_get_id(GTK_SOCKET(embed));
+		assert(hostWindow);
+
+//		GtkWidget *editor = editor_pane_new(synthesizer, adjustments, FALSE, scaling_factor);
+//		gtk_box_pack_start(GTK_BOX(vbox), editor, FALSE, FALSE, 0);
+
+		auto panel = new ControlPanel(presetController);
+
+		panel->setVisible(false);
+		panel->addToDesktop(0, hostWindow);
+		auto display = juce::XWindowSystem::getInstance()->getDisplay();
+		juce::X11Symbols::getInstance()->xReparentWindow(display,
+			(::Window)panel->getWindowHandle(),
+			(::Window)hostWindow,
+			0, 0);
+		juce::X11Symbols::getInstance()->xFlush(display);
+		panel->setVisible(true);
 
 		//
 		// start_atomic_value_change is not registered by editor_pane_new
@@ -121,20 +152,16 @@ struct MainWindow : public UpdateListener
 
 			g_object_set_data(G_OBJECT(adjustments[i]), "Parameter", &parameter);
 
-			g_signal_connect_after(
-					G_OBJECT(adjustments[i]), "start_atomic_value_change",
-					G_CALLBACK(MainWindow::on_adjustment_start_atomic_value_change),
-					(gpointer) this);
+//			g_signal_connect_after(
+//					G_OBJECT(adjustments[i]), "start_atomic_value_change",
+//					G_CALLBACK(MainWindow::on_adjustment_start_atomic_value_change),
+//					(gpointer) this);
 
 			g_signal_connect(
 					G_OBJECT(adjustments[i]), "value_changed",
 					G_CALLBACK(MainWindow::on_adjustment_value_changed),
 					(gpointer) this);
 		}
-
-		//
-
-		gtk_container_add(GTK_CONTAINER(window), vbox);
 	}
 
 	static void on_adjustment_start_atomic_value_change(GtkAdjustment *adjustment, MainWindow *mainWindow)
@@ -281,6 +308,9 @@ struct MainWindow : public UpdateListener
 	GThread *mainThread;
 	GAsyncQueue *parameterUpdateQueue;
 	bool ignoreAdjustmentValueChanges;
+
+	juce::ScopedJuceInitialiser_GUI libraryInitialiser;
+	juce::SharedResourcePointer<juce::MessageThread> messageThread;
 };
 
 

@@ -50,11 +50,7 @@
 
 #ifdef WITH_GUI
 #define JUCE_GUI_BASICS_INCLUDE_XHEADERS 1
-#include <juce_core/juce_core.h>
-#include <juce_data_structures/juce_data_structures.h>
-#include <juce_events/juce_events.h>
-#include <juce_graphics/juce_graphics.h>
-#include <juce_gui_basics/juce_gui_basics.h>
+#include "src/GUI/ControlPanel.h"
 // Must be included after juce_core
 #include <juce_audio_plugin_client/utility/juce_LinuxMessageThread.h>
 #endif
@@ -81,42 +77,11 @@ constexpr size_t kPresetsPerBank = sizeof(BankInfo::presets) / sizeof(BankInfo::
 
 extern "C" void modal_midi_learn(Param param_index) {}
 
-struct Editor : public juce::Component
-{
-	Editor()
-	{
-		setSize(600, 400);
-		slider.setOpaque(true);
-		slider.setSize(100, 100);
-		addAndMakeVisible(slider);
-		setOpaque(true);
-	}
-
-	void attachToHost(void *hostWindow)
-	{
-		setVisible(false);
-		addToDesktop(0, hostWindow);
-		auto display = juce::XWindowSystem::getInstance()->getDisplay();
-		juce::X11Symbols::getInstance()->xReparentWindow(display,
-			(::Window)getWindowHandle(),
-			(::Window)hostWindow,
-			0, 0);
-		juce::X11Symbols::getInstance()->xFlush(display);
-		setVisible(true);
-	}
-
-	juce::Slider slider{
-		juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag,
-		juce::Slider::TextEntryBoxPosition::TextBoxBelow};
-
-	juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostEventLoop;
-};
-
 #endif // WITH_GUI
 
-struct Plugin : public UpdateListener
+struct Plugin final
 {
-	Plugin(audioMasterCallback master)
+	explicit Plugin(audioMasterCallback master)
 	{
 		audioMaster = master;
 		synthesizer = new Synthesizer;
@@ -137,16 +102,9 @@ struct Plugin : public UpdateListener
 	std::string presetName;
 
 #ifdef WITH_GUI
-	typedef std::pair<Param, float> ParameterUpdate;
-
-	void UpdateParameter(Param paramID, float paramValue) override
-	{
-		// TODO: Update Editor
-	}
-
 	juce::ScopedJuceInitialiser_GUI libraryInitialiser;
 	juce::SharedResourcePointer<juce::MessageThread> messageThread;
-	std::unique_ptr<Editor> editor;
+	std::unique_ptr<ControlPanel> controlPanel;
 #endif
 };
 
@@ -211,21 +169,26 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 		}
 
 		case effEditOpen: {
-			juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
-			plugin->editor = std::make_unique<Editor>();
-			plugin->editor->attachToHost(ptr);
+			plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController);
+
+			plugin->controlPanel->setVisible(false);
+			plugin->controlPanel->addToDesktop(0, ptr);
+			auto display = juce::XWindowSystem::getInstance()->getDisplay();
+			juce::X11Symbols::getInstance()->xReparentWindow(display,
+				(::Window)plugin->controlPanel->getWindowHandle(),
+				(::Window)ptr,
+				0, 0);
+			juce::X11Symbols::getInstance()->xFlush(display);
+			plugin->controlPanel->setVisible(true);
 			return 1;
 		}
 
 		case effEditClose: {
-			juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
-			plugin->editor.reset();
+			plugin->controlPanel.reset();
 			return 0;
 		}
 
 		case effEditIdle: {
-			juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
-			hostDrivenEventLoop->processPendingEvents();
 			return 0;
 		}
 #endif
