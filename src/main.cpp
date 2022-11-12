@@ -71,6 +71,7 @@
 
 using namespace std;
 
+bool isPlugin = false;
 
 Configuration & config = Configuration::get();
 

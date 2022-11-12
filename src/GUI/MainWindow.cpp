@@ -44,7 +44,6 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include <juce_core/juce_core.h>
 #include <juce_events/juce_events.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 // Must be included after juce_core

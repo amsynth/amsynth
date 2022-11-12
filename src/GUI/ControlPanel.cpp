@@ -36,6 +36,8 @@
 
 extern "C" void modal_midi_learn(Param);
 
+extern bool isPlugin; // Defined externally
+
 class FilmStripParameterControl : public juce::Component, protected UpdateListener
 {
 public:
@@ -60,6 +62,9 @@ public:
 
 	void showPopupMenu() const
 	{
+		if (isPlugin) {
+			return;
+		}
 		auto menu = juce::PopupMenu();
 		auto p = parameter.getId();
 		menu.addItem(gettext("Assign MIDI Controller..."), true, false, [p](){

@@ -87,6 +87,8 @@ constexpr size_t kPresetsPerBank = sizeof(BankInfo::presets) / sizeof(BankInfo::
 
 extern "C" void modal_midi_learn(Param param_index) {}
 
+bool isPlugin = true;
+
 #endif // WITH_GUI
 
 struct Plugin final : private UpdateListener
