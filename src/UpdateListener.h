@@ -30,10 +30,13 @@
 class UpdateListener
 {
 public:
-	virtual ~UpdateListener () {}
-	 
+    virtual ~UpdateListener() = default;
+
+    // The user has started to change this parameter
+    virtual void parameterWillChange(Param) {}
+
     virtual void update			()		{;}
-    virtual void UpdateParameter	(Param, float)	{ update ();}
+    virtual void UpdateParameter(Param, float controlValue) { update (); }
 };
 
 #endif

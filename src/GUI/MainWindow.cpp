@@ -51,7 +51,6 @@
 #include <juce_audio_plugin_client/utility/juce_LinuxMessageThread.h>
 #include <cassert>
 
-
 static MIDILearnDialog *midiLearnDialog;
 
 struct MainWindow : public UpdateListener
@@ -60,7 +59,6 @@ struct MainWindow : public UpdateListener
 	:	synthesizer(synthesizer_)
 	,	presetController(synthesizer->getPresetController())
 	,	audio(audio_)
-	,	ignoreAdjustmentValueChanges(false)
 	{
 		presetIsNotSaved = false;
 		mainThread = g_thread_self();
@@ -104,23 +102,10 @@ struct MainWindow : public UpdateListener
 		memset(defaults, 0, sizeof(defaults));
 
 		presetController->setUpdateListener(*this);
-		for (int i = 0; i < kAmsynthParameterCount; i++) {
-			Preset &preset = presetController->getCurrentPreset();
-			Parameter &parameter = preset.getParameter(i);
-			adjustments[i] = (GtkAdjustment *) gtk_adjustment_new(
-					parameter.getValue(),
-					parameter.getMin(),
-					parameter.getMax(),
-					parameter.getStep(),
-					0, 0);
-			g_value_init(&defaults[i], G_TYPE_FLOAT);
-			g_value_set_float(&defaults[i], parameter.getDefault());
-			g_object_set_data(G_OBJECT(adjustments[i]), "default-value", &defaults[i]);
-			parameter.addUpdateListener(this);
-		}
+		presetController->getCurrentPreset().AddListenerToAll(this);
 
 		auto embed = gtk_socket_new();
-		gtk_widget_set_size_request(embed, 600, 400);
+		gtk_widget_set_size_request(embed, 600, 400); // FIXME: hard-coded size
 		gtk_box_pack_start(GTK_BOX(vbox), embed, FALSE, FALSE, 0);
 		gtk_widget_realize(embed);
 		gtk_widget_show(embed);
@@ -128,13 +113,9 @@ struct MainWindow : public UpdateListener
 		auto hostWindow = (void *)(uintptr_t)gtk_socket_get_id(GTK_SOCKET(embed));
 		assert(hostWindow);
 
-//		GtkWidget *editor = editor_pane_new(synthesizer, adjustments, FALSE, scaling_factor);
-//		gtk_box_pack_start(GTK_BOX(vbox), editor, FALSE, FALSE, 0);
-
 		auto panel = new ControlPanel(presetController);
-
 		panel->setVisible(false);
-		panel->addToDesktop(0, hostWindow);
+		panel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, hostWindow);
 		auto display = juce::XWindowSystem::getInstance()->getDisplay();
 		juce::X11Symbols::getInstance()->xReparentWindow(display,
 			(::Window)panel->getWindowHandle(),
@@ -142,43 +123,6 @@ struct MainWindow : public UpdateListener
 			0, 0);
 		juce::X11Symbols::getInstance()->xFlush(display);
 		panel->setVisible(true);
-
-		//
-		// start_atomic_value_change is not registered by editor_pane_new
-		//
-		for (int i = 0; i < kAmsynthParameterCount; i++) {
-			Preset &preset = presetController->getCurrentPreset();
-			Parameter &parameter = preset.getParameter(i);
-
-			g_object_set_data(G_OBJECT(adjustments[i]), "Parameter", &parameter);
-
-//			g_signal_connect_after(
-//					G_OBJECT(adjustments[i]), "start_atomic_value_change",
-//					G_CALLBACK(MainWindow::on_adjustment_start_atomic_value_change),
-//					(gpointer) this);
-
-			g_signal_connect(
-					G_OBJECT(adjustments[i]), "value_changed",
-					G_CALLBACK(MainWindow::on_adjustment_value_changed),
-					(gpointer) this);
-		}
-	}
-
-	static void on_adjustment_start_atomic_value_change(GtkAdjustment *adjustment, MainWindow *mainWindow)
-	{
-		gdouble value = gtk_adjustment_get_value(adjustment);
-		Parameter *parameter = (Parameter *) g_object_get_data(G_OBJECT(adjustment), "Parameter");
-		mainWindow->presetController->pushParamChange(parameter->getId(), (float) value);
-	}
-
-	static void on_adjustment_value_changed(GtkAdjustment *adjustment, MainWindow *mainWindow)
-	{
-		if (mainWindow->ignoreAdjustmentValueChanges) {
-			return;
-		}
-		gdouble value = gtk_adjustment_get_value(adjustment);
-		Parameter *parameter = (Parameter *) g_object_get_data(G_OBJECT(adjustment), "Parameter");
-		parameter->setValue((float) value);
 	}
 
 	void updateTitle()
@@ -282,12 +226,6 @@ struct MainWindow : public UpdateListener
 			updateTitle();
 			return;
 		}
-		if (0 <= parameter && parameter < kAmsynthParameterCount) {
-			const Parameter &param = presetController->getCurrentPreset().getParameter(parameter);
-			ignoreAdjustmentValueChanges = true;
-			gtk_adjustment_set_value (adjustments[parameter], param.getValue());
-			ignoreAdjustmentValueChanges = false;
-		}
 		bool isModified = presetController->isCurrentPresetModified();
 		if (presetIsNotSaved != isModified) {
 			presetIsNotSaved = isModified;
@@ -301,16 +239,13 @@ struct MainWindow : public UpdateListener
 	GenericOutput *audio;
 
 	PresetControllerView *presetControllerView;
-	GtkAdjustment *adjustments[kAmsynthParameterCount];
 	GValue defaults[kAmsynthParameterCount];
 	bool presetIsNotSaved;
 
 	GThread *mainThread;
 	GAsyncQueue *parameterUpdateQueue;
-	bool ignoreAdjustmentValueChanges;
 
 	juce::ScopedJuceInitialiser_GUI libraryInitialiser;
-	juce::SharedResourcePointer<juce::MessageThread> messageThread;
 };
 
 

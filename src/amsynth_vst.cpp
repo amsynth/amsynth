@@ -24,11 +24,9 @@
 #endif
 
 #include "midi.h"
-#include "Preset.h"
 #include "PresetController.h"
 #include "Synthesizer.h"
 
-#include <cassert>
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
@@ -67,6 +65,18 @@ struct ERect
 
 static char hostProductString[64] = "";
 
+class HostCall
+{
+public:
+	HostCall() { count_++; }
+	~HostCall() { count_--; }
+	static bool isActive() { return count_ > 0; }
+private:
+	static thread_local int count_;
+};
+
+thread_local int HostCall::count_ = 0;
+
 #if defined(DEBUG) && DEBUG
 static FILE *logFile;
 #endif
@@ -79,23 +89,33 @@ extern "C" void modal_midi_learn(Param param_index) {}
 
 #endif // WITH_GUI
 
-struct Plugin final
+struct Plugin final : private UpdateListener
 {
-	explicit Plugin(audioMasterCallback master)
+	explicit Plugin(AEffect *effect, audioMasterCallback master)
+	: effect(effect)
+	, audioMaster(master)
+	, synthesizer(std::make_unique<Synthesizer>())
 	{
-		audioMaster = master;
-		synthesizer = new Synthesizer;
 		midiBuffer = (unsigned char *)malloc(MIDI_BUFFER_SIZE);
+		synthesizer->_presetController->getCurrentPreset().AddListenerToAll(this);
 	}
 
-	~Plugin()
+	~Plugin() final
 	{ 
-		delete synthesizer;
 		free(midiBuffer);
 	}
 
+	void UpdateParameter(Param p, float controlValue) final
+	{
+		if (audioMaster && !HostCall::isActive()) {
+			auto value = synthesizer->getNormalizedParameterValue(p);
+			audioMaster(effect, audioMasterAutomate, p, 0, nullptr, value);
+		}
+	}
+
+	AEffect *effect;
 	audioMasterCallback audioMaster;
-	Synthesizer *synthesizer;
+	std::unique_ptr<Synthesizer> synthesizer;
 	unsigned char *midiBuffer;
 	std::vector<amsynth_midi_event_t> midiEvents;
 	int programNumber = 0;
@@ -110,6 +130,7 @@ struct Plugin final
 
 static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val, void *ptr, float f)
 {
+	HostCall hostCall;
 	Plugin *plugin = (Plugin *)effect->ptr3;
 
 	switch (opcode) {
@@ -162,6 +183,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 		case effEditGetRect: {
 			static ERect rect;
 			auto scale = 1;
+			// FIXME: hard-coded size
 			rect.bottom = 400 * scale;
 			rect.right = 600 * scale;
 			*(ERect **)ptr = &rect;
@@ -169,26 +191,44 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 		}
 
 		case effEditOpen: {
+#if JUCE_LINUX || JUCE_BSD
+			juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
+#else
+			const juce::MessageManagerLock mmLock;
+#endif
 			plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController);
 
-			plugin->controlPanel->setVisible(false);
-			plugin->controlPanel->addToDesktop(0, ptr);
+#if JUCE_LINUX || JUCE_BSD
+			plugin->controlPanel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ptr);
 			auto display = juce::XWindowSystem::getInstance()->getDisplay();
 			juce::X11Symbols::getInstance()->xReparentWindow(display,
 				(::Window)plugin->controlPanel->getWindowHandle(),
 				(::Window)ptr,
 				0, 0);
+			// The host is likely to attempt to move/resize the window directly after this call,
+			// and we need to ensure that the X server knows that our window has been attached
+			// before that happens.
 			juce::X11Symbols::getInstance()->xFlush(display);
+#endif
 			plugin->controlPanel->setVisible(true);
 			return 1;
 		}
 
 		case effEditClose: {
+#if JUCE_LINUX || JUCE_BSD
+			juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
+#else
+			const juce::MessageManagerLock mmLock;
+#endif
 			plugin->controlPanel.reset();
 			return 0;
 		}
 
 		case effEditIdle: {
+#if JUCE_LINUX || JUCE_BSD
+			juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
+			hostDrivenEventLoop->processPendingEvents();
+#endif
 			return 0;
 		}
 #endif
@@ -313,6 +353,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 
 static void process(AEffect *effect, float **inputs, float **outputs, int numSampleFrames)
 {
+	HostCall hostCall;
 	Plugin *plugin = (Plugin *)effect->ptr3;
 	std::vector<amsynth_midi_cc_t> midi_out;
 	plugin->synthesizer->process(numSampleFrames, plugin->midiEvents, midi_out, outputs[0], outputs[1]);
@@ -321,6 +362,7 @@ static void process(AEffect *effect, float **inputs, float **outputs, int numSam
 
 static void processReplacing(AEffect *effect, float **inputs, float **outputs, int numSampleFrames)
 {
+	HostCall hostCall;
 	Plugin *plugin = (Plugin *)effect->ptr3;
 	std::vector<amsynth_midi_cc_t> midi_out;
 	plugin->synthesizer->process(numSampleFrames, plugin->midiEvents, midi_out, outputs[0], outputs[1]);
@@ -329,18 +371,21 @@ static void processReplacing(AEffect *effect, float **inputs, float **outputs, i
 
 static void setParameter(AEffect *effect, int i, float f)
 {
+	HostCall hostCall;
 	Plugin *plugin = (Plugin *)effect->ptr3;
 	plugin->synthesizer->setNormalizedParameterValue((Param) i, f);
 }
 
 static float getParameter(AEffect *effect, int i)
 {
+	HostCall hostCall;
 	Plugin *plugin = (Plugin *)effect->ptr3;
 	return plugin->synthesizer->getNormalizedParameterValue((Param) i);
 }
 
 static int getNumPrograms()
 {
+	HostCall hostCall;
 	return PresetController::getPresetBanks().size() * kPresetsPerBank;
 }
 
@@ -356,6 +401,7 @@ __attribute__ ((visibility("default"))) AEffect * VSTPluginMain(audioMasterCallb
 
 AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 {
+	HostCall hostCall;
 #if defined(DEBUG) && DEBUG
 	if (!logFile) {
 		logFile = fopen("/tmp/amsynth.log", "a");
@@ -379,7 +425,7 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 	effect->flags |= effFlagsHasEditor;
 #endif
 	// Do no use the ->user pointer because ardour clobbers it
-	effect->ptr3 = new Plugin(audioMaster);
+	effect->ptr3 = new Plugin(effect, audioMaster);
 	effect->uniqueID = CCONST('a', 'm', 's', 'y');
 	effect->processReplacing = processReplacing;
 	return effect;

@@ -49,10 +49,7 @@ using namespace std;
 
 PresetController::PresetController()
 {
-}
-
-PresetController::~PresetController()
-{
+	currentPreset.AddListenerToAll(this);
 }
 
 int
@@ -86,9 +83,9 @@ PresetController::clearPreset		()
 }
 
 void
-PresetController::pushParamChange	(const Param param, const float value)
+PresetController::parameterWillChange(Param p)
 {
-	undoBuffer.push(new ParamChange(param, value));
+	undoBuffer.push(new ParamChange(p, currentPreset.getParameter(p).getValue()));
 	clearRedoBuffer();
 }
 

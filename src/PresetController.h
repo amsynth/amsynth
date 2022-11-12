@@ -38,13 +38,13 @@ struct BankInfo {
 	Preset presets[128];
 };
 
-class PresetController {
+class PresetController final : private UpdateListener {
 public:
 
 	static constexpr int kNumPresets = 128;
 
 	PresetController();
-	~PresetController();
+	~PresetController() final = default;
 	
 	/* Selects a Preset and makes it current, updating everything as necessary.
 	 * If the requested preset does not exist, then the request is ignored, and
@@ -71,7 +71,6 @@ public:
 	void	clearPreset			();
 
 	// Manages undo/redo for changes to current preset.
-	void	pushParamChange		( const Param param, const float value );
 	void	undoChange			();
 	void	redoChange			();
 
@@ -112,6 +111,8 @@ private:
 	int				currentBankNo = -1;
 	int 			currentPresetNo = -1;
 	long int 		lastPresetsFileModifiedTime = 0;
+
+	void parameterWillChange(Param) final;
 
 	class ChangeData {
 		public:

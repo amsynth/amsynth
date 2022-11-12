@@ -89,6 +89,9 @@ public:
 	void			addUpdateListener (UpdateListener *ul);
 	void			removeUpdateListener (UpdateListener *ul);
 
+	// The user is starting to change this parameter
+	void			willChange		() const { for (auto &l : _listeners) l->parameterWillChange(_paramId); }
+
 	float			getDefault		() const { return _spec.def; }
 
 	// min/max values apply for calls to setValue() not ControlValue

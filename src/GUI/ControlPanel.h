@@ -25,30 +25,17 @@
 #include "src/PresetController.h"
 
 #include <juce_gui_basics/juce_gui_basics.h>
-#include <vector>
 
-class ControlPanel final :
-		public juce::Component,
-		public juce::Button::Listener,
-		public juce::Slider::Listener,
-		public UpdateListener
+class ControlPanel final : public juce::Component
 {
 public:
 	explicit ControlPanel(PresetController *presetController);
 
 	~ControlPanel() noexcept final;
 
-	void buttonClicked(juce::Button *button) final;
-
-	void sliderValueChanged(juce::Slider *slider) final;
-
-	void UpdateParameter(Param param, float value) final;
-
 private:
-	std::unique_ptr<juce::Drawable> background_;
-	std::vector<juce::Component *> components_;
-	PresetController *presetController_;
+	struct Impl;
+	std::unique_ptr<Impl> impl_;
 };
-
 
 #endif //_CONTROLPANEL_H
