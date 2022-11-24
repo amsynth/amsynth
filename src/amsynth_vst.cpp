@@ -125,7 +125,9 @@ struct Plugin final : private UpdateListener
 
 #ifdef WITH_GUI
 	juce::ScopedJuceInitialiser_GUI libraryInitialiser;
+#if JUCE_LINUX || JUCE_BSD
 	juce::SharedResourcePointer<juce::MessageThread> messageThread;
+#endif
 	std::unique_ptr<ControlPanel> controlPanel;
 #endif
 };
@@ -199,9 +201,8 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			const juce::MessageManagerLock mmLock;
 #endif
 			plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController);
-
-#if JUCE_LINUX || JUCE_BSD
 			plugin->controlPanel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ptr);
+#if JUCE_LINUX || JUCE_BSD
 			auto display = juce::XWindowSystem::getInstance()->getDisplay();
 			juce::X11Symbols::getInstance()->xReparentWindow(display,
 				(::Window)plugin->controlPanel->getWindowHandle(),
@@ -222,6 +223,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 #else
 			const juce::MessageManagerLock mmLock;
 #endif
+			plugin->controlPanel->removeFromDesktop();
 			plugin->controlPanel.reset();
 			return 0;
 		}
