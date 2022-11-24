@@ -21,6 +21,8 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
+#else
+#define PACKAGE_VERSION "?.?.?"
 #endif
 
 #include "ControlPanel.h"
@@ -270,13 +272,21 @@ private:
 	std::unordered_map<std::string, juce::Image> images_;
 };
 
+class MouseDownControl : public juce::Component {
+public:
+	using Handler = std::function<void(const juce::MouseEvent&)>;
+	MouseDownControl(Handler handler) : handler_(handler) {}
+	void mouseDown(const juce::MouseEvent &event) override { handler_(event); }
+	Handler handler_;
+};
+
 struct ControlPanel::Impl final
 {
 	Impl(ControlPanel *controlPanel, PresetController *presetController)
 	: presetController_(presetController)
 	{
-		auto skin = Skin(PKGDATADIR "/skins/default");
-//		auto skin = Skin("/usr/local/share/amsynth/skins/etna/Etna");
+		auto skin = Skin(ControlPanel::skinsDirectory + "/default");
+//		auto skin = Skin(ControlPanel::skinsDirectory + "/Etna");
 
 		auto background = juce::Drawable::createFromImageFile(skin.getBackground());
 		background->setOpaque(true);
@@ -284,6 +294,15 @@ struct ControlPanel::Impl final
 		controlPanel->addAndMakeVisible(background.get());
 		controlPanel->setSize(background->getWidth(), background->getHeight());
 		components_.push_back(std::move(background));
+		
+		auto clickArea = std::make_unique<MouseDownControl>([this](auto &event) {
+			if (event.mods.isPopupMenu()) {
+				showPopupMenu();
+			}
+		});
+		clickArea->setSize(controlPanel->getWidth(), controlPanel->getHeight());
+		controlPanel->addAndMakeVisible(clickArea.get());
+		components_.push_back(std::move(clickArea));
 
 		for (int i = 0; i < kAmsynthParameterCount; i++) {
 			auto &parameter = presetController_->getCurrentPreset().getParameter(i);
@@ -305,9 +324,38 @@ struct ControlPanel::Impl final
 			if (component) {
 				component->setTopLeftPosition(control.x, control.y);
 				controlPanel->addAndMakeVisible(component.get());
+				components_.push_back(std::move(component));
 			}
-			components_.push_back(std::move(component));
 		}
+	}
+	
+	void showPopupMenu() {
+		auto presetMenu = juce::PopupMenu();
+		for (auto &bank : PresetController::getPresetBanks()) {
+			char text[64];
+			auto bankMenu = juce::PopupMenu();
+			for (int i = 0; i < PresetController::kNumPresets; i++) {
+				snprintf(text, sizeof text, "%d: %s", i, bank.presets[i].getName().c_str());
+				bankMenu.addItem(text, [this, &bank, i]() {
+					presetController_->loadPresets(bank.file_path.c_str());
+					presetController_->selectPreset(i);
+				});
+			}
+			snprintf(text, sizeof text, "[%s] %s", bank.read_only ? gettext("F") : gettext("U"), bank.name.c_str());
+			presetMenu.addSubMenu(text, bankMenu);
+		}
+		
+		auto fileMenu = juce::PopupMenu();
+		fileMenu.addItem(gettext("Open Alternate Tuning File..."), [this]() {});
+		fileMenu.addItem(gettext("Open Alternate Keyboard Map..."), [this]() {});
+		fileMenu.addItem(gettext("Reset All Tuning Settings to Default"), [this]() {});
+		
+		auto menu = juce::PopupMenu();
+		menu.addSubMenu(gettext("File"), fileMenu);
+		menu.addSubMenu(gettext("Preset"), presetMenu);
+		menu.addSeparator();
+		menu.addItem(1, "v" PACKAGE_VERSION, false);
+		menu.showMenuAsync(juce::PopupMenu::Options());
 	}
 
 	std::vector<std::unique_ptr<juce::Component>> components_;
@@ -318,3 +366,9 @@ ControlPanel::ControlPanel(PresetController *presetController)
 : impl_(std::make_unique<Impl>(this, presetController)) {}
 
 ControlPanel::~ControlPanel() noexcept = default;
+
+#ifdef PKGDATADIR
+std::string ControlPanel::skinsDirectory {PKGDATADIR "/skins"};
+#else
+std::string ControlPanel::skinsDirectory;
+#endif

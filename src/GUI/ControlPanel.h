@@ -32,6 +32,8 @@ public:
 	explicit ControlPanel(PresetController *presetController);
 
 	~ControlPanel() noexcept final;
+	
+	static std::string skinsDirectory;
 
 private:
 	struct Impl;

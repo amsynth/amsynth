@@ -436,7 +436,7 @@ static void scan_preset_banks(const std::string dir_path, bool read_only)
 #endif
 }
 
-static std::string sFactoryBanksDirectory;
+std::string sFactoryBanksDirectory;
 
 static void scan_preset_banks()
 {
