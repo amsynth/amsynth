@@ -21,8 +21,6 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#else
-#define PACKAGE_VERSION "?.?.?"
 #endif
 
 #include "ControlPanel.h"
@@ -353,8 +351,10 @@ struct ControlPanel::Impl final
 		auto menu = juce::PopupMenu();
 		menu.addSubMenu(gettext("File"), fileMenu);
 		menu.addSubMenu(gettext("Preset"), presetMenu);
+#ifdef PACKAGE_VERSION
 		menu.addSeparator();
 		menu.addItem(1, "v" PACKAGE_VERSION, false);
+#endif
 		menu.showMenuAsync(juce::PopupMenu::Options());
 	}
 
