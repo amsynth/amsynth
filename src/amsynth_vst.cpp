@@ -53,6 +53,10 @@
 #include <juce_audio_plugin_client/utility/juce_LinuxMessageThread.h>
 #endif
 
+#if JUCE_MAC
+#include <dlfcn.h>
+#endif
+
 struct ERect
 {
 	short top;
@@ -86,6 +90,8 @@ constexpr size_t kPresetsPerBank = sizeof(BankInfo::presets) / sizeof(BankInfo::
 #ifdef WITH_GUI
 
 extern "C" void modal_midi_learn(Param param_index) {}
+
+extern std::string sFactoryBanksDirectory;
 
 bool isPlugin = true;
 
@@ -393,6 +399,19 @@ static int getNumPrograms()
 	return PresetController::getPresetBanks().size() * kPresetsPerBank;
 }
 
+static void initialize()
+{
+	if (!ControlPanel::skinsDirectory.empty()) return;
+#if JUCE_MAC
+	Dl_info dl_info = {};
+	dladdr((void *)(&initialize), &dl_info);
+	const char *end = strstr(dl_info.dli_fname, "/MacOS/");
+	auto resources = std::string(dl_info.dli_fname, end - dl_info.dli_fname) + "/Resources";
+	sFactoryBanksDirectory = resources + "/banks";
+	ControlPanel::skinsDirectory = resources + "/skins";
+#endif
+}
+
 extern "C" {
 #ifdef _WIN32
 __declspec(dllexport) AEffect * MAIN(audioMasterCallback);
@@ -406,6 +425,7 @@ __attribute__ ((visibility("default"))) AEffect * VSTPluginMain(audioMasterCallb
 AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 {
 	HostCall hostCall;
+	initialize();
 #if defined(DEBUG) && DEBUG
 	if (!logFile) {
 		logFile = fopen("/tmp/amsynth.log", "a");
