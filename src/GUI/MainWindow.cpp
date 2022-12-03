@@ -112,8 +112,10 @@ struct MainWindow : public UpdateListener
 		assert(hostWindow);
 
 		auto panel = new ControlPanel(presetController);
+		auto scaleFactor = (float)default_scaling_factor();
+		juce::Desktop::getInstance().setGlobalScaleFactor(scaleFactor);
 		auto bounds = panel->getScreenBounds();
-		gtk_widget_set_size_request(embed, bounds.getWidth(), bounds.getHeight());
+		gtk_widget_set_size_request(embed, bounds.getWidth() * scaleFactor, bounds.getHeight() * scaleFactor);
 		panel->setVisible(false);
 		panel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, hostWindow);
 		auto display = juce::XWindowSystem::getInstance()->getDisplay();
