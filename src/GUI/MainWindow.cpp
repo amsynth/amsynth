@@ -104,7 +104,6 @@ struct MainWindow : public UpdateListener
 		presetController->getCurrentPreset().AddListenerToAll(this);
 
 		auto embed = gtk_socket_new();
-		gtk_widget_set_size_request(embed, 600, 400); // FIXME: hard-coded size
 		gtk_box_pack_start(GTK_BOX(vbox), embed, FALSE, FALSE, 0);
 		gtk_widget_realize(embed);
 		gtk_widget_show(embed);
@@ -113,6 +112,8 @@ struct MainWindow : public UpdateListener
 		assert(hostWindow);
 
 		auto panel = new ControlPanel(presetController);
+		auto bounds = panel->getScreenBounds();
+		gtk_widget_set_size_request(embed, bounds.getWidth(), bounds.getHeight());
 		panel->setVisible(false);
 		panel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, hostWindow);
 		auto display = juce::XWindowSystem::getInstance()->getDisplay();
