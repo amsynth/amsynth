@@ -38,10 +38,10 @@ extern "C" void modal_midi_learn(Param);
 
 extern bool isPlugin; // Defined externally
 
-class FilmStripParameterControl : public juce::Component, protected UpdateListener
+class SkinnedParameterControl : public juce::Component, protected UpdateListener
 {
 public:
-	FilmStripParameterControl(Parameter &p, juce::Image image, const LayoutDescription::Resource &r)
+	SkinnedParameterControl(Parameter &p, juce::Image image, const LayoutDescription::Resource &r)
 	: parameter(p)
 	, frame_(0)
 	, image_(std::move(image))
@@ -53,7 +53,7 @@ public:
 		parameter.addUpdateListener(this);
 	}
 
-	~FilmStripParameterControl() override
+	~SkinnedParameterControl() override
 	{
 		parameter.removeUpdateListener(this);
 	}
@@ -133,11 +133,11 @@ private:
 	int frames_;
 };
 
-class Knob : public FilmStripParameterControl
+class Knob : public SkinnedParameterControl
 {
 public:
 	Knob(Parameter &parameter, juce::Image image, const LayoutDescription::Resource &r)
-	: FilmStripParameterControl(parameter, std::move(image), r)
+	: SkinnedParameterControl(parameter, std::move(image), r)
 	{}
 
 protected:
@@ -154,7 +154,7 @@ protected:
 
 	void mouseDrag(const juce::MouseEvent &event) override
 	{
-		FilmStripParameterControl::mouseDrag(event);
+		SkinnedParameterControl::mouseDrag(event);
 		if (event.mods.isPopupMenu()) {
 			return;
 		}
@@ -194,11 +194,11 @@ private:
 	int referenceY_{0};
 };
 
-class Button : public FilmStripParameterControl
+class Button : public SkinnedParameterControl
 {
 public:
 	Button(Parameter &parameter, juce::Image image, const LayoutDescription::Resource &r)
-	: FilmStripParameterControl(parameter, std::move(image), r) {}
+	: SkinnedParameterControl(parameter, std::move(image), r) {}
 
 protected:
 	void mouseDown(const juce::MouseEvent &event) override
@@ -212,11 +212,11 @@ protected:
 	}
 };
 
-class Popup : public FilmStripParameterControl
+class Popup : public SkinnedParameterControl
 {
 public:
 	Popup(Parameter &parameter, juce::Image image, const LayoutDescription::Resource &r)
-	: FilmStripParameterControl(parameter, std::move(image), r) {}
+	: SkinnedParameterControl(parameter, std::move(image), r) {}
 
 protected:
 
