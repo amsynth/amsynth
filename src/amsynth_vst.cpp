@@ -53,6 +53,10 @@
 #include <juce_audio_plugin_client/utility/juce_LinuxMessageThread.h>
 #endif
 
+#if JUCE_LINUX || JUCE_BSD
+extern "C" int default_scaling_factor(void);
+#endif
+
 #if JUCE_MAC
 #include <dlfcn.h>
 #endif
@@ -191,11 +195,23 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 
 #ifdef WITH_GUI
 		case effEditGetRect: {
+			if (!plugin->controlPanel) {
+				plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController);
+			}
 			static ERect rect;
-			auto scale = 1;
-			// FIXME: hard-coded size
-			rect.bottom = 400 * scale;
-			rect.right = 600 * scale;
+#if JUCE_LINUX || JUCE_BSD
+			// This is probably a bad thing for a plugin to do in case we're in a JUCE-based host or there
+			// are other JUCE-based plugins that don't want to use this scale factor, but not scaling the UI
+			// seems to be a worse option, and JUCE doesn't automatically apply the correct scale factor if
+			// JUCEApplicationBase::isStandaloneApp() is false. Sigh.
+			juce::Desktop::getInstance().setGlobalScaleFactor((float)default_scaling_factor());
+#endif
+			// There doesn't seem to be a way to determine which screen the host wants to open a plugin on and
+			// apply the correct scale factor in a multiscreen setup.
+			auto scaleFactor = (int)juce::Desktop::getInstance().getGlobalScaleFactor();
+			auto bounds = plugin->controlPanel->getScreenBounds();
+			rect.right = short(bounds.getWidth() * scaleFactor);
+			rect.bottom = short(bounds.getHeight() * scaleFactor);
 			*(ERect **)ptr = &rect;
 			return 1;
 		}
@@ -206,7 +222,9 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 #else
 			const juce::MessageManagerLock mmLock;
 #endif
-			plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController);
+			if (!plugin->controlPanel) {
+				plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController);
+			}
 			plugin->controlPanel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ptr);
 #if JUCE_LINUX || JUCE_BSD
 			auto display = juce::XWindowSystem::getInstance()->getDisplay();
