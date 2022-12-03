@@ -273,7 +273,7 @@ private:
 class MouseDownControl : public juce::Component {
 public:
 	using Handler = std::function<void(const juce::MouseEvent&)>;
-	MouseDownControl(Handler handler) : handler_(handler) {}
+	explicit MouseDownControl(Handler handler) : handler_(std::move(handler)) {}
 	void mouseDown(const juce::MouseEvent &event) override { handler_(event); }
 	Handler handler_;
 };
