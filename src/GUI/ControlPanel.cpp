@@ -292,15 +292,17 @@ struct ControlPanel::Impl final
 		controlPanel->addAndMakeVisible(background.get());
 		controlPanel->setSize(background->getWidth(), background->getHeight());
 		components_.push_back(std::move(background));
-		
-		auto clickArea = std::make_unique<MouseDownControl>([this](auto &event) {
-			if (event.mods.isPopupMenu()) {
-				showPopupMenu();
-			}
-		});
-		clickArea->setSize(controlPanel->getWidth(), controlPanel->getHeight());
-		controlPanel->addAndMakeVisible(clickArea.get());
-		components_.push_back(std::move(clickArea));
+
+		if (isPlugin) {
+			auto clickArea = std::make_unique<MouseDownControl>([this](auto &event) {
+				if (event.mods.isPopupMenu()) {
+					showPopupMenu();
+				}
+			});
+			clickArea->setSize(controlPanel->getWidth(), controlPanel->getHeight());
+			controlPanel->addAndMakeVisible(clickArea.get());
+			components_.push_back(std::move(clickArea));
+		}
 
 		for (int i = 0; i < kAmsynthParameterCount; i++) {
 			auto &parameter = presetController_->getCurrentPreset().getParameter(i);
