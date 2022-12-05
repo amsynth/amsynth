@@ -223,7 +223,7 @@ endif
 if BUILD_GUI
 noinst_LTLIBRARIES += libjuce.la
 libjuce_la_CPPFLAGS = @GTK_CFLAGS@ \
-	-I$(HOME)/JUCE/modules \
+	-I$(top_srcdir)/vendor/JUCE/modules \
 	-DJUCE_INCLUDE_PNGLIB_CODE=1 \
 	-DJUCE_INCLUDE_JPEGLIB_CODE=1 \
 	-DJUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1 \
@@ -236,11 +236,11 @@ libjuce_la_CPPFLAGS = @GTK_CFLAGS@ \
 	-DPNG_NO_CONFIG_H=1 \
 	-DPKGDATADIR='"$(pkgdatadir)"'
 libjuce_la_SOURCES = \
-	$(HOME)/JUCE/modules/juce_core/juce_core.cpp \
-	$(HOME)/JUCE/modules/juce_data_structures/juce_data_structures.cpp \
-	$(HOME)/JUCE/modules/juce_events/juce_events.cpp \
-	$(HOME)/JUCE/modules/juce_graphics/juce_graphics.cpp \
-	$(HOME)/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp \
+	vendor/JUCE/modules/juce_core/juce_core.cpp \
+	vendor/JUCE/modules/juce_data_structures/juce_data_structures.cpp \
+	vendor/JUCE/modules/juce_events/juce_events.cpp \
+	vendor/JUCE/modules/juce_graphics/juce_graphics.cpp \
+	vendor/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp \
 	src/GUI/ControlPanel.cpp \
 	src/GUI/ControlPanel.h
 libjuce_la_LIBADD = -lcurl -ldl -lpng -lz
