@@ -1,7 +1,7 @@
 /*
- *  amsynth_lv2_ui_gtk.c
+ *  amsynth_lv2_x11.c
  *
- *  Copyright (c) 2001-2021 Nick Dowell
+ *  Copyright (c) 2001-2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -24,28 +24,29 @@
 #include "amsynth_lv2.h"
 
 #include "controls.h"
-#include "GUI/editor_pane.h"
 #include "Preset.h"
 #include "Synthesizer.h"
 
-// works around an issue in qtractor version <= 0.5.6
-// http://sourceforge.net/p/qtractor/tickets/19/
-#define CALL_LV2UI_WRITE_FUNCTION_ON_IDLE 1
+#define JUCE_GUI_BASICS_INCLUDE_XHEADERS 1
+#include "GUI/ControlPanel.h"
+// Must be included after juce_core
+#include <juce_audio_plugin_client/utility/juce_LinuxMessageThread.h>
+#include <cstring>
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef struct {
-	GtkWidget *_widget;
-	GtkAdjustment *_adjustments[kAmsynthParameterCount];
-#if CALL_LV2UI_WRITE_FUNCTION_ON_IDLE
-	gboolean _adjustment_changed[kAmsynthParameterCount];
-#endif
-	gboolean _dont_send_control_changes;
+struct lv2_ui {
+	PresetController presetController;
+	juce::ScopedJuceInitialiser_GUI libraryInitialiser;
+	juce::SharedResourcePointer<juce::MessageThread> messageThread;
+	std::unique_ptr<ControlPanel> controlPanel;
+	LV2UI_Widget parent;
+
 	LV2_Atom_Forge forge;
 	LV2_URID_Map *map;
 	LV2UI_Write_Function _write_function;
 	LV2UI_Controller _controller;
-	guint _timeout_id;
 
 	struct {
 		LV2_URID atom_Float;
@@ -62,29 +63,7 @@ typedef struct {
 		LV2_URID patch_property;
 		LV2_URID patch_value;
 	} uris;
-} lv2_ui;
-
-static void on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data);
-
-#if CALL_LV2UI_WRITE_FUNCTION_ON_IDLE
-static gboolean lv2_ui_on_idle(gpointer data)
-{
-	lv2_ui *ui = (lv2_ui *) data;
-	if (!ui->_write_function)
-		return TRUE;
-
-	size_t i; for (i = 0; i<kAmsynthParameterCount; i++) {
-		if (ui->_adjustment_changed[i] && ui->_adjustments[i]) {
-			float value = gtk_adjustment_get_value(ui->_adjustments[i]);
-			ui->_write_function(ui->_controller,
-				PORT_FIRST_PARAMETER + i,
-				sizeof(float), 0, &value);
-		}
-	}
-
-	return TRUE;
-}
-#endif
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -140,14 +119,21 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 				   LV2UI_Widget*                   widget,
 				   const LV2_Feature* const*       features)
 {
-	lv2_ui *ui = (lv2_ui *) g_malloc0 (sizeof(lv2_ui));
+	auto ui = new lv2_ui;
 
-	const char *missing = lv2_features_query(
-			features,
-			LV2_URID__map, &ui->map, true,
-			NULL);
-	if (missing) {
-		free(ui);
+	LV2UI_Resize resize {nullptr, nullptr};
+
+	for (auto f = features; *f; f++) {
+		if (!strcmp((*f)->URI, LV2_UI__parent))
+			ui->parent = reinterpret_cast<LV2UI_Widget>((*f)->data);
+		if (!strcmp((*f)->URI, LV2_URID__map))
+			ui->map = reinterpret_cast<LV2_URID_Map *>((*f)->data);
+		if (!strcmp((*f)->URI, LV2_UI__resize))
+			memcpy(&resize, (*f)->data, sizeof resize);
+	}
+
+	if (!ui->map) {
+		delete ui;
 		return nullptr;
 	}
 
@@ -170,37 +156,29 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 
 	lv2_atom_forge_init(&ui->forge, ui->map);
 
-	size_t i; for (i=0; i<kAmsynthParameterCount; i++) {
-		gdouble value = 0, lower = 0, upper = 0, step_increment = 0;
-		get_parameter_properties(i, &lower, &upper, &value, &step_increment);
-		ui->_adjustments[i] = (GtkAdjustment *)gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);
-		g_object_ref_sink(ui->_adjustments[i]); // assumes ownership of the floating reference
-		g_signal_connect(ui->_adjustments[i], "value-changed", (GCallback)&on_adjustment_value_changed, ui);
+	int scaleFactor = 2; // FIXME
+
+	juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
+	juce::Desktop::getInstance().setGlobalScaleFactor(scaleFactor);
+	ui->controlPanel = std::make_unique<ControlPanel>(&ui->presetController);
+	ui->controlPanel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ui->parent);
+	ui->controlPanel->setVisible(true);
+	if (resize.ui_resize) {
+		auto bounds = ui->controlPanel->getScreenBounds();
+		resize.ui_resize(resize.handle, bounds.getWidth() * scaleFactor, bounds.getHeight() * scaleFactor);
 	}
-
-	ui->_widget = editor_pane_new(new SynthesizerStub(ui), ui->_adjustments, TRUE, DEFAULT_SCALING);
-
-	*widget = ui->_widget;
-
-#if CALL_LV2UI_WRITE_FUNCTION_ON_IDLE
-    ui->_timeout_id = g_timeout_add_full(G_PRIORITY_LOW, 1000/60, (GSourceFunc)&lv2_ui_on_idle, ui, nullptr);
-#endif
-
+	*widget = ui->controlPanel->getWindowHandle();
 	return ui;
 }
 
 static void
 lv2_ui_cleanup(LV2UI_Handle ui)
 {
-#if CALL_LV2UI_WRITE_FUNCTION_ON_IDLE
-	g_source_remove(((lv2_ui *)ui)->_timeout_id);
-#endif
-	size_t i; for (i=0; i<kAmsynthParameterCount; i++) {
-		g_object_unref (((lv2_ui *)ui)->_adjustments[i]);
-	}
-	g_free (ui);
+	juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
+	delete reinterpret_cast<lv2_ui *>(ui);
 }
 
+#ifdef GTK
 static void
 on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
 {
@@ -224,6 +202,7 @@ on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
 		}
 	}
 }
+#endif
 
 static void
 lv2_ui_port_event(LV2UI_Handle ui,
@@ -232,6 +211,7 @@ lv2_ui_port_event(LV2UI_Handle ui,
 				  uint32_t     format,
 				  const void*  buffer)
 {
+#ifdef GTK
 	int parameter_index = port_index - PORT_FIRST_PARAMETER;
 	if (parameter_index < 0 || parameter_index >= kAmsynthParameterCount)
 		return;
@@ -243,19 +223,20 @@ lv2_ui_port_event(LV2UI_Handle ui,
 	((lv2_ui *)ui)->_adjustment_changed[parameter_index] = FALSE;
 #endif
 	((lv2_ui *)ui)->_dont_send_control_changes = FALSE;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void modal_midi_learn(Param param_index)
-{
-}
+bool isPlugin = true;
+
+extern "C" void modal_midi_learn(Param param_index) {}
 
 ////////////////////////////////////////////////////////////////////////////////
 
 static const
 LV2UI_Descriptor descriptor = {
-	"http://code.google.com/p/amsynth/amsynth/ui/gtk",
+	"http://code.google.com/p/amsynth/amsynth/x11ui",
 	&lv2_ui_instantiate,
 	&lv2_ui_cleanup,
 	&lv2_ui_port_event,
