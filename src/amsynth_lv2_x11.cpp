@@ -32,6 +32,7 @@
 
 #include <cstring>
 #include <memory>
+#include <utility>
 
 namespace juce {
 // Implemented in juce_linux_Messaging.cpp
@@ -40,10 +41,34 @@ namespace juce {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+struct ParameterListener final : public UpdateListener {
+	ParameterListener(PresetController *presetController, std::function<void(int, float)> writeFunc)
+	: presetController(presetController), writeFunc(std::move(writeFunc)) {
+		presetController->getCurrentPreset().AddListenerToAll(this);
+		active = true;
+	}
+
+	~ParameterListener() final {
+		for (int i = 0; i < kAmsynthParameterCount; i++) {
+			presetController->getCurrentPreset().getParameter(i).removeUpdateListener(this);
+		}
+	}
+
+	void UpdateParameter(Param param, float controlValue) override {
+		if (!active) return;
+		writeFunc(param, presetController->getCurrentPreset().getParameter(param).getValue());
+	}
+
+	PresetController *presetController;
+	std::function<void(int, float)> writeFunc;
+	bool active{false};
+};
+
 struct lv2_ui {
 	PresetController presetController;
 	juce::ScopedJuceInitialiser_GUI libraryInitialiser;
 	std::unique_ptr<ControlPanel> controlPanel;
+	std::unique_ptr<ParameterListener> parameterListener;
 	LV2UI_Widget parent;
 
 	LV2_Atom_Forge forge;
@@ -159,6 +184,10 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 
 	lv2_atom_forge_init(&ui->forge, ui->map);
 
+	ui->parameterListener = std::make_unique<ParameterListener>(&ui->presetController, [=](int idx, float value) {
+		write_function(controller, PORT_FIRST_PARAMETER + idx, sizeof(float), 0, &value);
+	});
+
 	int scaleFactor = 2; // FIXME
 
 	juce::Desktop::getInstance().setGlobalScaleFactor(scaleFactor);
@@ -180,32 +209,6 @@ lv2_ui_cleanup(LV2UI_Handle ui)
 	delete reinterpret_cast<lv2_ui *>(ui);
 }
 
-#ifdef GTK
-static void
-on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
-{
-	lv2_ui *ui = (lv2_ui *) user_data;
-	if (ui->_dont_send_control_changes)
-		return;
-
-	size_t i; for (i = 0; i<kAmsynthParameterCount; i++) {
-		if (adjustment == ui->_adjustments[i]) {
-#if CALL_LV2UI_WRITE_FUNCTION_ON_IDLE
-			ui->_adjustment_changed[i] = TRUE;
-#else
-			float value = gtk_adjustment_get_value(adjustment);
-			if (ui->_write_function != 0) {
-				ui->_write_function(ui->_controller,
-					PORT_FIRST_PARAMETER + i,
-					sizeof(float), 0, &value);
-			}
-#endif
-			break;
-		}
-	}
-}
-#endif
-
 static void
 lv2_ui_port_event(LV2UI_Handle ui,
 				  uint32_t     port_index,
@@ -213,19 +216,10 @@ lv2_ui_port_event(LV2UI_Handle ui,
 				  uint32_t     format,
 				  const void*  buffer)
 {
-#ifdef GTK
-	int parameter_index = port_index - PORT_FIRST_PARAMETER;
-	if (parameter_index < 0 || parameter_index >= kAmsynthParameterCount)
+	int paramId = (int)port_index - PORT_FIRST_PARAMETER;
+	if (paramId >= kAmsynthParameterCount || buffer_size != sizeof(float) || format != 0)
 		return;
-	float value = *(float *)buffer;
-	GtkAdjustment *adjustment = ((lv2_ui *)ui)->_adjustments[parameter_index];
-	((lv2_ui *)ui)->_dont_send_control_changes = TRUE;
-	gtk_adjustment_set_value(adjustment, value);
-#if CALL_LV2UI_WRITE_FUNCTION_ON_IDLE
-	((lv2_ui *)ui)->_adjustment_changed[parameter_index] = FALSE;
-#endif
-	((lv2_ui *)ui)->_dont_send_control_changes = FALSE;
-#endif
+	reinterpret_cast<lv2_ui *>(ui)->presetController.getCurrentPreset().getParameter(paramId).setValue(*(float *)buffer);
 }
 
 static int idle(LV2UI_Handle ui)
