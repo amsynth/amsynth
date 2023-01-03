@@ -19,7 +19,9 @@
 <http://code.google.com/p/amsynth/amsynth/x11ui>
     a ui:X11UI ;
     lv2:binary <amsynth_lv2_x11.so> ;
-    lv2:optionalFeature ui:noUserResize .
+    lv2:optionalFeature ui:noUserResize ;
+    lv2:requiredFeature ui:idleInterface ;
+    lv2:extensionData ui:idleInterface .
 
 <http://code.google.com/p/amsynth/amsynth#group_out>
     a pg:StereoGroup ,

@@ -29,17 +29,20 @@
 
 #define JUCE_GUI_BASICS_INCLUDE_XHEADERS 1
 #include "GUI/ControlPanel.h"
-// Must be included after juce_core
-#include <juce_audio_plugin_client/utility/juce_LinuxMessageThread.h>
+
 #include <cstring>
 #include <memory>
+
+namespace juce {
+// Implemented in juce_linux_Messaging.cpp
+	extern bool dispatchNextMessageOnSystemQueue(bool returnIfNoPendingMessages);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 
 struct lv2_ui {
 	PresetController presetController;
 	juce::ScopedJuceInitialiser_GUI libraryInitialiser;
-	juce::SharedResourcePointer<juce::MessageThread> messageThread;
 	std::unique_ptr<ControlPanel> controlPanel;
 	LV2UI_Widget parent;
 
@@ -158,7 +161,6 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 
 	int scaleFactor = 2; // FIXME
 
-	juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
 	juce::Desktop::getInstance().setGlobalScaleFactor(scaleFactor);
 	ui->controlPanel = std::make_unique<ControlPanel>(&ui->presetController);
 	ui->controlPanel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ui->parent);
@@ -174,7 +176,7 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 static void
 lv2_ui_cleanup(LV2UI_Handle ui)
 {
-	juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
+	reinterpret_cast<lv2_ui *>(ui)->controlPanel->removeFromDesktop();
 	delete reinterpret_cast<lv2_ui *>(ui);
 }
 
@@ -226,6 +228,24 @@ lv2_ui_port_event(LV2UI_Handle ui,
 #endif
 }
 
+static int idle(LV2UI_Handle ui)
+{
+	juce::dispatchNextMessageOnSystemQueue(true);
+	return 0;
+}
+
+static const void * extension_data(const char *uri)
+{
+	if (!strcmp(uri, LV2_UI__idleInterface)) {
+		static LV2UI_Idle_Interface idleInterface {
+			.idle = &idle
+		};
+		return &idleInterface;
+	}
+
+	return nullptr;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 bool isPlugin = true;
@@ -240,7 +260,7 @@ LV2UI_Descriptor descriptor = {
 	&lv2_ui_instantiate,
 	&lv2_ui_cleanup,
 	&lv2_ui_port_event,
-	nullptr
+	&extension_data,
 };
 
 LV2_SYMBOL_EXPORT
