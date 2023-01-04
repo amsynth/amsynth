@@ -281,7 +281,7 @@ public:
 struct ControlPanel::Impl final
 {
 	Impl(ControlPanel *controlPanel, PresetController *presetController)
-	: presetController_(presetController)
+	: controlPanel_(controlPanel), presetController_(presetController)
 	{
 		auto skin = Skin(ControlPanel::skinsDirectory + "/default");
 //		auto skin = Skin(ControlPanel::skinsDirectory + "/Etna");
@@ -346,10 +346,27 @@ struct ControlPanel::Impl final
 		}
 		
 		auto fileMenu = juce::PopupMenu();
-		fileMenu.addItem(gettext("Open Alternate Tuning File..."), [this]() {});
-		fileMenu.addItem(gettext("Open Alternate Keyboard Map..."), [this]() {});
-		fileMenu.addItem(gettext("Reset All Tuning Settings to Default"), [this]() {});
-		
+		if (controlPanel_->loadTuningScl) {
+			fileMenu.addItem(gettext("Open Alternate Tuning File..."), [this]() {
+				openFile(gettext("Open Scala (.scl) alternate tuning file"),
+						 "*.scl", controlPanel_->loadTuningScl);
+			});
+		}
+		if (controlPanel_->loadTuningKbm) {
+			fileMenu.addItem(gettext("Open Alternate Keyboard Map..."), [this]() {
+				openFile(gettext("Open alternate keyboard map (Scala .kbm format)"),
+						 "*.kbm", controlPanel_->loadTuningKbm);
+			});
+		}
+		if (controlPanel_->loadTuningKbm || controlPanel_->loadTuningScl) {
+			fileMenu.addItem(gettext("Reset All Tuning Settings to Default"), [this]() {
+				if (controlPanel_->loadTuningKbm)
+					controlPanel_->loadTuningKbm(nullptr);
+				if (controlPanel_->loadTuningScl)
+					controlPanel_->loadTuningScl(nullptr);
+			});
+		}
+
 		auto menu = juce::PopupMenu();
 		menu.addSubMenu(gettext("File"), fileMenu);
 		menu.addSubMenu(gettext("Preset"), presetMenu);
@@ -360,6 +377,19 @@ struct ControlPanel::Impl final
 		menu.showMenuAsync(juce::PopupMenu::Options());
 	}
 
+	static void openFile(const char *title, const char *filters, const std::function<void(const char *)> &handler) {
+		auto cwd = juce::File::getSpecialLocation(juce::File::userMusicDirectory);
+		auto chooser = new juce::FileChooser(title, cwd, filters);
+		chooser->launchAsync(juce::FileBrowserComponent::openMode, [chooser, handler](const auto &ignored) {
+			auto results = chooser->getResults();
+			if (results.isEmpty())
+				return;
+			handler(results[0].getFullPathName().toRawUTF8());
+			delete chooser;
+		});
+	}
+
+	ControlPanel *controlPanel_;
 	std::vector<std::unique_ptr<juce::Component>> components_;
 	PresetController *presetController_;
 };

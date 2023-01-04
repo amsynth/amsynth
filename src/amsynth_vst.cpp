@@ -225,6 +225,8 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			if (!plugin->controlPanel) {
 				plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController);
 			}
+			plugin->controlPanel->loadTuningKbm = [plugin](auto f) { plugin->synthesizer->loadTuningKeymap(f); };
+			plugin->controlPanel->loadTuningScl = [plugin](auto f) { plugin->synthesizer->loadTuningScale(f); };
 			plugin->controlPanel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ptr);
 #if JUCE_LINUX || JUCE_BSD
 			auto display = juce::XWindowSystem::getInstance()->getDisplay();

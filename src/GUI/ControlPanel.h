@@ -35,6 +35,9 @@ public:
 	
 	static std::string skinsDirectory;
 
+	std::function<void(const char *)> loadTuningKbm;
+	std::function<void(const char *)> loadTuningScl;
+
 private:
 	struct Impl;
 	std::unique_ptr<Impl> impl_;
