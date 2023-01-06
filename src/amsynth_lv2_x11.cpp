@@ -114,7 +114,7 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 {
 	auto ui = new lv2_ui;
 
-	LV2UI_Resize resize {nullptr, nullptr};
+	LV2UI_Resize *resize {nullptr};
 
 	for (auto f = features; *f; f++) {
 		if (!strcmp((*f)->URI, LV2_UI__parent))
@@ -122,7 +122,7 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 		if (!strcmp((*f)->URI, LV2_URID__map))
 			ui->map = reinterpret_cast<LV2_URID_Map *>((*f)->data);
 		if (!strcmp((*f)->URI, LV2_UI__resize))
-			memcpy(&resize, (*f)->data, sizeof resize);
+			resize = reinterpret_cast<LV2UI_Resize *>((*f)->data);
 	}
 
 	if (!ui->map) {
@@ -154,9 +154,9 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 	ui->controlPanel->loadTuningScl = [ui](auto f) { ui->patch_set_property(ui->uris.amsynth_scl_file, f); };
 	ui->controlPanel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ui->parent);
 	ui->controlPanel->setVisible(true);
-	if (resize.ui_resize) {
+	if (resize) {
 		auto bounds = ui->controlPanel->getScreenBounds();
-		resize.ui_resize(resize.handle, bounds.getWidth() * scaleFactor, bounds.getHeight() * scaleFactor);
+		resize->ui_resize(resize->handle, bounds.getWidth() * scaleFactor, bounds.getHeight() * scaleFactor);
 	}
 	*widget = ui->controlPanel->getWindowHandle();
 	return ui;

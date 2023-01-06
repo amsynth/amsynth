@@ -79,12 +79,13 @@ lv2_instantiate(const LV2_Descriptor *descriptor, double sample_rate, const char
 	amsynth_wrapper *a = new amsynth_wrapper;
 
 	LV2_URID_Map *urid_map = nullptr;
-	const char *missing = lv2_features_query(
-			features,
-			LV2_URID__map,        &urid_map,      true,
-			LV2_WORKER__schedule, &a->schedule,   true,
-			NULL);
-	if (missing) {
+	for (auto f = features; *f; f++) {
+		if (!strcmp((*f)->URI, LV2_URID__map))
+			urid_map = reinterpret_cast<LV2_URID_Map *>((*f)->data);
+		if (!strcmp((*f)->URI, LV2_WORKER__schedule))
+			a->schedule = reinterpret_cast<LV2_Worker_Schedule *>((*f)->data);
+	}
+	if (!urid_map) {
 		delete a;
 		return nullptr;
 	}
