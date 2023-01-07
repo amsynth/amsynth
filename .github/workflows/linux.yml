@@ -46,9 +46,9 @@ jobs:
     - name: Run gcov
       run: gcov -lp $(find . -name '*.c' -o -name '*.cpp')
       if: matrix.cc == 'gcc-11'
-    - uses: codecov/codecov-action@v2
+    - uses: codecov/codecov-action@v3
       if: matrix.cc == 'gcc-11'
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: tarball
         path: amsynth-*.tar.gz
