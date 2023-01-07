@@ -38,15 +38,7 @@ class MidiController;
 class PresetController;
 class VoiceAllocationUnit;
 
-struct ISynthesizer
-{
-    virtual int loadTuningKeymap(const char *filename) = 0;
-    virtual int loadTuningScale(const char *filename) = 0;
-    
-    virtual ~ISynthesizer() {}
-};
-
-class Synthesizer : ISynthesizer
+class Synthesizer
 {
 public:
     
@@ -81,8 +73,8 @@ public:
 	unsigned char getMidiChannel();
 	void setMidiChannel(unsigned char);
 
-	int loadTuningKeymap(const char *filename) override;
-	int loadTuningScale(const char *filename) override;
+	int loadTuningKeymap(const char *filename);
+	int loadTuningScale(const char *filename);
 
 	void setSampleRate(int sampleRate);
 
