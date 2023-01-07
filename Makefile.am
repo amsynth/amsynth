@@ -175,30 +175,6 @@ noinst_LTLIBRARIES =
 plugin_LDFLAGS = -avoid-version -module -disable-static
 
 #
-# DSSI
-#
-
-if BUILD_DSSI
-
-dssidir = $(libdir)/dssi
-noinst_LTLIBRARIES += amsynth_dssi.la
-amsynth_dssi_la_SOURCES = src/amsynth_dssi.cpp src/amsynth_dssi.h $(libcore_sources) $(libdsp_sources)
-amsynth_dssi_la_CPPFLAGS = $(AM_CPPFLAGS) @DSSI_CFLAGS@
-amsynth_dssi_la_LDFLAGS = -rpath $(dssidir) -avoid-version -module -export-symbols-regex "dssi_descriptor" -disable-static
-
-endif
-
-if BUILD_DSSI_GUI
-
-noinst_PROGRAMS = amsynth_dssi_gtk
-amsynth_dssi_gtk_SOURCES = src/amsynth_dssi_gtk.cpp $(libcore_sources) $(libgui_sources)
-amsynth_dssi_gtk_CPPFLAGS = $(AM_CPPFLAGS) @DSSI_CFLAGS@ @GTK_CFLAGS@ @LIBLO_CFLAGS@
-amsynth_dssi_gtk_LDADD = @DSSI_LIBS@ @GTK_LIBS@ @LIBLO_LIBS@ -lstdc++ -lX11
-
-endif
-
-
-#
 # LV2
 #
 
@@ -282,7 +258,6 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 appdatadir = $(datadir)/appdata
 appdata_in_files = data/amsynth.appdata.xml.in
-appdata_in_files += data/dssi-amsynth-plugin.metainfo.xml.in
 appdata_in_files += data/lv2-amsynth-plugin.metainfo.xml.in
 appdata_in_files += data/vst-amsynth-plugin.metainfo.xml.in
 appdata_DATA = $(appdata_in_files:.xml.in=.xml)
@@ -337,16 +312,6 @@ if ENABLE_REALTIME
 	chown root $(DESTDIR)$(bindir)/amsynth
 	chmod   +s $(DESTDIR)$(bindir)/amsynth
 endif
-if BUILD_DSSI
-	$(INSTALL_PROGRAM_ENV) $(INSTALL) -d $(DESTDIR)$(dssidir)
-	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL) \
-		$(top_builddir)/.libs/amsynth_dssi.so $(DESTDIR)$(dssidir)/amsynth_dssi.so
-endif
-if BUILD_DSSI_GUI
-	$(INSTALL_PROGRAM_ENV) $(INSTALL) -d $(DESTDIR)$(dssidir)/amsynth_dssi
-	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL) \
-		$(top_builddir)/amsynth_dssi_gtk $(DESTDIR)$(dssidir)/amsynth_dssi/amsynth_dssi_gtk
-endif
 if BUILD_LV2
 	$(INSTALL_PROGRAM_ENV) $(INSTALL) -d $(DESTDIR)$(amsynth_lv2dir)
 	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL) \
@@ -367,12 +332,6 @@ endif
 
 uninstall-hook:
 	rm -rf $(DESTDIR)$(pkgdatadir)
-if BUILD_DSSI
-	rm  -f $(DESTDIR)$(dssidir)/amsynth_dssi.so
-endif
-if BUILD_DSSI_GUI
-	rm -rf $(DESTDIR)$(dssidir)/amsynth_dssi
-endif
 if BUILD_LV2
 	rm -rf $(DESTDIR)$(amsynth_lv2dir)
 endif
