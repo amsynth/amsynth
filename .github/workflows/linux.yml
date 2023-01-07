@@ -30,7 +30,10 @@ jobs:
       CC: ${{ matrix.cc }}
       CXX: ${{ matrix.cxx }}
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 2
+        submodules: true
     - name: Install build dependencies
       run: |
         sudo apt update
