@@ -53,10 +53,6 @@
 #include <juce_audio_plugin_client/utility/juce_LinuxMessageThread.h>
 #endif
 
-#if JUCE_LINUX || JUCE_BSD
-extern "C" int default_scaling_factor(void);
-#endif
-
 #if JUCE_MAC
 #include <dlfcn.h>
 #endif
@@ -100,6 +96,21 @@ extern std::string sFactoryBanksDirectory;
 bool isPlugin = true;
 
 #endif // WITH_GUI
+
+static float default_scaling_factor() {
+	if (auto scale = getenv("GDK_SCALE")) {
+		return (float)atoi(scale);
+	}
+
+	if (auto *xSettings = juce::XWindowSystem::getInstance()->getXSettings()) {
+		auto windowScalingFactorSetting = xSettings->getSetting(
+				juce::XWindowSystem::getWindowScalingFactorSettingName());
+		if (windowScalingFactorSetting.isValid() && windowScalingFactorSetting.integerValue > 0)
+			return (float)windowScalingFactorSetting.integerValue;
+	}
+
+	return 1.f;
+}
 
 struct Plugin final : private UpdateListener
 {

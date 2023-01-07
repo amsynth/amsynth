@@ -103,6 +103,21 @@ struct lv2_ui {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+static float default_scaling_factor() {
+	if (auto scale = getenv("GDK_SCALE")) {
+		return (float)atoi(scale);
+	}
+
+	if (auto *xSettings = juce::XWindowSystem::getInstance()->getXSettings()) {
+		auto windowScalingFactorSetting = xSettings->getSetting(
+				juce::XWindowSystem::getWindowScalingFactorSettingName());
+		if (windowScalingFactorSetting.isValid() && windowScalingFactorSetting.integerValue > 0)
+			return (float)windowScalingFactorSetting.integerValue;
+	}
+
+	return 1.f;
+}
+
 static LV2UI_Handle
 lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 				   const char*                     plugin_uri,
@@ -146,9 +161,9 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 		write_function(controller, PORT_FIRST_PARAMETER + idx, sizeof(float), 0, &value);
 	});
 
-	int scaleFactor = 2; // FIXME
-
+	auto scaleFactor = default_scaling_factor();
 	juce::Desktop::getInstance().setGlobalScaleFactor(scaleFactor);
+
 	ui->controlPanel = std::make_unique<ControlPanel>(&ui->presetController);
 	ui->controlPanel->loadTuningKbm = [ui](auto f) { ui->patch_set_property(ui->uris.amsynth_kbm_file, f); };
 	ui->controlPanel->loadTuningScl = [ui](auto f) { ui->patch_set_property(ui->uris.amsynth_scl_file, f); };
