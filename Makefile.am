@@ -172,7 +172,7 @@ endif
 #
 
 noinst_LTLIBRARIES =
-
+plugin_LDFLAGS = -avoid-version -module -disable-static
 
 #
 # DSSI
@@ -208,12 +208,12 @@ amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
 noinst_LTLIBRARIES += amsynth_lv2.la
 amsynth_lv2_la_SOURCES = src/amsynth_lv2.cpp src/amsynth_lv2.h $(libcore_sources) $(libdsp_sources)
 amsynth_lv2_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@
-amsynth_lv2_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2_descriptor" -disable-static
+amsynth_lv2_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-symbols-regex "lv2_descriptor"
 
 noinst_LTLIBRARIES += amsynth_lv2_x11.la
 amsynth_lv2_x11_la_SOURCES = src/amsynth_lv2_x11.cpp $(libcore_sources)
 amsynth_lv2_x11_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@ $(libjuce_la_CPPFLAGS)
-amsynth_lv2_x11_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2ui_descriptor" -disable-static
+amsynth_lv2_x11_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-symbols-regex "lv2ui_descriptor"
 amsynth_lv2_x11_la_LIBADD = @LV2_LIBS@ libjuce.la
 
 dist_amsynth_lv2_DATA = $(wildcard data/amsynth.lv2/*.ttl)
@@ -243,7 +243,7 @@ libjuce_la_SOURCES = \
 	vendor/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp \
 	src/GUI/ControlPanel.cpp \
 	src/GUI/ControlPanel.h
-libjuce_la_LIBADD = -lcurl -ldl -lpng -lz
+libjuce_la_LIBADD = -lcurl -ldl -lfreetype -lpng -lz
 endif
 
 #
@@ -254,14 +254,10 @@ if BUILD_VST
 
 vstdir=$(libdir)/vst
 noinst_LTLIBRARIES += amsynth_vst.la
+amsynth_vst_la_CPPFLAGS = $(AM_CPPFLAGS) $(libjuce_la_CPPFLAGS)
+amsynth_vst_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(vstdir) -export-symbols-regex "VSTPluginMain|^main"
+amsynth_vst_la_LIBADD = libjuce.la
 amsynth_vst_la_SOURCES = src/amsynth_vst.cpp $(libcore_sources) $(libdsp_sources) vendor/vestige/aeffectx.h
-amsynth_vst_la_LDFLAGS = -rpath $(vstdir) -avoid-version -module -export-symbols-regex "VSTPluginMain|main"
-
-if BUILD_GUI
-amsynth_vst_la_SOURCES += $(libgui_sources)
-amsynth_vst_la_CPPFLAGS = $(AM_CPPFLAGS) @GTK_CFLAGS@ $(libjuce_la_CPPFLAGS)
-amsynth_vst_la_LIBADD = @GTK_LIBS@ libjuce.la
-endif
 
 endif
 
