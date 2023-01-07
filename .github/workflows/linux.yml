@@ -8,12 +8,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - release: 18.04
-            cc: clang-9
-            cxx: clang++-9
-          - release: 18.04
-            cc: gcc-7
-            cxx: g++-7
           # - release: 20.04
           #   cc: clang-10
           #   cxx: clang-10
