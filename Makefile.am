@@ -31,6 +31,8 @@ AM_CXXFLAGS = $(WARN_CXXFLAGS)
 
 ACLOCAL_AMFLAGS = -I m4
 
+EXTRA_DIST =
+
 SUBDIRS = po
 
 libcore_sources = \
@@ -218,8 +220,16 @@ libjuce_la_SOURCES = \
 	vendor/JUCE/modules/juce_graphics/juce_graphics.cpp \
 	vendor/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp \
 	src/GUI/ControlPanel.cpp \
-	src/GUI/ControlPanel.h
+	src/GUI/ControlPanel.h \
+	src/GUI/LayoutDescription.h
 libjuce_la_LIBADD = -lcurl -ldl -lfreetype -lpng -lz
+EXTRA_DIST += vendor/JUCE/LICENSE.md \
+	vendor/JUCE/modules/juce_audio_plugin_client/utility/juce_LinuxMessageThread.h \
+	vendor/JUCE/modules/juce_core \
+	vendor/JUCE/modules/juce_data_structures \
+	vendor/JUCE/modules/juce_events \
+	vendor/JUCE/modules/juce_graphics \
+	vendor/JUCE/modules/juce_gui_basics
 endif
 
 #
@@ -244,7 +254,7 @@ endif
 
 dist_pkgdata_DATA = data/rc
 
-EXTRA_DIST = data/icons/48x48/amsynth.png data/icons/scalable/amsynth.svg
+EXTRA_DIST += data/icons/48x48/amsynth.png data/icons/scalable/amsynth.svg
 
 appicon48dir=$(datadir)/icons/hicolor/48x48/apps
 appicon48_DATA=data/icons/48x48/amsynth.png

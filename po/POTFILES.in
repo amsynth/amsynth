@@ -1,5 +1,4 @@
 data/amsynth.appdata.xml.in
-data/dssi-amsynth-plugin.metainfo.xml.in
 data/lv2-amsynth-plugin.metainfo.xml.in
 data/vst-amsynth-plugin.metainfo.xml.in
 src/GUI/ConfigDialog.cpp
