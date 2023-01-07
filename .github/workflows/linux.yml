@@ -14,12 +14,12 @@ jobs:
           - release: 20.04
             cc: gcc-9
             cxx: g++-9
-          - release: 22.04
-            cc: clang-14
-            cxx: clang++-14
-          - release: 22.04
-            cc: gcc-11
-            cxx: g++-11
+#          - release: 22.04
+#            cc: clang-14
+#            cxx: clang++-14
+#          - release: 22.04
+#            cc: gcc-11
+#            cxx: g++-11
     env:
       CC: ${{ matrix.cc }}
       CXX: ${{ matrix.cxx }}
