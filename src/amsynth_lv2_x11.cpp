@@ -27,7 +27,6 @@
 #include "Preset.h"
 #include "Synthesizer.h"
 
-#define JUCE_GUI_BASICS_INCLUDE_XHEADERS 1
 #include "GUI/ControlPanel.h"
 #include "GUI/juce_x11.h"
 

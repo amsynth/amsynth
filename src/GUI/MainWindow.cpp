@@ -23,8 +23,6 @@
 #include "config.h"
 #endif
 
-#define JUCE_GUI_BASICS_INCLUDE_XHEADERS 1
-
 #include "MainWindow.h"
 
 #include "../AudioOutput.h"
