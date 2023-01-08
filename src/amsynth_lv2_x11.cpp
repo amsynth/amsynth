@@ -29,6 +29,7 @@
 
 #define JUCE_GUI_BASICS_INCLUDE_XHEADERS 1
 #include "GUI/ControlPanel.h"
+#include "GUI/juce_x11.h"
 
 #include <cstring>
 #include <memory>
@@ -103,21 +104,6 @@ struct lv2_ui {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static float default_scaling_factor() {
-	if (auto scale = getenv("GDK_SCALE")) {
-		return (float)atoi(scale);
-	}
-
-	if (auto *xSettings = juce::XWindowSystem::getInstance()->getXSettings()) {
-		auto windowScalingFactorSetting = xSettings->getSetting(
-				juce::XWindowSystem::getWindowScalingFactorSettingName());
-		if (windowScalingFactorSetting.isValid() && windowScalingFactorSetting.integerValue > 0)
-			return (float)windowScalingFactorSetting.integerValue;
-	}
-
-	return 1.f;
-}
-
 static LV2UI_Handle
 lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 				   const char*                     plugin_uri,
@@ -161,7 +147,7 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 		write_function(controller, PORT_FIRST_PARAMETER + idx, sizeof(float), 0, &value);
 	});
 
-	auto scaleFactor = default_scaling_factor();
+	auto scaleFactor = getGlobalScaleFactor();
 	juce::Desktop::getInstance().setGlobalScaleFactor(scaleFactor);
 
 	ui->controlPanel = std::make_unique<ControlPanel>(&ui->presetController);
@@ -171,7 +157,7 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 	ui->controlPanel->setVisible(true);
 	if (resize) {
 		auto bounds = ui->controlPanel->getScreenBounds();
-		resize->ui_resize(resize->handle, bounds.getWidth() * scaleFactor, bounds.getHeight() * scaleFactor);
+		resize->ui_resize(resize->handle, bounds.getWidth() * (int)scaleFactor, bounds.getHeight() * (int)scaleFactor);
 	}
 	*widget = ui->controlPanel->getWindowHandle();
 	return ui;

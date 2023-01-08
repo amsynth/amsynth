@@ -83,16 +83,6 @@ libdsp_sources = \
 	vendor/freeverb/tuning.h
 
 libgui_sources = \
-	src/GUI/bitmap_button.c \
-	src/GUI/bitmap_button.h \
-	src/GUI/bitmap_knob.c \
-	src/GUI/bitmap_knob.h \
-	src/GUI/bitmap_popup.c \
-	src/GUI/bitmap_popup.h \
-	src/GUI/editor_menus.cpp \
-	src/GUI/editor_menus.h \
-	src/GUI/editor_pane.c \
-	src/GUI/editor_pane.h \
 	src/GUI/gui_main.cpp \
 	src/GUI/gui_main.h \
 	vendor/seq24/controllers.h
@@ -221,6 +211,8 @@ libjuce_la_SOURCES = \
 	vendor/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp \
 	src/GUI/ControlPanel.cpp \
 	src/GUI/ControlPanel.h \
+	src/GUI/juce_x11.cpp \
+	src/GUI/juce_x11.h \
 	src/GUI/LayoutDescription.h
 libjuce_la_LIBADD = -lcurl -ldl -lfreetype -lpng -lz
 EXTRA_DIST += vendor/JUCE/LICENSE.md \

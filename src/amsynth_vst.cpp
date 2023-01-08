@@ -49,6 +49,7 @@
 #ifdef WITH_GUI
 #define JUCE_GUI_BASICS_INCLUDE_XHEADERS 1
 #include "src/GUI/ControlPanel.h"
+#include "GUI/juce_x11.h"
 // Must be included after juce_core
 #include <juce_audio_plugin_client/utility/juce_LinuxMessageThread.h>
 #endif
@@ -96,21 +97,6 @@ extern std::string sFactoryBanksDirectory;
 bool isPlugin = true;
 
 #endif // WITH_GUI
-
-static float default_scaling_factor() {
-	if (auto scale = getenv("GDK_SCALE")) {
-		return (float)atoi(scale);
-	}
-
-	if (auto *xSettings = juce::XWindowSystem::getInstance()->getXSettings()) {
-		auto windowScalingFactorSetting = xSettings->getSetting(
-				juce::XWindowSystem::getWindowScalingFactorSettingName());
-		if (windowScalingFactorSetting.isValid() && windowScalingFactorSetting.integerValue > 0)
-			return (float)windowScalingFactorSetting.integerValue;
-	}
-
-	return 1.f;
-}
 
 struct Plugin final : private UpdateListener
 {
@@ -211,11 +197,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			}
 			static ERect rect;
 #if JUCE_LINUX || JUCE_BSD
-			// This is probably a bad thing for a plugin to do in case we're in a JUCE-based host or there
-			// are other JUCE-based plugins that don't want to use this scale factor, but not scaling the UI
-			// seems to be a worse option, and JUCE doesn't automatically apply the correct scale factor if
-			// JUCEApplicationBase::isStandaloneApp() is false. Sigh.
-			juce::Desktop::getInstance().setGlobalScaleFactor((float)default_scaling_factor());
+			juce::Desktop::getInstance().setGlobalScaleFactor(getGlobalScaleFactor());
 #endif
 			// There doesn't seem to be a way to determine which screen the host wants to open a plugin on and
 			// apply the correct scale factor in a multiscreen setup.

@@ -34,21 +34,16 @@
 
 #include "ConfigDialog.h"
 #include "ControlPanel.h"
-#include "editor_pane.h"
 #include "gui_main.h"
+#include "juce_x11.h"
 #include "MainMenu.h"
 #include "MIDILearnDialog.h"
 #include "PresetControllerView.h"
 
+#include <cassert>
 #include <cmath>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-
-#include <juce_events/juce_events.h>
-#include <juce_gui_basics/juce_gui_basics.h>
-// Must be included after juce_core
-#include <juce_audio_plugin_client/utility/juce_LinuxMessageThread.h>
-#include <cassert>
 
 static MIDILearnDialog *midiLearnDialog;
 
@@ -112,10 +107,10 @@ struct MainWindow : public UpdateListener
 		assert(hostWindow);
 
 		auto panel = new ControlPanel(presetController);
-		auto scaleFactor = (float)default_scaling_factor();
+		auto scaleFactor = getGlobalScaleFactor();
 		juce::Desktop::getInstance().setGlobalScaleFactor(scaleFactor);
 		auto bounds = panel->getScreenBounds();
-		gtk_widget_set_size_request(embed, bounds.getWidth() * scaleFactor, bounds.getHeight() * scaleFactor);
+		gtk_widget_set_size_request(embed, bounds.getWidth() * (gint)scaleFactor, bounds.getHeight() * (gint)scaleFactor);
 		panel->setVisible(false);
 		panel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, hostWindow);
 		auto display = juce::XWindowSystem::getInstance()->getDisplay();
@@ -306,7 +301,7 @@ main_window_show(Synthesizer *synthesizer, GenericOutput *audio, int scaling_fac
 	gtk_widget_show_all(main_window_new(synthesizer, audio, scaling_factor));
 }
 
-void
+extern "C" void
 modal_midi_learn(Param param_index) // called by editor_pane upon right-clicking a control
 {
 	midiLearnDialog->run_modal(param_index);
