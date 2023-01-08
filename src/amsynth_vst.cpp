@@ -50,8 +50,13 @@
 #define JUCE_GUI_BASICS_INCLUDE_XHEADERS 1
 #include "src/GUI/ControlPanel.h"
 #include "GUI/juce_x11.h"
-// Must be included after juce_core
-#include <juce_audio_plugin_client/utility/juce_LinuxMessageThread.h>
+
+#if JUCE_LINUX || JUCE_BSD || JUCE_WINDOWS
+namespace juce {
+// Implemented in juce_linux_Messaging.cpp
+	extern bool dispatchNextMessageOnSystemQueue(bool returnIfNoPendingMessages);
+}
+#endif
 #endif
 
 #if JUCE_MAC
@@ -132,9 +137,6 @@ struct Plugin final : private UpdateListener
 
 #ifdef WITH_GUI
 	juce::ScopedJuceInitialiser_GUI libraryInitialiser;
-#if JUCE_LINUX || JUCE_BSD
-	juce::SharedResourcePointer<juce::MessageThread> messageThread;
-#endif
 	std::unique_ptr<ControlPanel> controlPanel;
 #endif
 };
@@ -210,47 +212,25 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 		}
 
 		case effEditOpen: {
-#if JUCE_LINUX || JUCE_BSD
-			juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
-#else
-			const juce::MessageManagerLock mmLock;
-#endif
 			if (!plugin->controlPanel) {
 				plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController);
 			}
 			plugin->controlPanel->loadTuningKbm = [plugin](auto f) { plugin->synthesizer->loadTuningKeymap(f); };
 			plugin->controlPanel->loadTuningScl = [plugin](auto f) { plugin->synthesizer->loadTuningScale(f); };
 			plugin->controlPanel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ptr);
-#if JUCE_LINUX || JUCE_BSD
-			auto display = juce::XWindowSystem::getInstance()->getDisplay();
-			juce::X11Symbols::getInstance()->xReparentWindow(display,
-				(::Window)plugin->controlPanel->getWindowHandle(),
-				(::Window)ptr,
-				0, 0);
-			// The host is likely to attempt to move/resize the window directly after this call,
-			// and we need to ensure that the X server knows that our window has been attached
-			// before that happens.
-			juce::X11Symbols::getInstance()->xFlush(display);
-#endif
 			plugin->controlPanel->setVisible(true);
 			return 1;
 		}
 
 		case effEditClose: {
-#if JUCE_LINUX || JUCE_BSD
-			juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
-#else
-			const juce::MessageManagerLock mmLock;
-#endif
 			plugin->controlPanel->removeFromDesktop();
 			plugin->controlPanel.reset();
 			return 0;
 		}
 
 		case effEditIdle: {
-#if JUCE_LINUX || JUCE_BSD
-			juce::SharedResourcePointer<juce::HostDrivenEventLoop> hostDrivenEventLoop;
-			hostDrivenEventLoop->processPendingEvents();
+#if JUCE_LINUX || JUCE_BSD || JUCE_WINDOWS
+			juce::dispatchNextMessageOnSystemQueue(true);
 #endif
 			return 0;
 		}

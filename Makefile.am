@@ -216,7 +216,6 @@ libjuce_la_SOURCES = \
 	src/GUI/LayoutDescription.h
 libjuce_la_LIBADD = -lcurl -ldl -lfreetype -lpng -lz
 EXTRA_DIST += vendor/JUCE/LICENSE.md \
-	vendor/JUCE/modules/juce_audio_plugin_client/utility/juce_LinuxMessageThread.h \
 	vendor/JUCE/modules/juce_core \
 	vendor/JUCE/modules/juce_data_structures \
 	vendor/JUCE/modules/juce_events \
