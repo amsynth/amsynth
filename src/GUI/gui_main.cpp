@@ -25,36 +25,25 @@
 
 #include "gui_main.h"
 
-#include <gtk/gtk.h>
+#include "juce_x11.h"
 
-#if defined(__linux)
-#include <X11/Xlib.h>
-#endif
+#include <gtk/gtk.h>
 
 static char **_argv = nullptr;
 
 void gui_kit_init(int *argc, char ***argv)
 {
-#if defined(__linux)
-	// Because JUCE uses a separate messaging thread.
-	XInitThreads();
-#endif
 	_argv = g_strdupv(*argv);
 	gtk_init(argc, argv);
 	gtk_window_set_default_icon_name("amsynth");
+	juceInit();
 }
 
-#if defined(__linux)
-namespace juce {
-// Implemented in juce_linux_Messaging.cpp
-	extern bool dispatchNextMessageOnSystemQueue(bool returnIfNoPendingMessages);
-}
 static gboolean on_idle(gpointer user_data)
 {
-	juce::dispatchNextMessageOnSystemQueue(true);
+	juceIdle();
 	return G_SOURCE_CONTINUE;
 }
-#endif
 
 void gui_kit_run(unsigned (*timer_callback)(void *))
 {

@@ -35,11 +35,6 @@
 #include <memory>
 #include <utility>
 
-namespace juce {
-// Implemented in juce_linux_Messaging.cpp
-	extern bool dispatchNextMessageOnSystemQueue(bool returnIfNoPendingMessages);
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 
 struct ParameterListener final : public UpdateListener {
@@ -147,9 +142,7 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 		write_function(controller, PORT_FIRST_PARAMETER + idx, sizeof(float), 0, &value);
 	});
 
-	auto scaleFactor = getGlobalScaleFactor();
-	juce::Desktop::getInstance().setGlobalScaleFactor(scaleFactor);
-
+	juceInit();
 	ui->controlPanel = std::make_unique<ControlPanel>(&ui->presetController);
 	ui->controlPanel->loadTuningKbm = [ui](auto f) { ui->patch_set_property(ui->uris.amsynth_kbm_file, f); };
 	ui->controlPanel->loadTuningScl = [ui](auto f) { ui->patch_set_property(ui->uris.amsynth_scl_file, f); };
@@ -157,6 +150,7 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 	ui->controlPanel->setVisible(true);
 	if (resize) {
 		auto bounds = ui->controlPanel->getScreenBounds();
+		auto scaleFactor = (int)juce::Desktop::getInstance().getGlobalScaleFactor();
 		resize->ui_resize(resize->handle, bounds.getWidth() * (int)scaleFactor, bounds.getHeight() * (int)scaleFactor);
 	}
 	*widget = ui->controlPanel->getWindowHandle();
@@ -185,7 +179,7 @@ lv2_ui_port_event(LV2UI_Handle ui,
 
 static int idle(LV2UI_Handle ui)
 {
-	juce::dispatchNextMessageOnSystemQueue(true);
+	juceIdle();
 	return 0;
 }
 

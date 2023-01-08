@@ -106,15 +106,13 @@ struct MainWindow : public UpdateListener
 		auto hostWindow = (void *)(uintptr_t)gtk_socket_get_id(GTK_SOCKET(embed));
 		assert(hostWindow);
 
-		auto panel = new ControlPanel(presetController);
-		auto scaleFactor = getGlobalScaleFactor();
-		juce::Desktop::getInstance().setGlobalScaleFactor(scaleFactor);
 
 		auto panel = new ControlPanel(presetController);
 		panel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, hostWindow);
 		panel->setVisible(true);
 		auto bounds = panel->getScreenBounds();
-		gtk_widget_set_size_request(embed, bounds.getWidth() * (gint)scaleFactor, bounds.getHeight() * (gint)scaleFactor);
+		auto scaleFactor = (gint)juce::Desktop::getInstance().getGlobalScaleFactor();
+		gtk_widget_set_size_request(embed, bounds.getWidth() * scaleFactor, bounds.getHeight() * scaleFactor);
 	}
 
 	void updateTitle()

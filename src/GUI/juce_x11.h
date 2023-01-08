@@ -1,3 +1,5 @@
 #pragma once
 
-float getGlobalScaleFactor();
+void juceInit();
+
+void juceIdle();

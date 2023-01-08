@@ -50,13 +50,6 @@
 #define JUCE_GUI_BASICS_INCLUDE_XHEADERS 1
 #include "src/GUI/ControlPanel.h"
 #include "GUI/juce_x11.h"
-
-#if JUCE_LINUX || JUCE_BSD || JUCE_WINDOWS
-namespace juce {
-// Implemented in juce_linux_Messaging.cpp
-	extern bool dispatchNextMessageOnSystemQueue(bool returnIfNoPendingMessages);
-}
-#endif
 #endif
 
 #if JUCE_MAC
@@ -136,7 +129,6 @@ struct Plugin final : private UpdateListener
 	std::string presetName;
 
 #ifdef WITH_GUI
-	juce::ScopedJuceInitialiser_GUI libraryInitialiser;
 	std::unique_ptr<ControlPanel> controlPanel;
 #endif
 };
@@ -194,13 +186,11 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 
 #ifdef WITH_GUI
 		case effEditGetRect: {
+			juceInit();
 			if (!plugin->controlPanel) {
 				plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController);
 			}
 			static ERect rect;
-#if JUCE_LINUX || JUCE_BSD
-			juce::Desktop::getInstance().setGlobalScaleFactor(getGlobalScaleFactor());
-#endif
 			// There doesn't seem to be a way to determine which screen the host wants to open a plugin on and
 			// apply the correct scale factor in a multiscreen setup.
 			auto scaleFactor = (int)juce::Desktop::getInstance().getGlobalScaleFactor();
@@ -229,9 +219,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 		}
 
 		case effEditIdle: {
-#if JUCE_LINUX || JUCE_BSD || JUCE_WINDOWS
-			juce::dispatchNextMessageOnSystemQueue(true);
-#endif
+			juceIdle();
 			return 0;
 		}
 #endif
