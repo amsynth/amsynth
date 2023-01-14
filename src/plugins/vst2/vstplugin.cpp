@@ -65,8 +65,6 @@ struct ERect
 
 #define MIDI_BUFFER_SIZE 4096
 
-static char hostProductString[64] = "";
-
 class HostCall
 {
 public:
@@ -394,9 +392,6 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 {
 	HostCall hostCall;
 	initialize();
-	if (audioMaster) {
-		audioMaster(nullptr, audioMasterGetProductString, 0, 0, hostProductString, 0.0f);
-	}
 	AEffect *effect = (AEffect *)calloc(1, sizeof(AEffect));
 	effect->magic = kEffectMagic;
 	effect->dispatcher = dispatcher;
