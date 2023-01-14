@@ -33,7 +33,8 @@ EXTRA_DIST = data \
 	vendor/JUCE/modules/juce_data_structures \
 	vendor/JUCE/modules/juce_events \
 	vendor/JUCE/modules/juce_graphics \
-	vendor/JUCE/modules/juce_gui_basics
+	vendor/JUCE/modules/juce_gui_basics \
+	vendor/vestige
 
 AM_CPPFLAGS += \
 	-I$(top_srcdir)/vendor/JUCE/modules \
