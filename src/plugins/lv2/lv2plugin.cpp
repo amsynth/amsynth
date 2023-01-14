@@ -286,8 +286,6 @@ lv2_extension_data(const char *uri)
 	return nullptr;
 }
 
-bool isPlugin = true; // FIXME: this shouldn't really be required when no gui code is used
-
 static const LV2_Descriptor amsynth1_descriptor = {
 	AMSYNTH_LV2_URI,
 	&lv2_instantiate,

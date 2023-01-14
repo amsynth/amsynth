@@ -200,17 +200,24 @@ plugin_LDFLAGS = -avoid-version -module -disable-static
 if BUILD_LV2
 
 amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
+
+# This links directly to .libs/libcore.a to avoid libtool's --whole-archive behaviour
+# which is inappropriate for these targets - we don't want to include gui code in the
+# plug-in, and don't want to include dsp code in the ui.
+
 noinst_LTLIBRARIES += amsynth_lv2.la
-amsynth_lv2_la_SOURCES = src/plugins/lv2/lv2plugin.cpp src/plugins/lv2/lv2plugin.h
 amsynth_lv2_la_CXXFLAGS = @LV2_CFLAGS@
+amsynth_lv2_la_DEPENDENCIES = libcore.la
 amsynth_lv2_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-symbols-regex "lv2_descriptor"
-amsynth_lv2_la_LIBADD = @LV2_LIBS@ libcore.la
+amsynth_lv2_la_LIBADD = @LV2_LIBS@ .libs/libcore.a
+amsynth_lv2_la_SOURCES = src/plugins/lv2/lv2plugin.cpp src/plugins/lv2/lv2plugin.h
 
 noinst_LTLIBRARIES += amsynth_lv2_x11.la
-amsynth_lv2_x11_la_SOURCES = src/plugins/lv2/lv2ui.cpp $(libcore_sources)
 amsynth_lv2_x11_la_CXXFLAGS = @LV2_CFLAGS@
+amsynth_lv2_x11_la_DEPENDENCIES = libcore.la
 amsynth_lv2_x11_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-symbols-regex "lv2ui_descriptor"
-amsynth_lv2_x11_la_LIBADD = @LV2_LIBS@ libcore.la
+amsynth_lv2_x11_la_LIBADD = @LV2_LIBS@ .libs/libcore.a $(libcore_la_LIBADD)
+amsynth_lv2_x11_la_SOURCES = src/plugins/lv2/lv2ui.cpp
 
 dist_amsynth_lv2_DATA = $(wildcard data/amsynth.lv2/*.ttl)
 
