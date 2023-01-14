@@ -206,12 +206,12 @@ amsynth_lv2_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-symb
 amsynth_lv2_la_LIBADD = @LV2_LIBS@ .libs/libcore.a
 amsynth_lv2_la_SOURCES = src/plugins/lv2/lv2plugin.cpp src/plugins/lv2/lv2plugin.h
 
-noinst_LTLIBRARIES += amsynth_lv2_x11.la
-amsynth_lv2_x11_la_CXXFLAGS = @LV2_CFLAGS@
-amsynth_lv2_x11_la_DEPENDENCIES = libcore.la
-amsynth_lv2_x11_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-symbols-regex "lv2ui_descriptor"
-amsynth_lv2_x11_la_LIBADD = @LV2_LIBS@ .libs/libcore.a $(libcore_la_LIBADD)
-amsynth_lv2_x11_la_SOURCES = src/plugins/lv2/lv2ui.cpp
+noinst_LTLIBRARIES += amsynth_lv2ui.la
+amsynth_lv2ui_la_CXXFLAGS = @LV2_CFLAGS@
+amsynth_lv2ui_la_DEPENDENCIES = libcore.la
+amsynth_lv2ui_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-symbols-regex "lv2ui_descriptor"
+amsynth_lv2ui_la_LIBADD = @LV2_LIBS@ .libs/libcore.a $(libcore_la_LIBADD)
+amsynth_lv2ui_la_SOURCES = src/plugins/lv2/lv2ui.cpp
 
 dist_amsynth_lv2_DATA = $(wildcard data/amsynth.lv2/*.ttl)
 
@@ -313,7 +313,7 @@ if BUILD_LV2
 	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL) \
 		$(top_builddir)/.libs/amsynth_lv2.so $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2.so
 	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL) \
-		$(top_builddir)/.libs/amsynth_lv2_x11.so $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2_x11.so
+		$(top_builddir)/.libs/amsynth_lv2ui.so $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2ui.so
 endif
 if BUILD_VST
 	$(INSTALL_PROGRAM_ENV) $(INSTALL) -d $(DESTDIR)$(vstdir)
