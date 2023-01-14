@@ -25,7 +25,7 @@ AC_INIT([amsynth], [1.13.0],
         [amsynth],
         [https://github.com/amsynth/amsynth])
 
-AC_CONFIG_SRCDIR([src/main.cpp])
+AC_CONFIG_SRCDIR([src/app/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -71,7 +71,8 @@ dnl Although amsynth does not use pthread directly, it seems to be necessary to 
 dnl against it with GCC 10.x
 AC_CHECK_LIB(pthread, pthread_create, [], exit)
 
-AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])])
+AS_IF([test "x$with_gui" != "xno"], [PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])])
+AS_IF([test "x$with_gui" != "xno"], [PKG_CHECK_MODULES([JUCE], [freetype2 libpng x11 zlib])])
 
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
