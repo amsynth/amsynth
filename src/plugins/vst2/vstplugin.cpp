@@ -79,10 +79,6 @@ private:
 
 thread_local int HostCall::count_ = 0;
 
-#if defined(DEBUG) && DEBUG
-static FILE *logFile;
-#endif
-
 constexpr size_t kPresetsPerBank = sizeof(BankInfo::presets) / sizeof(BankInfo::presets[0]);
 
 #ifdef WITH_GUI
@@ -310,10 +306,6 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 				strcmp("receiveVstSysexEvent", (char *)ptr) == 0 ||
 				strcmp("sendVstMidiEvent", (char *)ptr) == 0 ||
 				false) return 0;
-#if defined(DEBUG) && DEBUG
-			fprintf(logFile, "[amsynth_vst] unhandled canDo: %s\n", (char *)ptr);
-			fflush(logFile);
-#endif
 			return 0;
 
 		case effGetTailSize:
@@ -333,10 +325,6 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			return 0;
 
 		default:
-#if defined(DEBUG) && DEBUG
-			fprintf(logFile, "[amsynth_vst] unhandled VST opcode: %d\n", opcode);
-			fflush(logFile);
-#endif
 			return 0;
 	}
 }
@@ -406,11 +394,6 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 {
 	HostCall hostCall;
 	initialize();
-#if defined(DEBUG) && DEBUG
-	if (!logFile) {
-		logFile = fopen("/tmp/amsynth.log", "a");
-	}
-#endif
 	if (audioMaster) {
 		audioMaster(nullptr, audioMasterGetProductString, 0, 0, hostProductString, 0.0f);
 	}
