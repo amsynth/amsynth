@@ -48,10 +48,6 @@
 #include "nsm/NsmHandler.h"
 #endif
 
-#if defined(__APPLE__) && __APPLE__
-#include "drivers/CoreAudio.h"
-#endif
-
 #include <iostream>
 #include <fcntl.h>
 #include <fstream>
@@ -88,8 +84,6 @@ static void sched_realtime()
 	} else {
 		config.realtime = 1;
 	}
-#elif defined(__APPLE__)
-	// CoreAudio apps don't need realtime priority for decent performance
 #else
 #warning "sched_realtime not implemented for this OS"
 #endif
@@ -110,26 +104,6 @@ static int gui_midi_pipe[2];
 
 static GenericOutput * open_audio()
 {	
-#if defined(__APPLE__) && __APPLE__
-
-	if (config.audio_driver == "jack" ||
-		config.audio_driver == "JACK" ){
-		JackOutput *jack = new JackOutput();
-		if (jack->init() != 0) {
-			delete jack;
-			return NULL;
-		}
-		return jack;
-	}
-
-	if (config.audio_driver == "coreaudio" ||
-		config.audio_driver == "auto")
-		return CreateCoreAudioOutput();
-
-	return NULL;
-	
-#else
-
 	if (config.audio_driver == "jack" ||
 		config.audio_driver == "auto")
 	{
@@ -152,8 +126,6 @@ static GenericOutput * open_audio()
 	}
 	
 	return new AudioOutput();
-	
-#endif
 }
 
 static MidiDriver *opened_midi_driver(MidiDriver *driver)

@@ -166,13 +166,6 @@ amsynth_SOURCES += \
 amsynth_LDADD += @GTK_LIBS@
 endif
 
-if DARWIN
-amsynth_SOURCES += \
-	src/drivers/CoreAudio.cpp \
-	src/drivers/CoreAudio.h
-amsynth_LDFLAGS = $(AM_LDFLAGS) -framework CoreFoundation -framework CoreAudio -framework CoreMIDI
-endif
-
 if BUILD_NSM
 amsynth_SOURCES += \
 	src/app/nsm/NsmClient.cpp \
