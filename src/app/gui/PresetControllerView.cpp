@@ -21,9 +21,9 @@
 
 #include "PresetControllerView.h"
 
-#include "core/synth/PresetController.h"
-#include "app/main.h"
+#include "../main.h"
 #include "core/midi.h"
+#include "core/synth/PresetController.h"
 
 #include <fstream>
 #include <gdk/gdkkeysyms.h>
