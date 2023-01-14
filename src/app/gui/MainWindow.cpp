@@ -231,8 +231,6 @@ struct MainWindow : public UpdateListener
 
 	GThread *mainThread;
 	GAsyncQueue *parameterUpdateQueue;
-
-	juce::ScopedJuceInitialiser_GUI libraryInitialiser;
 };
 
 

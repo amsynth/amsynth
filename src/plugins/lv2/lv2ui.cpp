@@ -60,7 +60,6 @@ struct ParameterListener final : public UpdateListener {
 
 struct lv2_ui {
 	PresetController presetController;
-	juce::ScopedJuceInitialiser_GUI libraryInitialiser;
 	std::unique_ptr<ControlPanel> controlPanel;
 	std::unique_ptr<ParameterListener> parameterListener;
 	LV2UI_Widget parent;
