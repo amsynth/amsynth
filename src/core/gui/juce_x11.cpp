@@ -6,11 +6,11 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 
 #if JUCE_LINUX || JUCE_BSD || JUCE_WINDOWS
+
 namespace juce {
 // Implemented in juce_linux_Messaging.cpp / juce_win32_Messaging.cpp
 	extern bool dispatchNextMessageOnSystemQueue(bool returnIfNoPendingMessages);
 }
-#endif
 
 float getGlobalScaleFactor() {
 	if (auto scale = getenv("GDK_SCALE")) {
@@ -27,14 +27,20 @@ float getGlobalScaleFactor() {
 	return 1.f;
 }
 
+#endif
+
 void juceInit() {
 	static bool once;
 	if (once) return; else once = true;
 	juce::initialiseJuce_GUI();
+#if JUCE_LINUX || JUCE_BSD || JUCE_WINDOWS
 	auto scaleFactor = getGlobalScaleFactor();
 	juce::Desktop::getInstance().setGlobalScaleFactor(scaleFactor);
+#endif
 }
 
 void juceIdle() {
+#if JUCE_LINUX || JUCE_BSD || JUCE_WINDOWS
 	juce::dispatchNextMessageOnSystemQueue(true);
+#endif
 }
