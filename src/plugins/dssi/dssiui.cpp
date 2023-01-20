@@ -1,7 +1,7 @@
 /*
- *  amsynth_dssi_gtk.cpp
+ *  dssiui.cpp
  *
- *  Copyright (c) 2001-2022 Nick Dowell
+ *  Copyright (c) 2001-2023 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -19,29 +19,24 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "amsynth_dssi.h"
+#include "config.h"
+#include "core/controls.h"
+#include "core/gui/ControlPanel.h"
+#include "core/synth/Preset.h"
+#include "core/synth/Synthesizer.h"
 
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-#include <gdk/gdk.h>
-#include <gtk/gtk.h>
+#include <cassert>
+#include <cstdio>
+#include <cstdlib>
 #include <lo/lo.h>
-
-#include "controls.h"
-#include "Preset.h"
-#include "Synthesizer.h"
-#include "GUI/editor_pane.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
 #define MAX_PATH 160
 
-static GtkWindow *_window = nullptr;
-static GtkAdjustment *_adjustments[kAmsynthParameterCount] = {nullptr};
-static gboolean _dont_send_control_changes = FALSE;
+juce::TopLevelWindow *mainWindow;
+juce::String windowTitle;
+PresetController presetController;
 
 static char *_osc_path = nullptr;
 lo_server _osc_server = nullptr;
@@ -85,12 +80,6 @@ static void osc_error(int num, const char *msg, const char *path)
     fprintf(stderr, "OSC error (num = %d msg = '%s' path = '%s')\n", num, msg, path);
 }
 
-static gboolean osc_input_handler(GIOChannel *source, GIOCondition condition, gpointer data)
-{
-    lo_server_recv_noblock(_osc_server, 0);
-    return TRUE;
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // handle message sent by plugin host
@@ -103,10 +92,7 @@ static int osc_control_handler(const char *path, const char *types, lo_arg **arg
     float value = argv[1]->f;
     int port_number = argv[0]->i;
     int parameter_index = port_number - 2;
-    g_assert(parameter_index < kAmsynthParameterCount);
-    _dont_send_control_changes = TRUE;
-    gtk_adjustment_set_value(_adjustments[parameter_index], value);
-    _dont_send_control_changes = FALSE;
+    presetController.getCurrentPreset().getParameter(parameter_index).setValue(value);
     return 0;
 }
 
@@ -125,19 +111,19 @@ static int osc_program_handler(const char *path, const char *types, lo_arg **arg
 
 static int osc_show_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
 {
-    gtk_window_present(_window);
+    mainWindow->setVisible(true);
     return 0;
 }
 
 static int osc_hide_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
 {
-    gtk_widget_hide(GTK_WIDGET(_window));
+    mainWindow->setVisible(false);
     return 0;
 }
 
 static int osc_quit_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
 {
-    gtk_main_quit();
+    juce::JUCEApplication::getInstance()->systemRequestedQuit();
     return 0;
 }
 
@@ -182,36 +168,81 @@ static int host_gui_exiting()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static void on_window_deleted()
+class MainWindow : public juce::DocumentWindow
 {
-    _window = nullptr;
-    host_gui_exiting();
-    gtk_main_quit();
-}
+public:
+    MainWindow() : DocumentWindow(windowTitle, juce::Colours::lightgrey,
+                                  juce::DocumentWindow::closeButton |
+                                  juce::DocumentWindow::minimiseButton)
+    {
+        setUsingNativeTitleBar(true);
+        auto controlPanel = new ControlPanel(&presetController);
+        controlPanel->loadTuningKbm = [] (const char *file) {
+            host_configure(PROP_KBM_FILE, file);
+        };
+        controlPanel->loadTuningScl = [] (const char *file) {
+            host_configure(PROP_SCL_FILE, file);
+        };
+        setContentOwned(controlPanel, true);
+        centreWithSize(getWidth(), getHeight());
+        setResizable(false, false);
+    }
 
-static void on_adjustment_value_changed(GtkAdjustment *adjustment, gpointer user_data)
+    void closeButtonPressed() override
+    {
+        juce::JUCEApplication::getInstance()->systemRequestedQuit();
+    }
+
+private:
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainWindow)
+};
+
+////////////////////////////////////////////////////////////////////////////////
+
+class Application : public juce::JUCEApplication
 {
-    if (_dont_send_control_changes)
-        return;
-    size_t parameter_index = (size_t)user_data;
-    g_assert(parameter_index < kAmsynthParameterCount);
-    int port_number = parameter_index + 2;
-    host_set_control(port_number, gtk_adjustment_get_value(adjustment));
+public:
+    void initialise(const juce::String &commandLine) override
+    {
+        juce::LinuxEventLoop::registerFdCallback(lo_server_get_socket_fd(_osc_server), [] (int fd) {
+            lo_server_recv_noblock(_osc_server, 0);
+        });
+        mainWindow = new MainWindow();
+    }
+
+    void shutdown() override
+    {
+        host_gui_exiting();
+    }
+
+    const juce::String getApplicationName() override
+    {
+        return windowTitle;
+    }
+
+    const juce::String getApplicationVersion() override
+    {
+        return PACKAGE_VERSION;
+    }
+};
+
+static juce::JUCEApplicationBase * create_application()
+{
+    return new Application;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-struct SynthesizerStub : ISynthesizer
+struct ParameterListener : UpdateListener
 {
-	int loadTuningKeymap(const char *filename) override
-	{
-		return host_configure(PROP_KBM_FILE, filename);
-	}
+    void update() override {};
 
-	int loadTuningScale(const char *filename) override
-	{
-		return host_configure(PROP_SCL_FILE, filename);
-	}
+    void UpdateParameter(Param param, float controlValue) override
+    {
+        int port_number = param + 2;
+        auto value = presetController.getCurrentPreset().getParameter(param).getValue();
+        host_set_control(port_number, value);
+    }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -219,11 +250,9 @@ struct SynthesizerStub : ISynthesizer
 int main(int argc, char *argv[])
 {
     if (argc < 5) {
-        g_critical("not enough arguments supplied");
+        fprintf(stderr, "not enough arguments supplied\n");
         return 1;
     }
-
-    gtk_init(&argc, &argv);
 
     //char *exe_path = argv[0];
     char *host_url = argv[1];
@@ -245,29 +274,17 @@ int main(int argc, char *argv[])
     
     host_request_update();
 
-    g_io_add_watch(g_io_channel_unix_new(lo_server_get_socket_fd(_osc_server)), G_IO_IN, osc_input_handler, nullptr);
-    
-    _window = GTK_WINDOW(gtk_window_new(GTK_WINDOW_TOPLEVEL));
+    windowTitle = tmpstr("%s - %s", plug_name, identifier);
 
-    gtk_window_set_title(_window, tmpstr("%s - %s", plug_name, identifier));
-    g_signal_connect(GTK_OBJECT(_window), "delete-event", on_window_deleted, NULL);
+    presetController.getCurrentPreset().AddListenerToAll(new ParameterListener);
 
-    size_t i; for (i=0; i<kAmsynthParameterCount; i++) {
-        gdouble value = 0, lower = 0, upper = 0, step_increment = 0;
-        get_parameter_properties(i, &lower, &upper, &value, &step_increment);
-        _adjustments[i] = (GtkAdjustment *)gtk_adjustment_new(value, lower, upper, step_increment, 0, 0);
-        g_signal_connect(_adjustments[i], "value-changed", (GCallback)&on_adjustment_value_changed, (gpointer)i);
-    }
-
-    GtkWidget *editor = editor_pane_new(new SynthesizerStub, _adjustments, TRUE, DEFAULT_SCALING);
-    gtk_container_add(GTK_CONTAINER(_window), editor);
-    gtk_widget_show_all(GTK_WIDGET(editor));
-    
-    gtk_main();
-    
-    return 0;
+    juce::JUCEApplicationBase::createInstance = &create_application;
+    return juce::JUCEApplicationBase::main(JUCE_MAIN_FUNCTION_ARGS);
 }
 
+bool isPlugin {true};
+
+extern "C"
 void modal_midi_learn(Param param_index)
 {
 }

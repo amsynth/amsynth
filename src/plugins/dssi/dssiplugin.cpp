@@ -1,7 +1,7 @@
 /*
- *  amsynth_dssi.cpp
+ *  dssiplugin.cpp
  *
- *  Copyright (c) 2001-2022 Nick Dowell
+ *  Copyright (c) 2001-2023 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -19,12 +19,10 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "amsynth_dssi.h"
-
-#include "midi.h"
-#include "Preset.h"
-#include "PresetController.h"
-#include "Synthesizer.h"
+#include "core/midi.h"
+#include "core/synth/Preset.h"
+#include "core/synth/PresetController.h"
+#include "core/synth/Synthesizer.h"
 
 #include <assert.h>
 #include <climits>

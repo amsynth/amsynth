@@ -84,7 +84,8 @@ AS_IF([test "x$with_gui" != "xno"], [
        AC_DEFINE([WITH_GUI],, [Build GUI])
        with_gui="yes"], [
        with_gui="no"
-       with_lv2="no"])
+       with_lv2="no"
+       with_dssi_gui="no"])
 AM_CONDITIONAL([BUILD_GUI], [test "x$with_gui" != "xno"])
 AM_CONDITIONAL([BUILD_WITHOUT_GUI], [test "x$with_gui" != "xyes"])
 
@@ -119,6 +120,15 @@ AS_IF([test "x$with_nsm" != "xno"], [
         AC_DEFINE([WITH_NSM],, [Build NSM support])
         with_nsm="yes"], [with_nsm="no"])])
 AM_CONDITIONAL([BUILD_NSM], [test "x$with_nsm" = "xyes"])
+
+AC_ARG_WITH([dssi], [AS_HELP_STRING([--with-dssi], [build DSSI plugin])])
+AS_IF([test "x$with_dssi" != "xno"], [
+    PKG_CHECK_MODULES([DSSI], [dssi], [
+        AS_IF([test "x$with_gui" != "xno"], [with_dssi_gui="yes"])
+        PKG_CHECK_MODULES([LIBLO], [liblo], [], [with_dssi_gui="no"])
+    with_dssi="yes"], [with_dssi="no"])])
+AM_CONDITIONAL([BUILD_DSSI], [test "x$with_dssi" != "xno"])
+AM_CONDITIONAL([BUILD_DSSI_GUI], [test "x$with_dssi_gui" = "xyes"])
 
 AC_ARG_WITH([lv2], [AS_HELP_STRING([--with-lv2], [build support for LV2])])
 AS_IF([test "x$with_lv2" != "xno"], [
@@ -199,6 +209,10 @@ echo \| Build with JACK session support....................... : $ac_cv_header_j
 ])
 echo \| Build with LASH support............................... : $with_lash
 echo \| Build with Non Session Manager support................ : $with_nsm
+echo \| Build DSSI plugin..................................... : $with_dssi
+AS_IF([test "x$with_dssi" != "xno"], [
+echo \| Build DSSI GUI........................................ : $with_dssi_gui
+])
 echo \| Build LV2 plugin...................................... : $with_lv2
 echo \| Build VST plugin...................................... : $with_vst
 echo \|

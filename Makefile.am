@@ -38,6 +38,7 @@ EXTRA_DIST = data \
 
 AM_CPPFLAGS += \
 	-I$(top_srcdir)/vendor/JUCE/modules \
+	-DJUCE_DISPLAY_SPLASH_SCREEN=0 \
 	-DJUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1 \
 	-DJUCE_INCLUDE_JPEGLIB_CODE=1 \
 	-DJUCE_INCLUDE_PNGLIB_CODE=0 \
@@ -188,6 +189,38 @@ plugin_LDFLAGS = -avoid-version -module -disable-static
 
 ################################################################################
 #
+# DSSI
+#
+
+if BUILD_DSSI
+
+dssidir = $(libdir)/dssi
+
+# This links directly to .libs/libcore.a to avoid libtool's --whole-archive behaviour
+# which is inappropriate for these targets - we don't want to include gui code in the
+# plug-in, and don't want to include dsp code in the ui.
+
+noinst_LTLIBRARIES += amsynth_dssi.la
+amsynth_dssi_la_CXXFLAGS = @DSSI_CFLAGS@
+amsynth_dssi_la_DEPENDENCIES = libcore.la
+amsynth_dssi_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(dssidir) -export-symbols-regex "dssi_descriptor"
+amsynth_dssi_la_LIBADD = .libs/libcore.a
+amsynth_dssi_la_SOURCES = src/plugins/dssi/dssiplugin.cpp
+
+endif
+
+if BUILD_DSSI_GUI
+
+noinst_PROGRAMS = amsynth_dssi_ui
+amsynth_dssi_ui_CXXFLAGS = @DSSI_CFLAGS@ @LIBLO_CFLAGS@
+amsynth_dssi_ui_LDADD = @DSSI_LIBS@ @LIBLO_LIBS@ libcore.la
+amsynth_dssi_ui_SOURCES = src/plugins/dssi/dssiui.cpp
+
+endif
+
+
+################################################################################
+#
 # LV2
 #
 
@@ -252,6 +285,7 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 appdatadir = $(datadir)/appdata
 appdata_in_files = data/amsynth.appdata.xml.in
+appdata_in_files += data/dssi-amsynth-plugin.metainfo.xml.in
 appdata_in_files += data/lv2-amsynth-plugin.metainfo.xml.in
 appdata_in_files += data/vst-amsynth-plugin.metainfo.xml.in
 appdata_DATA = $(appdata_in_files:.xml.in=.xml)
@@ -308,6 +342,16 @@ if ENABLE_REALTIME
 	chown root $(DESTDIR)$(bindir)/amsynth
 	chmod   +s $(DESTDIR)$(bindir)/amsynth
 endif
+if BUILD_DSSI
+	$(INSTALL_PROGRAM_ENV) $(INSTALL) -d $(DESTDIR)$(dssidir)
+	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL) \
+		$(top_builddir)/.libs/amsynth_dssi.so $(DESTDIR)$(dssidir)/amsynth_dssi.so
+endif
+if BUILD_DSSI_GUI
+	$(INSTALL_PROGRAM_ENV) $(INSTALL) -d $(DESTDIR)$(dssidir)/amsynth_dssi
+	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL) \
+		$(top_builddir)/amsynth_dssi_ui $(DESTDIR)$(dssidir)/amsynth_dssi/amsynth_dssi_ui
+endif
 if BUILD_LV2
 	$(INSTALL_PROGRAM_ENV) $(INSTALL) -d $(DESTDIR)$(amsynth_lv2dir)
 	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL) \
@@ -323,6 +367,12 @@ endif
 
 uninstall-hook:
 	rm -rf $(DESTDIR)$(pkgdatadir)
+if BUILD_DSSI
+	rm  -f $(DESTDIR)$(dssidir)/amsynth_dssi.so
+endif
+if BUILD_DSSI_GUI
+	rm -rf $(DESTDIR)$(dssidir)/amsynth_dssi
+endif
 if BUILD_LV2
 	rm -rf $(DESTDIR)$(amsynth_lv2dir)
 endif
