@@ -1,3 +1,8 @@
+amsynth 1.13.1 -- 2022-01-21
+
+  - Fixed a crash when parsing XSettings on some systems.
+
+
 amsynth 1.13.0 -- 2022-07-16
 
   - Fixed intermittent unexpected MIDI output in response to MIDI CC input.
