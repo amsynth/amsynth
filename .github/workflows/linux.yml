@@ -31,18 +31,18 @@ jobs:
     - name: Install build dependencies
       run: |
         sudo apt update
-        sudo apt install autoconf-archive autopoint intltool dssi-dev libasound-dev libcurl4-openssl-dev libgtk2.0-dev libjack-jackd2-dev liblilv-0-0 liblo-dev lv2-dev pandoc
+        sudo apt install autoconf-archive autopoint dssi-dev intltool libasound-dev libcurl4-openssl-dev libgtk2.0-dev libjack-jackd2-dev liblilv-0-0 liblo-dev lv2-dev pandoc
     - run: ./autogen.sh
     - run: ./configure --enable-compile-warnings=error --without-lash
-    - run: make -j$(nproc) distcheck
-    - run: make -j$(nproc)
+    - run: make -j 2 distcheck
+    - run: make -j 2
     - name: Run make install
       run: sudo make install
     - run: ./utils/lv2lint.sh
     - name: Run make check
       run: |
-        ./configure CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' --without-dssi --without-lv2 --without-vst --without-gui --without-lash
-        make -j$(nproc) check
+        ./configure CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' --without-lv2 --without-dssi --without-vst --without-gui --without-lash
+        make -j 2 check
     - name: Run gcov
       run: gcov -lp $(find . -name '*.c' -o -name '*.cpp')
       if: matrix.cc == 'gcc-11'
