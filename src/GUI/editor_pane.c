@@ -242,8 +242,11 @@ static int get_xsettings_gdk_window_scaling_factor (void)
 		return 0;
 	}
 	
-	Atom selection_atom = XInternAtom (display, "_XSETTINGS_S0", False);
-	Atom xsettings_atom = XInternAtom (display, "_XSETTINGS_SETTINGS", False);
+	Atom selection_atom = XInternAtom (display, "_XSETTINGS_S0", True);
+	Atom xsettings_atom = XInternAtom (display, "_XSETTINGS_SETTINGS", True);
+	if (selection_atom == None || xsettings_atom == None) {
+		return 0;
+	}
 	
 	Window window = XGetSelectionOwner (display, selection_atom);
 	if (window == None) {
@@ -265,7 +268,7 @@ static int get_xsettings_gdk_window_scaling_factor (void)
 	}
 	
 	int value = 0;
-	if (type == xsettings_atom && format == 8) {
+	if (data && type == xsettings_atom && format == 8) {
 		char byte_order = *data; 
 		for (unsigned long i = 16; i < n_items - 32; i += 4) {
 			if (!strcmp ((const char *)data + i, "Gdk/WindowScalingFactor")) {

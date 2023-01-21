@@ -571,14 +571,17 @@ static int getNumPrograms()
 	return PresetController::getPresetBanks().size() * kPresetsPerBank;
 }
 
+extern "C" {
 #ifdef _WIN32
-extern "C" __declspec(dllexport)
-AEffect * VSTPluginMain(audioMasterCallback audioMaster)
-#else
-extern "C" __attribute__ ((visibility("default")))
-AEffect * VSTPluginMain(audioMasterCallback audioMaster);
-AEffect * VSTPluginMain(audioMasterCallback audioMaster)
+__declspec(dllexport) AEffect * MAIN(audioMasterCallback);
+__declspec(dllexport) AEffect * VSTPluginMain(audioMasterCallback);
+#else // https://gcc.gnu.org/onlinedocs/gcc/Asm-Labels.html
+__attribute__ ((visibility("default"))) AEffect * MAIN(audioMasterCallback) asm ("main");
+__attribute__ ((visibility("default"))) AEffect * VSTPluginMain(audioMasterCallback);
 #endif
+}
+
+AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 {
 #if defined(DEBUG) && DEBUG
 	if (!logFile) {
@@ -613,22 +616,7 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 	return effect;
 }
 
-#ifdef _WIN32
-
-__declspec(dllexport)
-extern "C" AEffect * MAIN(audioMasterCallback audioMaster)
+AEffect * MAIN(audioMasterCallback audioMaster)
 {
 	return VSTPluginMain (audioMaster);
 }
-
-#else
-
-// this is required because GCC throws an error if we declare a non-standard function named 'main'
-extern "C" __attribute__ ((visibility("default"))) AEffect * main_plugin(audioMasterCallback audioMaster) asm ("main");
-
-extern "C" __attribute__ ((visibility("default"))) AEffect * main_plugin(audioMasterCallback audioMaster)
-{
-	return VSTPluginMain (audioMaster);
-}
-
-#endif
