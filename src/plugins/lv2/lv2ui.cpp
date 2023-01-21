@@ -196,7 +196,7 @@ static const void * extension_data(const char *uri)
 
 bool isPlugin = true;
 
-extern "C" void modal_midi_learn(Param param_index) {}
+void modal_midi_learn(Param param_index) {}
 
 ////////////////////////////////////////////////////////////////////////////////
 

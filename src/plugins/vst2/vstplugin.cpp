@@ -81,7 +81,7 @@ constexpr size_t kPresetsPerBank = sizeof(BankInfo::presets) / sizeof(BankInfo::
 
 #ifdef WITH_GUI
 
-extern "C" void modal_midi_learn(Param param_index) {}
+void modal_midi_learn(Param param_index) {}
 
 extern std::string sFactoryBanksDirectory;
 

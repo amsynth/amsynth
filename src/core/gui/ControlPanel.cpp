@@ -34,7 +34,7 @@
 #include <utility>
 #include <vector>
 
-extern "C" void modal_midi_learn(Param);
+void modal_midi_learn(Param);
 
 extern bool isPlugin; // Defined externally
 

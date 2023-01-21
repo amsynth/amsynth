@@ -284,7 +284,6 @@ int main(int argc, char *argv[])
 
 bool isPlugin {true};
 
-extern "C"
 void modal_midi_learn(Param param_index)
 {
 }

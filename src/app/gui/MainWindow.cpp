@@ -289,7 +289,7 @@ main_window_show(Synthesizer *synthesizer, GenericOutput *audio, int scaling_fac
 	gtk_widget_show_all(main_window_new(synthesizer, audio, scaling_factor));
 }
 
-extern "C" void
+void
 modal_midi_learn(Param param_index) // called by editor_pane upon right-clicking a control
 {
 	midiLearnDialog->run_modal(param_index);
