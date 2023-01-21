@@ -95,21 +95,22 @@ struct MainWindow : public UpdateListener
 		presetController->setUpdateListener(*this);
 		presetController->getCurrentPreset().AddListenerToAll(this);
 
-		auto embed = gtk_socket_new();
-		gtk_box_pack_start(GTK_BOX(vbox), embed, FALSE, FALSE, 0);
-		gtk_widget_realize(embed);
-		gtk_widget_show(embed);
+		auto sock = gtk_socket_new();
+		gtk_box_pack_start(GTK_BOX(vbox), sock, FALSE, FALSE, 0);
+		gtk_widget_realize(sock);
+		gtk_widget_show(sock);
 
-		auto hostWindow = (void *)(uintptr_t)gtk_socket_get_id(GTK_SOCKET(embed));
-		assert(hostWindow);
-
+		if (scaling_factor) {
+			juce::Desktop::getInstance().setGlobalScaleFactor(scaling_factor);
+		}
 
 		auto panel = new ControlPanel(presetController, false);
-		panel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, hostWindow);
+		panel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses,
+							(void *)(uintptr_t)gtk_socket_get_id(GTK_SOCKET(sock)));
 		panel->setVisible(true);
 		auto bounds = panel->getScreenBounds();
 		auto scaleFactor = (gint)juce::Desktop::getInstance().getGlobalScaleFactor();
-		gtk_widget_set_size_request(embed, bounds.getWidth() * scaleFactor, bounds.getHeight() * scaleFactor);
+		gtk_widget_set_size_request(sock, bounds.getWidth() * scaleFactor, bounds.getHeight() * scaleFactor);
 	}
 
 	void updateTitle()
