@@ -29,7 +29,7 @@
 class ControlPanel final : public juce::Component
 {
 public:
-	explicit ControlPanel(PresetController *presetController);
+	explicit ControlPanel(PresetController *presetController, bool isPlugin);
 
 	~ControlPanel() noexcept final;
 	

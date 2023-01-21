@@ -36,8 +36,6 @@
 
 void modal_midi_learn(Param);
 
-extern bool isPlugin; // Defined externally
-
 class SkinnedParameterControl : public juce::Component, protected UpdateListener
 {
 public:
@@ -59,6 +57,8 @@ public:
 	}
 
 	Parameter &parameter;
+
+	bool isPlugin {false};
 
 	void showPopupMenu() const
 	{
@@ -280,7 +280,7 @@ public:
 
 struct ControlPanel::Impl final
 {
-	Impl(ControlPanel *controlPanel, PresetController *presetController)
+	Impl(ControlPanel *controlPanel, PresetController *presetController, bool isPlugin)
 	: controlPanel_(controlPanel), presetController_(presetController)
 	{
 		auto skin = Skin(ControlPanel::skinsDirectory + "/default");
@@ -311,7 +311,7 @@ struct ControlPanel::Impl final
 			const auto &resource = control.resource;
 			auto image = skin.getImage(resource);
 
-			std::unique_ptr<juce::Component> component;
+			std::unique_ptr<SkinnedParameterControl> component;
 			if (control.type == "button") {
 				component = std::make_unique<Button>(parameter, image, resource);
 			}
@@ -322,6 +322,7 @@ struct ControlPanel::Impl final
 				component = std::make_unique<Popup>(parameter, image, resource);
 			}
 			if (component) {
+				component->isPlugin = isPlugin;
 				component->setTopLeftPosition(control.x, control.y);
 				controlPanel->addAndMakeVisible(component.get());
 				components_.push_back(std::move(component));
@@ -394,8 +395,8 @@ struct ControlPanel::Impl final
 	PresetController *presetController_;
 };
 
-ControlPanel::ControlPanel(PresetController *presetController)
-: impl_(std::make_unique<Impl>(this, presetController)) {}
+ControlPanel::ControlPanel(PresetController *presetController, bool isPlugin)
+: impl_(std::make_unique<Impl>(this, presetController, isPlugin)) {}
 
 ControlPanel::~ControlPanel() noexcept = default;
 

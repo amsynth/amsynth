@@ -140,7 +140,7 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 	});
 
 	juceInit();
-	ui->controlPanel = std::make_unique<ControlPanel>(&ui->presetController);
+	ui->controlPanel = std::make_unique<ControlPanel>(&ui->presetController, true);
 	ui->controlPanel->loadTuningKbm = [ui](auto f) { ui->patch_set_property(ui->uris.amsynth_kbm_file, f); };
 	ui->controlPanel->loadTuningScl = [ui](auto f) { ui->patch_set_property(ui->uris.amsynth_scl_file, f); };
 	ui->controlPanel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ui->parent);
@@ -194,9 +194,9 @@ static const void * extension_data(const char *uri)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool isPlugin = true;
-
-void modal_midi_learn(Param param_index) {}
+void modal_midi_learn(Param param_index)
+{
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -85,8 +85,6 @@ void modal_midi_learn(Param param_index) {}
 
 extern std::string sFactoryBanksDirectory;
 
-bool isPlugin = true;
-
 #endif // WITH_GUI
 
 struct Plugin final : private UpdateListener
@@ -181,7 +179,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 		case effEditGetRect: {
 			juceInit();
 			if (!plugin->controlPanel) {
-				plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController);
+				plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController, true);
 			}
 			static ERect rect;
 			// There doesn't seem to be a way to determine which screen the host wants to open a plugin on and
@@ -196,7 +194,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 
 		case effEditOpen: {
 			if (!plugin->controlPanel) {
-				plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController);
+				plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController, true);
 			}
 			plugin->controlPanel->loadTuningKbm = [plugin](auto f) { plugin->synthesizer->loadTuningKeymap(f); };
 			plugin->controlPanel->loadTuningScl = [plugin](auto f) { plugin->synthesizer->loadTuningScale(f); };

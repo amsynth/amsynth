@@ -104,7 +104,7 @@ struct MainWindow : public UpdateListener
 		assert(hostWindow);
 
 
-		auto panel = new ControlPanel(presetController);
+		auto panel = new ControlPanel(presetController, false);
 		panel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, hostWindow);
 		panel->setVisible(true);
 		auto bounds = panel->getScreenBounds();

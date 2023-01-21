@@ -176,7 +176,7 @@ public:
                                   juce::DocumentWindow::minimiseButton)
     {
         setUsingNativeTitleBar(true);
-        auto controlPanel = new ControlPanel(&presetController);
+        auto controlPanel = new ControlPanel(&presetController, true);
         controlPanel->loadTuningKbm = [] (const char *file) {
             host_configure(PROP_KBM_FILE, file);
         };
@@ -281,8 +281,6 @@ int main(int argc, char *argv[])
     juce::JUCEApplicationBase::createInstance = &create_application;
     return juce::JUCEApplicationBase::main(JUCE_MAIN_FUNCTION_ARGS);
 }
-
-bool isPlugin {true};
 
 void modal_midi_learn(Param param_index)
 {
