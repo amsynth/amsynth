@@ -86,7 +86,7 @@ typedef struct {
 		LV2_URID patch_property;
 		LV2_URID patch_value;
 	} uris;
-};
+} lv2_ui;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -94,13 +94,13 @@ struct lv2helper
 {
 	lv2helper(lv2_ui *ui_): ui(ui_) {}
 
-	int loadTuningKeymap(const char *filename) override
+	int loadTuningKeymap(const char *filename)
 	{
 		send(ui->uris.amsynth_kbm_file, filename ?: "");
 		return 0;
 	}
 
-	int loadTuningScale(const char *filename) override
+	int loadTuningScale(const char *filename)
 	{
 		send(ui->uris.amsynth_scl_file, filename ?: "");
 		return 0;
@@ -186,8 +186,8 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 	juceInit();
 
 	ui->controlPanel = std::make_unique<ControlPanel>(&ui->presetController, true);
-	ui->controlPanel->loadTuningKbm = [ui] (auto f) { lv2helper(ui)->loadTuningKeymap(f); };
-	ui->controlPanel->loadTuningScl = [ui] (auto f) { lv2helper(ui)->loadTuningScale(f); };
+	ui->controlPanel->loadTuningKbm = [ui] (auto f) { lv2helper(ui).loadTuningKeymap(f); };
+	ui->controlPanel->loadTuningScl = [ui] (auto f) { lv2helper(ui).loadTuningScale(f); };
 	ui->controlPanel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ui->parent);
 	ui->controlPanel->setVisible(true);
 	if (resize) {
@@ -218,7 +218,7 @@ lv2_ui_port_event(LV2UI_Handle ui,
 	if (parameter_index < 0 || parameter_index >= kAmsynthParameterCount)
 		return;
 	float value = *(float *)buffer;
-	((lv2_ui *)ui)->presetController.getCurrentPreset().getParameter(paramId).setValue(value);
+	((lv2_ui *)ui)->presetController.getCurrentPreset().getParameter(parameter_index).setValue(value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
