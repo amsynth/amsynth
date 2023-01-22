@@ -65,6 +65,16 @@ struct ERect
 
 #define MIDI_BUFFER_SIZE 4096
 
+extern std::string sFactoryBanksDirectory;
+
+static char hostProductString[64] = "";
+
+#if defined(DEBUG) && DEBUG
+static FILE *logFile;
+#endif
+
+constexpr size_t kPresetsPerBank = sizeof(BankInfo::presets) / sizeof(BankInfo::presets[0]);
+
 class HostCall
 {
 public:
@@ -77,33 +87,23 @@ private:
 
 thread_local int HostCall::count_ = 0;
 
-constexpr size_t kPresetsPerBank = sizeof(BankInfo::presets) / sizeof(BankInfo::presets[0]);
-
-#ifdef WITH_GUI
-
-void modal_midi_learn(Param param_index) {}
-
-extern std::string sFactoryBanksDirectory;
-
-#endif // WITH_GUI
-
-struct Plugin final : private UpdateListener
+struct Plugin : public UpdateListener
 {
-	explicit Plugin(AEffect *effect, audioMasterCallback master)
-	: effect(effect)
-	, audioMaster(master)
-	, synthesizer(std::make_unique<Synthesizer>())
+	Plugin(AEffect *effect, audioMasterCallback master) : effect(effect)
 	{
+		audioMaster = master;
+		synthesizer = new Synthesizer;
 		midiBuffer = (unsigned char *)malloc(MIDI_BUFFER_SIZE);
 		synthesizer->_presetController->getCurrentPreset().AddListenerToAll(this);
 	}
 
-	~Plugin() final
+	~Plugin()
 	{ 
+		delete synthesizer;
 		free(midiBuffer);
 	}
 
-	void UpdateParameter(Param p, float controlValue) final
+	void UpdateParameter(Param p, float controlValue)
 	{
 		if (audioMaster && !HostCall::isActive()) {
 			auto value = synthesizer->getNormalizedParameterValue(p);
@@ -113,7 +113,7 @@ struct Plugin final : private UpdateListener
 
 	AEffect *effect;
 	audioMasterCallback audioMaster;
-	std::unique_ptr<Synthesizer> synthesizer;
+	Synthesizer *synthesizer;
 	unsigned char *midiBuffer;
 	std::vector<amsynth_midi_event_t> midiEvents;
 	int programNumber = 0;
@@ -123,6 +123,12 @@ struct Plugin final : private UpdateListener
 	std::unique_ptr<ControlPanel> controlPanel;
 #endif
 };
+
+#ifdef WITH_GUI
+
+void modal_midi_learn(Param param_index) {}
+
+#endif // WITH_GUI
 
 static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val, void *ptr, float f)
 {
@@ -191,7 +197,6 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			*(ERect **)ptr = &rect;
 			return 1;
 		}
-
 		case effEditOpen: {
 			if (!plugin->controlPanel) {
 				plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController, true);
@@ -202,13 +207,11 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			plugin->controlPanel->setVisible(true);
 			return 1;
 		}
-
 		case effEditClose: {
 			plugin->controlPanel->removeFromDesktop();
 			plugin->controlPanel.reset();
 			return 0;
 		}
-
 		case effEditIdle: {
 			juceIdle();
 			return 0;
@@ -302,6 +305,10 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 				strcmp("receiveVstSysexEvent", (char *)ptr) == 0 ||
 				strcmp("sendVstMidiEvent", (char *)ptr) == 0 ||
 				false) return 0;
+#if defined(DEBUG) && DEBUG
+			fprintf(logFile, "[amsynth_vst] unhandled canDo: %s\n", (char *)ptr);
+			fflush(logFile);
+#endif
 			return 0;
 
 		case effGetTailSize:
@@ -321,6 +328,10 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			return 0;
 
 		default:
+#if defined(DEBUG) && DEBUG
+			fprintf(logFile, "[amsynth_vst] unhandled VST opcode: %d\n", opcode);
+			fflush(logFile);
+#endif
 			return 0;
 	}
 }
@@ -363,19 +374,6 @@ static int getNumPrograms()
 	return PresetController::getPresetBanks().size() * kPresetsPerBank;
 }
 
-static void initialize()
-{
-	if (!ControlPanel::skinsDirectory.empty()) return;
-#if JUCE_MAC
-	Dl_info dl_info = {};
-	dladdr((void *)(&initialize), &dl_info);
-	const char *end = strstr(dl_info.dli_fname, "/MacOS/");
-	auto resources = std::string(dl_info.dli_fname, end - dl_info.dli_fname) + "/Resources";
-	sFactoryBanksDirectory = resources + "/banks";
-	ControlPanel::skinsDirectory = resources + "/skins";
-#endif
-}
-
 extern "C" {
 #ifdef _WIN32
 __declspec(dllexport) AEffect * MAIN(audioMasterCallback);
@@ -388,8 +386,25 @@ __attribute__ ((visibility("default"))) AEffect * VSTPluginMain(audioMasterCallb
 
 AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 {
+#if defined(DEBUG) && DEBUG
+	if (!logFile) {
+		logFile = fopen("/tmp/amsynth.log", "a");
+	}
+#endif
+	if (audioMaster) {
+		audioMaster(nullptr, audioMasterGetProductString, 0, 0, hostProductString, 0.0f);
+	}
+#if JUCE_MAC
+	if (ControlPanel::skinsDirectory.empty()) {
+		Dl_info dl_info = {};
+		dladdr((void *)(&initialize), &dl_info);
+		const char *end = strstr(dl_info.dli_fname, "/MacOS/");
+		auto resources = std::string(dl_info.dli_fname, end - dl_info.dli_fname) + "/Resources";
+		sFactoryBanksDirectory = resources + "/banks";
+		ControlPanel::skinsDirectory = resources + "/skins";
+	}
+#endif
 	HostCall hostCall;
-	initialize();
 	AEffect *effect = (AEffect *)calloc(1, sizeof(AEffect));
 	effect->magic = kEffectMagic;
 	effect->dispatcher = dispatcher;
