@@ -67,11 +67,11 @@ public:
 		}
 		auto menu = juce::PopupMenu();
 		auto p = parameter.getId();
-		menu.addItem(gettext("Assign MIDI Controller..."), true, false, [p](){
+		menu.addItem(gettext("Assign MIDI Controller..."), true, false, [p] {
 			modal_midi_learn(p);
 		});
 		bool ignored = Preset::shouldIgnoreParameter(p);
-		menu.addItem(gettext("Ignore Preset Value"), true, ignored, [ignored, p](){
+		menu.addItem(gettext("Ignore Preset Value"), true, ignored, [ignored, p] {
 			Preset::setShouldIgnoreParameter(p, !ignored);
 			Configuration &config = Configuration::get();
 			config.ignored_parameters = Preset::getIgnoredParameterNames();
@@ -120,7 +120,7 @@ protected:
 		if (mm && mm->isThisTheMessageThread()) {
 			repaint();
 		} else {
-			juce::MessageManager::callAsync([this]() {
+			juce::MessageManager::callAsync([this] {
 				repaint();
 			});
 		}
@@ -231,7 +231,7 @@ protected:
 		for (int i = 0; i <= parameter.getSteps(); i++) {
 			auto value = parameter.getMin() + parameter.getStep() * float(i);
 			auto isTicked = parameter.getValue() == value;
-			menu.addItem(strings[i], true, isTicked, [&parameter = parameter, value](){
+			menu.addItem(strings[i], true, isTicked, [&parameter = parameter, value] {
 				parameter.willChange();
 				parameter.setValue(value);
 			});
@@ -294,7 +294,7 @@ struct ControlPanel::Impl final
 		components_.push_back(std::move(background));
 
 		if (isPlugin) {
-			auto clickArea = std::make_unique<MouseDownControl>([this](auto &event) {
+			auto clickArea = std::make_unique<MouseDownControl>([this] (auto &event) {
 				if (event.mods.isPopupMenu()) {
 					showPopupMenu();
 				}
@@ -337,7 +337,7 @@ struct ControlPanel::Impl final
 			auto bankMenu = juce::PopupMenu();
 			for (int i = 0; i < PresetController::kNumPresets; i++) {
 				snprintf(text, sizeof text, "%d: %s", i, bank.presets[i].getName().c_str());
-				bankMenu.addItem(text, [this, &bank, i]() {
+				bankMenu.addItem(text, [this, &bank, i] {
 					presetController_->loadPresets(bank.file_path.c_str());
 					presetController_->selectPreset(i);
 				});
@@ -348,19 +348,19 @@ struct ControlPanel::Impl final
 		
 		auto fileMenu = juce::PopupMenu();
 		if (controlPanel_->loadTuningScl) {
-			fileMenu.addItem(gettext("Open Alternate Tuning File..."), [this]() {
+			fileMenu.addItem(gettext("Open Alternate Tuning File..."), [this] {
 				openFile(gettext("Open Scala (.scl) alternate tuning file"),
 						 "*.scl", controlPanel_->loadTuningScl);
 			});
 		}
 		if (controlPanel_->loadTuningKbm) {
-			fileMenu.addItem(gettext("Open Alternate Keyboard Map..."), [this]() {
+			fileMenu.addItem(gettext("Open Alternate Keyboard Map..."), [this] {
 				openFile(gettext("Open alternate keyboard map (Scala .kbm format)"),
 						 "*.kbm", controlPanel_->loadTuningKbm);
 			});
 		}
 		if (controlPanel_->loadTuningKbm || controlPanel_->loadTuningScl) {
-			fileMenu.addItem(gettext("Reset All Tuning Settings to Default"), [this]() {
+			fileMenu.addItem(gettext("Reset All Tuning Settings to Default"), [this] {
 				if (controlPanel_->loadTuningKbm)
 					controlPanel_->loadTuningKbm(nullptr);
 				if (controlPanel_->loadTuningScl)
@@ -381,7 +381,7 @@ struct ControlPanel::Impl final
 	static void openFile(const char *title, const char *filters, const std::function<void(const char *)> &handler) {
 		auto cwd = juce::File::getSpecialLocation(juce::File::userMusicDirectory);
 		auto chooser = new juce::FileChooser(title, cwd, filters);
-		chooser->launchAsync(juce::FileBrowserComponent::openMode, [chooser, handler](const auto &ignored) {
+		chooser->launchAsync(juce::FileBrowserComponent::openMode, [chooser, handler] (const auto &ignored) {
 			auto results = chooser->getResults();
 			if (results.isEmpty())
 				return;
