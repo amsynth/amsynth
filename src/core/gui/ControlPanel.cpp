@@ -90,7 +90,7 @@ protected:
 
 	void mouseDoubleClick(const juce::MouseEvent &event) override
 	{
-		// TODO: Reset to "default" value
+		parameter.setValue(parameter.getDefault());
 	}
 
 	void paint(juce::Graphics &g) override
