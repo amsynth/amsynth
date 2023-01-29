@@ -397,7 +397,7 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 #if JUCE_MAC
 	if (ControlPanel::skinsDirectory.empty()) {
 		Dl_info dl_info = {};
-		dladdr((void *)(&initialize), &dl_info);
+		dladdr((void *)(&__func__), &dl_info);
 		const char *end = strstr(dl_info.dli_fname, "/MacOS/");
 		auto resources = std::string(dl_info.dli_fname, end - dl_info.dli_fname) + "/Resources";
 		sFactoryBanksDirectory = resources + "/banks";
