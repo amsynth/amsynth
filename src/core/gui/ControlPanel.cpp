@@ -140,7 +140,76 @@ public:
 	: SkinnedParameterControl(parameter, std::move(image), r)
 	{}
 
+	class Label : public juce::Component
+	{
+	public:
+		Label(juce::Component *parent) : parent_(parent)
+		{
+			setAlwaysOnTop(true);
+			setOpaque(true);
+			setVisible(false);
+			parent->addChildComponent(this);
+		}
+
+		int yInset {0};
+
+		void show(juce::Component *control, juce::String text)
+		{
+			if (control_ && control_ != control) return;
+			control_ = control;
+
+			text_ = text;
+			if (text.isEmpty())
+			{
+				setVisible(false);
+				return;
+			}
+
+			auto ttb = getLookAndFeel().getTooltipBounds(text, control->getPosition(), parent_->getLocalBounds());
+			auto width = std::max(control->getWidth(), ttb.getWidth());
+			auto inset = (control->getWidth() - width) / 2;
+			setBounds(control->getX() + inset, control->getBottom() - yInset, width, ttb.getHeight());
+			setVisible(true);
+			repaint();
+		}
+
+		void hide()
+		{
+			setVisible(false);
+			control_ = nullptr;
+			text_ = "";
+		}
+
+	private:
+		void paint(juce::Graphics &graphics)
+		{
+			getLookAndFeel().drawTooltip(graphics, text_, getWidth(), getHeight());
+		}
+
+		juce::Component *parent_{nullptr};
+		juce::Component *control_{nullptr};
+		juce::String text_;
+	};
+
+	Label *label {nullptr};
+
 protected:
+	juce::String getLabelText()
+	{
+		char text[32] = "";
+		return parameter_get_display(parameter.getId(), parameter.getValue(), text, sizeof text) ? text : "";
+	}
+
+	void mouseEnter(const juce::MouseEvent &event) override
+	{
+		label->show(this, getLabelText());
+	}
+	
+	void mouseExit(const juce::MouseEvent &event) override
+	{
+		label->hide();
+	}
+
 	void mouseDown(const juce::MouseEvent &event) override
 	{
 		if (event.mods.isPopupMenu()) {
@@ -171,6 +240,7 @@ protected:
 		auto newVal = referenceVal_ + offset;
 		if (newVal != referenceVal_) {
 			parameter.setNormalisedValue(referenceVal_ + offset);
+			label->show(this, getLabelText());
 			referenceVal_ = newVal;
 			referenceY_ = event.y;
 		}
@@ -187,6 +257,7 @@ protected:
 				/ (event.mods.isShiftDown() ? 4.f : 1.f);
 		parameter.willChange();
 		parameter.setNormalisedValue(parameter.getNormalisedValue() + delta);
+		label->show(this, getLabelText());
 	}
 
 private:
@@ -281,10 +352,14 @@ public:
 struct ControlPanel::Impl final
 {
 	Impl(ControlPanel *controlPanel, PresetController *presetController, bool isPlugin)
-	: controlPanel_(controlPanel), presetController_(presetController)
+	: controlPanel_(controlPanel)
+	, presetController_(presetController)
+	, label_(controlPanel)
 	{
 		auto skin = Skin(ControlPanel::skinsDirectory + "/default");
+		label_.yInset = 6;
 //		auto skin = Skin(ControlPanel::skinsDirectory + "/Etna");
+//		label_.yOffset = 0;
 
 		auto background = juce::Drawable::createFromImageFile(skin.getBackground());
 		background->setOpaque(true);
@@ -317,6 +392,7 @@ struct ControlPanel::Impl final
 			}
 			if (control.type == "knob") {
 				component = std::make_unique<Knob>(parameter, image, resource);
+				dynamic_cast<Knob *>(component.get())->label = &label_;
 			}
 			if (control.type == "popup") {
 				component = std::make_unique<Popup>(parameter, image, resource);
@@ -393,6 +469,7 @@ struct ControlPanel::Impl final
 	ControlPanel *controlPanel_;
 	std::vector<std::unique_ptr<juce::Component>> components_;
 	PresetController *presetController_;
+	Knob::Label label_;
 };
 
 ControlPanel::ControlPanel(PresetController *presetController, bool isPlugin)
