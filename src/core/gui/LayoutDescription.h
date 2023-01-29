@@ -19,6 +19,8 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #include <fstream>
 #include <iostream>
 #include <string>

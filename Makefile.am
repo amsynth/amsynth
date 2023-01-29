@@ -69,11 +69,17 @@ libcore_la_SOURCES = \
 	src/core/filesystem.cpp \
 	src/core/filesystem.h \
 	src/core/gettext.h \
+	src/core/gui/Button.h \
+	src/core/gui/Control.cpp \
+	src/core/gui/Control.h \
 	src/core/gui/ControlPanel.cpp \
 	src/core/gui/ControlPanel.h \
-	src/core/gui/LayoutDescription.h \
 	src/core/gui/juce_x11.cpp \
 	src/core/gui/juce_x11.h \
+	src/core/gui/Knob.cpp \
+	src/core/gui/Knob.h \
+	src/core/gui/LayoutDescription.h \
+	src/core/gui/Popup.h \
 	src/core/midi.h \
 	src/core/synth/ADSR.cpp \
 	src/core/synth/ADSR.h \
