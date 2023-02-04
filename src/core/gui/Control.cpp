@@ -62,7 +62,7 @@ void Control::showPopupMenu()
 		config.ignored_parameters = Preset::getIgnoredParameterNames();
 		config.save();
 	});
-	menu.showMenuAsync(juce::PopupMenu::Options());
+	menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(this));
 }
 
 void Control::mouseDown(const juce::MouseEvent &event)

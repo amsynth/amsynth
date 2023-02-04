@@ -47,6 +47,6 @@ protected:
 				parameter.setValue(value);
 			});
 		}
-		menu.showMenuAsync(juce::PopupMenu::Options());
+		menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(this));
 	}
 };
