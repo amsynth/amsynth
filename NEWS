@@ -1,3 +1,13 @@
+amsynth 1.13.2 -- 2022-02-01
+
+  - Fixed a packaging error that cause preset banks to be omitted.
+
+
+amsynth 1.13.1 -- 2022-01-21
+
+  - Fixed a crash when parsing XSettings on some systems.
+
+
 amsynth 1.13.0 -- 2022-07-16
 
   - Fixed intermittent unexpected MIDI output in response to MIDI CC input.

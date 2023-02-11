@@ -239,6 +239,7 @@ int main( int argc, char *argv[] )
 				     << _("	-x          run in headless mode (without GUI)") << endl
 				     << endl
 				     << _("	-b <file>   use <file> as the bank to store presets") << endl
+				     << _("	-P <int>    set preset number to use") << endl
 				     << _("	-t <file>   use <file> as a tuning file") << endl
 				     << endl
 				     << _("	-a <string> set the sound output driver to use [alsa/oss/auto(default)]") << endl
