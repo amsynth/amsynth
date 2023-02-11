@@ -2,7 +2,7 @@
 @prefix lv2:     <http://lv2plug.in/ns/lv2core#> .
 @prefix midi:    <http://lv2plug.in/ns/ext/midi#> .
 @prefix epp:     <http://lv2plug.in/ns/ext/port-props#> .
-@prefix uiext:   <http://lv2plug.in/ns/extensions/ui#> .
+@prefix ui:      <http://lv2plug.in/ns/extensions/ui#> .
 @prefix pg:      <http://lv2plug.in/ns/ext/port-groups#> .
 @prefix foaf:    <http://xmlns.com/foaf/0.1/> .
 @prefix doap:    <http://usefulinc.com/ns/doap#> .
@@ -16,10 +16,12 @@
 @prefix state:   <http://lv2plug.in/ns/ext/state#> .
 @prefix work:    <http://lv2plug.in/ns/ext/worker#> .
 
-<http://code.google.com/p/amsynth/amsynth/ui/gtk>
-    a uiext:GtkUI ;
-    uiext:binary <amsynth_lv2_gtk.so> ;
-    lv2:optionalFeature uiext:noUserResize .
+<http://code.google.com/p/amsynth/amsynth/x11ui>
+    a ui:X11UI ;
+    lv2:binary <amsynth_lv2ui.so> ;
+    lv2:optionalFeature ui:noUserResize ;
+    lv2:requiredFeature ui:idleInterface ;
+    lv2:extensionData ui:idleInterface .
 
 <http://code.google.com/p/amsynth/amsynth#group_out>
     a pg:StereoGroup ,
@@ -95,7 +97,7 @@
     lv2:optionalFeature lv2:hardRTCapable;
     lv2:extensionData state:interface ,
         work:interface ;
-    uiext:ui <http://code.google.com/p/amsynth/amsynth/ui/gtk> ;
+    ui:ui <http://code.google.com/p/amsynth/amsynth/x11ui> ;
     lv2:port [
         a lv2:InputPort ,
             atom:AtomPort ;

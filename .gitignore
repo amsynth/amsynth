@@ -17,7 +17,6 @@ amsynth-tests.trs
 amsynth.desktop
 amsynth.VC.*
 amsynth.vcxproj.user
-amsynth_dssi_gtk
 autom4te.cache
 build
 compile

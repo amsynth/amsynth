@@ -25,11 +25,12 @@ AC_INIT([amsynth], [1.13.1],
         [amsynth],
         [https://github.com/amsynth/amsynth])
 
-AC_CONFIG_SRCDIR([src/main.cpp])
+AC_CONFIG_SRCDIR([src/app/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE([-Wall -Wno-portability check-news foreign subdir-objects])
+# tar-ustar required to fix error: "file name is too long"
+AM_INIT_AUTOMAKE([-Wall -Wno-portability check-news foreign subdir-objects tar-ustar])
 AM_SILENT_RULES([yes])
 
 # make CXXFLAGS inherit from CFLAGS unless CXXFLAGS were specified
@@ -43,7 +44,7 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 LT_INIT
 
-AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
+AX_CXX_COMPILE_STDCXX_14([noext], [mandatory])
 
 IT_PROG_INTLTOOL
 
@@ -70,7 +71,8 @@ dnl Although amsynth does not use pthread directly, it seems to be necessary to 
 dnl against it with GCC 10.x
 AC_CHECK_LIB(pthread, pthread_create, [], exit)
 
-AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])])
+AS_IF([test "x$with_gui" != "xno"], [PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])])
+AS_IF([test "x$with_gui" != "xno"], [PKG_CHECK_MODULES([JUCE], [freetype2 libpng x11 zlib])])
 
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
@@ -130,7 +132,7 @@ AM_CONDITIONAL([BUILD_DSSI_GUI], [test "x$with_dssi_gui" = "xyes"])
 
 AC_ARG_WITH([lv2], [AS_HELP_STRING([--with-lv2], [build support for LV2])])
 AS_IF([test "x$with_lv2" != "xno"], [
-    PKG_CHECK_MODULES([LV2], [[lv2, gtk+-2.0 >= 2.20.0]], [with_lv2="yes"], [with_lv2="no"])])
+    PKG_CHECK_MODULES([LV2], [[lv2]], [with_lv2="yes"], [with_lv2="no"])])
 AM_CONDITIONAL([BUILD_LV2], [test "x$with_lv2" != "xno"])
 
 AC_ARG_WITH([vst], [AS_HELP_STRING([--with-vst], [build VST plug-in] [default=yes])], [], [with_vst=yes])
@@ -171,9 +173,6 @@ AC_ARG_ENABLE([realtime], [AS_HELP_STRING([--enable-realtime],
 AM_CONDITIONAL([ENABLE_REALTIME], [test x$enable_realtime != x])
 
 AM_CONDITIONAL([DARWIN], [test "$(uname -s)" = "Darwin"])
-
-m4_ifdef([AX_COMPILER_FLAGS],
-         [AX_COMPILER_FLAGS([AM_CFLAGS], [AM_LDFLAGS], [yes])])
 
 AC_CONFIG_FILES([
     Makefile
