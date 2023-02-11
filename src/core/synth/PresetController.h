@@ -22,9 +22,10 @@
 #ifndef _PRESETCONTROLLER_H
 #define _PRESETCONTROLLER_H
 
+#include <set>
+#include <stack>
 #include <string>
 #include <vector>
-#include <stack>
 
 #include "Preset.h"
 #include "UpdateListener.h"
@@ -45,6 +46,10 @@ public:
 
 	PresetController();
 	~PresetController() final = default;
+
+	struct Observer {
+		virtual void currentPresetDidChange() = 0;
+	};
 	
 	/* Selects a Preset and makes it current, updating everything as necessary.
 	 * If the requested preset does not exist, then the request is ignored, and
@@ -88,6 +93,8 @@ public:
 	// Switch bank at runtime - safe to call on audio thread
 	void	selectBank			(int bankNumber);
 
+	void	addObserver			(Observer *observer) { observers.insert(observer); }
+	void	removeObserver		(Observer *observer) { observers.erase(observer); }
 	void	setUpdateListener	(UpdateListener & ul) { updateListener = &ul; }
 
     int		getCurrPresetNumber	() { return currentPresetNo; }
@@ -99,10 +106,16 @@ public:
 
     static std::string getUserBanksDirectory();
 
-	void	notify				() { if (updateListener) updateListener->update(); }
+	void	notify				() {
+		for (auto observer : observers)
+			observer->currentPresetDidChange();
+		if (updateListener)
+			updateListener->update();
+	}
 
 private:
 	std::string		bank_file;
+	std::set<Observer *> observers;
 	UpdateListener*	updateListener = nullptr;
 	Preset			presets[kNumPresets];
 	Preset 			currentPreset;
