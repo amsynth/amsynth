@@ -94,6 +94,7 @@ struct MainWindow : public UpdateListener
 		gtk_box_pack_start(GTK_BOX(vbox), sock, FALSE, FALSE, 0);
 		gtk_widget_realize(sock);
 		gtk_widget_show(sock);
+		auto nativeWindow = reinterpret_cast<void *>(gtk_socket_get_id(GTK_SOCKET(sock)));
 
 		if (scaling_factor) {
 			juce::Desktop::getInstance().setGlobalScaleFactor(scaling_factor);
@@ -102,8 +103,7 @@ struct MainWindow : public UpdateListener
 		auto component = new MainComponent(presetController);
 		component->loadTuningKbm = [this] (const char *path) { synthesizer->loadTuningKeymap(path); };
 		component->loadTuningScl = [this] (const char *path) { synthesizer->loadTuningScale(path); };
-		component->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses,
-							(void *)(uintptr_t)gtk_socket_get_id(GTK_SOCKET(sock)));
+		component->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, nativeWindow);
 		component->setVisible(true);
 		auto bounds = component->getScreenBounds();
 		auto scaleFactor = (gint)juce::Desktop::getInstance().getGlobalScaleFactor();
