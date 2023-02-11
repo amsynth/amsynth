@@ -6,7 +6,7 @@ src/app/gui/ConfigDialog.cpp
 src/app/gui/MIDILearnDialog.cpp
 src/app/gui/MainMenu.cpp
 src/app/gui/MainWindow.cpp
-src/app/gui/PresetControllerView.cpp
 src/app/main.cpp
+src/core/gui/MainComponent.cpp
 src/core/synth/Parameter.cpp
 src/core/synth/PresetController.cpp
