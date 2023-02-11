@@ -24,6 +24,8 @@
 #include "ControlPanel.h"
 #include "core/gettext.h"
 
+#include <climits>
+
 class ToolbarItem : public juce::ToolbarItemComponent {
 public:
 	ToolbarItem(int itemId, juce::String text, std::function<void(juce::Component *)> onClick)
@@ -99,7 +101,8 @@ private:
 
 struct MainComponent::Impl : public juce::ToolbarItemFactory {
 	Impl(MainComponent *component, PresetController *presetController)
-	: presetController_(presetController)
+	: component_(component)
+	, presetController_(presetController)
 	, controlPanel_(std::make_unique<ControlPanel>(presetController, true))
 	, toolbar_(std::make_unique<juce::Toolbar>()) {
 		int toolbarHeight = 25;
@@ -133,7 +136,7 @@ struct MainComponent::Impl : public juce::ToolbarItemFactory {
 	juce::ToolbarItemComponent* createItem (int itemId) override {
 		switch (itemId) {
 			case BurgerMenu:
-				return new ToolbarItem(itemId, "=", [this] (auto item) { showBurgerMenu(item); });
+				return new ToolbarItem(itemId, "#", [this] (auto item) { showBurgerMenu(item); });
 			case PresetPrevious:
 				return new ToolbarItem(itemId, "<", [this] (auto item) { navigatePresets(-1); });
 			case PresetNext:
@@ -168,11 +171,9 @@ struct MainComponent::Impl : public juce::ToolbarItemFactory {
 	}
 
 	void savePreset() {
-		// TODO: Create a preset save dialog / menu
-		// options:
-		// - choose a user bank & slot
-		// - create a new bank
-		// - enter preset name
+		presetController_->loadPresets(); // in case another instance has changed any of the other presets
+		presetController_->commitPreset();
+		presetController_->savePresets();
 	}
 
 	void showPresetMenu(juce::Component *targetComponent) {

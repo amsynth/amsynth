@@ -79,6 +79,8 @@ libcore_la_SOURCES = \
 	src/core/gui/Knob.cpp \
 	src/core/gui/Knob.h \
 	src/core/gui/LayoutDescription.h \
+	src/core/gui/MainComponent.cpp \
+	src/core/gui/MainComponent.h \
 	src/core/gui/Popup.h \
 	src/core/midi.h \
 	src/core/synth/ADSR.cpp \
@@ -168,9 +170,7 @@ amsynth_SOURCES += \
 	src/app/gui/MainWindow.cpp \
 	src/app/gui/MainWindow.h \
 	src/app/gui/gui_main.cpp \
-	src/app/gui/gui_main.h \
-	src/app/gui/PresetControllerView.cpp \
-	src/app/gui/PresetControllerView.h
+	src/app/gui/gui_main.h
 amsynth_LDADD += @GTK_LIBS@
 endif
 

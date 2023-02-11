@@ -29,10 +29,10 @@
 #include "ConfigDialog.h"
 #include "MIDILearnDialog.h"
 #include "MainMenu.h"
-#include "PresetControllerView.h"
 #include "core/Configuration.h"
 #include "core/gui/ControlPanel.h"
 #include "core/gui/juce_x11.h"
+#include "core/gui/MainComponent.h"
 #include "core/synth/PresetController.h"
 #include "core/synth/Synthesizer.h"
 #include "gui_main.h"
@@ -85,11 +85,6 @@ struct MainWindow : public UpdateListener
 
 		//
 
-		presetControllerView = PresetControllerView::instantiate(presetController);
-		gtk_box_pack_start(GTK_BOX(vbox), presetControllerView->getWidget(), FALSE, FALSE, 0);
-
-		//
-
 		memset(defaults, 0, sizeof(defaults));
 
 		presetController->setUpdateListener(*this);
@@ -104,11 +99,13 @@ struct MainWindow : public UpdateListener
 			juce::Desktop::getInstance().setGlobalScaleFactor(scaling_factor);
 		}
 
-		auto panel = new ControlPanel(presetController, false);
-		panel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses,
+		auto component = new MainComponent(presetController);
+		component->loadTuningKbm = [this] (const char *path) { synthesizer->loadTuningKeymap(path); };
+		component->loadTuningScl = [this] (const char *path) { synthesizer->loadTuningScale(path); };
+		component->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses,
 							(void *)(uintptr_t)gtk_socket_get_id(GTK_SOCKET(sock)));
-		panel->setVisible(true);
-		auto bounds = panel->getScreenBounds();
+		component->setVisible(true);
+		auto bounds = component->getScreenBounds();
 		auto scaleFactor = (gint)juce::Desktop::getInstance().getGlobalScaleFactor();
 		gtk_widget_set_size_request(sock, bounds.getWidth() * scaleFactor, bounds.getHeight() * scaleFactor);
 	}
@@ -209,7 +206,6 @@ struct MainWindow : public UpdateListener
 	void parameterDidChange(int parameter, float value)
 	{
 		if (parameter == -1) {
-			presetControllerView->update(); // note: PresetControllerView::update() is expensive
 			presetIsNotSaved = presetController->isCurrentPresetModified();
 			updateTitle();
 			return;
@@ -226,7 +222,6 @@ struct MainWindow : public UpdateListener
 	PresetController *presetController;
 	GenericOutput *audio;
 
-	PresetControllerView *presetControllerView;
 	GValue defaults[kAmsynthParameterCount];
 	bool presetIsNotSaved;
 
