@@ -74,8 +74,8 @@ AC_CHECK_LIB(pthread, pthread_create, [], exit)
 AS_IF([test "x$with_gui" != "xno"], [PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])])
 AS_IF([test "x$with_gui" != "xno"], [PKG_CHECK_MODULES([JUCE], [freetype2 libpng x11 zlib])])
 
-AS_IF([test -f vendor/JUCE/modules/juce_core/juce_core.cpp], [],
-      [AC_MSG_ERROR([JUCE source code is missing; maybe run `git submodule update`])])
+AS_IF([test -f "$srcdir/vendor/JUCE/modules/juce_core/juce_core.cpp"], [],
+      [AC_MSG_ERROR([cannot find JUCE source code; if this is a git checkout run `git submodule update` and try again])])
 
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
