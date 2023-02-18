@@ -21,7 +21,7 @@
 
 #pragma once
 
-#import "Control.h"
+#include "Control.h"
 
 class Button : public Control
 {
