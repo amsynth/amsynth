@@ -1,7 +1,7 @@
 /*
  *  main.cpp
  *
- *  Copyright (c) 2001-2023 Nick Dowell
+ *  Copyright (c) 2001 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -39,8 +39,7 @@
 #include "lash.h"
 
 #ifdef WITH_GUI
-#include "gui/gui_main.h"
-#include "gui/MainWindow.h"
+#include "core/gui/MainComponent.h"
 #endif
 
 #ifdef WITH_NSM
@@ -67,8 +66,6 @@
 #define _(string) gettext (string)
 
 using namespace std;
-
-bool isPlugin = false;
 
 Configuration & config = Configuration::get();
 
@@ -170,13 +167,62 @@ static void fatal_error(const std::string & msg) __attribute__ ((noreturn));
 static void fatal_error(const std::string & msg)
 {
 	std::cerr << msg << "\n";
-#ifdef WITH_GUI
-	ShowModalErrorMessage(msg);
-#endif
 	exit(1);
 }
 
-static unsigned amsynth_timer_callback(void *);
+////////////////////////////////////////////////////////////////////////////////
+
+#ifdef WITH_GUI
+
+class MainWindow : public juce::DocumentWindow
+{
+public:
+	MainWindow()
+	: DocumentWindow(PACKAGE_NAME, juce::Colours::lightgrey, juce::DocumentWindow::closeButton | juce::DocumentWindow::minimiseButton)
+	{
+		auto mainComponent = new MainComponent(s_synthesizer->getPresetController());
+		mainComponent->loadTuningKbm = [] (const char *file) { s_synthesizer->loadTuningKeymap(file); };
+		mainComponent->loadTuningScl = [] (const char *file) { s_synthesizer->loadTuningScale(file); };
+		setContentOwned(mainComponent, true);
+		centreWithSize(getWidth(), getHeight());
+		setResizable(false, false);
+		setUsingNativeTitleBar(true);
+	}
+
+	void closeButtonPressed() override
+	{
+		juce::JUCEApplication::getInstance()->systemRequestedQuit();
+	}
+
+private:
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainWindow)
+};
+
+class Application : public juce::JUCEApplication
+{
+public:
+	static juce::JUCEApplicationBase * create() { return new Application; }
+
+	void initialise(const juce::String &commandLine) override
+	{
+		(new MainWindow())->setVisible(true);
+
+		struct LashTimer : juce::Timer
+		{
+			void timerCallback() override { amsynth_lash_poll_events(); }
+		};
+
+		(new LashTimer())->startTimer(250);
+	}
+
+	void shutdown() override {}
+	const juce::String getApplicationName() override { return PACKAGE_NAME; }
+	const juce::String getApplicationVersion() override { return PACKAGE_VERSION; }
+};
+
+#endif // WITH_GUI
+
+////////////////////////////////////////////////////////////////////////////////
 
 static int signal_received = 0;
 
@@ -308,11 +354,6 @@ int main( int argc, char *argv[] )
 		}
 	}
 
-#ifdef WITH_GUI
-	if (!no_gui)
-		gui_kit_init(&argc, &argv);
-#endif
-
 	string amsynth_bank_file = config.current_bank_file;
 	// string amsynth_tuning_file = config.current_tuning_file;
 
@@ -376,8 +417,10 @@ int main( int argc, char *argv[] )
 
 #ifdef WITH_GUI
 	if (!no_gui) {
-		main_window_show(s_synthesizer, out, gui_scale_factor);
-		gui_kit_run(&amsynth_timer_callback);
+		if (gui_scale_factor)
+			juce::Desktop::getInstance().setGlobalScaleFactor((float)gui_scale_factor);
+		juce::JUCEApplicationBase::createInstance = &Application::create;
+		juce::JUCEApplicationBase::main(JUCE_MAIN_FUNCTION_ARGS);
 	} else {
 #endif
 		printf(_("amsynth running in headless mode, press ctrl-c to exit\n"));
@@ -396,13 +439,6 @@ int main( int argc, char *argv[] )
 
 	delete out;
 	return 0;
-}
-
-unsigned
-amsynth_timer_callback(void *unused)
-{
-	amsynth_lash_poll_events();
-	return 1;
 }
 
 void amsynth_midi_input(unsigned char status, unsigned char data1, unsigned char data2)

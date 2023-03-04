@@ -28,8 +28,6 @@
 #include "core/Configuration.h"
 #include "core/synth/Preset.h"
 
-extern void modal_midi_learn(Param);
-
 Control::Control(Parameter &p, juce::Image image, const LayoutDescription::Resource &r)
 : parameter(p)
 , frame_(0)
@@ -55,8 +53,8 @@ void Control::showPopupMenu()
 	}
 	auto menu = juce::PopupMenu();
 	auto p = parameter.getId();
-	menu.addItem(gettext("Assign MIDI Controller..."), true, false, [p] {
-		modal_midi_learn(p);
+	menu.addItem(gettext("Assign MIDI Controller..."), true, false, [] {
+		// TODO: Reimplement MIDI Learn / CC assignment
 	});
 	bool ignored = Preset::shouldIgnoreParameter(p);
 	menu.addItem(gettext("Ignore Preset Value"), true, ignored, [ignored, p] {

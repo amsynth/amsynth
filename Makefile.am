@@ -1,6 +1,6 @@
 #  amsynth Makefile.am
 #
-#  Copyright (C) 2001-2023 Nick Dowell
+#  Copyright (C) 2001 Nick Dowell
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -134,8 +134,7 @@ libcore_la_SOURCES = \
 
 bin_PROGRAMS = amsynth
 
-amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @LIBLO_CFLAGS@ @GTK_CFLAGS@
-amsynth_CPPFLAGS += -DGDK_DISABLE_DEPRECATED -DGSEAL_ENABLE -DGTK_DISABLE_DEPRECATED -DGTK_DISABLE_SINGLE_INCLUDES
+amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @LIBLO_CFLAGS@
 amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @LIBLO_LIBS@ @LIBS@ libcore.la
 amsynth_SOURCES = \
 	src/app/AudioOutput.cpp \
@@ -158,21 +157,6 @@ amsynth_SOURCES = \
 	src/app/lash.h \
 	src/app/main.h \
 	src/app/main.cpp
-
-if BUILD_GUI
-amsynth_SOURCES += \
-	src/app/gui/ConfigDialog.cpp \
-	src/app/gui/ConfigDialog.h \
-	src/app/gui/MIDILearnDialog.cpp \
-	src/app/gui/MIDILearnDialog.h \
-	src/app/gui/MainMenu.cpp \
-	src/app/gui/MainMenu.h \
-	src/app/gui/MainWindow.cpp \
-	src/app/gui/MainWindow.h \
-	src/app/gui/gui_main.cpp \
-	src/app/gui/gui_main.h
-amsynth_LDADD += @GTK_LIBS@
-endif
 
 if BUILD_NSM
 amsynth_SOURCES += \
