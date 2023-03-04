@@ -73,6 +73,14 @@ PresetController::containsPresetWithName(const string name)
 }
 
 void
+PresetController::saveCurrentPreset	()
+{
+	loadPresets(); // in case another instance has changed any of the other presets
+	commitPreset();
+	savePresets();
+}
+
+void
 PresetController::clearPreset		()
 {
 	loadPresets();

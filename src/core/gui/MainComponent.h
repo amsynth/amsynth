@@ -36,6 +36,8 @@ public:
 
 	void paint(juce::Graphics &g) override;
 
+	void resized() override;
+
 private:
 	struct Impl;
 	std::unique_ptr<Impl> impl_;

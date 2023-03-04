@@ -72,6 +72,8 @@ public:
 	// Commit the current preset to memory
 	void	commitPreset		() { presets[currentPresetNo] = currentPreset; notify(); }
 
+	void	saveCurrentPreset	();
+
 	// Resets all parameters to default value and clears the name.
 	void	clearPreset			();
 
