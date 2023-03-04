@@ -150,12 +150,14 @@ struct MainComponent::Impl {
 			bankCombo_.addItem(bank.name, bankCombo_.getNumItems() + 1);
 			if (bank.file_path == presetController_->getFilePath()) {
 				bankCombo_.setSelectedId(bankCombo_.getNumItems());
+				saveButton_.setEnabled((currentBankIsWritable_ = juce::File(bank.file_path).hasWriteAccess()));
 			}
 		}
 		bankCombo_.onChange = [this] {
 			auto &bank = PresetController::getPresetBanks().at(bankCombo_.getSelectedItemIndex());
 			presetController_->loadPresets(bank.file_path.c_str());
 			presetController_->selectPreset(std::max(0, presetController_->getCurrPresetNumber()));
+			saveButton_.setEnabled((currentBankIsWritable_ = juce::File(bank.file_path).hasWriteAccess()));
 			populatePresetCombo();
 		};
 	}
@@ -196,6 +198,7 @@ struct MainComponent::Impl {
 	juce::ComboBox presetCombo_;
 	juce::TextButton saveButton_;
 	LookAndFeel lookAndFeel_;
+	bool currentBankIsWritable_ {false};
 };
 
 MainComponent::MainComponent(PresetController *presetController)
