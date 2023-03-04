@@ -69,6 +69,8 @@ struct MainComponent::Impl {
 
 	void showMainMenu(juce::Component *targetComponent) {
 		auto menu = juce::PopupMenu();
+
+		menu.addSectionHeader(gettext("File"));
 		menu.addItem(gettext("Open Alternate Tuning File..."), [this] {
 			openFile(gettext("Open Scala (.scl) alternate tuning file"), "*.scl", component_->loadTuningScl);
 		});
@@ -79,14 +81,57 @@ struct MainComponent::Impl {
 			component_->loadTuningScl(nullptr);
 			component_->loadTuningKbm(nullptr);
 		});
-		menu.addSeparator();
+
+		menu.addSectionHeader(gettext("Preset"));
+		menu.addItem(gettext("Rename..."), [this] {
+			renamePreset();
+		});
+		menu.addItem(gettext("Clear"), [this] {
+			presetController_->clearPreset();
+		});
+		menu.addItem(gettext("Randomise"), [this] {
+			presetController_->randomiseCurrentPreset();
+		});
+		menu.addItem(gettext("Undo"), [this] {
+			presetController_->undoChange();
+		});
+		menu.addItem(gettext("Redo"), [this] {
+			presetController_->redoChange();
+		});
+
+		menu.addSectionHeader(gettext("Help"));
 		menu.addItem(1, "Version 1.2.3", false);
 		menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(targetComponent));
 	}
 
 	void savePreset() {
 		presetController_->saveCurrentPreset();
+		PresetController::rescanPresetBanks();
+		populateBankCombo();
 		populatePresetCombo();
+	}
+
+	void renamePreset() {
+		if (!presetCombo_.getSelectedId())
+			return;
+
+		auto label = dynamic_cast<juce::Label *>(presetCombo_.getChildComponent(0));
+		label->setText(presetController_->getCurrentPreset().getName(),
+					   juce::NotificationType::dontSendNotification);
+
+		presetCombo_.setEditableText(true);
+		presetCombo_.showEditor();
+
+		label->onEditorHide = [this, label] {
+			presetCombo_.setEditableText(false);
+			auto text = label->getText().toStdString();
+			if (presetController_->getCurrentPreset().getName() != text) {
+				presetController_->getCurrentPreset().setName(text);
+			}
+			label->setText(std::to_string(presetController_->getCurrPresetNumber() + 1) + ": " + text,
+						   juce::NotificationType::dontSendNotification);
+			label->onEditorHide = nullptr;
+		};
 	}
 
 	void populateBankCombo() {
@@ -121,9 +166,13 @@ struct MainComponent::Impl {
 			if (bank.file_path == presetController_->getFilePath())
 				for (int i = 0; i < PresetController::kNumPresets; i++)
 					presetCombo_.addItem(std::to_string(i + 1) + ": " + bank.presets[i].getName(), i + 1);
-		presetCombo_.setSelectedItemIndex(presetController_->getCurrPresetNumber());
+		presetCombo_.setSelectedItemIndex(presetController_->getCurrPresetNumber(),
+										  juce::NotificationType::dontSendNotification);
 		presetCombo_.onChange = [this] {
-			presetController_->selectPreset(presetCombo_.getSelectedItemIndex());
+			auto presetIndex = presetCombo_.getSelectedId() - 1;
+			if (presetIndex == -1)
+				return;
+			presetController_->selectPreset(presetIndex);
 		};
 	}
 
