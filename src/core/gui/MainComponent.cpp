@@ -103,6 +103,9 @@ struct MainComponent::Impl {
 				foundFactory = true;
 			}
 			bankCombo_.addItem(bank.name, bankCombo_.getNumItems() + 1);
+			if (bank.file_path == presetController_->getFilePath()) {
+				bankCombo_.setSelectedId(bankCombo_.getNumItems());
+			}
 		}
 		bankCombo_.onChange = [this] {
 			auto &bank = PresetController::getPresetBanks().at(bankCombo_.getSelectedItemIndex());
