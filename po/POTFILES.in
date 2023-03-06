@@ -2,10 +2,6 @@ data/amsynth.appdata.xml.in
 data/dssi-amsynth-plugin.metainfo.xml.in
 data/lv2-amsynth-plugin.metainfo.xml.in
 data/vst-amsynth-plugin.metainfo.xml.in
-src/app/gui/ConfigDialog.cpp
-src/app/gui/MIDILearnDialog.cpp
-src/app/gui/MainMenu.cpp
-src/app/gui/MainWindow.cpp
 src/app/main.cpp
 src/core/gui/MainComponent.cpp
 src/core/synth/Parameter.cpp
