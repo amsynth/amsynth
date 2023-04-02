@@ -81,6 +81,14 @@ struct MainComponent::Impl {
 			component_->loadTuningKbm(nullptr);
 		});
 
+		menu.addSectionHeader(gettext("Edit"));
+		menu.addItem(gettext("Undo"), [this] {
+			presetController_->undoChange();
+		});
+		menu.addItem(gettext("Redo"), [this] {
+			presetController_->redoChange();
+		});
+
 		menu.addSectionHeader(gettext("Preset"));
 		menu.addItem(gettext("Rename..."), [this] {
 			renamePreset();
@@ -90,12 +98,6 @@ struct MainComponent::Impl {
 		});
 		menu.addItem(gettext("Randomise"), [this] {
 			presetController_->randomiseCurrentPreset();
-		});
-		menu.addItem(gettext("Undo"), [this] {
-			presetController_->undoChange();
-		});
-		menu.addItem(gettext("Redo"), [this] {
-			presetController_->redoChange();
 		});
 
 		menu.addSectionHeader(gettext("Help"));
