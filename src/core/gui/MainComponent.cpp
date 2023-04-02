@@ -59,7 +59,6 @@ struct MainComponent::Impl {
 	, controlPanel_(presetController, true)
 	, menuButton_("Menu")
 	, saveButton_("Save") {
-		component->setLookAndFeel(&lookAndFeel_);
 		controlPanel_.setBounds(controlPanel_.getBounds().withY(toolbarHeight));
 		menuButton_.onMouseDown = [this] { showMainMenu(&menuButton_); };
 		saveButton_.onClick = [this] { savePreset(); };
@@ -100,7 +99,9 @@ struct MainComponent::Impl {
 		});
 
 		menu.addSectionHeader(gettext("Help"));
-		menu.addItem(1, "Version 1.2.3", false);
+		menu.addItem(gettext("About"), [this] {
+			showAbout();
+		});
 		menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(targetComponent));
 	}
 
@@ -132,6 +133,44 @@ struct MainComponent::Impl {
 						   juce::NotificationType::dontSendNotification);
 			label->onEditorHide = nullptr;
 		};
+	}
+
+	void showAbout() {
+		auto editor = new juce::TextEditor();
+		editor->setSize(component_->getWidth(), component_->getHeight());
+		editor->setJustification(juce::Justification::centred);
+		editor->setMultiLine(true);
+		editor->setReadOnly(true);
+		editor->setText("amsynth\n"
+						"version " PACKAGE_VERSION "\n"
+						"\n"
+						"Copyright (c) 2002 Nick Dowell\n"
+						"\n"
+						"With contributions from:\n"
+						"Adam Sampson\n"
+						"Adrian Knoth\n"
+						"Andy Ryan\n"
+						"Bob Ham\n"
+						"Brian\n"
+						"Chris Cannam\n"
+						"Darrick Servis\n"
+						"Johan Martinsson\n"
+						"Karsten Wiese\n"
+						"Martin Tarenskeen\n"
+						"Paul Winkler\n"
+						"Samuli Suominen\n"
+						"Sebastien Cevey\n"
+						"Taybin Rutkin\n"
+						"\n"
+						"Includes Freeverb by Jezar Wakefield");
+		class MouseListener : public juce::MouseListener {
+			void mouseDown(const juce::MouseEvent &event) override {
+				event.eventComponent->getParentComponent()->removeChildComponent(event.eventComponent);
+				delete event.eventComponent;
+			}
+		};
+		editor->addMouseListener(new MouseListener(), false);
+		component_->addAndMakeVisible(editor);
 	}
 
 	void populateBankCombo() {
@@ -203,6 +242,7 @@ struct MainComponent::Impl {
 
 MainComponent::MainComponent(PresetController *presetController)
 : impl_(std::make_unique<Impl>(this, presetController)) {
+	setLookAndFeel(&impl_->lookAndFeel_);
 	addAndMakeVisible(impl_->menuButton_);
 	addAndMakeVisible(impl_->bankCombo_);
 	addAndMakeVisible(impl_->presetCombo_);
@@ -211,7 +251,9 @@ MainComponent::MainComponent(PresetController *presetController)
 	setBounds(0, 0, impl_->controlPanel_.getWidth(), impl_->controlPanel_.getBottom());
 }
 
-MainComponent::~MainComponent() = default;
+MainComponent::~MainComponent() {
+	setLookAndFeel(nullptr);
+}
 
 void MainComponent::paint(juce::Graphics &g) {
 	g.setColour(juce::Colour::fromRGB(30, 30, 30));
