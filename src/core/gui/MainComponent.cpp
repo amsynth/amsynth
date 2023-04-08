@@ -109,6 +109,12 @@ struct MainComponent::Impl {
 		menu.addItem(gettext("About"), [this] {
 			showAbout();
 		});
+		menu.addItem(gettext("Report a Bug"), [] {
+			juce::URL("https://github.com/amsynth/amsynth/issues").launchInDefaultBrowser();
+		});
+		menu.addItem(gettext("Online Documentation"), [] {
+			juce::URL("https://github.com/amsynth/amsynth/wiki").launchInDefaultBrowser();
+		});
 		menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(targetComponent));
 	}
 
