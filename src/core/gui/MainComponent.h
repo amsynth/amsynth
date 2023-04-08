@@ -26,7 +26,7 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
-class MainComponent : public juce::Component {
+class MainComponent final : public juce::Component, public juce::ApplicationCommandTarget {
 public:
 	MainComponent(PresetController *presetController);
 	~MainComponent();
@@ -34,13 +34,18 @@ public:
 	std::function<void(const char *)> loadTuningKbm;
 	std::function<void(const char *)> loadTuningScl;
 
-	void paint(juce::Graphics &g) override;
+	ApplicationCommandTarget *getNextCommandTarget() final {return nullptr;}
+	void getAllCommands(juce::Array<juce::CommandID> &commands) final;
+	void getCommandInfo(juce::CommandID commandID, juce::ApplicationCommandInfo &result) final;
+	bool perform(const InvocationInfo &info) final;
 
-	void resized() override;
+	void paint(juce::Graphics &g) final;
+	void resized() final;
 
 private:
 	struct Impl;
 	std::unique_ptr<Impl> impl_;
+	juce::ApplicationCommandManager commandManager;
 };
 
 #endif //amsynth_MainComponent_h

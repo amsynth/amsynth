@@ -30,6 +30,10 @@
 
 // TODO: Disable save button when appropriate
 
+enum CommandIDs {
+	randomisePreset = 0x10000,
+};
+
 static constexpr int toolbarHeight = 25;
 
 class LookAndFeel : public juce::LookAndFeel_V4 {
@@ -57,12 +61,13 @@ public:
 };
 
 struct MainComponent::Impl {
-	Impl(MainComponent *component, PresetController *presetController)
+	Impl(MainComponent *component, PresetController *presetController, juce::ApplicationCommandManager *commandManager)
 	: component_(component)
 	, presetController_(presetController)
 	, controlPanel_(presetController, true)
 	, menuButton_("Menu")
-	, saveButton_("Save") {
+	, saveButton_("Save")
+	, commandManager_(commandManager) {
 		controlPanel_.setBounds(controlPanel_.getBounds().withY(toolbarHeight));
 		menuButton_.onMouseDown = [this] { showMainMenu(&menuButton_); };
 		saveButton_.onClick = [this] { savePreset(); };
@@ -86,12 +91,8 @@ struct MainComponent::Impl {
 		});
 
 		menu.addSectionHeader(gettext("Edit"));
-		menu.addItem(gettext("Undo"), [this] {
-			presetController_->undoChange();
-		});
-		menu.addItem(gettext("Redo"), [this] {
-			presetController_->redoChange();
-		});
+		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::undo);
+		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::redo);
 
 		menu.addSectionHeader(gettext("Preset"));
 		menu.addItem(gettext("Rename..."), [this] {
@@ -100,9 +101,7 @@ struct MainComponent::Impl {
 		menu.addItem(gettext("Clear"), [this] {
 			presetController_->clearPreset();
 		});
-		menu.addItem(gettext("Randomise"), [this] {
-			presetController_->randomiseCurrentPreset();
-		});
+		menu.addCommandItem(commandManager_, CommandIDs::randomisePreset);
 
 		menu.addSectionHeader(gettext("Help"));
 		menu.addItem(gettext("About"), [this] {
@@ -235,6 +234,7 @@ struct MainComponent::Impl {
 		});
 	}
 
+	juce::ApplicationCommandManager *commandManager_;
 	MainComponent *component_;
 	PresetController *presetController_;
 	ControlPanel controlPanel_;
@@ -247,7 +247,7 @@ struct MainComponent::Impl {
 };
 
 MainComponent::MainComponent(PresetController *presetController)
-: impl_(std::make_unique<Impl>(this, presetController)) {
+: impl_(std::make_unique<Impl>(this, presetController, &commandManager)) {
 	setLookAndFeel(&impl_->lookAndFeel_);
 	addAndMakeVisible(impl_->menuButton_);
 	addAndMakeVisible(impl_->bankCombo_);
@@ -255,10 +255,58 @@ MainComponent::MainComponent(PresetController *presetController)
 	addAndMakeVisible(impl_->controlPanel_);
 	addAndMakeVisible(impl_->saveButton_);
 	setBounds(0, 0, impl_->controlPanel_.getWidth(), impl_->controlPanel_.getBottom());
+	commandManager.registerAllCommandsForTarget(this);
+	addKeyListener(commandManager.getKeyMappings());
 }
 
 MainComponent::~MainComponent() {
 	setLookAndFeel(nullptr);
+}
+
+void MainComponent::getAllCommands(juce::Array<juce::CommandID> &commands) {
+	commands.add(juce::StandardApplicationCommandIDs::undo);
+	commands.add(juce::StandardApplicationCommandIDs::redo);
+	commands.add(CommandIDs::randomisePreset);
+}
+
+void MainComponent::getCommandInfo(juce::CommandID commandID, juce::ApplicationCommandInfo &result) {
+	switch (commandID) {
+		case juce::StandardApplicationCommandIDs::undo:
+			result.setInfo("Undo", "Undo parameter change(s)", "Preset", 0);
+			result.addDefaultKeypress('z', juce::ModifierKeys::commandModifier);
+			break;
+		case juce::StandardApplicationCommandIDs::redo:
+			result.setInfo("Redo", "Redo parameter change(s)", "Preset", 0);
+#if JUCE_MAC
+			info.addDefaultKeypress('y', juce::ModifierKeys::commandModifier);
+#else
+			result.addDefaultKeypress('z', juce::ModifierKeys::commandModifier | juce::ModifierKeys::shiftModifier);
+#endif
+			break;
+		case randomisePreset:
+			result.setInfo("Randomise", "Sets all parameters to a random value", "Preset", 0);
+			result.addDefaultKeypress('r', juce::ModifierKeys::commandModifier);
+			break;
+		default:
+			break;
+	}
+}
+
+bool MainComponent::perform(const InvocationInfo &info) {
+	switch (info.commandID) {
+		case juce::StandardApplicationCommandIDs::undo:
+			impl_->presetController_->undoChange();
+			break;
+		case juce::StandardApplicationCommandIDs::redo:
+			impl_->presetController_->redoChange();
+			break;
+		case randomisePreset:
+			impl_->presetController_->randomiseCurrentPreset();
+			break;
+		default:
+			return false;
+	}
+	return true;
 }
 
 void MainComponent::paint(juce::Graphics &g) {
