@@ -38,7 +38,7 @@ jobs:
     - run: make -j 2
     - name: Run make install
       run: sudo make install
-    - run: ./utils/lv2lint.sh
+#    - run: ./utils/lv2lint.sh # lv2lint seems to have disappeared from the internet
     - name: Run make check
       run: |
         ./configure CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' --without-lv2 --without-dssi --without-vst --without-gui --without-lash
