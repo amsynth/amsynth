@@ -277,11 +277,7 @@ void MainComponent::getCommandInfo(juce::CommandID commandID, juce::ApplicationC
 			break;
 		case juce::StandardApplicationCommandIDs::redo:
 			result.setInfo("Redo", "Redo parameter change(s)", "Preset", 0);
-#if JUCE_MAC
-			info.addDefaultKeypress('y', juce::ModifierKeys::commandModifier);
-#else
 			result.addDefaultKeypress('z', juce::ModifierKeys::commandModifier | juce::ModifierKeys::shiftModifier);
-#endif
 			break;
 		case randomisePreset:
 			result.setInfo("Randomise", "Sets all parameters to a random value", "Preset", 0);
