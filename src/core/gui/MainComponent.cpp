@@ -91,6 +91,8 @@ struct MainComponent::Impl {
 		});
 
 		menu.addSectionHeader(gettext("Edit"));
+		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::copy);
+		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::paste);
 		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::undo);
 		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::redo);
 
@@ -117,14 +119,17 @@ struct MainComponent::Impl {
 		populatePresetCombo();
 	}
 
+	juce::Label *setPresetComboLabelText(juce::String text) {
+		auto label = dynamic_cast<juce::Label *>(presetCombo_.getChildComponent(0));
+		label->setText(text, juce::NotificationType::dontSendNotification);
+		return label;
+	}
+
 	void renamePreset() {
 		if (!presetCombo_.getSelectedId())
 			return;
 
-		auto label = dynamic_cast<juce::Label *>(presetCombo_.getChildComponent(0));
-		label->setText(presetController_->getCurrentPreset().getName(),
-					   juce::NotificationType::dontSendNotification);
-
+		auto label = setPresetComboLabelText(presetController_->getCurrentPreset().getName());
 		presetCombo_.setEditableText(true);
 		presetCombo_.showEditor();
 
@@ -264,23 +269,35 @@ MainComponent::~MainComponent() {
 }
 
 void MainComponent::getAllCommands(juce::Array<juce::CommandID> &commands) {
+	commands.add(juce::StandardApplicationCommandIDs::copy);
+	commands.add(juce::StandardApplicationCommandIDs::paste);
 	commands.add(juce::StandardApplicationCommandIDs::undo);
 	commands.add(juce::StandardApplicationCommandIDs::redo);
 	commands.add(CommandIDs::randomisePreset);
 }
 
 void MainComponent::getCommandInfo(juce::CommandID commandID, juce::ApplicationCommandInfo &result) {
+	juce::String category {gettext("Preset")};
+
 	switch (commandID) {
+		case juce::StandardApplicationCommandIDs::copy:
+			result.setInfo(gettext("Copy"), "", category, 0);
+			result.addDefaultKeypress('c', juce::ModifierKeys::commandModifier);
+			break;
+		case juce::StandardApplicationCommandIDs::paste:
+			result.setInfo(gettext("Paste"), "", category, 0);
+			result.addDefaultKeypress('v', juce::ModifierKeys::commandModifier);
+			break;
 		case juce::StandardApplicationCommandIDs::undo:
-			result.setInfo("Undo", "Undo parameter change(s)", "Preset", 0);
+			result.setInfo(gettext("Undo"), "", category, 0);
 			result.addDefaultKeypress('z', juce::ModifierKeys::commandModifier);
 			break;
 		case juce::StandardApplicationCommandIDs::redo:
-			result.setInfo("Redo", "Redo parameter change(s)", "Preset", 0);
+			result.setInfo(gettext("Redo"), "", category, 0);
 			result.addDefaultKeypress('z', juce::ModifierKeys::commandModifier | juce::ModifierKeys::shiftModifier);
 			break;
 		case randomisePreset:
-			result.setInfo("Randomise", "Sets all parameters to a random value", "Preset", 0);
+			result.setInfo(gettext("Randomise"), gettext("Sets all parameters to a random value"), category, 0);
 			result.addDefaultKeypress('r', juce::ModifierKeys::commandModifier);
 			break;
 		default:
@@ -289,15 +306,25 @@ void MainComponent::getCommandInfo(juce::CommandID commandID, juce::ApplicationC
 }
 
 bool MainComponent::perform(const InvocationInfo &info) {
+	auto presetController = impl_->presetController_;
+
 	switch (info.commandID) {
+		case juce::StandardApplicationCommandIDs::copy:
+			juce::SystemClipboard::copyTextToClipboard(presetController->getCurrentPreset().toString());
+			break;
+		case juce::StandardApplicationCommandIDs::paste:
+			if (presetController->getCurrentPreset().fromString(juce::SystemClipboard::getTextFromClipboard().toStdString()))
+				impl_->setPresetComboLabelText(std::to_string(presetController->getCurrPresetNumber() + 1)
+											   + ": " + presetController->getCurrentPreset().getName());
+			break;
 		case juce::StandardApplicationCommandIDs::undo:
-			impl_->presetController_->undoChange();
+			presetController->undoChange();
 			break;
 		case juce::StandardApplicationCommandIDs::redo:
-			impl_->presetController_->redoChange();
+			presetController->redoChange();
 			break;
 		case randomisePreset:
-			impl_->presetController_->randomiseCurrentPreset();
+			presetController->randomiseCurrentPreset();
 			break;
 		default:
 			return false;
