@@ -64,7 +64,7 @@ struct MainComponent::Impl {
 	Impl(MainComponent *component, PresetController *presetController, juce::ApplicationCommandManager *commandManager)
 	: component_(component)
 	, presetController_(presetController)
-	, controlPanel_(presetController, true)
+	, controlPanel_(presetController)
 	, menuButton_("Menu")
 	, saveButton_("Save")
 	, commandManager_(commandManager) {

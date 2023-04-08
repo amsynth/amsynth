@@ -48,9 +48,6 @@ Control::~Control()
 
 void Control::showPopupMenu()
 {
-	if (isPlugin) {
-		return;
-	}
 	auto menu = juce::PopupMenu();
 	auto p = parameter.getId();
 	menu.addItem(gettext("Assign MIDI Controller..."), true, false, [] {

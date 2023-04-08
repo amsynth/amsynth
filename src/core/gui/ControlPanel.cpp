@@ -77,7 +77,7 @@ public:
 
 struct ControlPanel::Impl final
 {
-	Impl(ControlPanel *controlPanel, PresetController *presetController, bool isPlugin)
+	Impl(ControlPanel *controlPanel, PresetController *presetController)
 	: controlPanel_(controlPanel)
 	, presetController_(presetController)
 	, label_(controlPanel)
@@ -93,17 +93,6 @@ struct ControlPanel::Impl final
 		controlPanel->addAndMakeVisible(background.get());
 		controlPanel->setSize(background->getWidth(), background->getHeight());
 		components_.push_back(std::move(background));
-
-		if (isPlugin) {
-			auto clickArea = std::make_unique<MouseDownControl>([this] (auto &event) {
-				if (event.mods.isPopupMenu()) {
-					showPopupMenu();
-				}
-			});
-			clickArea->setSize(controlPanel->getWidth(), controlPanel->getHeight());
-			controlPanel->addAndMakeVisible(clickArea.get());
-			components_.push_back(std::move(clickArea));
-		}
 
 		for (int i = 0; i < kAmsynthParameterCount; i++) {
 			auto &parameter = presetController_->getCurrentPreset().getParameter(i);
@@ -123,7 +112,6 @@ struct ControlPanel::Impl final
 				component = std::make_unique<Popup>(parameter, image, resource);
 			}
 			if (component) {
-				component->isPlugin = isPlugin;
 				component->setTopLeftPosition(control.x, control.y);
 				controlPanel->addAndMakeVisible(component.get());
 				components_.push_back(std::move(component));
@@ -197,8 +185,8 @@ struct ControlPanel::Impl final
 	Knob::Label label_;
 };
 
-ControlPanel::ControlPanel(PresetController *presetController, bool isPlugin)
-: impl_(std::make_unique<Impl>(this, presetController, isPlugin)) {}
+ControlPanel::ControlPanel(PresetController *presetController)
+: impl_(std::make_unique<Impl>(this, presetController)) {}
 
 ControlPanel::~ControlPanel() noexcept = default;
 

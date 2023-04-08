@@ -21,7 +21,7 @@
 
 #include "config.h"
 #include "core/controls.h"
-#include "core/gui/ControlPanel.h"
+#include "core/gui/MainComponent.h"
 #include "core/synth/Preset.h"
 #include "core/synth/Synthesizer.h"
 
@@ -176,14 +176,14 @@ public:
                                   juce::DocumentWindow::minimiseButton)
     {
         setUsingNativeTitleBar(true);
-        auto controlPanel = new ControlPanel(&presetController, true);
-        controlPanel->loadTuningKbm = [] (const char *file) {
+        auto component = new MainComponent(&presetController);
+        component->loadTuningKbm = [] (const char *file) {
             host_configure(PROP_KBM_FILE, file);
         };
-        controlPanel->loadTuningScl = [] (const char *file) {
+        component->loadTuningScl = [] (const char *file) {
             host_configure(PROP_SCL_FILE, file);
         };
-        setContentOwned(controlPanel, true);
+        setContentOwned(component, true);
         centreWithSize(getWidth(), getHeight());
         setResizable(false, false);
     }

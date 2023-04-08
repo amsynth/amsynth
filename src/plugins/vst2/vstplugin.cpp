@@ -47,7 +47,7 @@
 #define effFlagsProgramChunks   (1 << 5)
 
 #ifdef WITH_GUI
-#include "core/gui/ControlPanel.h"
+#include "core/gui/MainComponent.h"
 #include "core/gui/juce_x11.h"
 #endif
 
@@ -120,7 +120,7 @@ struct Plugin : public UpdateListener
 	std::string presetName;
 
 #ifdef WITH_GUI
-	std::unique_ptr<ControlPanel> controlPanel;
+	std::unique_ptr<MainComponent> gui;
 #endif
 };
 
@@ -184,32 +184,32 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 #ifdef WITH_GUI
 		case effEditGetRect: {
 			juceInit();
-			if (!plugin->controlPanel) {
-				plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController, true);
+			if (!plugin->gui) {
+				plugin->gui = std::make_unique<MainComponent>(plugin->synthesizer->_presetController);
 			}
 			static ERect rect;
 			// There doesn't seem to be a way to determine which screen the host wants to open a plugin on and
 			// apply the correct scale factor in a multiscreen setup.
 			auto scaleFactor = (int)juce::Desktop::getInstance().getGlobalScaleFactor();
-			auto bounds = plugin->controlPanel->getScreenBounds();
+			auto bounds = plugin->gui->getScreenBounds();
 			rect.right = short(bounds.getWidth() * scaleFactor);
 			rect.bottom = short(bounds.getHeight() * scaleFactor);
 			*(ERect **)ptr = &rect;
 			return 1;
 		}
 		case effEditOpen: {
-			if (!plugin->controlPanel) {
-				plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController, true);
+			if (!plugin->gui) {
+				plugin->gui = std::make_unique<MainComponent>(plugin->synthesizer->_presetController);
 			}
-			plugin->controlPanel->loadTuningKbm = [plugin](auto f) { plugin->synthesizer->loadTuningKeymap(f); };
-			plugin->controlPanel->loadTuningScl = [plugin](auto f) { plugin->synthesizer->loadTuningScale(f); };
-			plugin->controlPanel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ptr);
-			plugin->controlPanel->setVisible(true);
+			plugin->gui->loadTuningKbm = [plugin] (auto f) { plugin->synthesizer->loadTuningKeymap(f); };
+			plugin->gui->loadTuningScl = [plugin] (auto f) { plugin->synthesizer->loadTuningScale(f); };
+			plugin->gui->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ptr);
+			plugin->gui->setVisible(true);
 			return 1;
 		}
 		case effEditClose: {
-			plugin->controlPanel->removeFromDesktop();
-			plugin->controlPanel.reset();
+			plugin->gui->removeFromDesktop();
+			plugin->gui.reset();
 			return 0;
 		}
 		case effEditIdle: {

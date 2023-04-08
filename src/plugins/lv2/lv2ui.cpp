@@ -24,7 +24,7 @@
 #include "lv2plugin.h"
 
 #include "core/controls.h"
-#include "core/gui/ControlPanel.h"
+#include "core/gui/MainComponent.h"
 #include "core/gui/juce_x11.h"
 #include "core/synth/Preset.h"
 #include "core/synth/Synthesizer.h"
@@ -62,7 +62,7 @@ struct ParameterListener final : public UpdateListener {
 
 typedef struct {
 	PresetController presetController;
-	std::unique_ptr<ControlPanel> controlPanel;
+	std::unique_ptr<MainComponent> mainComponent;
 	std::unique_ptr<ParameterListener> parameterListener;
 	LV2UI_Widget parent {nullptr};
 
@@ -185,17 +185,17 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 
 	juceInit();
 
-	ui->controlPanel = std::make_unique<ControlPanel>(&ui->presetController, true);
-	ui->controlPanel->loadTuningKbm = [ui] (auto f) { lv2helper(ui).loadTuningKeymap(f); };
-	ui->controlPanel->loadTuningScl = [ui] (auto f) { lv2helper(ui).loadTuningScale(f); };
-	ui->controlPanel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ui->parent);
-	ui->controlPanel->setVisible(true);
+	ui->mainComponent = std::make_unique<MainComponent>(&ui->presetController);
+	ui->mainComponent->loadTuningKbm = [ui] (auto f) { lv2helper(ui).loadTuningKeymap(f); };
+	ui->mainComponent->loadTuningScl = [ui] (auto f) { lv2helper(ui).loadTuningScale(f); };
+	ui->mainComponent->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ui->parent);
+	ui->mainComponent->setVisible(true);
 	if (resize) {
-		auto bounds = ui->controlPanel->getScreenBounds();
+		auto bounds = ui->mainComponent->getScreenBounds();
 		auto scaleFactor = (int)juce::Desktop::getInstance().getGlobalScaleFactor();
 		resize->ui_resize(resize->handle, bounds.getWidth() * (int)scaleFactor, bounds.getHeight() * (int)scaleFactor);
 	}
-	*widget = ui->controlPanel->getWindowHandle();
+	*widget = ui->mainComponent->getWindowHandle();
 
 	return ui;
 }
@@ -203,7 +203,7 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 static void
 lv2_ui_cleanup(LV2UI_Handle ui)
 {
-	((lv2_ui *)ui)->controlPanel->removeFromDesktop();
+	((lv2_ui *)ui)->mainComponent->removeFromDesktop();
 	delete ((lv2_ui *)ui);
 }
 

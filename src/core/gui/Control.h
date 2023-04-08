@@ -33,7 +33,6 @@ public:
 	~Control();
 
 	Parameter &parameter;
-	bool isPlugin {false};
 
 	void showPopupMenu();
 
