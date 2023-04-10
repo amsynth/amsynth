@@ -79,17 +79,19 @@ struct MainComponent::Impl {
 	void showMainMenu(juce::Component *targetComponent) {
 		auto menu = juce::PopupMenu();
 
-		menu.addSectionHeader(gettext("File"));
-		menu.addItem(gettext("Open Alternate Tuning File..."), [this] {
-			openFile(gettext("Open Scala (.scl) alternate tuning file"), "*.scl", component_->loadTuningScl);
-		});
-		menu.addItem(gettext("Open Alternate Keyboard Map..."), [this] {
-			openFile(gettext("Open alternate keyboard map (Scala .kbm format)"), "*.kbm", component_->loadTuningKbm);
-		});
-		menu.addItem(gettext("Reset All Tuning Settings to Default"), [this] {
-			component_->loadTuningScl(nullptr);
-			component_->loadTuningKbm(nullptr);
-		});
+		if (component_->loadTuningScl && component_->loadTuningKbm) {
+			menu.addSectionHeader(gettext("Tuning"));
+			menu.addItem(gettext("Open Alternate Tuning File..."), [this] {
+				openFile(gettext("Open Scala (.scl) alternate tuning file"), "*.scl", component_->loadTuningScl);
+			});
+			menu.addItem(gettext("Open Alternate Keyboard Map..."), [this] {
+				openFile(gettext("Open alternate keyboard map (Scala .kbm format)"), "*.kbm", component_->loadTuningKbm);
+			});
+			menu.addItem(gettext("Reset All Tuning Settings to Default"), [this] {
+				component_->loadTuningScl(nullptr);
+				component_->loadTuningKbm(nullptr);
+			});
+		}
 
 		menu.addSectionHeader(gettext("Edit"));
 		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::copy);
