@@ -236,37 +236,7 @@ amsynth_lv2ui_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-sy
 amsynth_lv2ui_la_LIBADD = @LV2_LIBS@ .libs/libcore.a $(libcore_la_LIBADD)
 amsynth_lv2ui_la_SOURCES = src/plugins/lv2/lv2ui.cpp
 
-dist_amsynth_lv2_DATA = \
-	data/amsynth.lv2/manifest.ttl \
-	data/amsynth.lv2/amsynth.ttl \
-	data/amsynth.lv2/amsynth_factory.bank.ttl \
-	data/amsynth.lv2/BriansBank01.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank02.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank03.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank04.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank05.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank06.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank07.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank08.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank09.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank10.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank11.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank12.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank13.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank14.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank15.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank16.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank17.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank18.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank19.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank20.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank21.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank22.amSynth.bank.ttl \
-	data/amsynth.lv2/PatriksBank01.bank.ttl \
-	data/amsynth.lv2/PatriksBank02.bank.ttl \
-	data/amsynth.lv2/PatriksBank03.bank.ttl \
-	data/amsynth.lv2/PatriksBank04.bank.ttl \
-	data/amsynth.lv2/PatriksBank05.bank.ttl
+dist_amsynth_lv2_DATA = data/amsynth.lv2/amsynth.ttl data/amsynth.lv2/manifest.ttl
 
 endif
 
