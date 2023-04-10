@@ -67,14 +67,6 @@ private:
 	std::unordered_map<std::string, juce::Image> images_;
 };
 
-class MouseDownControl : public juce::Component {
-public:
-	using Handler = std::function<void(const juce::MouseEvent&)>;
-	explicit MouseDownControl(Handler handler) : handler_(std::move(handler)) {}
-	void mouseDown(const juce::MouseEvent &event) override { handler_(event); }
-	Handler handler_;
-};
-
 struct ControlPanel::Impl final
 {
 	Impl(ControlPanel *controlPanel, PresetController *presetController)
@@ -119,54 +111,6 @@ struct ControlPanel::Impl final
 		}
 	}
 	
-	void showPopupMenu() {
-		auto presetMenu = juce::PopupMenu();
-		for (auto &bank : PresetController::getPresetBanks()) {
-			char text[64];
-			auto bankMenu = juce::PopupMenu();
-			for (int i = 0; i < PresetController::kNumPresets; i++) {
-				snprintf(text, sizeof text, "%d: %s", i, bank.presets[i].getName().c_str());
-				bankMenu.addItem(text, [this, &bank, i] {
-					presetController_->loadPresets(bank.file_path.c_str());
-					presetController_->selectPreset(i);
-				});
-			}
-			snprintf(text, sizeof text, "[%s] %s", bank.read_only ? gettext("F") : gettext("U"), bank.name.c_str());
-			presetMenu.addSubMenu(text, bankMenu);
-		}
-		
-		auto fileMenu = juce::PopupMenu();
-		if (controlPanel_->loadTuningScl) {
-			fileMenu.addItem(gettext("Open Alternate Tuning File..."), [this] {
-				openFile(gettext("Open Scala (.scl) alternate tuning file"),
-						 "*.scl", controlPanel_->loadTuningScl);
-			});
-		}
-		if (controlPanel_->loadTuningKbm) {
-			fileMenu.addItem(gettext("Open Alternate Keyboard Map..."), [this] {
-				openFile(gettext("Open alternate keyboard map (Scala .kbm format)"),
-						 "*.kbm", controlPanel_->loadTuningKbm);
-			});
-		}
-		if (controlPanel_->loadTuningKbm || controlPanel_->loadTuningScl) {
-			fileMenu.addItem(gettext("Reset All Tuning Settings to Default"), [this] {
-				if (controlPanel_->loadTuningKbm)
-					controlPanel_->loadTuningKbm(nullptr);
-				if (controlPanel_->loadTuningScl)
-					controlPanel_->loadTuningScl(nullptr);
-			});
-		}
-
-		auto menu = juce::PopupMenu();
-		menu.addSubMenu(gettext("File"), fileMenu);
-		menu.addSubMenu(gettext("Preset"), presetMenu);
-#ifdef PACKAGE_VERSION
-		menu.addSeparator();
-		menu.addItem(1, "v" PACKAGE_VERSION, false);
-#endif
-		menu.showMenuAsync(juce::PopupMenu::Options());
-	}
-
 	static void openFile(const char *title, const char *filters, const std::function<void(const char *)> &handler) {
 		auto cwd = juce::File::getSpecialLocation(juce::File::userMusicDirectory);
 		auto chooser = new juce::FileChooser(title, cwd, filters);
