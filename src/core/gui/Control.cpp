@@ -45,34 +45,18 @@ Control::~Control()
 	parameter.removeUpdateListener(this);
 }
 
-
-void Control::showPopupMenu()
-{
-	auto menu = juce::PopupMenu();
-	auto p = parameter.getId();
-	menu.addItem(gettext("Assign MIDI Controller..."), true, false, [] {
-		// TODO: Reimplement MIDI Learn / CC assignment
-	});
-	bool ignored = Preset::shouldIgnoreParameter(p);
-	menu.addItem(gettext("Ignore Preset Value"), true, ignored, [ignored, p] {
-		Preset::setShouldIgnoreParameter(p, !ignored);
-		Configuration &config = Configuration::get();
-		config.ignored_parameters = Preset::getIgnoredParameterNames();
-		config.save();
-	});
-	menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(this));
-}
-
 void Control::mouseDown(const juce::MouseEvent &event)
 {
-	if (event.mods.isPopupMenu()) {
-		showPopupMenu();
+	if (event.mods.isLeftButtonDown()) {
+		leftMouseDown(event);
 	}
 }
 
 void Control::mouseDoubleClick(const juce::MouseEvent &event)
 {
-	parameter.setValue(parameter.getDefault());
+	if (event.mods.isLeftButtonDown()) {
+		parameter.setValue(parameter.getDefault());
+	}
 }
 
 void Control::paint(juce::Graphics &g)

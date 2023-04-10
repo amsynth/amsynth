@@ -26,7 +26,7 @@
 #include "core/controls.h"
 #include "core/gui/MainComponent.h"
 #include "core/gui/juce_x11.h"
-#include "core/synth/Preset.h"
+#include "core/synth/PresetController.h"
 #include "core/synth/Synthesizer.h"
 
 #include <cstring>

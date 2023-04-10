@@ -27,6 +27,7 @@
 
 #include "ControlPanel.h"
 #include "core/gettext.h"
+#include "core/synth/PresetController.h"
 
 // TODO: Disable save button when appropriate
 
@@ -61,10 +62,10 @@ public:
 };
 
 struct MainComponent::Impl {
-	Impl(MainComponent *component, PresetController *presetController, juce::ApplicationCommandManager *commandManager)
+	Impl(MainComponent *component, MidiController *midiController, PresetController *presetController, juce::ApplicationCommandManager *commandManager)
 	: component_(component)
 	, presetController_(presetController)
-	, controlPanel_(presetController)
+	, controlPanel_(midiController, presetController)
 	, menuButton_("Menu")
 	, saveButton_("Save")
 	, commandManager_(commandManager) {
@@ -257,8 +258,8 @@ struct MainComponent::Impl {
 	bool currentBankIsWritable_ {false};
 };
 
-MainComponent::MainComponent(PresetController *presetController)
-: impl_(std::make_unique<Impl>(this, presetController, &commandManager)) {
+MainComponent::MainComponent(PresetController *presetController, MidiController *midiController)
+: impl_(std::make_unique<Impl>(this, midiController, presetController, &commandManager)) {
 	setLookAndFeel(&impl_->lookAndFeel_);
 	addAndMakeVisible(impl_->menuButton_);
 	addAndMakeVisible(impl_->bankCombo_);

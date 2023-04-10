@@ -30,12 +30,8 @@ public:
 	: Control(parameter, std::move(image), r) {}
 
 protected:
-	void mouseDown(const juce::MouseEvent &event) override
+	void leftMouseDown(const juce::MouseEvent &event) override
 	{
-		if (event.mods.isPopupMenu()) {
-			showPopupMenu();
-			return;
-		}
 		parameter.willChange();
 		parameter.setNormalisedValue(parameter.getNormalisedValue() > 0.f ? 0.f : 1.f);
 	}

@@ -22,13 +22,11 @@
 #ifndef amsynth_MainComponent_h
 #define amsynth_MainComponent_h
 
-#include "core/synth/PresetController.h"
-
 #include <juce_gui_basics/juce_gui_basics.h>
 
 class MainComponent final : public juce::Component, public juce::ApplicationCommandTarget {
 public:
-	MainComponent(PresetController *presetController);
+	MainComponent(class PresetController *presetController, class MidiController *midiController = nullptr);
 	~MainComponent();
 
 	std::function<void(const char *)> loadTuningKbm;

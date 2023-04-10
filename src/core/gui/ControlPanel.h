@@ -22,14 +22,12 @@
 #ifndef _CONTROLPANEL_H
 #define _CONTROLPANEL_H
 
-#include "core/synth/PresetController.h"
-
 #include <juce_gui_basics/juce_gui_basics.h>
 
 class ControlPanel final : public juce::Component
 {
 public:
-	explicit ControlPanel(PresetController *presetController);
+	explicit ControlPanel(class MidiController *midiController, class PresetController *presetController);
 
 	~ControlPanel() noexcept final;
 	

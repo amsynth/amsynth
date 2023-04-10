@@ -31,12 +31,8 @@ public:
 
 protected:
 
-	void mouseDown(const juce::MouseEvent &event) override
+	void leftMouseDown(const juce::MouseEvent &event) override
 	{
-		if (event.mods.isPopupMenu()) {
-			showPopupMenu();
-			return;
-		}
 		auto strings = parameter_get_value_strings(parameter.getId());
 		auto menu = juce::PopupMenu();
 		for (int i = 0; i <= parameter.getSteps(); i++) {

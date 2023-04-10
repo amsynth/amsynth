@@ -42,12 +42,8 @@ void Knob::mouseExit(const juce::MouseEvent &event)
 	label_->hide();
 }
 
-void Knob::mouseDown(const juce::MouseEvent &event)
+void Knob::leftMouseDown(const juce::MouseEvent &event)
 {
-	if (event.mods.isPopupMenu()) {
-		showPopupMenu();
-		return;
-	}
 	referenceVal_ = parameter.getNormalisedValue();
 	referenceY_ = event.y;
 	parameter.willChange();

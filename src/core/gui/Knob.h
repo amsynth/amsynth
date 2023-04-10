@@ -49,7 +49,7 @@ public:
 protected:
 	void mouseEnter(const juce::MouseEvent &event) override;
 	void mouseExit(const juce::MouseEvent &event) override;
-	void mouseDown(const juce::MouseEvent &event) override;
+	void leftMouseDown(const juce::MouseEvent &event) override;
 	void mouseDrag(const juce::MouseEvent &event) override;
 	void mouseWheelMove(const juce::MouseEvent &event, const juce::MouseWheelDetails &wheel) override;
 
