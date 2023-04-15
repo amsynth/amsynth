@@ -39,7 +39,9 @@ enum {
 enum {
     MIDI_CC_BANK_SELECT_MSB             = 0x00,
     MIDI_CC_MODULATION_WHEEL_MSB        = 0x01,
+    MIDI_CC_PORTAMENTO_TIME             = 0x05,
     MIDI_CC_DATA_ENTRY_MSB              = 0x06,
+    MIDI_CC_VOLUME                      = 0x07,
     MIDI_CC_PAN_MSB                     = 0x0A,
 
     MIDI_CC_BANK_SELECT_LSB             = 0x20,
@@ -48,6 +50,11 @@ enum {
     MIDI_CC_SUSTAIN_PEDAL               = 0x40,
     MIDI_CC_PORTAMENTO                  = 0x41,
     MIDI_CC_SOSTENUTO                   = 0x42,
+    MIDI_CC_FILTER_RESONANCE            = 0x47,
+    MIDI_CC_AMP_ENV_RELEASE             = 0x48,
+    MIDI_CC_AMP_ENV_ATTACK              = 0x49,
+    MIDI_CC_FILTER_CUTOFF_FREQ          = 0x4A,
+    MIDI_CC_REVERB_LEVEL                = 0x5B,
     MIDI_CC_NRPN_LSB                    = 0x62,
     MIDI_CC_NRPN_MSB                    = 0x63,
     MIDI_CC_RPN_LSB                     = 0x64,
