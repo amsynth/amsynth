@@ -181,8 +181,17 @@ public:
 	: DocumentWindow(PACKAGE_NAME, juce::Colours::lightgrey, juce::DocumentWindow::closeButton | juce::DocumentWindow::minimiseButton)
 	{
 		auto mainComponent = new MainComponent(s_synthesizer->getPresetController());
-		mainComponent->loadTuningKbm = [] (const char *file) { s_synthesizer->loadTuningKeymap(file); };
-		mainComponent->loadTuningScl = [] (const char *file) { s_synthesizer->loadTuningScale(file); };
+		mainComponent->properties = s_synthesizer->getProperties();
+		mainComponent->setProperty = [] (const char *name, const char *value) {
+			s_synthesizer->setProperty(name, value);
+			if (name == std::string(PROP_NAME(max_polyphony)))
+				Configuration::get().polyphony = std::stoi(value);
+			if (name == std::string(PROP_NAME(midi_channel)))
+				Configuration::get().midi_channel = std::stoi(value);
+			if (name == std::string(PROP_NAME(pitch_bend_range)))
+				Configuration::get().pitch_bend_range = std::stoi(value);
+			Configuration::get().save();
+		};
 		setContentOwned(mainComponent, true);
 		centreWithSize(getWidth(), getHeight());
 		setResizable(false, false);

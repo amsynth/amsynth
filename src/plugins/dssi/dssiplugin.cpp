@@ -110,17 +110,7 @@ static void cleanup (LADSPA_Handle instance)
 static char * configure(LADSPA_Handle Instance, const char *Key, const char *Value)
 {
 	Synthesizer *synthesizer = ((amsynth_wrapper *) Instance)->synth;
-
-	if (strcmp(Key, PROP_KBM_FILE) == 0) {
-		synthesizer->loadTuningKeymap(Value);
-		return nullptr;
-	}
-
-	if (strcmp(Key, PROP_SCL_FILE) == 0) {
-		synthesizer->loadTuningScale(Value);
-		return nullptr;
-	}
-
+	synthesizer->setProperty(Key, Value);
 	return nullptr;
 }
 

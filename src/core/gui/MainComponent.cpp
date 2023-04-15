@@ -28,6 +28,7 @@
 #include "ControlPanel.h"
 #include "core/gettext.h"
 #include "core/synth/PresetController.h"
+#include "core/synth/Synthesizer.h"
 
 // TODO: Disable save button when appropriate
 
@@ -79,19 +80,21 @@ struct MainComponent::Impl {
 	void showMainMenu(juce::Component *targetComponent) {
 		auto menu = juce::PopupMenu();
 
-		if (component_->loadTuningScl && component_->loadTuningKbm) {
-			menu.addSectionHeader(gettext("Tuning"));
-			menu.addItem(gettext("Open Alternate Tuning File..."), [this] {
-				openFile(gettext("Open Scala (.scl) alternate tuning file"), "*.scl", component_->loadTuningScl);
+		menu.addSectionHeader(gettext("Tuning"));
+		menu.addItem(gettext("Open Alternate Tuning File..."), [this] {
+			openFile(gettext("Open Scala (.scl) alternate tuning file"), "*.scl", [this] (const char *filename) {
+				component_->setProperty(PROP_NAME(tuning_scl_file), filename);
 			});
-			menu.addItem(gettext("Open Alternate Keyboard Map..."), [this] {
-				openFile(gettext("Open alternate keyboard map (Scala .kbm format)"), "*.kbm", component_->loadTuningKbm);
+		});
+		menu.addItem(gettext("Open Alternate Keyboard Map..."), [this] {
+			openFile(gettext("Open alternate keyboard map (Scala .kbm format)"), "*.kbm",  [this] (const char *filename) {
+				component_->setProperty(PROP_NAME(tuning_kbm_file), filename);
 			});
-			menu.addItem(gettext("Reset All Tuning Settings to Default"), [this] {
-				component_->loadTuningScl(nullptr);
-				component_->loadTuningKbm(nullptr);
-			});
-		}
+		});
+		menu.addItem(gettext("Reset All Tuning Settings to Default"), [this] {
+			component_->setProperty(PROP_NAME(tuning_scl_file), nullptr);
+			component_->setProperty(PROP_NAME(tuning_kbm_file), nullptr);
+		});
 
 		menu.addSectionHeader(gettext("Edit"));
 		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::copy);
@@ -107,6 +110,53 @@ struct MainComponent::Impl {
 			presetController_->clearPreset();
 		});
 		menu.addCommandItem(commandManager_, CommandIDs::randomisePreset);
+
+		menu.addSectionHeader(gettext("Config"));
+        auto getIntProperty = [&] (const char *key, int fallback) {
+            auto it = component_->properties.find(key);
+            if (it != component_->properties.end())
+                return std::stoi(it->second);
+            return fallback;
+        };
+        auto setIntProperty = [&] (const char *key, int value) {
+            component_->properties[key] = std::to_string(value);
+            component_->setProperty(key, component_->properties[key].c_str());
+        };
+		menu.addSubMenu(gettext("Pitch Bend Range"), [&] {
+			juce::PopupMenu submenu;
+            auto key = PROP_NAME(pitch_bend_range);
+			int currentValue = getIntProperty(key, 2);
+			for (int i = 1; i <= 24; i++) {
+				submenu.addItem(std::to_string(i) + gettext(" Semitones"), true, i == currentValue, [=] {
+					setIntProperty(key, i);
+				});
+			}
+			return submenu;
+		}());
+		menu.addSubMenu(gettext("Max. Polyphony"), [&] {
+			juce::PopupMenu submenu;
+            auto key = PROP_NAME(max_polyphony);
+            int currentValue = getIntProperty(key, 10);
+			for (int i = 0; i <= 16; i++) {
+				submenu.addItem(i ? std::to_string(i) : gettext("Unlimited"), true, i == currentValue, [=] {
+					setIntProperty(key, i);
+				});
+			}
+			return submenu;
+		}());
+		if (!component_->isPlugin) {
+			menu.addSubMenu(gettext("MIDI Channel"), [&] {
+				juce::PopupMenu submenu;
+                auto key = PROP_NAME(midi_channel);
+                int currentValue = getIntProperty(key, 0);
+				for (int i = 0; i <= 16; i++) {
+					submenu.addItem(i ? std::to_string(i) : gettext("Unlimited"), true, i == currentValue, [=] {
+						setIntProperty(key, i);
+					});
+				}
+				return submenu;
+			}());
+		}
 
 		menu.addSectionHeader(gettext("Help"));
 		menu.addItem(gettext("About"), [this] {
@@ -207,7 +257,7 @@ struct MainComponent::Impl {
 			}
 			bankCombo_.addItem(bank.name, bankCombo_.getNumItems() + 1);
 			if (bank.file_path == presetController_->getFilePath()) {
-				bankCombo_.setSelectedId(bankCombo_.getNumItems());
+				bankCombo_.setSelectedId(bankCombo_.getNumItems(), juce::NotificationType::dontSendNotification);
 				saveButton_.setEnabled((currentBankIsWritable_ = juce::File(bank.file_path).hasWriteAccess()));
 			}
 		}

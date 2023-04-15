@@ -25,14 +25,24 @@
 #include "core/controls.h"
 #include "core/types.h"
 
+#include <map>
+#include <string>
 #include <vector>
 
-//
-// Property names
-//
-#define PROP_KBM_FILE "tuning_kbm_file"
-#define PROP_SCL_FILE "tuning_scl_file"
+enum class PropertyID
+{
+	max_polyphony,
+	midi_channel,
+	pitch_bend_range,
+	tuning_kbm_file,
+	tuning_scl_file,
+};
 
+#ifdef NDEBUG
+#define PROP_NAME(x) #x
+#else
+#define PROP_NAME(x) ((void)PropertyID::x, #x)
+#endif
 
 class MidiController;
 class PresetController;
@@ -44,6 +54,9 @@ public:
     
     Synthesizer();
     virtual ~Synthesizer();
+
+	void setProperty(const char *name, const char *value);
+	std::map<std::string, std::string> getProperties();
     
     void loadBank(const char *filename);
     void saveBank(const char *filename);
@@ -64,6 +77,7 @@ public:
     void getParameterLabel(Param parameter, char *buffer, size_t maxLen);
     void getParameterDisplay(Param parameter, char *buffer, size_t maxLen);
 
+	int getPitchBendRangeSemitones();
     void setPitchBendRangeSemitones(int value);
 
 	int getMaxNumVoices();

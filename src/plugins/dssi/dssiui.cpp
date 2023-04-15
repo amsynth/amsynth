@@ -34,6 +34,7 @@
 
 #define MAX_PATH 160
 
+MainComponent *mainComponent;
 juce::TopLevelWindow *mainWindow;
 juce::String windowTitle;
 PresetController presetController;
@@ -84,6 +85,14 @@ static void osc_error(int num, const char *msg, const char *path)
 //
 // handle message sent by plugin host
 //
+
+static int osc_configure_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+{
+	assert(types[0] == 's');
+	assert(types[1] == 's');
+	mainComponent->properties[&argv[0]->S] = &argv[1]->s;
+	return 0;
+}
 
 static int osc_control_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
 {
@@ -176,14 +185,9 @@ public:
                                   juce::DocumentWindow::minimiseButton)
     {
         setUsingNativeTitleBar(true);
-        auto component = new MainComponent(&presetController);
-        component->loadTuningKbm = [] (const char *file) {
-            host_configure(PROP_KBM_FILE, file);
-        };
-        component->loadTuningScl = [] (const char *file) {
-            host_configure(PROP_SCL_FILE, file);
-        };
-        setContentOwned(component, true);
+        mainComponent = new MainComponent(&presetController);
+		mainComponent->setProperty = &host_configure;
+        setContentOwned(mainComponent, true);
         centreWithSize(getWidth(), getHeight());
         setResizable(false, false);
     }
@@ -264,6 +268,7 @@ int main(int argc, char *argv[])
     _osc_host_addr = lo_address_new_from_url(host_url);
     
     _osc_server = lo_server_new(nullptr, osc_error);
+    lo_server_add_method(_osc_server, tmpstr("/%s/configure",   _osc_path), "ss",    osc_configure_handler,   nullptr);
     lo_server_add_method(_osc_server, tmpstr("/%s/control",     _osc_path), "if",    osc_control_handler,     nullptr);
     lo_server_add_method(_osc_server, tmpstr("/%s/sample-rate", _osc_path), "i",     osc_samplerate_handler,  nullptr);
     lo_server_add_method(_osc_server, tmpstr("/%s/program",     _osc_path), "ii",    osc_program_handler,     nullptr);
@@ -282,9 +287,4 @@ int main(int argc, char *argv[])
     return juce::JUCEApplicationBase::main(JUCE_MAIN_FUNCTION_ARGS);
 }
 
-void modal_midi_learn(Param param_index)
-{
-}
-
 ////////////////////////////////////////////////////////////////////////////////
-

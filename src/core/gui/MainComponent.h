@@ -24,13 +24,12 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
+#include <map>
+
 class MainComponent final : public juce::Component, public juce::ApplicationCommandTarget {
 public:
 	MainComponent(class PresetController *presetController, class MidiController *midiController = nullptr);
 	~MainComponent();
-
-	std::function<void(const char *)> loadTuningKbm;
-	std::function<void(const char *)> loadTuningScl;
 
 	ApplicationCommandTarget *getNextCommandTarget() final {return nullptr;}
 	void getAllCommands(juce::Array<juce::CommandID> &commands) final;
@@ -39,6 +38,11 @@ public:
 
 	void paint(juce::Graphics &g) final;
 	void resized() final;
+
+	std::function<void(const char *name, const char *value)> setProperty;
+	std::map<std::string, std::string> properties;
+
+	bool isPlugin {true};
 
 private:
 	struct Impl;
