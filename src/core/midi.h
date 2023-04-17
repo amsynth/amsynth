@@ -50,11 +50,11 @@ enum {
     MIDI_CC_SUSTAIN_PEDAL               = 0x40,
     MIDI_CC_PORTAMENTO                  = 0x41,
     MIDI_CC_SOSTENUTO                   = 0x42,
-    MIDI_CC_FILTER_RESONANCE            = 0x47,
-    MIDI_CC_AMP_ENV_RELEASE             = 0x48,
-    MIDI_CC_AMP_ENV_ATTACK              = 0x49,
-    MIDI_CC_FILTER_CUTOFF_FREQ          = 0x4A,
-    MIDI_CC_REVERB_LEVEL                = 0x5B,
+    MIDI_CC_SOUND_CONTROLLER_2          = 0x47, // default: Timbre/Harmonic Intensity
+    MIDI_CC_SOUND_CONTROLLER_3          = 0x48, // default: Release Time
+    MIDI_CC_SOUND_CONTROLLER_4          = 0x49, // default: Attack Time
+    MIDI_CC_SOUND_CONTROLLER_5          = 0x4A, // default: Brightness
+    MIDI_CC_EFFECTS_1_DEPTH             = 0x5B,
     MIDI_CC_NRPN_LSB                    = 0x62,
     MIDI_CC_NRPN_MSB                    = 0x63,
     MIDI_CC_RPN_LSB                     = 0x64,
