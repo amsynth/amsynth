@@ -215,11 +215,11 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 		case MIDI_CC_MODULATION_WHEEL_MSB:
 		case MIDI_CC_PORTAMENTO_TIME:
 		case MIDI_CC_VOLUME:
-		case MIDI_CC_FILTER_RESONANCE:
-		case MIDI_CC_FILTER_CUTOFF_FREQ:
-		case MIDI_CC_AMP_ENV_ATTACK:
-		case MIDI_CC_AMP_ENV_RELEASE:
-		case MIDI_CC_REVERB_LEVEL:
+		case MIDI_CC_SOUND_CONTROLLER_2:
+		case MIDI_CC_SOUND_CONTROLLER_3:
+		case MIDI_CC_SOUND_CONTROLLER_4:
+		case MIDI_CC_SOUND_CONTROLLER_5:
+		case MIDI_CC_EFFECTS_1_DEPTH:
 			/* Handled by controller map */
 		default:
 			break;
@@ -243,16 +243,16 @@ MidiController::clearControllerMap()
 	_param_to_cc_map[kAmsynthParameter_PortamentoTime]   = MIDI_CC_PORTAMENTO_TIME;
 	_cc_to_param_map[MIDI_CC_VOLUME]                     = kAmsynthParameter_MasterVolume;
 	_param_to_cc_map[kAmsynthParameter_MasterVolume]     = MIDI_CC_VOLUME;
-	_cc_to_param_map[MIDI_CC_FILTER_RESONANCE]           = kAmsynthParameter_FilterResonance;
-	_param_to_cc_map[kAmsynthParameter_FilterResonance]  = MIDI_CC_FILTER_RESONANCE;
-	_cc_to_param_map[MIDI_CC_FILTER_CUTOFF_FREQ]         = kAmsynthParameter_FilterCutoff;
-	_param_to_cc_map[kAmsynthParameter_FilterCutoff]     = MIDI_CC_FILTER_CUTOFF_FREQ;
-	_cc_to_param_map[MIDI_CC_AMP_ENV_ATTACK]             = kAmsynthParameter_AmpEnvAttack;
-	_param_to_cc_map[kAmsynthParameter_AmpEnvAttack]     = MIDI_CC_AMP_ENV_ATTACK;
-	_cc_to_param_map[MIDI_CC_AMP_ENV_RELEASE]            = kAmsynthParameter_AmpEnvRelease;
-	_param_to_cc_map[kAmsynthParameter_AmpEnvRelease]    = MIDI_CC_AMP_ENV_RELEASE;
-	_cc_to_param_map[MIDI_CC_REVERB_LEVEL]               = kAmsynthParameter_ReverbWet;
-	_param_to_cc_map[kAmsynthParameter_ReverbWet]        = MIDI_CC_REVERB_LEVEL;
+	_cc_to_param_map[MIDI_CC_SOUND_CONTROLLER_2]         = kAmsynthParameter_FilterResonance;
+	_param_to_cc_map[kAmsynthParameter_FilterResonance]  = MIDI_CC_SOUND_CONTROLLER_2;
+	_cc_to_param_map[MIDI_CC_SOUND_CONTROLLER_3]         = kAmsynthParameter_AmpEnvRelease;
+	_param_to_cc_map[kAmsynthParameter_AmpEnvRelease]    = MIDI_CC_SOUND_CONTROLLER_3;
+	_cc_to_param_map[MIDI_CC_SOUND_CONTROLLER_4]         = kAmsynthParameter_AmpEnvAttack;
+	_param_to_cc_map[kAmsynthParameter_AmpEnvAttack]     = MIDI_CC_SOUND_CONTROLLER_4;
+	_cc_to_param_map[MIDI_CC_SOUND_CONTROLLER_5]         = kAmsynthParameter_FilterCutoff;
+	_param_to_cc_map[kAmsynthParameter_FilterCutoff]     = MIDI_CC_SOUND_CONTROLLER_5;
+	_cc_to_param_map[MIDI_CC_EFFECTS_1_DEPTH]            = kAmsynthParameter_ReverbWet;
+	_param_to_cc_map[kAmsynthParameter_ReverbWet]        = MIDI_CC_EFFECTS_1_DEPTH;
 }
 
 void
