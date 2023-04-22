@@ -25,6 +25,7 @@
 
 #include "Preset.h"
 
+#include <array>
 #include <cassert>
 #include <cmath>
 #include <cstdio>
@@ -164,18 +165,16 @@ Preset::fromString(const std::string &str)
 	return true;
 }
 
-static std::vector<bool> s_ignoreParameter(kAmsynthParameterCount);
+static std::array<bool, kAmsynthParameterCount> s_ignoreParameter {false};
 
 bool Preset::shouldIgnoreParameter(int parameter)
 {
-	assert(parameter >= 0 && parameter < (int)s_ignoreParameter.size());
-	return s_ignoreParameter[parameter];
+	return s_ignoreParameter.at(parameter);
 }
 
 void Preset::setShouldIgnoreParameter(int parameter, bool ignore)
 {
-	assert(parameter >= 0 && parameter < (int)s_ignoreParameter.size());
-	s_ignoreParameter[parameter] = ignore;
+	s_ignoreParameter.at(parameter) = ignore;
 }
 
 std::string Preset::getIgnoredParameterNames()
