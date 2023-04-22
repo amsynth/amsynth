@@ -19,11 +19,11 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "PresetController.h"
-
 #if HAVE_CONFIG_H
 #include "config.h"
 #endif
+
+#include "PresetController.h"
 
 #include "core/filesystem.h"
 #include "core/gettext.h"

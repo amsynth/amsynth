@@ -58,7 +58,9 @@ AS_IF([test "$USE_NLS" = "yes"], [AC_DEFINE([ENABLE_NLS], [1], [Enable gettext])
 
 GETTEXT_PACKAGE=amsynth
 AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package])
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
+AC_DEFINE_UNQUOTED([DEFAULT_TEXT_DOMAIN], ["$GETTEXT_PACKAGE"],
+    [The domain used by the gettext() and ngettext() macros])
 
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl

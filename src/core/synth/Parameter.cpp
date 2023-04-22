@@ -19,11 +19,11 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Parameter.h"
-
 #if HAVE_CONFIG_H
 #include "config.h"
 #endif
+
+#include "Parameter.h"
 
 #include "core/gettext.h"
 #include "core/synth/Synth--.h"

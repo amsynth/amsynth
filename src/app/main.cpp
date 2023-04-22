@@ -19,11 +19,11 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "main.h"
-
 #if HAVE_CONFIG_H
 #include "config.h"
 #endif
+
+#include "main.h"
 
 #include "AudioOutput.h"
 #include "JackOutput.h"
@@ -202,7 +202,6 @@ int main( int argc, char *argv[] )
 	setlocale(LC_ALL, "");
 	bindtextdomain(GETTEXT_PACKAGE, PACKAGE_LOCALEDIR);
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-	textdomain(GETTEXT_PACKAGE);
 #else
 #warning text will not be localized because ENABLE_NLS not set
 #endif

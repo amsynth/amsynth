@@ -19,10 +19,13 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "Control.h"
 
 #include "core/Configuration.h"
-#include "core/gettext.h"
 #include "core/synth/Preset.h"
 
 extern void modal_midi_learn(Param);

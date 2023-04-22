@@ -19,11 +19,11 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Preset.h"
-
 #if HAVE_CONFIG_H
 #include "config.h"
 #endif
+
+#include "Preset.h"
 
 #include <cassert>
 #include <cmath>
@@ -32,9 +32,6 @@
 #include <iterator>
 #include <map>
 #include <vector>
-
-#include "core/gettext.h"
-#define _(string) gettext (string)
 
 
 Preset::Preset(const std::string name) : mName (name)
