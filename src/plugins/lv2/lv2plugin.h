@@ -22,13 +22,13 @@
 #ifndef AMSYNTH_LV2_H
 #define AMSYNTH_LV2_H
 
-#include <lv2/lv2plug.in/ns/ext/atom/atom.h>
-#include <lv2/lv2plug.in/ns/ext/atom/forge.h>
-#include <lv2/lv2plug.in/ns/ext/midi/midi.h>
-#include <lv2/lv2plug.in/ns/ext/patch/patch.h>
-#include <lv2/lv2plug.in/ns/ext/state/state.h>
-#include <lv2/lv2plug.in/ns/ext/worker/worker.h>
-#include <lv2/lv2plug.in/ns/extensions/ui/ui.h>
+#include <lv2/atom/atom.h>
+#include <lv2/atom/forge.h>
+#include <lv2/midi/midi.h>
+#include <lv2/patch/patch.h>
+#include <lv2/state/state.h>
+#include <lv2/ui/ui.h>
+#include <lv2/worker/worker.h>
 
 #define AMSYNTH_LV2_URI             "http://code.google.com/p/amsynth/amsynth"
 #define AMSYNTH__tuning_kbm_file    AMSYNTH_LV2_URI "#tuning_kbm_file"
