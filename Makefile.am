@@ -239,17 +239,17 @@ amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
 # plug-in, and don't want to include dsp code in the ui.
 
 noinst_LTLIBRARIES += amsynth_lv2.la
-amsynth_lv2_la_CXXFLAGS = @LV2_CFLAGS@
+amsynth_lv2_la_CXXFLAGS = -I"$(top_srcdir)/vendor/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2"
 amsynth_lv2_la_DEPENDENCIES = libcore.la
 amsynth_lv2_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-symbols-regex "lv2_descriptor"
-amsynth_lv2_la_LIBADD = @LV2_LIBS@ .libs/libcore.a
+amsynth_lv2_la_LIBADD = .libs/libcore.a
 amsynth_lv2_la_SOURCES = src/plugins/lv2/lv2plugin.cpp src/plugins/lv2/lv2plugin.h
 
 noinst_LTLIBRARIES += amsynth_lv2ui.la
-amsynth_lv2ui_la_CXXFLAGS = @LV2_CFLAGS@
+amsynth_lv2ui_la_CXXFLAGS = -I"$(top_srcdir)/vendor/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2"
 amsynth_lv2ui_la_DEPENDENCIES = libcore.la
 amsynth_lv2ui_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-symbols-regex "lv2ui_descriptor"
-amsynth_lv2ui_la_LIBADD = @LV2_LIBS@ .libs/libcore.a $(libcore_la_LIBADD)
+amsynth_lv2ui_la_LIBADD = .libs/libcore.a $(libcore_la_LIBADD)
 amsynth_lv2ui_la_SOURCES = src/plugins/lv2/lv2ui.cpp
 
 dist_amsynth_lv2_DATA = \
