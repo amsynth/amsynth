@@ -29,6 +29,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 EXTRA_DIST = data \
 	vendor/JUCE/LICENSE.md \
+	vendor/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2 \
 	vendor/JUCE/modules/juce_core \
 	vendor/JUCE/modules/juce_data_structures \
 	vendor/JUCE/modules/juce_events \
