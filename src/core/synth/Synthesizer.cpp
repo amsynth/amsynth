@@ -58,6 +58,11 @@ Synthesizer::~Synthesizer()
 
 void Synthesizer::setProperty(const char *name, const char *value)
 {
+	if (value && strlen(value))
+		propertyStore_[name] = value;
+	else
+		propertyStore_.erase(name);
+
 	if (name == std::string(PROP_NAME(max_polyphony)))
 		setMaxNumVoices(std::stoi(value));
 
@@ -76,7 +81,7 @@ void Synthesizer::setProperty(const char *name, const char *value)
 
 std::map<std::string, std::string> Synthesizer::getProperties()
 {
-	std::map<std::string, std::string> props;
+	auto props = propertyStore_;
 	props[PROP_NAME(max_polyphony)] = std::to_string(getMaxNumVoices());
 	props[PROP_NAME(midi_channel)] = std::to_string(getMidiChannel());
 	props[PROP_NAME(pitch_bend_range)] = std::to_string(getPitchBendRangeSemitones());

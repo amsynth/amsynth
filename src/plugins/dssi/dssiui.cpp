@@ -186,7 +186,7 @@ public:
     {
         setUsingNativeTitleBar(true);
         mainComponent = new MainComponent(&presetController);
-		mainComponent->setProperty = &host_configure;
+		mainComponent->sendProperty = &host_configure;
         setContentOwned(mainComponent, true);
         centreWithSize(getWidth(), getHeight());
         setResizable(false, false);

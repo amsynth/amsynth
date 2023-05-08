@@ -196,8 +196,10 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			if (!plugin->gui) {
 				plugin->gui = std::make_unique<MainComponent>(plugin->synthesizer->_presetController);
 			}
-			plugin->gui->properties = plugin->synthesizer->getProperties();
-			plugin->gui->setProperty = [plugin] (const char *name, const char *value) {
+			for (const auto &it : plugin->synthesizer->getProperties()) {
+				plugin->gui->propertyChanged(it.first.c_str(), it.second.c_str());
+			}
+			plugin->gui->sendProperty = [plugin] (const char *name, const char *value) {
 				plugin->synthesizer->setProperty(name, value);
 			};
 			plugin->gui->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ptr);

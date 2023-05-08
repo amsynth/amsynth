@@ -207,7 +207,7 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 	juceInit();
 
 	ui->mainComponent = std::make_unique<MainComponent>(&ui->presetController);
-	ui->mainComponent->setProperty = [ui] (const char *name, const char *value) {lv2helper(ui).send(name, value);};
+	ui->mainComponent->sendProperty = [ui] (const char *name, const char *value) {lv2helper(ui).send(name, value);};
 	ui->mainComponent->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ui->parent);
 	ui->mainComponent->setVisible(true);
 	if (resize) {
@@ -252,7 +252,7 @@ lv2_ui_port_event(LV2UI_Handle handle,
 					LV2_URID urid = ((LV2_Atom_URID *)(void *)property)->body;
 #define PATCH_SET_PROP(Name) \
 					if (ui->uris.amsynth_##Name == urid) \
-						ui->mainComponent->properties[#Name] = (const char *)LV2_ATOM_BODY_CONST(value);
+						ui->mainComponent->propertyChanged(#Name, (const char *)LV2_ATOM_BODY_CONST(value));
 					FOR_EACH_PROPERTY(PATCH_SET_PROP)
 				}
 			}

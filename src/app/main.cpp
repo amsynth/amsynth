@@ -181,7 +181,9 @@ public:
 	: DocumentWindow(PACKAGE_NAME, juce::Colours::lightgrey, juce::DocumentWindow::closeButton | juce::DocumentWindow::minimiseButton)
 	{
 		auto mainComponent = new MainComponent(s_synthesizer->getPresetController());
-		mainComponent->properties = s_synthesizer->getProperties();
+		for (const auto &it : s_synthesizer->getProperties()) {
+			mainComponent->propertyChanged(it.first.c_str(), it.second.c_str());
+		}
 		mainComponent->setProperty = [] (const char *name, const char *value) {
 			s_synthesizer->setProperty(name, value);
 			if (name == std::string(PROP_NAME(max_polyphony)))

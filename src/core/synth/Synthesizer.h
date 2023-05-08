@@ -34,6 +34,9 @@ enum class PropertyID
 	max_polyphony,
 	midi_channel,
 	pitch_bend_range,
+	preset_bank_name,
+	preset_name,
+	preset_number,
 	tuning_kbm_file,
 	tuning_scl_file,
 };
@@ -56,7 +59,9 @@ public:
     virtual ~Synthesizer();
 
 	void setProperty(const char *name, const char *value);
-	std::map<std::string, std::string> getProperties();
+
+	using Properties = std::map<std::string, std::string>;
+	Properties getProperties();
     
     void loadBank(const char *filename);
     void saveBank(const char *filename);
@@ -110,6 +115,7 @@ public:
 private:
 
 	bool needsResetAllVoices_ = false;
+	Properties propertyStore_;
 };
 
 #endif /* defined(__amsynth__Synthesizer__) */

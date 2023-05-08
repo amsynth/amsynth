@@ -39,14 +39,18 @@ public:
 	void paint(juce::Graphics &g) final;
 	void resized() final;
 
-	std::function<void(const char *name, const char *value)> setProperty;
-	std::map<std::string, std::string> properties;
+	// Sends a property value to the Synthesizer.
+	std::function<void(const char *name, const char *value)> sendProperty;
+
+	// At startup, receives property values from the Synthesizer.
+	void propertyChanged(const char *name, const char *value);
 
 	bool isPlugin {true};
 
 private:
 	struct Impl;
 	std::unique_ptr<Impl> impl_;
+	std::map<std::string, std::string> properties;
 	juce::ApplicationCommandManager commandManager;
 };
 
