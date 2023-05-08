@@ -193,6 +193,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			return 1;
 		}
 		case effEditOpen: {
+			juceInit();
 			if (!plugin->gui) {
 				plugin->gui = std::make_unique<MainComponent>(plugin->synthesizer->_presetController);
 			}
