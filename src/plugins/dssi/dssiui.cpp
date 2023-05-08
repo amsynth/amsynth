@@ -90,7 +90,7 @@ static int osc_configure_handler(const char *path, const char *types, lo_arg **a
 {
 	assert(types[0] == 's');
 	assert(types[1] == 's');
-	mainComponent->properties[&argv[0]->S] = &argv[1]->s;
+	mainComponent->propertyChanged(&argv[0]->S, &argv[1]->s);
 	return 0;
 }
 
