@@ -62,7 +62,6 @@ struct ParameterListener final : public UpdateListener {
 
 typedef struct {
 	PresetController presetController;
-	juce::ScopedJuceInitialiser_GUI libraryInitialiser;
 	std::unique_ptr<MainComponent> mainComponent;
 	std::unique_ptr<ParameterListener> parameterListener;
 	LV2UI_Widget parent {nullptr};

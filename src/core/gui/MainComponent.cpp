@@ -94,7 +94,7 @@ struct MainComponent::Impl {
 			presetController_->getCurrentPreset().setName(value);
 			setPresetComboLabelText(value);
 		}
-		if (name == PROP_NAME(preset_number)) {
+		if (name == PROP_NAME(preset_number) && !value.empty()) {
 			int presetNumber = std::stoi(value);
 			presetController_->setCurrPresetNumber(presetNumber);
 			// Don't call selectPreset() because that would change the parameter values

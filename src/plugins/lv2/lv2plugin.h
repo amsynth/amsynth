@@ -36,6 +36,9 @@
 	X(max_polyphony) \
 	X(midi_channel) \
 	X(pitch_bend_range) \
+	X(preset_bank_name) \
+	X(preset_name) \
+	X(preset_number) \
 	X(tuning_kbm_file) \
 	X(tuning_scl_file)
 
