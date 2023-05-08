@@ -43,7 +43,15 @@ Synthesizer::Synthesizer()
 
 	_presetController = new PresetController;
 	_presetController->getCurrentPreset().AddListenerToAll(_voiceAllocationUnit);
-	
+	for (const auto &bank : PresetController::getPresetBanks()) {
+		if (bank.file_path == _presetController->getFilePath()) {
+			propertyStore_[PROP_NAME(preset_bank_name)] = bank.name;
+			break;
+		}
+	}
+	propertyStore_[PROP_NAME(preset_name)] = _presetController->getCurrentPreset().getName();
+	propertyStore_[PROP_NAME(preset_number)] = std::to_string(_presetController->getCurrPresetNumber());
+
 	_midiController = new MidiController();
 	_midiController->SetMidiEventHandler(_voiceAllocationUnit);
 	_midiController->setPresetController(*_presetController);
