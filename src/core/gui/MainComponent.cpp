@@ -309,6 +309,8 @@ struct MainComponent::Impl {
 			auto presetNumber = presetCombo_.getSelectedId() - 1;
 			if (presetNumber == -1)
 				return;
+			if (presetNumber == presetController_->getCurrPresetNumber())
+				return; // Ignore spam from juce::ComboBox::handleAsyncUpdate)
 			selectPreset(presetNumber);
 		};
 	}
