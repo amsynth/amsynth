@@ -74,8 +74,8 @@ libcore_la_SOURCES = \
 	src/core/gui/Controls.h \
 	src/core/gui/ControlPanel.cpp \
 	src/core/gui/ControlPanel.h \
-	src/core/gui/juce_x11.cpp \
-	src/core/gui/juce_x11.h \
+	src/core/gui/JuceIntegration.cpp \
+	src/core/gui/JuceIntegration.h \
 	src/core/gui/LayoutDescription.h \
 	src/core/gui/MainComponent.cpp \
 	src/core/gui/MainComponent.h \

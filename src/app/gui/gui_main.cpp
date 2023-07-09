@@ -25,7 +25,7 @@
 
 #include "gui_main.h"
 
-#include "core/gui/juce_x11.h"
+#include "core/gui/JuceIntegration.h"
 
 #include <gtk/gtk.h>
 

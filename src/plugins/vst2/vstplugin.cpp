@@ -48,7 +48,7 @@
 
 #ifdef WITH_GUI
 #include "core/gui/MainComponent.h"
-#include "core/gui/juce_x11.h"
+#include "core/gui/JuceIntegration.h"
 #endif
 
 #if JUCE_MAC

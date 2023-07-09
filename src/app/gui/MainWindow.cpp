@@ -31,7 +31,7 @@
 #include "MainMenu.h"
 #include "core/Configuration.h"
 #include "core/gui/ControlPanel.h"
-#include "core/gui/juce_x11.h"
+#include "core/gui/JuceIntegration.h"
 #include "core/gui/MainComponent.h"
 #include "core/synth/PresetController.h"
 #include "core/synth/Synthesizer.h"
