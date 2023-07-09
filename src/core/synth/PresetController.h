@@ -100,6 +100,7 @@ public:
 	void	setUpdateListener	(UpdateListener & ul) { updateListener = &ul; }
 
     int		getCurrPresetNumber	() { return currentPresetNo; }
+	void	setCurrPresetNumber (int num) { currentPresetNo = num; }
 
 	const std::string & getFilePath() { return bank_file; }
 

@@ -29,17 +29,21 @@ float getGlobalScaleFactor() {
 
 #endif
 
+static bool isInitialized;
+
 void juceInit() {
-	static bool once;
-	if (once) return; else once = true;
+	if (isInitialized) return;
 	juce::initialiseJuce_GUI();
 #if JUCE_LINUX || JUCE_BSD || JUCE_WINDOWS
 	auto scaleFactor = getGlobalScaleFactor();
 	juce::Desktop::getInstance().setGlobalScaleFactor(scaleFactor);
 #endif
+	isInitialized = true;
 }
 
 void juceIdle() {
+	if (!isInitialized)
+		return;
 #if JUCE_LINUX || JUCE_BSD || JUCE_WINDOWS
 	juce::dispatchNextMessageOnSystemQueue(true);
 #endif

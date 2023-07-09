@@ -56,6 +56,7 @@ PresetController::PresetController()
 		if (it == banks.end())
 			it = banks.begin();
 		loadPresets(it->file_path.c_str());
+		selectPreset(0);
 	}
 
 	currentPreset.AddListenerToAll(this);

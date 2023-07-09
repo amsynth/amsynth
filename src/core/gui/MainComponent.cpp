@@ -28,6 +28,7 @@
 #include "ControlPanel.h"
 #include "core/gettext.h"
 #include "core/synth/PresetController.h"
+#include "core/synth/Synthesizer.h"
 
 // TODO: Disable save button when appropriate
 
@@ -76,22 +77,49 @@ struct MainComponent::Impl {
 		populatePresetCombo();
 	}
 
+	void propertyChanged(const std::string &name, const std::string &value) {
+		if (name == PROP_NAME(preset_bank_name)) {
+			int bankNumber = 0;
+			for (const auto &bank : PresetController::getPresetBanks()) {
+				if (bank.name == value) {
+					bankCombo_.setSelectedItemIndex(bankNumber, juce::NotificationType::dontSendNotification);
+					presetController_->loadPresets(bank.file_path.c_str());
+					populatePresetCombo();
+					break;
+				}
+				bankNumber++;
+			}
+		}
+		if (name == PROP_NAME(preset_name)) {
+			presetController_->getCurrentPreset().setName(value);
+			setPresetComboLabelText(value);
+		}
+		if (name == PROP_NAME(preset_number) && !value.empty()) {
+			int presetNumber = std::stoi(value);
+			presetController_->setCurrPresetNumber(presetNumber);
+			// Don't call selectPreset() because that would change the parameter values
+			presetCombo_.setSelectedItemIndex(presetNumber, juce::NotificationType::dontSendNotification);
+		}
+	}
+
 	void showMainMenu(juce::Component *targetComponent) {
 		auto menu = juce::PopupMenu();
 
-		if (component_->loadTuningScl && component_->loadTuningKbm) {
-			menu.addSectionHeader(gettext("Tuning"));
-			menu.addItem(gettext("Open Alternate Tuning File..."), [this] {
-				openFile(gettext("Open Scala (.scl) alternate tuning file"), "*.scl", component_->loadTuningScl);
+		menu.addSectionHeader(gettext("Tuning"));
+		menu.addItem(gettext("Open Alternate Tuning File..."), [this] {
+			openFile(gettext("Open Scala (.scl) alternate tuning file"), "*.scl", [this] (const char *filename) {
+				setProperty(PROP_NAME(tuning_scl_file), filename);
 			});
-			menu.addItem(gettext("Open Alternate Keyboard Map..."), [this] {
-				openFile(gettext("Open alternate keyboard map (Scala .kbm format)"), "*.kbm", component_->loadTuningKbm);
+		});
+		menu.addItem(gettext("Open Alternate Keyboard Map..."), [this] {
+			openFile(gettext("Open alternate keyboard map (Scala .kbm format)"), "*.kbm",  [this] (const char *filename) {
+				setProperty(PROP_NAME(tuning_kbm_file), filename);
 			});
-			menu.addItem(gettext("Reset All Tuning Settings to Default"), [this] {
-				component_->loadTuningScl(nullptr);
-				component_->loadTuningKbm(nullptr);
-			});
-		}
+		});
+		menu.addItem(gettext("Reset All Tuning Settings to Default"), [this] {
+			setProperty(PROP_NAME(tuning_scl_file), nullptr);
+			setProperty(PROP_NAME(tuning_kbm_file), nullptr);
+		});
 
 		menu.addSectionHeader(gettext("Edit"));
 		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::copy);
@@ -107,6 +135,52 @@ struct MainComponent::Impl {
 			presetController_->clearPreset();
 		});
 		menu.addCommandItem(commandManager_, CommandIDs::randomisePreset);
+
+		menu.addSectionHeader(gettext("Config"));
+        auto getIntProperty = [&] (const char *key, int fallback) {
+            auto it = component_->properties.find(key);
+            if (it != component_->properties.end())
+                return std::stoi(it->second);
+            return fallback;
+        };
+        auto setIntProperty = [&] (const char *key, int value) {
+            setProperty(key, std::to_string(value).c_str());
+        };
+		menu.addSubMenu(gettext("Pitch Bend Range"), [&] {
+			juce::PopupMenu submenu;
+            auto key = PROP_NAME(pitch_bend_range);
+			int currentValue = getIntProperty(key, 2);
+			for (int i = 1; i <= 24; i++) {
+				submenu.addItem(std::to_string(i) + gettext(" Semitones"), true, i == currentValue, [=] {
+					setIntProperty(key, i);
+				});
+			}
+			return submenu;
+		}());
+		menu.addSubMenu(gettext("Max. Polyphony"), [&] {
+			juce::PopupMenu submenu;
+            auto key = PROP_NAME(max_polyphony);
+            int currentValue = getIntProperty(key, 10);
+			for (int i = 0; i <= 16; i++) {
+				submenu.addItem(i ? std::to_string(i) : gettext("Unlimited"), true, i == currentValue, [=] {
+					setIntProperty(key, i);
+				});
+			}
+			return submenu;
+		}());
+		if (!component_->isPlugin) {
+			menu.addSubMenu(gettext("MIDI Channel"), [&] {
+				juce::PopupMenu submenu;
+                auto key = PROP_NAME(midi_channel);
+                int currentValue = getIntProperty(key, 0);
+				for (int i = 0; i <= 16; i++) {
+					submenu.addItem(i ? std::to_string(i) : gettext("Unlimited"), true, i == currentValue, [=] {
+						setIntProperty(key, i);
+					});
+				}
+				return submenu;
+			}());
+		}
 
 		menu.addSectionHeader(gettext("Help"));
 		menu.addItem(gettext("About"), [this] {
@@ -147,6 +221,7 @@ struct MainComponent::Impl {
 			auto text = label->getText().toStdString();
 			if (presetController_->getCurrentPreset().getName() != text) {
 				presetController_->getCurrentPreset().setName(text);
+				setProperty(PROP_NAME(preset_name), text.c_str());
 			}
 			label->setText(std::to_string(presetController_->getCurrPresetNumber() + 1) + ": " + text,
 						   juce::NotificationType::dontSendNotification);
@@ -207,14 +282,16 @@ struct MainComponent::Impl {
 			}
 			bankCombo_.addItem(bank.name, bankCombo_.getNumItems() + 1);
 			if (bank.file_path == presetController_->getFilePath()) {
-				bankCombo_.setSelectedId(bankCombo_.getNumItems());
+				bankCombo_.setSelectedId(bankCombo_.getNumItems(), juce::NotificationType::dontSendNotification);
 				saveButton_.setEnabled((currentBankIsWritable_ = juce::File(bank.file_path).hasWriteAccess()));
 			}
 		}
 		bankCombo_.onChange = [this] {
 			auto &bank = PresetController::getPresetBanks().at(bankCombo_.getSelectedItemIndex());
+			int presetNumber = std::max(0, presetController_->getCurrPresetNumber());
 			presetController_->loadPresets(bank.file_path.c_str());
-			presetController_->selectPreset(std::max(0, presetController_->getCurrPresetNumber()));
+			selectPreset(presetNumber);
+			setProperty(PROP_NAME(preset_bank_name), bank.name.c_str());
 			saveButton_.setEnabled((currentBankIsWritable_ = juce::File(bank.file_path).hasWriteAccess()));
 			populatePresetCombo();
 		};
@@ -229,11 +306,19 @@ struct MainComponent::Impl {
 		presetCombo_.setSelectedItemIndex(presetController_->getCurrPresetNumber(),
 										  juce::NotificationType::dontSendNotification);
 		presetCombo_.onChange = [this] {
-			auto presetIndex = presetCombo_.getSelectedId() - 1;
-			if (presetIndex == -1)
+			auto presetNumber = presetCombo_.getSelectedId() - 1;
+			if (presetNumber == -1)
 				return;
-			presetController_->selectPreset(presetIndex);
+			if (presetNumber == presetController_->getCurrPresetNumber())
+				return; // Ignore spam from juce::ComboBox::handleAsyncUpdate)
+			selectPreset(presetNumber);
 		};
+	}
+
+	void selectPreset(int presetNumber) {
+		presetController_->selectPreset(presetNumber);
+		setProperty(PROP_NAME(preset_name), presetController_->getCurrentPreset().getName().c_str());
+		setProperty(PROP_NAME(preset_number), std::to_string(presetNumber).c_str());
 	}
 
 	static void openFile(const char *title, const char *filters, const std::function<void(const char *)> &handler) {
@@ -247,6 +332,8 @@ struct MainComponent::Impl {
 			delete chooser;
 		});
 	}
+
+	std::function<void(const char *name, const char *value)> setProperty;
 
 	juce::ApplicationCommandManager *commandManager_;
 	MainComponent *component_;
@@ -262,6 +349,10 @@ struct MainComponent::Impl {
 
 MainComponent::MainComponent(PresetController *presetController, MidiController *midiController)
 : impl_(std::make_unique<Impl>(this, midiController, presetController, &commandManager)) {
+	impl_->setProperty = [this] (const char *name, const char *value) {
+		sendProperty(name, value);
+		properties[name] = value;
+	};
 	setLookAndFeel(&impl_->lookAndFeel_);
 	addAndMakeVisible(impl_->menuButton_);
 	addAndMakeVisible(impl_->bankCombo_);
@@ -355,4 +446,9 @@ void MainComponent::resized() {
 	int space = impl_->saveButton_.getX() - impl_->menuButton_.getRight();
 	impl_->bankCombo_.setBounds(impl_->menuButton_.getRight(), 0, space / 2, toolbarHeight);
 	impl_->presetCombo_.setBounds(impl_->bankCombo_.getRight(), 0, space / 2, toolbarHeight);
+}
+
+void MainComponent::propertyChanged(const char *name, const char *value) {
+	properties[name] = value;
+	impl_->propertyChanged(name, value);
 }

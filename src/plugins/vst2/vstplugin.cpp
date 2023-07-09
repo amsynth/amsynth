@@ -52,6 +52,7 @@
 #endif
 
 #if JUCE_MAC
+#include "core/gui/ControlPanel.h"
 #include <dlfcn.h>
 #endif
 
@@ -124,12 +125,6 @@ struct Plugin : public UpdateListener
 #endif
 };
 
-#ifdef WITH_GUI
-
-void modal_midi_learn(Param param_index) {}
-
-#endif // WITH_GUI
-
 static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val, void *ptr, float f)
 {
 	HostCall hostCall;
@@ -198,11 +193,16 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			return 1;
 		}
 		case effEditOpen: {
+			juceInit();
 			if (!plugin->gui) {
 				plugin->gui = std::make_unique<MainComponent>(plugin->synthesizer->_presetController);
 			}
-			plugin->gui->loadTuningKbm = [plugin] (auto f) { plugin->synthesizer->loadTuningKeymap(f); };
-			plugin->gui->loadTuningScl = [plugin] (auto f) { plugin->synthesizer->loadTuningScale(f); };
+			for (const auto &it : plugin->synthesizer->getProperties()) {
+				plugin->gui->propertyChanged(it.first.c_str(), it.second.c_str());
+			}
+			plugin->gui->sendProperty = [plugin] (const char *name, const char *value) {
+				plugin->synthesizer->setProperty(name, value);
+			};
 			plugin->gui->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ptr);
 			plugin->gui->setVisible(true);
 			return 1;
