@@ -25,10 +25,8 @@
 
 #include "ControlPanel.h"
 
-#include "Button.h"
-#include "Knob.h"
+#include "Controls.h"
 #include "LayoutDescription.h"
-#include "Popup.h"
 #include "core/Configuration.h"
 #include "core/controls.h"
 #include "core/gettext.h"
