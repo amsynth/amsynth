@@ -197,7 +197,10 @@ public:
 		setContentOwned(mainComponent, true);
 		centreWithSize(getWidth(), getHeight());
 		setResizable(false, false);
-		setUsingNativeTitleBar(true);
+		// Would like to use native title bar but JUCE's Linux implementation is buggy;
+		// - window is always resizable
+		// - window has incorrect initial size
+		// setUsingNativeTitleBar(true);
 	}
 
 	void closeButtonPressed() override
