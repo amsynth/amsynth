@@ -1,5 +1,1 @@
-src/app/gui/ConfigDialog.cpp
-src/app/gui/MIDILearnDialog.cpp
-src/app/gui/MainMenu.cpp
-src/app/gui/MainWindow.cpp
 vendor
