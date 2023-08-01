@@ -1,7 +1,7 @@
 /*
  *  ControlPanel.cpp
  *
- *  Copyright (c) 2022 - 2023 Nick Dowell
+ *  Copyright (c) 2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -28,8 +28,6 @@
 #include "Controls.h"
 #include "LayoutDescription.h"
 #include "core/Configuration.h"
-#include "core/controls.h"
-#include "core/gettext.h"
 #include "core/synth/MidiController.h"
 #include "core/synth/PresetController.h"
 
@@ -130,13 +128,13 @@ struct ControlPanel::Impl final : juce::MouseListener
 				midiController_->setControllerForParameter(paramId, i);
 			});
 		}
-		ccSubmenu.addItem(gettext("None"), [this, paramId] {
+		ccSubmenu.addItem(GETTEXT("None"), [this, paramId] {
 			midiController_->setControllerForParameter(paramId, -1);
 		});
-		menu.addSubMenu(gettext("Assign MIDI CC"), ccSubmenu, true, nullptr, cc != -1);
+		menu.addSubMenu(GETTEXT("Assign MIDI CC"), ccSubmenu, true, nullptr, cc != -1);
 
 		bool isIgnored = Preset::shouldIgnoreParameter(paramId);
-		menu.addItem(gettext("Ignore Preset Value"), true, isIgnored, [isIgnored, paramId] {
+		menu.addItem(GETTEXT("Ignore Preset Value"), true, isIgnored, [isIgnored, paramId] {
 			Preset::setShouldIgnoreParameter(paramId, !isIgnored);
 			Configuration &config = Configuration::get();
 			config.ignored_parameters = Preset::getIgnoredParameterNames();

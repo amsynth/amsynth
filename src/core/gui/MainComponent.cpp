@@ -26,7 +26,6 @@
 #include "MainComponent.h"
 
 #include "ControlPanel.h"
-#include "core/gettext.h"
 #include "core/synth/PresetController.h"
 #include "core/synth/Synthesizer.h"
 
@@ -67,8 +66,8 @@ struct MainComponent::Impl {
 	: component_(component)
 	, presetController_(presetController)
 	, controlPanel_(midiController, presetController)
-	, menuButton_("Menu")
-	, saveButton_("Save")
+	, menuButton_(GETTEXT("Menu"))
+	, saveButton_(GETTEXT("Save"))
 	, commandManager_(commandManager) {
 		controlPanel_.setBounds(controlPanel_.getBounds().withY(toolbarHeight));
 		menuButton_.onMouseDown = [this] { showMainMenu(&menuButton_); };
@@ -105,30 +104,30 @@ struct MainComponent::Impl {
 	void showMainMenu(juce::Component *targetComponent) {
 		auto menu = juce::PopupMenu();
 
-		menu.addSectionHeader(gettext("Tuning"));
-		menu.addItem(gettext("Open Alternate Tuning File..."), [this] {
-			openFile(gettext("Open Scala (.scl) alternate tuning file"), "*.scl", [this] (const char *filename) {
+		menu.addSectionHeader(GETTEXT("Tuning"));
+		menu.addItem(GETTEXT("Open Alternate Tuning File..."), [this] {
+			openFile(GETTEXT("Open Scala (.scl) alternate tuning file"), "*.scl", [this] (const char *filename) {
 				setProperty(PROP_NAME(tuning_scl_file), filename);
 			});
 		});
-		menu.addItem(gettext("Open Alternate Keyboard Map..."), [this] {
-			openFile(gettext("Open alternate keyboard map (Scala .kbm format)"), "*.kbm",  [this] (const char *filename) {
+		menu.addItem(GETTEXT("Open Alternate Keyboard Map..."), [this] {
+			openFile(GETTEXT("Open alternate keyboard map (Scala .kbm format)"), "*.kbm", [this] (const char *filename) {
 				setProperty(PROP_NAME(tuning_kbm_file), filename);
 			});
 		});
-		menu.addItem(gettext("Reset All Tuning Settings to Default"), [this] {
+		menu.addItem(GETTEXT("Reset All Tuning Settings to Default"), [this] {
 			setProperty(PROP_NAME(tuning_scl_file), nullptr);
 			setProperty(PROP_NAME(tuning_kbm_file), nullptr);
 		});
 
-		menu.addSectionHeader(gettext("Edit"));
+		menu.addSectionHeader(GETTEXT("Edit"));
 		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::copy);
 		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::paste);
 		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::undo);
 		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::redo);
 
-		menu.addSectionHeader(gettext("Preset"));
-		menu.addItem(gettext("Rename..."), [this] {
+		menu.addSectionHeader(GETTEXT("Preset"));
+		menu.addItem(GETTEXT("Rename..."), [this] {
 #if JUCE_LINUX || JUCE_BSD
 			// callAfterDelay to work around a JUCE X11 bug where the Label's editor won't respond to keyboard
 			// input if shown immediately. Maybe to do with the popup menu needing to be fully finished?
@@ -137,12 +136,12 @@ struct MainComponent::Impl {
 			renamePreset();
 #endif
 		});
-		menu.addItem(gettext("Clear"), [this] {
+		menu.addItem(GETTEXT("Clear"), [this] {
 			presetController_->clearPreset();
 		});
 		menu.addCommandItem(commandManager_, CommandIDs::randomisePreset);
 
-		menu.addSectionHeader(gettext("Config"));
+		menu.addSectionHeader(GETTEXT("Config"));
         auto getIntProperty = [&] (const char *key, int fallback) {
             auto it = component_->properties.find(key);
             if (it != component_->properties.end())
@@ -152,35 +151,35 @@ struct MainComponent::Impl {
         auto setIntProperty = [&] (const char *key, int value) {
             setProperty(key, std::to_string(value).c_str());
         };
-		menu.addSubMenu(gettext("Pitch Bend Range"), [&] {
+		menu.addSubMenu(GETTEXT("Pitch Bend Range"), [&] {
 			juce::PopupMenu submenu;
             auto key = PROP_NAME(pitch_bend_range);
 			int currentValue = getIntProperty(key, 2);
 			for (int i = 1; i <= 24; i++) {
-				submenu.addItem(std::to_string(i) + gettext(" Semitones"), true, i == currentValue, [=] {
+				submenu.addItem(juce::String(std::to_string(i)) + GETTEXT(" Semitones"), true, i == currentValue, [=] {
 					setIntProperty(key, i);
 				});
 			}
 			return submenu;
 		}());
-		menu.addSubMenu(gettext("Max. Polyphony"), [&] {
+		menu.addSubMenu(GETTEXT("Max. Polyphony"), [&] {
 			juce::PopupMenu submenu;
             auto key = PROP_NAME(max_polyphony);
             int currentValue = getIntProperty(key, 10);
 			for (int i = 0; i <= 16; i++) {
-				submenu.addItem(i ? std::to_string(i) : gettext("Unlimited"), true, i == currentValue, [=] {
+				submenu.addItem(i ? std::to_string(i) : GETTEXT("Unlimited"), true, i == currentValue, [=] {
 					setIntProperty(key, i);
 				});
 			}
 			return submenu;
 		}());
 		if (!component_->isPlugin) {
-			menu.addSubMenu(gettext("MIDI Channel"), [&] {
+			menu.addSubMenu(GETTEXT("MIDI Channel"), [&] {
 				juce::PopupMenu submenu;
                 auto key = PROP_NAME(midi_channel);
                 int currentValue = getIntProperty(key, 0);
 				for (int i = 0; i <= 16; i++) {
-					submenu.addItem(i ? std::to_string(i) : gettext("Unlimited"), true, i == currentValue, [=] {
+					submenu.addItem(i ? std::to_string(i) : GETTEXT("Unlimited"), true, i == currentValue, [=] {
 						setIntProperty(key, i);
 					});
 				}
@@ -188,14 +187,14 @@ struct MainComponent::Impl {
 			}());
 		}
 
-		menu.addSectionHeader(gettext("Help"));
-		menu.addItem(gettext("About"), [this] {
+		menu.addSectionHeader(GETTEXT("Help"));
+		menu.addItem(GETTEXT("About"), [this] {
 			showAbout();
 		});
-		menu.addItem(gettext("Report a Bug"), [] {
+		menu.addItem(GETTEXT("Report a Bug"), [] {
 			juce::URL("https://github.com/amsynth/amsynth/issues").launchInDefaultBrowser();
 		});
-		menu.addItem(gettext("Online Documentation"), [] {
+		menu.addItem(GETTEXT("Online Documentation"), [] {
 			juce::URL("https://github.com/amsynth/amsynth/wiki").launchInDefaultBrowser();
 		});
 		menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(targetComponent));
@@ -279,11 +278,11 @@ struct MainComponent::Impl {
 		bool foundFactory {false};
 		for (const auto &bank : PresetController::getPresetBanks()) {
 			if (!bank.read_only && !foundUser) {
-				bankCombo_.addSectionHeading("User banks");
+				bankCombo_.addSectionHeading(GETTEXT("User banks"));
 				foundUser = true;
 			}
 			if (bank.read_only && !foundFactory) {
-				bankCombo_.addSectionHeading("Factory banks");
+				bankCombo_.addSectionHeading(GETTEXT("Factory banks"));
 				foundFactory = true;
 			}
 			bankCombo_.addItem(bank.name, bankCombo_.getNumItems() + 1);
@@ -327,7 +326,7 @@ struct MainComponent::Impl {
 		setProperty(PROP_NAME(preset_number), std::to_string(presetNumber).c_str());
 	}
 
-	static void openFile(const char *title, const char *filters, const std::function<void(const char *)> &handler) {
+	static void openFile(const juce::String &title, const char *filters, const std::function<void(const char *)> &handler) {
 		auto cwd = juce::File::getSpecialLocation(juce::File::userMusicDirectory);
 		auto chooser = new juce::FileChooser(title, cwd, filters);
 		chooser->launchAsync(juce::FileBrowserComponent::openMode, [chooser, handler] (const auto &ignored) {
@@ -383,27 +382,27 @@ void MainComponent::getAllCommands(juce::Array<juce::CommandID> &commands) {
 }
 
 void MainComponent::getCommandInfo(juce::CommandID commandID, juce::ApplicationCommandInfo &result) {
-	juce::String category {gettext("Preset")};
+	juce::String category {GETTEXT("Preset")};
 
 	switch (commandID) {
 		case juce::StandardApplicationCommandIDs::copy:
-			result.setInfo(gettext("Copy"), "", category, 0);
+			result.setInfo(GETTEXT("Copy"), "", category, 0);
 			result.addDefaultKeypress('c', juce::ModifierKeys::commandModifier);
 			break;
 		case juce::StandardApplicationCommandIDs::paste:
-			result.setInfo(gettext("Paste"), "", category, 0);
+			result.setInfo(GETTEXT("Paste"), "", category, 0);
 			result.addDefaultKeypress('v', juce::ModifierKeys::commandModifier);
 			break;
 		case juce::StandardApplicationCommandIDs::undo:
-			result.setInfo(gettext("Undo"), "", category, 0);
+			result.setInfo(GETTEXT("Undo"), "", category, 0);
 			result.addDefaultKeypress('z', juce::ModifierKeys::commandModifier);
 			break;
 		case juce::StandardApplicationCommandIDs::redo:
-			result.setInfo(gettext("Redo"), "", category, 0);
+			result.setInfo(GETTEXT("Redo"), "", category, 0);
 			result.addDefaultKeypress('z', juce::ModifierKeys::commandModifier | juce::ModifierKeys::shiftModifier);
 			break;
 		case randomisePreset:
-			result.setInfo(gettext("Randomise"), gettext("Sets all parameters to a random value"), category, 0);
+			result.setInfo(GETTEXT("Randomise"), GETTEXT("Sets all parameters to a random value"), category, 0);
 			result.addDefaultKeypress('r', juce::ModifierKeys::commandModifier);
 			break;
 		default:
