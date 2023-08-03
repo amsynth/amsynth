@@ -68,8 +68,7 @@ private:
 struct ControlPanel::Impl final : juce::MouseListener
 {
 	Impl(ControlPanel *controlPanel, MidiController *midiController, PresetController *presetController)
-	: controlPanel_(controlPanel)
-	, presetController_(presetController)
+	: presetController_(presetController)
 	, midiController_(midiController)
 	, label_(controlPanel)
 	{
@@ -144,20 +143,7 @@ struct ControlPanel::Impl final : juce::MouseListener
 		});
 		menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(control));
 	}
-	
-	static void openFile(const char *title, const char *filters, const std::function<void(const char *)> &handler) {
-		auto cwd = juce::File::getSpecialLocation(juce::File::userMusicDirectory);
-		auto chooser = new juce::FileChooser(title, cwd, filters);
-		chooser->launchAsync(juce::FileBrowserComponent::openMode, [chooser, handler] (const auto &ignored) {
-			auto results = chooser->getResults();
-			if (results.isEmpty())
-				return;
-			handler(results[0].getFullPathName().toRawUTF8());
-			delete chooser;
-		});
-	}
 
-	ControlPanel *controlPanel_;
 	std::vector<std::unique_ptr<juce::Component>> components_;
 	MidiController *midiController_;
 	PresetController *presetController_;
