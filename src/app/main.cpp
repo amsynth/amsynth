@@ -180,7 +180,7 @@ public:
 	MainWindow()
 	: DocumentWindow(PACKAGE_NAME, juce::Colours::lightgrey, juce::DocumentWindow::closeButton | juce::DocumentWindow::minimiseButton)
 	{
-		auto mainComponent = new MainComponent(s_synthesizer->getPresetController());
+		auto mainComponent = new MainComponent(s_synthesizer->getPresetController(), s_synthesizer->getMidiController());
 		for (const auto &it : s_synthesizer->getProperties()) {
 			mainComponent->propertyChanged(it.first.c_str(), it.second.c_str());
 		}

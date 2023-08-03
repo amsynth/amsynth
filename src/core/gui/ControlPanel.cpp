@@ -112,7 +112,7 @@ struct ControlPanel::Impl final : juce::MouseListener
 	}
 
 	void mouseDown(const juce::MouseEvent& event) final {
-		if (event.mods.isPopupMenu() && midiController_) {
+		if (event.mods.isPopupMenu()) {
 			showPopupMenu(dynamic_cast<Control *>(event.originalComponent));
 		}
 	}
@@ -121,17 +121,19 @@ struct ControlPanel::Impl final : juce::MouseListener
 		auto paramId = control->parameter.getId();
 		juce::PopupMenu menu;
 
-		juce::PopupMenu ccSubmenu;
-		int cc = midiController_->getControllerForParameter(paramId);
-		for (int i = 0; i < 128; i++) {
-			ccSubmenu.addItem(c_controller_names[i], true, i == cc, [this, paramId, i] {
-				midiController_->setControllerForParameter(paramId, i);
+		if (midiController_) {
+			juce::PopupMenu ccSubmenu;
+			int cc = midiController_->getControllerForParameter(paramId);
+			for (int i = 0; i < 128; i++) {
+				ccSubmenu.addItem(c_controller_names[i], true, i == cc, [this, paramId, i] {
+					midiController_->setControllerForParameter(paramId, i);
+				});
+			}
+			ccSubmenu.addItem(GETTEXT("None"), [this, paramId] {
+				midiController_->setControllerForParameter(paramId, -1);
 			});
+			menu.addSubMenu(GETTEXT("Assign MIDI CC"), ccSubmenu, true, nullptr, cc != -1);
 		}
-		ccSubmenu.addItem(GETTEXT("None"), [this, paramId] {
-			midiController_->setControllerForParameter(paramId, -1);
-		});
-		menu.addSubMenu(GETTEXT("Assign MIDI CC"), ccSubmenu, true, nullptr, cc != -1);
 
 		bool isIgnored = Preset::shouldIgnoreParameter(paramId);
 		menu.addItem(GETTEXT("Ignore Preset Value"), true, isIgnored, [isIgnored, paramId] {
