@@ -1,7 +1,7 @@
 /*
  *  JuceIntegration.cpp
  *
- *  Copyright (c) Nick Dowell
+ *  Copyright (c) 2023 Nick Dowell
  *
  *  This file is part of amsynth.
  *

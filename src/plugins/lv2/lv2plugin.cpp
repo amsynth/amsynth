@@ -1,7 +1,7 @@
 /*
  *  lv2plugin.cpp
  *
- *  Copyright (c) 2001-2023 Nick Dowell
+ *  Copyright (c) 2012 Nick Dowell
  *
  *  This file is part of amsynth.
  *

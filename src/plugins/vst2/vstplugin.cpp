@@ -1,7 +1,7 @@
 /*
  *  vstplugin.cpp
  *
- *  Copyright (c) 2008-2023 Nick Dowell
+ *  Copyright (c) 2014 Nick Dowell
  *
  *  This file is part of amsynth.
  *

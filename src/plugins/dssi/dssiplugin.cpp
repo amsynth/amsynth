@@ -1,7 +1,7 @@
 /*
  *  dssiplugin.cpp
  *
- *  Copyright (c) 2001-2023 Nick Dowell
+ *  Copyright (c) 2005 Nick Dowell
  *
  *  This file is part of amsynth.
  *
