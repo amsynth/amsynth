@@ -1,7 +1,7 @@
 /*
- *  gui_main.h
+ *  JuceIntegration.h
  *
- *  Copyright (c) 2001-2022 Nick Dowell
+ *  Copyright (c) 2023 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -19,16 +19,8 @@
  *  along with amsynth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <string>
+#pragma once
 
-void gui_kit_init(int *argc, char ***argv);
+void juceInit();
 
-void gui_kit_run(unsigned (*timer_callback)(void *));
-
-void ShowModalErrorMessage(const std::string & msg, const std::string & secondaryText = "");
-
-#if defined(__linux)
-
-void spawn_new_instance();
-
-#endif
+void juceIdle();

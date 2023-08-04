@@ -1,7 +1,7 @@
 /*
  *  vstplugin.cpp
  *
- *  Copyright (c) 2008-2023 Nick Dowell
+ *  Copyright (c) 2014 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -47,11 +47,12 @@
 #define effFlagsProgramChunks   (1 << 5)
 
 #ifdef WITH_GUI
-#include "core/gui/ControlPanel.h"
-#include "core/gui/juce_x11.h"
+#include "core/gui/MainComponent.h"
+#include "core/gui/JuceIntegration.h"
 #endif
 
 #if JUCE_MAC
+#include "core/gui/ControlPanel.h"
 #include <dlfcn.h>
 #endif
 
@@ -120,15 +121,9 @@ struct Plugin : public UpdateListener
 	std::string presetName;
 
 #ifdef WITH_GUI
-	std::unique_ptr<ControlPanel> controlPanel;
+	std::unique_ptr<MainComponent> gui;
 #endif
 };
-
-#ifdef WITH_GUI
-
-void modal_midi_learn(Param param_index) {}
-
-#endif // WITH_GUI
 
 static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val, void *ptr, float f)
 {
@@ -184,32 +179,37 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 #ifdef WITH_GUI
 		case effEditGetRect: {
 			juceInit();
-			if (!plugin->controlPanel) {
-				plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController, true);
+			if (!plugin->gui) {
+				plugin->gui = std::make_unique<MainComponent>(plugin->synthesizer->_presetController);
 			}
 			static ERect rect;
 			// There doesn't seem to be a way to determine which screen the host wants to open a plugin on and
 			// apply the correct scale factor in a multiscreen setup.
 			auto scaleFactor = (int)juce::Desktop::getInstance().getGlobalScaleFactor();
-			auto bounds = plugin->controlPanel->getScreenBounds();
+			auto bounds = plugin->gui->getScreenBounds();
 			rect.right = short(bounds.getWidth() * scaleFactor);
 			rect.bottom = short(bounds.getHeight() * scaleFactor);
 			*(ERect **)ptr = &rect;
 			return 1;
 		}
 		case effEditOpen: {
-			if (!plugin->controlPanel) {
-				plugin->controlPanel = std::make_unique<ControlPanel>(plugin->synthesizer->_presetController, true);
+			juceInit();
+			if (!plugin->gui) {
+				plugin->gui = std::make_unique<MainComponent>(plugin->synthesizer->_presetController);
 			}
-			plugin->controlPanel->loadTuningKbm = [plugin](auto f) { plugin->synthesizer->loadTuningKeymap(f); };
-			plugin->controlPanel->loadTuningScl = [plugin](auto f) { plugin->synthesizer->loadTuningScale(f); };
-			plugin->controlPanel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ptr);
-			plugin->controlPanel->setVisible(true);
+			for (const auto &it : plugin->synthesizer->getProperties()) {
+				plugin->gui->propertyChanged(it.first.c_str(), it.second.c_str());
+			}
+			plugin->gui->sendProperty = [plugin] (const char *name, const char *value) {
+				plugin->synthesizer->setProperty(name, value);
+			};
+			plugin->gui->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ptr);
+			plugin->gui->setVisible(true);
 			return 1;
 		}
 		case effEditClose: {
-			plugin->controlPanel->removeFromDesktop();
-			plugin->controlPanel.reset();
+			plugin->gui->removeFromDesktop();
+			plugin->gui.reset();
 			return 0;
 		}
 		case effEditIdle: {

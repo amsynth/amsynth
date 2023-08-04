@@ -1,7 +1,7 @@
 /*
  *  lv2ui.c
  *
- *  Copyright (c) 2001-2023 Nick Dowell
+ *  Copyright (c) 2012 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -24,9 +24,9 @@
 #include "lv2plugin.h"
 
 #include "core/controls.h"
-#include "core/gui/ControlPanel.h"
-#include "core/gui/juce_x11.h"
-#include "core/synth/Preset.h"
+#include "core/gui/MainComponent.h"
+#include "core/gui/JuceIntegration.h"
+#include "core/synth/PresetController.h"
 #include "core/synth/Synthesizer.h"
 
 #include <cstring>
@@ -62,7 +62,7 @@ struct ParameterListener final : public UpdateListener {
 
 typedef struct {
 	PresetController presetController;
-	std::unique_ptr<ControlPanel> controlPanel;
+	std::unique_ptr<MainComponent> mainComponent;
 	std::unique_ptr<ParameterListener> parameterListener;
 	LV2UI_Widget parent {nullptr};
 
@@ -76,15 +76,16 @@ typedef struct {
 		LV2_URID atom_Path;
 		LV2_URID atom_Resource;
 		LV2_URID atom_Sequence;
+		LV2_URID atom_String;
 		LV2_URID atom_URID;
 		LV2_URID atom_eventTransfer;
-		LV2_URID amsynth_kbm_file;
-		LV2_URID amsynth_scl_file;
 		LV2_URID midi_Event;
 		LV2_URID patch_Get;
 		LV2_URID patch_Set;
 		LV2_URID patch_property;
 		LV2_URID patch_value;
+#define DECLARE_LV2_URID(name) LV2_URID amsynth_##name;
+		FOR_EACH_PROPERTY(DECLARE_LV2_URID)
 	} uris;
 } lv2_ui;
 
@@ -94,16 +95,10 @@ struct lv2helper
 {
 	lv2helper(lv2_ui *ui_): ui(ui_) {}
 
-	int loadTuningKeymap(const char *filename)
+	void send(const char *name, const char *value)
 	{
-		send(ui->uris.amsynth_kbm_file, filename ?: "");
-		return 0;
-	}
-
-	int loadTuningScale(const char *filename)
-	{
-		send(ui->uris.amsynth_scl_file, filename ?: "");
-		return 0;
+#define SET_PROPERTY(Name) if (!strcmp(name, #Name)) send(ui->uris.amsynth_##Name, value);
+		FOR_EACH_PROPERTY(SET_PROPERTY)
 	}
 
 	void send(LV2_URID key, const char *value)
@@ -117,7 +112,7 @@ struct lv2helper
 		lv2_atom_forge_key(forge, ui->uris.patch_property);
 		lv2_atom_forge_urid(forge, key);
 		lv2_atom_forge_key(forge, ui->uris.patch_value);
-		lv2_atom_forge_path(forge, value, (uint32_t) strlen(value));
+		lv2_atom_forge_string(forge, value, (uint32_t)strlen(value));
 		lv2_atom_forge_pop(forge, &frame);
 
 		ui->_write_function(
@@ -126,6 +121,30 @@ struct lv2helper
 				lv2_atom_total_size(msg),
 				ui->uris.atom_eventTransfer,
 				msg);
+	}
+
+	void getProperties()
+	{
+		auto getProp = [&] (const char *name, LV2_URID key) {
+			uint8_t buffer[1024];
+
+			LV2_Atom_Forge_Frame frame;
+			LV2_Atom_Forge *forge = &ui->forge;
+			lv2_atom_forge_set_buffer(forge, buffer, sizeof(buffer));
+			LV2_Atom *msg = (LV2_Atom *) lv2_atom_forge_object(forge, &frame, 0, ui->uris.patch_Get);
+			lv2_atom_forge_key(forge, ui->uris.patch_property);
+			lv2_atom_forge_urid(forge, key);
+			lv2_atom_forge_pop(forge, &frame);
+
+			ui->_write_function(
+					ui->_controller,
+					PORT_CONTROL,
+					lv2_atom_total_size(msg),
+					ui->uris.atom_eventTransfer,
+					msg);
+		};
+#define GET_PROP(name) getProp(#name, ui->uris.amsynth_##name);
+		FOR_EACH_PROPERTY(GET_PROP)
 	}
 
 	lv2_ui *ui;
@@ -164,15 +183,16 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 	ui->uris.atom_Path          = ui->map->map(ui->map->handle, LV2_ATOM__Path);
 	ui->uris.atom_Resource      = ui->map->map(ui->map->handle, LV2_ATOM__Resource);
 	ui->uris.atom_Sequence      = ui->map->map(ui->map->handle, LV2_ATOM__Sequence);
+	ui->uris.atom_String        = ui->map->map(ui->map->handle, LV2_ATOM__String);
 	ui->uris.atom_URID          = ui->map->map(ui->map->handle, LV2_ATOM__URID);
 	ui->uris.atom_eventTransfer = ui->map->map(ui->map->handle, LV2_ATOM__eventTransfer);
-	ui->uris.amsynth_kbm_file   = ui->map->map(ui->map->handle, AMSYNTH__tuning_kbm_file);
-	ui->uris.amsynth_scl_file   = ui->map->map(ui->map->handle, AMSYNTH__tuning_scl_file);
 	ui->uris.midi_Event         = ui->map->map(ui->map->handle, LV2_MIDI__MidiEvent);
 	ui->uris.patch_Get          = ui->map->map(ui->map->handle, LV2_PATCH__Get);
 	ui->uris.patch_Set          = ui->map->map(ui->map->handle, LV2_PATCH__Set);
 	ui->uris.patch_property     = ui->map->map(ui->map->handle, LV2_PATCH__property);
 	ui->uris.patch_value        = ui->map->map(ui->map->handle, LV2_PATCH__value);
+#define MAP_URID(Name) ui->uris.amsynth_##Name = ui->map->map(ui->map->handle, AMSYNTH_LV2_URI "#" #Name);
+	FOR_EACH_PROPERTY(MAP_URID)
 
 	ui->_write_function = write_function;
 	ui->_controller = controller;
@@ -185,17 +205,18 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 
 	juceInit();
 
-	ui->controlPanel = std::make_unique<ControlPanel>(&ui->presetController, true);
-	ui->controlPanel->loadTuningKbm = [ui] (auto f) { lv2helper(ui).loadTuningKeymap(f); };
-	ui->controlPanel->loadTuningScl = [ui] (auto f) { lv2helper(ui).loadTuningScale(f); };
-	ui->controlPanel->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ui->parent);
-	ui->controlPanel->setVisible(true);
+	ui->mainComponent = std::make_unique<MainComponent>(&ui->presetController);
+	ui->mainComponent->sendProperty = [ui] (const char *name, const char *value) {lv2helper(ui).send(name, value);};
+	ui->mainComponent->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ui->parent);
+	ui->mainComponent->setVisible(true);
 	if (resize) {
-		auto bounds = ui->controlPanel->getScreenBounds();
+		auto bounds = ui->mainComponent->getScreenBounds();
 		auto scaleFactor = (int)juce::Desktop::getInstance().getGlobalScaleFactor();
 		resize->ui_resize(resize->handle, bounds.getWidth() * (int)scaleFactor, bounds.getHeight() * (int)scaleFactor);
 	}
-	*widget = ui->controlPanel->getWindowHandle();
+	*widget = ui->mainComponent->getWindowHandle();
+
+	lv2helper(ui).getProperties();
 
 	return ui;
 }
@@ -203,22 +224,41 @@ lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
 static void
 lv2_ui_cleanup(LV2UI_Handle ui)
 {
-	((lv2_ui *)ui)->controlPanel->removeFromDesktop();
+	((lv2_ui *)ui)->mainComponent->removeFromDesktop();
 	delete ((lv2_ui *)ui);
 }
 
 static void
-lv2_ui_port_event(LV2UI_Handle ui,
+lv2_ui_port_event(LV2UI_Handle handle,
 				  uint32_t     port_index,
 				  uint32_t     buffer_size,
 				  uint32_t     format,
 				  const void*  buffer)
 {
-	int parameter_index = port_index - PORT_FIRST_PARAMETER;
-	if (parameter_index < 0 || parameter_index >= kAmsynthParameterCount)
-		return;
-	float value = *(float *)buffer;
-	((lv2_ui *)ui)->presetController.getCurrentPreset().getParameter(parameter_index).setValue(value);
+	lv2_ui *ui = (lv2_ui *)handle;
+	if (format == ui->uris.atom_eventTransfer) {
+		auto atom = (const LV2_Atom *)buffer;
+		if (lv2_atom_forge_is_object_type(&ui->forge, atom->type)) {
+			auto obj = (const LV2_Atom_Object *)atom;
+			if (obj->body.otype == ui->uris.patch_Set) {
+				const LV2_Atom *property = NULL;
+				const LV2_Atom *value = NULL;
+				lv2_atom_object_get(obj,
+									ui->uris.patch_property, &property,
+									ui->uris.patch_value, &value,
+									0);
+				if (property && value && value->type == ui->uris.atom_String) {
+					LV2_URID urid = ((LV2_Atom_URID *)(void *)property)->body;
+#define PATCH_SET_PROP(Name) \
+					if (ui->uris.amsynth_##Name == urid) \
+						ui->mainComponent->propertyChanged(#Name, (const char *)LV2_ATOM_BODY_CONST(value));
+					FOR_EACH_PROPERTY(PATCH_SET_PROP)
+				}
+			}
+		}
+	} else if (port_index >= PORT_FIRST_PARAMETER) {
+		ui->presetController.getCurrentPreset().getParameter(port_index - PORT_FIRST_PARAMETER).setValue(*(float *)buffer);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -241,12 +281,6 @@ lv2_ui_extension_data(const char *uri)
 	}
 
 	return nullptr;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void modal_midi_learn(Param param_index)
-{
 }
 
 ////////////////////////////////////////////////////////////////////////////////

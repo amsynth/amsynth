@@ -49,6 +49,16 @@ using namespace std;
 
 PresetController::PresetController()
 {
+	// Load the first user-writable bank by default, falling back to first read-only one.
+	const auto &banks = getPresetBanks();
+	if (!banks.empty()) {
+		auto it = std::find_if(banks.begin(), banks.end(), [] (const BankInfo &bi) {return !bi.read_only;});
+		if (it == banks.end())
+			it = banks.begin();
+		loadPresets(it->file_path.c_str());
+		selectPreset(0);
+	}
+
 	currentPreset.AddListenerToAll(this);
 }
 
@@ -70,6 +80,14 @@ PresetController::containsPresetWithName(const string name)
 		if (getPreset(i).getName() == name) 
 			return true;
 	return false;
+}
+
+void
+PresetController::saveCurrentPreset	()
+{
+	loadPresets(); // in case another instance has changed any of the other presets
+	commitPreset();
+	savePresets();
 }
 
 void

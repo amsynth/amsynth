@@ -22,23 +22,36 @@
 #ifndef amsynth_MainComponent_h
 #define amsynth_MainComponent_h
 
-#include "core/synth/PresetController.h"
-
 #include <juce_gui_basics/juce_gui_basics.h>
 
-class MainComponent : public juce::Component {
+#include <map>
+
+class MainComponent final : public juce::Component, public juce::ApplicationCommandTarget {
 public:
-	MainComponent(PresetController *presetController);
+	MainComponent(class PresetController *presetController, class MidiController *midiController = nullptr);
 	~MainComponent();
 
-	std::function<void(const char *)> loadTuningKbm;
-	std::function<void(const char *)> loadTuningScl;
+	ApplicationCommandTarget *getNextCommandTarget() final {return nullptr;}
+	void getAllCommands(juce::Array<juce::CommandID> &commands) final;
+	void getCommandInfo(juce::CommandID commandID, juce::ApplicationCommandInfo &result) final;
+	bool perform(const InvocationInfo &info) final;
 
-	void paint(juce::Graphics &g) override;
+	void paint(juce::Graphics &g) final;
+	void resized() final;
+
+	// Sends a property value to the Synthesizer.
+	std::function<void(const char *name, const char *value)> sendProperty;
+
+	// At startup, receives property values from the Synthesizer.
+	void propertyChanged(const char *name, const char *value);
+
+	bool isPlugin {true};
 
 private:
 	struct Impl;
 	std::unique_ptr<Impl> impl_;
+	std::map<std::string, std::string> properties;
+	juce::ApplicationCommandManager commandManager;
 };
 
 #endif //amsynth_MainComponent_h

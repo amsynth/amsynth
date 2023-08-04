@@ -1,7 +1,7 @@
 /*
  *  lv2plugin.cpp
  *
- *  Copyright (c) 2001-2023 Nick Dowell
+ *  Copyright (c) 2012 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -41,18 +41,20 @@ struct amsynth_wrapper {
 
 	struct {
 		LV2_URID midiEvent;
+		LV2_URID patch_Get;
 		LV2_URID patch_Set;
 		LV2_URID patch_property;
 		LV2_URID patch_value;
 		LV2_URID atom_String;
-		LV2_URID amsynth_kbm_file;
-		LV2_URID amsynth_scl_file;
+#define DECLARE_LV2_URID(name) LV2_URID amsynth_##name;
+		FOR_EACH_PROPERTY(DECLARE_LV2_URID)
 	} uris;
 
 	LV2_Atom_Forge forge;
 	LV2_Worker_Schedule *schedule;
 
 	const LV2_Atom_Sequence *control_port;
+    LV2_Atom_Sequence *notify_port {nullptr};
 	float *out_l;
 	float *out_r;
 	float *param_ports[kAmsynthParameterCount];
@@ -62,12 +64,8 @@ struct amsynth_wrapper {
 	void patchSet(LV2_URID urid, const char *value)
 	{
 		patch_values[urid] = (std::string) value;
-
-		if (urid == uris.amsynth_kbm_file)
-			synth.loadTuningKeymap(value);
-
-		if (urid == uris.amsynth_scl_file)
-			synth.loadTuningScale(value);
+#define PATCH_SET_PROP(Name) if (urid == uris.amsynth_##Name) synth.setProperty(#Name, value);
+		FOR_EACH_PROPERTY(PATCH_SET_PROP)
 	}
 };
 
@@ -93,12 +91,17 @@ lv2_instantiate(const LV2_Descriptor *descriptor, double sample_rate, const char
 	a->synth.setSampleRate((int)sample_rate);
 
 	a->uris.midiEvent          = urid_map->map(urid_map->handle, LV2_MIDI__MidiEvent);
+	a->uris.patch_Get          = urid_map->map(urid_map->handle, LV2_PATCH__Get);
 	a->uris.patch_Set          = urid_map->map(urid_map->handle, LV2_PATCH__Set);
 	a->uris.patch_property     = urid_map->map(urid_map->handle, LV2_PATCH__property);
 	a->uris.patch_value        = urid_map->map(urid_map->handle, LV2_PATCH__value);
 	a->uris.atom_String        = urid_map->map(urid_map->handle, LV2_ATOM__String);
-	a->uris.amsynth_kbm_file   = urid_map->map(urid_map->handle, AMSYNTH__tuning_kbm_file);
-	a->uris.amsynth_scl_file   = urid_map->map(urid_map->handle, AMSYNTH__tuning_scl_file);
+#define MAP_URID(Name) a->uris.amsynth_##Name = urid_map->map(urid_map->handle, AMSYNTH_LV2_URI "#" #Name);
+	FOR_EACH_PROPERTY(MAP_URID)
+
+	auto properties = a->synth.getProperties();
+#define GET_PATCH_VALUE(Name) a->patch_values[a->uris.amsynth_##Name] = properties[#Name];
+	FOR_EACH_PROPERTY(GET_PATCH_VALUE)
 
 	lv2_atom_forge_init(&a->forge, urid_map);
 
@@ -122,6 +125,7 @@ lv2_connect_port(LV2_Handle instance, uint32_t port, void *data_location)
 			a->control_port = (LV2_Atom_Sequence *) data_location;
 			break;
 		case PORT_NOTIFY:
+            a->notify_port = (LV2_Atom_Sequence *)data_location;
 			break;
 		case PORT_AUDIO_L:
 			a->out_l = (float *) data_location;
@@ -153,8 +157,17 @@ static void
 lv2_run(LV2_Handle instance, uint32_t sample_count)
 {
 	amsynth_wrapper * a = (amsynth_wrapper *) instance;
+	LV2_Atom_Forge *forge = &a->forge;
 
-	std::vector<amsynth_midi_event_t> midi_events;
+    // Set up forge to write directly to notify output port.
+    const uint32_t notify_capacity = a->notify_port->atom.size;
+    lv2_atom_forge_set_buffer(forge, (uint8_t *)a->notify_port, notify_capacity);
+
+    // Start a sequence in the notify output port.
+    LV2_Atom_Forge_Frame notify_frame;
+    lv2_atom_forge_sequence_head(forge, &notify_frame, 0);
+
+    std::vector<amsynth_midi_event_t> midi_events;
 	LV2_ATOM_SEQUENCE_FOREACH(a->control_port, ev) {
 		if (ev->body.type == a->uris.midiEvent) {
 			amsynth_midi_event_t midi_event = {0};
@@ -163,9 +176,29 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
 			midi_event.length = ev->body.size;
 			midi_events.push_back(midi_event);
 		}
-		if (lv2_atom_forge_is_object_type(&a->forge, ev->body.type)) {
-			const LV2_Atom_Object *obj = (const LV2_Atom_Object *) &ev->body;
+		if (lv2_atom_forge_is_object_type(forge, ev->body.type)) {
+			const auto *obj = (const LV2_Atom_Object *)&ev->body;
+			if (obj->body.otype == a->uris.patch_Get) {
+                // UI has requested a property value
+				const LV2_Atom_URID *property = nullptr;
+				lv2_atom_object_get(obj, a->uris.patch_property, &property, 0);
+				if (!property)
+					continue;
+				const LV2_URID key = property->body;
+				auto it = a->patch_values.find(key);
+				if (it == a->patch_values.end())
+					continue;
+				lv2_atom_forge_frame_time(forge, ev->time.frames);
+				LV2_Atom_Forge_Frame frame;
+				lv2_atom_forge_object(forge, &frame, 0, a->uris.patch_Set);
+				lv2_atom_forge_key(forge, a->uris.patch_property);
+				lv2_atom_forge_urid(forge, key);
+				lv2_atom_forge_key(forge, a->uris.patch_value);
+				lv2_atom_forge_string(forge, it->second.c_str(), static_cast<uint32_t>(it->second.size()));
+				lv2_atom_forge_pop(forge, &frame);
+			}
 			if (obj->body.otype == a->uris.patch_Set) {
+                // Note: some property types could be handled here without using worker
 				a->schedule->schedule_work(a->schedule->handle, lv2_atom_total_size(&ev->body), &ev->body);
 			}
 		}
@@ -221,14 +254,16 @@ restore(LV2_Handle                  instance,
 
 	// host takes care of restoring port values
 
-	LV2_URID urids[] = { a->uris.amsynth_kbm_file, a->uris.amsynth_scl_file };
-	for (unsigned i = 0; i < sizeof(urids) / sizeof(urids[0]); i ++) {
+	auto restoreProp = [=] (const char *name, LV2_URID urid) {
 		size_t size = 0; uint32_t type = 0, vflags = 0;
-		const void *value = retrieve(handle, urids[i], &size, &type, &vflags);
+		const void *value = retrieve(handle, urid, &size, &type, &vflags);
 		if (value && type == a->uris.atom_String) {
-			a->patchSet(urids[i], (const char *) value);
+			a->patchSet(urid, (const char *)value);
 		}
-	}
+	};
+
+#define RESTORE_PROP(name) restoreProp(#name, a->uris.amsynth_##name);
+	FOR_EACH_PROPERTY(RESTORE_PROP)
 
 	return LV2_STATE_SUCCESS;
 }

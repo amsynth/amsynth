@@ -43,7 +43,15 @@ Synthesizer::Synthesizer()
 
 	_presetController = new PresetController;
 	_presetController->getCurrentPreset().AddListenerToAll(_voiceAllocationUnit);
-	
+	for (const auto &bank : PresetController::getPresetBanks()) {
+		if (bank.file_path == _presetController->getFilePath()) {
+			propertyStore_[PROP_NAME(preset_bank_name)] = bank.name;
+			break;
+		}
+	}
+	propertyStore_[PROP_NAME(preset_name)] = _presetController->getCurrentPreset().getName();
+	propertyStore_[PROP_NAME(preset_number)] = std::to_string(_presetController->getCurrPresetNumber());
+
 	_midiController = new MidiController();
 	_midiController->SetMidiEventHandler(_voiceAllocationUnit);
 	_midiController->setPresetController(*_presetController);
@@ -54,6 +62,42 @@ Synthesizer::~Synthesizer()
 	delete _midiController;
 	delete _presetController;
 	delete _voiceAllocationUnit;
+}
+
+void Synthesizer::setProperty(const char *name, const char *value)
+{
+	if (value && strlen(value))
+		propertyStore_[name] = value;
+	else
+		propertyStore_.erase(name);
+
+	if (name == std::string(PROP_NAME(max_polyphony)))
+		setMaxNumVoices(std::stoi(value));
+
+	if (name == std::string(PROP_NAME(midi_channel)))
+		setMidiChannel(std::stoi(value));
+
+	if (name == std::string(PROP_NAME(pitch_bend_range)))
+		setPitchBendRangeSemitones(std::stoi(value));
+
+	if (name == std::string(PROP_NAME(tuning_kbm_file)))
+		loadTuningKeymap(value);
+
+	if (name == std::string(PROP_NAME(tuning_scl_file)))
+		loadTuningScale(value);
+}
+
+std::map<std::string, std::string> Synthesizer::getProperties()
+{
+	auto props = propertyStore_;
+	props[PROP_NAME(max_polyphony)] = std::to_string(getMaxNumVoices());
+	props[PROP_NAME(midi_channel)] = std::to_string(getMidiChannel());
+	props[PROP_NAME(pitch_bend_range)] = std::to_string(getPitchBendRangeSemitones());
+	if (!_voiceAllocationUnit->tuningMap.getKeyMapFile().empty())
+		props[PROP_NAME(tuning_kbm_file)] = _voiceAllocationUnit->tuningMap.getKeyMapFile();
+	if (!_voiceAllocationUnit->tuningMap.getScaleFile().empty())
+		props[PROP_NAME(tuning_scl_file)] = _voiceAllocationUnit->tuningMap.getScaleFile();
+	return props;
 }
 
 void Synthesizer::loadBank(const char *filename)
@@ -83,12 +127,7 @@ void Synthesizer::loadState(char *buffer)
 			stream >> key;
 			stream.get(); // skip whitespace
 			std::getline(stream, value); // value may contain whitespace
-
-			if (key == PROP_KBM_FILE)
-				loadTuningKeymap(value.c_str());
-
-			if (key == PROP_SCL_FILE)
-				loadTuningScale(value.c_str());
+			setProperty(key.c_str(), value.c_str());
 		}
 	}
 }
@@ -98,13 +137,8 @@ int Synthesizer::saveState(char **buffer)
 	std::stringstream stream;
 	_presetController->getCurrentPreset().toString(stream);
 
-	const std::string &tuning_kbm_file = _voiceAllocationUnit->tuningMap.getKeyMapFile();
-	if (tuning_kbm_file.length())
-		stream << "<property> " PROP_KBM_FILE " " << tuning_kbm_file << std::endl;
-
-	const std::string &tuning_scl_file = _voiceAllocationUnit->tuningMap.getScaleFile();
-	if (tuning_scl_file.length())
-		stream << "<property> " PROP_SCL_FILE " " << tuning_scl_file << std::endl;
+	for (auto &it : getProperties())
+		stream << "<property> " << it.first << " " << it.second << std::endl;
 
 	std::string string = stream.str();
 	*buffer = (char *)malloc(4096);
@@ -154,6 +188,11 @@ void Synthesizer::getParameterLabel(Param parameter, char *buffer, size_t maxLen
 void Synthesizer::getParameterDisplay(Param parameter, char *buffer, size_t maxLen)
 {
 	strncpy(buffer, _presetController->getCurrentPreset().getParameter(parameter).getStringValue().c_str(), maxLen);
+}
+
+int Synthesizer::getPitchBendRangeSemitones()
+{
+	return _voiceAllocationUnit->getPitchBendRangeSemitones();
 }
 
 void Synthesizer::setPitchBendRangeSemitones(int value)

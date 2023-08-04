@@ -1,6 +1,6 @@
 #  amsynth Makefile.am
 #
-#  Copyright (C) 2001-2023 Nick Dowell
+#  Copyright (C) 2001 Nick Dowell
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -70,17 +70,15 @@ libcore_la_SOURCES = \
 	src/core/filesystem.cpp \
 	src/core/filesystem.h \
 	src/core/gettext.h \
-	src/core/gui/Button.h \
-	src/core/gui/Control.cpp \
-	src/core/gui/Control.h \
+	src/core/gui/Controls.cpp \
+	src/core/gui/Controls.h \
 	src/core/gui/ControlPanel.cpp \
 	src/core/gui/ControlPanel.h \
-	src/core/gui/juce_x11.cpp \
-	src/core/gui/juce_x11.h \
-	src/core/gui/Knob.cpp \
-	src/core/gui/Knob.h \
+	src/core/gui/JuceIntegration.cpp \
+	src/core/gui/JuceIntegration.h \
 	src/core/gui/LayoutDescription.h \
-	src/core/gui/Popup.h \
+	src/core/gui/MainComponent.cpp \
+	src/core/gui/MainComponent.h \
 	src/core/midi.h \
 	src/core/synth/ADSR.cpp \
 	src/core/synth/ADSR.h \
@@ -133,8 +131,7 @@ libcore_la_SOURCES = \
 
 bin_PROGRAMS = amsynth
 
-amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @LIBLO_CFLAGS@ @GTK_CFLAGS@
-amsynth_CPPFLAGS += -DGDK_DISABLE_DEPRECATED -DGSEAL_ENABLE -DGTK_DISABLE_DEPRECATED -DGTK_DISABLE_SINGLE_INCLUDES
+amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @LIBLO_CFLAGS@
 amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @LIBLO_LIBS@ @LIBS@ libcore.la
 amsynth_SOURCES = \
 	src/app/AudioOutput.cpp \
@@ -157,23 +154,6 @@ amsynth_SOURCES = \
 	src/app/lash.h \
 	src/app/main.h \
 	src/app/main.cpp
-
-if BUILD_GUI
-amsynth_SOURCES += \
-	src/app/gui/ConfigDialog.cpp \
-	src/app/gui/ConfigDialog.h \
-	src/app/gui/MIDILearnDialog.cpp \
-	src/app/gui/MIDILearnDialog.h \
-	src/app/gui/MainMenu.cpp \
-	src/app/gui/MainMenu.h \
-	src/app/gui/MainWindow.cpp \
-	src/app/gui/MainWindow.h \
-	src/app/gui/gui_main.cpp \
-	src/app/gui/gui_main.h \
-	src/app/gui/PresetControllerView.cpp \
-	src/app/gui/PresetControllerView.h
-amsynth_LDADD += @GTK_LIBS@
-endif
 
 if BUILD_NSM
 amsynth_SOURCES += \
@@ -253,37 +233,7 @@ amsynth_lv2ui_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-sy
 amsynth_lv2ui_la_LIBADD = .libs/libcore.a $(libcore_la_LIBADD)
 amsynth_lv2ui_la_SOURCES = src/plugins/lv2/lv2ui.cpp
 
-dist_amsynth_lv2_DATA = \
-	data/amsynth.lv2/manifest.ttl \
-	data/amsynth.lv2/amsynth.ttl \
-	data/amsynth.lv2/amsynth_factory.bank.ttl \
-	data/amsynth.lv2/BriansBank01.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank02.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank03.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank04.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank05.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank06.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank07.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank08.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank09.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank10.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank11.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank12.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank13.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank14.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank15.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank16.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank17.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank18.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank19.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank20.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank21.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank22.amSynth.bank.ttl \
-	data/amsynth.lv2/PatriksBank01.bank.ttl \
-	data/amsynth.lv2/PatriksBank02.bank.ttl \
-	data/amsynth.lv2/PatriksBank03.bank.ttl \
-	data/amsynth.lv2/PatriksBank04.bank.ttl \
-	data/amsynth.lv2/PatriksBank05.bank.ttl
+dist_amsynth_lv2_DATA = data/amsynth.lv2/amsynth.ttl data/amsynth.lv2/manifest.ttl
 
 endif
 

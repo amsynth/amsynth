@@ -1,7 +1,7 @@
 /*
  *  ControlPanel.h
  *
- *  Copyright (c) 2022 - 2023 Nick Dowell
+ *  Copyright (c) 2022 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -22,21 +22,20 @@
 #ifndef _CONTROLPANEL_H
 #define _CONTROLPANEL_H
 
-#include "core/synth/PresetController.h"
+#include "core/gettext.h"
 
 #include <juce_gui_basics/juce_gui_basics.h>
+
+#define GETTEXT(Msgid) juce::String(juce::CharPointer_UTF8(gettext(Msgid)))
 
 class ControlPanel final : public juce::Component
 {
 public:
-	explicit ControlPanel(PresetController *presetController, bool isPlugin);
+	explicit ControlPanel(class MidiController *midiController, class PresetController *presetController);
 
 	~ControlPanel() noexcept final;
 	
 	static std::string skinsDirectory;
-
-	std::function<void(const char *)> loadTuningKbm;
-	std::function<void(const char *)> loadTuningScl;
 
 private:
 	struct Impl;

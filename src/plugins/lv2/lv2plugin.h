@@ -1,7 +1,7 @@
 /*
  *  lv2plugin.h
  *
- *  Copyright (c) 2001-2023 Nick Dowell
+ *  Copyright (c) 2012 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -31,8 +31,16 @@
 #include <lv2/worker/worker.h>
 
 #define AMSYNTH_LV2_URI             "http://code.google.com/p/amsynth/amsynth"
-#define AMSYNTH__tuning_kbm_file    AMSYNTH_LV2_URI "#tuning_kbm_file"
-#define AMSYNTH__tuning_scl_file    AMSYNTH_LV2_URI "#tuning_scl_file"
+
+#define FOR_EACH_PROPERTY(X) \
+	X(max_polyphony) \
+	X(midi_channel) \
+	X(pitch_bend_range) \
+	X(preset_bank_name) \
+	X(preset_name) \
+	X(preset_number) \
+	X(tuning_kbm_file) \
+	X(tuning_scl_file)
 
 enum {
     PORT_CONTROL            = 0,

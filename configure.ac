@@ -1,7 +1,7 @@
 dnl
 dnl  amsynth configure.ac
 dnl
-dnl  Copyright (C) 2001-2022 Nick Dowell
+dnl  Copyright (C) 2001 Nick Dowell
 dnl
 dnl  This program is free software; you can redistribute it and/or modify
 dnl  it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ dnl  along with this program; if not, write to the Free Software
 dnl  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 dnl
 
-AC_COPYRIGHT([Copyright (C) 2001-2023 Nick Dowell])
+AC_COPYRIGHT([Copyright (C) 2001 Nick Dowell])
 
 AC_INIT([amsynth], [1.13.1],
         [https://github.com/amsynth/amsynth/issues],
@@ -73,7 +73,6 @@ dnl Although amsynth does not use pthread directly, it seems to be necessary to 
 dnl against it with GCC 10.x
 AC_CHECK_LIB(pthread, pthread_create, [], exit)
 
-AS_IF([test "x$with_gui" != "xno"], [PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])])
 AS_IF([test "x$with_gui" != "xno"], [PKG_CHECK_MODULES([JUCE], [freetype2 libpng x11 zlib])])
 
 AS_IF([test -f "$srcdir/vendor/JUCE/modules/juce_core/juce_core.cpp"], [],
@@ -198,9 +197,6 @@ dnl
 echo
 echo +------------------------------------------------------- $PACKAGE $VERSION
 echo \|
-AS_IF([test "x$with_gui" != "xno"], [
-echo \| GTK version........................................... : `pkg-config --modversion gtk+-2.0`
-])
 echo \| Build with GUI support................................ : $with_gui
 echo \|
 echo \| Build with OSS support................................ : $with_oss

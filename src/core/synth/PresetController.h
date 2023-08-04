@@ -72,6 +72,8 @@ public:
 	// Commit the current preset to memory
 	void	commitPreset		() { presets[currentPresetNo] = currentPreset; notify(); }
 
+	void	saveCurrentPreset	();
+
 	// Resets all parameters to default value and clears the name.
 	void	clearPreset			();
 
@@ -98,6 +100,7 @@ public:
 	void	setUpdateListener	(UpdateListener & ul) { updateListener = &ul; }
 
     int		getCurrPresetNumber	() { return currentPresetNo; }
+	void	setCurrPresetNumber (int num) { currentPresetNo = num; }
 
 	const std::string & getFilePath() { return bank_file; }
 
