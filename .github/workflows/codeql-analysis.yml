@@ -33,7 +33,7 @@ jobs:
     - name: Install build dependencies
       run: |
         sudo apt update
-        sudo apt install autoconf-archive autopoint dssi-dev intltool libasound-dev libcurl4-openssl-dev libjack-jackd2-dev liblo-dev libxcursor-dev libxinerama-dev libxrandr-dev pandoc
+        sudo apt install autopoint dssi-dev intltool libasound-dev libcurl4-openssl-dev libjack-jackd2-dev liblo-dev libxcursor-dev libxinerama-dev libxrandr-dev pandoc
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
