@@ -16,7 +16,7 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-AM_CPPFLAGS = @CPPFLAGS@ -iquote "$(top_srcdir)/src" -I"$(top_srcdir)/vendor"
+AM_CPPFLAGS = @CPPFLAGS@ -iquote "$(top_srcdir)/src" -I"$(top_srcdir)/external"
 
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
 AM_CPPFLAGS += -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' -DPACKAGE_LOCALEDIR=\""$(datadir)/locale"\"
@@ -28,17 +28,17 @@ AM_CXXFLAGS = $(WARN_CXXFLAGS) -fPIC -fvisibility=hidden
 ACLOCAL_AMFLAGS = -I m4
 
 EXTRA_DIST = data \
-	vendor/JUCE/LICENSE.md \
-	vendor/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2 \
-	vendor/JUCE/modules/juce_core \
-	vendor/JUCE/modules/juce_data_structures \
-	vendor/JUCE/modules/juce_events \
-	vendor/JUCE/modules/juce_graphics \
-	vendor/JUCE/modules/juce_gui_basics \
-	vendor/vestige
+	external/JUCE/LICENSE.md \
+	external/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2 \
+	external/JUCE/modules/juce_core \
+	external/JUCE/modules/juce_data_structures \
+	external/JUCE/modules/juce_events \
+	external/JUCE/modules/juce_graphics \
+	external/JUCE/modules/juce_gui_basics \
+	external/vestige
 
 AM_CPPFLAGS += \
-	-I$(top_srcdir)/vendor/JUCE/modules \
+	-I$(top_srcdir)/external/JUCE/modules \
 	-DJUCE_DISPLAY_SPLASH_SCREEN=0 \
 	-DJUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1 \
 	-DJUCE_INCLUDE_JPEGLIB_CODE=1 \
@@ -64,16 +64,30 @@ noinst_LTLIBRARIES = libcore.la
 libcore_la_CPPFLAGS = $(AM_CPPFLAGS) @JUCE_CFLAGS@
 libcore_la_LIBADD = @JUCE_LIBS@ -ldl
 libcore_la_SOURCES = \
+	external/freeverb/allpass.cpp \
+	external/freeverb/allpass.hpp \
+	external/freeverb/comb.cpp \
+	external/freeverb/comb.hpp \
+	external/freeverb/denormals.h \
+	external/freeverb/revmodel.cpp \
+	external/freeverb/revmodel.hpp \
+	external/freeverb/tuning.h \
+	external/JUCE/modules/juce_core/juce_core.cpp \
+	external/JUCE/modules/juce_data_structures/juce_data_structures.cpp \
+	external/JUCE/modules/juce_events/juce_events.cpp \
+	external/JUCE/modules/juce_graphics/juce_graphics.cpp \
+	external/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp \
+	external/seq24/controllers.h \
 	src/core/Configuration.cpp \
 	src/core/Configuration.h \
 	src/core/controls.h \
 	src/core/filesystem.cpp \
 	src/core/filesystem.h \
 	src/core/gettext.h \
-	src/core/gui/Controls.cpp \
-	src/core/gui/Controls.h \
 	src/core/gui/ControlPanel.cpp \
 	src/core/gui/ControlPanel.h \
+	src/core/gui/Controls.cpp \
+	src/core/gui/Controls.h \
 	src/core/gui/JuceIntegration.cpp \
 	src/core/gui/JuceIntegration.h \
 	src/core/gui/LayoutDescription.h \
@@ -108,21 +122,7 @@ libcore_la_SOURCES = \
 	src/core/synth/VoiceAllocationUnit.h \
 	src/core/synth/VoiceBoard.cpp \
 	src/core/synth/VoiceBoard.h \
-	src/core/types.h \
-	vendor/JUCE/modules/juce_core/juce_core.cpp \
-	vendor/JUCE/modules/juce_data_structures/juce_data_structures.cpp \
-	vendor/JUCE/modules/juce_events/juce_events.cpp \
-	vendor/JUCE/modules/juce_graphics/juce_graphics.cpp \
-	vendor/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp \
-	vendor/freeverb/allpass.cpp \
-	vendor/freeverb/allpass.hpp \
-	vendor/freeverb/comb.cpp \
-	vendor/freeverb/comb.hpp \
-	vendor/freeverb/denormals.h \
-	vendor/freeverb/revmodel.cpp \
-	vendor/freeverb/revmodel.hpp \
-	vendor/freeverb/tuning.h \
-	vendor/seq24/controllers.h
+	src/core/types.h
 
 ################################################################################
 #
@@ -161,7 +161,7 @@ amsynth_SOURCES += \
 	src/app/nsm/NsmClient.h \
 	src/app/nsm/NsmHandler.cpp \
 	src/app/nsm/NsmHandler.h \
-	vendor/nsm/nsm.h
+	external/nsm/nsm.h
 endif
 
 ################################################################################
@@ -220,14 +220,14 @@ amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
 # plug-in, and don't want to include dsp code in the ui.
 
 noinst_LTLIBRARIES += amsynth_lv2.la
-amsynth_lv2_la_CXXFLAGS = -I"$(top_srcdir)/vendor/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2"
+amsynth_lv2_la_CXXFLAGS = -I"$(top_srcdir)/external/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2"
 amsynth_lv2_la_DEPENDENCIES = libcore.la
 amsynth_lv2_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-symbols-regex "lv2_descriptor"
 amsynth_lv2_la_LIBADD = .libs/libcore.a
 amsynth_lv2_la_SOURCES = src/plugins/lv2/lv2plugin.cpp src/plugins/lv2/lv2plugin.h
 
 noinst_LTLIBRARIES += amsynth_lv2ui.la
-amsynth_lv2ui_la_CXXFLAGS = -I"$(top_srcdir)/vendor/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2"
+amsynth_lv2ui_la_CXXFLAGS = -I"$(top_srcdir)/external/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2"
 amsynth_lv2ui_la_DEPENDENCIES = libcore.la
 amsynth_lv2ui_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-symbols-regex "lv2ui_descriptor"
 amsynth_lv2ui_la_LIBADD = .libs/libcore.a $(libcore_la_LIBADD)

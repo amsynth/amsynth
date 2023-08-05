@@ -1,3 +1,3 @@
-[submodule "vendor/JUCE"]
-	path = vendor/JUCE
+[submodule "external/JUCE"]
+	path = external/JUCE
 	url = https://github.com/juce-framework/JUCE

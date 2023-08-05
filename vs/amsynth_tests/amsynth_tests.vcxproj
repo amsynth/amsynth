@@ -88,7 +88,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -103,7 +103,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>PKGDATADIR="";_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -120,7 +120,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -139,7 +139,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>PKGDATADIR="";_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -154,9 +154,9 @@
     <ClCompile Include="..\..\src\Effects\Distortion.cpp" />
     <ClCompile Include="..\..\src\Effects\SoftLimiter.cpp" />
     <ClCompile Include="..\..\src\filesystem.cpp" />
-    <ClCompile Include="..\..\vendor\freeverb\allpass.cpp" />
-    <ClCompile Include="..\..\vendor\freeverb\comb.cpp" />
-    <ClCompile Include="..\..\vendor\freeverb\revmodel.cpp" />
+    <ClCompile Include="..\..\external\freeverb\allpass.cpp" />
+    <ClCompile Include="..\..\external\freeverb\comb.cpp" />
+    <ClCompile Include="..\..\external\freeverb\revmodel.cpp" />
     <ClCompile Include="..\..\src\MidiController.cpp" />
     <ClCompile Include="..\..\src\Parameter.cpp" />
     <ClCompile Include="..\..\src\Preset.cpp" />
@@ -176,11 +176,11 @@
     <ClInclude Include="..\..\src\Effects\Distortion.h" />
     <ClInclude Include="..\..\src\Effects\SoftLimiter.h" />
     <ClInclude Include="..\..\src\filesystem.h" />
-    <ClInclude Include="..\..\vendor\freeverb\allpass.hpp" />
-    <ClInclude Include="..\..\vendor\freeverb\comb.hpp" />
-    <ClInclude Include="..\..\vendor\freeverb\denormals.h" />
-    <ClInclude Include="..\..\vendor\freeverb\revmodel.hpp" />
-    <ClInclude Include="..\..\vendor\freeverb\tuning.h" />
+    <ClInclude Include="..\..\external\freeverb\allpass.hpp" />
+    <ClInclude Include="..\..\external\freeverb\comb.hpp" />
+    <ClInclude Include="..\..\external\freeverb\denormals.h" />
+    <ClInclude Include="..\..\external\freeverb\revmodel.hpp" />
+    <ClInclude Include="..\..\external\freeverb\tuning.h" />
     <ClInclude Include="..\..\src\main.h" />
     <ClInclude Include="..\..\src\midi.h" />
     <ClInclude Include="..\..\src\MidiController.h" />

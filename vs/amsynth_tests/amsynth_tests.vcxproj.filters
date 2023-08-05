@@ -18,10 +18,10 @@
     <ClCompile Include="..\..\src\VoiceBoard\ADSR.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vendor\freeverb\allpass.cpp">
+    <ClCompile Include="..\..\external\freeverb\allpass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vendor\freeverb\comb.cpp">
+    <ClCompile Include="..\..\external\freeverb\comb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Configuration.cpp">
@@ -48,7 +48,7 @@
     <ClCompile Include="..\..\src\PresetController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\vendor\freeverb\revmodel.cpp">
+    <ClCompile Include="..\..\external\freeverb\revmodel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Effects\SoftLimiter.cpp">
@@ -77,10 +77,10 @@
     <ClInclude Include="..\..\src\VoiceBoard\ADSR.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\vendor\freeverb\allpass.hpp">
+    <ClInclude Include="..\..\external\freeverb\allpass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\vendor\freeverb\comb.hpp">
+    <ClInclude Include="..\..\external\freeverb\comb.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Configuration.h">
@@ -89,7 +89,7 @@
     <ClInclude Include="..\..\src\controls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\vendor\freeverb\denormals.h">
+    <ClInclude Include="..\..\external\freeverb\denormals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Effects\Distortion.h">
@@ -119,7 +119,7 @@
     <ClInclude Include="..\..\src\PresetController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\vendor\freeverb\revmodel.hpp">
+    <ClInclude Include="..\..\external\freeverb\revmodel.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Effects\SoftLimiter.h">
@@ -131,7 +131,7 @@
     <ClInclude Include="..\..\src\Synthesizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\vendor\freeverb\tuning.h">
+    <ClInclude Include="..\..\external\freeverb\tuning.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\TuningMap.h">
