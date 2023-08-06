@@ -12,6 +12,12 @@ autoconf --version | head -n1
 automake --version | head -n1
 autoreconf --verbose --force --install
 intltoolize --force
+
+if test -d ".git"; then
+    echo "Updating git submodules"
+    git submodule update --init
+fi
+
 cd -
 
 echo
