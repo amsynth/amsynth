@@ -20,7 +20,9 @@
  */
 
 #if HAVE_CONFIG_H
+
 #include "config.h"
+
 #endif
 
 #include "main.h"
@@ -28,6 +30,7 @@
 #include "AudioOutput.h"
 #include "JackOutput.h"
 #include "core/Configuration.h"
+#include "core/filesystem.h"
 #include "core/gettext.h"
 #include "core/midi.h"
 #include "core/synth/LowPassFilter.h"
@@ -39,12 +42,17 @@
 #include "lash.h"
 
 #ifdef WITH_GUI
+
+#include "core/gui/ControlPanel.h"
 #include "core/gui/MainComponent.h"
+
 #endif
 
 #ifdef WITH_NSM
+
 #include "nsm/NsmClient.h"
 #include "nsm/NsmHandler.h"
+
 #endif
 
 #include <iostream>
@@ -220,6 +228,27 @@ public:
 	void initialise(const juce::String &commandLine) override
 	{
 		(new MainWindow())->setVisible(true);
+
+		juce::String errorMessage;
+		if (config.current_audio_driver.empty()) {
+			errorMessage = GETTEXT("Could not initialise the configured audio device.\n\n"
+								   "Please edit ~/.config/amsynth/config and restart");
+		} else if (config.current_midi_driver.empty()) {
+			errorMessage = GETTEXT("Could not initialise the configured MIDI device.\n\n"
+								   "Please edit ~/.config/amsynth/config and restart");
+		}
+
+		if (errorMessage.isNotEmpty()) {
+			juce::AlertWindow::showAsync(
+					juce::MessageBoxOptions()
+							.withTitle(GETTEXT("Configuration error"))
+							.withMessage(errorMessage)
+							.withButton(GETTEXT("OK")),
+					[this](int) {
+						system(("xdg-open " + filesystem::get().config).c_str());
+						quit();
+					});
+		}
 
 		struct LashTimer : juce::Timer
 		{
