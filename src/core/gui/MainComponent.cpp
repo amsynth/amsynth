@@ -132,13 +132,7 @@ struct MainComponent::Impl {
 
 		menu.addSectionHeader(GETTEXT("Preset"));
 		menu.addItem(GETTEXT("Rename..."), [this] {
-#if JUCE_LINUX || JUCE_BSD
-			// callAfterDelay to work around a JUCE X11 bug where the Label's editor won't respond to keyboard
-			// input if shown immediately. Maybe to do with the popup menu needing to be fully finished?
-			juce::Timer::callAfterDelay(10, [this] { renamePreset(); });
-#else
 			renamePreset();
-#endif
 		});
 		menu.addItem(GETTEXT("Clear"), [this] {
 			presetController_->clearPreset();
@@ -235,8 +229,11 @@ struct MainComponent::Impl {
 			}
 			alertWindow_ = nullptr;
 		});
-		alertWindow_->enterModalState(true, callback, true);
-		alertWindow_->getTextEditor("name")->grabKeyboardFocus();
+		alertWindow_->enterModalState(false, callback, true);
+		juce::Timer::callAfterDelay(100, [this] {
+			// On X11 this needs to be delayed to be effective
+			alertWindow_->getTextEditor("name")->grabKeyboardFocus();
+		});
 	}
 
 	void showAbout() {
