@@ -76,6 +76,10 @@ struct MainComponent::Impl {
 		populatePresetCombo();
 	}
 
+	~Impl() {
+		delete alertWindow_;
+	}
+
 	void propertyChanged(const std::string &name, const std::string &value) {
 		if (name == PROP_NAME(preset_bank_name)) {
 			int bankNumber = 0;
@@ -214,24 +218,25 @@ struct MainComponent::Impl {
 	}
 
 	void renamePreset() {
-		if (!presetCombo_.getSelectedId())
-			return;
-
-		auto label = setPresetComboLabelText(presetController_->getCurrentPreset().getName());
-		presetCombo_.setEditableText(true);
-		presetCombo_.showEditor();
-
-		label->onEditorHide = [this, label] {
-			presetCombo_.setEditableText(false);
-			auto text = label->getText().toStdString();
-			if (presetController_->getCurrentPreset().getName() != text) {
-				presetController_->getCurrentPreset().setName(text);
-				setProperty(PROP_NAME(preset_name), text.c_str());
+		alertWindow_ = new juce::AlertWindow(GETTEXT("Rename Preset"), "", juce::MessageBoxIconType::NoIcon, component_);
+		alertWindow_->addButton(GETTEXT("Rename"), 100, juce::KeyPress(juce::KeyPress::returnKey));
+		alertWindow_->addButton(GETTEXT("Cancel"), 0);
+		alertWindow_->addTextEditor("name", presetController_->getCurrentPreset().getName());
+		auto callback = juce::ModalCallbackFunction::create([this] (int result) {
+			if (result == 100) {
+				auto text = alertWindow_->getTextEditorContents("name").toStdString();
+				if (presetController_->getCurrentPreset().getName() != text) {
+					presetController_->getCurrentPreset().setName(text);
+					setProperty(PROP_NAME(preset_name), text.c_str());
+					auto label = dynamic_cast<juce::Label *>(presetCombo_.getChildComponent(0));
+					label->setText(std::to_string(presetController_->getCurrPresetNumber() + 1) + ": " + text,
+								   juce::NotificationType::dontSendNotification);
+				}
 			}
-			label->setText(std::to_string(presetController_->getCurrPresetNumber() + 1) + ": " + text,
-						   juce::NotificationType::dontSendNotification);
-			label->onEditorHide = nullptr;
-		};
+			alertWindow_ = nullptr;
+		});
+		alertWindow_->enterModalState(true, callback, true);
+		alertWindow_->getTextEditor("name")->grabKeyboardFocus();
 	}
 
 	void showAbout() {
@@ -348,6 +353,7 @@ struct MainComponent::Impl {
 	juce::ComboBox bankCombo_;
 	juce::ComboBox presetCombo_;
 	juce::TextButton saveButton_;
+	juce::AlertWindow *alertWindow_{nullptr};
 	LookAndFeel lookAndFeel_;
 	bool currentBankIsWritable_ {false};
 };
