@@ -29,8 +29,6 @@
 #include "core/synth/PresetController.h"
 #include "core/synth/Synthesizer.h"
 
-// TODO: Disable save button when appropriate
-
 enum CommandIDs {
 	randomisePreset = 0x10000,
 };
@@ -61,7 +59,7 @@ public:
 	std::function<void()> onMouseDown;
 };
 
-struct MainComponent::Impl {
+struct MainComponent::Impl : private juce::Timer {
 	Impl(MainComponent *component, MidiController *midiController, PresetController *presetController, juce::ApplicationCommandManager *commandManager)
 	: component_(component)
 	, presetController_(presetController)
@@ -74,10 +72,15 @@ struct MainComponent::Impl {
 		saveButton_.onClick = [this] { savePreset(); };
 		populateBankCombo();
 		populatePresetCombo();
+		startTimer(100);
 	}
 
 	~Impl() {
 		delete alertWindow_;
+	}
+
+	void timerCallback() {
+		saveButton_.setEnabled(presetController_->isCurrentPresetModified());
 	}
 
 	void propertyChanged(const std::string &name, const std::string &value) {
