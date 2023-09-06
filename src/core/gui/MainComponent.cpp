@@ -79,8 +79,12 @@ struct MainComponent::Impl : private juce::Timer {
 		delete alertWindow_;
 	}
 
-	void timerCallback() {
-		saveButton_.setEnabled(presetController_->isCurrentPresetModified());
+	void timerCallback() final {
+		updateSaveButton();
+	}
+
+	void updateSaveButton() {
+		saveButton_.setEnabled(currentBankIsWritable_ && presetController_->isCurrentPresetModified());
 	}
 
 	void propertyChanged(const std::string &name, const std::string &value) {
@@ -293,7 +297,8 @@ struct MainComponent::Impl : private juce::Timer {
 			bankCombo_.addItem(bank.name, bankCombo_.getNumItems() + 1);
 			if (bank.file_path == presetController_->getFilePath()) {
 				bankCombo_.setSelectedId(bankCombo_.getNumItems(), juce::NotificationType::dontSendNotification);
-				saveButton_.setEnabled((currentBankIsWritable_ = juce::File(bank.file_path).hasWriteAccess()));
+				currentBankIsWritable_ = juce::File(bank.file_path).hasWriteAccess();
+				updateSaveButton();
 			}
 		}
 		bankCombo_.onChange = [this] {
@@ -302,7 +307,8 @@ struct MainComponent::Impl : private juce::Timer {
 			presetController_->loadPresets(bank.file_path.c_str());
 			selectPreset(presetNumber);
 			setProperty(PROP_NAME(preset_bank_name), bank.name.c_str());
-			saveButton_.setEnabled((currentBankIsWritable_ = juce::File(bank.file_path).hasWriteAccess()));
+			currentBankIsWritable_ = juce::File(bank.file_path).hasWriteAccess();
+			updateSaveButton();
 			populatePresetCombo();
 		};
 	}
