@@ -27,7 +27,9 @@ AM_CXXFLAGS = $(WARN_CXXFLAGS) -fPIC -fvisibility=hidden
 
 ACLOCAL_AMFLAGS = -I m4
 
-EXTRA_DIST = data \
+EXTRA_DIST = \
+	CHANGELOG.md \
+	data \
 	external/JUCE/LICENSE.md \
 	external/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2 \
 	external/JUCE/modules/juce_core \

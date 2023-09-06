@@ -30,7 +30,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
 # tar-ustar required to fix error: "file name is too long"
-AM_INIT_AUTOMAKE([-Wall -Wno-portability check-news foreign subdir-objects tar-ustar])
+AM_INIT_AUTOMAKE([foreign subdir-objects tar-ustar])
 AM_SILENT_RULES([yes])
 
 # make CXXFLAGS inherit from CFLAGS unless CXXFLAGS were specified

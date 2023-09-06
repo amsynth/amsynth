@@ -1,14 +1,21 @@
-amsynth 1.13.2 -- 2022-02-01
+## [Unreleased]
+
+  - The GUI has been ported from GTK2 to JUCE.
+  - Plug-ins GUIs now include preset selection, saving, and menu items.
+  - The lv2-dev package is no longer required; JUCE bundles the LV2 headers.
+
+
+## 1.13.2 (2022-02-01)
 
   - Fixed a packaging error that cause preset banks to be omitted.
 
 
-amsynth 1.13.1 -- 2022-01-21
+## 1.13.1 (2022-01-21)
 
   - Fixed a crash when parsing XSettings on some systems.
 
 
-amsynth 1.13.0 -- 2022-07-16
+## 1.13.0 (2022-07-16)
 
   - Fixed intermittent unexpected MIDI output in response to MIDI CC input.
   - Fixed VST plugin UI updates in response to host parameter changes.
@@ -16,29 +23,29 @@ amsynth 1.13.0 -- 2022-07-16
   - Added version info to plugin pop-up menu.
 
 
-amsynth 1.12.4 -- 2022-01-08
+## 1.12.4 (2022-01-08)
 
   - Fixed lv2 .ttl syntax error
 
 
-amsynth 1.12.3 -- 2022-01-01
+## 1.12.3 (2022-01-01)
 
   - Added PatriksBank04 and PatriksBank05.
   - Fixed click when playing a note for the first time - issue #196
   - Stopped vendoring lv2 headers; install lv2-dev (or similar) via your package manager.
 
 
-amsynth 1.12.2 -- 2020-11-20
+## 1.12.2 (2020-11-20)
 
   - Fixed a regression in 1.12.0 that broke ALSA MIDI
 
 
-amsynth 1.12.1 -- 2020-11-14
+## 1.12.1 (2020-11-14)
 
   - Fixed LV2 manifest format error
 
 
-amsynth 1.12.0 -- 2020-11-08
+## 1.12.0 (2020-11-08)
 
   - Improved HiDPI autodetection and added --force-device-scale-factor command line option
   - Presets are now available to be loaded in VST hosts using the generic GUI (e.g. REAPER)
@@ -49,7 +56,7 @@ amsynth 1.12.0 -- 2020-11-08
   - Fixed a crash when compiled with LASH support but without a LASH server running
 
 
-amsynth 1.11.0 -- 2020-09-20
+## 1.11.0 (2020-09-20)
 
   - Added mouse wheel support for controls
   - Implemented UI upscaling for background and controls on HiDPI displays
@@ -58,7 +65,7 @@ amsynth 1.11.0 -- 2020-09-20
   - Removed dependency on oscpack for Non Session Manager support
 
 
-amsynth 1.10.0 -- 2020-05-07
+## 1.10.0 (2020-05-07)
 
   - Implemented smoothing / de-zippering to improve sound quality while adjusting parameters
   - amsynth user files (config, banks, etc.) now live in XDG-compliant directories
@@ -68,7 +75,7 @@ amsynth 1.10.0 -- 2020-05-07
   - Disabled VST GUI in REAPER
 
 
-amsynth 1.9.0 -- 2019-04-13
+## 1.9.0 (2019-04-13)
 
   - Added support for NSM (Non Session Manager)
   - Improved FreeBSD OSS audio support
@@ -78,7 +85,7 @@ amsynth 1.9.0 -- 2019-04-13
   - Other minor bug fixes
 
 
-amsynth 1.8.0 -- 2017-06-25
+## 1.8.0 (2017-06-25)
 
   - controls can now be reset to their default value via a double-click
   - alternate tuning scales & keyboard maps can now be loaded in plug-ins
@@ -86,7 +93,7 @@ amsynth 1.8.0 -- 2017-06-25
   - removed dependency on gtkmm (gtk is still required for the UI)
 
 
-amsynth 1.7.1 -- 2017-03-15
+## 1.7.1 (2017-03-15)
 
   - fixed MIDI channel filtering
   - fixed corrupt preset names in dssi plugin
@@ -95,7 +102,7 @@ amsynth 1.7.1 -- 2017-03-15
   - added a man page
 
 
-amsynth 1.7.0 -- 2016-09-28
+## 1.7.0 (2016-09-28)
 
   - MIDI CCs are now sent immediately when changing a parameter in the UI
   - fixed an issue with ALSA MIDI input becoming delayed
@@ -110,30 +117,30 @@ amsynth 1.7.0 -- 2016-09-28
   - fixed use of deprecated snd_seq_free_event API
 
 
-amsynth 1.6.4 -- 2016-01-19
+## 1.6.4 (2016-01-19)
 
   - fix incorrect parameter display when vst gui is created
   - support selection of a non-default tuning via command line or config file
   - another sound bank thanks to brian :)
 
 
-amsynth 1.6.3 -- 2015-10-31
+## 1.6.3 (2015-10-31)
 
   - fixed vst load & save compatibility with Bitwig Studio
   - fixes a warning about start_atomic_value_change in plugin versions
 
 
-amsynth 1.6.2 -- 2015-10-24
+## 1.6.2 (2015-10-24)
 
   - fixes an issue with MIDI event handling observed with Ardour/LV2
 
 
-amsynth 1.6.1 -- 2015-10-10
+## 1.6.1 (2015-10-10)
 
   - fixes support for non-44100 sample rates in DSSI and LV2 builds
 
 
-amsynth 1.6.0 -- 2015-09-27
+## 1.6.0 (2015-09-27)
 
   - VST plug-in build now available
   - adds a portamento mode control with legato option
@@ -142,13 +149,13 @@ amsynth 1.6.0 -- 2015-09-27
   - other minor bug fixes and improvements
 
 
-amsynth 1.5.1 -- 2014-08-06
+## 1.5.1 (2014-08-06)
 
   - fixes broken MIDI handling in the DSSI plugin
   - fixes a crash when a folder is selected from 'import preset'
 
 
-amsynth 1.5.0 -- 2014-08-02
+## 1.5.0 (2014-08-02)
 
   - new filter modes: notch and bypass
   - new filter controls for key-tracking and velocity sensitivity
@@ -163,7 +170,7 @@ amsynth 1.5.0 -- 2014-08-02
   - bank & preset loading is now faster
 
 
-amsynth 1.4.2 -- 2014-04-16
+## 1.4.2 (2014-04-16)
 
   - fixes use of alsa utilities from the 'Utils' menu
   - user specified jack client name now shown in window title
@@ -174,7 +181,7 @@ amsynth 1.4.2 -- 2014-04-16
   - more sound banks thanks to brian :)
 
 
-amsynth 1.4.1 -- 2014-02-03
+## 1.4.1 (2014-02-03)
 
   - adds new preset banks: BriansBank12, 13 & 14
   - MIDI CCs for mapped parameters are now be sent in real-time
@@ -184,7 +191,7 @@ amsynth 1.4.1 -- 2014-02-03
   - fixes for issues with MIDI learn dialog
 
 
-amsynth 1.4.0 -- 2013-06-23
+## 1.4.0 (2013-06-23)
 
   - LV2 support added
   - various improvements to sound engine, including:
@@ -200,12 +207,12 @@ amsynth 1.4.0 -- 2013-06-23
   - numerous other improvements and bug fixes
 
 
-amsynth 1.3.2 -- 2012-08-12
+## 1.3.2 (2012-08-12)
 
   - fixes compilation error with GCC 4.7
 
 
-amsynth 1.3.1 -- 2012-06-23
+## 1.3.1 (2012-06-23)
 
   - fixes check of external tools (e.g. vkeybd) - issue #34
   - fixes build on debian 6.0 - issue #35
@@ -217,7 +224,7 @@ amsynth 1.3.1 -- 2012-06-23
   - some tidying up of code & build system
 
 
-amsynth 1.3.0 -- 2011-12-23
+## 1.3.0 (2011-12-23)
 
   - adds a brand new skinned UI
   - added support for JACK-MIDI
@@ -235,7 +242,7 @@ amsynth 1.3.0 -- 2011-12-23
   - fixed problem with auto-connection of JACK output ports
 
 
-amSynth 1.2.3 -- 2010-05-08
+## 1.2.3 (2010-05-08)
 
   Bugs Fixed:
 
@@ -262,7 +269,7 @@ amSynth 1.2.3 -- 2010-05-08
   - Other internal code improvements
 
 
-amSynth 1.2.2 -- 2009-07-12
+## 1.2.2 (2009-07-12)
 
   Fixes various missing includes on some platforms / build configurations.
   Fixes compatibility issues with jackdmp.
@@ -270,13 +277,13 @@ amSynth 1.2.2 -- 2009-07-12
   Updated about dialog with list of contributors.
 
 
-amSynth 1.2.1 -- 2009-04-08
+## 1.2.1 (2009-04-08)
 
   + fixed compilation errors on linux/gcc-4.3.2
   + fixed a buffer overrun crash (caught by fortify on ubuntu)
 
 
-amSynth 1.2.0 -- 2006-12-22
+## 1.2.0 (2006-12-22)
 
   * nicer graphics
   * fixed crash upon startup on some machines
@@ -285,7 +292,7 @@ amSynth 1.2.0 -- 2006-12-22
   * improved per-user installation process
 
 
-amSynth 1.1.0 -- 2005-10-26
+## 1.1.0 (2005-10-26)
 
   + Updated GUI to use gtkmm2.x / gtk2.x
   + Fix build on latest GCC versions (4.0)
@@ -293,11 +300,11 @@ amSynth 1.1.0 -- 2005-10-26
   + Performance improvements
 
 
-amSynth 1.0.0 -- 2004-02-25
+## 1.0.0 (2004-02-25)
 
   Initial stable release
 
 
-amSynth 1.0 beta 1 -- 2002-03-19
+## 1.0 beta 1 (2002-03-19)
 
   First public release
