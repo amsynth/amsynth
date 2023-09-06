@@ -115,6 +115,21 @@ struct MainComponent::Impl : private juce::Timer {
 	void showMainMenu(juce::Component *targetComponent) {
 		auto menu = juce::PopupMenu();
 
+		menu.addSectionHeader(GETTEXT("Edit"));
+		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::copy);
+		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::paste);
+		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::undo);
+		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::redo);
+
+		menu.addSectionHeader(GETTEXT("Preset"));
+		menu.addItem(GETTEXT("Rename..."), [this] {
+			renamePreset();
+		});
+		menu.addItem(GETTEXT("Clear"), [this] {
+			presetController_->clearPreset();
+		});
+		menu.addCommandItem(commandManager_, CommandIDs::randomisePreset);
+
 		menu.addSectionHeader(GETTEXT("Tuning"));
 		menu.addItem(GETTEXT("Open Alternate Tuning File..."), [this] {
 			openFile(GETTEXT("Open Scala (.scl) alternate tuning file"), "*.scl", [this] (const char *filename) {
@@ -130,21 +145,6 @@ struct MainComponent::Impl : private juce::Timer {
 			setProperty(PROP_NAME(tuning_scl_file), nullptr);
 			setProperty(PROP_NAME(tuning_kbm_file), nullptr);
 		});
-
-		menu.addSectionHeader(GETTEXT("Edit"));
-		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::copy);
-		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::paste);
-		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::undo);
-		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::redo);
-
-		menu.addSectionHeader(GETTEXT("Preset"));
-		menu.addItem(GETTEXT("Rename..."), [this] {
-			renamePreset();
-		});
-		menu.addItem(GETTEXT("Clear"), [this] {
-			presetController_->clearPreset();
-		});
-		menu.addCommandItem(commandManager_, CommandIDs::randomisePreset);
 
 		menu.addSectionHeader(GETTEXT("Config"));
         auto getIntProperty = [&] (const char *key, int fallback) {
