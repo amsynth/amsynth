@@ -82,7 +82,7 @@ static const ParameterSpec ParameterSpecs[] = { //                            de
 	SPEC(kAmsynthParameter_FilterKeyTrackAmount,    "filter_kbd_track",      1.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
 	SPEC(kAmsynthParameter_FilterKeyVelocityAmount, "filter_vel_sens",       1.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
 	SPEC(kAmsynthParameter_AmpVelocityAmount,       "amp_vel_sens",          1.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
-	SPEC(kAmsynthParameter_PortamentoMode,          "portamento_mode",       0.0f,   0.0f,   1.0f,  0.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
+	SPEC(kAmsynthParameter_PortamentoMode,          "portamento_mode",       0.0f,   0.0f,   1.0f,  1.0f,       kParameterLaw_Linear,        1.0f,  0.0f,       ""   ),
 };
 
 static float getControlValue(const ParameterSpec &spec, float value)
