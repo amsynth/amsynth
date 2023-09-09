@@ -60,8 +60,8 @@ https://www.freshports.org/audio/amsynth
 
 ### 1. Install Prerequisites
 
-In order to successfully compile amsynth you will need the following
-development packages installed:
+In order to successfully build amsynth you will need compiler with support for
+C++14 language features, GNU make, and the following development libraries:
 
 - curl
 - Freetype
@@ -85,8 +85,8 @@ On Debian and Ubuntu based systems, the recommended packages may be installed
 with the following command:
 
 ```sh
-sudo apt install autopoint dssi-dev intltool libasound2-dev libcurl4-openssl-dev \
-	libfreetype-dev libjack-dev liblo-dev libpng-dev libxcursor-dev \
+sudo apt install autopoint dssi-dev intltool g++ libasound2-dev libcurl4-openssl-dev \
+	libfreetype-dev libjack-dev liblo-dev libpng-dev libtool libxcursor-dev \
 	libxinerama-dev libxrandr-dev pandoc zlib1g-dev
 ```
 
