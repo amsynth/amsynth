@@ -16,7 +16,7 @@
 @prefix state:   <http://lv2plug.in/ns/ext/state#> .
 @prefix work:    <http://lv2plug.in/ns/ext/worker#> .
 
-<http://code.google.com/p/amsynth/amsynth/x11ui>
+<http://code.google.com/p/amsynth/amsynth/ui>
     a ui:X11UI ;
     lv2:binary <amsynth_lv2ui.so> ;
     lv2:optionalFeature ui:noUserResize ;
@@ -97,7 +97,7 @@
     lv2:optionalFeature lv2:hardRTCapable;
     lv2:extensionData state:interface ,
         work:interface ;
-    ui:ui <http://code.google.com/p/amsynth/amsynth/x11ui> ;
+    ui:ui <http://code.google.com/p/amsynth/amsynth/ui> ;
     lv2:port [
         a lv2:InputPort ,
             atom:AtomPort ;

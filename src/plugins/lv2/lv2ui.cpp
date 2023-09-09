@@ -287,7 +287,7 @@ lv2_ui_extension_data(const char *uri)
 
 static const
 LV2UI_Descriptor descriptor = {
-	"http://code.google.com/p/amsynth/amsynth/x11ui",
+	"http://code.google.com/p/amsynth/amsynth/ui",
 	&lv2_ui_instantiate,
 	&lv2_ui_cleanup,
 	&lv2_ui_port_event,
