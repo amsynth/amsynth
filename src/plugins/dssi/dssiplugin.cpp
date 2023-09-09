@@ -49,13 +49,13 @@ static unsigned long 		s_lastBankGet = ULONG_MAX;
 
 #define MIDI_BUFFER_SIZE 4096
 
-typedef struct _amsynth_wrapper {
+struct amsynth_wrapper {
 	Synthesizer *synth;
 	unsigned char *midi_buffer;
 	LADSPA_Data *out_l;
 	LADSPA_Data *out_r;
 	LADSPA_Data **params;
-} amsynth_wrapper;
+};
 
 
 

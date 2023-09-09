@@ -60,7 +60,7 @@ struct ParameterListener final : public UpdateListener {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef struct {
+struct lv2_ui {
 	PresetController presetController;
 	std::unique_ptr<MainComponent> mainComponent;
 	std::unique_ptr<ParameterListener> parameterListener;
@@ -87,7 +87,7 @@ typedef struct {
 #define DECLARE_LV2_URID(name) LV2_URID amsynth_##name;
 		FOR_EACH_PROPERTY(DECLARE_LV2_URID)
 	} uris;
-} lv2_ui;
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 
