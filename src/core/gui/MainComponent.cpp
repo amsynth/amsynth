@@ -46,9 +46,30 @@ public:
 	// TODO: hide borders around toolbar buttons and combos
 };
 
-class MouseDownButton : public juce::TextButton {
+class MenuButton : public juce::ShapeButton {
 public:
-	explicit MouseDownButton(const juce::String& buttonName) : juce::TextButton(buttonName) {}
+	explicit MenuButton(const juce::String &buttonName)
+	: juce::ShapeButton(buttonName, juce::Colours::lightgrey, juce::Colours::lightgrey, juce::Colours::white) {
+		// From JUCE/examples/GUI/MenusDemo.h
+		static constexpr uint8_t burgerMenuPathData[] = {
+			110,109,0,0,128,64,0,0,32,65,108,0,0,224,65,0,0,32,65,98,254,212,232,65,0,0,32,65,0,0,240,65,252,
+			169,17,65,0,0,240,65,0,0,0,65,98,0,0,240,65,8,172,220,64,254,212,232,65,0,0,192,64,0,0,224,65,0,0,
+			192,64,108,0,0,128,64,0,0,192,64,98,16,88,57,64,0,0,192,64,0,0,0,64,8,172,220,64,0,0,0,64,0,0,0,65,
+			98,0,0,0,64,252,169,17,65,16,88,57,64,0,0,32,65,0,0,128,64,0,0,32,65,99,109,0,0,224,65,0,0,96,65,108,
+			0,0,128,64,0,0,96,65,98,16,88,57,64,0,0,96,65,0,0,0,64,4,86,110,65,0,0,0,64,0,0,128,65,98,0,0,0,64,
+			254,212,136,65,16,88,57,64,0,0,144,65,0,0,128,64,0,0,144,65,108,0,0,224,65,0,0,144,65,98,254,212,232,
+			65,0,0,144,65,0,0,240,65,254,212,136,65,0,0,240,65,0,0,128,65,98,0,0,240,65,4,86,110,65,254,212,232,
+			65,0,0,96,65,0,0,224,65,0,0,96,65,99,109,0,0,224,65,0,0,176,65,108,0,0,128,64,0,0,176,65,98,16,88,57,
+			64,0,0,176,65,0,0,0,64,2,43,183,65,0,0,0,64,0,0,192,65,98,0,0,0,64,254,212,200,65,16,88,57,64,0,0,208,
+			65,0,0,128,64,0,0,208,65,108,0,0,224,65,0,0,208,65,98,254,212,232,65,0,0,208,65,0,0,240,65,254,212,
+			200,65,0,0,240,65,0,0,192,65,98,0,0,240,65,2,43,183,65,254,212,232,65,0,0,176,65,0,0,224,65,0,0,176,
+			65,99,101,0,0
+		};
+		juce::Path path;
+		path.loadPathFromData(burgerMenuPathData, sizeof(burgerMenuPathData));
+		setShape(path, false, true, false);
+		setBorderSize(juce::BorderSize<int>(4));
+	}
 
 	void mouseDown(const juce::MouseEvent &event) override {
 		if (event.eventComponent == this) {
@@ -355,7 +376,7 @@ struct MainComponent::Impl : private juce::Timer {
 	MainComponent *component_;
 	PresetController *presetController_;
 	ControlPanel controlPanel_;
-	MouseDownButton menuButton_;
+	MenuButton menuButton_;
 	juce::ComboBox bankCombo_;
 	juce::ComboBox presetCombo_;
 	juce::TextButton saveButton_;
@@ -455,8 +476,7 @@ void MainComponent::paint(juce::Graphics &g) {
 }
 
 void MainComponent::resized() {
-	impl_->menuButton_.setTopLeftPosition(0, 0);
-	impl_->menuButton_.changeWidthToFitText(toolbarHeight);
+	impl_->menuButton_.setBounds(0, 0, toolbarHeight, toolbarHeight);
 	impl_->saveButton_.changeWidthToFitText(toolbarHeight);
 	impl_->saveButton_.setTopRightPosition(getWidth(), 0);
 	// TODO: shrink bank combo if possible
