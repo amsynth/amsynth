@@ -1,6 +1,6 @@
 # amsynth
 
-amsynth is is a free and open-source analog modelling (a.k.a virtual analog)
+amsynth is is a free and open-source analog modeling (a.k.a virtual analog)
 software synthesizer.
 
 It mimics the operation of early analog subtractive synthesizers with classic
