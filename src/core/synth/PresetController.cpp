@@ -464,6 +464,9 @@ static void scan_preset_banks()
 #ifdef PKGDATADIR
 	if (sFactoryBanksDirectory.empty())
 		sFactoryBanksDirectory = std::string(PKGDATADIR "/banks");
+#elif defined(__APPLE__)
+	if (sFactoryBanksDirectory.empty())
+		sFactoryBanksDirectory = "/Library/Application Support/amsynth/banks";
 #endif
 	// sFactoryBanksDirectory == userBanksDirectory if the build is configured with a --prefix=$HOME/.local
 	if (!sFactoryBanksDirectory.empty() && sFactoryBanksDirectory != userBanksDirectory ) {

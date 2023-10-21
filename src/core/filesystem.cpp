@@ -84,6 +84,18 @@ filesystem::filesystem()
         !copy(PKGDATADIR "/banks/amsynth_factory.bank", default_bank)) {
         std::cerr << "Error: could not create " << default_bank << std::endl;
     }
+#elif defined(__APPLE__)
+	auto prefs = std::string(getenv("HOME")) + "/Library/Preferences/amsynth";
+	config = prefs + "/config";
+	controllers = prefs + "/controllers";
+	user_banks = prefs + "/banks";
+	default_bank = user_banks + "/default";
+	create_dir(prefs);
+	create_dir(user_banks);
+	if (!exists(default_bank)) {
+		// Create an empty bank file
+		std::ofstream(default_bank, std::ios::out) << "amSynth\nEOF\n";
+	}
 #endif
 }
 

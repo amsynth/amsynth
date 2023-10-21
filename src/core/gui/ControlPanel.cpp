@@ -157,6 +157,8 @@ ControlPanel::~ControlPanel() noexcept = default;
 
 #ifdef PKGDATADIR
 std::string ControlPanel::skinsDirectory {PKGDATADIR "/skins"};
+#elif defined(__APPLE__)
+std::string ControlPanel::skinsDirectory {"/Library/Application Support/amsynth/skins"};
 #else
 std::string ControlPanel::skinsDirectory;
 #endif
