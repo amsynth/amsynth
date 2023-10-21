@@ -283,7 +283,7 @@ struct MainComponent::Impl : private juce::Timer {
 		alertWindow_->enterModalState(false, callback, true);
 #if JUCE_LINUX
 		// On X11 this needs to be delayed to be effective
-		juce::Timer::callAfterDelay(100, [this] { textEditor->grabKeyboardFocus(); });
+		juce::Timer::callAfterDelay(100, [=] { textEditor->grabKeyboardFocus(); });
 #else
 		textEditor->grabKeyboardFocus();
 #endif
