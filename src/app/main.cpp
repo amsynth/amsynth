@@ -245,7 +245,7 @@ public:
 							.withMessage(errorMessage)
 							.withButton(GETTEXT("OK")),
 					[this](int) {
-						system(("xdg-open " + filesystem::get().config).c_str());
+						(void)system(("xdg-open " + filesystem::get().config).c_str());
 						quit();
 					});
 		}
