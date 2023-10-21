@@ -143,6 +143,9 @@ struct MainComponent::Impl : private juce::Timer {
 		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::redo);
 
 		menu.addSectionHeader(GETTEXT("Preset"));
+		menu.addItem(GETTEXT("Add New User Bank..."), [this] {
+			addNewUserBank();
+		});
 		menu.addItem(GETTEXT("Rename..."), [this] {
 			renamePreset();
 		});
@@ -238,32 +241,60 @@ struct MainComponent::Impl : private juce::Timer {
 		label->setText(text, juce::NotificationType::dontSendNotification);
 		return label;
 	}
+	
+	void addNewUserBank() {
+		showTextAlert(GETTEXT("Add New User Bank"), GETTEXT("Create"), "Bank 1", [this](std::string text) {
+			if (PresetController::createUserBank(text)) {
+				PresetController::rescanPresetBanks();
+				populateBankCombo();
+			} else {
+				showError(juce::String::formatted(GETTEXT("Failed to create user bank with name \"%s\""),
+												  text.c_str()).toStdString());
+			}
+		});
+	}
 
 	void renamePreset() {
-		alertWindow_ = new juce::AlertWindow(GETTEXT("Rename Preset"), "", juce::MessageBoxIconType::NoIcon, component_);
-		alertWindow_->addButton(GETTEXT("Rename"), 100, juce::KeyPress(juce::KeyPress::returnKey));
+		auto &name = presetController_->getCurrentPreset().getName();
+		showTextAlert(GETTEXT("Rename Preset"), GETTEXT("Rename"), name, [this](std::string text) {
+			if (presetController_->getCurrentPreset().getName() != text) {
+				presetController_->getCurrentPreset().setName(text);
+				setProperty(PROP_NAME(preset_name), text.c_str());
+				auto label = dynamic_cast<juce::Label *>(presetCombo_.getChildComponent(0));
+				label->setText(std::to_string(presetController_->getCurrPresetNumber() + 1) + ": " + text,
+							   juce::NotificationType::dontSendNotification);
+			}
+		});
+	}
+	
+	void showTextAlert(const juce::String &title, const juce::String &okButton, const std::string &text,
+					   std::function<void(std::string)> &&okAction) {
+		alertWindow_ = new juce::AlertWindow(title, "", juce::MessageBoxIconType::NoIcon, component_);
+		alertWindow_->addButton(okButton, 100, juce::KeyPress(juce::KeyPress::returnKey));
 		alertWindow_->addButton(GETTEXT("Cancel"), 0);
-		alertWindow_->addTextEditor("name", presetController_->getCurrentPreset().getName());
-		auto callback = juce::ModalCallbackFunction::create([this] (int result) {
+		alertWindow_->addTextEditor("text", text);
+		auto *textEditor = alertWindow_->getTextEditor("text");
+		auto callback = juce::ModalCallbackFunction::create([=] (int result) {
 			if (result == 100) {
-				auto text = alertWindow_->getTextEditorContents("name").toStdString();
-				if (presetController_->getCurrentPreset().getName() != text) {
-					presetController_->getCurrentPreset().setName(text);
-					setProperty(PROP_NAME(preset_name), text.c_str());
-					auto label = dynamic_cast<juce::Label *>(presetCombo_.getChildComponent(0));
-					label->setText(std::to_string(presetController_->getCurrPresetNumber() + 1) + ": " + text,
-								   juce::NotificationType::dontSendNotification);
-				}
+				okAction(textEditor->getText().toStdString());
 			}
 			alertWindow_ = nullptr;
 		});
 		alertWindow_->enterModalState(false, callback, true);
-		juce::Timer::callAfterDelay(100, [this] {
-			// On X11 this needs to be delayed to be effective
-			alertWindow_->getTextEditor("name")->grabKeyboardFocus();
-		});
+#if JUCE_LINUX
+		// On X11 this needs to be delayed to be effective
+		juce::Timer::callAfterDelay(100, [this] { textEditor->grabKeyboardFocus(); });
+#else
+		textEditor->grabKeyboardFocus();
+#endif
 	}
-
+	
+	void showError(const std::string &message) {
+		if (alertWindow_)
+			alertWindow_->exitModalState(0);
+		juce::AlertWindow::showMessageBoxAsync(juce::MessageBoxIconType::WarningIcon, "Error", message);
+	}
+	
 	void showAbout() {
 		auto editor = new juce::TextEditor();
 		editor->setSize(component_->getWidth(), component_->getHeight());

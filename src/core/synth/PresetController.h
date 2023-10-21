@@ -109,6 +109,8 @@ public:
 
     static std::string getUserBanksDirectory();
 
+	static bool createUserBank(const std::string &name);
+
 	void	notify				() {
 		for (auto observer : observers)
 			observer->currentPresetDidChange();

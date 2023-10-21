@@ -488,3 +488,14 @@ std::string PresetController::getUserBanksDirectory()
 {
 	return filesystem::get().user_banks;
 }
+
+bool PresetController::createUserBank(const std::string &name)
+{
+	auto path = getUserBanksDirectory() + "/" + name + ".bank";
+	auto file = std::ofstream(path, ios::out);
+	if (!file.is_open())
+		return false;
+	file << "amSynth\nEOF\n";
+	file.close();
+	return true;
+}
