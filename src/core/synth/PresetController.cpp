@@ -495,6 +495,8 @@ std::string PresetController::getUserBanksDirectory()
 bool PresetController::createUserBank(const std::string &name)
 {
 	auto path = getUserBanksDirectory() + "/" + name + ".bank";
+	if (std::ifstream(path, ios::in).is_open())
+		return false;
 	auto file = std::ofstream(path, ios::out);
 	if (!file.is_open())
 		return false;
