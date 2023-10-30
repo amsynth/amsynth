@@ -1,7 +1,7 @@
 /*
  *  TuningMap.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -51,6 +51,8 @@ public:
 
 	const std::string & getScaleFile() const { return scaleFile; }
 	const std::string & getKeyMapFile() const { return keyMapFile; }
+
+	bool	isDefault		() const { return scaleFile.empty() && keyMapFile.empty(); }
 
 	double	noteToPitch		(int note) const;
 

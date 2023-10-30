@@ -126,6 +126,12 @@ libcore_la_SOURCES = \
 	src/core/synth/VoiceBoard.h \
 	src/core/types.h
 
+if BUILD_MTS_ESP
+libcore_la_SOURCES += \
+	external/MTS-ESP/Client/libMTSClient.cpp \
+	external/MTS-ESP/Client/libMTSClient.h
+endif
+
 ################################################################################
 #
 # amsynth standalone

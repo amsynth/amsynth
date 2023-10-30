@@ -1,7 +1,7 @@
 /*
  *  VoiceAllocationUnit.h
  *
- *  Copyright (c) 2001-2019 Nick Dowell
+ *  Copyright (c) 2001 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -25,6 +25,10 @@
 #include "UpdateListener.h"
 #include "MidiController.h"
 #include "TuningMap.h"
+
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <stdint.h>
 #include <vector>
@@ -64,6 +68,7 @@ public:
 
 	void	Process			(float *l, float *r, unsigned nframes, int stride=1);
 
+	bool	shouldPlayNote	(int note) const;
 	double	noteToPitch		(int note) const;
 	int		loadScale		(const std::string & sclFileName);
 	int		loadKeyMap		(const std::string & kbmFileName);
@@ -99,6 +104,10 @@ public:
 	float	mLastNoteFrequency;
 
 	TuningMap	tuningMap;
+#ifdef WITH_MTS_ESP
+	class MTSClient *mtsClient;
+	bool mtsEspDisabled {false};
+#endif
 };
 
 #endif

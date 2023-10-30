@@ -3,6 +3,9 @@
   - The GUI has been ported from GTK2 to JUCE.
   - Plug-ins GUIs now include preset selection, saving, and menu items.
   - The lv2-dev package is no longer required; JUCE bundles the LV2 headers.
+  - Added support for [MTS-ESP](https://github.com/ODDSound/MTS-ESP) microtuning,
+    excluding multi-channel tuning tables. MTS-ESP is not GPL licensed so some
+    packagers may wish to disable it by configuring `--without-mts-esp`.
 
 
 ## 1.13.2 (2022-02-01)

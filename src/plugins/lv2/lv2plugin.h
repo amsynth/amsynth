@@ -40,7 +40,8 @@
 	X(preset_name) \
 	X(preset_number) \
 	X(tuning_kbm_file) \
-	X(tuning_scl_file)
+	X(tuning_scl_file) \
+	X(tuning_mts_esp_disabled)
 
 enum {
     PORT_CONTROL            = 0,

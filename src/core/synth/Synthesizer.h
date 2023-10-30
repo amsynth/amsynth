@@ -1,7 +1,7 @@
 /*
  *  Synthesizer.cpp
  *
- *  Copyright (c) 2014-2023 Nick Dowell
+ *  Copyright (c) 2014 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -39,6 +39,7 @@ enum class PropertyID
 	preset_number,
 	tuning_kbm_file,
 	tuning_scl_file,
+	tuning_mts_esp_disabled,
 };
 
 #ifdef NDEBUG

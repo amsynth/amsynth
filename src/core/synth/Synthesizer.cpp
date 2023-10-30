@@ -1,7 +1,7 @@
 /*
  *  Synthesizer.cpp
  *
- *  Copyright (c) 2014-2023 Nick Dowell
+ *  Copyright (c) 2014 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -85,6 +85,9 @@ void Synthesizer::setProperty(const char *name, const char *value)
 
 	if (name == std::string(PROP_NAME(tuning_scl_file)))
 		loadTuningScale(value);
+	
+	if (name == std::string(PROP_NAME(tuning_mts_esp_disabled)))
+		_voiceAllocationUnit->mtsEspDisabled = std::stoi(value);
 }
 
 std::map<std::string, std::string> Synthesizer::getProperties()
@@ -97,6 +100,9 @@ std::map<std::string, std::string> Synthesizer::getProperties()
 		props[PROP_NAME(tuning_kbm_file)] = _voiceAllocationUnit->tuningMap.getKeyMapFile();
 	if (!_voiceAllocationUnit->tuningMap.getScaleFile().empty())
 		props[PROP_NAME(tuning_scl_file)] = _voiceAllocationUnit->tuningMap.getScaleFile();
+#ifdef WITH_MTS_ESP
+	props[PROP_NAME(tuning_mts_esp_disabled)] = _voiceAllocationUnit->mtsEspDisabled ? "1" : "0";
+#endif
 	return props;
 }
 

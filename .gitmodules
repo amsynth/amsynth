@@ -2,3 +2,6 @@
 	path = external/JUCE
 	url = https://github.com/juce-framework/JUCE
 	shallow = true
+[submodule "external/MTS-ESP"]
+	path = external/MTS-ESP
+	url = https://github.com/ODDSound/MTS-ESP.git

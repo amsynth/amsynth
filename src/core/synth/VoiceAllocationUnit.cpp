@@ -1,7 +1,7 @@
 /*
  *  VoiceAllocationUnit.cpp
  *
- *  Copyright (c) 2001-2022 Nick Dowell
+ *  Copyright (c) 2001 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -24,6 +24,10 @@
 #include "SoftLimiter.h"
 #include "Distortion.h"
 #include "VoiceBoard.h"
+
+#ifdef WITH_MTS_ESP
+#include "MTS-ESP/Client/libMTSClient.h"
+#endif
 
 #include <assert.h>
 #include <cstring>
@@ -49,6 +53,9 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 ,	mPitchBendRangeSemitones(2)
 ,	mPitchBendValue(1)
 ,	mLastNoteFrequency (0.0f)
+#ifdef WITH_MTS_ESP
+,	mtsClient(MTS_RegisterClient())
+#endif
 {
 	limiter = new SoftLimiter;
 	reverb = new revmodel;
@@ -69,6 +76,9 @@ VoiceAllocationUnit::VoiceAllocationUnit ()
 
 VoiceAllocationUnit::~VoiceAllocationUnit	()
 {
+#ifdef WITH_MTS_ESP
+	MTS_DeregisterClient(mtsClient);
+#endif
 	while (_voices.size()) { delete _voices.back(); _voices.pop_back(); }
 	delete limiter;
 	delete reverb;
@@ -92,7 +102,7 @@ VoiceAllocationUnit::HandleMidiNoteOn(int note, float velocity)
 
 	// Checks if the note is within the note ranges activated in the current keyboard map.
 	// The above assertions guarantee the safety of this check.
-	if (!tuningMap.inActiveRange(note))
+	if (!shouldPlayNote(note))
 		return;
 
 	float pitch = (float) noteToPitch(note);
@@ -198,7 +208,7 @@ void
 VoiceAllocationUnit::HandleMidiNoteOff(int note, float /*velocity*/)
 {
 	// No action is required if the note is outside the active range of notes.
-	if (!tuningMap.inActiveRange(note))
+	if (!shouldPlayNote(note))
 		return;
 
 	keyPressed[note] = false;
@@ -398,9 +408,29 @@ VoiceAllocationUnit::UpdateParameter	(Param param, float value)
 
 ////////////////////////////////////////////////////////////////////////////////
 
+// Note: MTS-ESP wants us to supply a MIDI channel when querying retuning or
+// note filtering, in order to support multi-channel tuning tables which are
+// useful for microtonal MIDI controllers with more than 128 keys. We don't yet
+// support this because VoiceAllocationUnit uses the MIDI note number to index
+// _voices[], therefore notes playing on different channels could conflict.
+
+bool
+VoiceAllocationUnit::shouldPlayNote	(int note) const
+{
+#ifdef WITH_MTS_ESP
+	if (!mtsEspDisabled && tuningMap.isDefault())
+		return !MTS_ShouldFilterNote(mtsClient, note, 0);
+#endif
+	return tuningMap.inActiveRange(note);
+}
+
 double
 VoiceAllocationUnit::noteToPitch	(int note) const
 {
+#ifdef WITH_MTS_ESP
+	if (!mtsEspDisabled && tuningMap.isDefault())
+		return MTS_NoteToFrequency(mtsClient, note, 0);
+#endif
 	return tuningMap.noteToPitch(note);
 }
 
@@ -415,4 +445,3 @@ VoiceAllocationUnit::loadKeyMap		(const string & kbmFileName)
 {
 	return tuningMap.loadKeyMap(kbmFileName);
 }
-
