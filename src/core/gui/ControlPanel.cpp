@@ -73,6 +73,11 @@ struct ControlPanel::Impl final : juce::MouseListener
 	, label_(controlPanel)
 	{
 		auto skin = Skin(ControlPanel::skinsDirectory + "/default");
+		if (skin.layout.background.empty() || skin.layout.controls.empty())
+		{
+			fprintf(stderr, "amsynth: could not load layout.ini\n");
+			return;
+		}
 		label_.yInset = 6;
 //		auto skin = Skin(ControlPanel::skinsDirectory + "/Etna");
 //		label_.yOffset = 0;
