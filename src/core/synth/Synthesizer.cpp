@@ -86,8 +86,10 @@ void Synthesizer::setProperty(const char *name, const char *value)
 	if (name == std::string(PROP_NAME(tuning_scl_file)))
 		loadTuningScale(value);
 	
+#ifdef WITH_MTS_ESP
 	if (name == std::string(PROP_NAME(tuning_mts_esp_disabled)))
 		_voiceAllocationUnit->mtsEspDisabled = std::stoi(value);
+#endif
 }
 
 std::map<std::string, std::string> Synthesizer::getProperties()
