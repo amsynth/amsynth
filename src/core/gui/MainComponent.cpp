@@ -510,7 +510,7 @@ bool MainComponent::perform(const InvocationInfo &info) {
 }
 
 void MainComponent::paint(juce::Graphics &g) {
-	g.setColour(juce::Colour::fromRGB(30, 30, 30));
+	g.setColour(impl_->lookAndFeel_.findColour(juce::ComboBox::ColourIds::backgroundColourId));
 	g.fillAll();
 }
 
