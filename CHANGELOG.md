@@ -8,12 +8,12 @@
     packagers may wish to disable it by configuring `--without-mts-esp`.
 
 
-## 1.13.2 (2022-02-01)
+## 1.13.2 (2023-02-01)
 
   - Fixed a packaging error that cause preset banks to be omitted.
 
 
-## 1.13.1 (2022-01-21)
+## 1.13.1 (2023-01-21)
 
   - Fixed a crash when parsing XSettings on some systems.
 
