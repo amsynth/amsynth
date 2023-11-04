@@ -256,8 +256,7 @@ struct MainComponent::Impl : private juce::Timer {
 				PresetController::rescanPresetBanks();
 				populateBankCombo();
 			} else {
-				showError(juce::String::formatted(GETTEXT("Failed to create user bank with name \"%s\""),
-												  text.c_str()).toStdString());
+				showError(GETTEXT("Failed to create user bank with name \"%s\""), text.c_str());
 			}
 		});
 	}
@@ -296,13 +295,15 @@ struct MainComponent::Impl : private juce::Timer {
 		textEditor->grabKeyboardFocus();
 #endif
 	}
-	
-	void showError(const std::string &message) {
+
+	template <typename... Args>
+	void showError(const juce::String& fmt, Args... args) {
 		if (alertWindow_)
 			alertWindow_->exitModalState(0);
-		juce::AlertWindow::showMessageBoxAsync(juce::MessageBoxIconType::WarningIcon, "Error", message);
+		juce::AlertWindow::showMessageBoxAsync(juce::MessageBoxIconType::WarningIcon, GETTEXT("Error"),
+											   juce::String::formatted(fmt, args...));
 	}
-	
+
 	void showAbout() {
 		auto editor = new juce::TextEditor();
 		editor->setSize(component_->getWidth(), component_->getHeight());
