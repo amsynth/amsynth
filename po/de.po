@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-04 10:06+0000\n"
-"PO-Revision-Date: 2023-11-04 10:13+0000\n"
+"POT-Creation-Date: 2023-11-04 15:05+0000\n"
+"PO-Revision-Date: 2023-11-04 15:06+0000\n"
 "Last-Translator: Peter Körner <18427@gmx.net>\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -204,159 +204,163 @@ msgstr "MIDI-Controller"
 msgid "Ignore Preset Value"
 msgstr "Preset-Wert ignorieren"
 
-#: ../src/core/gui/MainComponent.cpp:88
+#: ../src/core/gui/MainComponent.cpp:90
 msgid "Menu"
 msgstr ""
 
-#: ../src/core/gui/MainComponent.cpp:89
+#: ../src/core/gui/MainComponent.cpp:91
 msgid "Save"
 msgstr "Speichern"
 
-#: ../src/core/gui/MainComponent.cpp:139
+#: ../src/core/gui/MainComponent.cpp:141
 msgid "Edit"
 msgstr ""
 
-#: ../src/core/gui/MainComponent.cpp:145 ../src/core/gui/MainComponent.cpp:457
+#: ../src/core/gui/MainComponent.cpp:147 ../src/core/gui/MainComponent.cpp:464
 msgid "Preset"
 msgstr "Preset"
 
-#: ../src/core/gui/MainComponent.cpp:146
-msgid "Add New User Bank..."
-msgstr ""
+#: ../src/core/gui/MainComponent.cpp:148
+msgid "Create New User Bank..."
+msgstr "Neue Benutzerbank erstellen..."
 
-#: ../src/core/gui/MainComponent.cpp:149
+#: ../src/core/gui/MainComponent.cpp:151
 msgid "Rename..."
 msgstr "Umbenennen..."
 
 # TODO: bessere Übersetzung?
-#: ../src/core/gui/MainComponent.cpp:152
+#: ../src/core/gui/MainComponent.cpp:154
 msgid "Clear"
 msgstr "Leeren"
 
-#: ../src/core/gui/MainComponent.cpp:157
+#: ../src/core/gui/MainComponent.cpp:159
 msgid "Tuning"
 msgstr ""
 
-#: ../src/core/gui/MainComponent.cpp:158
+#: ../src/core/gui/MainComponent.cpp:160
 msgid "Open Alternate Tuning File..."
 msgstr "Lade andere Stimmung..."
 
-#: ../src/core/gui/MainComponent.cpp:159
+#: ../src/core/gui/MainComponent.cpp:161
 msgid "Open Scala (.scl) alternate tuning file"
 msgstr "Lade andere Open-Scala-Stimmungsdatei (.scl)"
 
-#: ../src/core/gui/MainComponent.cpp:163
+#: ../src/core/gui/MainComponent.cpp:165
 msgid "Open Alternate Keyboard Map..."
 msgstr "Lade andere Keyboard-Map..."
 
-#: ../src/core/gui/MainComponent.cpp:164
+#: ../src/core/gui/MainComponent.cpp:166
 msgid "Open alternate keyboard map (Scala .kbm format)"
 msgstr "Lade andere Keyboard-Map (Scala-.kbm-Format)"
 
-#: ../src/core/gui/MainComponent.cpp:168
+#: ../src/core/gui/MainComponent.cpp:170
 msgid "Reset All Tuning Settings to Default"
 msgstr "Setze alle Stimmungseinstellungen auf den Standard zurück"
 
-#: ../src/core/gui/MainComponent.cpp:175
+#: ../src/core/gui/MainComponent.cpp:177
 msgid "Use MTS-ESP if available"
 msgstr ""
 
-#: ../src/core/gui/MainComponent.cpp:181
+#: ../src/core/gui/MainComponent.cpp:183
 msgid "Config"
 msgstr "Konfiguration"
 
-#: ../src/core/gui/MainComponent.cpp:191
+#: ../src/core/gui/MainComponent.cpp:193
 msgid "Pitch Bend Range"
 msgstr "Pitch-Bend-Bereich"
 
-#: ../src/core/gui/MainComponent.cpp:196
+#: ../src/core/gui/MainComponent.cpp:198
 msgid " Semitones"
 msgstr " Halbtöne"
 
-#: ../src/core/gui/MainComponent.cpp:202
+#: ../src/core/gui/MainComponent.cpp:204
 msgid "Max. Polyphony"
 msgstr "Max. Polyphonie"
 
-#: ../src/core/gui/MainComponent.cpp:207 ../src/core/gui/MainComponent.cpp:219
+#: ../src/core/gui/MainComponent.cpp:209 ../src/core/gui/MainComponent.cpp:221
 msgid "Unlimited"
 msgstr "Unbegrenzt"
 
-#: ../src/core/gui/MainComponent.cpp:214
+#: ../src/core/gui/MainComponent.cpp:216
 msgid "MIDI Channel"
 msgstr "MIDI-Kanal"
 
-#: ../src/core/gui/MainComponent.cpp:227
+#: ../src/core/gui/MainComponent.cpp:229
 msgid "Help"
 msgstr "Hilfe"
 
-#: ../src/core/gui/MainComponent.cpp:228
+#: ../src/core/gui/MainComponent.cpp:230
 msgid "About"
 msgstr "Über"
 
-#: ../src/core/gui/MainComponent.cpp:231
+#: ../src/core/gui/MainComponent.cpp:233
 msgid "Report a Bug"
 msgstr "Einen Fehler melden"
 
-#: ../src/core/gui/MainComponent.cpp:234
+#: ../src/core/gui/MainComponent.cpp:236
 msgid "Online Documentation"
 msgstr "Online-Dokumentation"
 
-#: ../src/core/gui/MainComponent.cpp:254
+#: ../src/core/gui/MainComponent.cpp:256
 #, fuzzy
 msgid "Add New User Bank"
 msgstr "Benutzerbank"
 
-#: ../src/core/gui/MainComponent.cpp:254
+#: ../src/core/gui/MainComponent.cpp:256
 msgid "Create"
 msgstr ""
 
-#: ../src/core/gui/MainComponent.cpp:259
+#: ../src/core/gui/MainComponent.cpp:261
 #, c-format
 msgid "Failed to create user bank with name \"%s\""
 msgstr ""
 
-#: ../src/core/gui/MainComponent.cpp:267
+#: ../src/core/gui/MainComponent.cpp:268
 msgid "Rename Preset"
 msgstr "Preset umbenennen"
 
-#: ../src/core/gui/MainComponent.cpp:267
+#: ../src/core/gui/MainComponent.cpp:268
 msgid "Rename"
 msgstr "Umbenennen"
 
-#: ../src/core/gui/MainComponent.cpp:282
+#: ../src/core/gui/MainComponent.cpp:283
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ../src/core/gui/MainComponent.cpp:350
+#: ../src/core/gui/MainComponent.cpp:309
+msgid "Error"
+msgstr ""
+
+#: ../src/core/gui/MainComponent.cpp:357
 #, fuzzy
 msgid "User banks"
 msgstr "Benutzerbank"
 
-#: ../src/core/gui/MainComponent.cpp:354
+#: ../src/core/gui/MainComponent.cpp:361
 msgid "Factory banks"
 msgstr ""
 
-#: ../src/core/gui/MainComponent.cpp:461
+#: ../src/core/gui/MainComponent.cpp:468
 msgid "Copy"
 msgstr "Kopieren"
 
-#: ../src/core/gui/MainComponent.cpp:465
+#: ../src/core/gui/MainComponent.cpp:472
 msgid "Paste"
 msgstr "Einfügen"
 
-#: ../src/core/gui/MainComponent.cpp:469
+#: ../src/core/gui/MainComponent.cpp:476
 msgid "Undo"
 msgstr "Rückgängig"
 
-#: ../src/core/gui/MainComponent.cpp:473
+#: ../src/core/gui/MainComponent.cpp:480
 msgid "Redo"
 msgstr "Wiederherstellen"
 
-#: ../src/core/gui/MainComponent.cpp:477
+#: ../src/core/gui/MainComponent.cpp:484
 msgid "Randomise"
 msgstr "Zufällige Einstellungen"
 
-#: ../src/core/gui/MainComponent.cpp:477
+#: ../src/core/gui/MainComponent.cpp:484
 msgid "Sets all parameters to a random value"
 msgstr ""
 

@@ -145,7 +145,7 @@ struct MainComponent::Impl : private juce::Timer {
 		menu.addCommandItem(commandManager_, juce::StandardApplicationCommandIDs::redo);
 
 		menu.addSectionHeader(GETTEXT("Preset"));
-		menu.addItem(GETTEXT("Add New User Bank..."), [this] {
+		menu.addItem(GETTEXT("Create New User Bank..."), [this] {
 			addNewUserBank();
 		});
 		menu.addItem(GETTEXT("Rename..."), [this] {
