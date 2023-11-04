@@ -29,6 +29,8 @@
 #include "core/synth/PresetController.h"
 #include "core/synth/Synthesizer.h"
 
+#include <alloca.h>
+
 enum CommandIDs {
 	randomisePreset = 0x10000,
 };
@@ -297,11 +299,15 @@ struct MainComponent::Impl : private juce::Timer {
 	}
 
 	template <typename... Args>
-	void showError(const juce::String& fmt, Args... args) {
+	void showError(const juce::String &fmt, Args... args) {
 		if (alertWindow_)
 			alertWindow_->exitModalState(0);
+		// Not using juce::String::formatted because it doesn't properly handle UTF-8
+		auto size = snprintf(nullptr, 0, fmt.toStdString().c_str(), args...) + 1;
+		char *message = (char *)alloca(size);
+		snprintf(message, size, fmt.toStdString().c_str(), args...);
 		juce::AlertWindow::showMessageBoxAsync(juce::MessageBoxIconType::WarningIcon, GETTEXT("Error"),
-											   juce::String::formatted(fmt, args...));
+											   juce::String(juce::CharPointer_UTF8(message)));
 	}
 
 	void showAbout() {
