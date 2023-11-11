@@ -67,8 +67,8 @@ public:
     void loadBank(const char *filename);
     void saveBank(const char *filename);
 
-    void loadState(char *buffer);
-    int saveState(char **buffer);
+	std::string getState();
+	void setState(const std::string &);
 
     int getPresetNumber();
     void setPresetNumber(int number);

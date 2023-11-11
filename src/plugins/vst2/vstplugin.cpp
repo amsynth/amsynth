@@ -119,6 +119,7 @@ struct Plugin final : public UpdateListener
 	std::vector<amsynth_midi_event_t> midiEvents;
 	int programNumber = 0;
 	std::string presetName;
+	std::string chunk;
 
 #ifdef WITH_GUI
 	std::unique_ptr<MainComponent> gui;
@@ -219,10 +220,12 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 #endif
 
 		case effGetChunk:
-			return plugin->synthesizer->saveState((char **)ptr);
+			plugin->chunk = plugin->synthesizer->getState();
+			*(const char **)ptr = plugin->chunk.data();
+			return plugin->chunk.size();
 
 		case effSetChunk:
-			plugin->synthesizer->loadState((char *)ptr);
+			plugin->synthesizer->setState(std::string((const char *)ptr, val));
 			return 0;
 
 		case effProcessEvents: {

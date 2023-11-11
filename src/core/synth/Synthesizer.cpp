@@ -120,7 +120,7 @@ void Synthesizer::saveBank(const char *filename)
 	_presetController->savePresets(filename);
 }
 
-void Synthesizer::loadState(char *buffer)
+void Synthesizer::setState(const std::string &buffer)
 {
 	if (!_presetController->getCurrentPreset().fromString(buffer))
 		return;
@@ -140,10 +140,7 @@ void Synthesizer::loadState(char *buffer)
 	}
 }
 
-// FIXME: This leaks memory when called from effSetChunk
-// effSetChunk expects *ptr to be set to a block of memory that will eventually
-// be freed by the plugin - i.e. the host does not free the memory.
-int Synthesizer::saveState(char **buffer)
+std::string Synthesizer::getState()
 {
 	std::stringstream stream;
 	_presetController->getCurrentPreset().toString(stream);
@@ -151,9 +148,7 @@ int Synthesizer::saveState(char **buffer)
 	for (auto &it : getProperties())
 		stream << "<property> " << it.first << " " << it.second << std::endl;
 
-	std::string string = stream.str();
-	*buffer = (char *)strdup(string.c_str());
-	return (int)string.size();
+	return stream.str();
 }
 
 int Synthesizer::getPresetNumber()
