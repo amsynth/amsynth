@@ -105,7 +105,7 @@ public:
 
 	TuningMap	tuningMap;
 #ifdef WITH_MTS_ESP
-	class MTSClient *mtsClient;
+	struct MTSClient *mtsClient;
 	bool mtsEspDisabled {false};
 #endif
 };

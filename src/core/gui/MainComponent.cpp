@@ -172,12 +172,13 @@ struct MainComponent::Impl : private juce::Timer {
 			setProperty(PROP_NAME(tuning_kbm_file), nullptr);
 		});
 #ifdef WITH_MTS_ESP
-		if (auto it = component_->properties.find(PROP_NAME(tuning_mts_esp_disabled)); true) {
+		do {
+			auto it = component_->properties.find(PROP_NAME(tuning_mts_esp_disabled));
 			bool currentValue = it == component_->properties.end() ? false : std::stoi(it->second);
 			menu.addItem(GETTEXT("Use MTS-ESP if available"), true, !currentValue, [this, currentValue] {
 				setProperty(PROP_NAME(tuning_mts_esp_disabled), currentValue ? "0" : "1");
 			});
-		}
+		} while (0);
 #endif
 
 		menu.addSectionHeader(GETTEXT("Config"));

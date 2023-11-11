@@ -33,11 +33,13 @@ extern bool dispatchNextMessageOnSystemQueue(bool returnIfNoPendingMessages);
 } // namespace juce
 
 float getGlobalScaleFactor() {
-	if (auto scale = getenv("GDK_SCALE")) {
-		return (float)atoi(scale);
+	auto gdkScale = getenv("GDK_SCALE")
+	if (gdkScale) {
+		return (float)atoi(gdkScale);
 	}
 
-	if (auto *xSettings = juce::XWindowSystem::getInstance()->getXSettings()) {
+	auto *xSettings = juce::XWindowSystem::getInstance()->getXSettings();
+	if (xSettings) {
 		auto windowScalingFactorSetting = xSettings->getSetting(juce::XWindowSystem::getWindowScalingFactorSettingName());
 		if (windowScalingFactorSetting.isValid() && windowScalingFactorSetting.integerValue > 0)
 			return (float)windowScalingFactorSetting.integerValue;
