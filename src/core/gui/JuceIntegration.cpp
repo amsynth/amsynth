@@ -33,7 +33,7 @@ extern bool dispatchNextMessageOnSystemQueue(bool returnIfNoPendingMessages);
 } // namespace juce
 
 float getGlobalScaleFactor() {
-	auto gdkScale = getenv("GDK_SCALE")
+	auto gdkScale = getenv("GDK_SCALE");
 	if (gdkScale) {
 		return (float)atoi(gdkScale);
 	}
