@@ -21,9 +21,10 @@
 
 #include "VoiceAllocationUnit.h"
 
-#include "SoftLimiter.h"
 #include "Distortion.h"
+#include "SoftLimiter.h"
 #include "VoiceBoard.h"
+#include "freeverb/revmodel.hpp"
 
 #ifdef WITH_MTS_ESP
 #include "MTS-ESP/Client/libMTSClient.h"
@@ -31,7 +32,6 @@
 
 #include <assert.h>
 #include <cstring>
-#include <freeverb/revmodel.hpp>
 #include <iostream>
 #include <math.h>
 

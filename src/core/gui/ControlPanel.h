@@ -23,8 +23,7 @@
 #define _CONTROLPANEL_H
 
 #include "core/gettext.h"
-
-#include <juce_gui_basics/juce_gui_basics.h>
+#include "juce_gui_basics/juce_gui_basics.h"
 
 #define GETTEXT(Msgid) juce::String(juce::CharPointer_UTF8(gettext(Msgid)))
 

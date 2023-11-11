@@ -2,10 +2,10 @@
 
 #include "../main.h"
 #include "NsmClient.h"
+#include "nsm/nsm.h"
 
 #include <csignal>
 #include <iostream>
-#include <nsm/nsm.h>
 #include <sstream>
 #include <sys/stat.h>
 #include <sys/types.h>

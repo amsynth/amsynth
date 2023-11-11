@@ -23,7 +23,7 @@
 
 #define JUCE_GUI_BASICS_INCLUDE_XHEADERS 1
 
-#include <juce_gui_basics/juce_gui_basics.h>
+#include "juce_gui_basics/juce_gui_basics.h"
 
 #if JUCE_LINUX || JUCE_BSD || JUCE_WINDOWS
 

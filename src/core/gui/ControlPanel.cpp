@@ -30,8 +30,8 @@
 #include "core/Configuration.h"
 #include "core/synth/MidiController.h"
 #include "core/synth/PresetController.h"
+#include "seq24/controllers.h"
 
-#include <seq24/controllers.h>
 #include <utility>
 #include <vector>
 

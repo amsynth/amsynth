@@ -22,7 +22,7 @@
 #ifndef amsynth_MainComponent_h
 #define amsynth_MainComponent_h
 
-#include <juce_gui_basics/juce_gui_basics.h>
+#include "juce_gui_basics/juce_gui_basics.h"
 
 #include <map>
 

@@ -16,7 +16,7 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-AM_CPPFLAGS = @CPPFLAGS@ -iquote "$(top_srcdir)/src" -I"$(top_srcdir)/external"
+AM_CPPFLAGS = @CPPFLAGS@ -iquote "$(top_srcdir)/src" -iquote "$(top_srcdir)/external"
 
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
 AM_CPPFLAGS += -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' -DPACKAGE_LOCALEDIR=\""$(datadir)/locale"\"
@@ -40,7 +40,7 @@ EXTRA_DIST = \
 	external/vestige
 
 AM_CPPFLAGS += \
-	-I$(top_srcdir)/external/JUCE/modules \
+	-iquote $(top_srcdir)/external/JUCE/modules \
 	-DJUCE_DISPLAY_SPLASH_SCREEN=0 \
 	-DJUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1 \
 	-DJUCE_INCLUDE_JPEGLIB_CODE=1 \
@@ -228,14 +228,14 @@ amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
 # plug-in, and don't want to include dsp code in the ui.
 
 noinst_LTLIBRARIES += amsynth_lv2.la
-amsynth_lv2_la_CXXFLAGS = -I"$(top_srcdir)/external/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2"
+amsynth_lv2_la_CXXFLAGS = -iquote "$(top_srcdir)/external/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2"
 amsynth_lv2_la_DEPENDENCIES = libcore.la
 amsynth_lv2_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-symbols-regex "lv2_descriptor"
 amsynth_lv2_la_LIBADD = .libs/libcore.a
 amsynth_lv2_la_SOURCES = src/plugins/lv2/lv2plugin.cpp src/plugins/lv2/lv2plugin.h
 
 noinst_LTLIBRARIES += amsynth_lv2ui.la
-amsynth_lv2ui_la_CXXFLAGS = -I"$(top_srcdir)/external/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2"
+amsynth_lv2ui_la_CXXFLAGS = -iquote "$(top_srcdir)/external/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2"
 amsynth_lv2ui_la_DEPENDENCIES = libcore.la
 amsynth_lv2ui_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-symbols-regex "lv2ui_descriptor"
 amsynth_lv2ui_la_LIBADD = .libs/libcore.a $(libcore_la_LIBADD)

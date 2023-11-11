@@ -26,13 +26,12 @@
 #include "core/midi.h"
 #include "core/synth/PresetController.h"
 #include "core/synth/Synthesizer.h"
+#include "vestige/aeffectx.h"
 
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
 #include <memory>
-
-#include <vestige/aeffectx.h>
 
 // from http://www.asseca.org/vst-24-specs/index.html
 #define effGetParamLabel        6

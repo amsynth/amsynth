@@ -24,7 +24,7 @@
 #include "LayoutDescription.h"
 #include "core/synth/Parameter.h"
 
-#include <juce_gui_basics/juce_gui_basics.h>
+#include "juce_gui_basics/juce_gui_basics.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
