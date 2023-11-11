@@ -37,24 +37,21 @@
 
 Preset::Preset(const std::string name) : mName (name)
 {
-	mParameters = (Parameter *)malloc(kAmsynthParameterCount * sizeof(Parameter));
+	mParameters.reserve(kAmsynthParameterCount);
 	for (int i = 0; i < kAmsynthParameterCount; i++) {
-		new (&mParameters[i]) Parameter((Param) i);
+		mParameters.emplace_back((Param) i);
 	}
 }
 
 Preset::Preset(const Preset& other) : mName(other.mName)
 {
-	mParameters = (Parameter *)malloc(kAmsynthParameterCount * sizeof(Parameter));
+	mParameters.reserve(kAmsynthParameterCount);
 	for (int i = 0; i < kAmsynthParameterCount; i++) {
-		new (&mParameters[i]) Parameter(other.mParameters[i]);
+		mParameters.emplace_back(other.mParameters[i]);
 	}
 }
 
-Preset::~Preset()
-{
-	free(mParameters);
-}
+Preset::~Preset() = default;
 
 Preset&
 Preset::operator =		(const Preset &rhs)

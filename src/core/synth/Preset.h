@@ -26,6 +26,7 @@
 
 #include <sstream>
 #include <string>
+#include <vector>
 
 
 class Preset
@@ -45,8 +46,8 @@ public:
 	void			setName			(const std::string name) { mName = name; }
 	
 	Parameter&		getParameter	(const std::string name);
-	Parameter&		getParameter	(const int no) { return mParameters[no]; };
-	const Parameter& getParameter	(const int no) const { return mParameters[no]; };
+	Parameter&		getParameter	(const int no) { return mParameters.at(no); };
+	const Parameter& getParameter	(const int no) const { return mParameters.at(no); };
 	
     void			randomise		();
     
@@ -64,7 +65,7 @@ public:
 
 private:
     std::string				mName;
-	Parameter				*mParameters;
+	std::vector<Parameter>	mParameters;
 };
 
 #endif
