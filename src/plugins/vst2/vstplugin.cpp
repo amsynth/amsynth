@@ -141,14 +141,15 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			free(effect);
 			return 0;
 
-		case effSetProgram: {
-			auto &bank = PresetController::getPresetBanks().at(val / kPresetsPerBank);
-			auto &preset = bank.presets[val % kPresetsPerBank];
-			plugin->presetName = preset.getName();
-			plugin->programNumber = (int)val;
-			plugin->synthesizer->_presetController->setCurrentPreset(preset);
+		case effSetProgram:
+			if (plugin->programNumber != (int)val) {
+				auto &bank = PresetController::getPresetBanks().at(val / kPresetsPerBank);
+				auto &preset = bank.presets[val % kPresetsPerBank];
+				plugin->presetName = preset.getName();
+				plugin->programNumber = (int)val;
+				plugin->synthesizer->_presetController->setCurrentPreset(preset);
+			}
 			return 1;
-		}
 
 		case effGetProgram:
 			return plugin->programNumber;
