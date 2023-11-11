@@ -1,7 +1,7 @@
 /*
  *  PresetController.h
  *
- *  Copyright (c) 2001-2022 Nick Dowell
+ *  Copyright (c) 2001 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -28,7 +28,6 @@
 #include <vector>
 
 #include "Preset.h"
-#include "UpdateListener.h"
 
 struct BankInfo {
 	~BankInfo();
@@ -39,7 +38,7 @@ struct BankInfo {
 	Preset presets[128];
 };
 
-class PresetController final : private UpdateListener {
+class PresetController final : private Parameter::Observer {
 public:
 
 	static constexpr int kNumPresets = 128;
@@ -128,8 +127,8 @@ private:
 	int 			currentPresetNo = -1;
 	long int 		lastPresetsFileModifiedTime = 0;
 
-	// UpdateListener
-	void parameterWillChange(Param) final;
+	// Parameter::Observer
+	void parameterWillChange(const Parameter &) final;
 
 	class ChangeData {
 		public:

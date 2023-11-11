@@ -22,7 +22,6 @@
 #ifndef _VOICEALLOCATIONUNIT_H
 #define _VOICEALLOCATIONUNIT_H
 
-#include "UpdateListener.h"
 #include "MidiController.h"
 #include "TuningMap.h"
 
@@ -40,13 +39,13 @@ class revmodel;
 class Distortion;
 
 
-class VoiceAllocationUnit : public UpdateListener, public MidiEventHandler
+class VoiceAllocationUnit : public Parameter::Observer, public MidiEventHandler
 {
 public:
 			VoiceAllocationUnit		();
 	virtual	~VoiceAllocationUnit	();
 
-	void	UpdateParameter		(Param, float) override;
+	void	parameterDidChange		(const Parameter &) override;
 
 	void	SetSampleRate		(int);
 	

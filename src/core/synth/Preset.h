@@ -1,7 +1,7 @@
 /*
  *  Preset.h
  *
- *  Copyright (c) 2001-2022 Nick Dowell
+ *  Copyright (c) 2001 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -51,7 +51,7 @@ public:
 	
     void			randomise		();
     
-    void			AddListenerToAll(UpdateListener*);
+	void			addObserver		(Parameter::Observer *);
 
     std::string		toString		() { std::stringstream stream; toString(stream); return stream.str(); }
     void			toString		(std::stringstream &);

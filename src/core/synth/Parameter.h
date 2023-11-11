@@ -1,7 +1,7 @@
 /*
  *  Parameter.h
  *
- *  Copyright (c) 2001-2022 Nick Dowell
+ *  Copyright (c) 2001 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -22,7 +22,7 @@
 #ifndef _PARAMETER_H
 #define _PARAMETER_H
 
-#include "UpdateListener.h"
+#include "core/controls.h"
 
 #include <cmath>
 #include <set>
@@ -60,6 +60,13 @@ struct ParameterSpec {
 
 class Parameter {
 public:
+	class Observer {
+	public:
+		virtual void parameterWillChange(const Parameter &) {}
+		virtual void parameterDidChange(const Parameter &) {}
+	protected:
+		~Observer() = default;
+	};
 
 	Parameter(Param paramId);
 
@@ -84,13 +91,11 @@ public:
 
 	Param			getId				() const { return _paramId; }
 
-	// UpdateListeners (eg one or more ParameterViews - part of the GUI) are 
-	// notified and updated when this Parameter changes.
-	void			addUpdateListener (UpdateListener *ul);
-	void			removeUpdateListener (UpdateListener *ul);
+	void			addObserver			(Observer *observer);
+	void			removeObserver		(Observer *observer) { _observers.erase(observer); }
 
 	// The user is starting to change this parameter
-	void			willChange		() const { for (auto &l : _listeners) l->parameterWillChange(_paramId); }
+	void			willChange		() const { for (auto it : _observers) it->parameterWillChange(*this); }
 
 	float			getDefault		() const { return _spec.def; }
 
@@ -113,7 +118,7 @@ public:
 	Param							_paramId;
 	const ParameterSpec &			_spec;
 	float							_value;
-	std::set<UpdateListener *>		_listeners;
+	std::set<Observer *>			_observers;
 };
 
 #endif

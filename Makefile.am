@@ -119,7 +119,6 @@ libcore_la_SOURCES = \
 	src/core/synth/Synthesizer.h \
 	src/core/synth/TuningMap.cpp \
 	src/core/synth/TuningMap.h \
-	src/core/synth/UpdateListener.h \
 	src/core/synth/VoiceAllocationUnit.cpp \
 	src/core/synth/VoiceAllocationUnit.h \
 	src/core/synth/VoiceBoard.cpp \

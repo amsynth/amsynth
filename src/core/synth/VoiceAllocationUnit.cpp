@@ -350,8 +350,10 @@ VoiceAllocationUnit::setKeyboardMode(KeyboardMode keyboardMode)
 }
 
 void
-VoiceAllocationUnit::UpdateParameter	(Param param, float value)
+VoiceAllocationUnit::parameterDidChange(const Parameter &parameter)
 {
+	auto param = parameter.getId();
+	auto value = parameter.getControlValue();
 	switch (param) {
 	case kAmsynthParameter_MasterVolume:		mMasterVol = value;		break;
 	case kAmsynthParameter_ReverbRoomsize:	reverb->setroomsize (value);	break;

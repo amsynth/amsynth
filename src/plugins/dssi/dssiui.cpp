@@ -237,9 +237,9 @@ static juce::JUCEApplicationBase * create_application()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-struct ParameterListener : UpdateListener
+struct ParameterListener : Parameter::Observer
 {
-    void UpdateParameter(Param param, float controlValue) override
+    void parameterDidChange(const Parameter &parameter) override
     {
         int port_number = param + 2;
         auto value = presetController.getCurrentPreset().getParameter(param).getValue();
@@ -279,7 +279,7 @@ int main(int argc, char *argv[])
 
     windowTitle = tmpstr("%s - %s", plug_name, identifier);
 
-    presetController.getCurrentPreset().AddListenerToAll(new ParameterListener);
+    presetController.getCurrentPreset().addObserver(new ParameterListener);
 
     juce::JUCEApplicationBase::createInstance = &create_application;
     return juce::JUCEApplicationBase::main(JUCE_MAIN_FUNCTION_ARGS);

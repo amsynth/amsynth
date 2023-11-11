@@ -1,7 +1,7 @@
 /*
  *  Parameter.h
  *
- *  Copyright (c) 2001-2022 Nick Dowell
+ *  Copyright (c) 2001 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -106,16 +106,10 @@ Parameter::Parameter(Param paramId)
 {}
 
 void
-Parameter::addUpdateListener(UpdateListener *listener)
+Parameter::addObserver(Observer *observer)
 {
-	_listeners.insert(listener);
-	listener->UpdateParameter(_paramId, getControlValue());
-}
-
-void
-Parameter::removeUpdateListener(UpdateListener *listener)
-{
-	_listeners.erase(listener);
+	_observers.insert(observer);
+	observer->parameterDidChange(*this);
 }
 
 void
@@ -135,10 +129,7 @@ Parameter::setValue(float value)
 
 	_value = newValue;
 
-	float cv = getControlValue();
-	for (auto &listener : _listeners) {
-		listener->UpdateParameter(_paramId, cv);
-	}
+	for (auto it : _observers) it->parameterDidChange(*this);
 }
 
 float

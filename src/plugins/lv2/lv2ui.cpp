@@ -35,22 +35,22 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-struct ParameterListener final : public UpdateListener {
+struct ParameterListener final : public Parameter::Observer {
 	ParameterListener(PresetController *presetController, std::function<void(int, float)> writeFunc)
 	: presetController(presetController), writeFunc(std::move(writeFunc)) {
-		presetController->getCurrentPreset().AddListenerToAll(this);
+		presetController->getCurrentPreset().addObserver(this);
 		active = true;
 	}
 
 	~ParameterListener() {
 		for (int i = 0; i < kAmsynthParameterCount; i++) {
-			presetController->getCurrentPreset().getParameter(i).removeUpdateListener(this);
+			presetController->getCurrentPreset().getParameter(i).removeObserver(this);
 		}
 	}
 
-	void UpdateParameter(Param param, float) final {
+	void parameterDidChange(const Parameter &parameter) final {
 		if (!active) return;
-		writeFunc(param, presetController->getCurrentPreset().getParameter(param).getValue());
+		writeFunc(parameter.getId(), parameter.getValue());
 	}
 
 	PresetController *presetController;

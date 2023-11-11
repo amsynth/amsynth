@@ -28,7 +28,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class Control : public juce::Component, protected UpdateListener {
+class Control : public juce::Component, protected Parameter::Observer {
 public:
 	Control(Parameter &p, juce::Image image, const LayoutDescription::Resource &r);
 	~Control();
@@ -40,7 +40,7 @@ protected:
 	void mouseDown(const juce::MouseEvent &event) final;
 	void mouseDoubleClick(const juce::MouseEvent &event) final;
 	void paint(juce::Graphics &g) override;
-	void UpdateParameter(Param param, float controlValue) override;
+	void parameterDidChange(const Parameter &) override;
 	void repaintFromAnyThread();
 
 private:

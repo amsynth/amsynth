@@ -42,7 +42,7 @@ Synthesizer::Synthesizer()
 	_voiceAllocationUnit->SetSampleRate((int) _sampleRate);
 
 	_presetController = new PresetController;
-	_presetController->getCurrentPreset().AddListenerToAll(_voiceAllocationUnit);
+	_presetController->getCurrentPreset().addObserver(_voiceAllocationUnit);
 	for (const auto &bank : PresetController::getPresetBanks()) {
 		if (bank.file_path == _presetController->getFilePath()) {
 			propertyStore_[PROP_NAME(preset_bank_name)] = bank.name;

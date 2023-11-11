@@ -87,14 +87,14 @@ private:
 
 thread_local int HostCall::count_ = 0;
 
-struct Plugin final : public UpdateListener
+struct Plugin final : public Parameter::Observer
 {
 	Plugin(AEffect *effect, audioMasterCallback master) : effect(effect)
 	{
 		audioMaster = master;
 		synthesizer = new Synthesizer;
 		midiBuffer = (unsigned char *)malloc(MIDI_BUFFER_SIZE);
-		synthesizer->_presetController->getCurrentPreset().AddListenerToAll(this);
+		synthesizer->_presetController->getCurrentPreset().addObserver(this);
 	}
 
 	~Plugin()
@@ -103,12 +103,10 @@ struct Plugin final : public UpdateListener
 		free(midiBuffer);
 	}
 
-	void UpdateParameter(Param p, float)
+	void parameterDidChange(const Parameter &parameter)
 	{
-		if (audioMaster && !HostCall::isActive()) {
-			auto value = synthesizer->getNormalizedParameterValue(p);
-			audioMaster(effect, audioMasterAutomate, p, 0, nullptr, value);
-		}
+		if (audioMaster && !HostCall::isActive())
+			audioMaster(effect, audioMasterAutomate, parameter.getValue(), 0, nullptr, parameter.getValue());
 	}
 
 	AEffect *effect;

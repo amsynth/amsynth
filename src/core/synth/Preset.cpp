@@ -1,7 +1,7 @@
 /*
  *  Preset.cpp
  *
- *  Copyright (c) 2001-2022 Nick Dowell
+ *  Copyright (c) 2001 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -104,11 +104,9 @@ Preset::randomise()
 }
 
 void
-Preset::AddListenerToAll	(UpdateListener* ul)
+Preset::addObserver(Parameter::Observer *observer)
 {
-	for (int i = 0; i < kAmsynthParameterCount; i++) {
-		getParameter(i).addUpdateListener(ul);
-	}
+	for (auto &it : mParameters) it.addObserver(observer);
 }
 
 void

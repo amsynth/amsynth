@@ -36,10 +36,10 @@ Control::Control(Parameter &p, juce::Image image, const LayoutDescription::Resou
 , height_(r.height)
 , frames_(r.frames) {
 	setSize(width_, height_);
-	parameter.addUpdateListener(this);
+	parameter.addObserver(this);
 }
 
-Control::~Control() { parameter.removeUpdateListener(this); }
+Control::~Control() { parameter.removeObserver(this); }
 
 void Control::mouseDown(const juce::MouseEvent &event) {
 	if (event.mods.isLeftButtonDown()) {
@@ -63,7 +63,7 @@ void Control::paint(juce::Graphics &g) {
 	g.drawImage(image_, 0, 0, width_, height_, x, y, width_, height_, false);
 }
 
-void Control::UpdateParameter(Param, float) {
+void Control::parameterDidChange(const Parameter &) {
 	int frame = int(float(frames_ - 1) * parameter.getNormalisedValue());
 	if (frame_ == frame) {
 		return;

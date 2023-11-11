@@ -1,7 +1,7 @@
 /*
  *  PresetController.cpp
  *
- *  Copyright (c) 2001-2023 Nick Dowell
+ *  Copyright (c) 2001 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -59,7 +59,7 @@ PresetController::PresetController()
 		selectPreset(0);
 	}
 
-	currentPreset.AddListenerToAll(this);
+	currentPreset.addObserver(this);
 }
 
 int
@@ -101,9 +101,9 @@ PresetController::clearPreset		()
 }
 
 void
-PresetController::parameterWillChange(Param p)
+PresetController::parameterWillChange(const Parameter &parameter)
 {
-	undoBuffer.push(new ParamChange(p, currentPreset.getParameter(p).getValue()));
+	undoBuffer.push(new ParamChange(parameter.getId(), parameter.getValue()));
 	clearRedoBuffer();
 }
 
