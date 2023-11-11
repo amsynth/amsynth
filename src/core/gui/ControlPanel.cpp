@@ -68,8 +68,8 @@ private:
 struct ControlPanel::Impl final : juce::MouseListener
 {
 	Impl(ControlPanel *controlPanel, MidiController *midiController, PresetController *presetController)
-	: presetController_(presetController)
-	, midiController_(midiController)
+	: midiController_(midiController)
+	, presetController_(presetController)
 	, label_(controlPanel)
 	{
 		auto skin = Skin(ControlPanel::skinsDirectory + "/default");

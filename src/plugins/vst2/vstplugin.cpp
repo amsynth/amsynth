@@ -88,7 +88,7 @@ private:
 
 thread_local int HostCall::count_ = 0;
 
-struct Plugin : public UpdateListener
+struct Plugin final : public UpdateListener
 {
 	Plugin(AEffect *effect, audioMasterCallback master) : effect(effect)
 	{
@@ -104,7 +104,7 @@ struct Plugin : public UpdateListener
 		free(midiBuffer);
 	}
 
-	void UpdateParameter(Param p, float controlValue)
+	void UpdateParameter(Param p, float)
 	{
 		if (audioMaster && !HostCall::isActive()) {
 			auto value = synthesizer->getNormalizedParameterValue(p);
@@ -144,7 +144,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			auto &bank = PresetController::getPresetBanks().at(val / kPresetsPerBank);
 			auto &preset = bank.presets[val % kPresetsPerBank];
 			plugin->presetName = preset.getName();
-			plugin->programNumber = val;
+			plugin->programNumber = (int)val;
 			plugin->synthesizer->_presetController->setCurrentPreset(preset);
 			return 1;
 		}
@@ -338,6 +338,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 
 static void process(AEffect *effect, float **inputs, float **outputs, int numSampleFrames)
 {
+	(void)inputs;
 	HostCall hostCall;
 	Plugin *plugin = (Plugin *)effect->ptr3;
 	std::vector<amsynth_midi_cc_t> midi_out;
@@ -347,6 +348,7 @@ static void process(AEffect *effect, float **inputs, float **outputs, int numSam
 
 static void processReplacing(AEffect *effect, float **inputs, float **outputs, int numSampleFrames)
 {
+	(void)inputs;
 	HostCall hostCall;
 	Plugin *plugin = (Plugin *)effect->ptr3;
 	std::vector<amsynth_midi_cc_t> midi_out;
@@ -371,7 +373,7 @@ static float getParameter(AEffect *effect, int i)
 static int getNumPrograms()
 {
 	HostCall hostCall;
-	return PresetController::getPresetBanks().size() * kPresetsPerBank;
+	return (int)PresetController::getPresetBanks().size() * kPresetsPerBank;
 }
 
 extern "C" {

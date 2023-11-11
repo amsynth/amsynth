@@ -58,7 +58,7 @@ public:
 	: Control(parameter, std::move(image), r) {}
 
 private:
-	void leftMouseDown(const juce::MouseEvent &event) override {
+	void leftMouseDown(const juce::MouseEvent &) override {
 		parameter.willChange();
 		parameter.setNormalisedValue(parameter.getNormalisedValue() > 0.f ? 0.f : 1.f);
 	}
@@ -109,7 +109,7 @@ public:
 	: Control(parameter, std::move(image), r) {}
 
 private:
-	void leftMouseDown(const juce::MouseEvent &event) override {
+	void leftMouseDown(const juce::MouseEvent &) override {
 		auto strings = parameter_get_value_strings(parameter.getId());
 		auto menu = juce::PopupMenu();
 		for (int i = 0; i <= parameter.getSteps(); i++) {

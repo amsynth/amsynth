@@ -70,7 +70,7 @@ struct amsynth_wrapper {
 };
 
 static LV2_Handle
-lv2_instantiate(const LV2_Descriptor *descriptor, double sample_rate, const char *bundle_path, const LV2_Feature *const *features)
+lv2_instantiate(const LV2_Descriptor *, double sample_rate, const char */*bundle_path*/, const LV2_Feature *const *features)
 {
 	LOG_FUNCTION_CALL();
 
@@ -142,13 +142,13 @@ lv2_connect_port(LV2_Handle instance, uint32_t port, void *data_location)
 }
 
 static void
-lv2_activate(LV2_Handle instance)
+lv2_activate(LV2_Handle)
 {
 	LOG_FUNCTION_CALL();
 }
 
 static void
-lv2_deactivate(LV2_Handle instance)
+lv2_deactivate(LV2_Handle)
 {
 	LOG_FUNCTION_CALL();
 }
@@ -170,8 +170,8 @@ lv2_run(LV2_Handle instance, uint32_t sample_count)
     std::vector<amsynth_midi_event_t> midi_events;
 	LV2_ATOM_SEQUENCE_FOREACH(a->control_port, ev) {
 		if (ev->body.type == a->uris.midiEvent) {
-			amsynth_midi_event_t midi_event = {0};
-			midi_event.offset_frames = ev->time.frames;
+			amsynth_midi_event_t midi_event {};
+			midi_event.offset_frames = static_cast<unsigned>(ev->time.frames);
 			midi_event.buffer = (uint8_t *)(ev + 1);
 			midi_event.length = ev->body.size;
 			midi_events.push_back(midi_event);
@@ -221,8 +221,8 @@ static LV2_State_Status
 save(LV2_Handle                instance,
      LV2_State_Store_Function  store,
      LV2_State_Handle          handle,
-     uint32_t                  flags,
-     const LV2_Feature* const* features)
+     uint32_t                  /*flags*/,
+     const LV2_Feature* const* /*features*/)
 {
 	LOG_FUNCTION_CALL();
 
@@ -245,8 +245,8 @@ static LV2_State_Status
 restore(LV2_Handle                  instance,
         LV2_State_Retrieve_Function retrieve,
         LV2_State_Handle            handle,
-        uint32_t                    flags,
-        const LV2_Feature* const*   features)
+        uint32_t                    /*flags*/,
+        const LV2_Feature* const*   /*features*/)
 {
 	LOG_FUNCTION_CALL();
 
@@ -254,7 +254,7 @@ restore(LV2_Handle                  instance,
 
 	// host takes care of restoring port values
 
-	auto restoreProp = [=] (const char *name, LV2_URID urid) {
+	auto restoreProp = [=] (LV2_URID urid) {
 		size_t size = 0; uint32_t type = 0, vflags = 0;
 		const void *value = retrieve(handle, urid, &size, &type, &vflags);
 		if (value && type == a->uris.atom_String) {
@@ -262,7 +262,7 @@ restore(LV2_Handle                  instance,
 		}
 	};
 
-#define RESTORE_PROP(name) restoreProp(#name, a->uris.amsynth_##name);
+#define RESTORE_PROP(name) restoreProp(a->uris.amsynth_##name);
 	FOR_EACH_PROPERTY(RESTORE_PROP)
 
 	return LV2_STATE_SUCCESS;
@@ -270,9 +270,9 @@ restore(LV2_Handle                  instance,
 
 static LV2_Worker_Status
 work(LV2_Handle                  instance,
-	 LV2_Worker_Respond_Function respond,
-	 LV2_Worker_Respond_Handle   handle,
-	 uint32_t                    size,
+	 LV2_Worker_Respond_Function /*respond*/,
+	 LV2_Worker_Respond_Handle   /*handle*/,
+	 uint32_t                    /*size*/,
 	 const void*                 data)
 {
 	LOG_FUNCTION_CALL();
@@ -294,9 +294,9 @@ work(LV2_Handle                  instance,
 }
 
 static LV2_Worker_Status
-work_response(LV2_Handle  instance,
-			  uint32_t    size,
-			  const void* data)
+work_response(LV2_Handle  /*instance*/,
+			  uint32_t    /*size*/,
+			  const void* /*data*/)
 {
 	LOG_FUNCTION_CALL();
 

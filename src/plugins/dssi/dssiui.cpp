@@ -239,8 +239,6 @@ static juce::JUCEApplicationBase * create_application()
 
 struct ParameterListener : UpdateListener
 {
-    void update() override {};
-
     void UpdateParameter(Param param, float controlValue) override
     {
         int port_number = param + 2;

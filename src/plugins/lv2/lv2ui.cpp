@@ -42,13 +42,13 @@ struct ParameterListener final : public UpdateListener {
 		active = true;
 	}
 
-	~ParameterListener() final {
+	~ParameterListener() {
 		for (int i = 0; i < kAmsynthParameterCount; i++) {
 			presetController->getCurrentPreset().getParameter(i).removeUpdateListener(this);
 		}
 	}
 
-	void UpdateParameter(Param param, float controlValue) override {
+	void UpdateParameter(Param param, float) final {
 		if (!active) return;
 		writeFunc(param, presetController->getCurrentPreset().getParameter(param).getValue());
 	}
@@ -125,7 +125,7 @@ struct lv2helper
 
 	void getProperties()
 	{
-		auto getProp = [&] (const char *name, LV2_URID key) {
+		auto getProp = [&] (LV2_URID key) {
 			uint8_t buffer[1024];
 
 			LV2_Atom_Forge_Frame frame;
@@ -143,7 +143,7 @@ struct lv2helper
 					ui->uris.atom_eventTransfer,
 					msg);
 		};
-#define GET_PROP(name) getProp(#name, ui->uris.amsynth_##name);
+#define GET_PROP(name) getProp(ui->uris.amsynth_##name);
 		FOR_EACH_PROPERTY(GET_PROP)
 	}
 
@@ -153,9 +153,9 @@ struct lv2helper
 ////////////////////////////////////////////////////////////////////////////////
 
 static LV2UI_Handle
-lv2_ui_instantiate(const LV2UI_Descriptor* descriptor,
-				   const char*                     plugin_uri,
-				   const char*                     bundle_path,
+lv2_ui_instantiate(const LV2UI_Descriptor*         /*descriptor*/,
+				   const char*                     /*plugin_uri*/,
+				   const char*                     /*bundle_path*/,
 				   LV2UI_Write_Function            write_function,
 				   LV2UI_Controller                controller,
 				   LV2UI_Widget*                   widget,
@@ -231,7 +231,7 @@ lv2_ui_cleanup(LV2UI_Handle ui)
 static void
 lv2_ui_port_event(LV2UI_Handle handle,
 				  uint32_t     port_index,
-				  uint32_t     buffer_size,
+				  uint32_t     /*buffer_size*/,
 				  uint32_t     format,
 				  const void*  buffer)
 {
@@ -264,7 +264,7 @@ lv2_ui_port_event(LV2UI_Handle handle,
 ////////////////////////////////////////////////////////////////////////////////
 
 static int
-lv2_ui_idle(LV2UI_Handle ui)
+lv2_ui_idle(LV2UI_Handle)
 {
 	juceIdle();
 	return 0;

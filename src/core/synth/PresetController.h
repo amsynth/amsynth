@@ -45,10 +45,12 @@ public:
 	static constexpr int kNumPresets = 128;
 
 	PresetController();
-	~PresetController() final = default;
 
-	struct Observer {
+	class Observer {
+	public:
 		virtual void currentPresetDidChange() = 0;
+	protected:
+		~Observer() = default;
 	};
 	
 	/* Selects a Preset and makes it current, updating everything as necessary.
@@ -97,7 +99,6 @@ public:
 
 	void	addObserver			(Observer *observer) { observers.insert(observer); }
 	void	removeObserver		(Observer *observer) { observers.erase(observer); }
-	void	setUpdateListener	(UpdateListener & ul) { updateListener = &ul; }
 
     int		getCurrPresetNumber	() { return currentPresetNo; }
 	void	setCurrPresetNumber (int num) { currentPresetNo = num; }
@@ -114,14 +115,11 @@ public:
 	void	notify				() {
 		for (auto observer : observers)
 			observer->currentPresetDidChange();
-		if (updateListener)
-			updateListener->update();
 	}
 
 private:
 	std::string		bank_file;
 	std::set<Observer *> observers;
-	UpdateListener*	updateListener = nullptr;
 	Preset			presets[kNumPresets];
 	Preset 			currentPreset;
 	Preset			blankPreset;
@@ -130,6 +128,7 @@ private:
 	int 			currentPresetNo = -1;
 	long int 		lastPresetsFileModifiedTime = 0;
 
+	// UpdateListener
 	void parameterWillChange(Param) final;
 
 	class ChangeData {

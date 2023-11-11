@@ -84,12 +84,12 @@ public:
 
 struct MainComponent::Impl : private juce::Timer {
 	Impl(MainComponent *component, MidiController *midiController, PresetController *presetController, juce::ApplicationCommandManager *commandManager)
-	: component_(component)
+	: commandManager_(commandManager)
+	, component_(component)
 	, presetController_(presetController)
 	, controlPanel_(midiController, presetController)
 	, menuButton_(GETTEXT("Menu"))
-	, saveButton_(GETTEXT("Save"))
-	, commandManager_(commandManager) {
+	, saveButton_(GETTEXT("Save")) {
 		controlPanel_.setBounds(controlPanel_.getBounds().withY(toolbarHeight));
 		menuButton_.onMouseDown = [this] { showMainMenu(&menuButton_); };
 		saveButton_.onClick = [this] { savePreset(); };
@@ -407,7 +407,7 @@ struct MainComponent::Impl : private juce::Timer {
 	static void openFile(const juce::String &title, const char *filters, const std::function<void(const char *)> &handler) {
 		auto cwd = juce::File::getSpecialLocation(juce::File::userMusicDirectory);
 		auto chooser = new juce::FileChooser(title, cwd, filters);
-		chooser->launchAsync(juce::FileBrowserComponent::openMode, [chooser, handler] (const auto &ignored) {
+		chooser->launchAsync(juce::FileBrowserComponent::openMode, [chooser, handler] (const auto &) {
 			auto results = chooser->getResults();
 			if (results.isEmpty())
 				return;

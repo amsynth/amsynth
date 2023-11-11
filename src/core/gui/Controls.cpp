@@ -63,7 +63,7 @@ void Control::paint(juce::Graphics &g) {
 	g.drawImage(image_, 0, 0, width_, height_, x, y, width_, height_, false);
 }
 
-void Control::UpdateParameter(Param param, float controlValue) {
+void Control::UpdateParameter(Param, float) {
 	int frame = int(float(frames_ - 1) * parameter.getNormalisedValue());
 	if (frame_ == frame) {
 		return;
@@ -92,9 +92,9 @@ juce::String Knob::getLabelText() {
 	return parameter_get_display(parameter.getId(), parameter.getValue(), text, sizeof text) ? text : "";
 }
 
-void Knob::mouseEnter(const juce::MouseEvent &event) { label_->show(this, getLabelText()); }
+void Knob::mouseEnter(const juce::MouseEvent &) { label_->show(this, getLabelText()); }
 
-void Knob::mouseExit(const juce::MouseEvent &event) { label_->hide(); }
+void Knob::mouseExit(const juce::MouseEvent &) { label_->hide(); }
 
 void Knob::leftMouseDown(const juce::MouseEvent &event) {
 	referenceVal_ = parameter.getNormalisedValue();

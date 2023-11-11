@@ -34,16 +34,17 @@ typedef unsigned char uchar;
 class MidiEventHandler
 {
 public:
-	virtual ~MidiEventHandler() {}
-	
-	virtual void HandleMidiNoteOn(int /*note*/, float /*velocity*/) {}
-	virtual void HandleMidiNoteOff(int /*note*/, float /*velocity*/) {}
-	virtual void HandleMidiPitchWheel(float /*value*/) {}
-	virtual void HandleMidiPitchWheelSensitivity(uchar semitones) {}
-	virtual void HandleMidiAllSoundOff() {}
-	virtual void HandleMidiAllNotesOff() {}
-	virtual void HandleMidiSustainPedal(uchar /*value*/) {}
-	virtual void HandleMidiPan(float left, float right) {}
+	virtual void HandleMidiNoteOn(int /*note*/, float /*velocity*/) = 0;
+	virtual void HandleMidiNoteOff(int /*note*/, float /*velocity*/) = 0;
+	virtual void HandleMidiPitchWheel(float /*value*/) = 0;
+	virtual void HandleMidiPitchWheelSensitivity(uchar semitones) = 0;
+	virtual void HandleMidiAllSoundOff() = 0;
+	virtual void HandleMidiAllNotesOff() = 0;
+	virtual void HandleMidiSustainPedal(uchar /*value*/) = 0;
+	virtual void HandleMidiPan(float left, float right) = 0;
+
+protected:
+	~MidiEventHandler() = default;
 };
 
 class MidiController

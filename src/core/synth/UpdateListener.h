@@ -1,7 +1,7 @@
 /*
  *  UpdateListener.h
  *
- *  Copyright (c) 2001-2012 Nick Dowell
+ *  Copyright (c) 2001 Nick Dowell
  *
  *  This file is part of amsynth.
  *
@@ -30,13 +30,13 @@
 class UpdateListener
 {
 public:
-    virtual ~UpdateListener() = default;
-
     // The user has started to change this parameter
     virtual void parameterWillChange(Param) {}
 
-    virtual void update			()		{;}
-    virtual void UpdateParameter(Param, float controlValue) { update (); }
+	virtual void UpdateParameter(Param, float /* controlValue */) {};
+
+protected:
+	~UpdateListener() = default;
 };
 
 #endif

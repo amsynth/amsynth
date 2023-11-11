@@ -140,6 +140,9 @@ void Synthesizer::loadState(char *buffer)
 	}
 }
 
+// FIXME: This leaks memory when called from effSetChunk
+// effSetChunk expects *ptr to be set to a block of memory that will eventually
+// be freed by the plugin - i.e. the host does not free the memory.
 int Synthesizer::saveState(char **buffer)
 {
 	std::stringstream stream;
@@ -149,8 +152,8 @@ int Synthesizer::saveState(char **buffer)
 		stream << "<property> " << it.first << " " << it.second << std::endl;
 
 	std::string string = stream.str();
-	*buffer = (char *)malloc(4096);
-	return sprintf(*buffer, "%s", string.c_str());
+	*buffer = (char *)strdup(string.c_str());
+	return (int)string.size();
 }
 
 int Synthesizer::getPresetNumber()
