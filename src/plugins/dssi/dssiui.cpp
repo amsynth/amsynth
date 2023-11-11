@@ -241,9 +241,7 @@ struct ParameterListener : Parameter::Observer
 {
     void parameterDidChange(const Parameter &parameter) override
     {
-        int port_number = param + 2;
-        auto value = presetController.getCurrentPreset().getParameter(param).getValue();
-        host_set_control(port_number, value);
+        host_set_control(parameter.getId() + 2, parameter.getValue());
     }
 };
 
