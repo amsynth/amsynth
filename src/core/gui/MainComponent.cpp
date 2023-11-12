@@ -125,13 +125,16 @@ struct MainComponent::Impl : private juce::Timer {
 		}
 		if (name == PROP_NAME(preset_name)) {
 			presetController_->getCurrentPreset().setName(value);
-			setPresetComboLabelText(value);
+			updatePresetComboLabelText();
 		}
 		if (name == PROP_NAME(preset_number) && !value.empty()) {
+			auto presetName = presetController_->getCurrentPreset().getName();
 			int presetNumber = std::stoi(value);
 			presetController_->setCurrPresetNumber(presetNumber);
+			presetController_->getCurrentPreset().setName(presetName);
 			// Don't call selectPreset() because that would change the parameter values
 			presetCombo_.setSelectedItemIndex(presetNumber, juce::NotificationType::dontSendNotification);
+			updatePresetComboLabelText();
 		}
 	}
 
@@ -247,12 +250,13 @@ struct MainComponent::Impl : private juce::Timer {
 		populatePresetCombo();
 	}
 
-	juce::Label *setPresetComboLabelText(juce::String text) {
+	void updatePresetComboLabelText() {
+		auto text = (std::to_string(presetController_->getCurrPresetNumber() + 1)
+					 + ": " + presetController_->getCurrentPreset().getName());
 		auto label = dynamic_cast<juce::Label *>(presetCombo_.getChildComponent(0));
 		label->setText(text, juce::NotificationType::dontSendNotification);
-		return label;
 	}
-	
+
 	void addNewUserBank() {
 		showTextAlert(GETTEXT("Add New User Bank"), GETTEXT("Create"), "Bank 1", [this](std::string text) {
 			if (PresetController::createUserBank(text)) {
@@ -393,8 +397,6 @@ struct MainComponent::Impl : private juce::Timer {
 			auto presetNumber = presetCombo_.getSelectedId() - 1;
 			if (presetNumber == -1)
 				return;
-			if (presetNumber == presetController_->getCurrPresetNumber())
-				return; // Ignore spam from juce::ComboBox::handleAsyncUpdate)
 			selectPreset(presetNumber);
 		};
 	}
@@ -499,8 +501,7 @@ bool MainComponent::perform(const InvocationInfo &info) {
 			break;
 		case juce::StandardApplicationCommandIDs::paste:
 			if (presetController->getCurrentPreset().fromString(juce::SystemClipboard::getTextFromClipboard().toStdString()))
-				impl_->setPresetComboLabelText(std::to_string(presetController->getCurrPresetNumber() + 1)
-											   + ": " + presetController->getCurrentPreset().getName());
+				impl_->updatePresetComboLabelText();
 			break;
 		case juce::StandardApplicationCommandIDs::undo:
 			presetController->undoChange();
