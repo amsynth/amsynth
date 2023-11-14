@@ -6,6 +6,7 @@
   - Added support for [MTS-ESP](https://github.com/ODDSound/MTS-ESP) microtuning,
     excluding multi-channel tuning tables. MTS-ESP is not GPL licensed so some
     packagers may wish to disable it by configuring `--without-mts-esp`.
+  - Fixed a memory leak in VST effGetChunk handler.
 
 
 ## 1.13.2 (2023-02-01)
