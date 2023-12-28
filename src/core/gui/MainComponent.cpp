@@ -386,7 +386,7 @@ struct MainComponent::Impl : private juce::Timer {
 	}
 
 	void populatePresetCombo() {
-		presetCombo_.clear();
+		presetCombo_.clear(juce::NotificationType::dontSendNotification);
 		for (const auto &bank : PresetController::getPresetBanks())
 			if (bank.file_path == presetController_->getFilePath())
 				for (int i = 0; i < PresetController::kNumPresets; i++)
