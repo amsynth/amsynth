@@ -296,9 +296,8 @@ dist_skinsdefault_DATA = \
 	data/skins/default/filter_slope.png \
 	data/skins/default/filter_type.png \
 	data/skins/default/keybmode.png \
-	data/skins/default/knob.png \
-	data/skins/default/knob_boost.png \
 	data/skins/default/knob_boost_cut.png \
+	data/skins/default/knob_boost.png \
 	data/skins/default/knob_mix.png \
 	data/skins/default/knob_osc_octave.png \
 	data/skins/default/knob_osc_pitch.png \
@@ -307,8 +306,6 @@ dist_skinsdefault_DATA = \
 	data/skins/default/layout.ini \
 	data/skins/default/osc_select.png \
 	data/skins/default/portamento_modes.png \
-	data/skins/default/slider_boost_1.png \
-	data/skins/default/slider_boost_2.png \
 	data/skins/default/waveform_lfo.png \
 	data/skins/default/waveform_pics.png
 
