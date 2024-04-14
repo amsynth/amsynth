@@ -86,7 +86,7 @@ static void osc_error(int num, const char *msg, const char *path)
 // handle message sent by plugin host
 //
 
-static int osc_configure_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_configure_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
 	assert(types[0] == 's');
 	assert(types[1] == 's');
@@ -94,7 +94,7 @@ static int osc_configure_handler(const char *path, const char *types, lo_arg **a
 	return 0;
 }
 
-static int osc_control_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_control_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     assert(types[0] == 'i');
     assert(types[1] == 'f');
@@ -105,38 +105,38 @@ static int osc_control_handler(const char *path, const char *types, lo_arg **arg
     return 0;
 }
 
-static int osc_samplerate_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_samplerate_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     assert(types[0] == 'i');
     return 0;
 }
 
-static int osc_program_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_program_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     assert(types[0] == 'i');
     assert(types[1] == 'i');
     return 0;
 }
 
-static int osc_show_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_show_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     mainWindow->setVisible(true);
     return 0;
 }
 
-static int osc_hide_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_hide_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     mainWindow->setVisible(false);
     return 0;
 }
 
-static int osc_quit_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_quit_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     juce::JUCEApplication::getInstance()->systemRequestedQuit();
     return 0;
 }
 
-static int osc_fallback_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_fallback_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     fprintf(stderr, "unhandled OSC message (path = '%s' types = '%s')\n", path, types);
     return 1;
