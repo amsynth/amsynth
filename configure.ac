@@ -1,7 +1,7 @@
 dnl
 dnl  amsynth configure.ac
 dnl
-dnl  Copyright (C) 2001-2022 Nick Dowell
+dnl  Copyright (C) 2001 Nick Dowell
 dnl
 dnl  This program is free software; you can redistribute it and/or modify
 dnl  it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@ dnl  along with this program; if not, write to the Free Software
 dnl  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 dnl
 
-AC_COPYRIGHT([Copyright (C) 2001-2023 Nick Dowell])
+AC_COPYRIGHT([Copyright (C) 2001-2024 Nick Dowell])
 
-AC_INIT([amsynth], [1.13.2],
+AC_INIT([amsynth], [1.13.3],
         [https://github.com/amsynth/amsynth/issues],
         [amsynth],
         [https://github.com/amsynth/amsynth])
