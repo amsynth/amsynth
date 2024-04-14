@@ -96,7 +96,7 @@ static gboolean osc_input_handler(GIOChannel *source, GIOCondition condition, gp
 // handle message sent by plugin host
 //
 
-static int osc_control_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_control_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     assert(types[0] == 'i');
     assert(types[1] == 'f');
@@ -110,38 +110,38 @@ static int osc_control_handler(const char *path, const char *types, lo_arg **arg
     return 0;
 }
 
-static int osc_samplerate_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_samplerate_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     assert(types[0] == 'i');
     return 0;
 }
 
-static int osc_program_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_program_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     assert(types[0] == 'i');
     assert(types[1] == 'i');
     return 0;
 }
 
-static int osc_show_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_show_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     gtk_window_present(_window);
     return 0;
 }
 
-static int osc_hide_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_hide_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     gtk_widget_hide(GTK_WIDGET(_window));
     return 0;
 }
 
-static int osc_quit_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_quit_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     gtk_main_quit();
     return 0;
 }
 
-static int osc_fallback_handler(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data)
+static int osc_fallback_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     fprintf(stderr, "unhandled OSC message (path = '%s' types = '%s')\n", path, types);
     return 1;
