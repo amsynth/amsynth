@@ -9,6 +9,16 @@
   - Fixed a memory leak in VST effGetChunk handler.
 
 
+## 1.13.4 (2022-05-02)
+
+  - Fixed "reference to 'filesystem' is ambiguous" build error.
+
+
+## 1.13.3 (2022-04-15)
+
+  - Fixed an error when building DSSI GUI with GCC 14 or Clang.
+
+
 ## 1.13.2 (2023-02-01)
 
   - Fixed a packaging error that cause preset banks to be omitted.

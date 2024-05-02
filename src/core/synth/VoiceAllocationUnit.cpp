@@ -36,8 +36,6 @@
 #include <math.h>
 
 
-using namespace std;
-
 const unsigned kBufferSize = 1024;
 
 
@@ -437,13 +435,13 @@ VoiceAllocationUnit::noteToPitch	(int note) const
 }
 
 int
-VoiceAllocationUnit::loadScale		(const string & sclFileName)
+VoiceAllocationUnit::loadScale		(const std::string & sclFileName)
 {
 	return tuningMap.loadScale(sclFileName);
 }
 
 int
-VoiceAllocationUnit::loadKeyMap		(const string & kbmFileName)
+VoiceAllocationUnit::loadKeyMap		(const std::string & kbmFileName)
 {
 	return tuningMap.loadKeyMap(kbmFileName);
 }

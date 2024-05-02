@@ -36,8 +36,6 @@
 #include <iostream>
 #include <poll.h>
 
-using namespace std;
-
 
 class ALSAMidiDriver : public MidiDriver
 {
@@ -95,7 +93,7 @@ ALSAMidiDriver::write_cc(unsigned int channel, unsigned int param, unsigned int 
         ev.data.control.param = param;
         ev.data.control.value = value;
         ret=snd_seq_event_output_direct(seq_handle, &ev);
-      if (ret < 0 ) cout << snd_strerror(ret) << endl;        
+      if (ret < 0 ) std::cout << snd_strerror(ret) << std::endl;
       return ret;
 }
 
@@ -115,12 +113,12 @@ int ALSAMidiDriver::open()
 	if (seq_handle) return 0;
 	
 	if (snd_seq_open(&seq_handle, "default", SND_SEQ_OPEN_DUPLEX, SND_SEQ_NONBLOCK) != 0) {
-		cerr << "Error opening ALSA sequencer.\n";
+		std::cerr << "Error opening ALSA sequencer.\n";
 		return -1;
 	}
 
 	if (seq_handle == nullptr) {
-		cerr << "error: snd_seq_open() claimed to succeed but seq_handle is NULL.\n";
+		std::cerr << "error: snd_seq_open() claimed to succeed but seq_handle is NULL.\n";
 		return -1;
 	}
 	
@@ -131,14 +129,14 @@ int ALSAMidiDriver::open()
 	if ((portid = snd_seq_create_simple_port(seq_handle, "MIDI IN",
             SND_SEQ_PORT_CAP_WRITE|SND_SEQ_PORT_CAP_SUBS_WRITE,
             SND_SEQ_PORT_TYPE_APPLICATION)) < 0) {
-		cerr << "Error creating sequencer port.\n";
+		std::cerr << "Error creating sequencer port.\n";
 		return -1;
 	}
 
 	if ((portid_out = snd_seq_create_simple_port(seq_handle, "MIDI OUT",
 		SND_SEQ_PORT_CAP_READ|SND_SEQ_PORT_CAP_SUBS_READ,
 		SND_SEQ_PORT_TYPE_APPLICATION)) < 0) {
-		cerr << "Error creating sequencer port.\n";
+		std::cerr << "Error creating sequencer port.\n";
 		return -1;
 	}
 	
@@ -160,7 +158,7 @@ ALSAMidiDriver::ALSAMidiDriver(const char *name)
 	seq_handle = nullptr;
 	memset( &pollfd_in, 0, sizeof(pollfd_in) );
 	if( snd_midi_event_new( 32, &seq_midi_parser ) )
-		cout << "Error creating MIDI event parser\n";
+		std::cout << "Error creating MIDI event parser\n";
 }
 
 ALSAMidiDriver::~ALSAMidiDriver()

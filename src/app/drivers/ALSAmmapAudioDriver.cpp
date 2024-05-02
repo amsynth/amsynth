@@ -35,8 +35,6 @@
 #include <alsa/asoundlib.h>
 #include <iostream>
 
-using namespace std;
-
 
 class ALSAmmapAudioDriver : public AudioDriver {
 public:
@@ -65,7 +63,7 @@ ALSAmmapAudioDriver::xrun_recovery()
 				periods = 0;
                 err = snd_pcm_prepare(playback_handle);
                 if (err < 0){
-                        cerr << "Can't recovery from underrun, prepare failed: " << snd_strerror(err) << "\n";
+                        std::cerr << "Can't recovery from underrun, prepare failed: " << snd_strerror(err) << "\n";
 return -1;
 				}
                 return 0;
@@ -76,7 +74,7 @@ return -1;
 						periods = 0;
                         err = snd_pcm_prepare(playback_handle);
                         if (err < 0){
-                                cerr << "Can't recovery from suspend, prepare failed: " << snd_strerror(err) << "\n";
+                                std::cerr << "Can't recovery from suspend, prepare failed: " << snd_strerror(err) << "\n";
 return -1;
 						}
                 }
@@ -103,7 +101,7 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 		{
 //			char b[ 80];
 //			sprintf( b, "%i", err = avail);
-//			cerr << "snd_pcm_avail_update error " << b << "=\"" 
+//			std::cerr << "snd_pcm_avail_update error " << b << "=\"" 
 //			<< snd_strerror( err) << "\"\n";
 			return xrun_recovery();
 		}
@@ -111,7 +109,7 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 		if( (int)avail >= (int)lframes ) break;
 		if( 0 > ( err = snd_pcm_wait( playback_handle, -1)))
 		{
-//			cerr << "snd_pcm_wait error\n";
+//			std::cerr << "snd_pcm_wait error\n";
 			config.xruns++;
 			return xrun_recovery();
 		}
@@ -119,7 +117,7 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 
 	if( 0 > ( err = snd_pcm_mmap_begin( playback_handle, &areas, &offset, &lframes)))
 	{
-		cerr << "snd_pcm_mmap_begin error\n";
+		std::cerr << "snd_pcm_mmap_begin error\n";
 		xrun_recovery();
 		// Return an error code so we can quickly test during initialisation.
 		// Won't stop playback at runtime because AudioOutput checks for a return code of -1
@@ -133,23 +131,23 @@ ALSAmmapAudioDriver::write(float *buffer, int frames)
 
 	if( 0 > ( err = snd_pcm_mmap_commit(  playback_handle, offset, lframes)))
 	{
-		cerr << "snd_pcm_mmap_commit error\n";
+		std::cerr << "snd_pcm_mmap_commit error\n";
 		return xrun_recovery();
 	}
 
 	if( periods < 2)
 		if( 2 == ++periods )
-//				cerr << "snd_pcm_start soon\n";
+//				std::cerr << "snd_pcm_start soon\n";
 			if( 0 > ( err = snd_pcm_start( playback_handle ) ) )
 			{
-				cerr << "snd_pcm_start error\n";
+				std::cerr << "snd_pcm_start error\n";
 				return -1;
 			}
 	/*else{
 		if( ++periods == 0)
 			periods = 2;
 		if( ! ( periods % 0x100))
-				cerr << "( periods % 0x100)\n";
+				std::cerr << "( periods % 0x100)\n";
 	}*/
 	return 0;
 }
@@ -165,7 +163,7 @@ ALSAmmapAudioDriver::open()
 	_rate = config.sample_rate;
 
 	if(snd_pcm_open(&playback_handle, config.alsa_audio_device.c_str(), SND_PCM_STREAM_PLAYBACK, 0)<0){
-		cerr << "ALSA: cannot open audio device " << config.alsa_audio_device << endl;
+		std::cerr << "ALSA: cannot open audio device " << config.alsa_audio_device << std::endl;
 		return -1;
 	}
     snd_pcm_hw_params_alloca( &hw_params );
