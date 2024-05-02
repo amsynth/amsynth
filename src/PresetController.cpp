@@ -44,8 +44,6 @@
 
 #define _(string) gettext (string)
 
-using namespace std;
-
 
 PresetController::PresetController()
 {
@@ -67,7 +65,7 @@ PresetController::selectPreset		(const int presetNo)
 }
 
 bool
-PresetController::containsPresetWithName(const string name)
+PresetController::containsPresetWithName(const std::string name)
 {
 	for (int i=0; i<kNumPresets; i++) 
 		if (getPreset(i).getName() == name) 
@@ -151,11 +149,11 @@ PresetController::randomiseCurrentPreset	()
 }
 
 int
-PresetController::exportPreset		(const string filename)
+PresetController::exportPreset		(const std::string filename)
 {
 	try
 	{
-		ofstream file( filename.c_str(), ios::out );
+		std::ofstream file( filename.c_str(), std::ios::out );
 		file << currentPreset.toString();
 		file.close();
 		return 0;
@@ -167,11 +165,11 @@ PresetController::exportPreset		(const string filename)
 }
 
 int
-PresetController::importPreset		(const string filename)
+PresetController::importPreset		(const std::string filename)
 {
 	try
 	{
-		ifstream ifs( filename.c_str(), ios::in );
+		std::ifstream ifs( filename.c_str(), std::ios::in );
 		std::string str( (std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>() );
 		if (!currentPreset.fromString( str )) return -1;
 		currentPreset.setName("Imported: " + currentPreset.getName());
@@ -200,21 +198,21 @@ PresetController::savePresets		(const char *filename)
 	if (filename == nullptr)
 		filename = bank_file.c_str();
 
-	ofstream file( filename, ios::out );
+	std::ofstream file( filename, std::ios::out );
   
-	file << "amSynth" << endl;
+	file << "amSynth\n";
 	for (int i = 0; i < kNumPresets; i++) {
 		if (presets[i].getName()!="unused"){
-			file << "<preset> " << "<name> " << presets[i].getName() << endl;
+			file << "<preset> " << "<name> " << presets[i].getName() << "\n";
 			for (int n = 0; n < kAmsynthParameterCount; n++)
 			{
 				file << "<parameter> " 
 				<< presets[i].getParameter(n).getName()
-				<< " " << presets[i].getParameter(n).getValue() << endl;
+				<< " " << presets[i].getParameter(n).getValue() << "\n";
 			}
 		}
 	}
-	file << "EOF" << endl;
+	file << "EOF" << std::endl;
 	file.close();
 
 	lastPresetsFileModifiedTime = mtime(filename);
@@ -401,7 +399,7 @@ static void scan_preset_bank(const std::string dir_path, const std::string file_
 	} else {
 		std::string::size_type pos = bank_name.find_first_of(".");
 		if (pos != std::string::npos)
-			bank_name.erase(pos, string::npos);
+			bank_name.erase(pos, std::string::npos);
 	}
 
 	std::replace(bank_name.begin(), bank_name.end(), '_', ' ');
