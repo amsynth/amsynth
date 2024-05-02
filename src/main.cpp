@@ -69,8 +69,6 @@
 #include "gettext.h"
 #define _(string) gettext (string)
 
-using namespace std;
-
 
 Configuration & config = Configuration::get();
 
@@ -169,23 +167,23 @@ static void open_midi()
 	
 	if (config.midi_driver == "alsa" || config.midi_driver == "ALSA") {
 		if (!(midiDriver = opened_midi_driver(CreateAlsaMidiDriver(alsa_client_name)))) {
-			std::cerr << _("error: could not open ALSA MIDI interface") << endl;
+			std::cerr << _("error: could not open ALSA MIDI interface") << std::endl;
 		}
 		return;
 	}
 
 	if (config.midi_driver == "oss" || config.midi_driver == "OSS") {
 		if (!(midiDriver = opened_midi_driver(CreateOSSMidiDriver()))) {
-			std::cerr << _("error: could not open OSS MIDI interface") << endl;
+			std::cerr << _("error: could not open OSS MIDI interface") << std::endl;
 		}
 		return;
 	}
 
 	if (config.midi_driver == "auto") {
 		midiDriver = opened_midi_driver(CreateAlsaMidiDriver(alsa_client_name)) ?:
-		             opened_midi_driver(CreateOSSMidiDriver());
+					 opened_midi_driver(CreateOSSMidiDriver());
 		if (config.current_midi_driver.empty()) {
-			std::cerr << _("error: could not open any MIDI interface") << endl;
+			std::cerr << _("error: could not open any MIDI interface") << std::endl;
 		}
 		return;
 	}
@@ -250,38 +248,37 @@ int main( int argc, char *argv[] )
 	int opt, longindex = -1;
 	while ((opt = getopt_long(argc, argv, "vhsdzxm:c:a:r:p:b:U:P:n:t:", longopts, &longindex)) != -1) {
 		switch (opt) {
-            case 'v':
-                cout << PACKAGE_STRING << endl;
+			case 'v':
+				std::cout << PACKAGE_STRING << std::endl;
 				return 0;
 			case 'h':
-				cout << _("usage: ") << PACKAGE << _(" [options]") << endl
-				     << endl
-				     << _("Any options given here override those in the config file ($HOME/.amSynthrc)") << endl
-				     << endl
-				     << _("OPTIONS:") << endl
-				     << endl
-				     << _("	-h          show this usage message") << endl
-				     << _("	-v          show version information") << endl
-				     << _("	-x          run in headless mode (without GUI)") << endl
-				     << endl
-				     << _("	-b <file>   use <file> as the bank to store presets") << endl
-				     << _("	-P <int>    set preset number to use") << endl
-				     << _("	-t <file>   use <file> as a tuning file") << endl
-				     << endl
-				     << _("	-a <string> set the sound output driver to use [alsa/oss/auto(default)]") << endl
-				     << _("	-r <int>    set the sampling rate to use") << endl
-				     << _("	-m <string> set the MIDI driver to use [alsa/oss/auto(default)]") << endl
-				     << _("	-c <int>    set the MIDI channel to respond to (default=all)") << endl
-				     << _("	-p <int>    set the polyphony (maximum active voices)") << endl
-				     << endl
-				     << _("	-n <name>   specify the JACK client name to use") << endl
-				     << _("	--jack_autoconnect[=<true|false>]") << endl
-				     << _("	            automatically connect jack audio ports to hardware I/O ports. (Default: true)") << endl
-					 << endl
-					 << _("	--force-device-scale-factor <scale>") << endl
-					 << _("	            override the default scaling factor for the control panel") << endl
-				     << endl;
-
+				std::cout << _("usage: ") << PACKAGE << _(" [options]") << "\n"
+					<< "\n"
+					<< _("Any options given here override those in the config file ($HOME/.amSynthrc)") << "\n"
+					<< "\n"
+					<< _("OPTIONS:") << "\n"
+					<< "\n"
+					<< _("	-h          show this usage message") << "\n"
+					<< _("	-v          show version information") << "\n"
+					<< _("	-x          run in headless mode (without GUI)") << "\n"
+					<< "\n"
+					<< _("	-b <file>   use <file> as the bank to store presets") << "\n"
+					<< _("	-P <int>    set preset number to use") << "\n"
+					<< _("	-t <file>   use <file> as a tuning file") << "\n"
+					<< "\n"
+					<< _("	-a <string> set the sound output driver to use [alsa/oss/auto(default)]") << "\n"
+					<< _("	-r <int>    set the sampling rate to use") << "\n"
+					<< _("	-m <string> set the MIDI driver to use [alsa/oss/auto(default)]") << "\n"
+					<< _("	-c <int>    set the MIDI channel to respond to (default=all)") << "\n"
+					<< _("	-p <int>    set the polyphony (maximum active voices)") << "\n"
+					<< "\n"
+					<< _("	-n <name>   specify the JACK client name to use") << "\n"
+					<< _("	--jack_autoconnect[=<true|false>]") << "\n"
+					<< _("	            automatically connect jack audio ports to hardware I/O ports. (Default: true)") << "\n"
+					<< "\n"
+					<< _("	--force-device-scale-factor <scale>") << "\n"
+					<< _("	            override the default scaling factor for the control panel") << "\n"
+					<< std::endl;
 				return 0;
 			case 'z':
 				ptest();
@@ -340,7 +337,7 @@ int main( int argc, char *argv[] )
 		gui_kit_init(&argc, &argv);
 #endif
 
-	string amsynth_bank_file = config.current_bank_file;
+	std::string amsynth_bank_file = config.current_bank_file;
 	// string amsynth_tuning_file = config.current_tuning_file;
 
 	GenericOutput *out = open_audio();
@@ -501,7 +498,7 @@ void amsynth_audio_callback(
 void
 amsynth_save_bank(const char *filename)
 {
-    s_synthesizer->saveBank(filename);
+	s_synthesizer->saveBank(filename);
 }
 
 void
@@ -515,7 +512,7 @@ amsynth_load_tuning_file(const char *filename)
 {
 	int result = s_synthesizer->loadTuningScale(filename);
 	if (result != 0) {
-		cerr << _("error: could not load tuning file ") << filename << endl;
+		std::cerr << _("error: could not load tuning file ") << filename << std::endl;
 	}
 	return result;
 }

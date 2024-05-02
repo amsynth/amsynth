@@ -27,8 +27,6 @@
 
 #include "TuningMap.h"
 
-using namespace std;
-
 TuningMap::TuningMap		()
 {
 	defaultScale();
@@ -106,10 +104,10 @@ TuningMap::noteToPitch		(int note) const
 
 // Convert a single line of a Scala scale file to a frequency relative to 1/1.
 static double
-parseScalaLine(const string & line)
+parseScalaLine(const std::string & line)
 {
-	istringstream iss(line);
-	if (line.find('.') == string::npos)
+	std::istringstream iss(line);
+	if (line.find('.') == std::string::npos)
 	{ // treat as ratio
 		long n, d;
 		char slash;
@@ -133,14 +131,14 @@ parseScalaLine(const string & line)
 }
 
 int
-TuningMap::loadScale		(const string & filename)
+TuningMap::loadScale		(const std::string & filename)
 {
-	ifstream file(filename.c_str());
-	string line;
+	std::ifstream file(filename.c_str());
+	std::string line;
 
 	bool gotDesc = false;
 	int scaleSize = -1;
-	vector<double> newScale;
+	std::vector<double> newScale;
 
 	while (file.good())
 	{
@@ -158,7 +156,7 @@ TuningMap::loadScale		(const string & filename)
 		}
 		else if (scaleSize < 0)
 		{
-			istringstream iss(line);
+			std::istringstream iss(line);
 			iss >> scaleSize;
 			if (scaleSize < 0)
 			{
@@ -186,10 +184,10 @@ TuningMap::activateRange(int min, int max)
 }
 
 int
-TuningMap::loadKeyMap		(const string & filename)
+TuningMap::loadKeyMap		(const std::string & filename)
 {
-	ifstream file(filename.c_str());
-	string line;
+	std::ifstream file(filename.c_str());
+	std::string line;
 
 	int mapSize = -1;
 	int firstNote = -1;
@@ -198,7 +196,7 @@ TuningMap::loadKeyMap		(const string & filename)
 	int newRefNote = -1;
 	double newRefPitch = -1.;
 	int newMapRepeatInc = -1;
-	vector<int> newMapping;
+	std::vector<int> newMapping;
 
 	// It makes more sense to manipulate the ActiveRange array directly instead of creating
 	// a temporary container and pointing the actual array to it at the end because
@@ -214,10 +212,10 @@ TuningMap::loadKeyMap		(const string & filename)
 		while (i < line.size() && isspace(line[i])) ++i;
 		if (i == line.size()) continue;	// skip all-whitespace lines
 		if (line[i] == '!') continue;	// skip comment lines
-		istringstream iss(line);
+		std::istringstream iss(line);
 		if (line [i] == '<') //An active range should be defined on this line.
 		{
-			string tag;
+			std::string tag;
 			int min, max;
 			iss >> tag;
 			iss >> min;

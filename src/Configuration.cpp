@@ -28,8 +28,6 @@
 #include <cstdlib>
 #include <sstream>
 
-using namespace std;
-
 Configuration::Configuration()
 {
 	amsynthrc_fname = filesystem::get().config;
@@ -64,9 +62,9 @@ Configuration::Defaults	()
 int
 Configuration::load	()
 {
-	string buffer;
+	std::string buffer;
 
-	fstream file( amsynthrc_fname.c_str(), ios::in );
+	std::fstream file( amsynthrc_fname.c_str(), std::ios::in );
 	while( file.good() ) {
 		file >> buffer;
 		if( buffer[0]=='#' ){
@@ -87,7 +85,7 @@ Configuration::load	()
 			oss_midi_device = buffer;
 		} else if (buffer=="midi_channel"){
 			file >> buffer;
-			istringstream(buffer) >> midi_channel;
+			std::istringstream(buffer) >> midi_channel;
 		} else if (buffer=="oss_audio_device"){
 			file >> buffer;
 			oss_audio_device = buffer;
@@ -96,13 +94,13 @@ Configuration::load	()
 			alsa_audio_device = buffer;
 		} else if (buffer=="sample_rate"){
 			file >> buffer;
-			istringstream(buffer) >> sample_rate;
+			std::istringstream(buffer) >> sample_rate;
 		} else if (buffer=="polyphony"){
 			file >> buffer;
-			istringstream(buffer) >> polyphony;
+			std::istringstream(buffer) >> polyphony;
 		} else if (buffer=="pitch_bend_range"){
 			file >> buffer;
-			istringstream(buffer) >> pitch_bend_range;
+			std::istringstream(buffer) >> pitch_bend_range;
 		} else if (buffer=="tuning_file") {
 			file >> buffer;
 			current_tuning_file = buffer;
