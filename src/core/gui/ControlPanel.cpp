@@ -73,9 +73,8 @@ struct ControlPanel::Impl final : juce::MouseListener
 	, label_(controlPanel)
 	{
 		auto skin = Skin(ControlPanel::skinsDirectory + "/default");
-		if (skin.layout.background.empty() || skin.layout.controls.empty())
-		{
-			fprintf(stderr, "amsynth: could not load layout.ini\n");
+		if (skin.layout.background.empty() || skin.layout.controls.empty()) {
+			controlPanel->setSize(600, 400);
 			return;
 		}
 		label_.yInset = 6;
@@ -159,6 +158,19 @@ ControlPanel::ControlPanel(MidiController *midiController, PresetController *pre
 : impl_(std::make_unique<Impl>(this, midiController, presetController)) {}
 
 ControlPanel::~ControlPanel() noexcept = default;
+
+void ControlPanel::paint(juce::Graphics &g)
+{
+	if (impl_->components_.empty()) {
+		g.setFont(15.f);
+		g.setColour(findColour(juce::Label::textColourId));
+		g.drawFittedText("Error: could not load "  + ControlPanel::skinsDirectory + "/default/layout.ini",
+						 20, 20, getWidth() - 40, getHeight() - 40,
+						 juce::Justification::horizontallyCentred | juce::Justification::verticallyCentred, 2);
+	} else {
+		juce::Component::paint(g);
+	}
+}
 
 #ifdef PKGDATADIR
 std::string ControlPanel::skinsDirectory {PKGDATADIR "/skins"};

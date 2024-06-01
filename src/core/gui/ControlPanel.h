@@ -33,7 +33,9 @@ public:
 	explicit ControlPanel(class MidiController *midiController, class PresetController *presetController);
 
 	~ControlPanel() noexcept final;
-	
+
+	void paint(juce::Graphics &) final;
+
 	static std::string skinsDirectory;
 
 private:
