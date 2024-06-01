@@ -109,7 +109,7 @@ AC_ARG_WITH([jack], [AS_HELP_STRING([--with-jack], [build support for Jack Audio
 AS_IF([test "x$with_jack" != "xno"],
     [PKG_CHECK_MODULES([JACK], [jack], [
         AC_DEFINE([WITH_JACK],, [Use this optional package])
-        AC_CHECK_HEADERS([jack/midiport.h jack/session.h])
+        AC_CHECK_HEADERS([jack/midiport.h])
         with_jack="yes"], [with_jack="no"])])
 
 AC_ARG_WITH([lash], [AS_HELP_STRING([--with-lash], [build support for LASH])])
@@ -210,7 +210,6 @@ echo \| Build with ALSA support............................... : $with_alsa
 echo \| Build with JACK support............................... : $with_jack
 AS_IF([test "x$with_jack" != "xno"], [
 echo \| Build with JACK MIDI support.......................... : $ac_cv_header_jack_midiport_h
-echo \| Build with JACK session support....................... : $ac_cv_header_jack_session_h
 ])
 echo \| Build with LASH support............................... : $with_lash
 echo \| Build with MTS-ESP support............................ : $with_mts_esp

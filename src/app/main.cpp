@@ -373,12 +373,6 @@ int main( int argc, char *argv[] )
 			case 't':
 				config.current_tuning_file = optarg;
 				break;
-			case 'U':
-				config.jack_session_uuid = optarg;
-				// don't auto connect ports if under jack session control...
-				// the jack session manager is responsible for restoring port connections
-				config.jack_autoconnect = false;
-				break;
 			case 'n':
 				config.jack_client_name_preference = optarg;
 				break;

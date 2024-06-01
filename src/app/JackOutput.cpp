@@ -28,12 +28,6 @@
 #include <jack/midiport.h>
 #endif
 
-#ifdef HAVE_JACK_SESSION_H
-#include <jack/session.h>
-// JACK-Session is now deprecated; support will be removed in a future release
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
-
 #include <iostream>
 #include <sstream>
 #include <stdio.h>
@@ -43,10 +37,6 @@
 
 
 #define UNUSED_PARAM( x ) (void)x
-
-#ifdef HAVE_JACK_SESSION_H
-static void session_callback(jack_session_event_t *event, void *arg);
-#endif
 
 
 int
@@ -61,14 +51,7 @@ JackOutput::init()
 	l_port = r_port = m_port = nullptr;
 
 	jack_status_t status = (jack_status_t)0;
-
-#if HAVE_JACK_SESSION_H
-	if (!config.jack_session_uuid.empty())
-		client = jack_client_open(config.jack_client_name_preference.c_str(), JackSessionID,
-				&status, config.jack_session_uuid.c_str());
-	else
-#endif
-		client = jack_client_open(config.jack_client_name_preference.c_str(), JackNoStartServer, &status);
+	client = jack_client_open(config.jack_client_name_preference.c_str(), JackNoStartServer, &status);
 	if (!client) {
 		std::ostringstream o;
 		o << "jack_client_open() failed, status = 0x" << std::hex << status;
@@ -88,10 +71,6 @@ JackOutput::init()
 	m_port_out = jack_port_register(client, "midi_out", JACK_DEFAULT_MIDI_TYPE, JackPortIsOutput, 0);
 #endif
 	
-#if HAVE_JACK_SESSION_H
-	jack_set_session_callback(client, session_callback, client);
-#endif
-
 	config.current_audio_driver = "JACK";
 	if (m_port) {
 		config.current_midi_driver = "JACK";
@@ -197,37 +176,3 @@ JackOutput::Stop()
 	client = nullptr;
 #endif
 }
-
-#ifdef HAVE_JACK_SESSION_H
-
-static void session_callback(jack_session_event_t *event, void *arg)
-{
-	char filename[1024]; snprintf(filename, sizeof(filename),
-		"%s%s.amsynth.bank", event->session_dir, event->client_uuid);
-
-	amsynth_save_bank(filename);
-
-	char exe_path[4096] = "";
-	if (readlink("/proc/self/exe", exe_path, sizeof(exe_path)) == -1) {
-		perror("readlink /proc/self/exe");
-		strcpy(exe_path, "amsynth");
-	}
-
-	// construct a command line that the session manager can use to re-launch the synth
-	if (asprintf(&event->command_line,
-		"%s -b \"${SESSION_DIR}%s.amsynth.bank\" -P %d -U %s",
-		exe_path, event->client_uuid, amsynth_get_preset_number(), event->client_uuid) == -1) {
-		event->flags = JackSessionSaveError;
-		perror("asprintf");
-	}
-
-	jack_session_reply( (jack_client_t *)arg, event );
-	
-	jack_session_event_free (event);
-
-	if (event->type == JackSessionSaveAndQuit) {
-		exit(0);
-	}
-}
-
-#endif
