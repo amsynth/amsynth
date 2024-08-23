@@ -141,33 +141,33 @@ bin_PROGRAMS = amsynth
 amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @LIBLO_CFLAGS@
 amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @LIBLO_LIBS@ @LIBS@ libcore.la
 amsynth_SOURCES = \
-	src/app/AudioOutput.cpp \
-	src/app/AudioOutput.h \
-	src/app/drivers/ALSAAudioDriver.cpp \
-	src/app/drivers/ALSAAudioDriver.h \
-	src/app/drivers/ALSAMidiDriver.cpp \
-	src/app/drivers/ALSAMidiDriver.h \
-	src/app/drivers/ALSAmmapAudioDriver.cpp \
-	src/app/drivers/ALSAmmapAudioDriver.h \
-	src/app/drivers/AudioDriver.h \
-	src/app/drivers/MidiDriver.h \
-	src/app/drivers/OSSAudioDriver.cpp \
-	src/app/drivers/OSSAudioDriver.h \
-	src/app/drivers/OSSMidiDriver.cpp \
-	src/app/drivers/OSSMidiDriver.h \
-	src/app/JackOutput.cpp \
-	src/app/JackOutput.h \
-	src/app/lash.c \
-	src/app/lash.h \
-	src/app/main.h \
-	src/app/main.cpp
+	src/standalone/AudioOutput.cpp \
+	src/standalone/AudioOutput.h \
+	src/standalone/drivers/ALSAAudioDriver.cpp \
+	src/standalone/drivers/ALSAAudioDriver.h \
+	src/standalone/drivers/ALSAMidiDriver.cpp \
+	src/standalone/drivers/ALSAMidiDriver.h \
+	src/standalone/drivers/ALSAmmapAudioDriver.cpp \
+	src/standalone/drivers/ALSAmmapAudioDriver.h \
+	src/standalone/drivers/AudioDriver.h \
+	src/standalone/drivers/MidiDriver.h \
+	src/standalone/drivers/OSSAudioDriver.cpp \
+	src/standalone/drivers/OSSAudioDriver.h \
+	src/standalone/drivers/OSSMidiDriver.cpp \
+	src/standalone/drivers/OSSMidiDriver.h \
+	src/standalone/JackOutput.cpp \
+	src/standalone/JackOutput.h \
+	src/standalone/lash.c \
+	src/standalone/lash.h \
+	src/standalone/main.h \
+	src/standalone/main.cpp
 
 if BUILD_NSM
 amsynth_SOURCES += \
-	src/app/nsm/NsmClient.cpp \
-	src/app/nsm/NsmClient.h \
-	src/app/nsm/NsmHandler.cpp \
-	src/app/nsm/NsmHandler.h \
+	src/standalone/nsm/NsmClient.cpp \
+	src/standalone/nsm/NsmClient.h \
+	src/standalone/nsm/NsmHandler.cpp \
+	src/standalone/nsm/NsmHandler.h \
 	external/nsm/nsm.h
 endif
 

@@ -25,7 +25,7 @@ AC_INIT([amsynth], [1.13.4],
         [amsynth],
         [https://github.com/amsynth/amsynth])
 
-AC_CONFIG_SRCDIR([src/app/main.cpp])
+AC_CONFIG_SRCDIR([src/standalone/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
