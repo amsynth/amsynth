@@ -17,23 +17,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: ../src/app/main.cpp:127
+#: ../src/standalone/main.cpp:127
 msgid "JACK init failed: "
 msgstr "JACK-Initialisierung gescheitert: "
 
-#: ../src/app/main.cpp:151
+#: ../src/standalone/main.cpp:151
 msgid "error: could not open ALSA MIDI interface"
 msgstr "Fehler: Kann ALSA-MIDI-Interface nicht öffnen"
 
-#: ../src/app/main.cpp:158
+#: ../src/standalone/main.cpp:158
 msgid "error: could not open OSS MIDI interface"
 msgstr "Fehler: Kann OSS-MIDI-Interface nicht öffnen"
 
-#: ../src/app/main.cpp:167
+#: ../src/standalone/main.cpp:167
 msgid "error: could not open any MIDI interface"
 msgstr "Fehler: Kein MIDI-Interface kann geöffnet werden"
 
-#: ../src/app/main.cpp:234
+#: ../src/standalone/main.cpp:234
 #, fuzzy
 msgid ""
 "Could not initialise the configured audio device.\n"
@@ -44,7 +44,7 @@ msgstr ""
 "\n"
 "Bitte die Konfiguration prüfen und neu starten"
 
-#: ../src/app/main.cpp:237
+#: ../src/standalone/main.cpp:237
 #, fuzzy
 msgid ""
 "Could not initialise the configured MIDI device.\n"
@@ -55,95 +55,95 @@ msgstr ""
 "\n"
 "Bitte die Konfiguration prüfen und neu starten"
 
-#: ../src/app/main.cpp:244
+#: ../src/standalone/main.cpp:244
 #, fuzzy
 msgid "Configuration error"
 msgstr "amsynth-Konfigurationsfehler"
 
-#: ../src/app/main.cpp:246
+#: ../src/standalone/main.cpp:246
 msgid "OK"
 msgstr ""
 
-#: ../src/app/main.cpp:319
+#: ../src/standalone/main.cpp:319
 msgid "usage: "
 msgstr "Verwendung: "
 
-#: ../src/app/main.cpp:319
+#: ../src/standalone/main.cpp:319
 msgid " [options]"
 msgstr " [Optionen]"
 
-#: ../src/app/main.cpp:321
+#: ../src/standalone/main.cpp:321
 msgid ""
 "Any options given here override those in the config file ($HOME/.amSynthrc)"
 msgstr ""
 "Alle hier angegebenen Optionen setzen diejenigen aus der Konfigurationsdatei "
 "($HOME/.amSynthrc) außer Kraft"
 
-#: ../src/app/main.cpp:323
+#: ../src/standalone/main.cpp:323
 msgid "OPTIONS:"
 msgstr "OPTIONEN:"
 
-#: ../src/app/main.cpp:325
+#: ../src/standalone/main.cpp:325
 msgid "\t-h          show this usage message"
 msgstr "\t-h          zeigt diese Verwendungsbeschreibung"
 
-#: ../src/app/main.cpp:326
+#: ../src/standalone/main.cpp:326
 msgid "\t-v          show version information"
 msgstr "\t-v          zeigt Versionsinformationen"
 
-#: ../src/app/main.cpp:327
+#: ../src/standalone/main.cpp:327
 msgid "\t-x          run in headless mode (without GUI)"
 msgstr "\t-x          führt amsynth ohne grafische Oberfläche aus"
 
-#: ../src/app/main.cpp:329
+#: ../src/standalone/main.cpp:329
 msgid "\t-b <file>   use <file> as the bank to store presets"
 msgstr "\t-b <Datei>  nutzt <Datei> als Bank zum Speichern von Presets"
 
-#: ../src/app/main.cpp:330
+#: ../src/standalone/main.cpp:330
 #, fuzzy
 msgid "\t-P <int>    set preset number to use"
 msgstr "\t-r <int>    setzt die zu verwendende Samplerate"
 
-#: ../src/app/main.cpp:331
+#: ../src/standalone/main.cpp:331
 msgid "\t-t <file>   use <file> as a tuning file"
 msgstr "\t-t <Datei>  nutzt <Datei> als Stimmungsdatei"
 
-#: ../src/app/main.cpp:333
+#: ../src/standalone/main.cpp:333
 msgid ""
 "\t-a <string> set the sound output driver to use [alsa/oss/auto(default)]"
 msgstr ""
 "\t-a <string> setzt den Audio-Ausgabe-Treiber als [alsa/oss/auto(Standard)]"
 
-#: ../src/app/main.cpp:334
+#: ../src/standalone/main.cpp:334
 msgid "\t-r <int>    set the sampling rate to use"
 msgstr "\t-r <int>    setzt die zu verwendende Samplerate"
 
-#: ../src/app/main.cpp:335
+#: ../src/standalone/main.cpp:335
 msgid "\t-m <string> set the MIDI driver to use [alsa/oss/auto(default)]"
 msgstr ""
 "\t-m <string> setzt den zu verwendenden MIDI-Treiber [alsa/oss/"
 "auto(Standard)]"
 
-#: ../src/app/main.cpp:336
+#: ../src/standalone/main.cpp:336
 msgid "\t-c <int>    set the MIDI channel to respond to (default=all)"
 msgstr ""
 "\t-c <int>    setzt den MIDI-Kanal, auf den reagiert werden soll "
 "(Standard=alle)"
 
-#: ../src/app/main.cpp:337
+#: ../src/standalone/main.cpp:337
 msgid "\t-p <int>    set the polyphony (maximum active voices)"
 msgstr ""
 "\t-p <int>    setzt die Polyphonie (maximale Anzahl der aktiven Stimmen)"
 
-#: ../src/app/main.cpp:339
+#: ../src/standalone/main.cpp:339
 msgid "\t-n <name>   specify the JACK client name to use"
 msgstr "\t-n <Name>   legt den JACK-Client-Namen fest"
 
-#: ../src/app/main.cpp:340
+#: ../src/standalone/main.cpp:340
 msgid "\t--jack_autoconnect[=<true|false>]"
 msgstr "\t--jack_autoconnect[=<true|false>]"
 
-#: ../src/app/main.cpp:341
+#: ../src/standalone/main.cpp:341
 msgid ""
 "\t            automatically connect jack audio ports to hardware I/O ports. "
 "(Default: true)"
@@ -151,42 +151,42 @@ msgstr ""
 "\t            legt die automatische Verbindung von JACK-Audio-Ports mit "
 "Hardware-I/O-Ports fest. (Standard: true)"
 
-#: ../src/app/main.cpp:343
+#: ../src/standalone/main.cpp:343
 msgid "\t--force-device-scale-factor <scale>"
 msgstr ""
 
-#: ../src/app/main.cpp:344
+#: ../src/standalone/main.cpp:344
 msgid "\t            override the default scaling factor for the control panel"
 msgstr ""
 
-#: ../src/app/main.cpp:405
+#: ../src/standalone/main.cpp:405
 msgid "Fatal Error: open_audio() returned NULL.\n"
 msgstr "Fataler Fehler: open_audio() hat NULL zurückgegeben.\n"
 
-#: ../src/app/main.cpp:469
+#: ../src/standalone/main.cpp:469
 #, c-format
 msgid "amsynth running in headless mode, press ctrl-c to exit\n"
 msgstr "amsynth läuft ohne grafische Oberfläche, Strg+C zum Beenden\n"
 
-#: ../src/app/main.cpp:474
+#: ../src/standalone/main.cpp:474
 #, c-format
 msgid "shutting down...\n"
 msgstr "Beende...\n"
 
-#: ../src/app/main.cpp:481
+#: ../src/standalone/main.cpp:481
 msgid " audio buffer underruns occurred\n"
 msgstr " Audio Buffer Underruns sind aufgetreten\n"
 
-#: ../src/app/main.cpp:570
+#: ../src/standalone/main.cpp:570
 msgid "error: could not load tuning file "
 msgstr "Fehler: Konnte Stimmungsdatei nicht laden: "
 
-#: ../src/app/main.cpp:632
+#: ../src/standalone/main.cpp:632
 #, c-format
 msgid "user time: %f\t\tsystem time: %f\n"
 msgstr "Benutzerzeit: %f\t\tSystemzeit: %f\n"
 
-#: ../src/app/main.cpp:633
+#: ../src/standalone/main.cpp:633
 #, c-format
 msgid "performance index: %f\n"
 msgstr "Leistungsindex: %f\n"

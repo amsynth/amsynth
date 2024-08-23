@@ -2,8 +2,8 @@ data/amsynth.appdata.xml.in
 data/dssi-amsynth-plugin.metainfo.xml.in
 data/lv2-amsynth-plugin.metainfo.xml.in
 data/vst-amsynth-plugin.metainfo.xml.in
-src/app/main.cpp
 src/core/gui/ControlPanel.cpp
 src/core/gui/MainComponent.cpp
 src/core/synth/Parameter.cpp
 src/core/synth/PresetController.cpp
+src/standalone/main.cpp
