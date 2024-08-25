@@ -50,22 +50,25 @@ float getGlobalScaleFactor() {
 
 #endif
 
-static bool isInitialized;
+static int numInstances;
 
-void juceInit() {
-	if (isInitialized)
-		return;
-	juce::initialiseJuce_GUI();
+JuceIntegration::JuceIntegration() {
+	if (numInstances++ == 0) {
+		juce::initialiseJuce_GUI();
 #if JUCE_LINUX || JUCE_BSD || JUCE_WINDOWS
-	auto scaleFactor = getGlobalScaleFactor();
-	juce::Desktop::getInstance().setGlobalScaleFactor(scaleFactor);
+		auto scaleFactor = getGlobalScaleFactor();
+		juce::Desktop::getInstance().setGlobalScaleFactor(scaleFactor);
 #endif
-	isInitialized = true;
+	}
 }
 
-void juceIdle() {
-	if (!isInitialized)
-		return;
+JuceIntegration::~JuceIntegration() {
+	if (--numInstances == 0) {
+		juce::shutdownJuce_GUI();
+	}
+}
+
+void JuceIntegration::idle() {
 #if JUCE_LINUX || JUCE_BSD || JUCE_WINDOWS
 	juce::dispatchNextMessageOnSystemQueue(true);
 #endif

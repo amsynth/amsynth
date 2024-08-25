@@ -62,6 +62,7 @@ struct ParameterListener final : public Parameter::Observer {
 
 struct lv2_ui {
 	PresetController presetController;
+	JuceIntegration juceIntegration;
 	std::unique_ptr<MainComponent> mainComponent;
 	std::unique_ptr<ParameterListener> parameterListener;
 	LV2UI_Widget parent {nullptr};
@@ -203,8 +204,6 @@ lv2_ui_instantiate(const LV2UI_Descriptor*         /*descriptor*/,
 		write_function(controller, PORT_FIRST_PARAMETER + idx, sizeof(float), 0, &value);
 	});
 
-	juceInit();
-
 	ui->mainComponent = std::make_unique<MainComponent>(&ui->presetController);
 	ui->mainComponent->sendProperty = [ui] (const char *name, const char *value) {lv2helper(ui).send(name, value);};
 	ui->mainComponent->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ui->parent);
@@ -264,9 +263,9 @@ lv2_ui_port_event(LV2UI_Handle handle,
 ////////////////////////////////////////////////////////////////////////////////
 
 static int
-lv2_ui_idle(LV2UI_Handle)
+lv2_ui_idle(LV2UI_Handle handle)
 {
-	juceIdle();
+	reinterpret_cast<lv2_ui *>(handle)->juceIntegration.idle();
 	return 0;
 }
 

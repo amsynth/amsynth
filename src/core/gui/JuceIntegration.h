@@ -21,6 +21,12 @@
 
 #pragma once
 
-void juceInit();
+// Like juce::ScopedJuceInitialiser_GUI but also initialises the global scale factor
+class JuceIntegration
+{
+public:
+	JuceIntegration();
+	~JuceIntegration();
 
-void juceIdle();
+	void idle();
+};

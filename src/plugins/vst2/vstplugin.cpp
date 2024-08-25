@@ -108,6 +108,7 @@ struct Plugin final : public Parameter::Observer
 	std::string chunk;
 
 #ifdef WITH_GUI
+	JuceIntegration juceIntegration;
 	std::unique_ptr<MainComponent> gui;
 #endif
 };
@@ -153,7 +154,6 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 
 #ifdef WITH_GUI
 		case effEditGetRect: {
-			juceInit();
 			if (!plugin->gui) {
 				plugin->gui = std::make_unique<MainComponent>(plugin->synthesizer->_presetController);
 			}
@@ -168,7 +168,6 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			return 1;
 		}
 		case effEditOpen: {
-			juceInit();
 			if (!plugin->gui) {
 				plugin->gui = std::make_unique<MainComponent>(plugin->synthesizer->_presetController);
 			}
@@ -188,7 +187,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			return 0;
 		}
 		case effEditIdle: {
-			juceIdle();
+			plugin->juceIntegration.idle();
 			return 0;
 		}
 #endif
