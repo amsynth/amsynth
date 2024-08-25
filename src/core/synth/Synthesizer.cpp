@@ -183,7 +183,7 @@ void Synthesizer::setNormalizedParameterValue(Param parameter, float value)
 
 void Synthesizer::getParameterName(Param parameter, char *buffer, size_t maxLen)
 {
-	strncpy(buffer, _presetController->getCurrentPreset().getParameter(parameter).getName().c_str(), maxLen);
+	strncpy(buffer, _presetController->getCurrentPreset().getParameter(parameter).getName(), maxLen);
 }
 
 void Synthesizer::getParameterLabel(Param parameter, char *buffer, size_t maxLen)

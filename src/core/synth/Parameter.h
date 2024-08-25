@@ -35,7 +35,7 @@ enum ParameterLaw {
 };
 
 struct ParameterSpec {
-	const char name[20];
+	const char *name;
 	float def;
 	float min;
 	float max;
@@ -87,7 +87,7 @@ public:
 
 	const std::string getStringValue	() const;
 
-	const std::string getName			() const { return _spec.name; }
+	const char * 	getName				() const { return _spec.name; }
 
 	Param			getId				() const { return _paramId; }
 
