@@ -75,25 +75,17 @@ static FILE *logFile;
 
 constexpr size_t kPresetsPerBank = sizeof(BankInfo::presets) / sizeof(BankInfo::presets[0]);
 
-class HostCall
-{
-public:
-	HostCall() { count_++; }
-	~HostCall() { count_--; }
-	static bool isActive() { return count_ > 0; }
-private:
-	static thread_local int count_;
-};
-
-thread_local int HostCall::count_ = 0;
-
 struct Plugin final : public Parameter::Observer
 {
-	Plugin(AEffect *effect, audioMasterCallback master) : effect(effect)
+	Plugin(AEffect *effect, audioMasterCallback master)
+	: effect(effect)
+	, audioMasterValues(kAmsynthParameterCount)
 	{
 		audioMaster = master;
 		synthesizer = new Synthesizer;
 		midiBuffer = (unsigned char *)malloc(MIDI_BUFFER_SIZE);
+		for (int i = 0; i < kAmsynthParameterCount; i++)
+			audioMasterValues[i] = synthesizer->_presetController->getCurrentPreset().getParameter(i).getNormalisedValue();
 		synthesizer->_presetController->getCurrentPreset().addObserver(this);
 	}
 
@@ -105,12 +97,15 @@ struct Plugin final : public Parameter::Observer
 
 	void parameterDidChange(const Parameter &parameter)
 	{
-		if (audioMaster && !HostCall::isActive())
-			audioMaster(effect, audioMasterAutomate, parameter.getId(), 0, nullptr, parameter.getNormalisedValue());
+		if (audioMaster &&
+			audioMasterValues.at(parameter.getId()) != parameter.getNormalisedValue())
+			audioMaster(effect, audioMasterAutomate, parameter.getId(), 0, nullptr,
+						audioMasterValues[parameter.getId()] = parameter.getNormalisedValue());
 	}
 
 	AEffect *effect;
 	audioMasterCallback audioMaster;
+	std::vector<float> audioMasterValues;
 	Synthesizer *synthesizer;
 	unsigned char *midiBuffer;
 	std::vector<amsynth_midi_event_t> midiEvents;
@@ -125,7 +120,6 @@ struct Plugin final : public Parameter::Observer
 
 static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val, void *ptr, float f)
 {
-	HostCall hostCall;
 	Plugin *plugin = (Plugin *)effect->ptr3;
 
 	switch (opcode) {
@@ -340,7 +334,6 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 static void process(AEffect *effect, float **inputs, float **outputs, int numSampleFrames)
 {
 	(void)inputs;
-	HostCall hostCall;
 	Plugin *plugin = (Plugin *)effect->ptr3;
 	std::vector<amsynth_midi_cc_t> midi_out;
 	plugin->synthesizer->process(numSampleFrames, plugin->midiEvents, midi_out, outputs[0], outputs[1]);
@@ -350,7 +343,6 @@ static void process(AEffect *effect, float **inputs, float **outputs, int numSam
 static void processReplacing(AEffect *effect, float **inputs, float **outputs, int numSampleFrames)
 {
 	(void)inputs;
-	HostCall hostCall;
 	Plugin *plugin = (Plugin *)effect->ptr3;
 	std::vector<amsynth_midi_cc_t> midi_out;
 	plugin->synthesizer->process(numSampleFrames, plugin->midiEvents, midi_out, outputs[0], outputs[1]);
@@ -359,21 +351,18 @@ static void processReplacing(AEffect *effect, float **inputs, float **outputs, i
 
 static void setParameter(AEffect *effect, int i, float f)
 {
-	HostCall hostCall;
 	Plugin *plugin = (Plugin *)effect->ptr3;
-	plugin->synthesizer->setNormalizedParameterValue((Param) i, f);
+	plugin->synthesizer->setNormalizedParameterValue((Param) i, plugin->audioMasterValues.at(i) = f);
 }
 
 static float getParameter(AEffect *effect, int i)
 {
-	HostCall hostCall;
 	Plugin *plugin = (Plugin *)effect->ptr3;
-	return plugin->synthesizer->getNormalizedParameterValue((Param) i);
+	return plugin->audioMasterValues.at(i) = plugin->synthesizer->getNormalizedParameterValue((Param) i);
 }
 
 static int getNumPrograms()
 {
-	HostCall hostCall;
 	return (int)PresetController::getPresetBanks().size() * kPresetsPerBank;
 }
 
@@ -407,7 +396,6 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 		ControlPanel::skinsDirectory = resources + "/skins";
 	}
 #endif
-	HostCall hostCall;
 	AEffect *effect = (AEffect *)calloc(1, sizeof(AEffect));
 	effect->magic = kEffectMagic;
 	effect->dispatcher = dispatcher;
