@@ -270,7 +270,8 @@ MidiController::loadControllerMap()
 	for (int cc = 0; cc < MAX_CC && file.good(); cc++, file >> name) {
 		int paramId = parameter_index_from_name(name.c_str());
 		_cc_to_param_map[cc] = paramId;
-		_param_to_cc_map[paramId] = cc;
+		if (paramId >= 0 && paramId < kAmsynthParameterCount)
+			_param_to_cc_map[paramId] = cc;
 	}
 	file.close();
 }
