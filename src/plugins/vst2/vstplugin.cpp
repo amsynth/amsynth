@@ -106,7 +106,7 @@ struct Plugin final : public Parameter::Observer
 	void parameterDidChange(const Parameter &parameter)
 	{
 		if (audioMaster && !HostCall::isActive())
-			audioMaster(effect, audioMasterAutomate, parameter.getValue(), 0, nullptr, parameter.getValue());
+			audioMaster(effect, audioMasterAutomate, parameter.getId(), 0, nullptr, parameter.getNormalisedValue());
 	}
 
 	AEffect *effect;
