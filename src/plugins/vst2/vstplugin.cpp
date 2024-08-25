@@ -65,8 +65,6 @@ struct ERect
 
 #define MIDI_BUFFER_SIZE 4096
 
-extern std::string sFactoryBanksDirectory;
-
 static char hostProductString[64] = "";
 
 #if defined(DEBUG) && DEBUG
@@ -365,16 +363,6 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 	if (audioMaster) {
 		audioMaster(nullptr, audioMasterGetProductString, 0, 0, hostProductString, 0.0f);
 	}
-#if JUCE_MAC
-	if (ControlPanel::skinsDirectory.empty()) {
-		Dl_info dl_info = {};
-		dladdr((void *)(&__func__), &dl_info);
-		const char *end = strstr(dl_info.dli_fname, "/MacOS/");
-		auto resources = std::string(dl_info.dli_fname, end - dl_info.dli_fname) + "/Resources";
-		sFactoryBanksDirectory = resources + "/banks";
-		ControlPanel::skinsDirectory = resources + "/skins";
-	}
-#endif
 	AEffect *effect = (AEffect *)calloc(1, sizeof(AEffect));
 	effect->magic = kEffectMagic;
 	effect->dispatcher = dispatcher;
