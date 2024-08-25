@@ -73,8 +73,6 @@ static char hostProductString[64] = "";
 static FILE *logFile;
 #endif
 
-constexpr size_t kPresetsPerBank = sizeof(BankInfo::presets) / sizeof(BankInfo::presets[0]);
-
 struct Plugin final : public Parameter::Observer
 {
 	Plugin(AEffect *effect, audioMasterCallback master)
@@ -109,8 +107,6 @@ struct Plugin final : public Parameter::Observer
 	Synthesizer *synthesizer;
 	unsigned char *midiBuffer;
 	std::vector<amsynth_midi_event_t> midiEvents;
-	int programNumber = 0;
-	std::string presetName;
 	std::string chunk;
 
 #ifdef WITH_GUI
@@ -133,21 +129,9 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			return 0;
 
 		case effSetProgram:
-			if (plugin->programNumber != (int)val) {
-				auto &bank = PresetController::getPresetBanks().at(val / kPresetsPerBank);
-				auto &preset = bank.presets[val % kPresetsPerBank];
-				plugin->presetName = preset.getName();
-				plugin->programNumber = (int)val;
-				plugin->synthesizer->_presetController->setCurrentPreset(preset);
-			}
-			return 1;
-
 		case effGetProgram:
-			return plugin->programNumber;
-
 		case effGetProgramName:
-			strncpy((char *)ptr, plugin->presetName.c_str(), 24);
-			return 1;
+			return 0;
 
 		case effGetParamLabel:
 			plugin->synthesizer->getParameterLabel((Param)index, (char *)ptr, 32);
@@ -361,11 +345,6 @@ static float getParameter(AEffect *effect, int i)
 	return plugin->audioMasterValues.at(i) = plugin->synthesizer->getNormalizedParameterValue((Param) i);
 }
 
-static int getNumPrograms()
-{
-	return (int)PresetController::getPresetBanks().size() * kPresetsPerBank;
-}
-
 extern "C" {
 #ifdef _WIN32
 __declspec(dllexport) AEffect * MAIN(audioMasterCallback);
@@ -402,7 +381,7 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 	effect->process = process;
 	effect->setParameter = setParameter;
 	effect->getParameter = getParameter;
-	effect->numPrograms = getNumPrograms();
+	effect->numPrograms = 0;
 	effect->numParams = kAmsynthParameterCount;
 	effect->numInputs = 0;
 	effect->numOutputs = 2;
