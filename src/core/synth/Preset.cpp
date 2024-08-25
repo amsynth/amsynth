@@ -71,9 +71,8 @@ Preset::isEqual(const Preset &rhs)
 	for (int i = 0; i < kAmsynthParameterCount; i++) {
 		if (shouldIgnoreParameter(i))
 			continue;
-		if (getParameter(i).getValue() != rhs.getParameter(i).getValue()) {
+		if (getParameter(i).getNormalisedValue() != rhs.getParameter(i).getNormalisedValue())
 			return false;
-		}
 	}
 	return getName() == rhs.getName();
 }
