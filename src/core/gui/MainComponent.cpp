@@ -89,10 +89,14 @@ struct MainComponent::Impl : private juce::Timer {
 	, presetController_(presetController)
 	, controlPanel_(midiController, presetController)
 	, menuButton_(GETTEXT("Menu"))
-	, saveButton_(GETTEXT("Save")) {
+	, saveButton_(GETTEXT("Save"))
+	, prevButton_("<")
+	, nextButton_(">") {
 		controlPanel_.setBounds(controlPanel_.getBounds().withY(toolbarHeight));
 		menuButton_.onMouseDown = [this] { showMainMenu(&menuButton_); };
 		saveButton_.onClick = [this] { savePreset(); };
+		prevButton_.onClick = [this] { selectNextPreset(-1); };
+		nextButton_.onClick = [this] { selectNextPreset(1); };
 		populateBankCombo();
 		populatePresetCombo();
 		startTimer(100);
@@ -407,6 +411,26 @@ struct MainComponent::Impl : private juce::Timer {
 		setProperty(PROP_NAME(preset_number), std::to_string(presetNumber).c_str());
 	}
 
+	void selectNextPreset(int direction) {
+		int numBanks = bankCombo_.getNumItems(), numPresets = presetCombo_.getNumItems();
+		if (!numBanks) return;
+		int presetIndex = presetCombo_.getSelectedItemIndex() + direction;
+		int bankIndex = bankCombo_.getSelectedItemIndex();
+		if (presetIndex >= numPresets)
+		{
+			presetIndex = 0;
+			bankIndex = (bankIndex + 1) % numBanks;
+		}
+		else if (presetIndex < 0)
+		{
+			presetIndex = numPresets - 1;
+			bankIndex = (bankIndex ? bankIndex : numBanks) - 1;
+		}
+		bankCombo_.setSelectedItemIndex(bankIndex, juce::NotificationType::sendNotificationSync);
+		presetCombo_.setSelectedItemIndex(presetIndex, juce::NotificationType::sendNotificationSync);
+		updateSaveButton();
+	}
+
 	static void openFile(const juce::String &title, const char *filters, const std::function<void(const char *)> &handler) {
 		auto cwd = juce::File::getSpecialLocation(juce::File::userMusicDirectory);
 		auto chooser = new juce::FileChooser(title, cwd, filters);
@@ -429,6 +453,8 @@ struct MainComponent::Impl : private juce::Timer {
 	juce::ComboBox bankCombo_;
 	juce::ComboBox presetCombo_;
 	juce::TextButton saveButton_;
+	juce::TextButton prevButton_;
+	juce::TextButton nextButton_;
 	juce::AlertWindow *alertWindow_{nullptr};
 	LookAndFeel lookAndFeel_;
 	bool currentBankIsWritable_ {false};
@@ -446,6 +472,8 @@ MainComponent::MainComponent(PresetController *presetController, MidiController 
 	addAndMakeVisible(impl_->presetCombo_);
 	addAndMakeVisible(impl_->controlPanel_);
 	addAndMakeVisible(impl_->saveButton_);
+	addAndMakeVisible(impl_->prevButton_);
+	addAndMakeVisible(impl_->nextButton_);
 	setBounds(0, 0, impl_->controlPanel_.getWidth(), impl_->controlPanel_.getBottom());
 	commandManager.registerAllCommandsForTarget(this);
 	addKeyListener(commandManager.getKeyMappings());
@@ -525,11 +553,13 @@ void MainComponent::paint(juce::Graphics &g) {
 
 void MainComponent::resized() {
 	impl_->menuButton_.setBounds(0, 0, toolbarHeight, toolbarHeight);
+	impl_->saveButton_.setTopLeftPosition(impl_->menuButton_.getRight(), 0);
 	impl_->saveButton_.changeWidthToFitText(toolbarHeight);
-	impl_->saveButton_.setTopRightPosition(getWidth(), 0);
+	impl_->prevButton_.setBounds(getWidth() - toolbarHeight * 2, 0, toolbarHeight, toolbarHeight);
+	impl_->nextButton_.setBounds(getWidth() - toolbarHeight, 0, toolbarHeight, toolbarHeight);
 	// TODO: shrink bank combo if possible
-	int space = impl_->saveButton_.getX() - impl_->menuButton_.getRight();
-	impl_->bankCombo_.setBounds(impl_->menuButton_.getRight(), 0, space / 2, toolbarHeight);
+	int space = impl_->prevButton_.getX() - impl_->saveButton_.getRight();
+	impl_->bankCombo_.setBounds(impl_->saveButton_.getRight(), 0, space / 2, toolbarHeight);
 	impl_->presetCombo_.setBounds(impl_->bankCombo_.getRight(), 0, space / 2, toolbarHeight);
 }
 
