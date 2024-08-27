@@ -29,7 +29,9 @@
 #include "core/synth/PresetController.h"
 #include "core/synth/Synthesizer.h"
 
-#include <alloca.h>
+#ifndef PACKAGE_VERSION
+#define PACKAGE_VERSION "???"
+#endif
 
 enum CommandIDs {
 	randomisePreset = 0x10000,
@@ -477,6 +479,7 @@ MainComponent::MainComponent(PresetController *presetController, MidiController 
 	setBounds(0, 0, impl_->controlPanel_.getWidth(), impl_->controlPanel_.getBottom());
 	commandManager.registerAllCommandsForTarget(this);
 	addKeyListener(commandManager.getKeyMappings());
+	setOpaque(true);
 }
 
 MainComponent::~MainComponent() {

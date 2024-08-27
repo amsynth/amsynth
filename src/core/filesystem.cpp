@@ -96,6 +96,18 @@ filesystem::filesystem()
 		// Create an empty bank file
 		std::ofstream(default_bank, std::ios::out) << "amSynth\nEOF\n";
 	}
+#elif defined(_WIN32)
+	auto prefs = std::string(getenv("APPDATA")) + "\\amsynth";
+	config = prefs + "\\config";
+	controllers = prefs + "\\controllers";
+	user_banks = prefs + "\\banks";
+	default_bank = user_banks + "\\default";
+	create_dir(prefs);
+	create_dir(user_banks);
+	if (!exists(default_bank)) {
+		// Create an empty bank file
+		std::ofstream(default_bank, std::ios::out) << "amSynth\nEOF\n";
+	}
 #endif
 }
 
@@ -112,7 +124,7 @@ bool filesystem::copy(const std::string &from, const std::string &to)
 
 bool filesystem::create_dir(const std::string &path)
 {
-#if defined _MSC_VER
+#if defined(_WIN32)
     return _mkdir(path.c_str()) == 0;
 #else
     return mkdir(path.c_str(), 0755) == 0;

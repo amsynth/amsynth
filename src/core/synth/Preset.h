@@ -33,9 +33,6 @@ class Preset
 {
 public:
 	Preset(const std::string name = "");
-
-	Preset(const Preset& other);
-
 	~Preset();
 
 	Preset&			operator =		(const Preset& p);

@@ -117,10 +117,10 @@ private:
 			auto values = entry.second;
 			if (values.find("file") != values.end()) {
 				resources[name] = {
-					.file = values.at("file"),
-					.width = std::stoi(values.at("width")),
-					.height = std::stoi(values.at("height")),
-					.frames = std::stoi(values.at("frames")),
+					values.at("file"),
+					std::stoi(values.at("width")),
+					std::stoi(values.at("height")),
+					std::stoi(values.at("frames")),
 				};
 			}
 		}
@@ -135,10 +135,10 @@ private:
 			auto values = entry.second;
 			if (values.find("resource") != values.end()) {
 				controls[name] = {
-					.type = values.at("type"),
-					.x = std::stoi(values.at("pos_x")),
-					.y = std::stoi(values.at("pos_y")),
-					.resource = resources.at(values.at("resource"))
+					values.at("type"),
+					std::stoi(values.at("pos_x")),
+					std::stoi(values.at("pos_y")),
+					resources.at(values.at("resource"))
 				};
 			}
 		}

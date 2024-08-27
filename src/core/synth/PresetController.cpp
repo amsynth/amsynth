@@ -30,6 +30,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <cassert>
 #include <cstdlib>
 #include <cstring>
 #include <string>
@@ -37,7 +38,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#ifndef _WIN32
+#ifdef _WIN32
+#include <Windows.h>
+#else
 #include <dirent.h>
 #include <unistd.h>
 #endif
@@ -247,10 +250,10 @@ static bool is_amsynth_file(const char *filename)
 		return false;
 
 	char buffer[sizeof(amsynth_file_header)] = {0};
-	size_t count = fread(buffer, sizeof(buffer), 1, file);
+	size_t count = fread(buffer, 1, sizeof(buffer), file);
 	fclose(file);
 
-	if (count != 1)
+	if (!count)
 		return false;
 
 	if (memcmp(buffer, amsynth_file_header, sizeof(amsynth_file_header)) != 0)
@@ -266,15 +269,19 @@ static off_t file_read_contents(const char *filename, void **result)
 	if (!file)
 		return 0;
 	fseek(file, 0, SEEK_END);
-#ifdef _WIN32
-	long length = ftell(file);
-#else
-	off_t length = ftello(file);
-#endif
+	off_t length = ftell(file);
 	void *buffer = calloc(length + 1, 1);
-	fseek(file, 0, SEEK_SET);
-	if (fread(buffer, length, 1, file) != 1) {
+	if (!buffer) {
 		fprintf(stderr, "Error reading %s\n", filename);
+		fclose(file);
+		return 0;
+	}
+	fseek(file, 0, SEEK_SET);
+	length = fread(buffer, 1, length, file);
+	if (!length) {
+		fprintf(stderr, "Error reading %s\n", filename);
+		fclose(file);
+		free(buffer);
 		return 0;
 	}
 	fclose(file);
@@ -328,6 +335,7 @@ static bool readBankFile(const char *filename, Preset *presets)
 
 			static char preset_prefix[] = "<preset> <name> ";
 			if (strncmp(line_ptr, preset_prefix, sizeof(preset_prefix) - 1) == 0) {
+				assert(preset_index < 127);
 				presets[++preset_index] = Preset(std::string(line_ptr + sizeof(preset_prefix) - 1));
 			}
 
@@ -432,24 +440,32 @@ static void scan_preset_bank(const std::string dir_path, const std::string file_
 
 static void scan_preset_banks(const std::string dir_path, bool read_only)
 {
-#ifndef _WIN32
+	std::vector<std::string> filenames;
+
+#ifdef _WIN32
+	std::string spec = dir_path + "\\*";
+	WIN32_FIND_DATAA found;
+	HANDLE handle = FindFirstFileA(spec.c_str(), &found);
+	if (handle == INVALID_HANDLE_VALUE)
+		return;
+	do {
+		filenames.push_back(found.cFileName);
+	} while (FindNextFileA(handle, &found));
+	FindClose(handle);
+#else
 	DIR *dir = opendir(dir_path.c_str());
 	if (!dir)
 		return;
-
-	std::vector<std::string> filenames;
-
 	struct dirent *entry;
 	while ((entry = readdir(dir)))
 		filenames.push_back(std::string(entry->d_name));
-
 	closedir(dir);
+#endif
 
 	std::sort(filenames.begin(), filenames.end());
 
 	for (auto &filename : filenames)
 		scan_preset_bank(dir_path, filename, read_only);
-#endif
 }
 
 std::string sFactoryBanksDirectory;
@@ -465,6 +481,9 @@ static void scan_preset_banks()
 #elif defined(__APPLE__)
 	if (sFactoryBanksDirectory.empty())
 		sFactoryBanksDirectory = "/Library/Application Support/amsynth/banks";
+#elif defined(_WIN32)
+	if (sFactoryBanksDirectory.empty())
+		sFactoryBanksDirectory = std::string(getenv("ProgramData")) + "\\amsynth\\banks";
 #endif
 	// sFactoryBanksDirectory == userBanksDirectory if the build is configured with a --prefix=$HOME/.local
 	if (!sFactoryBanksDirectory.empty() && sFactoryBanksDirectory != userBanksDirectory ) {

@@ -43,14 +43,6 @@ Preset::Preset(const std::string name) : mName (name)
 	}
 }
 
-Preset::Preset(const Preset& other) : mName(other.mName)
-{
-	mParameters.reserve(kAmsynthParameterCount);
-	for (int i = 0; i < kAmsynthParameterCount; i++) {
-		mParameters.emplace_back(other.mParameters[i]);
-	}
-}
-
 Preset::~Preset() = default;
 
 Preset&

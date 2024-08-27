@@ -168,14 +168,14 @@ void ControlPanel::paint(juce::Graphics &g)
 						 20, 20, getWidth() - 40, getHeight() - 40,
 						 juce::Justification::horizontallyCentred | juce::Justification::verticallyCentred, 2);
 	} else {
-		juce::Component::paint(g);
+		g.fillAll(juce::Colours::black);
 	}
 }
 
 #ifdef PKGDATADIR
 std::string ControlPanel::skinsDirectory {PKGDATADIR "/skins"};
-#elif defined(__APPLE__)
+#elif JUCE_MAC
 std::string ControlPanel::skinsDirectory {"/Library/Application Support/amsynth/skins"};
-#else
-std::string ControlPanel::skinsDirectory;
+#elif JUCE_WINDOWS
+std::string ControlPanel::skinsDirectory = std::string(getenv("ProgramData")) + "\\amsynth\\skins";
 #endif

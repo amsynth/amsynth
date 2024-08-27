@@ -25,6 +25,10 @@
 
 #include "juce_gui_basics/juce_gui_basics.h"
 
+#if JUCE_WINDOWS
+#include <Windows.h>
+#endif
+
 #if JUCE_LINUX || JUCE_BSD || JUCE_WINDOWS
 
 namespace juce {
@@ -33,6 +37,7 @@ extern bool dispatchNextMessageOnSystemQueue(bool returnIfNoPendingMessages);
 } // namespace juce
 
 float getGlobalScaleFactor() {
+#if JUCE_LINUX || JUCE_BSD
 	auto gdkScale = getenv("GDK_SCALE");
 	if (gdkScale) {
 		return (float)atoi(gdkScale);
@@ -46,6 +51,10 @@ float getGlobalScaleFactor() {
 	}
 
 	return 1.f;
+#elif JUCE_WINDOWS
+	int dpi = GetDeviceCaps(GetDC(NULL), LOGPIXELSX);
+	return dpi / (float)USER_DEFAULT_SCREEN_DPI;
+#endif
 }
 
 #endif

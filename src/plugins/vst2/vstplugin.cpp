@@ -21,6 +21,8 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
+#else
+#define WITH_GUI
 #endif
 
 #include "core/midi.h"
@@ -28,6 +30,7 @@
 #include "core/synth/Synthesizer.h"
 #include "vestige/aeffectx.h"
 
+#include <cassert>
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
@@ -49,19 +52,6 @@
 #include "core/gui/MainComponent.h"
 #include "core/gui/JuceIntegration.h"
 #endif
-
-#if JUCE_MAC
-#include "core/gui/ControlPanel.h"
-#include <dlfcn.h>
-#endif
-
-struct ERect
-{
-	short top;
-	short left;
-	short bottom;
-	short right;
-};
 
 #define MIDI_BUFFER_SIZE 4096
 
@@ -157,14 +147,14 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			if (!plugin->gui) {
 				plugin->gui = std::make_unique<MainComponent>(plugin->synthesizer->_presetController);
 			}
-			static ERect rect;
+			static short rect[4] = {};
 			// There doesn't seem to be a way to determine which screen the host wants to open a plugin on and
 			// apply the correct scale factor in a multiscreen setup.
-			auto scaleFactor = (int)juce::Desktop::getInstance().getGlobalScaleFactor();
+			auto scaleFactor = juce::Desktop::getInstance().getGlobalScaleFactor();
 			auto bounds = plugin->gui->getScreenBounds();
-			rect.right = short(bounds.getWidth() * scaleFactor);
-			rect.bottom = short(bounds.getHeight() * scaleFactor);
-			*(ERect **)ptr = &rect;
+			rect[2] = bounds.getHeight() * scaleFactor;
+			rect[3] = bounds.getWidth() * scaleFactor;
+			*(short**)ptr = rect;
 			return 1;
 		}
 		case effEditOpen: {
@@ -177,6 +167,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			plugin->gui->sendProperty = [plugin] (const char *name, const char *value) {
 				plugin->synthesizer->setProperty(name, value);
 			};
+			assert(plugin->gui->isOpaque()); // CreateWindowEx will fail if not opaque
 			plugin->gui->addToDesktop(juce::ComponentPeer::windowIgnoresKeyPresses, ptr);
 			plugin->gui->setVisible(true);
 			return 1;
@@ -209,10 +200,14 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			size_t bytesCopied = 0;
 			
 			for (int32_t i=0; i<events->numEvents; i++) {
+#ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-align"
+#endif
 				auto event = (const VstMidiEvent *)events->events[i];
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
+#endif
 				if (event->type != kVstMidiType) {
 					continue;
 				}

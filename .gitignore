@@ -8,6 +8,7 @@
 .deps
 .dirstamp
 .libs
+.vs
 ABOUT-NLS
 aclocal.m4
 amsynth
@@ -16,7 +17,7 @@ amsynth-tests.log
 amsynth-tests.trs
 amsynth.desktop
 amsynth.VC.*
-amsynth.vcxproj.user
+*.vcxproj.user
 autom4te.cache
 build
 compile
