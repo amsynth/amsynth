@@ -1,0 +1,19 @@
+name: Windows
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 2
+        submodules: 'true'
+    - uses: microsoft/setup-msbuild@v2
+    - run: msbuild /p:Configuration="Release" /p:Platform="x64" win/amsynth.sln
+    - run: iscc win/installer.iss
+    - uses: actions/upload-artifact@v3
+      with:
+        name: installer
+        path: win/amsynth_*.exe
