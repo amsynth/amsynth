@@ -15,5 +15,5 @@ jobs:
     - run: iscc win/installer.iss
     - uses: actions/upload-artifact@v4
       with:
-        name: installer
+        name: amsynth-windows-installer-${{ github.sha }}
         path: win/amsynth_*.exe
