@@ -1,8 +1,8 @@
 /*
- * aeffectx.h - simple header to allow VeSTige compilation and eventually work
+ * vestige.h - simple header to allow VeSTige compilation and eventually work
  *
  * Copyright (c) 2006 Javier Serrano Polo <jasp00/at/users.sourceforge.net>
- * 
+ *
  * This file is part of Linux MultiMedia Studio - http://lmms.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or
@@ -20,15 +20,20 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301 USA.
  *
+ * This VeSTige header is included in this package in the good-faith
+ * belief that it has been cleanly and legally reverse engineered
+ * without reference to the official VST SDK and without its
+ * developer(s) having agreed to the VST SDK license agreement.
  */
-#include <stdint.h>
-#ifndef _AEFFECTX_H
-#define _AEFFECTX_H
 
-#define CCONST(a, b, c, d)( ( ( (int) a ) << 24 ) |		\
-				( ( (int) b ) << 16 ) |		\
-				( ( (int) c ) << 8 ) |		\
-				( ( (int) d ) << 0 ) )
+#include <stdint.h>
+#ifndef _VESTIGE_H
+#define _VESTIGE_H
+
+#define CCONST(a, b, c, d) (( ((int) a) << 24 ) | \
+                            ( ((int) b) << 16 ) | \
+                            ( ((int) c) <<  8 ) | \
+                            ( ((int) d) <<  0 ))
 
 #define audioMasterAutomate 0
 #define audioMasterVersion 1
@@ -74,8 +79,8 @@
 #define audioMasterCloseWindow 40
 #define audioMasterGetDirectory 41
 #define audioMasterUpdateDisplay 42
-#define audioMasterBeginEdit 43
-#define audioMasterEndEdit 44
+#define audioMasterBeginEdit 43  //BeginGesture
+#define audioMasterEndEdit 44   //EndGesture
 #define audioMasterOpenFileSelector 45
 #define audioMasterCloseFileSelector 46 // currently unused
 #define audioMasterEditFile 47 // currently unused
@@ -101,6 +106,7 @@
 #define effEditIdle 19
 #define effEditTop 20
 #define effProcessEvents 25
+#define effCanBeAutomated 26
 // the next one from http://asseca.com/vst-24-specs/index.html
 #define effGetPlugCategory 35
 #define effGetEffectName 45
@@ -135,7 +141,13 @@
 
 struct RemoteVstPlugin;
 
+#define kVstTransportChanged 1
 #define kVstTransportPlaying (1 << 1)
+#define kVstTransportCycleActive (1 << 2)
+#define kVstTransportRecording (1 << 3)
+
+#define kVstAutomationWriting (1 << 6)
+#define kVstAutomationReading (1 << 7)
 
 #define kVstNanosValid (1 << 8)
 #define kVstPpqPosValid (1 << 9)
@@ -153,7 +165,7 @@ struct _VstMidiEvent
 	// 04
 	int byteSize;
 	// 08
-	int deltaFrames;
+	int deltaSamples;
 	// 0c?
 	int flags;
 	// 10?
@@ -198,7 +210,7 @@ struct _VstEvents
 enum Vestige2StringConstants
 {
 	VestigeMaxNameLen       = 64,
-	VestigeMaxLabelLen      = 64,
+	VestigeMaxLabelLen      = 128,
 	VestigeMaxShortLabelLen = 8,
 	VestigeMaxCategLabelLen = 24,
 	VestigeMaxFileNameLen   = 100
@@ -229,10 +241,10 @@ typedef struct _VstEvents VstEvents;
 /* this struct taken from http://asseca.com/vst-24-specs/efGetParameterProperties.html */
 struct _VstParameterProperties
 {
-	float stepFloat;              /* float step */
-	float smallStepFloat;         /* small float step */
-	float largeStepFloat;         /* large float step */
-	char label[VestigeMaxLabelLen];  /* parameter label */
+	float stepFloat;             /* float step */
+	float smallStepFloat;        /* small float step */
+	float largeStepFloat;        /* large float step */
+	char label[64];              /* parameter label */
 	int32_t flags;               /* @see VstParameterFlags */
 	int32_t minInteger;          /* integer minimum */
 	int32_t maxInteger;          /* integer maximum */
@@ -297,8 +309,8 @@ struct _AEffect
 	void *user;
 	// Id 48-4b
 	int32_t uniqueID;
-	// Don't know 4c-4f
-	char unknown1[4];
+	// Version 4c-4f
+	int32_t version;
 	// processReplacing 50-53
 	void (* processReplacing) (struct _AEffect *, float **, float **, int);
 };

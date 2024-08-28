@@ -25,10 +25,10 @@
 #define WITH_GUI
 #endif
 
+#include "ardour/vestige.h"
 #include "core/midi.h"
 #include "core/synth/PresetController.h"
 #include "core/synth/Synthesizer.h"
-#include "vestige/aeffectx.h"
 
 #include <cassert>
 #include <cstdlib>
@@ -240,7 +240,7 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 				}
 
 				amsynth_midi_event_t midi_event;
-				midi_event.offset_frames = event->deltaFrames;
+				midi_event.offset_frames = event->deltaSamples;
 				midi_event.length = msgLength;
 				midi_event.buffer = (unsigned char *)memcpy(plugin->midiBuffer + bytesCopied, msgData, msgLength);
 				plugin->midiEvents.push_back(midi_event);
