@@ -22,7 +22,7 @@
 #ifndef _midi_h
 #define _midi_h
 
-/*  See http://www.midi.org/techspecs/midimessages.php for further reading  */
+/* See https://midi.org/summary-of-midi-1-0-messages for further reading  */
 
 enum {
     MIDI_STATUS_NOTE_OFF                = 0x80,
@@ -34,7 +34,7 @@ enum {
     MIDI_STATUS_PITCH_WHEEL             = 0xE0,
 };
 
-/* https://www.midi.org/specifications/item/table-3-control-change-messages-data-bytes-2
+/* https://midi.org/midi-1-0-control-change-messages
  */
 enum {
     MIDI_CC_BANK_SELECT_MSB             = 0x00,
