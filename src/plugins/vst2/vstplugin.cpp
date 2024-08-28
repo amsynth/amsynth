@@ -21,12 +21,12 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#else
-#define WITH_GUI
 #endif
 
 #include "ardour/vestige.h"
 #include "core/midi.h"
+#include "core/gui/MainComponent.h"
+#include "core/gui/JuceIntegration.h"
 #include "core/synth/PresetController.h"
 #include "core/synth/Synthesizer.h"
 
@@ -47,11 +47,6 @@
 #define effGetMidiKeyName       66
 #define effBeginLoadBank        75
 #define effFlagsProgramChunks   (1 << 5)
-
-#ifdef WITH_GUI
-#include "core/gui/MainComponent.h"
-#include "core/gui/JuceIntegration.h"
-#endif
 
 #define MIDI_BUFFER_SIZE 4096
 
@@ -96,11 +91,8 @@ struct Plugin final : public Parameter::Observer
 	unsigned char *midiBuffer;
 	std::vector<amsynth_midi_event_t> midiEvents;
 	std::string chunk;
-
-#ifdef WITH_GUI
 	JuceIntegration juceIntegration;
 	std::unique_ptr<MainComponent> gui;
-#endif
 };
 
 static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val, void *ptr, float f)
@@ -142,7 +134,6 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 		case effMainsChanged:
 			return 0;
 
-#ifdef WITH_GUI
 		case effEditGetRect: {
 			if (!plugin->gui) {
 				plugin->gui = std::make_unique<MainComponent>(plugin->synthesizer->_presetController);
@@ -181,7 +172,6 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 			plugin->juceIntegration.idle();
 			return 0;
 		}
-#endif
 
 		case effGetChunk:
 			plugin->chunk = plugin->synthesizer->getState();
@@ -367,11 +357,7 @@ AEffect * VSTPluginMain(audioMasterCallback audioMaster)
 	effect->numParams = kAmsynthParameterCount;
 	effect->numInputs = 0;
 	effect->numOutputs = 2;
-	effect->flags = effFlagsCanReplacing | effFlagsIsSynth | effFlagsProgramChunks;
-#ifdef WITH_GUI
-	effect->flags |= effFlagsHasEditor;
-#endif
-	// Do no use the ->user pointer because ardour clobbers it
+	effect->flags = effFlagsCanReplacing | effFlagsIsSynth | effFlagsProgramChunks | effFlagsHasEditor;
 	effect->ptr3 = new Plugin(effect, audioMaster);
 	effect->uniqueID = CCONST('a', 'm', 's', 'y');
 	effect->processReplacing = processReplacing;
