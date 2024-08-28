@@ -30,14 +30,14 @@ ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = \
 	CHANGELOG.md \
 	data \
+	external/ardour/vestige.h \
 	external/JUCE/LICENSE.md \
 	external/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2 \
 	external/JUCE/modules/juce_core \
 	external/JUCE/modules/juce_data_structures \
 	external/JUCE/modules/juce_events \
 	external/JUCE/modules/juce_graphics \
-	external/JUCE/modules/juce_gui_basics \
-	external/vestige
+	external/JUCE/modules/juce_gui_basics
 
 AM_CPPFLAGS += \
 	-I$(top_srcdir)/external/JUCE/modules \
