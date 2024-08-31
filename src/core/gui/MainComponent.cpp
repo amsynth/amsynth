@@ -84,6 +84,69 @@ public:
 	std::function<void()> onMouseDown;
 };
 
+class ShapeButton : public juce::ShapeButton {
+public:
+	enum class Shape {
+		save,
+		previous,
+		next,
+	};
+
+	explicit ShapeButton(const juce::String &name, Shape shape)
+	: juce::ShapeButton(name, juce::Colours::lightgrey, juce::Colours::lightgrey, juce::Colours::white)
+	, shape_(shape) {}
+
+	void paintButton(juce::Graphics &g, bool /*shouldDrawButtonAsHighlighted*/, bool /*shouldDrawButtonAsDown*/) override {
+		juce::Path path;
+		switch (shape_) {
+			case Shape::save:
+				g.setColour(isEnabled() ? juce::Colours::lightgrey : juce::Colour(0xff808080));
+				path.startNewSubPath(20, 7);
+				path.lineTo(20, 20);
+				path.lineTo(5, 20);
+				path.lineTo(5, 5);
+				path.lineTo(18, 5);
+				path.closeSubPath();
+				g.strokePath(path, juce::PathStrokeType(2.0, juce::PathStrokeType::beveled, juce::PathStrokeType::square));
+				path.clear();
+
+				path.startNewSubPath(9.5, 5);
+				path.lineTo(9.5, 9.5);
+				path.lineTo(15.5, 9.5);
+				path.lineTo(15.5, 5);
+				g.strokePath(path, juce::PathStrokeType(2.0, juce::PathStrokeType::beveled, juce::PathStrokeType::square));
+				path.clear();
+
+				path.startNewSubPath(8, 20);
+				path.lineTo(8, 13);
+				path.lineTo(17, 13);
+				path.lineTo(17, 20);
+				g.strokePath(path, juce::PathStrokeType(2.0, juce::PathStrokeType::mitered, juce::PathStrokeType::square));
+				path.clear();
+				break;
+
+			case Shape::previous:
+				path.startNewSubPath(15, 8);
+				path.lineTo(10, 12.5);
+				path.lineTo(15, 17);
+				g.setColour(juce::Colours::white);
+				g.strokePath(path, juce::PathStrokeType(2.0, juce::PathStrokeType::mitered, juce::PathStrokeType::square));
+				break;
+			
+			case Shape::next:
+				path.startNewSubPath(10, 8);
+				path.lineTo(15, 12.5);
+				path.lineTo(10, 17);
+				g.setColour(juce::Colours::white);
+				g.strokePath(path, juce::PathStrokeType(2.0, juce::PathStrokeType::mitered, juce::PathStrokeType::square));
+				break;
+		}
+	}
+
+private:
+	Shape shape_;
+};
+
 struct MainComponent::Impl : private juce::Timer {
 	Impl(MainComponent *component, MidiController *midiController, PresetController *presetController, juce::ApplicationCommandManager *commandManager)
 	: commandManager_(commandManager)
@@ -91,9 +154,9 @@ struct MainComponent::Impl : private juce::Timer {
 	, presetController_(presetController)
 	, controlPanel_(midiController, presetController)
 	, menuButton_(GETTEXT("Menu"))
-	, saveButton_(GETTEXT("Save"))
-	, prevButton_("<")
-	, nextButton_(">") {
+	, saveButton_(GETTEXT("Save"), ShapeButton::Shape::save)
+	, prevButton_(GETTEXT("Previous"), ShapeButton::Shape::previous)
+	, nextButton_(GETTEXT("Next"), ShapeButton::Shape::next) {
 		controlPanel_.setBounds(controlPanel_.getBounds().withY(toolbarHeight));
 		menuButton_.onMouseDown = [this] { showMainMenu(&menuButton_); };
 		saveButton_.onClick = [this] { savePreset(); };
@@ -454,9 +517,9 @@ struct MainComponent::Impl : private juce::Timer {
 	MenuButton menuButton_;
 	juce::ComboBox bankCombo_;
 	juce::ComboBox presetCombo_;
-	juce::TextButton saveButton_;
-	juce::TextButton prevButton_;
-	juce::TextButton nextButton_;
+	ShapeButton saveButton_;
+	ShapeButton prevButton_;
+	ShapeButton nextButton_;
 	juce::AlertWindow *alertWindow_{nullptr};
 	LookAndFeel lookAndFeel_;
 	bool currentBankIsWritable_ {false};
@@ -556,8 +619,7 @@ void MainComponent::paint(juce::Graphics &g) {
 
 void MainComponent::resized() {
 	impl_->menuButton_.setBounds(0, 0, toolbarHeight, toolbarHeight);
-	impl_->saveButton_.setTopLeftPosition(impl_->menuButton_.getRight(), 0);
-	impl_->saveButton_.changeWidthToFitText(toolbarHeight);
+	impl_->saveButton_.setBounds(toolbarHeight, 0, toolbarHeight, toolbarHeight);
 	impl_->prevButton_.setBounds(getWidth() - toolbarHeight * 2, 0, toolbarHeight, toolbarHeight);
 	impl_->nextButton_.setBounds(getWidth() - toolbarHeight, 0, toolbarHeight, toolbarHeight);
 	// TODO: shrink bank combo if possible
