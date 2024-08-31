@@ -87,7 +87,6 @@ public:
 class ShapeButton : public juce::ShapeButton {
 public:
 	enum class Shape {
-		save,
 		previous,
 		next,
 	};
@@ -99,32 +98,6 @@ public:
 	void paintButton(juce::Graphics &g, bool /*shouldDrawButtonAsHighlighted*/, bool /*shouldDrawButtonAsDown*/) override {
 		juce::Path path;
 		switch (shape_) {
-			case Shape::save:
-				g.setColour(isEnabled() ? juce::Colours::lightgrey : juce::Colour(0xff808080));
-				path.startNewSubPath(20, 7);
-				path.lineTo(20, 20);
-				path.lineTo(5, 20);
-				path.lineTo(5, 5);
-				path.lineTo(18, 5);
-				path.closeSubPath();
-				g.strokePath(path, juce::PathStrokeType(2.0, juce::PathStrokeType::beveled, juce::PathStrokeType::square));
-				path.clear();
-
-				path.startNewSubPath(9.5, 5);
-				path.lineTo(9.5, 9.5);
-				path.lineTo(15.5, 9.5);
-				path.lineTo(15.5, 5);
-				g.strokePath(path, juce::PathStrokeType(2.0, juce::PathStrokeType::beveled, juce::PathStrokeType::square));
-				path.clear();
-
-				path.startNewSubPath(8, 20);
-				path.lineTo(8, 13);
-				path.lineTo(17, 13);
-				path.lineTo(17, 20);
-				g.strokePath(path, juce::PathStrokeType(2.0, juce::PathStrokeType::mitered, juce::PathStrokeType::square));
-				path.clear();
-				break;
-
 			case Shape::previous:
 				path.startNewSubPath(15, 8);
 				path.lineTo(10, 12.5);
@@ -154,7 +127,7 @@ struct MainComponent::Impl : private juce::Timer {
 	, presetController_(presetController)
 	, controlPanel_(midiController, presetController)
 	, menuButton_(GETTEXT("Menu"))
-	, saveButton_(GETTEXT("Save"), ShapeButton::Shape::save)
+	, saveButton_(GETTEXT("Save"))
 	, prevButton_(GETTEXT("Previous"), ShapeButton::Shape::previous)
 	, nextButton_(GETTEXT("Next"), ShapeButton::Shape::next) {
 		controlPanel_.setBounds(controlPanel_.getBounds().withY(toolbarHeight));
@@ -517,7 +490,7 @@ struct MainComponent::Impl : private juce::Timer {
 	MenuButton menuButton_;
 	juce::ComboBox bankCombo_;
 	juce::ComboBox presetCombo_;
-	ShapeButton saveButton_;
+	juce::TextButton saveButton_;
 	ShapeButton prevButton_;
 	ShapeButton nextButton_;
 	juce::AlertWindow *alertWindow_{nullptr};
@@ -619,7 +592,8 @@ void MainComponent::paint(juce::Graphics &g) {
 
 void MainComponent::resized() {
 	impl_->menuButton_.setBounds(0, 0, toolbarHeight, toolbarHeight);
-	impl_->saveButton_.setBounds(toolbarHeight, 0, toolbarHeight, toolbarHeight);
+	impl_->saveButton_.setTopLeftPosition(impl_->menuButton_.getRight(), 0);
+	impl_->saveButton_.changeWidthToFitText(toolbarHeight);
 	impl_->prevButton_.setBounds(getWidth() - toolbarHeight * 2, 0, toolbarHeight, toolbarHeight);
 	impl_->nextButton_.setBounds(getWidth() - toolbarHeight, 0, toolbarHeight, toolbarHeight);
 	// TODO: shrink bank combo if possible
