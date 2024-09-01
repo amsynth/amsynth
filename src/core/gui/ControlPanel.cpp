@@ -32,13 +32,14 @@
 #include "core/synth/PresetController.h"
 #include "seq24/controllers.h"
 
+#include <cstdlib>
 #include <utility>
 #include <vector>
 
 class Skin
 {
 public:
-	explicit Skin(const std::string& path)
+	explicit Skin(const std::string &path)
 	: directory(path)
 	, layout(directory.getChildFile("layout.ini").getFullPathName().toStdString())
 	{}
@@ -72,14 +73,17 @@ struct ControlPanel::Impl final : juce::MouseListener
 	, presetController_(presetController)
 	, label_(controlPanel)
 	{
-		auto skin = Skin(ControlPanel::skinsDirectory + "/default");
+		skinDir_ = ControlPanel::skinsDirectory + "/default";
+		if (const char *path = getenv("AMSYNTH_SKIN"))
+			skinDir_ = path;
+		else
+			label_.yInset = 6;
+
+		auto skin = Skin(skinDir_);
 		if (skin.layout.background.empty() || skin.layout.controls.empty()) {
 			controlPanel->setSize(600, 400);
 			return;
 		}
-		label_.yInset = 6;
-//		auto skin = Skin(ControlPanel::skinsDirectory + "/Etna");
-//		label_.yOffset = 0;
 
 		auto background = juce::Drawable::createFromImageFile(skin.getBackground());
 		background->setOpaque(true);
@@ -152,6 +156,7 @@ struct ControlPanel::Impl final : juce::MouseListener
 	MidiController *midiController_;
 	PresetController *presetController_;
 	Knob::Label label_;
+	std::string skinDir_;
 };
 
 ControlPanel::ControlPanel(MidiController *midiController, PresetController *presetController)
@@ -164,7 +169,7 @@ void ControlPanel::paint(juce::Graphics &g)
 	if (impl_->components_.empty()) {
 		g.setFont(15.f);
 		g.setColour(findColour(juce::Label::textColourId));
-		g.drawFittedText("Error: could not load "  + ControlPanel::skinsDirectory + "/default/layout.ini",
+		g.drawFittedText("Error: could not load "  + impl_->skinDir_ + "/default/layout.ini",
 						 20, 20, getWidth() - 40, getHeight() - 40,
 						 juce::Justification::horizontallyCentred | juce::Justification::verticallyCentred, 2);
 	} else {
