@@ -115,7 +115,8 @@ private:
 		for (int i = 0; i <= parameter.getSteps(); i++) {
 			auto value = parameter.getMin() + parameter.getStep() * float(i);
 			auto isTicked = parameter.getValue() == value;
-			menu.addItem(strings[i], true, isTicked, [&parameter = parameter, value] {
+			auto itemText = juce::String(juce::CharPointer_UTF8(strings[i]));
+			menu.addItem(itemText, true, isTicked, [&parameter = parameter, value] {
 				parameter.willChange();
 				parameter.setValue(value);
 			});
