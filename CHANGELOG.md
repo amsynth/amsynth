@@ -1,13 +1,16 @@
 ## [Unreleased]
 
-  - The GUI has been ported from GTK2 to JUCE.
-  - Plug-ins GUIs now include preset selection, saving, and menu items.
+  - Ported the GUI from GTK2 to JUCE.
+    PACKAGERS TAKE NOTE: build dependencies have changed!
+  - Added preset selection, saving, and main menu to plug-ins GUIs.
   - The lv2-dev package is no longer required; JUCE bundles the LV2 headers.
   - Added support for [MTS-ESP](https://github.com/ODDSound/MTS-ESP) microtuning,
     excluding multi-channel tuning tables. MTS-ESP is not GPL licensed so some
     packagers may wish to disable it by configuring `--without-mts-esp`.
   - Removed support for JACK-Session, which is deprecated and unsupported.
   - Fixed a memory leak in VST effGetChunk handler.
+  - Fixed values passed to VST audioMasterAutomate.
+  - Added Visual Studio project to allow building VST for Windows.
 
 
 ## 1.13.4 (2024-05-02)
