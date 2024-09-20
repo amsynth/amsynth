@@ -23,7 +23,7 @@
 #include <math.h>
 #include <iostream>
 
-#define AT 0.0001		// attack time in seconds
+#define AT 0.001		// attack time in seconds
 #define RT 0.5			// release time in seconds
 #define THRESHOLD 0.9	// THRESHOLD>0 !!
 
