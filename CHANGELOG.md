@@ -9,6 +9,7 @@
     packagers may wish to disable it by configuring `--without-mts-esp`.
   - Removed support for JACK-Session, which is deprecated and unsupported.
   - Fixed a memory leak in VST effGetChunk handler.
+  - Fixed unintentional distortion on some presets - issue #235
   - Fixed values passed to VST audioMasterAutomate.
   - Added Visual Studio project to allow building VST for Windows.
 
