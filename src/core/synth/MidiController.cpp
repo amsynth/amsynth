@@ -165,26 +165,19 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 			presetController->selectPreset(presetController->getCurrPresetNumber());
 			break;
 		}
-		case MIDI_CC_BANK_SELECT_LSB:
-			break;
 		case MIDI_CC_PAN_MSB: {
 			// https://web.archive.org/web/20160115024014/http://www.midi.org/techspecs/rp36.php
 			// the effective range for CC#10 is modified to be 1 to 127, and values 0 and 1 both pan hard left
 			float scaled = (value < 1 ? 0 : value - 1) / 126.f;
 			_handler->HandleMidiPan(cosf(m::halfPi * scaled), sinf(m::halfPi * scaled));
-		}
 			break;
+		}
 		case MIDI_CC_SUSTAIN_PEDAL:
 			_handler->HandleMidiSustainPedal(value);
 			break;
 		case MIDI_CC_DATA_ENTRY_MSB:
 			if (_rpn_msb == 0x00 && _rpn_lsb == 0x00)
 				_handler->HandleMidiPitchWheelSensitivity(value);
-			break;
-		case MIDI_CC_PORTAMENTO:
-		case MIDI_CC_SOSTENUTO:
-		case MIDI_CC_NRPN_LSB:
-		case MIDI_CC_NRPN_MSB:
 			break;
 		case MIDI_CC_RPN_LSB:
 			_rpn_lsb = value;
@@ -200,8 +193,6 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 			// https://web.archive.org/web/20160105110518/http://www.midi.org/techspecs/rp15.php
 			_handler->HandleMidiPitchWheel(0);
 			break;
-		case MIDI_CC_LOCAL_CONTROL:
-			break;
 		case MIDI_CC_ALL_NOTES_OFF:
 			if (value == 0)
 				_handler->HandleMidiAllNotesOff();
@@ -212,15 +203,6 @@ MidiController::controller_change(unsigned char cc, unsigned char value)
 		case MIDI_CC_POLY_MODE_ON:
 			_handler->HandleMidiAllNotesOff();
 			break;
-		case MIDI_CC_MODULATION_WHEEL_MSB:
-		case MIDI_CC_PORTAMENTO_TIME:
-		case MIDI_CC_VOLUME:
-		case MIDI_CC_SOUND_CONTROLLER_2:
-		case MIDI_CC_SOUND_CONTROLLER_3:
-		case MIDI_CC_SOUND_CONTROLLER_4:
-		case MIDI_CC_SOUND_CONTROLLER_5:
-		case MIDI_CC_EFFECTS_1_DEPTH:
-			/* Handled by controller map */
 		default:
 			break;
 	}
@@ -236,23 +218,19 @@ MidiController::clearControllerMap()
 	for (size_t i = 0; i < kAmsynthParameterCount; i++)
 		_param_to_cc_map[i] = -1;
 
-	// these are the defaults from /usr/share/amsynth/Controllersrc
-	_cc_to_param_map[MIDI_CC_MODULATION_WHEEL_MSB]       = kAmsynthParameter_LFOToOscillators;
 	_param_to_cc_map[kAmsynthParameter_LFOToOscillators] = MIDI_CC_MODULATION_WHEEL_MSB;
-	_cc_to_param_map[MIDI_CC_PORTAMENTO_TIME]            = kAmsynthParameter_PortamentoTime;
 	_param_to_cc_map[kAmsynthParameter_PortamentoTime]   = MIDI_CC_PORTAMENTO_TIME;
-	_cc_to_param_map[MIDI_CC_VOLUME]                     = kAmsynthParameter_MasterVolume;
 	_param_to_cc_map[kAmsynthParameter_MasterVolume]     = MIDI_CC_VOLUME;
-	_cc_to_param_map[MIDI_CC_SOUND_CONTROLLER_2]         = kAmsynthParameter_FilterResonance;
 	_param_to_cc_map[kAmsynthParameter_FilterResonance]  = MIDI_CC_SOUND_CONTROLLER_2;
-	_cc_to_param_map[MIDI_CC_SOUND_CONTROLLER_3]         = kAmsynthParameter_AmpEnvRelease;
 	_param_to_cc_map[kAmsynthParameter_AmpEnvRelease]    = MIDI_CC_SOUND_CONTROLLER_3;
-	_cc_to_param_map[MIDI_CC_SOUND_CONTROLLER_4]         = kAmsynthParameter_AmpEnvAttack;
 	_param_to_cc_map[kAmsynthParameter_AmpEnvAttack]     = MIDI_CC_SOUND_CONTROLLER_4;
-	_cc_to_param_map[MIDI_CC_SOUND_CONTROLLER_5]         = kAmsynthParameter_FilterCutoff;
 	_param_to_cc_map[kAmsynthParameter_FilterCutoff]     = MIDI_CC_SOUND_CONTROLLER_5;
-	_cc_to_param_map[MIDI_CC_EFFECTS_1_DEPTH]            = kAmsynthParameter_ReverbWet;
+	_param_to_cc_map[kAmsynthParameter_AmpEnvDecay]      = MIDI_CC_SOUND_CONTROLLER_6;
 	_param_to_cc_map[kAmsynthParameter_ReverbWet]        = MIDI_CC_EFFECTS_1_DEPTH;
+
+	for (size_t i = 0; i < kAmsynthParameterCount; i++)
+		if (_param_to_cc_map[i] != -1)
+			_cc_to_param_map[_param_to_cc_map[i]] = i;
 }
 
 void
