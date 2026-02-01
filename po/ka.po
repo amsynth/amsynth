@@ -1,0 +1,518 @@
+# Georgian translation for amsynth.
+# Copyright (C) 2026 amsynth authors.
+# This file is distributed under the same license as the amsynth package.
+# Ekaterine Papava <papava.e@gtu.ge>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: amsynth\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-26 07:13+0100\n"
+"PO-Revision-Date: 2026-02-01 19:56+0100\n"
+"Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
+"Language-Team: Georgian <(nothing)>\n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.8\n"
+
+#: ../src/core/gui/ControlPanel.cpp:144
+msgid "None"
+msgstr "არცერთი"
+
+#: ../src/core/gui/ControlPanel.cpp:147
+msgid "Assign MIDI CC"
+msgstr "MIDI CC-ის მინიჭება"
+
+#: ../src/core/gui/ControlPanel.cpp:151
+msgid "Lock Parameter"
+msgstr "პარამეტრის ჩაკეტვა"
+
+#: ../src/core/gui/MainComponent.cpp:129
+msgid "Menu"
+msgstr "მენიუ"
+
+#: ../src/core/gui/MainComponent.cpp:130
+msgid "Save"
+msgstr "შენახვა"
+
+#: ../src/core/gui/MainComponent.cpp:131
+msgid "Previous"
+msgstr "წინა"
+
+#: ../src/core/gui/MainComponent.cpp:132
+msgid "Next"
+msgstr "შემდეგი"
+
+#: ../src/core/gui/MainComponent.cpp:186
+msgid "Edit"
+msgstr "ჩასწორება"
+
+#: ../src/core/gui/MainComponent.cpp:192 ../src/core/gui/MainComponent.cpp:518
+msgid "Preset"
+msgstr "პრესეტი"
+
+#: ../src/core/gui/MainComponent.cpp:193
+msgid "Create New User Bank..."
+msgstr "ახალი მომხმარებლის ბანკის შექმნა..."
+
+#: ../src/core/gui/MainComponent.cpp:196
+msgid "Rename..."
+msgstr "სახელის გადარქმევა..."
+
+#: ../src/core/gui/MainComponent.cpp:199
+msgid "Clear"
+msgstr "გასუფთავება"
+
+#: ../src/core/gui/MainComponent.cpp:204
+msgid "Tuning"
+msgstr "მორგება"
+
+#: ../src/core/gui/MainComponent.cpp:205
+msgid "Open Alternate Tuning File..."
+msgstr "ალტერნატიული მორგების ფაილის გახსნა..."
+
+#: ../src/core/gui/MainComponent.cpp:206
+msgid "Open Scala (.scl) alternate tuning file"
+msgstr "Scala (.scl) ალტერნატიული მორგების ფაილის გახსნა"
+
+#: ../src/core/gui/MainComponent.cpp:210
+msgid "Open Alternate Keyboard Map..."
+msgstr "ალტერნატიული კლავიატურის რუკის გახსნა..."
+
+#: ../src/core/gui/MainComponent.cpp:211
+msgid "Open alternate keyboard map (Scala .kbm format)"
+msgstr "ალტერნატიული კლავიატურის რუკის (Scala-ის .kbm ფორმატი) გახსნა"
+
+#: ../src/core/gui/MainComponent.cpp:215
+msgid "Reset All Tuning Settings to Default"
+msgstr "ყველა მორგების პარამეტრის ნაგულისხმევზე ჩამოყრა"
+
+#: ../src/core/gui/MainComponent.cpp:223
+msgid "Use MTS-ESP if available"
+msgstr "MTS-ESP-ის გამოყენება, თუ ხელმისაწვდომია"
+
+#: ../src/core/gui/MainComponent.cpp:229
+msgid "Config"
+msgstr "პარამ"
+
+#: ../src/core/gui/MainComponent.cpp:239
+msgid "Pitch Bend Range"
+msgstr "მოდულაციის ბორბლის შუალედი"
+
+#: ../src/core/gui/MainComponent.cpp:244
+msgid " Semitones"
+msgstr " ნახევარტონები"
+
+#: ../src/core/gui/MainComponent.cpp:250
+msgid "Max. Polyphony"
+msgstr "მაქს. პოლიფონია"
+
+#: ../src/core/gui/MainComponent.cpp:255
+msgid "Unlimited"
+msgstr "შეუზღუდავი"
+
+#: ../src/core/gui/MainComponent.cpp:262
+msgid "MIDI Channel"
+msgstr "MIDI არხი"
+
+#: ../src/core/gui/MainComponent.cpp:267
+msgid "All"
+msgstr "ყველა"
+
+#: ../src/core/gui/MainComponent.cpp:273 ../src/standalone/main.cpp:448
+msgid "Audio & MIDI..."
+msgstr "აუდიო & MIDI..."
+
+#: ../src/core/gui/MainComponent.cpp:276
+msgid "Help"
+msgstr "დახმარება"
+
+#: ../src/core/gui/MainComponent.cpp:277
+msgid "About"
+msgstr "შესახებ"
+
+#: ../src/core/gui/MainComponent.cpp:280
+msgid "Report a Bug"
+msgstr "შეცდომის ანგარიში"
+
+#: ../src/core/gui/MainComponent.cpp:283
+msgid "Online Documentation"
+msgstr "ონლაინ-დოკუმენტაცია"
+
+#: ../src/core/gui/MainComponent.cpp:304
+msgid "Add New User Bank"
+msgstr "ახალი მომხმარებლის ბანკის დამატება"
+
+#: ../src/core/gui/MainComponent.cpp:304
+msgid "Create"
+msgstr "შექმნა"
+
+#: ../src/core/gui/MainComponent.cpp:309
+#, c-format
+msgid "Failed to create user bank with name \"%s\""
+msgstr "ჩავარდა მომხმარებლის ბანკის შექმნა სახელით \"%s\""
+
+#: ../src/core/gui/MainComponent.cpp:316
+msgid "Rename Preset"
+msgstr "პრესეტის დამატება"
+
+#: ../src/core/gui/MainComponent.cpp:316
+msgid "Rename"
+msgstr "სახელის გადარქმევა"
+
+#: ../src/core/gui/MainComponent.cpp:331
+msgid "Cancel"
+msgstr "გაუქმება"
+
+#: ../src/core/gui/MainComponent.cpp:357
+msgid "Error"
+msgstr "შეცდომა"
+
+#: ../src/core/gui/MainComponent.cpp:388
+msgid "User banks"
+msgstr "მომხმარებლის ბანკები"
+
+#: ../src/core/gui/MainComponent.cpp:392
+msgid "Factory banks"
+msgstr "ქარხნული ბანკები"
+
+#: ../src/core/gui/MainComponent.cpp:522
+msgid "Copy"
+msgstr "კოპირება"
+
+#: ../src/core/gui/MainComponent.cpp:526
+msgid "Paste"
+msgstr "ჩასმა"
+
+#: ../src/core/gui/MainComponent.cpp:530
+msgid "Undo"
+msgstr "გაუქმება"
+
+#: ../src/core/gui/MainComponent.cpp:534
+msgid "Redo"
+msgstr "გამეორება"
+
+#: ../src/core/gui/MainComponent.cpp:538
+msgid "Randomise"
+msgstr "შემთხვევით"
+
+#: ../src/core/gui/MainComponent.cpp:538
+msgid "Sets all parameters to a random value"
+msgstr "ყველა პარამეტრის შემთხვევით მნიშვნელობაზე დაყენება"
+
+#: ../src/core/synth/Parameter.cpp:299 ../src/core/synth/Parameter.cpp:309
+msgid "sine"
+msgstr "სინუსიოდი"
+
+#: ../src/core/synth/Parameter.cpp:300
+msgid "square / pulse"
+msgstr "ოთხკუთხედი / პულსი"
+
+#: ../src/core/synth/Parameter.cpp:301
+msgid "triangle / saw"
+msgstr "სამკუთხედი / მუსიკალური ხერხი"
+
+#: ../src/core/synth/Parameter.cpp:302
+msgid "white noise"
+msgstr "თეთრი ხმაური"
+
+#: ../src/core/synth/Parameter.cpp:303 ../src/core/synth/Parameter.cpp:313
+msgid "noise + sample & hold"
+msgstr "ხმაური + სინკი & შენარჩუნება"
+
+#: ../src/core/synth/Parameter.cpp:310
+msgid "square"
+msgstr "კვადრატი"
+
+#: ../src/core/synth/Parameter.cpp:311
+msgid "triangle"
+msgstr "სამკუთხედი"
+
+#: ../src/core/synth/Parameter.cpp:312
+msgid "noise"
+msgstr "ხმაური"
+
+#: ../src/core/synth/Parameter.cpp:314
+msgid "sawtooth (up)"
+msgstr "კბილოვანი ტალღა (მაღლა)"
+
+#: ../src/core/synth/Parameter.cpp:315
+msgid "sawtooth (down)"
+msgstr "კბილოვანი ტალღა (დაბლა)"
+
+#: ../src/core/synth/Parameter.cpp:321
+msgid "poly"
+msgstr "მრავალკუთხა"
+
+#: ../src/core/synth/Parameter.cpp:322
+msgid "mono"
+msgstr "მონო"
+
+#: ../src/core/synth/Parameter.cpp:323 ../src/core/synth/Parameter.cpp:355
+msgid "legato"
+msgstr "legato"
+
+#: ../src/core/synth/Parameter.cpp:329
+msgid "low pass"
+msgstr "დაბალსიხშირული"
+
+#: ../src/core/synth/Parameter.cpp:330
+msgid "high pass"
+msgstr "მაღალსიხშირული"
+
+#: ../src/core/synth/Parameter.cpp:331
+msgid "band pass"
+msgstr "გატარების ზოლი"
+
+#: ../src/core/synth/Parameter.cpp:332
+msgid "notch"
+msgstr "ამოკვეთა"
+
+#: ../src/core/synth/Parameter.cpp:333
+msgid "bypass"
+msgstr "გატარება"
+
+#: ../src/core/synth/Parameter.cpp:339
+msgid "12 dB / octave"
+msgstr "12 დბ / ოქტავა"
+
+#: ../src/core/synth/Parameter.cpp:340
+msgid "24 dB / octave"
+msgstr "24 დბ / ოქტავა"
+
+#: ../src/core/synth/Parameter.cpp:346
+msgid "osc 1+2"
+msgstr "ოსც 1+2"
+
+#: ../src/core/synth/Parameter.cpp:347
+msgid "osc 1"
+msgstr "ოსც 1"
+
+#: ../src/core/synth/Parameter.cpp:348
+msgid "osc 2"
+msgstr "ოსც 2"
+
+#: ../src/core/synth/Parameter.cpp:354
+msgid "always"
+msgstr "ყოველთვის"
+
+#: ../src/core/synth/PresetController.cpp:421
+msgid "User bank"
+msgstr "მომხმარებლის ბანკი"
+
+#: ../src/standalone/main.cpp:127
+msgid "JACK init failed: "
+msgstr "JACK-ის ინიციალიზაცია ჩავარდა: "
+
+#: ../src/standalone/main.cpp:151
+msgid "error: could not open ALSA MIDI interface"
+msgstr "შეცდომა: ALSA-ის MIDI ინტერფეისის გახსნა შეუძლებელია"
+
+#: ../src/standalone/main.cpp:158
+msgid "error: could not open OSS MIDI interface"
+msgstr "შეცდომა: OSS-ის MIDI ინტერფეისის გახსნა შეუძლებელია"
+
+#: ../src/standalone/main.cpp:167
+msgid "error: could not open any MIDI interface"
+msgstr "შეცდომა: MIDI ინტერფეისის გახსნა შეუძლებელია"
+
+#: ../src/standalone/main.cpp:195
+msgid "MIDI device type:"
+msgstr "MIDI მოწყობილობის ტიპი:"
+
+#: ../src/standalone/main.cpp:204
+msgid "OSS MIDI device:"
+msgstr "OSS MIDI მოწყობილობა:"
+
+#: ../src/standalone/main.cpp:213
+msgid "Audio device type:"
+msgstr "აუდიომოწყობილობის ტიპი:"
+
+#: ../src/standalone/main.cpp:222
+msgid "ALSA audio device:"
+msgstr "ALSA-უს აუდიომოწყობილობა:"
+
+#: ../src/standalone/main.cpp:231
+msgid "OSS audio device:"
+msgstr "OSS-ის აუდიომოწყობილობა:"
+
+#: ../src/standalone/main.cpp:240
+msgid "Sample rate:"
+msgstr "სემპლის სიხშირე:"
+
+#: ../src/standalone/main.cpp:244
+msgid "Auto-connect to system outputs"
+msgstr "ავტოდაკავშირება სისტემურ გამოტანასთან"
+
+#: ../src/standalone/main.cpp:249
+msgid "JACK"
+msgstr "JACK"
+
+#: ../src/standalone/main.cpp:252
+msgid "Apply"
+msgstr "გადატარება"
+
+#: ../src/standalone/main.cpp:342
+msgid "Could not initialise the configured audio device.\n"
+msgstr "მორგებული აუდიომოწყობილობის ინიციალიზაცია შეუძლებელია.\n"
+
+#: ../src/standalone/main.cpp:344
+msgid "Could not initialise the configured MIDI device.\n"
+msgstr "მორგებული MIDI მოწყობილობის ინიციალიზაცია შეუძლებელია.\n"
+
+#: ../src/standalone/main.cpp:348 ../src/standalone/main.cpp:446
+msgid "Configuration error"
+msgstr "კონფიგურაციის შეცდომა"
+
+#: ../src/standalone/main.cpp:350
+msgid "OK"
+msgstr "დიახ"
+
+#: ../src/standalone/main.cpp:376
+msgid "Audio/MIDI Settings"
+msgstr "აუდიოს/MIDI-ის მორგება"
+
+#: ../src/standalone/main.cpp:436
+msgid ""
+"Could not initialise the configured audio device.\n"
+"\n"
+"Please check audio configuration"
+msgstr ""
+"მორგებული აუდიომოწყობილობის ინიციალიზაცია შეუძლებელია.\n"
+"\n"
+"შეამოწმეთ აუდიოს კონფიგურაცია"
+
+#: ../src/standalone/main.cpp:439
+msgid ""
+"Could not initialise the configured MIDI device.\n"
+"\n"
+"Please check MIDI configuration"
+msgstr ""
+"მორგებული MIDI მოწყობილობის ინიციალიზაცია შეუძლებელია.\n"
+"\n"
+"შეამოწმეთ MIDI-ის კონფიგურაცია"
+
+#: ../src/standalone/main.cpp:517
+msgid "usage: "
+msgstr "გამოყენება: "
+
+#: ../src/standalone/main.cpp:517
+msgid " [options]"
+msgstr " [პარამეტრები]"
+
+#: ../src/standalone/main.cpp:519
+msgid ""
+"Any options given here override those in the config file ($HOME/.amSynthrc)"
+msgstr ""
+"აქ მითითებული პარამეტრი გადაფარავს კონფიგურაციის ფაილში ($HOME/.amSyncthrc) "
+"მითითებულს"
+
+#: ../src/standalone/main.cpp:521
+msgid "OPTIONS:"
+msgstr "პარამეტრები:"
+
+#: ../src/standalone/main.cpp:523
+msgid "\t-h          show this usage message"
+msgstr "\t-h          ამ გამოყენების შეტყობინების ჩვენება"
+
+#: ../src/standalone/main.cpp:524
+msgid "\t-v          show version information"
+msgstr "\t-v          ვერსიის ინფორმაციის ჩვენება"
+
+#: ../src/standalone/main.cpp:525
+msgid "\t-x          run in headless mode (without GUI)"
+msgstr "\t-x          გაშვება უთავო რეჟიმში (ინტერფეისის გარეშე)"
+
+#: ../src/standalone/main.cpp:527
+msgid "\t-b <file>   use <file> as the bank to store presets"
+msgstr "\t-b <file>   მითითებული ფაილის გამოყენება პრესეტების შესანახად"
+
+#: ../src/standalone/main.cpp:528
+msgid "\t-P <int>    set preset number to use"
+msgstr "\t-P <int>    გამოსაყენებელი პრესეტის დაყენება"
+
+#: ../src/standalone/main.cpp:529
+msgid "\t-t <file>   use <file> as a tuning file"
+msgstr "\t-t <file>   მითითებული ფაილის გამოყენება მორგების ფაილად"
+
+#: ../src/standalone/main.cpp:531
+msgid ""
+"\t-a <string> set the sound output driver to use [alsa/oss/auto(default)]"
+msgstr ""
+"\t-a <string> გამოსაყენებელი ხმის გამოტანის დრაივერის დაყენება [alsa/oss/"
+"auto(default)]"
+
+#: ../src/standalone/main.cpp:532
+msgid "\t-r <int>    set the sampling rate to use"
+msgstr "\t-r <int>    გამოსაყენებელი სემპლინგის სიხშირის დაყენება"
+
+#: ../src/standalone/main.cpp:533
+msgid "\t-m <string> set the MIDI driver to use [alsa/oss/auto(default)]"
+msgstr ""
+"\t-m <string> გამოსაყენებელი MIDI დრაივერის დაყენება [alsa/oss/"
+"auto(default)]"
+
+#: ../src/standalone/main.cpp:534
+msgid "\t-c <int>    set the MIDI channel to respond to (default=all)"
+msgstr ""
+"\t-c <int>    MIDI არხის დაყენება, რომელსაც უნდა ვუპასუხოთ "
+"(ნაგულისხმევი=ყველა)"
+
+#: ../src/standalone/main.cpp:535
+msgid "\t-p <int>    set the polyphony (maximum active voices)"
+msgstr "\t-p <int>    პოლიფონიის დაყენება (აქტიური ხმების მაქს. რაოდენობა)"
+
+#: ../src/standalone/main.cpp:537
+msgid "\t-n <name>   specify the JACK client name to use"
+msgstr "\t-n <name>   მიუთითეთ JACK-ის კლიენტის სახელი გამოსაყენებლად"
+
+#: ../src/standalone/main.cpp:538
+msgid "\t--jack_autoconnect[=<true|false>]"
+msgstr "\t--jack_autoconnect[=<true|false>]"
+
+#: ../src/standalone/main.cpp:539
+msgid ""
+"\t            automatically connect jack audio ports to hardware I/O ports. "
+"(Default: true)"
+msgstr ""
+"\t            jack-ის აუდიოპორტების აპარატურულ პორტებთან ავტომატური "
+"დაკავშირება (ნაგულისხმევი: კი)"
+
+#: ../src/standalone/main.cpp:541
+msgid "\t--ui-scale <scale>"
+msgstr "\t--ui-scale <მასშტაბი>"
+
+#: ../src/standalone/main.cpp:542
+msgid "\t            set the scaling factor for the GUI"
+msgstr "\t            ინტერფეისის მასშტაბის კოეფიციენტის დაყენება"
+
+#: ../src/standalone/main.cpp:651
+#, c-format
+msgid "amsynth running in headless mode, press ctrl-c to exit\n"
+msgstr ""
+"amsynth გაშვებულია უთავო რეჟიმში. გასასვლელად დააჭირეთ ღილაკებს ctrl-c\n"
+
+#: ../src/standalone/main.cpp:656
+#, c-format
+msgid "shutting down...\n"
+msgstr "გამორთვა…\n"
+
+#: ../src/standalone/main.cpp:663
+msgid " audio buffer underruns occurred\n"
+msgstr " აღმოჩენილია აუდიოს ბუფერის არშევსებები\n"
+
+#: ../src/standalone/main.cpp:752
+msgid "error: could not load tuning file "
+msgstr "შეცდომა: ჩატვირთვის შეცდომა მორგების ფაილისთვის "
+
+#: ../src/standalone/main.cpp:814
+#, c-format
+msgid "user time: %f\t\tsystem time: %f\n"
+msgstr "მომხმარებლის დრო: %f\t\tსისტემის დრო: %f\n"
+
+#: ../src/standalone/main.cpp:815
+#, c-format
+msgid "performance index: %f\n"
+msgstr "წარმადობის ინდექსი: %f\n"
