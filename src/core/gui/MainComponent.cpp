@@ -359,7 +359,15 @@ struct MainComponent::Impl : private juce::Timer {
 	}
 
 	void showAbout() {
-		auto editor = new juce::TextEditor();
+		class AboutTextEditor final : public juce::TextEditor {
+		public:
+			void mouseDown(const juce::MouseEvent &event) override {
+				event.eventComponent->getParentComponent()->removeChildComponent(event.eventComponent);
+				delete event.eventComponent;
+			}
+		};
+
+		auto editor = new AboutTextEditor();
 		editor->setColour(juce::TextEditor::backgroundColourId, juce::Colour((uint8_t)0, (uint8_t)0, (uint8_t)0, 0.8f));
 		editor->setSize(component_->getWidth(), component_->getHeight());
 		editor->setJustification(juce::Justification::centred);
@@ -369,13 +377,6 @@ struct MainComponent::Impl : private juce::Timer {
 			"amsynth " PACKAGE_VERSION "\n\n"
 			"Analog Modelling SYNTHesizer\n\n"
 			"Copyright © 2002 - 2025 Nick Dowell and contributors")));
-		class MouseListener : public juce::MouseListener {
-			void mouseDown(const juce::MouseEvent &event) override {
-				event.eventComponent->getParentComponent()->removeChildComponent(event.eventComponent);
-				delete event.eventComponent;
-			}
-		};
-		editor->addMouseListener(new MouseListener(), false);
 		component_->addAndMakeVisible(editor);
 	}
 
