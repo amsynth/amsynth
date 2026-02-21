@@ -51,7 +51,7 @@ private:
 	juce::Image image_;
 	int width_, height_;
 	int frames_;
-	std::atomic_bool needsRepaint_;
+	std::atomic_bool needsRepaint_ {false};
 };
 
 ////////////////////////////////////////////////////////////////////////////////
