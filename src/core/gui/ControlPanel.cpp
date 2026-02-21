@@ -103,7 +103,10 @@ struct ControlPanel::Impl final : juce::MouseListener, juce::Timer
 		for (int i = 0; i < kAmsynthParameterCount; i++) {
 			auto &parameter = presetController_->getCurrentPreset().getParameter(i);
 
-			const auto &control = skin.layout.controls.at(parameter.getName());
+			auto it = skin.layout.controls.find(parameter.getName());
+			if (it == skin.layout.controls.end())
+				continue;
+			const auto &control = it->second;
 			const auto &resource = control.resource;
 			auto image = skin.getImage(resource);
 
