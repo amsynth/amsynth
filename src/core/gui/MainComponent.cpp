@@ -458,9 +458,8 @@ struct MainComponent::Impl : private juce::Timer {
 		auto chooser = new juce::FileChooser(title, cwd, filters);
 		chooser->launchAsync(juce::FileBrowserComponent::openMode, [chooser, handler] (const auto &) {
 			auto results = chooser->getResults();
-			if (results.isEmpty())
-				return;
-			handler(results[0].getFullPathName().toRawUTF8());
+			if (!results.isEmpty())
+				handler(results[0].getFullPathName().toRawUTF8());
 			delete chooser;
 		});
 	}
