@@ -80,6 +80,7 @@ Configuration::load	()
 	std::string line;
 	while (std::getline(file, line)) {
 		std::istringstream istr(line);
+		istr.imbue(std::locale::classic());
 		std::string buffer;
 		istr >> buffer;
 		if (!buffer.empty() && buffer[0] == '#') {
@@ -112,9 +113,7 @@ Configuration::load	()
 			}
 		} else if (buffer == "jack_autoconnect" && istr >> buffer) {
 			jack_autoconnect = (buffer == "true");
-		} else if (buffer == "ui_scale" && istr >> buffer) {
-			std::istringstream istr(buffer);
-			istr.imbue(std::locale::classic());
+		} else if (buffer == "ui_scale") {
 			istr >> ui_scale;
 		}
 	}
