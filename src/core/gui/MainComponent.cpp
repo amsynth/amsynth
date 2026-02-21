@@ -29,6 +29,11 @@
 #include "core/synth/PresetController.h"
 #include "core/synth/Synthesizer.h"
 
+#include <cassert>
+#include <cerrno>
+#include <cstdlib>
+#include <limits>
+
 #ifndef PACKAGE_VERSION
 #define PACKAGE_VERSION "???"
 #endif
@@ -38,6 +43,16 @@ enum CommandIDs {
 };
 
 static constexpr int toolbarHeight = 25;
+
+static int to_int(const std::string &text, int fallback) {
+	char *end = nullptr;
+	long value = std::strtol(text.c_str(), &end, 10);
+	if (end == text.c_str() || *end != '\0')
+		return fallback;
+	if (value < std::numeric_limits<int>::min() || value > std::numeric_limits<int>::max())
+		return fallback;
+	return static_cast<int>(value);
+}
 
 class LookAndFeel : public juce::LookAndFeel_V4 {
 public:
@@ -171,7 +186,10 @@ struct MainComponent::Impl : private juce::Timer {
 		}
 		if (name == PROP_NAME(preset_number) && !value.empty()) {
 			auto presetName = presetController_->getCurrentPreset().getName();
-			int presetNumber = std::stoi(value);
+			int presetNumber = to_int(value, -1);
+			assert(presetNumber >= 0);
+			if (presetNumber < 0)
+					return;
 			presetController_->setCurrPresetNumber(presetNumber);
 			presetController_->getCurrentPreset().setName(presetName);
 			// Don't call selectPreset() because that would change the parameter values
@@ -219,7 +237,7 @@ struct MainComponent::Impl : private juce::Timer {
 #ifdef WITH_MTS_ESP
 		do {
 			auto it = component_->properties.find(PROP_NAME(tuning_mts_esp_disabled));
-			bool currentValue = it == component_->properties.end() ? false : std::stoi(it->second);
+			bool currentValue = it == component_->properties.end() ? false : to_int(it->second, 0) != 0;
 			menu.addItem(GETTEXT("Use MTS-ESP if available"), true, !currentValue, [this, currentValue] {
 				setProperty(PROP_NAME(tuning_mts_esp_disabled), currentValue ? "0" : "1");
 			});
@@ -230,7 +248,7 @@ struct MainComponent::Impl : private juce::Timer {
         auto getIntProperty = [&] (const char *key, int fallback) {
             auto it = component_->properties.find(key);
             if (it != component_->properties.end())
-                return std::stoi(it->second);
+                return to_int(it->second, fallback);
             return fallback;
         };
         auto setIntProperty = [&] (const char *key, int value) {
