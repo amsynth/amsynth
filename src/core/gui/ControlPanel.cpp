@@ -80,18 +80,23 @@ struct ControlPanel::Impl final : juce::MouseListener, juce::Timer
 		else
 			label_.yInset = 6;
 
+		controlPanel->setSize(600, 400); // fallback size
+
 		auto skin = Skin(skinDir_);
 		if (skin.layout.background.empty() || skin.layout.controls.empty()) {
-			controlPanel->setSize(600, 400);
 			return;
 		}
 
 		auto background = juce::Drawable::createFromImageFile(skin.getBackground());
-		background->setOpaque(true);
-		controlPanel->setOpaque(true);
-		controlPanel->addAndMakeVisible(background.get());
-		controlPanel->setSize(background->getWidth(), background->getHeight());
-		components_.push_back(std::move(background));
+		if (background) {
+			background->setOpaque(true);
+			controlPanel->setOpaque(true);
+			controlPanel->addAndMakeVisible(background.get());
+			controlPanel->setSize(background->getWidth(), background->getHeight());
+			components_.push_back(std::move(background));
+		} else {
+			return;
+		}
 
 		Control::isMainThread = true;
 
