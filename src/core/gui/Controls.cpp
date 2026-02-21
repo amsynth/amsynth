@@ -100,14 +100,17 @@ void Knob::mouseEnter(const juce::MouseEvent &) { label_->show(this, getLabelTex
 void Knob::mouseExit(const juce::MouseEvent &) { label_->hide(); }
 
 void Knob::mouseUp(const juce::MouseEvent &event) {
-	if (event.mods.isLeftButtonDown())
+	if (isEditing_) {
+		isEditing_ = false;
 		parameter.endEdit();
+	}
 }
 
 void Knob::leftMouseDown(const juce::MouseEvent &event) {
 	referenceVal_ = parameter.getNormalisedValue();
 	referenceY_ = event.y;
 	parameter.beginEdit();
+	isEditing_ = true;
 }
 
 void Knob::mouseDrag(const juce::MouseEvent &event) {

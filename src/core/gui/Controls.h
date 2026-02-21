@@ -105,6 +105,7 @@ private:
 	float referenceVal_ {0.f};
 	int referenceY_ {0};
 	Label *label_;
+	bool isEditing_ {false};
 };
 
 ////////////////////////////////////////////////////////////////////////////////
