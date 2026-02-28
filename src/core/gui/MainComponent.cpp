@@ -116,7 +116,7 @@ public:
 				g.setColour(juce::Colours::white);
 				g.strokePath(path, juce::PathStrokeType(2.0, juce::PathStrokeType::mitered, juce::PathStrokeType::square));
 				break;
-			
+
 			case Shape::next:
 				path.startNewSubPath(10, 8);
 				path.lineTo(15, 12.5);
@@ -240,18 +240,18 @@ struct MainComponent::Impl : private juce::Timer {
 #endif
 
 		menu.addSectionHeader(GETTEXT("Config"));
-        auto getIntProperty = [&] (const char *key, int fallback) {
-            auto it = component_->properties.find(key);
-            if (it != component_->properties.end())
-                return to_int(it->second, fallback);
-            return fallback;
-        };
-        auto setIntProperty = [&] (const char *key, int value) {
-            setProperty(key, std::to_string(value).c_str());
-        };
+		auto getIntProperty = [&] (const char *key, int fallback) {
+			auto it = component_->properties.find(key);
+			if (it != component_->properties.end())
+				return to_int(it->second, fallback);
+			return fallback;
+		};
+		auto setIntProperty = [&] (const char *key, int value) {
+			setProperty(key, std::to_string(value).c_str());
+		};
 		menu.addSubMenu(GETTEXT("Pitch Bend Range"), [&] {
 			juce::PopupMenu submenu;
-            auto key = PROP_NAME(pitch_bend_range);
+			auto key = PROP_NAME(pitch_bend_range);
 			int currentValue = getIntProperty(key, 2);
 			for (int i = 1; i <= 24; i++) {
 				submenu.addItem(juce::String(std::to_string(i)) + GETTEXT(" Semitones"), true, i == currentValue, [=] {
@@ -262,8 +262,8 @@ struct MainComponent::Impl : private juce::Timer {
 		}());
 		menu.addSubMenu(GETTEXT("Max. Polyphony"), [&] {
 			juce::PopupMenu submenu;
-            auto key = PROP_NAME(max_polyphony);
-            int currentValue = getIntProperty(key, 10);
+			auto key = PROP_NAME(max_polyphony);
+			int currentValue = getIntProperty(key, 10);
 			for (int i = 0; i <= 16; i++) {
 				submenu.addItem(i ? std::to_string(i) : GETTEXT("Unlimited"), true, i == currentValue, [=] {
 					setIntProperty(key, i);
@@ -274,8 +274,8 @@ struct MainComponent::Impl : private juce::Timer {
 		if (!component_->isPlugin) {
 			menu.addSubMenu(GETTEXT("MIDI Channel"), [&] {
 				juce::PopupMenu submenu;
-                auto key = PROP_NAME(midi_channel);
-                int currentValue = getIntProperty(key, 0);
+				auto key = PROP_NAME(midi_channel);
+				int currentValue = getIntProperty(key, 0);
 				for (int i = 0; i <= 16; i++) {
 					submenu.addItem(i ? std::to_string(i) : GETTEXT("All"), true, i == currentValue, [=] {
 						setIntProperty(key, i);
@@ -336,7 +336,7 @@ struct MainComponent::Impl : private juce::Timer {
 			}
 		});
 	}
-	
+
 	void showTextAlert(const juce::String &title, const juce::String &okButton, const std::string &text,
 					   std::function<void(std::string)> &&okAction) {
 		alertWindow_ = new juce::AlertWindow(title, "", juce::MessageBoxIconType::NoIcon, component_);
