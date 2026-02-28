@@ -30,9 +30,6 @@
 #include "core/synth/Synthesizer.h"
 
 #include <cassert>
-#include <cerrno>
-#include <cstdlib>
-#include <limits>
 
 #ifndef PACKAGE_VERSION
 #define PACKAGE_VERSION "???"
@@ -45,13 +42,12 @@ enum CommandIDs {
 static constexpr int toolbarHeight = 25;
 
 static int to_int(const std::string &text, int fallback) {
-	char *end = nullptr;
-	long value = std::strtol(text.c_str(), &end, 10);
-	if (end == text.c_str() || *end != '\0')
+	try {
+		return std::stoi(text);
+	} catch (...) {
+		assert(false);
 		return fallback;
-	if (value < std::numeric_limits<int>::min() || value > std::numeric_limits<int>::max())
-		return fallback;
-	return static_cast<int>(value);
+	}
 }
 
 class LookAndFeel : public juce::LookAndFeel_V4 {
@@ -185,11 +181,10 @@ struct MainComponent::Impl : private juce::Timer {
 			updatePresetComboLabelText();
 		}
 		if (name == PROP_NAME(preset_number) && !value.empty()) {
-			auto presetName = presetController_->getCurrentPreset().getName();
 			int presetNumber = to_int(value, -1);
-			assert(presetNumber >= 0);
 			if (presetNumber < 0)
-					return;
+				return;
+			auto presetName = presetController_->getCurrentPreset().getName();
 			presetController_->setCurrPresetNumber(presetNumber);
 			presetController_->getCurrentPreset().setName(presetName);
 			// Don't call selectPreset() because that would change the parameter values
