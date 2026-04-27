@@ -1,5 +1,5 @@
 #define MyAppName "amsynth"
-#define MyAppVersion "1.14.0"
+#define MyAppVersion "2.0b1"
 #define MyAppPublisher "Nick Dowell"
 
 [Setup]

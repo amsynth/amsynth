@@ -1,4 +1,4 @@
-## [Unreleased]
+## 2.0b1 (2026-04-27)
 
   - Ported the GUI from GTK2 to JUCE.
     PACKAGERS TAKE NOTE: build dependencies have changed!
