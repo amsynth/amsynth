@@ -27,6 +27,9 @@
 
 #include "core/Configuration.h"
 #include "core/synth/Preset.h"
+#include "core/gettext.h"
+
+#define GETTEXT(Msgid) juce::String(juce::CharPointer_UTF8(gettext(Msgid)))
 
 thread_local bool Control::isMainThread;
 
@@ -46,6 +49,8 @@ Control::~Control() { parameter.removeObserver(this); }
 void Control::mouseDown(const juce::MouseEvent &event) {
 	if (event.mods.isLeftButtonDown()) {
 		leftMouseDown(event);
+	} else if (event.mods.isMiddleButtonDown()) {
+		middleMouseDown(event);
 	}
 }
 
@@ -142,6 +147,53 @@ void Knob::mouseWheelMove(const juce::MouseEvent &event, const juce::MouseWheelD
 	auto delta = (wheel.deltaY / 2.f / (event.mods.isCtrlDown() ? 4.f : 1.f) / (event.mods.isShiftDown() ? 4.f : 1.f));
 	parameter.setNormalisedValue(parameter.getNormalisedValue() + delta);
 	label_->show(this, getLabelText());
+}
+
+void Knob::middleMouseDown(const juce::MouseEvent &) {
+	auto *alertWindow = new juce::AlertWindow(GETTEXT("Enter Value"), "", juce::MessageBoxIconType::NoIcon);
+	alertWindow->addTextEditor("value", getLabelText());
+
+	auto *textEditor = alertWindow->getTextEditor("value");
+	textEditor->setInputRestrictions(0, "0123456789.-");
+
+	alertWindow->addButton(GETTEXT("OK"), 1);
+	alertWindow->addButton(GETTEXT("Cancel"), 0);
+
+	auto callback = juce::ModalCallbackFunction::create([this, alertWindow](int result) {
+		if (result == 1) {
+			auto *editor = alertWindow->getTextEditor("value");
+			if (editor) {
+				auto text = editor->getText().trim();
+				if (text.isNotEmpty()) {
+					try {
+						float value = text.getFloatValue();
+						// Clamp to parameter range
+						value = juce::jlimit(parameter.getMin(), parameter.getMax(), value);
+						parameter.beginEdit();
+						parameter.setValue(value);
+						parameter.endEdit();
+						label_->show(this, getLabelText());
+					} catch (...) {
+						// Invalid input, ignore
+					}
+				}
+			}
+		}
+		delete alertWindow;
+	});
+
+	alertWindow->enterModalState(true, callback, true);
+
+#if JUCE_LINUX
+	// On X11 this needs to be delayed to be effective
+	juce::Component::SafePointer<juce::TextEditor> safeTextEditor(textEditor);
+	juce::Timer::callAfterDelay(100, [safeTextEditor] {
+		if (safeTextEditor != nullptr)
+			safeTextEditor->grabKeyboardFocus();
+	});
+#else
+	textEditor->grabKeyboardFocus();
+#endif
 }
 
 Knob::Label::Label(juce::Component *parent)
