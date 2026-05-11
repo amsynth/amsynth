@@ -159,27 +159,36 @@ void Knob::middleMouseDown(const juce::MouseEvent &) {
 	alertWindow->addButton(GETTEXT("OK"), 1);
 	alertWindow->addButton(GETTEXT("Cancel"), 0);
 
-	auto callback = juce::ModalCallbackFunction::create([this, alertWindow](int result) {
-		if (result == 1) {
+	juce::Component::SafePointer<Knob> safeThis(this);
+	auto callback = juce::ModalCallbackFunction::create([safeThis, alertWindow](int result) {
+		if (result == 1 && safeThis != nullptr) {
 			auto *editor = alertWindow->getTextEditor("value");
 			if (editor) {
 				auto text = editor->getText().trim();
 				if (text.isNotEmpty()) {
+					// Validate that the string contains a valid float
+					bool isValid = false;
+					float value = 0.0f;
 					try {
-						float value = text.getFloatValue();
-						// Clamp to parameter range
-						value = juce::jlimit(parameter.getMin(), parameter.getMax(), value);
-						parameter.beginEdit();
-						parameter.setValue(value);
-						parameter.endEdit();
-						label_->show(this, getLabelText());
-					} catch (...) {
+						value = std::stof(text.toStdString());
+						isValid = true;
+					} catch (const std::invalid_argument &) {
 						// Invalid input, ignore
+					} catch (const std::out_of_range &) {
+						// Out of range, ignore
+					}
+
+					if (isValid) {
+						// Clamp to parameter range
+						value = juce::jlimit(safeThis->parameter.getMin(), safeThis->parameter.getMax(), value);
+						safeThis->parameter.beginEdit();
+						safeThis->parameter.setValue(value);
+						safeThis->parameter.endEdit();
+						safeThis->label_->show(safeThis, safeThis->getLabelText());
 					}
 				}
 			}
 		}
-		delete alertWindow;
 	});
 
 	alertWindow->enterModalState(true, callback, true);
