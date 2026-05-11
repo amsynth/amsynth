@@ -100,20 +100,30 @@ AS_IF([test "x$with_oss" != "xno"], [
         with_oss="yes"], [with_oss="no"])])
 
 AC_ARG_WITH([alsa], [AS_HELP_STRING([--with-alsa], [build support for ALSA])])
-AS_IF([test "x$with_alsa" != "xno"], [
+AS_IF([test "x$with_alsa" = "xyes"], [
+    PKG_CHECK_MODULES([ALSA], [alsa])
+    AC_DEFINE([WITH_ALSA],, [Use this optional package])
+], [test "x$with_alsa" != "xno"], [
     PKG_CHECK_MODULES([ALSA], [alsa], [
         AC_DEFINE([WITH_ALSA],, [Use this optional package])
         with_alsa="yes"], [with_alsa="no"])])
 
 AC_ARG_WITH([jack], [AS_HELP_STRING([--with-jack], [build support for Jack Audio Connection Kit])])
-AS_IF([test "x$with_jack" != "xno"],
-    [PKG_CHECK_MODULES([JACK], [jack], [
+AS_IF([test "x$with_jack" = "xyes"], [
+    PKG_CHECK_MODULES([JACK], [jack])
+    AC_DEFINE([WITH_JACK],, [Use this optional package])
+    AC_CHECK_HEADERS([jack/midiport.h])
+], [test "x$with_jack" != "xno"], [
+    PKG_CHECK_MODULES([JACK], [jack], [
         AC_DEFINE([WITH_JACK],, [Use this optional package])
         AC_CHECK_HEADERS([jack/midiport.h])
         with_jack="yes"], [with_jack="no"])])
 
 AC_ARG_WITH([lash], [AS_HELP_STRING([--with-lash], [build support for LASH])])
-AS_IF([test "x$with_lash" != "xno"], [
+AS_IF([test "x$with_lash" = "xyes"], [
+    PKG_CHECK_MODULES([LASH], [lash-1.0])
+    AC_DEFINE([WITH_LASH],, [Use this optional package])
+], [test "x$with_lash" != "xno"], [
     PKG_CHECK_MODULES([LASH], [lash-1.0], [
         AC_DEFINE([WITH_LASH],, [Use this optional package])
         with_lash="yes"], [with_lash="no"])])
@@ -123,7 +133,10 @@ AM_CONDITIONAL([BUILD_MTS_ESP], [test "x$with_mts_esp" != "xno"])
 AS_IF([test "x$with_mts_esp" != "xno"], [AC_DEFINE([WITH_MTS_ESP],, [Build MTS-ESP support (includes non-GPL code)])])
 
 AC_ARG_WITH([nsm], [AS_HELP_STRING([--with-nsm], [build support for Non Session Manager])])
-AS_IF([test "x$with_nsm" != "xno"], [
+AS_IF([test "x$with_nsm" = "xyes"], [
+    PKG_CHECK_MODULES([LIBLO], [liblo])
+    AC_DEFINE([WITH_NSM],, [Build NSM support])
+], [test "x$with_nsm" != "xno"], [
     PKG_CHECK_MODULES([LIBLO], [liblo], [
         AC_DEFINE([WITH_NSM],, [Build NSM support])
         with_nsm="yes"], [with_nsm="no"])])
@@ -132,7 +145,13 @@ AM_CONDITIONAL([BUILD_NSM], [test "x$with_nsm" = "xyes"])
 dnl Optional targets
 
 AC_ARG_WITH([dssi], [AS_HELP_STRING([--with-dssi], [build DSSI plugin])])
-AS_IF([test "x$with_dssi" != "xno"], [
+AS_IF([test "x$with_dssi" = "xyes"], [
+    PKG_CHECK_MODULES([DSSI], [dssi])
+    AS_IF([test "x$with_gui" != "xno"], [
+        PKG_CHECK_MODULES([LIBLO], [liblo])
+        with_dssi_gui="yes"
+    ])
+], [test "x$with_dssi" != "xno"], [
     PKG_CHECK_MODULES([DSSI], [dssi], [
         AS_IF([test "x$with_gui" != "xno"], [with_dssi_gui="yes"])
         PKG_CHECK_MODULES([LIBLO], [liblo], [], [with_dssi_gui="no"])
