@@ -155,13 +155,14 @@ void Knob::middleMouseDown(const juce::MouseEvent &) {
 	// Initialize with numeric-only current value (strip units from display string)
 	juce::String currentValueText = parameter.getStringValue();
 	// Extract just the numeric part (remove units like " ms", " %", etc.)
-	currentValueText = currentValueText.retainCharacters("0123456789.-");
+	// Support scientific notation characters (e, E, +, -)
+	currentValueText = currentValueText.retainCharacters("0123456789.eE+-");
 
 	auto *alertWindow = new juce::AlertWindow(GETTEXT("Enter Value"), "", juce::MessageBoxIconType::NoIcon);
 	alertWindow->addTextEditor("value", currentValueText);
 
 	auto *textEditor = alertWindow->getTextEditor("value");
-	textEditor->setInputRestrictions(0, "0123456789.-");
+	textEditor->setInputRestrictions(0, "0123456789.eE+-");
 
 	alertWindow->addButton(GETTEXT("OK"), 1);
 	alertWindow->addButton(GETTEXT("Cancel"), 0);
@@ -202,14 +203,17 @@ void Knob::middleMouseDown(const juce::MouseEvent &) {
 								break;
 						}
 
-						// Clamp to parameter range
-						internalValue = juce::jlimit(safeThis->parameter.getMin(), safeThis->parameter.getMax(), internalValue);
-						safeThis->parameter.beginEdit();
-						safeThis->parameter.setValue(internalValue);
-						safeThis->parameter.endEdit();
-						safeThis->label_->show(safeThis, safeThis->getLabelText());
+						// Check for NaN resulting from invalid inverse operations (e.g. log of negative)
+						if (!std::isnan(internalValue)) {
+							// Clamp to parameter range
+							internalValue = juce::jlimit(safeThis->parameter.getMin(), safeThis->parameter.getMax(), internalValue);
+							safeThis->parameter.beginEdit();
+							safeThis->parameter.setValue(internalValue);
+							safeThis->parameter.endEdit();
+							safeThis->label_->show(safeThis, safeThis->getLabelText());
+						}
 					}
-					// If parsing failed (NaN), dialog closes silently
+					// If parsing failed or result was NaN, dialog closes silently
 				}
 			}
 		}
