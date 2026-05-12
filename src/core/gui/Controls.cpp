@@ -25,6 +25,8 @@
 
 #include "Controls.h"
 
+#include <cmath>
+
 #include "core/Configuration.h"
 #include "core/synth/Preset.h"
 #include "core/gettext.h"
@@ -150,8 +152,13 @@ void Knob::mouseWheelMove(const juce::MouseEvent &event, const juce::MouseWheelD
 }
 
 void Knob::middleMouseDown(const juce::MouseEvent &) {
+	// Initialize with numeric-only current value (strip units from display string)
+	juce::String currentValueText = parameter.getStringValue();
+	// Extract just the numeric part (remove units like " ms", " %", etc.)
+	currentValueText = currentValueText.retainCharacters("0123456789.-");
+
 	auto *alertWindow = new juce::AlertWindow(GETTEXT("Enter Value"), "", juce::MessageBoxIconType::NoIcon);
-	alertWindow->addTextEditor("value", getLabelText());
+	alertWindow->addTextEditor("value", currentValueText);
 
 	auto *textEditor = alertWindow->getTextEditor("value");
 	textEditor->setInputRestrictions(0, "0123456789.-");
@@ -166,26 +173,43 @@ void Knob::middleMouseDown(const juce::MouseEvent &) {
 			if (editor) {
 				auto text = editor->getText().trim();
 				if (text.isNotEmpty()) {
-					// Validate that the string contains a valid float
-					bool isValid = false;
-					float value = 0.0f;
-					try {
-						value = std::stof(text.toStdString());
-						isValid = true;
-					} catch (const std::invalid_argument &) {
-						// Invalid input, ignore
-					} catch (const std::out_of_range &) {
-						// Out of range, ignore
-					}
+					// Use Parameter::valueFromString for locale-independent parsing
+					// This parses the control value (what the user sees/types)
+					float controlValue = Parameter::valueFromString(text.toStdString());
 
-					if (isValid) {
+					// Check if parsing was successful
+					if (!std::isnan(controlValue)) {
+						// Convert control value to internal parameter value
+						// by inverting the parameter law transformation
+						const auto &spec = safeThis->parameter._spec;
+						float internalValue = controlValue;  // default for Linear law
+
+						switch (spec.law) {
+							case kParameterLaw_Linear:
+								// control = offset + base * internal
+								// internal = (control - offset) / base
+								internalValue = (controlValue - spec.offset) / spec.base;
+								break;
+							case kParameterLaw_Exponential:
+								// control = offset + base^internal
+								// internal = log(control - offset) / log(base)
+								internalValue = std::log(controlValue - spec.offset) / std::log((float)spec.base);
+								break;
+							case kParameterLaw_Power:
+								// control = offset + internal^base
+								// internal = (control - offset)^(1/base)
+								internalValue = std::pow(controlValue - spec.offset, 1.0f / (float)spec.base);
+								break;
+						}
+
 						// Clamp to parameter range
-						value = juce::jlimit(safeThis->parameter.getMin(), safeThis->parameter.getMax(), value);
+						internalValue = juce::jlimit(safeThis->parameter.getMin(), safeThis->parameter.getMax(), internalValue);
 						safeThis->parameter.beginEdit();
-						safeThis->parameter.setValue(value);
+						safeThis->parameter.setValue(internalValue);
 						safeThis->parameter.endEdit();
 						safeThis->label_->show(safeThis, safeThis->getLabelText());
 					}
+					// If parsing failed (NaN), dialog closes silently
 				}
 			}
 		}
