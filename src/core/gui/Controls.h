@@ -41,9 +41,8 @@ public:
 
 protected:
 	virtual void leftMouseDown(const juce::MouseEvent &event) = 0;
-	virtual void middleMouseDown(const juce::MouseEvent &event) {}
 	void mouseDown(const juce::MouseEvent &event) final;
-	void mouseDoubleClick(const juce::MouseEvent &event) final;
+	void mouseDoubleClick(const juce::MouseEvent &event) override;
 	void paint(juce::Graphics &g) override;
 	void parameterDidChange(const Parameter &) override;
 
@@ -98,7 +97,7 @@ private:
 	void mouseExit(const juce::MouseEvent &event) override;
 	void mouseUp(const juce::MouseEvent &event) override;
 	void leftMouseDown(const juce::MouseEvent &event) override;
-	void middleMouseDown(const juce::MouseEvent &event) override;
+	void mouseDoubleClick(const juce::MouseEvent &event) override;
 	void mouseDrag(const juce::MouseEvent &event) override;
 	void mouseWheelMove(const juce::MouseEvent &event, const juce::MouseWheelDetails &wheel) override;
 

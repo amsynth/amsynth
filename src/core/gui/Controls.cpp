@@ -51,8 +51,6 @@ Control::~Control() { parameter.removeObserver(this); }
 void Control::mouseDown(const juce::MouseEvent &event) {
 	if (event.mods.isLeftButtonDown()) {
 		leftMouseDown(event);
-	} else if (event.mods.isMiddleButtonDown()) {
-		middleMouseDown(event);
 	}
 }
 
@@ -151,7 +149,7 @@ void Knob::mouseWheelMove(const juce::MouseEvent &event, const juce::MouseWheelD
 	label_->show(this, getLabelText());
 }
 
-void Knob::middleMouseDown(const juce::MouseEvent &) {
+void Knob::mouseDoubleClick(const juce::MouseEvent &) {
 	// Initialize with numeric-only current value (strip units from display string)
 	juce::String currentValueText = parameter.getStringValue();
 	// Extract just the numeric part (remove units like " ms", " %", etc.)
