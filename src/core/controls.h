@@ -104,8 +104,6 @@ typedef enum {
 extern "C" {
 #endif
 
-void get_parameter_properties(int parameter_index, double *minimum, double *maximum, double *default_value, double *step_size);
-
 const char *parameter_name_from_index (int param_index);
 int parameter_index_from_name (const char *param_name);
 

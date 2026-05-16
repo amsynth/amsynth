@@ -169,23 +169,6 @@ Parameter::randomise()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void get_parameter_properties(int parameter_index, double *minimum, double *maximum, double *default_value, double *step_size)
-{
-	const ParameterSpec &spec = ParameterSpecs[parameter_index];
-	if (minimum) {
-		*minimum = spec.min;
-	}
-	if (maximum) {
-		*maximum = spec.max;
-	}
-	if (default_value) {
-		*default_value = spec.def;
-	}
-	if (step_size) {
-		*step_size = spec.step;
-	}
-}
-
 const char *parameter_name_from_index(int param_index)
 {
 	if (param_index < 0 || param_index >= (int)kAmsynthParameterCount)
