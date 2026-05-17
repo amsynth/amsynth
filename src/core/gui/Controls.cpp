@@ -52,8 +52,7 @@ void Control::mouseDown(const juce::MouseEvent &event) {
 			parameter.beginEdit();
 			parameter.setValue(parameter.getDefault());
 			parameter.endEdit();
-		}
-		else {
+		} else {
 			leftMouseDown(event);
 		}
 	}
@@ -153,10 +152,7 @@ void Knob::mouseDoubleClick(const juce::MouseEvent &) {
 
 	auto *alertWindow = new juce::AlertWindow(GETTEXT("Enter Value"), "", juce::MessageBoxIconType::NoIcon, getParentComponent());
 	alertWindow->addTextEditor("value", currentValueText);
-
-	auto *textEditor = alertWindow->getTextEditor("value");
-
-	alertWindow->addButton(GETTEXT("OK"), 1, juce::KeyPress (juce::KeyPress::returnKey));
+	alertWindow->addButton(GETTEXT("OK"), 1, juce::KeyPress(juce::KeyPress::returnKey));
 	alertWindow->addButton(GETTEXT("Cancel"), 0);
 
 	juce::Component::SafePointer<Knob> safeThis(this);
@@ -176,6 +172,8 @@ void Knob::mouseDoubleClick(const juce::MouseEvent &) {
 	});
 
 	alertWindow->enterModalState(true, callback, true);
+
+	auto *textEditor = alertWindow->getTextEditor("value");
 
 #if JUCE_LINUX
 	// On X11 this needs to be delayed to be effective
