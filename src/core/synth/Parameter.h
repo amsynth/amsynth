@@ -88,6 +88,9 @@ public:
 
 	const std::string getStringValue	() const;
 
+	bool			textFromValue		(float value, char *text, size_t size);
+	bool			valueFromText		(const char *text, float *value);
+
 	const char * 	getName				() const { return _spec.name; }
 
 	Param			getId				() const { return _paramId; }

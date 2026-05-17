@@ -99,6 +99,20 @@ static float getControlValue(const ParameterSpec &spec, float value)
 	}
 }
 
+static float fromControlValue(const ParameterSpec &spec, float value)
+{
+	switch (spec.law) {
+		case kParameterLaw_Linear:
+			return (value - spec.offset) / spec.base;
+		case kParameterLaw_Exponential:
+			return std::log(value - spec.offset) / std::log(spec.base);
+		case kParameterLaw_Power:
+			return std::pow(value - spec.offset, 1.f / spec.base);
+		default:
+			assert(!"Invalid ParameterLaw");
+	}
+}
+
 Parameter::Parameter(Param paramId)
 :	_paramId	(paramId)
 ,	_spec		(ParameterSpecs[paramId])
@@ -264,6 +278,97 @@ int parameter_get_display(int param_index, float value, char *buffer, size_t max
 			fprintf(stderr, "amsynth: parameter_get_display: out of bounds parameter index %d\n", param_index);
 			return 0;
 	}
+}
+
+bool Parameter::textFromValue(float value, char *text, size_t size)
+{
+	return parameter_get_display(getId(), value, text, size) > 0;
+}
+
+bool Parameter::valueFromText(const char *text, float *output)
+{
+	std::istringstream istr(text);
+	istr.imbue(std::locale("")); // use user's locale
+
+	float value;
+	if (!(istr >> value))
+		return false;
+
+	std::string units;
+	istr >> units;
+
+	switch (getId()) {
+		case kAmsynthParameter_AmpEnvAttack:
+		case kAmsynthParameter_AmpEnvDecay:
+		case kAmsynthParameter_AmpEnvRelease:
+		case kAmsynthParameter_FilterEnvAttack:
+		case kAmsynthParameter_FilterEnvDecay:
+		case kAmsynthParameter_FilterEnvRelease:
+		case kAmsynthParameter_PortamentoTime:
+			if (units == "ms" || (units != "s" && value > ::getControlValue(_spec, getMax())))
+				value /= 1000.f;
+			*output = fromControlValue(_spec, value);
+			return true;
+
+		case kAmsynthParameter_LFOFreq:
+			*output = fromControlValue(_spec, value);
+			return true;
+
+		case kAmsynthParameter_Oscillator2Detune:
+			*output = fromControlValue(_spec, std::pow(2.f, value / 1200.f));
+			return true;
+
+		case kAmsynthParameter_Oscillator2Pitch:
+		case kAmsynthParameter_Oscillator2Octave:
+			*output = value;
+			return true;
+
+		case kAmsynthParameter_MasterVolume:
+			*output = fromControlValue(_spec, std::pow(10.f, value / 20.f));
+			return true;
+
+		case kAmsynthParameter_FilterEnvAmount:
+			*output = fromControlValue(_spec, value) * 0.16f;
+			return true;
+
+		case kAmsynthParameter_AmpDistortion:
+		case kAmsynthParameter_AmpEnvSustain:
+		case kAmsynthParameter_AmpVelocityAmount:
+		case kAmsynthParameter_FilterCutoff:
+		case kAmsynthParameter_FilterEnvSustain:
+		case kAmsynthParameter_FilterKeyTrackAmount:
+		case kAmsynthParameter_FilterKeyVelocityAmount:
+		case kAmsynthParameter_FilterResonance:
+		case kAmsynthParameter_LFOToAmp:
+		case kAmsynthParameter_LFOToFilterCutoff:
+		case kAmsynthParameter_LFOToOscillators:
+		case kAmsynthParameter_OscillatorMixRingMod:
+		case kAmsynthParameter_ReverbDamp:
+		case kAmsynthParameter_ReverbRoomsize:
+		case kAmsynthParameter_ReverbWet:
+		case kAmsynthParameter_ReverbWidth:
+			*output = fromControlValue(_spec, value / 100.f);
+			return true;
+
+		case kAmsynthParameter_FilterSlope:
+		case kAmsynthParameter_FilterType:
+		case kAmsynthParameter_KeyboardMode:
+		case kAmsynthParameter_LFOOscillatorSelect:
+		case kAmsynthParameter_LFOWaveform:
+		case kAmsynthParameter_Oscillator1Pulsewidth:
+		case kAmsynthParameter_Oscillator1Waveform:
+		case kAmsynthParameter_Oscillator2Pulsewidth:
+		case kAmsynthParameter_Oscillator2Sync:
+		case kAmsynthParameter_Oscillator2Waveform:
+		case kAmsynthParameter_OscillatorMix:
+		case kAmsynthParameter_PortamentoMode:
+			return false;
+
+		default:
+			break;
+	}
+	assert(false);
+	return false;
 }
 
 const char **parameter_get_value_strings(int param_index)
