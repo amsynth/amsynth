@@ -151,7 +151,7 @@ void Knob::mouseDoubleClick(const juce::MouseEvent &) {
 	if (currentValueText.isEmpty())
 		return;
 
-	auto *alertWindow = new juce::AlertWindow(GETTEXT("Enter Value"), "", juce::MessageBoxIconType::NoIcon);
+	auto *alertWindow = new juce::AlertWindow(GETTEXT("Enter Value"), "", juce::MessageBoxIconType::NoIcon, getParentComponent());
 	alertWindow->addTextEditor("value", currentValueText);
 
 	auto *textEditor = alertWindow->getTextEditor("value");
