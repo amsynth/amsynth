@@ -25,8 +25,13 @@
 
 #include "Controls.h"
 
+#include <cmath>
+
 #include "core/Configuration.h"
 #include "core/synth/Preset.h"
+#include "core/gettext.h"
+
+#define GETTEXT(Msgid) juce::String(juce::CharPointer_UTF8(gettext(Msgid)))
 
 thread_local bool Control::isMainThread;
 
@@ -142,6 +147,88 @@ void Knob::mouseWheelMove(const juce::MouseEvent &event, const juce::MouseWheelD
 	auto delta = (wheel.deltaY / 2.f / (event.mods.isCtrlDown() ? 4.f : 1.f) / (event.mods.isShiftDown() ? 4.f : 1.f));
 	parameter.setNormalisedValue(parameter.getNormalisedValue() + delta);
 	label_->show(this, getLabelText());
+}
+
+void Knob::mouseDoubleClick(const juce::MouseEvent &) {
+	// Initialize with numeric-only current value (strip units from display string)
+	juce::String currentValueText = parameter.getStringValue();
+	// Extract just the numeric part (remove units like " ms", " %", etc.)
+	// Support scientific notation characters (e, E, +, -)
+	currentValueText = currentValueText.retainCharacters("0123456789.eE+-");
+
+	auto *alertWindow = new juce::AlertWindow(GETTEXT("Enter Value"), "", juce::MessageBoxIconType::NoIcon);
+	alertWindow->addTextEditor("value", currentValueText);
+
+	auto *textEditor = alertWindow->getTextEditor("value");
+	textEditor->setInputRestrictions(0, "0123456789.eE+-");
+
+	alertWindow->addButton(GETTEXT("OK"), 1);
+	alertWindow->addButton(GETTEXT("Cancel"), 0);
+
+	juce::Component::SafePointer<Knob> safeThis(this);
+	auto callback = juce::ModalCallbackFunction::create([safeThis, alertWindow](int result) {
+		if (result == 1 && safeThis != nullptr) {
+			auto *editor = alertWindow->getTextEditor("value");
+			if (editor) {
+				auto text = editor->getText().trim();
+				if (text.isNotEmpty()) {
+					// Use Parameter::valueFromString for locale-independent parsing
+					// This parses the control value (what the user sees/types)
+					float controlValue = Parameter::valueFromString(text.toStdString());
+
+					// Check if parsing was successful
+					if (!std::isnan(controlValue)) {
+						// Convert control value to internal parameter value
+						// by inverting the parameter law transformation
+						const auto &spec = safeThis->parameter._spec;
+						float internalValue = controlValue;  // default for Linear law
+
+						switch (spec.law) {
+							case kParameterLaw_Linear:
+								// control = offset + base * internal
+								// internal = (control - offset) / base
+								internalValue = (controlValue - spec.offset) / spec.base;
+								break;
+							case kParameterLaw_Exponential:
+								// control = offset + base^internal
+								// internal = log(control - offset) / log(base)
+								internalValue = std::log(controlValue - spec.offset) / std::log((float)spec.base);
+								break;
+							case kParameterLaw_Power:
+								// control = offset + internal^base
+								// internal = (control - offset)^(1/base)
+								internalValue = std::pow(controlValue - spec.offset, 1.0f / (float)spec.base);
+								break;
+						}
+
+						// Check for NaN resulting from invalid inverse operations (e.g. log of negative)
+						if (!std::isnan(internalValue)) {
+							// Clamp to parameter range
+							internalValue = juce::jlimit(safeThis->parameter.getMin(), safeThis->parameter.getMax(), internalValue);
+							safeThis->parameter.beginEdit();
+							safeThis->parameter.setValue(internalValue);
+							safeThis->parameter.endEdit();
+							safeThis->label_->show(safeThis, safeThis->getLabelText());
+						}
+					}
+					// If parsing failed or result was NaN, dialog closes silently
+				}
+			}
+		}
+	});
+
+	alertWindow->enterModalState(true, callback, true);
+
+#if JUCE_LINUX
+	// On X11 this needs to be delayed to be effective
+	juce::Component::SafePointer<juce::TextEditor> safeTextEditor(textEditor);
+	juce::Timer::callAfterDelay(100, [safeTextEditor] {
+		if (safeTextEditor != nullptr)
+			safeTextEditor->grabKeyboardFocus();
+	});
+#else
+	textEditor->grabKeyboardFocus();
+#endif
 }
 
 Knob::Label::Label(juce::Component *parent)
