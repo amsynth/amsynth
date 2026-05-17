@@ -99,6 +99,7 @@ private:
 	void mouseDoubleClick(const juce::MouseEvent &event) override;
 	void mouseDrag(const juce::MouseEvent &event) override;
 	void mouseWheelMove(const juce::MouseEvent &event, const juce::MouseWheelDetails &wheel) override;
+	void parameterDidChange(const Parameter &) override;
 
 	juce::String getLabelText();
 

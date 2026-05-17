@@ -133,7 +133,6 @@ void Knob::mouseDrag(const juce::MouseEvent &event) {
 	auto newVal = referenceVal_ + offset;
 	if (newVal != referenceVal_) {
 		parameter.setNormalisedValue(referenceVal_ + offset);
-		label_->show(this, getLabelText());
 		referenceVal_ = newVal;
 		referenceY_ = event.y;
 	}
@@ -145,7 +144,6 @@ void Knob::mouseWheelMove(const juce::MouseEvent &event, const juce::MouseWheelD
 	}
 	auto delta = (wheel.deltaY / 2.f / (event.mods.isCtrlDown() ? 4.f : 1.f) / (event.mods.isShiftDown() ? 4.f : 1.f));
 	parameter.setNormalisedValue(parameter.getNormalisedValue() + delta);
-	label_->show(this, getLabelText());
 }
 
 void Knob::mouseDoubleClick(const juce::MouseEvent &) {
@@ -172,7 +170,6 @@ void Knob::mouseDoubleClick(const juce::MouseEvent &) {
 					safeThis->parameter.beginEdit();
 					safeThis->parameter.setValue(value);
 					safeThis->parameter.endEdit();
-					safeThis->label_->show(safeThis, safeThis->getLabelText());
 				}
 			}
 		}
@@ -190,6 +187,12 @@ void Knob::mouseDoubleClick(const juce::MouseEvent &) {
 #else
 	textEditor->grabKeyboardFocus();
 #endif
+}
+
+void Knob::parameterDidChange(const Parameter &parameter) {
+	Control::parameterDidChange(parameter);
+	if (label_->isVisible())
+		label_->show(this, getLabelText());
 }
 
 Knob::Label::Label(juce::Component *parent)
