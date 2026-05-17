@@ -347,7 +347,7 @@ bool Parameter::valueFromText(const char *text, float *output)
 		case kAmsynthParameter_ReverbRoomsize:
 		case kAmsynthParameter_ReverbWet:
 		case kAmsynthParameter_ReverbWidth:
-			*output = fromControlValue(_spec, value / 100.f);
+			*output = (value / 100.f) * (_spec.max - _spec.min) + _spec.min;
 			return true;
 
 		case kAmsynthParameter_FilterSlope:
