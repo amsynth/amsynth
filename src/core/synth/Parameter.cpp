@@ -148,10 +148,9 @@ Parameter::valueFromString(const std::string &str)
 	// which can change the decimal point character.
 	std::istringstream istr(str);
 	istr.imbue(std::locale::classic());
-	float value;
-	if (istr >> value)
-		return value;
-	return m::nan;
+	float value = m::nan;
+	istr >> value;
+	return value;
 }
 
 const std::string
