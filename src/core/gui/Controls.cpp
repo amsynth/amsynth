@@ -48,13 +48,14 @@ Control::~Control() { parameter.removeObserver(this); }
 
 void Control::mouseDown(const juce::MouseEvent &event) {
 	if (event.mods.isLeftButtonDown()) {
-		leftMouseDown(event);
-	}
-}
-
-void Control::mouseDoubleClick(const juce::MouseEvent &event) {
-	if (event.mods.isLeftButtonDown()) {
-		parameter.setValue(parameter.getDefault());
+		if (event.mods.isCommandDown()) {
+			parameter.beginEdit();
+			parameter.setValue(parameter.getDefault());
+			parameter.endEdit();
+		}
+		else {
+			leftMouseDown(event);
+		}
 	}
 }
 

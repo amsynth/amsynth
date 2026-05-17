@@ -42,7 +42,6 @@ public:
 protected:
 	virtual void leftMouseDown(const juce::MouseEvent &event) = 0;
 	void mouseDown(const juce::MouseEvent &event) final;
-	void mouseDoubleClick(const juce::MouseEvent &event) override;
 	void paint(juce::Graphics &g) override;
 	void parameterDidChange(const Parameter &) override;
 
