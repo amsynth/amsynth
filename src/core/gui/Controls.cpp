@@ -157,7 +157,7 @@ void Knob::mouseDoubleClick(const juce::MouseEvent &) {
 
 	auto *textEditor = alertWindow->getTextEditor("value");
 
-	alertWindow->addButton(GETTEXT("OK"), 1);
+	alertWindow->addButton(GETTEXT("OK"), 1, juce::KeyPress (juce::KeyPress::returnKey));
 	alertWindow->addButton(GETTEXT("Cancel"), 0);
 
 	juce::Component::SafePointer<Knob> safeThis(this);
