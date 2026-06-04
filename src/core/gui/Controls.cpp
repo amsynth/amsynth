@@ -150,41 +150,35 @@ void Knob::mouseDoubleClick(const juce::MouseEvent &) {
 	if (currentValueText.isEmpty())
 		return;
 
-	auto *alertWindow = new juce::AlertWindow(GETTEXT("Enter Value"), "", juce::MessageBoxIconType::NoIcon, getParentComponent());
-	alertWindow->addTextEditor("value", currentValueText);
-	alertWindow->addButton(GETTEXT("OK"), 1, juce::KeyPress(juce::KeyPress::returnKey));
-	alertWindow->addButton(GETTEXT("Cancel"), 0);
-
-	juce::Component::SafePointer<Knob> safeThis(this);
-	auto callback = juce::ModalCallbackFunction::create([safeThis, alertWindow](int result) {
-		if (result == 1 && safeThis != nullptr) {
-			auto *editor = alertWindow->getTextEditor("value");
-			if (editor) {
-				auto text = editor->getText().trim();
-				float value;
-				if (safeThis->parameter.valueFromText(text.toStdString().c_str(), &value)) {
-					safeThis->parameter.beginEdit();
-					safeThis->parameter.setValue(value);
-					safeThis->parameter.endEdit();
-				}
-			}
+	struct ModalTextEditor : juce::TextEditor {
+		void inputAttemptWhenModal() override {
+			exitModalState(0); // exit if user clicks outside
 		}
-	});
+	};
 
-	alertWindow->enterModalState(true, callback, true);
+	label_->show(this, currentValueText); // calculate bounds
+	label_->hide();
 
-	auto *textEditor = alertWindow->getTextEditor("value");
+	juce::TextEditor *editor = new ModalTextEditor();
+	editor->setBounds(label_->getBounds().translated(0, -1));
+	editor->setFont(juce::Font(13.0f)); // from LookAndFeelHelpers::layoutTooltipText
+	editor->setJustification(juce::Justification::centred);
+	editor->setText(currentValueText, false);
+	editor->selectAll();
+	editor->onEscapeKey = [editor] { editor->exitModalState(0); };
+	editor->onReturnKey = [this, editor] {
+		auto text = editor->getText().trim();
+		float value;
+		if (parameter.valueFromText(text.toStdString().c_str(), &value)) {
+			parameter.beginEdit();
+			parameter.setValue(value);
+			parameter.endEdit();
+		}
+		editor->exitModalState(0);
+	};
 
-#if JUCE_LINUX
-	// On X11 this needs to be delayed to be effective
-	juce::Component::SafePointer<juce::TextEditor> safeTextEditor(textEditor);
-	juce::Timer::callAfterDelay(100, [safeTextEditor] {
-		if (safeTextEditor != nullptr)
-			safeTextEditor->grabKeyboardFocus();
-	});
-#else
-	textEditor->grabKeyboardFocus();
-#endif
+	label_->getParentComponent()->addAndMakeVisible(editor);
+	editor->enterModalState(true, nullptr, true);
 }
 
 void Knob::parameterDidChange(const Parameter &parameter) {
