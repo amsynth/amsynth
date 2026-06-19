@@ -49,6 +49,10 @@
 #define effFlagsProgramChunks   (1 << 5)
 #define kVstSysexType 6
 
+// from https://github.com/DISTRHO/DPF/commit/fa54750583225c2e6aa5cda9baf9c18eb722daee
+#define effEditKeyDown          59
+#define effEditKeyUp            60
+
 struct VstSysexEvent
 {
 	int type;
@@ -201,6 +205,27 @@ static intptr_t dispatcher(AEffect *effect, int opcode, int index, intptr_t val,
 		case effEditIdle:
 			plugin->juceIntegration.idle();
 			return 0;
+
+#if JUCE_WINDOWS // Some hosts (e.g. Ableton Live) intercept all WM_CHAR messages etc.
+		case effEditKeyDown:
+			if (plugin->editor) {
+				juce::ComponentPeer *peer = plugin->editor->getPeer();
+				if (peer) {
+					peer->handleKeyUpOrDown(true);
+					if (peer->handleKeyPress(index, index))
+						return 1;
+				}
+			}
+			return 0;
+
+		case effEditKeyUp:
+			if (plugin->editor) {
+				juce::ComponentPeer *peer = plugin->editor->getPeer();
+				if (peer && peer->handleKeyUpOrDown(false))
+					return 1;
+			}
+			return 0;
+#endif
 
 		case effGetChunk:
 			plugin->chunk = plugin->synthesizer->getState();
