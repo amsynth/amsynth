@@ -19,7 +19,7 @@ jobs:
           - release: 22.04
           - release: 24.04
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 2
     - name: Install build dependencies
@@ -40,9 +40,9 @@ jobs:
     - name: Run gcov
       run: gcov -lp $(find . -name '*.c' -o -name '*.cpp')
       if: matrix.release == '22.04'
-    - uses: codecov/codecov-action@v3
+    - uses: codecov/codecov-action@v7
       if: matrix.release == '22.04'
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v7
       if: matrix.release == '22.04'
       with:
         name: amsynth-tarball-${{ github.sha }}
