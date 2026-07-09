@@ -155,6 +155,98 @@ Parameter::getControlValue() const
 	return ::getControlValue(_spec, _value);
 }
 
+const char *
+Parameter::getDisplayName() const
+{
+	switch (_paramId) {
+		case kAmsynthParameter_AmpEnvAttack:
+			return gettext("Amp Attack");
+		case kAmsynthParameter_AmpEnvDecay:
+			return gettext("Amp Decay");
+		case kAmsynthParameter_AmpEnvSustain:
+			return gettext("Amp Sustain");
+		case kAmsynthParameter_AmpEnvRelease:
+			return gettext("Amp Release");
+		case kAmsynthParameter_Oscillator1Waveform:
+			return gettext("Oscillator 1 Waveform");
+		case kAmsynthParameter_FilterEnvAttack:
+			return gettext("Filter Attack");
+		case kAmsynthParameter_FilterEnvDecay:
+			return gettext("Filter Decay");
+		case kAmsynthParameter_FilterEnvSustain:
+			return gettext("Filter Sustain");
+		case kAmsynthParameter_FilterEnvRelease:
+			return gettext("Filter Release");
+		case kAmsynthParameter_FilterResonance:
+			return gettext("Filter Resonance");
+		case kAmsynthParameter_FilterEnvAmount:
+			return gettext("Filter Amount");
+		case kAmsynthParameter_FilterCutoff:
+			return gettext("Filter Cutoff");
+		case kAmsynthParameter_Oscillator2Detune:
+			return gettext("Oscillator 2 Detune");
+		case kAmsynthParameter_Oscillator2Waveform:
+			return gettext("Oscillator 2 Waveform");
+		case kAmsynthParameter_MasterVolume:
+			return gettext("Master Volume");
+		case kAmsynthParameter_LFOFreq:
+			return gettext("LFO Frequency");
+		case kAmsynthParameter_LFOWaveform:
+			return gettext("LFO Waveform");
+		case kAmsynthParameter_Oscillator2Octave:
+			return gettext("Oscillator 2 Octave");
+		case kAmsynthParameter_OscillatorMix:
+			return gettext("Oscillator Mix");
+		case kAmsynthParameter_LFOToOscillators:
+			return gettext("Oscillator Frequency LFO Amount");
+		case kAmsynthParameter_LFOToFilterCutoff:
+			return gettext("Filter Cutoff LFO Amount");
+		case kAmsynthParameter_LFOToAmp:
+			return gettext("Volume LFO Amount");
+		case kAmsynthParameter_OscillatorMixRingMod:
+			return gettext("Ring Modulation Amount");
+		case kAmsynthParameter_Oscillator1Pulsewidth:
+			return gettext("Oscillator 1 Shape");
+		case kAmsynthParameter_Oscillator2Pulsewidth:
+			return gettext("Oscillator 2 Shape");
+		case kAmsynthParameter_ReverbRoomsize:
+			return gettext("Reverb Room Size");
+		case kAmsynthParameter_ReverbDamp:
+			return gettext("Reverb Damping");
+		case kAmsynthParameter_ReverbWet:
+			return gettext("Reverb Wet");
+		case kAmsynthParameter_ReverbWidth:
+			return gettext("Reverb Width");
+		case kAmsynthParameter_AmpDistortion:
+			return gettext("Distortion");
+		case kAmsynthParameter_Oscillator2Sync:
+			return gettext("Oscillator 2 Sync");
+		case kAmsynthParameter_PortamentoTime:
+			return gettext("Portamento Time");
+		case kAmsynthParameter_KeyboardMode:
+			return gettext("Keyboard Mode");
+		case kAmsynthParameter_Oscillator2Pitch:
+			return gettext("Oscillator 2 Semitones");
+		case kAmsynthParameter_FilterType:
+			return gettext("Filter Type");
+		case kAmsynthParameter_FilterSlope:
+			return gettext("Filter Slope");
+		case kAmsynthParameter_LFOOscillatorSelect:
+			return gettext("LFO Oscillator Select");
+		case kAmsynthParameter_FilterKeyTrackAmount:
+			return gettext("Filter Key Tracking");
+		case kAmsynthParameter_FilterKeyVelocityAmount:
+			return gettext("Filter Velocity Amount");
+		case kAmsynthParameter_AmpVelocityAmount:
+			return gettext("Amp Velocity Amount");
+		case kAmsynthParameter_PortamentoMode:
+			return gettext("Portamento Mode");
+		default:
+			assert(false);
+			return nullptr;
+	}
+}
+
 float
 Parameter::valueFromString(const std::string &str)
 {

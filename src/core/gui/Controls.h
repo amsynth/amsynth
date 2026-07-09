@@ -21,14 +21,14 @@
 
 #pragma once
 
-#include "LayoutDescription.h"
 #include "core/synth/Parameter.h"
+#include "LayoutDescription.h"
 
 #include "juce_gui_basics/juce_gui_basics.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class Control : public juce::Component, protected Parameter::Observer {
+class Control : public juce::Component, public juce::SettableTooltipClient, protected Parameter::Observer {
 public:
 	Control(Parameter &p, juce::Image image, const LayoutDescription::Resource &r);
 	~Control();
@@ -40,6 +40,36 @@ public:
 	static thread_local bool isMainThread;
 
 protected:
+	class AccessibilityValueInterface : public juce::AccessibilityValueInterface {
+	public:
+		explicit AccessibilityValueInterface(Parameter &parameter_) : parameter(parameter_) {}
+
+		bool isReadOnly() const override { return false; }
+
+		juce::String getCurrentValueAsString() const override {
+			char str[64] = "\0";
+			if (!parameter_get_display(parameter.getId(), parameter.getValue(), str, sizeof(str))) {
+				snprintf(str, sizeof(str), "%d%%", (int)std::round(parameter.getNormalisedValue() * 100.f));
+			}
+			return str;
+		}
+
+		void setValueAsString(const juce::String &newValue) override {}
+
+		double getCurrentValue() const override { return parameter.getValue(); }
+
+		void setValue(double newValue) override { parameter.setValue(newValue); }
+
+		AccessibleValueRange getRange() const override {
+			float min = parameter.getMin(), max = parameter.getMax(), step = parameter.getStep();
+			return {{min, max}, step ? step : ((max - min) / 100.0)};
+		}
+
+		Parameter &parameter;
+	};
+
+	juce::String getAccessibilityHelp() { return juce::CharPointer_UTF8(parameter.getDisplayName()); }
+
 	virtual void leftMouseDown(const juce::MouseEvent &event) = 0;
 	void mouseDown(const juce::MouseEvent &event) final;
 	void paint(juce::Graphics &g) override;
@@ -61,7 +91,37 @@ public:
 	: Control(parameter, std::move(image), r) {}
 
 private:
-	void leftMouseDown(const juce::MouseEvent &) override {
+	class AccessibilityHandler : public juce::AccessibilityHandler {
+	public:
+		explicit AccessibilityHandler(Button &ctrl)
+		: juce::AccessibilityHandler(
+			  ctrl, juce::AccessibilityRole::toggleButton, getAccessibilityActions(ctrl),
+			  juce::AccessibilityHandler::Interfaces {std::make_unique<AccessibilityValueInterface>(ctrl.parameter)})
+		, control(ctrl) {}
+
+		juce::AccessibleState getCurrentState() const override {
+			auto state = juce::AccessibilityHandler::getCurrentState().withCheckable();
+			return control.parameter.getNormalisedValue() > 0.f ? state.withChecked() : state;
+		}
+
+		juce::String getHelp() const override { return control.getAccessibilityHelp(); }
+
+	private:
+		static juce::AccessibilityActions getAccessibilityActions(Button &control) {
+			return juce::AccessibilityActions().addAction(juce::AccessibilityActionType::toggle,
+														  [&control] { control.toggle(); });
+		}
+
+		Button &control;
+	};
+
+	std::unique_ptr<juce::AccessibilityHandler> createAccessibilityHandler() override {
+		return std::make_unique<AccessibilityHandler>(*this);
+	}
+
+	void leftMouseDown(const juce::MouseEvent &) override { toggle(); }
+
+	void toggle() {
 		parameter.beginEdit();
 		parameter.setNormalisedValue(parameter.getNormalisedValue() > 0.f ? 0.f : 1.f);
 		parameter.endEdit();
@@ -92,6 +152,24 @@ public:
 	Knob(Parameter &parameter, juce::Image image, const LayoutDescription::Resource &r, Label *label);
 
 private:
+	class AccessibilityHandler : public juce::AccessibilityHandler {
+	public:
+		explicit AccessibilityHandler(Knob &ctrl)
+		: juce::AccessibilityHandler(
+			  ctrl, juce::AccessibilityRole::slider, juce::AccessibilityActions {},
+			  juce::AccessibilityHandler::Interfaces {std::make_unique<AccessibilityValueInterface>(ctrl.parameter)})
+		, control(ctrl) {}
+
+		juce::String getHelp() const override { return control.getAccessibilityHelp(); }
+
+	private:
+		Knob &control;
+	};
+
+	std::unique_ptr<juce::AccessibilityHandler> createAccessibilityHandler() override {
+		return std::make_unique<AccessibilityHandler>(*this);
+	}
+
 	void mouseEnter(const juce::MouseEvent &event) override;
 	void mouseExit(const juce::MouseEvent &event) override;
 	void mouseUp(const juce::MouseEvent &event) override;
@@ -114,10 +192,42 @@ private:
 class Popup : public Control {
 public:
 	Popup(Parameter &parameter, juce::Image image, const LayoutDescription::Resource &r)
-	: Control(parameter, std::move(image), r) {}
+	: Control(parameter, std::move(image), r) {
+		setAccessible(true);
+	}
 
 private:
-	void leftMouseDown(const juce::MouseEvent &) override {
+	class AccessibilityHandler : public juce::AccessibilityHandler {
+	public:
+		explicit AccessibilityHandler(Popup &ctrl)
+		: juce::AccessibilityHandler(
+			  ctrl, juce::AccessibilityRole::comboBox, getAccessibilityActions(ctrl),
+			  juce::AccessibilityHandler::Interfaces {std::make_unique<AccessibilityValueInterface>(ctrl.parameter)})
+		, control(ctrl) {}
+
+		juce::AccessibleState getCurrentState() const override {
+			return juce::AccessibilityHandler::getCurrentState().withExpandable().withCollapsed();
+		}
+
+		juce::String getHelp() const override { return control.getAccessibilityHelp(); }
+
+	private:
+		static juce::AccessibilityActions getAccessibilityActions(Popup &popup) {
+			return juce::AccessibilityActions()
+				.addAction(juce::AccessibilityActionType::press, [&popup] { popup.showPopup(); })
+				.addAction(juce::AccessibilityActionType::showMenu, [&popup] { popup.showPopup(); });
+		}
+
+		Popup &control;
+	};
+
+	std::unique_ptr<juce::AccessibilityHandler> createAccessibilityHandler() override {
+		return std::make_unique<AccessibilityHandler>(*this);
+	}
+
+	void leftMouseDown(const juce::MouseEvent &) override { showPopup(); }
+
+	void showPopup() {
 		auto strings = parameter_get_value_strings(parameter.getId());
 		auto menu = juce::PopupMenu();
 		for (int i = 0; i <= parameter.getSteps(); i++) {

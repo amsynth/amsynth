@@ -84,12 +84,33 @@ public:
 		path.loadPathFromData(burgerMenuPathData, sizeof(burgerMenuPathData));
 		setShape(path, false, true, false);
 		setBorderSize(juce::BorderSize<int>(4));
+		setTitle(buttonName);
 	}
 
 	void mouseDown(const juce::MouseEvent &event) override {
 		if (event.eventComponent == this) {
 			onMouseDown();
 		}
+	}
+
+	std::unique_ptr<juce::AccessibilityHandler> createAccessibilityHandler() override {
+		class AccessibilityHandler : public juce::AccessibilityHandler {
+		public:
+			explicit AccessibilityHandler(MenuButton &ctrl)
+			: juce::AccessibilityHandler(ctrl, juce::AccessibilityRole::comboBox, getAccessibilityActions(ctrl)) {}
+
+			juce::AccessibleState getCurrentState() const override {
+				return juce::AccessibilityHandler::getCurrentState().withExpandable().withCollapsed();
+			}
+
+		private:
+			static juce::AccessibilityActions getAccessibilityActions(MenuButton &ctrl) {
+				return juce::AccessibilityActions()
+					.addAction(juce::AccessibilityActionType::press, [&ctrl] { ctrl.onMouseDown(); })
+					.addAction(juce::AccessibilityActionType::showMenu, [&ctrl] { ctrl.onMouseDown(); });
+			}
+		};
+		return std::make_unique<AccessibilityHandler>(*this);
 	}
 
 	std::function<void()> onMouseDown;
@@ -137,10 +158,12 @@ struct MainComponent::Impl : private juce::Timer {
 	, component_(component)
 	, presetController_(presetController)
 	, controlPanel_(midiController, presetController)
-	, menuButton_(GETTEXT("Menu"))
+	, menuButton_(GETTEXT("Main menu"))
 	, saveButton_(GETTEXT("Save"))
-	, prevButton_(GETTEXT("Previous"), ShapeButton::Shape::previous)
-	, nextButton_(GETTEXT("Next"), ShapeButton::Shape::next) {
+	, prevButton_(GETTEXT("Previous preset"), ShapeButton::Shape::previous)
+	, nextButton_(GETTEXT("Next preset"), ShapeButton::Shape::next) {
+		bankCombo_.setDescription(GETTEXT("Bank menu"));
+		presetCombo_.setDescription(GETTEXT("Preset menu"));
 		controlPanel_.setBounds(controlPanel_.getBounds().withY(toolbarHeight));
 		menuButton_.onMouseDown = [this] { showMainMenu(&menuButton_); };
 		saveButton_.onClick = [this] { savePreset(); };
@@ -517,6 +540,7 @@ MainComponent::MainComponent(PresetController *presetController, MidiController 
 	commandManager.registerAllCommandsForTarget(this);
 	addKeyListener(commandManager.getKeyMappings());
 	setOpaque(true);
+	setTitle("amsynth");
 }
 
 MainComponent::~MainComponent() {

@@ -53,7 +53,8 @@ AM_CPPFLAGS += \
 	-DJUCE_MODULE_AVAILABLE_juce_graphics=1 \
 	-DJUCE_MODULE_AVAILABLE_juce_gui_basics=1 \
 	-DJUCE_STRICT_REFCOUNTEDPOINTER=1 \
-	-DJUCE_USE_CURL=0
+	-DJUCE_USE_CURL=0 \
+	-DJucePlugin_Name='"amsynth"'
 
 SUBDIRS = po
 

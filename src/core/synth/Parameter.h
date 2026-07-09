@@ -92,6 +92,7 @@ public:
 	bool			valueFromText		(const char *text, float *value);
 
 	const char * 	getName				() const { return _spec.name; }
+	const char *	getDisplayName		() const;
 
 	Param			getId				() const { return _paramId; }
 
