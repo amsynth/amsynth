@@ -18,18 +18,19 @@ dnl  along with this program; if not, write to the Free Software
 dnl  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 dnl
 
-AC_COPYRIGHT([Copyright (C) 2001-2024 Nick Dowell])
+AC_COPYRIGHT([Copyright (C) 2001 Nick Dowell])
 
-AC_INIT([amsynth], [1.13.4],
+AC_INIT([amsynth], [2.0.0],
         [https://github.com/amsynth/amsynth/issues],
         [amsynth],
         [https://github.com/amsynth/amsynth])
 
-AC_CONFIG_SRCDIR([src/main.cpp])
+AC_CONFIG_SRCDIR([src/standalone/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE([-Wall -Wno-portability check-news foreign subdir-objects])
+# tar-ustar required to fix error: "file name is too long"
+AM_INIT_AUTOMAKE([foreign subdir-objects tar-ustar])
 AM_SILENT_RULES([yes])
 
 # make CXXFLAGS inherit from CFLAGS unless CXXFLAGS were specified
@@ -43,7 +44,7 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 LT_INIT
 
-AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
+AX_CXX_COMPILE_STDCXX_14([noext], [mandatory])
 
 IT_PROG_INTLTOOL
 
@@ -57,7 +58,9 @@ AS_IF([test "$USE_NLS" = "yes"], [AC_DEFINE([ENABLE_NLS], [1], [Enable gettext])
 
 GETTEXT_PACKAGE=amsynth
 AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package])
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
+AC_DEFINE_UNQUOTED([DEFAULT_TEXT_DOMAIN], ["$GETTEXT_PACKAGE"],
+    [The domain used by the gettext() and ngettext() macros])
 
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
@@ -70,7 +73,10 @@ dnl Although amsynth does not use pthread directly, it seems to be necessary to 
 dnl against it with GCC 10.x
 AC_CHECK_LIB(pthread, pthread_create, [], exit)
 
-AS_IF([test "x$with_gui" != "xno"],[PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= 2.20.0])])
+AS_IF([test "x$with_gui" != "xno"], [PKG_CHECK_MODULES([JUCE], [freetype2 libpng x11 zlib])])
+
+AS_IF([test -f "$srcdir/external/JUCE/modules/juce_core/juce_core.cpp"], [],
+      [AC_MSG_ERROR([cannot find JUCE source code; if this is a git checkout run `git submodule update --init` and try again])])
 
 dnl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dnl
@@ -94,33 +100,63 @@ AS_IF([test "x$with_oss" != "xno"], [
         with_oss="yes"], [with_oss="no"])])
 
 AC_ARG_WITH([alsa], [AS_HELP_STRING([--with-alsa], [build support for ALSA])])
-AS_IF([test "x$with_alsa" != "xno"], [
+AS_IF([test "x$with_alsa" = "xyes"], [
+    PKG_CHECK_MODULES([ALSA], [alsa])
+    AC_DEFINE([WITH_ALSA],, [Use this optional package])
+    with_alsa="yes"
+], [test "x$with_alsa" != "xno"], [
     PKG_CHECK_MODULES([ALSA], [alsa], [
         AC_DEFINE([WITH_ALSA],, [Use this optional package])
         with_alsa="yes"], [with_alsa="no"])])
 
 AC_ARG_WITH([jack], [AS_HELP_STRING([--with-jack], [build support for Jack Audio Connection Kit])])
-AS_IF([test "x$with_jack" != "xno"],
-    [PKG_CHECK_MODULES([JACK], [jack], [
+AS_IF([test "x$with_jack" = "xyes"], [
+    PKG_CHECK_MODULES([JACK], [jack])
+    AC_DEFINE([WITH_JACK],, [Use this optional package])
+    AC_CHECK_HEADERS([jack/midiport.h])
+    with_jack="yes"
+], [test "x$with_jack" != "xno"], [
+    PKG_CHECK_MODULES([JACK], [jack], [
         AC_DEFINE([WITH_JACK],, [Use this optional package])
-        AC_CHECK_HEADERS([jack/midiport.h jack/session.h])
+        AC_CHECK_HEADERS([jack/midiport.h])
         with_jack="yes"], [with_jack="no"])])
 
 AC_ARG_WITH([lash], [AS_HELP_STRING([--with-lash], [build support for LASH])])
-AS_IF([test "x$with_lash" != "xno"], [
+AS_IF([test "x$with_lash" = "xyes"], [
+    PKG_CHECK_MODULES([LASH], [lash-1.0])
+    AC_DEFINE([WITH_LASH],, [Use this optional package])
+    with_lash="yes"
+], [test "x$with_lash" != "xno"], [
     PKG_CHECK_MODULES([LASH], [lash-1.0], [
         AC_DEFINE([WITH_LASH],, [Use this optional package])
         with_lash="yes"], [with_lash="no"])])
 
+AC_ARG_WITH([mts-esp], [AS_HELP_STRING([--with-mts-esp], [build support for MTS-ESP])], [], [with_mts_esp=yes])
+AM_CONDITIONAL([BUILD_MTS_ESP], [test "x$with_mts_esp" != "xno"])
+AS_IF([test "x$with_mts_esp" != "xno"], [AC_DEFINE([WITH_MTS_ESP],, [Build MTS-ESP support (includes non-GPL code)])])
+
 AC_ARG_WITH([nsm], [AS_HELP_STRING([--with-nsm], [build support for Non Session Manager])])
-AS_IF([test "x$with_nsm" != "xno"], [
+AS_IF([test "x$with_nsm" = "xyes"], [
+    PKG_CHECK_MODULES([LIBLO], [liblo])
+    AC_DEFINE([WITH_NSM],, [Build NSM support])
+    with_nsm="yes"
+], [test "x$with_nsm" != "xno"], [
     PKG_CHECK_MODULES([LIBLO], [liblo], [
         AC_DEFINE([WITH_NSM],, [Build NSM support])
         with_nsm="yes"], [with_nsm="no"])])
 AM_CONDITIONAL([BUILD_NSM], [test "x$with_nsm" = "xyes"])
 
+dnl Optional targets
+
 AC_ARG_WITH([dssi], [AS_HELP_STRING([--with-dssi], [build DSSI plugin])])
-AS_IF([test "x$with_dssi" != "xno"], [
+AS_IF([test "x$with_dssi" = "xyes"], [
+    PKG_CHECK_MODULES([DSSI], [dssi])
+    with_dssi="yes"
+    AS_IF([test "x$with_gui" != "xno"], [
+        PKG_CHECK_MODULES([LIBLO], [liblo])
+        with_dssi_gui="yes"
+    ])
+], [test "x$with_dssi" != "xno"], [
     PKG_CHECK_MODULES([DSSI], [dssi], [
         AS_IF([test "x$with_gui" != "xno"], [with_dssi_gui="yes"])
         PKG_CHECK_MODULES([LIBLO], [liblo], [], [with_dssi_gui="no"])
@@ -128,12 +164,10 @@ AS_IF([test "x$with_dssi" != "xno"], [
 AM_CONDITIONAL([BUILD_DSSI], [test "x$with_dssi" != "xno"])
 AM_CONDITIONAL([BUILD_DSSI_GUI], [test "x$with_dssi_gui" = "xyes"])
 
-AC_ARG_WITH([lv2], [AS_HELP_STRING([--with-lv2], [build support for LV2])])
-AS_IF([test "x$with_lv2" != "xno"], [
-    PKG_CHECK_MODULES([LV2], [[lv2, gtk+-2.0 >= 2.20.0]], [with_lv2="yes"], [with_lv2="no"])])
+AC_ARG_WITH([lv2], [AS_HELP_STRING([--with-lv2], [build support for LV2])], [], [with_lv2=yes])
 AM_CONDITIONAL([BUILD_LV2], [test "x$with_lv2" != "xno"])
 
-AC_ARG_WITH([vst], [AS_HELP_STRING([--with-vst], [build VST plug-in] [default=yes])], [], [with_vst=yes])
+AC_ARG_WITH([vst], [AS_HELP_STRING([--with-vst], [build VST plug-in])], [], [with_vst=yes])
 AM_CONDITIONAL([BUILD_VST], [test "x$with_vst" != "xno"])
 
 dnl For man page generation
@@ -172,9 +206,6 @@ AM_CONDITIONAL([ENABLE_REALTIME], [test x$enable_realtime != x])
 
 AM_CONDITIONAL([DARWIN], [test "$(uname -s)" = "Darwin"])
 
-m4_ifdef([AX_COMPILER_FLAGS],
-         [AX_COMPILER_FLAGS([AM_CFLAGS], [AM_LDFLAGS], [yes])])
-
 AC_CONFIG_FILES([
     Makefile
     data/amsynth.desktop
@@ -196,9 +227,6 @@ dnl
 echo
 echo +------------------------------------------------------- $PACKAGE $VERSION
 echo \|
-AS_IF([test "x$with_gui" != "xno"], [
-echo \| GTK version........................................... : `pkg-config --modversion gtk+-2.0`
-])
 echo \| Build with GUI support................................ : $with_gui
 echo \|
 echo \| Build with OSS support................................ : $with_oss
@@ -206,9 +234,9 @@ echo \| Build with ALSA support............................... : $with_alsa
 echo \| Build with JACK support............................... : $with_jack
 AS_IF([test "x$with_jack" != "xno"], [
 echo \| Build with JACK MIDI support.......................... : $ac_cv_header_jack_midiport_h
-echo \| Build with JACK session support....................... : $ac_cv_header_jack_session_h
 ])
 echo \| Build with LASH support............................... : $with_lash
+echo \| Build with MTS-ESP support............................ : $with_mts_esp
 echo \| Build with Non Session Manager support................ : $with_nsm
 echo \| Build DSSI plugin..................................... : $with_dssi
 AS_IF([test "x$with_dssi" != "xno"], [

@@ -1,6 +1,6 @@
 #  amsynth Makefile.am
 #
-#  Copyright (C) 2001-2022 Nick Dowell
+#  Copyright (C) 2001 Nick Dowell
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -16,152 +16,165 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+AM_CPPFLAGS = @CPPFLAGS@ -iquote "$(top_srcdir)/src" -iquote "$(top_srcdir)/external"
+
 # http://www.gnu.org/software/libtool/manual/autoconf/Defining-Directories.html
-AM_CPPFLAGS = -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' -DPACKAGE_LOCALEDIR=\""$(datadir)/locale"\" @CPPFLAGS@ -fPIC -fvisibility=hidden
+AM_CPPFLAGS += -DDATADIR='"$(datadir)"' -DPKGDATADIR='"$(pkgdatadir)"' -DPACKAGE_LOCALEDIR=\""$(datadir)/locale"\"
 
-AM_CPPFLAGS += -I"$(top_srcdir)/vendor"
+AM_CFLAGS = $(WARN_CFLAGS) -Wno-declaration-after-statement -Wno-strict-prototypes -fPIC -fvisibility=hidden
 
-# https://developer.gnome.org/gtk3/stable/gtk-migrating-2-to-3.html#id-1.6.3.3
-AM_CPPFLAGS += -DGDK_DISABLE_DEPRECATED -DGSEAL_ENABLE -DGTK_DISABLE_DEPRECATED -DGTK_DISABLE_SINGLE_INCLUDES
-
-AM_CFLAGS = -Wno-declaration-after-statement
-AM_CFLAGS += -Wno-strict-prototypes
-
-AM_CXXFLAGS = $(WARN_CXXFLAGS)
+AM_CXXFLAGS = $(WARN_CXXFLAGS) -fPIC -fvisibility=hidden
 
 ACLOCAL_AMFLAGS = -I m4
 
+EXTRA_DIST = \
+	CHANGELOG.md \
+	data \
+	external/ardour/vestige.h \
+	external/MTS-ESP/LICENSE \
+	external/JUCE/LICENSE.md \
+	external/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2 \
+	external/JUCE/modules/juce_core \
+	external/JUCE/modules/juce_data_structures \
+	external/JUCE/modules/juce_events \
+	external/JUCE/modules/juce_graphics \
+	external/JUCE/modules/juce_gui_basics
+
+AM_CPPFLAGS += \
+	-I$(top_srcdir)/external/JUCE/modules \
+	-DJUCE_DISPLAY_SPLASH_SCREEN=0 \
+	-DJUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1 \
+	-DJUCE_INCLUDE_JPEGLIB_CODE=1 \
+	-DJUCE_INCLUDE_PNGLIB_CODE=0 \
+	-DJUCE_INCLUDE_ZLIB_CODE=0 \
+	-DJUCE_MODULE_AVAILABLE_juce_core=1 \
+	-DJUCE_MODULE_AVAILABLE_juce_data_structures=1 \
+	-DJUCE_MODULE_AVAILABLE_juce_events=1 \
+	-DJUCE_MODULE_AVAILABLE_juce_graphics=1 \
+	-DJUCE_MODULE_AVAILABLE_juce_gui_basics=1 \
+	-DJUCE_STRICT_REFCOUNTEDPOINTER=1 \
+	-DJUCE_USE_CURL=0 \
+	-DJucePlugin_Name='"amsynth"'
+
 SUBDIRS = po
 
-libcore_sources = \
-	src/Configuration.cpp \
-	src/Configuration.h \
-	src/controls.h \
-	src/filesystem.cpp \
-	src/filesystem.h \
-	src/midi.h \
-	src/MidiController.cpp \
-	src/MidiController.h \
-	src/Parameter.cpp \
-	src/Parameter.h \
-	src/Preset.cpp \
-	src/Preset.h \
-	src/PresetController.cpp \
-	src/PresetController.h \
-	src/types.h \
-	src/UpdateListener.h
+################################################################################
+#
+# Core library
+#
 
-libdsp_sources = \
-	src/Effects/Distortion.cpp \
-	src/Effects/Distortion.h \
-	src/Effects/SoftLimiter.cpp \
-	src/Effects/SoftLimiter.h \
-	src/Synthesizer.cpp \
-	src/Synthesizer.h \
-	src/TuningMap.cpp \
-	src/TuningMap.h \
-	src/VoiceAllocationUnit.cpp \
-	src/VoiceAllocationUnit.h \
-	src/VoiceBoard/ADSR.cpp \
-	src/VoiceBoard/ADSR.h \
-	src/VoiceBoard/LowPassFilter.cpp \
-	src/VoiceBoard/LowPassFilter.h \
-	src/VoiceBoard/Oscillator.cpp \
-	src/VoiceBoard/Oscillator.h \
-	src/VoiceBoard/Synth--.h \
-	src/VoiceBoard/VoiceBoard.cpp \
-	src/VoiceBoard/VoiceBoard.h \
-	vendor/freeverb/allpass.cpp \
-	vendor/freeverb/allpass.hpp \
-	vendor/freeverb/comb.cpp \
-	vendor/freeverb/comb.hpp \
-	vendor/freeverb/denormals.h \
-	vendor/freeverb/revmodel.cpp \
-	vendor/freeverb/revmodel.hpp \
-	vendor/freeverb/tuning.h
+noinst_LTLIBRARIES = libcore.la
 
-libgui_sources = \
-	src/GUI/bitmap_button.c \
-	src/GUI/bitmap_button.h \
-	src/GUI/bitmap_knob.c \
-	src/GUI/bitmap_knob.h \
-	src/GUI/bitmap_popup.c \
-	src/GUI/bitmap_popup.h \
-	src/GUI/editor_menus.cpp \
-	src/GUI/editor_menus.h \
-	src/GUI/editor_pane.c \
-	src/GUI/editor_pane.h \
-	src/GUI/gui_main.cpp \
-	src/GUI/gui_main.h \
-	vendor/seq24/controllers.h
+libcore_la_CPPFLAGS = $(AM_CPPFLAGS) @JUCE_CFLAGS@
+libcore_la_LIBADD = @JUCE_LIBS@ -ldl
+libcore_la_SOURCES = \
+	external/freeverb/allpass.cpp \
+	external/freeverb/allpass.hpp \
+	external/freeverb/comb.cpp \
+	external/freeverb/comb.hpp \
+	external/freeverb/denormals.h \
+	external/freeverb/revmodel.cpp \
+	external/freeverb/revmodel.hpp \
+	external/freeverb/tuning.h \
+	external/JUCE/modules/juce_audio_plugin_client/utility/juce_LinuxMessageThread.h \
+	external/JUCE/modules/juce_core/juce_core.cpp \
+	external/JUCE/modules/juce_data_structures/juce_data_structures.cpp \
+	external/JUCE/modules/juce_events/juce_events.cpp \
+	external/JUCE/modules/juce_graphics/juce_graphics.cpp \
+	external/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp \
+	external/seq24/controllers.h \
+	src/core/Configuration.cpp \
+	src/core/Configuration.h \
+	src/core/controls.h \
+	src/core/filesystem.cpp \
+	src/core/filesystem.h \
+	src/core/gettext.h \
+	src/core/gui/ControlPanel.cpp \
+	src/core/gui/ControlPanel.h \
+	src/core/gui/Controls.cpp \
+	src/core/gui/Controls.h \
+	src/core/gui/JuceIntegration.cpp \
+	src/core/gui/JuceIntegration.h \
+	src/core/gui/LayoutDescription.h \
+	src/core/gui/MainComponent.cpp \
+	src/core/gui/MainComponent.h \
+	src/core/midi.h \
+	src/core/synth/ADSR.cpp \
+	src/core/synth/ADSR.h \
+	src/core/synth/Distortion.cpp \
+	src/core/synth/Distortion.h \
+	src/core/synth/LowPassFilter.cpp \
+	src/core/synth/LowPassFilter.h \
+	src/core/synth/MidiController.cpp \
+	src/core/synth/MidiController.h \
+	src/core/synth/Oscillator.cpp \
+	src/core/synth/Oscillator.h \
+	src/core/synth/Parameter.cpp \
+	src/core/synth/Parameter.h \
+	src/core/synth/Preset.cpp \
+	src/core/synth/Preset.h \
+	src/core/synth/PresetController.cpp \
+	src/core/synth/PresetController.h \
+	src/core/synth/SoftLimiter.cpp \
+	src/core/synth/SoftLimiter.h \
+	src/core/synth/Synth--.h \
+	src/core/synth/Synthesizer.cpp \
+	src/core/synth/Synthesizer.h \
+	src/core/synth/TuningMap.cpp \
+	src/core/synth/TuningMap.h \
+	src/core/synth/VoiceAllocationUnit.cpp \
+	src/core/synth/VoiceAllocationUnit.h \
+	src/core/synth/VoiceBoard.cpp \
+	src/core/synth/VoiceBoard.h \
+	src/core/types.h
 
+if BUILD_MTS_ESP
+libcore_la_SOURCES += \
+	external/MTS-ESP/Client/libMTSClient.cpp \
+	external/MTS-ESP/Client/libMTSClient.h
+endif
 
+################################################################################
 #
 # amsynth standalone
 #
 
 bin_PROGRAMS = amsynth
 
+amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @LIBLO_CFLAGS@
+amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @LIBLO_LIBS@ @LIBS@ libcore.la
 amsynth_SOURCES = \
-	$(libcore_sources) \
-	$(libdsp_sources) \
-	src/AudioOutput.cpp \
-	src/AudioOutput.h \
-	src/drivers/ALSAAudioDriver.cpp \
-	src/drivers/ALSAAudioDriver.h \
-	src/drivers/ALSAMidiDriver.cpp \
-	src/drivers/ALSAMidiDriver.h \
-	src/drivers/ALSAmmapAudioDriver.cpp \
-	src/drivers/ALSAmmapAudioDriver.h \
-	src/drivers/AudioDriver.h \
-	src/drivers/MidiDriver.h \
-	src/drivers/OSSAudioDriver.cpp \
-	src/drivers/OSSAudioDriver.h \
-	src/drivers/OSSMidiDriver.cpp \
-	src/drivers/OSSMidiDriver.h \
-	src/gettext.h \
-	src/JackOutput.cpp \
-	src/JackOutput.h \
-	src/lash.c \
-	src/lash.h \
-	src/main.h \
-	src/main.cpp
-
-amsynth_CPPFLAGS = $(AM_CPPFLAGS) @ALSA_CFLAGS@ @JACK_CFLAGS@ @LASH_CFLAGS@ @LIBLO_CFLAGS@ @GTK_CFLAGS@
-
-amsynth_LDADD = @ALSA_LIBS@ @JACK_LIBS@ @LASH_LIBS@ @LIBLO_LIBS@ @LIBS@ -lX11
-
-if BUILD_GUI
-amsynth_SOURCES += $(libgui_sources) \
-	src/GUI/ConfigDialog.cpp \
-	src/GUI/ConfigDialog.h \
-	src/GUI/MainMenu.cpp \
-	src/GUI/MainMenu.h \
-	src/GUI/MainWindow.cpp \
-	src/GUI/MainWindow.h \
-	src/GUI/MIDILearnDialog.cpp \
-	src/GUI/MIDILearnDialog.h \
-	src/GUI/PresetControllerView.cpp \
-	src/GUI/PresetControllerView.h
-amsynth_LDADD += @GTK_LIBS@
-endif
-
-if DARWIN
-amsynth_SOURCES += \
-	src/drivers/CoreAudio.cpp \
-	src/drivers/CoreAudio.h
-amsynth_LDFLAGS = $(AM_LDFLAGS) -framework CoreFoundation -framework CoreAudio -framework CoreMIDI
-endif
+	src/standalone/AudioOutput.cpp \
+	src/standalone/AudioOutput.h \
+	src/standalone/drivers/ALSAAudioDriver.cpp \
+	src/standalone/drivers/ALSAAudioDriver.h \
+	src/standalone/drivers/ALSAMidiDriver.cpp \
+	src/standalone/drivers/ALSAMidiDriver.h \
+	src/standalone/drivers/ALSAmmapAudioDriver.cpp \
+	src/standalone/drivers/ALSAmmapAudioDriver.h \
+	src/standalone/drivers/AudioDriver.h \
+	src/standalone/drivers/MidiDriver.h \
+	src/standalone/drivers/OSSAudioDriver.cpp \
+	src/standalone/drivers/OSSAudioDriver.h \
+	src/standalone/drivers/OSSMidiDriver.cpp \
+	src/standalone/drivers/OSSMidiDriver.h \
+	src/standalone/JackOutput.cpp \
+	src/standalone/JackOutput.h \
+	src/standalone/lash.c \
+	src/standalone/lash.h \
+	src/standalone/main.h \
+	src/standalone/main.cpp
 
 if BUILD_NSM
 amsynth_SOURCES += \
-	src/nsm/NsmClient.cpp \
-	src/nsm/NsmClient.h \
-	src/nsm/NsmHandler.cpp \
-	src/nsm/NsmHandler.h \
-	vendor/nsm/nsm.h
+	src/standalone/nsm/NsmClient.cpp \
+	src/standalone/nsm/NsmClient.h \
+	src/standalone/nsm/NsmHandler.cpp \
+	src/standalone/nsm/NsmHandler.h \
+	external/nsm/nsm.h
 endif
 
+################################################################################
 #
 # plugins
 #
@@ -169,9 +182,9 @@ endif
 # plugin gets installed via custom install-exec-hook
 #
 
-noinst_LTLIBRARIES =
+plugin_LDFLAGS = -avoid-version -module -disable-static
 
-
+################################################################################
 #
 # DSSI
 #
@@ -179,23 +192,31 @@ noinst_LTLIBRARIES =
 if BUILD_DSSI
 
 dssidir = $(libdir)/dssi
+
+# This links directly to .libs/libcore.a to avoid libtool's --whole-archive behaviour
+# which is inappropriate for these targets - we don't want to include gui code in the
+# plug-in, and don't want to include dsp code in the ui.
+
 noinst_LTLIBRARIES += amsynth_dssi.la
-amsynth_dssi_la_SOURCES = src/amsynth_dssi.cpp src/amsynth_dssi.h $(libcore_sources) $(libdsp_sources)
-amsynth_dssi_la_CPPFLAGS = $(AM_CPPFLAGS) @DSSI_CFLAGS@
-amsynth_dssi_la_LDFLAGS = -rpath $(dssidir) -avoid-version -module -export-symbols-regex "dssi_descriptor" -disable-static
+amsynth_dssi_la_CXXFLAGS = @DSSI_CFLAGS@
+amsynth_dssi_la_DEPENDENCIES = libcore.la
+amsynth_dssi_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(dssidir) -export-symbols-regex "dssi_descriptor"
+amsynth_dssi_la_LIBADD = .libs/libcore.a
+amsynth_dssi_la_SOURCES = src/plugins/dssi/dssiplugin.cpp
 
 endif
 
 if BUILD_DSSI_GUI
 
-noinst_PROGRAMS = amsynth_dssi_gtk
-amsynth_dssi_gtk_SOURCES = src/amsynth_dssi_gtk.cpp $(libcore_sources) $(libgui_sources)
-amsynth_dssi_gtk_CPPFLAGS = $(AM_CPPFLAGS) @DSSI_CFLAGS@ @GTK_CFLAGS@ @LIBLO_CFLAGS@
-amsynth_dssi_gtk_LDADD = @DSSI_LIBS@ @GTK_LIBS@ @LIBLO_LIBS@ -lstdc++ -lX11
+noinst_PROGRAMS = amsynth_dssi_ui
+amsynth_dssi_ui_CXXFLAGS = @DSSI_CFLAGS@ @LIBLO_CFLAGS@
+amsynth_dssi_ui_LDADD = @DSSI_LIBS@ @LIBLO_LIBS@ libcore.la
+amsynth_dssi_ui_SOURCES = src/plugins/dssi/dssiui.cpp
 
 endif
 
 
+################################################################################
 #
 # LV2
 #
@@ -203,52 +224,31 @@ endif
 if BUILD_LV2
 
 amsynth_lv2dir = $(libdir)/lv2/amsynth.lv2
+
+# This links directly to .libs/libcore.a to avoid libtool's --whole-archive behaviour
+# which is inappropriate for these targets - we don't want to include gui code in the
+# plug-in, and don't want to include dsp code in the ui.
+
 noinst_LTLIBRARIES += amsynth_lv2.la
-amsynth_lv2_la_SOURCES = src/amsynth_lv2.cpp src/amsynth_lv2.h $(libcore_sources) $(libdsp_sources)
-amsynth_lv2_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@
-amsynth_lv2_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2_descriptor" -disable-static
+amsynth_lv2_la_CXXFLAGS = -I"$(top_srcdir)/external/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2"
+amsynth_lv2_la_DEPENDENCIES = libcore.la
+amsynth_lv2_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-symbols-regex "lv2_descriptor"
+amsynth_lv2_la_LIBADD = .libs/libcore.a
+amsynth_lv2_la_SOURCES = src/plugins/lv2/lv2plugin.cpp src/plugins/lv2/lv2plugin.h
 
-noinst_LTLIBRARIES += amsynth_lv2_gtk.la
-amsynth_lv2_gtk_la_SOURCES = src/amsynth_lv2_ui_gtk.cpp $(libcore_sources) $(libgui_sources)
-amsynth_lv2_gtk_la_CPPFLAGS = $(AM_CPPFLAGS) @LV2_CFLAGS@
-amsynth_lv2_gtk_la_LDFLAGS = -rpath $(amsynth_lv2dir) -avoid-version -module -export-symbols-regex "lv2ui_descriptor" -disable-static
-amsynth_lv2_gtk_la_LIBADD = @LV2_LIBS@
+noinst_LTLIBRARIES += amsynth_lv2ui.la
+amsynth_lv2ui_la_CXXFLAGS = -I"$(top_srcdir)/external/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2"
+amsynth_lv2ui_la_DEPENDENCIES = libcore.la
+amsynth_lv2ui_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(amsynth_lv2dir) -export-symbols-regex "lv2ui_descriptor"
+amsynth_lv2ui_la_LIBADD = .libs/libcore.a $(libcore_la_LIBADD)
+amsynth_lv2ui_la_SOURCES = src/plugins/lv2/lv2ui.cpp
 
-dist_amsynth_lv2_DATA = \
-	data/amsynth.lv2/manifest.ttl \
-	data/amsynth.lv2/amsynth.ttl \
-	data/amsynth.lv2/amsynth_factory.bank.ttl \
-	data/amsynth.lv2/BriansBank01.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank02.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank03.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank04.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank05.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank06.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank07.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank08.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank09.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank10.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank11.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank12.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank13.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank14.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank15.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank16.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank17.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank18.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank19.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank20.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank21.amSynth.bank.ttl \
-	data/amsynth.lv2/BriansBank22.amSynth.bank.ttl \
-	data/amsynth.lv2/PatriksBank01.bank.ttl \
-	data/amsynth.lv2/PatriksBank02.bank.ttl \
-	data/amsynth.lv2/PatriksBank03.bank.ttl \
-	data/amsynth.lv2/PatriksBank04.bank.ttl \
-	data/amsynth.lv2/PatriksBank05.bank.ttl
+dist_amsynth_lv2_DATA = data/amsynth.lv2/amsynth.ttl data/amsynth.lv2/manifest.ttl
 
 endif
 
 
+################################################################################
 #
 # VST
 #
@@ -257,25 +257,16 @@ if BUILD_VST
 
 vstdir=$(libdir)/vst
 noinst_LTLIBRARIES += amsynth_vst.la
-amsynth_vst_la_SOURCES = src/amsynth_vst.cpp $(libcore_sources) $(libdsp_sources) vendor/vestige/aeffectx.h
-amsynth_vst_la_LDFLAGS = -rpath $(vstdir) -avoid-version -module -export-symbols-regex "VSTPluginMain|main"
-
-if BUILD_GUI
-amsynth_vst_la_SOURCES += $(libgui_sources)
-amsynth_vst_la_CPPFLAGS = $(AM_CPPFLAGS) @GTK_CFLAGS@
-amsynth_vst_la_LIBADD = @GTK_LIBS@
-endif
+amsynth_vst_la_LDFLAGS = $(plugin_LDFLAGS) -rpath $(vstdir) -export-symbols-regex "VSTPluginMain|^main"
+amsynth_vst_la_LIBADD = libcore.la
+amsynth_vst_la_SOURCES = src/plugins/vst2/vstplugin.cpp
 
 endif
 
 
+################################################################################
 #
 #
-#
-
-dist_pkgdata_DATA = data/rc
-
-EXTRA_DIST = data/icons/48x48/amsynth.png data/icons/scalable/amsynth.svg
 
 appicon48dir=$(datadir)/icons/hicolor/48x48/apps
 appicon48_DATA=data/icons/48x48/amsynth.png
@@ -306,9 +297,8 @@ dist_skinsdefault_DATA = \
 	data/skins/default/filter_slope.png \
 	data/skins/default/filter_type.png \
 	data/skins/default/keybmode.png \
-	data/skins/default/knob.png \
-	data/skins/default/knob_boost.png \
 	data/skins/default/knob_boost_cut.png \
+	data/skins/default/knob_boost.png \
 	data/skins/default/knob_mix.png \
 	data/skins/default/knob_osc_octave.png \
 	data/skins/default/knob_osc_pitch.png \
@@ -317,8 +307,6 @@ dist_skinsdefault_DATA = \
 	data/skins/default/layout.ini \
 	data/skins/default/osc_select.png \
 	data/skins/default/portamento_modes.png \
-	data/skins/default/slider_boost_1.png \
-	data/skins/default/slider_boost_2.png \
 	data/skins/default/waveform_lfo.png \
 	data/skins/default/waveform_pics.png
 
@@ -354,6 +342,7 @@ dist_banks_DATA = \
 	data/banks/PatriksBank05.bank
 
 
+################################################################################
 #
 # Man pages
 #
@@ -363,8 +352,9 @@ SUBDIRS += man
 endif
 
 
+################################################################################
 #
-#
+# Install & uninstall hooks
 #
 
 install-exec-hook:
@@ -380,25 +370,20 @@ endif
 if BUILD_DSSI_GUI
 	$(INSTALL_PROGRAM_ENV) $(INSTALL) -d $(DESTDIR)$(dssidir)/amsynth_dssi
 	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL) \
-		$(top_builddir)/amsynth_dssi_gtk $(DESTDIR)$(dssidir)/amsynth_dssi/amsynth_dssi_gtk
+		$(top_builddir)/amsynth_dssi_ui $(DESTDIR)$(dssidir)/amsynth_dssi/amsynth_dssi_ui
 endif
 if BUILD_LV2
 	$(INSTALL_PROGRAM_ENV) $(INSTALL) -d $(DESTDIR)$(amsynth_lv2dir)
 	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL) \
 		$(top_builddir)/.libs/amsynth_lv2.so $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2.so
 	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL) \
-		$(top_builddir)/.libs/amsynth_lv2_gtk.so $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2_gtk.so
+		$(top_builddir)/.libs/amsynth_lv2ui.so $(DESTDIR)$(amsynth_lv2dir)/amsynth_lv2ui.so
 endif
 if BUILD_VST
 	$(INSTALL_PROGRAM_ENV) $(INSTALL) -d $(DESTDIR)$(vstdir)
 	$(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL) \
 		$(top_builddir)/.libs/amsynth_vst.so $(DESTDIR)$(vstdir)/amsynth_vst.so
 endif
-
-
-#
-#
-#
 
 uninstall-hook:
 	rm -rf $(DESTDIR)$(pkgdatadir)
@@ -419,15 +404,14 @@ endif
 # ./po/.intltool-merge-cache.lock
 	-rm ./po/.intltool-merge-cache.lock
 
+
+################################################################################
 #
-#
+# Tests
 #
 
 check_PROGRAMS = amsynth-tests
-
-amsynth_tests_SOURCES = \
-	$(libcore_sources) \
-	$(libdsp_sources) \
-	src/tests.cpp
+amsynth_tests_LDADD = libcore.la
+amsynth_tests_SOURCES = tests/tests.cpp
 
 TESTS = $(check_PROGRAMS)

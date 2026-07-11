@@ -12,16 +12,13 @@ autoconf --version | head -n1
 automake --version | head -n1
 autoreconf --verbose --force --install
 intltoolize --force
-cd -
 
-if ! grep -q AX_CXX_COMPILE_STDCXX_11 aclocal.m4; then
-	echo
-	echo "ERROR: The AX_CXX_COMPILE_STDCXX_11 macro from the GNU Autoconf Archive was not found."
-	echo
-	echo "Try installing the autoconf-archive package and re-running autogen.sh"
-	echo
-	exit 1
+if test -d ".git"; then
+    echo "Updating git submodules"
+    git submodule update --init
 fi
+
+cd -
 
 echo
 echo "----------------------------------------------------------------"
