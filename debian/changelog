@@ -1,5 +1,5 @@
-amsynth (1.13.4-1) unstable; urgency=medium
+amsynth (2.0.0-1) unstable; urgency=medium
 
-  * New upstream version 1.13.4
+  * New upstream version 2.0.0
 
- -- Nick Dowell <nick@nickdowell.com>  Wed, 15 Jan 2025 04:03:43 +0000
+ -- Nick Dowell <nick@nickdowell.com>  Sat, 11 Jul 2026 16:00:00 +0000

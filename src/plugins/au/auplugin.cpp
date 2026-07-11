@@ -46,7 +46,7 @@ public:
 		}
 	}
 
-	OSStatus Version() override { return 0; }
+	OSStatus Version() override { return 0x020000; }
 
 	bool CanScheduleParameters() const override { return false; }
 
