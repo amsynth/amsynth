@@ -1,8 +1,9 @@
-## 2.0b1 (2026-04-27)
+## 2.0.0 (2026-07-11)
 
   - Ported the GUI from GTK2 to JUCE.
     PACKAGERS TAKE NOTE: build dependencies have changed!
   - Added preset selection, saving, and main menu to plug-ins GUIs.
+  - Added support for accessibility (screan readers).
   - Added support for fractional UI scaling.
   - Added support for LV2 touch extension.
   - The lv2-dev package is no longer required; JUCE bundles the LV2 headers.

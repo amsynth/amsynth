@@ -416,7 +416,7 @@ struct MainComponent::Impl : private juce::Timer {
 		editor->setText(juce::String(juce::CharPointer_UTF8(
 			"amsynth " PACKAGE_VERSION "\n\n"
 			"Analog Modelling SYNTHesizer\n\n"
-			"Copyright © 2002 - 2025 Nick Dowell and contributors")));
+			"Copyright © 2002 - 2026 Nick Dowell and contributors")));
 		component_->addAndMakeVisible(editor);
 	}
 
