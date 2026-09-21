@@ -1,3 +1,7 @@
+## Next version
+
+  - Fixed crash on systems with no XSETTINGS
+
 ## 2.0.0 (2026-07-11)
 
   - Ported the GUI from GTK2 to JUCE.
