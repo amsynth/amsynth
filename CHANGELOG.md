@@ -1,6 +1,7 @@
 ## Next version
 
   - Fixed crash on systems with no XSETTINGS
+  - Locked parameters are now omitted from Randomisation.
 
 ## 2.0.0 (2026-07-11)
 

@@ -88,7 +88,7 @@ void
 Preset::randomise()
 {
 	for (int i = 0; i < kAmsynthParameterCount; i++) {
-		if (i != kAmsynthParameter_MasterVolume) {
+		if (i != kAmsynthParameter_MasterVolume && !isParameterLocked(i)) {
 			getParameter(i).randomise();
 		}
 	}
