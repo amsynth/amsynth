@@ -43,7 +43,7 @@ available to select in the GUI:
 While the simplest way to install amsynth is from your Linux distribution's
 package repository, the available versions tend to be quite old.
 
-Package versions: https://repology.org/project/amsynth/versions
+Package versions: https://repology.amdmi3.ru/project/amsynth/versions
 
 More recent builds of amsynth for Ubuntu related distributions are available
 through the amsynth PPA:
