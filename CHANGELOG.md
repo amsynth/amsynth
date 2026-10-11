@@ -1,5 +1,6 @@
 ## Next version
 
+  - Added X11 keyboard event forwarding to DAW
   - Fixed crash on systems with no XSETTINGS
   - Locked parameters are now omitted from Randomisation.
 
