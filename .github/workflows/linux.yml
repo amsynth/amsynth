@@ -6,6 +6,7 @@ on:
       - '.github/workflows/mac.yml'
       - '.github/workflows/windows.yml'
       - '.gitignore'
+      - 'CHANGELOG.md'
       - 'mac/**'
       - 'src/plugins/au/**'
       - 'win/**'
@@ -28,15 +29,16 @@ jobs:
         sudo apt install autopoint dssi-dev intltool libasound-dev libcurl4-openssl-dev libfreetype-dev libjack-jackd2-dev liblo-dev libpng-dev libxcursor-dev libxinerama-dev libxrandr-dev pandoc
     - run: ./autogen.sh
     - run: ./configure --enable-compile-warnings=error --without-lash
-    - run: make -j 2 distcheck
-    - run: make -j 2
+    - name: Run make distcheck
+      run: make -j $(nproc) distcheck
+    - name: Run make
+      run: make -j $(nproc)
     - name: Run make install
       run: sudo make install
 #    - run: ./tools/lv2lint.sh # lv2lint seems to have disappeared from the internet
+    - run: ./configure CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' --without-lv2 --without-dssi --without-vst --without-gui --without-lash
     - name: Run make check
-      run: |
-        ./configure CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' --without-lv2 --without-dssi --without-vst --without-gui --without-lash
-        make -j 2 check
+      run: make -j $(nproc) check
     - name: Run gcov
       run: gcov -lp $(find . -name '*.c' -o -name '*.cpp')
       if: matrix.runner == 'ubuntu-22.04'
