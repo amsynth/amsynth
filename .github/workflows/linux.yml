@@ -17,7 +17,6 @@ jobs:
       matrix:
         include:
           - runner: ubuntu-22.04
-          - runner: ubuntu-24.04
           - runner: ubuntu-26.04-arm
     steps:
     - uses: actions/checkout@v7
@@ -40,11 +39,11 @@ jobs:
         make -j 2 check
     - name: Run gcov
       run: gcov -lp $(find . -name '*.c' -o -name '*.cpp')
-      if: matrix.runner == 'ubuntu-26.04-arm'
+      if: matrix.runner == 'ubuntu-22.04'
     - uses: codecov/codecov-action@v7
-      if: matrix.runner == 'ubuntu-26.04-arm'
+      if: matrix.runner == 'ubuntu-22.04'
     - uses: actions/upload-artifact@v7
-      if: matrix.runner == 'ubuntu-26.04-arm'
+      if: matrix.runner == 'ubuntu-22.04'
       with:
         name: amsynth-tarball-${{ github.sha }}
         path: amsynth-*.tar.gz
