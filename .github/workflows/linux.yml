@@ -12,12 +12,13 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-${{ matrix.release }}
+    runs-on: ${{ matrix.runner }}
     strategy:
       matrix:
         include:
-          - release: 22.04
-          - release: 24.04
+          - runner: ubuntu-22.04
+          - runner: ubuntu-24.04
+          - runner: ubuntu-26.04-arm
     steps:
     - uses: actions/checkout@v7
       with:
@@ -39,11 +40,11 @@ jobs:
         make -j 2 check
     - name: Run gcov
       run: gcov -lp $(find . -name '*.c' -o -name '*.cpp')
-      if: matrix.release == '22.04'
+      if: matrix.runner == 'ubuntu-26.04-arm'
     - uses: codecov/codecov-action@v7
-      if: matrix.release == '22.04'
+      if: matrix.runner == 'ubuntu-26.04-arm'
     - uses: actions/upload-artifact@v7
-      if: matrix.release == '22.04'
+      if: matrix.runner == 'ubuntu-26.04-arm'
       with:
         name: amsynth-tarball-${{ github.sha }}
         path: amsynth-*.tar.gz
