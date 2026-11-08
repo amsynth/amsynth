@@ -36,9 +36,9 @@ jobs:
     - name: Run make install
       run: sudo make install
 #    - run: ./tools/lv2lint.sh # lv2lint seems to have disappeared from the internet
-    - run: ./configure CFLAGS='-O0 -g -fprofile-arcs -ftest-coverage' --without-lv2 --without-dssi --without-vst --without-gui --without-lash
+    - run: ./configure --without-alsa --without-dssi --without-gui --without-jack --without-lash --without-lv2 --without-mts-esp --without-nsm --without-oss --without-vst
     - name: Run make check
-      run: make -j $(nproc) check
+      run: make -j $(nproc) clean check CFLAGS="--coverage -O0 -g" CXXFLAGS="--coverage -O0 -g" LDFLAGS="--coverage"
     - name: Run gcov
       run: find . -name '*.gcda' -exec gcov -lp {} +
       if: matrix.runner == 'ubuntu-22.04'
