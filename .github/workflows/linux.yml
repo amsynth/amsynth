@@ -40,7 +40,7 @@ jobs:
     - name: Run make check
       run: make -j $(nproc) check
     - name: Run gcov
-      run: gcov -lp $(find . -name '*.c' -o -name '*.cpp')
+      run: find . -name '*.gcda' -exec gcov -lp {} +
       if: matrix.runner == 'ubuntu-22.04'
     - uses: codecov/codecov-action@v7
       if: matrix.runner == 'ubuntu-22.04'
