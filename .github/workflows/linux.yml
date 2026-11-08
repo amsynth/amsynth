@@ -39,9 +39,6 @@ jobs:
     - run: ./configure --without-alsa --without-dssi --without-gui --without-jack --without-lash --without-lv2 --without-mts-esp --without-nsm --without-oss --without-vst
     - name: Run make check
       run: make -j $(nproc) clean check CFLAGS="--coverage -O0 -g" CXXFLAGS="--coverage -O0 -g" LDFLAGS="--coverage"
-    - name: Run gcov
-      run: find . -name '*.gcda' -exec gcov -lp {} +
-      if: matrix.runner == 'ubuntu-22.04'
     - uses: codecov/codecov-action@v7
       if: matrix.runner == 'ubuntu-22.04'
     - uses: actions/upload-artifact@v7
