@@ -1,2 +1,2 @@
 #define PACKAGE_NAME "amsynth"
-#define PACKAGE_VERSION "2.0.0"
+#define PACKAGE_VERSION "2.0.1"

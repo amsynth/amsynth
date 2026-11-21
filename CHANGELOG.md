@@ -1,4 +1,4 @@
-## Next version
+## 2.0.1 (2026-11-21)
 
   - Added X11 keyboard event forwarding to DAW
   - Fixed crash on systems with no XSETTINGS
