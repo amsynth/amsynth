@@ -14,7 +14,7 @@
 			<key>name</key>
 			<string>Nick Dowell: amsynth</string>
 			<key>sandboxSafe</key>
-			<true/>
+			<false/>
 			<key>subtype</key>
 			<string>Amsy</string>
 			<key>tags</key>
