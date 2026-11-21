@@ -118,9 +118,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED;JUCE_CHECK_MEMORY_LEAKS=0;WITH_MTS_ESP;_CRT_SECURE_NO_WARNINGS;JucePlugin_Name="amsynth";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;HAVE_CONFIG_H;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED;JUCE_CHECK_MEMORY_LEAKS=0;PNG_NO_CONFIG_H;WITH_MTS_ESP;_CRT_SECURE_NO_WARNINGS;JucePlugin_Name="amsynth";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\external;..\..\external\JUCE\modules;..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\external;..\..\external\JUCE\modules;..\..\src;..\..\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj</AdditionalOptions>
       <PrecompiledHeaderFile />
     </ClCompile>
@@ -136,11 +136,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED;WITH_MTS_ESP;_CRT_SECURE_NO_WARNINGS;JucePlugin_Name="amsynth";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;HAVE_CONFIG_H;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED;PNG_NO_CONFIG_H;WITH_MTS_ESP;_CRT_SECURE_NO_WARNINGS;JucePlugin_Name="amsynth";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\..\external;..\..\external\JUCE\modules;..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\external;..\..\external\JUCE\modules;..\..\src;..\..\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -155,9 +155,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED;JUCE_CHECK_MEMORY_LEAKS=0;WITH_MTS_ESP;_CRT_SECURE_NO_WARNINGS;JucePlugin_Name="amsynth";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;HAVE_CONFIG_H;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED;JUCE_CHECK_MEMORY_LEAKS=0;PNG_NO_CONFIG_H;WITH_MTS_ESP;_CRT_SECURE_NO_WARNINGS;JucePlugin_Name="amsynth";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\external;..\..\external\JUCE\modules;..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\external;..\..\external\JUCE\modules;..\..\src;..\..\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj</AdditionalOptions>
       <PrecompiledHeaderFile />
     </ClCompile>
@@ -176,11 +176,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED;WITH_MTS_ESP;_CRT_SECURE_NO_WARNINGS;JucePlugin_Name="amsynth";JucePlugin_Name="amsynth";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;HAVE_CONFIG_H;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED;PNG_NO_CONFIG_H;WITH_MTS_ESP;_CRT_SECURE_NO_WARNINGS;JucePlugin_Name="amsynth";JucePlugin_Name="amsynth";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\..\external;..\..\external\JUCE\modules;..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\external;..\..\external\JUCE\modules;..\..\src;..\..\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj</AdditionalOptions>
     </ClCompile>
     <Link>

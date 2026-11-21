@@ -6,7 +6,10 @@ on:
       - '.github/workflows/linux.yml'
       - '.github/workflows/mac.yml'
       - '.gitignore'
+      - 'CHANGELOG.md'
+      - 'configure.ac'
       - 'mac/**'
+      - 'Makefile.am'
       - 'src/plugins/au/**'
 
 jobs:

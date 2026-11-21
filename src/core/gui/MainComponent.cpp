@@ -31,10 +31,6 @@
 
 #include <cassert>
 
-#ifndef PACKAGE_VERSION
-#define PACKAGE_VERSION "???"
-#endif
-
 enum CommandIDs {
 	randomisePreset = 0x10000,
 };

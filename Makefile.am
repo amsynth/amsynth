@@ -33,6 +33,7 @@ EXTRA_DIST = \
 	external/ardour/vestige.h \
 	external/MTS-ESP/LICENSE \
 	external/JUCE/LICENSE.md \
+	external/JUCE/modules/juce_audio_plugin_client/utility/juce_LinuxMessageThread.h \
 	external/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2 \
 	external/JUCE/modules/juce_core \
 	external/JUCE/modules/juce_data_structures \
@@ -40,6 +41,7 @@ EXTRA_DIST = \
 	external/JUCE/modules/juce_graphics \
 	external/JUCE/modules/juce_gui_basics
 
+if BUILD_GUI
 AM_CPPFLAGS += \
 	-I$(top_srcdir)/external/JUCE/modules \
 	-DJUCE_DISPLAY_SPLASH_SCREEN=0 \
@@ -55,6 +57,7 @@ AM_CPPFLAGS += \
 	-DJUCE_STRICT_REFCOUNTEDPOINTER=1 \
 	-DJUCE_USE_CURL=0 \
 	-DJucePlugin_Name='"amsynth"'
+endif
 
 SUBDIRS = po
 
@@ -65,8 +68,8 @@ SUBDIRS = po
 
 noinst_LTLIBRARIES = libcore.la
 
-libcore_la_CPPFLAGS = $(AM_CPPFLAGS) @JUCE_CFLAGS@
-libcore_la_LIBADD = @JUCE_LIBS@ -ldl
+libcore_la_CPPFLAGS = $(AM_CPPFLAGS)
+libcore_la_LIBADD = -ldl
 libcore_la_SOURCES = \
 	external/freeverb/allpass.cpp \
 	external/freeverb/allpass.hpp \
@@ -76,12 +79,6 @@ libcore_la_SOURCES = \
 	external/freeverb/revmodel.cpp \
 	external/freeverb/revmodel.hpp \
 	external/freeverb/tuning.h \
-	external/JUCE/modules/juce_audio_plugin_client/utility/juce_LinuxMessageThread.h \
-	external/JUCE/modules/juce_core/juce_core.cpp \
-	external/JUCE/modules/juce_data_structures/juce_data_structures.cpp \
-	external/JUCE/modules/juce_events/juce_events.cpp \
-	external/JUCE/modules/juce_graphics/juce_graphics.cpp \
-	external/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp \
 	external/seq24/controllers.h \
 	src/core/Configuration.cpp \
 	src/core/Configuration.h \
@@ -89,15 +86,6 @@ libcore_la_SOURCES = \
 	src/core/filesystem.cpp \
 	src/core/filesystem.h \
 	src/core/gettext.h \
-	src/core/gui/ControlPanel.cpp \
-	src/core/gui/ControlPanel.h \
-	src/core/gui/Controls.cpp \
-	src/core/gui/Controls.h \
-	src/core/gui/JuceIntegration.cpp \
-	src/core/gui/JuceIntegration.h \
-	src/core/gui/LayoutDescription.h \
-	src/core/gui/MainComponent.cpp \
-	src/core/gui/MainComponent.h \
 	src/core/midi.h \
 	src/core/synth/ADSR.cpp \
 	src/core/synth/ADSR.h \
@@ -127,6 +115,26 @@ libcore_la_SOURCES = \
 	src/core/synth/VoiceBoard.cpp \
 	src/core/synth/VoiceBoard.h \
 	src/core/types.h
+
+if BUILD_GUI
+libcore_la_CPPFLAGS += @JUCE_CFLAGS@
+libcore_la_LIBADD += @JUCE_LIBS@
+libcore_la_SOURCES += \
+	external/JUCE/modules/juce_core/juce_core.cpp \
+	external/JUCE/modules/juce_data_structures/juce_data_structures.cpp \
+	external/JUCE/modules/juce_events/juce_events.cpp \
+	external/JUCE/modules/juce_graphics/juce_graphics.cpp \
+	external/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp \
+	src/core/gui/ControlPanel.cpp \
+	src/core/gui/ControlPanel.h \
+	src/core/gui/Controls.cpp \
+	src/core/gui/Controls.h \
+	src/core/gui/JuceIntegration.cpp \
+	src/core/gui/JuceIntegration.h \
+	src/core/gui/LayoutDescription.h \
+	src/core/gui/MainComponent.cpp \
+	src/core/gui/MainComponent.h
+endif
 
 if BUILD_MTS_ESP
 libcore_la_SOURCES += \

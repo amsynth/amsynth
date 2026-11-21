@@ -6,6 +6,9 @@ on:
       - '.github/workflows/linux.yml'
       - '.github/workflows/windows.yml'
       - '.gitignore'
+      - 'CHANGELOG.md'
+      - 'configure.ac'
+      - 'Makefile.am'
       - 'win/**'
 
 jobs:

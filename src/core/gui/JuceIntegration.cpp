@@ -55,7 +55,9 @@ double JuceIntegration::getPluginScaleFactor() {
 	}
 
 	auto x11 = juce::XWindowSystem::getInstance();
-	auto setting = x11->getXSettings()->getSetting("Gdk/WindowScalingFactor");
+	auto xsettings = x11->getXSettings();
+	auto setting = xsettings ? xsettings->getSetting("Gdk/WindowScalingFactor") :
+		juce::XWindowSystemUtilities::XSetting();
 	if (setting.isValid() && setting.integerValue > 1) {
 		return (double)setting.integerValue;
 	}
